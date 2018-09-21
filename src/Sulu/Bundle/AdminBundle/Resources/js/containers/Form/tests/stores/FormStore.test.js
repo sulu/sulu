@@ -20,11 +20,16 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     }
 });
 
-jest.mock('../../stores/MetadataStore', () => ({
-    getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
-}));
+jest.mock('../../stores/MetadataStore', () => ({}));
+
+beforeEach(() => {
+    // $FlowFixMe
+    metadataStore.getSchema = jest.fn().mockReturnValue(Promise.resolve({}));
+    // $FlowFixMe
+    metadataStore.getJsonSchema = jest.fn().mockReturnValue(Promise.resolve({}));
+    // $FlowFixMe
+    metadataStore.getSchemaTypes = jest.fn().mockReturnValue(Promise.resolve({}));
+});
 
 test('Create data object for schema', () => {
     const metadata = {
@@ -57,6 +62,144 @@ test('Create data object for schema', () => {
             description: undefined,
         });
         formStore.destroy();
+    }, 0);
+});
+
+test('Evaluate all visibilityConditions for schema', (done) => {
+    const metadata = {
+        item1: {
+            type: 'text_line',
+        },
+        item2: {
+            type: 'text_line',
+            visibilityCondition: 'item1 == "item2"',
+        },
+        section: {
+            items: {
+                item31: {
+                    type: 'text_line',
+                },
+                item32: {
+                    type: 'text_line',
+                    visibilityCondition: 'item1 == "item32"',
+                },
+            },
+            type: 'section',
+            visibilityCondition: 'item1 == "section"',
+        },
+        block: {
+            types: {
+                text_line: {
+                    form: {
+                        item41: {
+                            type: 'text_line',
+                            visibilityCondition: 'item1 == "item41"',
+                        },
+                        item42: {
+                            type: 'text_line',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    const formStore = new FormStore(resourceStore);
+
+    setTimeout(() => {
+        const sectionItems = formStore.schema.section.items;
+        if (!sectionItems) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes = formStore.schema.block.types;
+        if (!blockTypes) {
+            throw new Error('Block types should be defined!');
+        }
+
+        expect(formStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems.item32.visible).toEqual(false);
+        expect(formStore.schema.section.visible).toEqual(false);
+        expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+
+        resourceStore.data = {item1: 'item2'};
+        expect(formStore.schema.item2.visible).toEqual(false);
+
+        formStore.finishField('/item1').then(() => {
+            const sectionItems = formStore.schema.section.items;
+            if (!sectionItems) {
+                throw new Error('Section items should be defined!');
+            }
+            const blockTypes = formStore.schema.block.types;
+            if (!blockTypes) {
+                throw new Error('Block types should be defined!');
+            }
+
+            expect(formStore.schema.item2.visible).toEqual(true);
+            expect(sectionItems.item32.visible).toEqual(false);
+            expect(formStore.schema.section.visible).toEqual(false);
+            expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+
+            resourceStore.data = {item1: 'item32'};
+            formStore.finishField('/item1').then(() => {
+                const sectionItems = formStore.schema.section.items;
+                if (!sectionItems) {
+                    throw new Error('Section items should be defined!');
+                }
+                const blockTypes = formStore.schema.block.types;
+                if (!blockTypes) {
+                    throw new Error('Block types should be defined!');
+                }
+
+                expect(formStore.schema.item2.visible).toEqual(false);
+                expect(sectionItems.item32.visible).toEqual(true);
+                expect(formStore.schema.section.visible).toEqual(false);
+                expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+
+                resourceStore.data = {item1: 'section'};
+                formStore.finishField('/item1').then(() => {
+                    const sectionItems = formStore.schema.section.items;
+                    if (!sectionItems) {
+                        throw new Error('Section items should be defined!');
+                    }
+                    const blockTypes = formStore.schema.block.types;
+                    if (!blockTypes) {
+                        throw new Error('Block types should be defined!');
+                    }
+
+                    expect(formStore.schema.item2.visible).toEqual(false);
+                    expect(sectionItems.item32.visible).toEqual(false);
+                    expect(formStore.schema.section.visible).toEqual(true);
+                    expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+
+                    resourceStore.data = {item1: 'item41'};
+                    formStore.finishField('/item1').then(() => {
+                        const sectionItems = formStore.schema.section.items;
+                        if (!sectionItems) {
+                            throw new Error('Section items should be defined!');
+                        }
+                        const blockTypes = formStore.schema.block.types;
+                        if (!blockTypes) {
+                            throw new Error('Block types should be defined!');
+                        }
+
+                        expect(formStore.schema.item2.visible).toEqual(false);
+                        expect(sectionItems.item32.visible).toEqual(false);
+                        expect(formStore.schema.section.visible).toEqual(false);
+                        expect(blockTypes.text_line.form.item41.visible).toEqual(true);
+
+                        formStore.destroy();
+                        done();
+                    });
+                });
+            });
+        });
     }, 0);
 });
 
@@ -258,7 +401,7 @@ test('Change type should update schema and data', (done) => {
     const cachedPathsByTag = formStore.pathsByTag;
 
     setTimeout(() => {
-        expect(formStore.schema).toBe(sidebarMetadata);
+        expect(formStore.rawSchema).toBe(sidebarMetadata);
         expect(formStore.pathsByTag).not.toBe(cachedPathsByTag);
         expect(formStore.data).toEqual({
             title: 'Title',
@@ -564,7 +707,7 @@ test('Return all the values for a given tag', () => {
     };
 
     const formStore = new FormStore(resourceStore);
-    formStore.schema = {
+    formStore.rawSchema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -597,7 +740,7 @@ test('Return all the values for a given tag sorted by priority', () => {
     };
 
     const formStore = new FormStore(resourceStore);
-    formStore.schema = {
+    formStore.rawSchema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part', priority: 10},
@@ -628,7 +771,7 @@ test('Return all the values for a given tag within sections', () => {
     };
 
     const formStore = new FormStore(resourceStore);
-    formStore.schema = {
+    formStore.rawSchema = {
         highlight: {
             items: {
                 title: {
@@ -668,7 +811,7 @@ test('Return all the values for a given tag with empty blocks', () => {
     });
 
     const formStore = new FormStore(resourceStore);
-    formStore.schema = {
+    formStore.rawSchema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -715,7 +858,7 @@ test('Return all the values for a given tag within blocks', () => {
     });
 
     const formStore = new FormStore(resourceStore);
-    formStore.schema = {
+    formStore.rawSchema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -759,7 +902,7 @@ test('Return all the values for a given tag within blocks', () => {
 
 test('Return SchemaEntry for given schemaPath', () => {
     const formStore = new FormStore(new ResourceStore('test'));
-    formStore.schema = {
+    formStore.rawSchema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -800,6 +943,7 @@ test('Return SchemaEntry for given schemaPath', () => {
 
 test('Remember fields being finished as modified fields and forget about them after saving', () => {
     const formStore = new FormStore(new ResourceStore('test'));
+    formStore.rawSchema = {};
     formStore.finishField('/block/0/text');
     formStore.finishField('/block/0/text');
     formStore.finishField('/block/1/text');

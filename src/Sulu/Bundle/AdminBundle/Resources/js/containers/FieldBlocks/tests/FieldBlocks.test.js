@@ -2,6 +2,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import pretty from 'pretty';
+import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
 import FormStore from '../../Form/stores/FormStore';
@@ -39,10 +40,12 @@ test('Render block with schema', () => {
                 text1: {
                     label: 'Text 1',
                     type: 'text_line',
+                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -61,17 +64,8 @@ test('Render block with schema', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -93,6 +87,7 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -132,17 +127,11 @@ test('Render block with schema and error on fields already being modified', () =
 
     const fieldBlocks = mount(
         <FieldBlocks
+            {...fieldTypeDefaultProps}
             dataPath="/block"
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/block"
-            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -165,6 +154,7 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -200,16 +190,9 @@ test('Render block with schema and error on fields already being modified', () =
 
     const fieldBlocks = mount(
         <FieldBlocks
-            dataPath=""
+            {...fieldTypeDefaultProps}
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
             showAllErrors={true}
             types={types}
             value={value}
@@ -235,6 +218,7 @@ test('Should correctly pass props to the BlockCollection', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -244,17 +228,12 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     const fieldBlocks = shallow(
         <FieldBlocks
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
             maxOccurs={2}
             minOccurs={1}
             onChange={changeSpy}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -280,6 +259,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             form: {
                 text: {
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -287,17 +267,10 @@ test('Should pass correct schemaPath to FieldRender', () => {
 
     const fieldBlocks = mount(
         <FieldBlocks
+            {...fieldTypeDefaultProps}
             dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath=""
-            showAllErrors={false}
             types={types}
             value={[{}, {}]}
         />
@@ -321,6 +294,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -330,17 +304,12 @@ test('Should call onFinish when a field from the child renderer has finished edi
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
+            {...fieldTypeDefaultProps}
             dataPath=""
-            error={undefined}
             fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
             schemaPath=""
-            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -361,6 +330,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
+                    visible: true,
                 },
             },
         },
@@ -370,17 +340,9 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
             types={types}
             value={value}
         />
@@ -395,19 +357,8 @@ test('Throw error if no types are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');
 });
@@ -416,18 +367,8 @@ test('Throw error if empty type array is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <FieldBlocks
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={[]}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');

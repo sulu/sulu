@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -17,19 +18,9 @@ test('Pass error correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
-            dataPath=""
+            {...fieldTypeDefaultProps}
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={'xyz'}
         />
     );
 
@@ -43,19 +34,11 @@ test('Pass props correctly to component', () => {
 
     const field = shallow(
         <ColorPicker
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={onChange}
             onFinish={onFinish}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={'#123123'}
+            value="#123123"
         />
     );
 

@@ -2,6 +2,7 @@
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Datagrid from '../../../Datagrid';
@@ -45,7 +46,6 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 test('Should pass props correctly to selection component', () => {
-    const changeSpy = jest.fn();
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -72,18 +72,10 @@ test('Should pass props correctly to selection component', () => {
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={changeSpy}
             onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -116,19 +108,9 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -151,19 +133,10 @@ test('Should pass empty array if value is not given to overlay type', () => {
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -193,19 +166,11 @@ test('Should call onChange and onFinish callback when selection overlay is confi
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -220,19 +185,9 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
 
     expect(() => shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={{default_type: 'datagrid_overlay'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     )).toThrowError(/"resource_key"/);
 });
@@ -249,19 +204,9 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
 
     expect(() => shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     )).toThrowError(/"adapter"/);
 });
@@ -280,19 +225,9 @@ test('Should call the disposer for datagrid selections if unmounted', () => {
 
     const selection = mount(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -327,18 +262,9 @@ test('Should pass props correctly to datagrid component', () => {
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -375,19 +301,11 @@ test('Should call onChange and onFinish prop when datagrid selection changes', (
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -422,19 +340,11 @@ test('Should not call onChange and onFinish prop while datagrid is still loading
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -470,18 +380,9 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -525,18 +426,11 @@ test('Should pass allowAdd prop to MultiAutoComplete component', () => {
 
     const selection = shallow(
         <Selection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );

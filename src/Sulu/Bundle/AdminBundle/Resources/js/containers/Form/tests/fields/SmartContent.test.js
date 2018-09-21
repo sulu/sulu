@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -57,19 +58,9 @@ test('Should correctly initialize SmartContentStore', () => {
 
     shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -104,19 +95,9 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
 
     shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -142,20 +123,10 @@ test('Pass correct props to SmartContent component', () => {
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
-            maxOccurs={0}
-            minOccurs={0}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -179,20 +150,11 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -219,20 +181,11 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -273,19 +226,11 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -331,19 +276,11 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -373,20 +310,9 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
 
     const smartContent = shallow(
         <SmartContent
-            dataPath="/"
-            error={{}}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={0}
-            minOccurs={0}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath="/"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 

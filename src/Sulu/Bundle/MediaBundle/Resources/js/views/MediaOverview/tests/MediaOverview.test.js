@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render} from 'enzyme';
-import {findWithToolbarFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../../containers/Datagrid/adapters/MediaCardOverviewAdapter';
 
 jest.mock('sulu-admin-bundle/containers', () => {
@@ -221,7 +221,7 @@ test('Destroy all stores on unmount', () => {
 test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, MediaOverview);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
 
     const router = {
         restore: jest.fn(),
