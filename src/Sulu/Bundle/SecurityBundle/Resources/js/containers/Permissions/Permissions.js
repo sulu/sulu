@@ -159,8 +159,6 @@ export default class Permissions extends React.Component<Props> {
         return (
             <div className={permissionsStyle.selectContainer}>
                 <MultiSelect
-                    allSelectedText="All selected"
-                    noneSelectedText="None selected"
                     onChange={this.handleWebspaceSelectChange}
                     values={this.selectedWebspaces}
                 >

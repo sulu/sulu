@@ -35,7 +35,11 @@ export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
             countOptions += 1;
 
             if (this.isOptionSelected(child)) {
-                selectedValues.push(child.props.children);
+                let selectedValue = child.props.children;
+                if (typeof selectedValue !== 'string') {
+                    selectedValue = selectedValue.toString();
+                }
+                selectedValues.push(selectedValue);
             }
         });
 
