@@ -43,10 +43,22 @@
                     </param>
                 </params>
             </property>
-            <property name="title" type="page_settings_link_title">
+            <property name="title" type="text_line" visibilityCondition="nodeType != 1">
                 <meta>
                     <title lang="en">Link title</title>
                     <title lang="de">Link Titel</title>
+                </meta>
+            </property>
+            <property name="internal_link" type="single_internal_link" visibilityCondition="nodeType == 2">
+                <meta>
+                    <title lang="en">Linked Content</title>
+                    <title lang="de">Verlinkter Inhalt</title>
+                </meta>
+            </property>
+            <property name="external" type="url" visibilityCondition="nodeType == 4">
+                <meta>
+                    <title lang="en">URL</title>
+                    <title lang="de">URL</title>
                 </meta>
             </property>
         </properties>
