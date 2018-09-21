@@ -1,6 +1,8 @@
 // @flow
-import {findWithToolbarFunction} from './TestHelper';
+import fieldTypeDefaultProps from './fieldTypeDefaultProps';
+import findWithHighOrderFunction from './findWithHighOrderFunction';
 
 export {
-    findWithToolbarFunction,
+    fieldTypeDefaultProps,
+    findWithHighOrderFunction,
 };

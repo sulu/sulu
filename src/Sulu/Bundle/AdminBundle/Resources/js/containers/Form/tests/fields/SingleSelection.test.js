@@ -2,6 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {observable} from 'mobx';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -47,18 +48,9 @@ test('Pass correct props to SingleAutoComplete', () => {
 
     const singleSelection = shallow(
         <SingleSelection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -93,18 +85,11 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
 
     const singleSelection = shallow(
         <SingleSelection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -125,19 +110,9 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     expect(
         () => shallow(
             <SingleSelection
-                dataPath=""
-                error={undefined}
+                {...fieldTypeDefaultProps}
                 fieldTypeOptions={fieldTypeOptions}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value={undefined}
             />
         )
     ).toThrow(/"auto_complete"/);
@@ -163,18 +138,9 @@ test('Pass correct props to SingleItemSelection', () => {
 
     const singleSelection = shallow(
         <SingleSelection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -212,18 +178,9 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
 
     const singleSelection = shallow(
         <SingleSelection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );
@@ -257,18 +214,11 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
 
     const singleSelection = shallow(
         <SingleSelection
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={value}
         />
     );

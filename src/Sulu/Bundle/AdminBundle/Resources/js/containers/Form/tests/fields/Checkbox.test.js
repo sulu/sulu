@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -16,18 +17,8 @@ test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={true}
         />
     );
@@ -38,18 +29,8 @@ test('Pass the value of false correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={false}
         />
     );
@@ -63,19 +44,10 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={false}
         />
     );
     checkbox.find(CheckboxComponent).simulate('change', true);
@@ -88,19 +60,10 @@ test('Pass the value of true correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={true}
         />
     );
@@ -111,19 +74,9 @@ test('Pass the value of false correctly to Toggler component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={{type: {value: 'toggler'}}}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={false}
         />
     );
@@ -137,20 +90,11 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
 
     const checkbox = shallow(
         <Checkbox
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={{type: {value: 'toggler'}}}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={false}
         />
     );
     checkbox.find(Toggler).simulate('change', true);

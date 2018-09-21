@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
-import {findWithToolbarFunction} from '../../../utils/TestHelper';
+import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
 jest.mock('../../../services/Initializer', () => jest.fn());
@@ -231,7 +231,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     class SaveToolbarAction extends AbstractToolbarAction {
@@ -290,7 +290,7 @@ test('Should not add PublishIndicator if no publish status is available', () => 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -317,7 +317,7 @@ test('Should add PublishIndicator if publish status is available showing draft',
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
     resourceStore.data = {
         publishedState: false,
@@ -354,7 +354,7 @@ test('Should add PublishIndicator if publish status is available showing publish
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
     resourceStore.data = {
         publishedState: true,
@@ -391,7 +391,7 @@ test('Should add PublishIndicator if publish status is available showing publish
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
     resourceStore.data = {
         publishedState: false,
@@ -468,7 +468,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -496,7 +496,7 @@ test('Should navigate to defined route on back button click without locale', () 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -522,7 +522,7 @@ test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {
@@ -546,7 +546,7 @@ test('Should change locale in form store via locale chooser', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -574,7 +574,7 @@ test('Should show locales from router options in toolbar', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -602,7 +602,7 @@ test('Should show locales from props in toolbar if route has no locales', () => 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
@@ -629,7 +629,7 @@ test('Should not show a locale chooser if no locales are passed in router option
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Form);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     const route = {

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -28,19 +29,9 @@ test('Pass props correctly to SingleSelect', () => {
     };
     const singleSelect = shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value="test"
         />
     );
@@ -78,20 +69,9 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
 
     expect(() => shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="test"
         />
     )).toThrow(/"default_value"/);
 });
@@ -115,20 +95,9 @@ test('Should throw an exception if value is of wrong type', () => {
 
     expect(() => shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="test"
         />
     )).toThrow(/"values"/);
 });
@@ -153,20 +122,10 @@ test('Should call onFinish callback on every onChange', () => {
 
     const singleSelect = shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="test"
         />
     );
 
@@ -197,20 +156,10 @@ test('Set default value if no value is passed', () => {
     };
     shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -221,19 +170,8 @@ test('Throw error if no schemaOptions are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />)
     ) .toThrow(/"values"/);
 });
@@ -242,19 +180,8 @@ test('Throw error if no value option is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <SingleSelect
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />)
     ).toThrow(/"values"/);
 });
