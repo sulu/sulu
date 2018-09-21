@@ -10,7 +10,7 @@ import Datagrid, {
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
 import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
-import Sidebar, {sidebarStore, sidebarViewRegistry} from './Sidebar';
+import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {fieldRegistry, FormInspector, FormStore} from './Form';
@@ -44,7 +44,7 @@ export {
     SingleAutoComplete,
     Sidebar,
     sidebarStore,
-    sidebarViewRegistry,
+    sidebarRegistry,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

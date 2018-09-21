@@ -1,8 +1,8 @@
 // @flow
-import type {SidebarView} from '../types';
+import type {ComponentType} from 'react';
 
-class SidebarViewRegistry {
-    views: {[string]: SidebarView};
+class SidebarRegistry {
+    views: {[string]: ComponentType<*>};
     disabled = [];
 
     constructor() {
@@ -17,18 +17,18 @@ class SidebarViewRegistry {
         return !!this.views[name];
     }
 
-    add(name: string, adapter: SidebarView) {
+    add(name: string, adapter: ComponentType<*>) {
         if (name in this.views) {
-            throw new Error('The key "' + name + '" has already been used for another sidebar view');
+            throw new Error('The key "' + name + '" has already been used for another sidebar component');
         }
 
         this.views[name] = adapter;
     }
 
-    get(name: string): SidebarView {
+    get(name: string): ComponentType<*> {
         if (!(name in this.views)) {
             throw new Error(
-                'The sidebar view with the key "' + name + '" is not defined. ' +
+                'The sidebar component with the key "' + name + '" is not defined. ' +
                 'You probably forgot to add it to the store using the "add" method.'
             );
         }
@@ -45,4 +45,4 @@ class SidebarViewRegistry {
     }
 }
 
-export default new SidebarViewRegistry();
+export default new SidebarRegistry();

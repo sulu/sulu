@@ -1,7 +1,6 @@
 // @flow
-import type {ComponentType} from 'react';
 
-export type SidebarView = ComponentType<*>;
+export type SidebarContainer = ComponentType<*>;
 
 export type Size = 'small' | 'medium' | 'large';
 

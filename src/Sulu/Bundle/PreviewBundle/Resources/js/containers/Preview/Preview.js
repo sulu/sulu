@@ -60,9 +60,7 @@ export default class Preview extends React.Component<Props> {
             formStore,
         } = this.props;
 
-        this.previewStore.start().then(() => {
-            this.setStarted(true);
-        });
+        this.previewStore.start();
 
         this.dataDisposer = autorun(() => {
             if (this.previewStore.starting || formStore.loading || !this.iframeRef) {
@@ -79,6 +77,8 @@ export default class Preview extends React.Component<Props> {
 
             this.previewStore.updateContext(toJS(formStore.type)).then(this.setContent);
         });
+
+        this.setStarted(true);
     };
 
     updatePreview = debounce((data: Object) => {
