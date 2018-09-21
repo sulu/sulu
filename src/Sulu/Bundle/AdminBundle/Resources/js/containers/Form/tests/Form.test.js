@@ -103,6 +103,7 @@ test('Call finish handlers with dataPath and schemaPath when a section field has
     const handler2 = jest.fn();
 
     const store = new FormStore(new ResourceStore('snippet', '1'));
+    // $FlowFixMe
     store.schema = {
         highlight: {
             items: {
@@ -127,6 +128,7 @@ test('Call finish handlers with dataPath and schemaPath when a field has finishe
     const handler2 = jest.fn();
 
     const store = new FormStore(new ResourceStore('snippet', '1'));
+    // $FlowFixMe
     store.schema = {
         article: {
             type: 'text_line',
@@ -156,6 +158,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     };
 
     const store = new FormStore(resourceStore);
+    // $FlowFixMe
     store.schema = {
         block: {
             type: 'block',
@@ -184,6 +187,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {
     const store = new FormStore(new ResourceStore('snippet', '1'));
+    // $FlowFixMe
     store.schema = {};
     store.data.title = 'Title';
     store.data.description = 'Description';
@@ -221,6 +225,7 @@ test('Should change data on store when changed', () => {
 test('Should change data on store without sections', () => {
     const submitSpy = jest.fn();
     const store = new FormStore(new ResourceStore('snippet', '1'));
+    // $FlowFixMe
     store.schema = {
         section1: {
             label: 'Section 1',

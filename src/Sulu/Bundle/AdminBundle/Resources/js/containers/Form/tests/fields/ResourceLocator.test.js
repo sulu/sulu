@@ -2,6 +2,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
 import Requester from '../../../../services/Requester';
@@ -45,19 +46,10 @@ test('Pass props correctly to ResourceLocator', () => {
 
     const resourceLocator = shallow(
         <ResourceLocator
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value="/"
         />
     );
@@ -77,20 +69,10 @@ test('Throw an exception if a non-valid mode is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
-                dataPath=""
-                error={undefined}
+                {...fieldTypeDefaultProps}
                 fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
                 schemaOptions={schemaOptions}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value="/"
             />
         )
     ).toThrow(/"leaf" or "full"/);
@@ -102,19 +84,8 @@ test('Throw an exception if a no generationUrl is passed', () => {
     expect(
         () => shallow(
             <ResourceLocator
-                dataPath=""
-                error={undefined}
-                fieldTypeOptions={{}}
+                {...fieldTypeDefaultProps}
                 formInspector={formInspector}
-                label="Test"
-                maxOccurs={undefined}
-                minOccurs={undefined}
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                schemaPath=""
-                showAllErrors={false}
-                types={undefined}
-                value="/"
             />
         )
     ).toThrow(/"generationUrl"/);
@@ -124,18 +95,9 @@ test('Set default mode correctly', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const resourceLocator = mount(
         <ResourceLocator
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value="/test/xxx"
         />
     );
@@ -149,19 +111,10 @@ test('Should not pass any argument to onFinish callback', () => {
 
     const resourceLocator = mount(
         <ResourceLocator
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="/test/xxx"
         />
     );
 
@@ -174,19 +127,10 @@ test('Should not request a new URL if on an edit form', () =>{
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
     shallow(
         <ResourceLocator
-            dataPath=""
-            error={undefined}
+            {...fieldTypeDefaultProps}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value="/test/xxx"
         />
     );
 
@@ -206,19 +150,12 @@ test('Should request a new URL if no URL was defined', () => {
 
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -259,18 +196,12 @@ test('Should not request a new URL if URL was defined', () => {
 
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
             value="/url"
         />
     );
@@ -297,19 +228,12 @@ test('Should request a new URL including the options from the FormStore if no UR
 
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -345,19 +269,11 @@ test('Should not request a new URL if no parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -380,19 +296,11 @@ test('Should not request a new URL if only empty parts are available', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -415,19 +323,11 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -450,19 +350,11 @@ test('Should not request a new URL if a field without any tags has finished edit
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -482,19 +374,12 @@ test('Should not request a new URL if the resource locator field has already bee
 
     shallow(
         <ResourceLocator
+            {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            error={undefined}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaPath="/url"
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 

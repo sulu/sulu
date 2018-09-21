@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -26,20 +27,10 @@ test('Pass error prop correctly to Url component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const url = shallow(
         <Url
-            dataPath=""
+            {...fieldTypeDefaultProps}
             error={error}
-            fieldTypeOptions={{}}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="http://www.sulu.io"
         />
     );
 
@@ -59,19 +50,9 @@ test('Pass props correctly to Url component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const url = shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value="http://www.sulu.io"
         />
     );
@@ -87,20 +68,10 @@ test('Pass correct default props to Url component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const url = shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -126,20 +97,9 @@ test('Throw error if only specific_part default is set', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     )).toThrow(/without a scheme/);
 });
@@ -165,19 +125,10 @@ test('Do not build URL from defaults if value is already given', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
             value={'http://www.sulu.io'}
         />
     );
@@ -206,20 +157,10 @@ test('Build URL from defaults to pass as value to URL component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
             onChange={changeSpy}
-            onFinish={jest.fn()}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value={undefined}
         />
     );
 
@@ -241,20 +182,10 @@ test('Should not pass any arguments to onFinish callback', () => {
 
     const url = shallow(
         <Url
-            dataPath=""
-            error={undefined}
-            fieldTypeOptions={{}}
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            label="Test"
-            maxOccurs={undefined}
-            minOccurs={undefined}
-            onChange={jest.fn()}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            schemaPath=""
-            showAllErrors={false}
-            types={undefined}
-            value="xyz"
         />
     );
 

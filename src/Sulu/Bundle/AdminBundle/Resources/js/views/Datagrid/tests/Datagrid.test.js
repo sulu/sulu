@@ -4,7 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
-import {findWithToolbarFunction} from '../../../utils/TestHelper';
+import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -305,7 +305,7 @@ test('Should destroy the store on unmount', () => {
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         bind: jest.fn(),
         route: {
@@ -332,7 +332,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
 test('Should navigate when add button is clicked and locales have been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -362,7 +362,7 @@ test('Should navigate when add button is clicked and locales have been passed in
 test('Should navigate without locale when pencil button is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -480,7 +480,7 @@ test('Should load the route attributes from the UserStore', () => {
 test('Should render the delete item enabled only if something is selected', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         bind: jest.fn(),
         route: {
@@ -508,7 +508,7 @@ test('Should render the delete item enabled only if something is selected', () =
 test('Should render the locale dropdown with the options from router', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         bind: jest.fn(),
         route: {
@@ -603,7 +603,7 @@ test('Should delete selected items when delete button is clicked', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         bind: jest.fn(),
         route: {
@@ -636,7 +636,7 @@ test('Should crash when deleting selected items returns a rejected promise', () 
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithToolbarFunction(withToolbar, Datagrid);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
     const router = {
         bind: jest.fn(),
         route: {

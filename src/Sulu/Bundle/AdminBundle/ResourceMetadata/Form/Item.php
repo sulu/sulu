@@ -30,6 +30,11 @@ abstract class Item
     /**
      * @var string
      */
+    protected $visibilityCondition;
+
+    /**
+     * @var string
+     */
     protected $description;
 
     /**
@@ -60,6 +65,16 @@ abstract class Item
     public function setLabel(?string $label): void
     {
         $this->label = $label;
+    }
+
+    public function getVisibilityCondition(): ?string
+    {
+        return $this->visibilityCondition;
+    }
+
+    public function setVisibilityCondition(?string $visibilityCondition): void
+    {
+        $this->visibilityCondition = $visibilityCondition;
     }
 
     public function getDescription(): ?string
