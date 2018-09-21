@@ -3,6 +3,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
+import resourceMetadataStore from '../../../../stores/ResourceMetadataStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -23,6 +24,10 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.id = formStore.id;
     this.locale = formStore.locale;
+}));
+
+jest.mock('../../../../stores/ResourceMetadataStore', () => ({
+    isSameEndpoint: jest.fn(),
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -162,6 +167,8 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('accounts', 5, locale)));
     const value = 3;
 
+    resourceMetadataStore.isSameEndpoint.mockReturnValue(true);
+
     const fieldTypeOptions = {
         default_type: 'datagrid_overlay',
         resource_key: 'accounts',
@@ -185,6 +192,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
         />
     );
 
+    expect(resourceMetadataStore.isSameEndpoint).toBeCalledWith('accounts', 'accounts');
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         disabledIds: [5],
         locale,
