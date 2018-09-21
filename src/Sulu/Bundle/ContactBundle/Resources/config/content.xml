@@ -20,5 +20,12 @@
             <tag name="sulu.content.type" alias="contact"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
         </service>
+
+        <service id="sulu_contact.content.single_contact_selection" class="Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection">
+            <argument type="service" id="sulu.repository.contact" />
+
+            <tag name="sulu.content.type" alias="single_contact_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
+        </service>
     </services>
 </container>
