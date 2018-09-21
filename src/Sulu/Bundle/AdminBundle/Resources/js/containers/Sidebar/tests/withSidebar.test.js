@@ -7,6 +7,7 @@ import withSidebar from '../withSidebar';
 
 jest.mock('../stores/SidebarStore', () => ({
     setConfig: jest.fn(),
+    clearConfig: jest.fn(),
 }));
 
 test('Pass props to rendered component', () => {

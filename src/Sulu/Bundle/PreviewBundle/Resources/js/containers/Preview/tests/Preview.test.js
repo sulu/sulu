@@ -9,10 +9,11 @@ import Preview from '../Preview';
 
 jest.mock('debounce', () => jest.fn((value) => value));
 
-jest.mock('../stores/PreviewStore', () => jest.fn(function () {
-    this.start = jest.fn();
-    this.update = jest.fn();
-    this.updateContext = jest.fn();
+jest.mock('../stores/PreviewStore', () => jest.fn(function() {
+    this.start = jest.fn().mockReturnValue(Promise.resolve());
+    this.update = jest.fn().mockReturnValue(Promise.resolve());
+    this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
+    this.stop = jest.fn().mockReturnValue(Promise.resolve());
 
     this.renderRoute = '/render';
 }));
@@ -27,6 +28,9 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function() {
+}));
+
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
 }));
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function(history) {
@@ -45,7 +49,7 @@ test('Render correct preview', () => {
     const formStore = new FormStore(resourceStore);
     const router = new Router({});
 
-    const component = shallow(<Preview formStore={formStore} router={router}/>);
+    const component = shallow(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const previewStore = component.instance().previewStore;
@@ -64,7 +68,7 @@ test('Render button to start preview', () => {
     const formStore = new FormStore(resourceStore);
     const router = new Router({});
 
-    expect(render(<Preview formStore={formStore} router={router}/>)).toMatchSnapshot();
+    expect(render(<Preview formStore={formStore} router={router} />)).toMatchSnapshot();
 });
 
 test('React and update preview when data is changed', () => {
@@ -79,7 +83,7 @@ test('React and update preview when data is changed', () => {
     formStore.type = observable.box('default');
 
     const router = new Router({});
-    const component = mount(<Preview formStore={formStore} router={router}/>);
+    const component = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');

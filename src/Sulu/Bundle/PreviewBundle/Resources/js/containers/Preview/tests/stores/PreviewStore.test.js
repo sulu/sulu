@@ -1,8 +1,8 @@
 // @flow
+import {Requester} from 'sulu-admin-bundle/services';
 import PreviewStore from '../../stores/PreviewStore';
-import {Requester} from 'sulu-admin-bundle/services'
 
-PreviewStore.routes =  {
+PreviewStore.routes = {
     start: '/start',
     render: '/render',
     update: '/update',
@@ -42,7 +42,10 @@ test('Should request server on update preview', () => {
     });
 
     return postPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/update?locale=en&webspace=sulu_io', {data: {title: 'Sulu is aswesome'}});
+        expect(Requester.post).toBeCalledWith(
+            '/update?locale=en&webspace=sulu_io',
+            {data: {title: 'Sulu is aswesome'}}
+        );
     });
 });
 

@@ -1,12 +1,14 @@
 // @flow
-import React from 'react';
 import type {ElementRef} from 'react';
-import {action, computed, observable, isObservableArray} from 'mobx';
+import React from 'react';
+import {action, computed, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
+import jexl from 'jexl';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
+import type {SidebarConfig} from '../../containers/Sidebar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
@@ -26,6 +28,7 @@ class Form extends React.Component<Props> {
     @observable errors = [];
     showSuccess = observable.box(false);
     @observable toolbarActions = [];
+    @observable sidebarConfig: ?SidebarConfig;
 
     @computed get hasOwnResourceStore() {
         const {
@@ -151,6 +154,10 @@ class Form extends React.Component<Props> {
         }
     }
 
+    @action setSidebarConfig = (sidebarConfig: ?SidebarConfig) => {
+        this.sidebarConfig = sidebarConfig;
+    };
+
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
     };
@@ -200,7 +207,10 @@ class Form extends React.Component<Props> {
                 if (editRoute) {
                     router.navigate(
                         editRoute,
-                        {id: resourceStore.id, locale: resourceStore.locale, ...editRouteParameters}
+                        {
+                            id: resourceStore.id,
+                            locale: resourceStore.locale, ...editRouteParameters,
+                        }
                     );
                 }
 
@@ -289,6 +299,10 @@ const FormWithToolbar = withToolbar(Form, function() {
 });
 
 export default withSidebar(FormWithToolbar, function() {
+    if (undefined !== this.sidebarConfig) {
+        return this.sidebarConfig;
+    }
+
     const {
         router: {
             route: {
@@ -299,16 +313,26 @@ export default withSidebar(FormWithToolbar, function() {
         },
     } = this.props;
 
-    if (!preview) {
-        return null;
+    if (this.resourceStore.loading) {
+        return;
     }
 
-    return {
-        view: 'sulu_preview.preview',
-        sizes: ['medium', 'large'],
-        props: {
-            router: this.props.router,
-            formStore: this.formStore,
-        },
-    };
+    jexl.eval(preview, this.resourceStore.data).then((preview) => {
+        if (!preview) {
+            this.setSidebarConfig(null);
+
+            return;
+        }
+
+        this.setSidebarConfig({
+            view: 'sulu_preview.preview',
+            sizes: ['medium', 'large'],
+            props: {
+                router: this.props.router,
+                formStore: this.formStore,
+            },
+        });
+    });
+
+    return null;
 });

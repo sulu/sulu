@@ -5,6 +5,12 @@ import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
+jest.mock('jexl', () => ({
+    eval: jest.fn().mockImplementation((expression) => {
+        return Promise.resolve(expression === 'nodeType == 1');
+    }),
+}));
+
 jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 jest.mock('../../../containers/Sidebar/withSidebar', () => jest.fn((Component) => Component));
@@ -290,14 +296,15 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
 test('Should initialize preview sidebar', () => {
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../Form').default;
-    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
 
     const route = {
         options: {
             toolbarActions: [],
-            preview: true,
+            preview: 'nodeType == 1',
         },
     };
     const router = {
@@ -307,25 +314,30 @@ test('Should initialize preview sidebar', () => {
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
 
-    const sidebarConfig = sidebarFunction.call(form.instance());
-    expect(sidebarConfig.view).toEqual('sulu_preview.preview');
-    expect(sidebarConfig.sizes).toEqual(['medium', 'large']);
-    expect(sidebarConfig.props.router).toEqual(router);
-    expect(sidebarConfig.props.formStore).toBeDefined();
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig.view).toEqual('sulu_preview.preview');
+        expect(sidebarConfig.sizes).toEqual(['medium', 'large']);
+        expect(sidebarConfig.props.router).toEqual(router);
+        expect(sidebarConfig.props.formStore).toBeDefined();
+    }, 0);
 });
 
-test('Should not initialize preview sidebar when option is false', () => {
+test('Should not initialize preview sidebar when expression evaluates to false', () => {
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../Form').default;
-    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
 
     const route = {
         options: {
             toolbarActions: [],
-            preview: false,
+            preview: 'nodeType == 2',
         },
     };
     const router = {
@@ -335,17 +347,22 @@ test('Should not initialize preview sidebar when option is false', () => {
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
 
-    const sidebarConfig = sidebarFunction.call(form.instance());
-    expect(sidebarConfig).toEqual(null);
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig).toEqual(null);
+    }, 0);
 });
 
 test('Should not initialize preview sidebar when option is not set', () => {
     const withSidebar = require('../../../containers/Sidebar/withSidebar');
     const Form = require('../Form').default;
-    const sidebarFunction = findWithHighOrderComponentFunction(withSidebar, Form);
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
 
     const route = {
         options: {
@@ -359,9 +376,13 @@ test('Should not initialize preview sidebar when option is not set', () => {
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
 
-    const sidebarConfig = sidebarFunction.call(form.instance());
-    expect(sidebarConfig).toEqual(null);
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig).toEqual(null);
+    }, 0);
 });
 
 test('Should not add PublishIndicator if no publish status is available', () => {

@@ -4,13 +4,9 @@ import {action, computed, observable} from 'mobx';
 import Requester from 'sulu-admin-bundle/services/Requester';
 import type {PreviewRouteName} from './../types';
 
-const generateRoute = (name: PreviewRouteName, options: Object): ?string => {
-    if (!PreviewStore.routes[name]) {
-        return null;
-    }
-
+const generateRoute = (name: PreviewRouteName, options: Object): string => {
     const query = queryString.stringify(options);
-    if (0 === query.length) {
+    if (query.length === 0) {
         return PreviewStore.routes[name];
     }
 
@@ -50,55 +46,43 @@ export default class PreviewStore {
         this.token = token;
     };
 
-    start() {
+    start(): Promise<*> {
         const route = generateRoute('start', {
             provider: this.resourceKey,
             locale: this.locale,
             id: this.id,
         });
-        if (!route) {
-            return;
-        }
 
         return Requester.get(route).then((response) => {
             this.setToken(response.token);
         });
     }
 
-    update(data: Object) {
+    update(data: Object): Promise<string> {
         const route = generateRoute('update', {
             locale: this.locale,
             webspace: this.webspace,
             token: this.token,
         });
-        if (!route) {
-            return;
-        }
 
         return Requester.post(route, {data: data}).then((response) => {
             return response.content;
         });
     }
 
-    updateContext(type: string) {
+    updateContext(type: string): Promise<string> {
         const route = generateRoute('update-context', {
             webspace: this.webspace,
             token: this.token,
         });
-        if (!route) {
-            return;
-        }
 
         return Requester.post(route, {context: {template: type}}).then((response) => {
             return response.content;
         });
     }
 
-    stop() {
+    stop(): Promise<*> {
         const route = generateRoute('stop', {token: this.token});
-        if (!route) {
-            return;
-        }
 
         return Requester.get(route).then(this.setToken(null));
     }

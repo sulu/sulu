@@ -3,7 +3,7 @@ import React from 'react';
 import {render} from 'enzyme';
 import Sidebar from '../Sidebar';
 import sidebarStore from '../stores/SidebarStore';
-import sidebarRegistry from '../registries/sidebarRegistry';
+import sidebarRegistry from '../registries/SidebarRegistry';
 
 const component = (props) => (<h1>{props.title}</h1>);
 
