@@ -3,6 +3,7 @@ import {arrayMove} from 'react-sortable-hoc';
 import ArrowMenu from './ArrowMenu';
 import Breadcrumb from './Breadcrumb';
 import Button from './Button';
+import ButtonGroup from './ButtonGroup';
 import Checkbox from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
@@ -30,6 +31,7 @@ export {
     Backdrop,
     Breadcrumb,
     Button,
+    ButtonGroup,
     Checkbox,
     CircularProgressbar,
     CroppedText,

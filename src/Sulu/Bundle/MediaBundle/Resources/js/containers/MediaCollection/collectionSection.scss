@@ -1,4 +1,33 @@
 .collection-section {
     display: flex;
-    justify-content: space-between;
+}
+
+.left {
+    display: flex;
+    flex-grow: 1;
+
+    &:hover {
+        > .icons {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.icons {
+    display: none;
+    margin: 0 10px 30px 20px;
+}
+
+.icon {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.right {
+    flex-grow: 1;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }

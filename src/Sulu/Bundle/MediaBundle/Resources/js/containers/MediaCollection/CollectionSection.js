@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Dialog, Icon} from 'sulu-admin-bundle/components';
+import {Dialog, Icon, Button, ButtonGroup} from 'sulu-admin-bundle/components';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import type {OperationType, OverlayType} from './types';
@@ -143,18 +143,35 @@ export default class CollectionSection extends React.Component<Props> {
             <div>
                 {!resourceStore.loading &&
                     <div className={collectionSectionStyles.collectionSection}>
-                        <CollectionBreadcrumb
-                            onNavigate={this.handleBreadcrumbNavigate}
-                            resourceStore={resourceStore}
-                        />
-                        <div>
-                            <Icon name="su-plus" onClick={this.handleAddCollectionClick} />
-                            {!!resourceStore.id &&
-                                <Icon name="su-pen" onClick={this.handleEditCollectionClick} />
-                            }
-                            {!!resourceStore.id &&
-                                <Icon name="su-trash-alt" onClick={this.handleRemoveCollectionClick} />
-                            }
+                        <div className={collectionSectionStyles.left}>
+                            <CollectionBreadcrumb
+                                onNavigate={this.handleBreadcrumbNavigate}
+                                resourceStore={resourceStore}
+                            />
+                            <div className={collectionSectionStyles.icons}>
+                                {!!resourceStore.id &&
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-pen"
+                                        onClick={this.handleEditCollectionClick}
+                                    />
+                                }
+                                {!!resourceStore.id &&
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-trash-alt"
+                                        onClick={this.handleRemoveCollectionClick}
+                                    />
+                                }
+                            </div>
+                        </div>
+
+                        <div className={collectionSectionStyles.right}>
+                            <ButtonGroup>
+                                <Button onClick={this.handleAddCollectionClick}>
+                                    <Icon name="su-plus" />
+                                </Button>
+                            </ButtonGroup>
                         </div>
                     </div>
                 }
