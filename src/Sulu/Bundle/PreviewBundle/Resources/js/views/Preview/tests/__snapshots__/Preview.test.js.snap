@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React and update preview when data is changed 1`] = `
+<Preview
+  formStore={
+    mockConstructor {
+      "data": Object {
+        "title": "New Test",
+      },
+      "loading": false,
+      "type": "default",
+    }
+  }
+  router={
+    mockConstructor {
+      "attributes": Object {
+        "locale": "de",
+      },
+      "history": Object {},
+    }
+  }
+>
+  <button
+    onClick={[Function]}
+  >
+    Start
+  </button>
+</Preview>
+`;
+
 exports[`Render button to start preview 1`] = `
 <button>
   Start
@@ -11,10 +39,11 @@ exports[`Render correct preview 1`] = `
   className="container"
 >
   <div
-    className="loaderContainer"
+    className="iframeContainer"
   >
-    <Loader
-      size={40}
+    <iframe
+      className="iframe"
+      src="/render"
     />
   </div>
   <Toolbar

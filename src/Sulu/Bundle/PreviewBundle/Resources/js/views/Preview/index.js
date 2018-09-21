@@ -1,6 +1,6 @@
 // @flow
 import Preview from './Preview';
-import previewConfigStore from './stores/PreviewConfigStore';
+import PreviewStore from './stores/PreviewStore';
 
-export {previewConfigStore};
+export {PreviewStore};
 export default Preview;

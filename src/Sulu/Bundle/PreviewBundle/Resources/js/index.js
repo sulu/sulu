@@ -2,12 +2,14 @@
 import {bundleReady} from 'sulu-admin-bundle/services';
 import initializer from 'sulu-admin-bundle/services/Initializer';
 import {sidebarViewRegistry} from 'sulu-admin-bundle/containers/Sidebar';
-import Preview, {previewConfigStore} from './views/Preview';
+import Preview, {PreviewStore} from './views/Preview';
 
 initializer.addUpdateConfigHook('sulu_preview', (config: Object) => {
-    previewConfigStore.setConfig(config);
+    PreviewStore.routes = config.routes;
+    Preview.debounceDelay = config.debounceDelay;
+    Preview.mode = config.mode;
 
-    if (previewConfigStore.mode === 'off') {
+    if (config.mode === 'off') {
         sidebarViewRegistry.disable('sulu_preview.preview');
     }
 });

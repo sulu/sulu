@@ -5,11 +5,11 @@ import {action, autorun, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {Router} from 'sulu-admin-bundle/services';
-import {sidebarStore, FormStore} from 'sulu-admin-bundle/containers';
-import Requester from 'sulu-admin-bundle/services/Requester';
-import {Toolbar, Loader} from 'sulu-admin-bundle/components';
+import {FormStore, sidebarStore} from 'sulu-admin-bundle/containers';
+import {Loader, Toolbar} from 'sulu-admin-bundle/components';
 import previewStyles from './preview.scss';
-import previewConfigStore from './stores/PreviewConfigStore';
+import PreviewStore from './stores/PreviewStore';
+import type {PreviewMode} from './types';
 
 type Props = {|
     formStore: FormStore,
@@ -18,44 +18,54 @@ type Props = {|
 
 @observer
 export default class Preview extends React.Component<Props> {
+    static debounceDelay: number = 250;
+    static mode: PreviewMode = 'auto';
+
     @observable iframeRef: ?HTMLIFrameElement;
-    @observable token: ?string;
     @observable started: boolean = false;
+
+    previewStore: PreviewStore;
 
     typeDisposer: () => void;
     dataDisposer: () => void;
 
-    componentDidMount() {
-        if (previewConfigStore.mode === 'auto') {
-            this.startPreview();
-        }
-    }
+    constructor(props: Props) {
+        super(props);
 
-    @action startPreview = () => {
         const {
             formStore,
             router: {
                 attributes: {
                     locale,
+                    webspace,
                 },
             },
         } = this.props;
 
-        const route = previewConfigStore.generateRoute('start', {
-            provider: formStore.resourceKey,
-            locale: locale,
-            id: formStore.id,
-        });
-        if (!route) {
-            return;
-        }
+        this.previewStore = new PreviewStore(formStore.resourceKey, formStore.id, locale, webspace);
+    }
 
-        Requester.get(route).then((response) => {
-            this.setToken(response.token);
+    componentDidMount() {
+        if (Preview.mode === 'auto') {
+            this.startPreview();
+        }
+    }
+
+    @action setStarted = (started: boolean) => {
+        this.started = started;
+    };
+
+    startPreview = () => {
+        const {
+            formStore,
+        } = this.props;
+
+        this.previewStore.start().then(() => {
+            this.setStarted(true);
         });
 
         this.dataDisposer = autorun(() => {
-            if (formStore.loading || !this.iframeRef) {
+            if (this.previewStore.starting || formStore.loading || !this.iframeRef) {
                 return;
             }
 
@@ -63,63 +73,19 @@ export default class Preview extends React.Component<Props> {
         });
 
         this.typeDisposer = autorun(() => {
-            if (formStore.loading || !this.iframeRef) {
+            if (this.previewStore.starting || formStore.loading || !this.iframeRef) {
                 return;
             }
 
-            this.updateContext(toJS(formStore.type));
+            this.previewStore.updateContext(toJS(formStore.type)).then(this.setContent);
         });
-
-        this.started = true;
     };
 
     updatePreview = debounce((data: Object) => {
-        const {
-            router: {
-                attributes: {
-                    locale,
-                    webspace,
-                },
-            },
-        } = this.props;
+        this.previewStore.update(data).then(this.setContent);
+    }, Preview.debounceDelay);
 
-        const route = previewConfigStore.generateRoute('update', {
-            locale: locale,
-            webspace: webspace,
-            token: this.token,
-        });
-        if (!route) {
-            return;
-        }
-
-        Requester.post(route, {data: data}).then((response) => {
-            this.setContent(response.content);
-        });
-    }, previewConfigStore.debounceDelay);
-
-    updateContext = (type: string) => {
-        const {
-            router: {
-                attributes: {
-                    webspace,
-                },
-            },
-        } = this.props;
-
-        const route = previewConfigStore.generateRoute('update-context', {
-            webspace: webspace,
-            token: this.token,
-        });
-        if (!route) {
-            return;
-        }
-
-        Requester.post(route, {context: {template: type}}).then((response) => {
-            this.setContent(response.content);
-        });
-    };
-
-    setContent(content: string) {
+    setContent = (content: string) => {
         const document = this.getPreviewDocument();
         if (!document) {
             return;
@@ -128,7 +94,7 @@ export default class Preview extends React.Component<Props> {
         document.open();
         document.write(content);
         document.close();
-    }
+    };
 
     componentWillUnmount() {
         if (this.typeDisposer) {
@@ -143,12 +109,7 @@ export default class Preview extends React.Component<Props> {
             return;
         }
 
-        const route = previewConfigStore.generateRoute('stop', {token: this.token});
-        if (!route) {
-            return;
-        }
-
-        Requester.get(route);
+        this.previewStore.stop();
     }
 
     getPreviewDocument = (): ?Document => {
@@ -159,10 +120,6 @@ export default class Preview extends React.Component<Props> {
         }
 
         return iframe.contentDocument;
-    };
-
-    @action setToken = (token: string) => {
-        this.token = token;
     };
 
     @action setIframe = (iframeRef: ?Object) => {
@@ -212,7 +169,7 @@ export default class Preview extends React.Component<Props> {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
 
-        if (!this.token) {
+        if (this.previewStore.starting) {
             return (
                 <div className={previewStyles.container}>
                     <div className={previewStyles.loaderContainer}>
@@ -224,28 +181,13 @@ export default class Preview extends React.Component<Props> {
             );
         }
 
-        const {
-            router: {
-                attributes: {
-                    locale,
-                    webspace,
-                },
-            },
-        } = this.props;
-
-        const url = previewConfigStore.generateRoute('render', {
-            webspace: webspace,
-            locale: locale,
-            token: this.token,
-        });
-
         return (
             <div className={previewStyles.container}>
                 <div className={previewStyles.iframeContainer}>
                     <iframe
                         className={previewStyles.iframe}
                         ref={this.setIframe}
-                        src={url}
+                        src={this.previewStore.renderRoute}
                     />
                 </div>
 

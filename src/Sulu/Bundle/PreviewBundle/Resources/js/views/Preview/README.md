@@ -1,5 +1,5 @@
 The `Preview` sidebar-view is registered with the key `sulu_preview.preview`.
-It shows the rendered web-page of the resource represented by the given resource-store.
+It shows the rendered web-page of the resource represented by the given form-store.
 
 To initialize the `Preview` for your component use following code-snippet:
 
@@ -7,7 +7,7 @@ To initialize the `Preview` for your component use following code-snippet:
 const PageWithSidebar = withSidebar(Page, function() {
     const {
         router,
-        resourceStore,
+        formStore,
     } = this.props;
 
     return {
@@ -15,7 +15,7 @@ const PageWithSidebar = withSidebar(Page, function() {
         sizes: ['medium', 'large'],
         props: {
             router: router,
-            resourceStore: resourceStore,
+            formStore: formStore,
         },
     };
 });
