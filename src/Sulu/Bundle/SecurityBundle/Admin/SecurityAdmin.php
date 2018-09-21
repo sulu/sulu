@@ -93,7 +93,7 @@ class SecurityAdmin extends Admin
                 ->addOption('resourceKey', 'roles')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_security.details')
+                ->addOption('tabTitle', 'sulu_security.role_form_detail')
                 ->addOption('backRoute', 'sulu_security.datagrid')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent('sulu_security.role_edit_form'),
