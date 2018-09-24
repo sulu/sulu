@@ -107,7 +107,7 @@ export default class Permissions extends React.Component<Props> {
         return securityContexts;
     }
 
-    @action handleWebspaceSelectChange = (newSelectedWebspaces: Array<string | number>) => {
+    @action handleWebspaceSelectChange = (newSelectedWebspaces: Array<string>) => {
         const {value} = this.props;
         const contextPermissions = value ? value : [];
         const newContextPermissions = [];
