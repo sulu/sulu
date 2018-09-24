@@ -26,6 +26,7 @@
                 <argument key="enabled" type="string">%sulu_websocket.enabled%</argument>
                 <argument key="port" type="string">%sulu_websocket.server.port%</argument>
                 <argument key="httpHost" type="string">%sulu_websocket.server.http_host%</argument>
+                <argument key="ssl">%sulu_websocket.server.ssl%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

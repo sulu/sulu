@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('ip_address')->defaultValue('0.0.0.0')->end()
                         ->scalarNode('port')->defaultValue('9876')->end()
                         ->scalarNode('http_host')->defaultValue('localhost')->end()
+                        ->booleanNode('ssl')->defaultFalse()->end()
                     ->end()
                 ->end()
                 ->arrayNode('cache')
