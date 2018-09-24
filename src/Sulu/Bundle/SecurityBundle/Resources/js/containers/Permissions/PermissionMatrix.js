@@ -3,19 +3,19 @@ import React from 'react';
 import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import Matrix from 'sulu-admin-bundle/components/Matrix';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
+import {translate} from 'sulu-admin-bundle/utils';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {Actions, SecurityContexts} from '../../stores/SecurityContextsStore/types';
 import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 
-type Props = {
+type Props = {|
     contextPermissions: Array<ContextPermission>,
     onChange: (value: Array<ContextPermission>) => void,
     securityContexts: SecurityContexts,
     subTitle?: string,
     title?: string,
-};
+|};
 
 @observer
 export default class PermissionMatrix extends React.Component<Props> {
