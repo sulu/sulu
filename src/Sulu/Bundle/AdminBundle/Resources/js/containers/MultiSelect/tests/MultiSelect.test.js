@@ -95,7 +95,7 @@ test('Render with values', () => {
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
-            values={[5,99]}
+            values={[5, 99]}
         />
     );
 
@@ -137,6 +137,6 @@ test('The component should trigger the change callback', () => {
         />
     );
 
-    multiSelect.find(MultiSelectComponent).props().onChange([5,99]);
-    expect(onChangeSpy).toHaveBeenCalledWith([5,99]);
+    multiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
+    expect(onChangeSpy).toHaveBeenCalledWith([5, 99]);
 });

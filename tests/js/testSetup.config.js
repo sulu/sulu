@@ -14,6 +14,6 @@ jest.mock('sulu-admin-bundle/services/Config', () => ({
         'resetResend': 'reset_resend_url',
         'resources': 'resources_url/:resource',
     },
-    translations: ['en','de'],
+    translations: ['en', 'de'],
     fallbackLocale: 'en',
 }));
