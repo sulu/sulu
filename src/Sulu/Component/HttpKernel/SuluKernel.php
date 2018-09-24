@@ -51,6 +51,7 @@ abstract class SuluKernel extends Kernel
      */
     public function __construct($environment, $debug, $suluContext)
     {
+        $this->name = $suluContext;
         $this->context = $suluContext;
         $this->reversedContext = self::CONTEXT_ADMIN === $this->context ? self::CONTEXT_WEBSITE : self::CONTEXT_ADMIN;
         parent::__construct($environment, $debug);
