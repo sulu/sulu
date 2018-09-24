@@ -36,7 +36,6 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -293,14 +293,6 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param RouteCollection $collection
-     */
-    public function setRouteCollection(RouteCollection $collection)
-    {
-        $this->collection = $collection;
-    }
-
-    /**
      * @return RouteCollection
      */
     public function getRouteCollection()

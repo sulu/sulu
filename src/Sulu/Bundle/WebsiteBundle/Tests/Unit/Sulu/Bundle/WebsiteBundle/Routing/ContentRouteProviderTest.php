@@ -798,7 +798,10 @@ class ContentRouteProviderTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route('/dummy');
         $collection->add('dummy', $route);
-        $this->contentRouteProvider->setRouteCollection($collection);
+
+        $routeCollectionReflection = new \ReflectionProperty(ContentRouteProvider::class, 'collection');
+        $routeCollectionReflection->setAccessible(true);
+        $routeCollectionReflection->setValue($this->contentRouteProvider, $collection);
 
         // Test the route provider
         $this->assertEquals($route, $this->contentRouteProvider->getRouteByName('dummy'));

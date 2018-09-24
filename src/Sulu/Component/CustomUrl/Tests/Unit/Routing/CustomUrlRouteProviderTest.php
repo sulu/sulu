@@ -165,7 +165,10 @@ class CustomUrlRouteProviderTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route('/dummy');
         $collection->add('dummy', $route);
-        $provider->setRouteCollection($collection);
+
+        $routeCollectionReflection = new \ReflectionProperty(CustomUrlRouteProvider::class, 'collection');
+        $routeCollectionReflection->setAccessible(true);
+        $routeCollectionReflection->setValue($provider, $collection);
 
         // Test the route provider
         $this->assertEquals($route, $provider->getRouteByName('dummy'));
