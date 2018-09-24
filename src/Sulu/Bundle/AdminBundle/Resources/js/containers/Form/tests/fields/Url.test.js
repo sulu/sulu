@@ -19,7 +19,7 @@ test('Pass error prop correctly to Url component', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
     };
 
     const error = {keyword: 'minLength', parameters: {}};
@@ -44,7 +44,7 @@ test('Pass props correctly to Url component', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
     };
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
@@ -86,7 +86,7 @@ test('Throw error if only specific_part default is set', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
         defaults: {
             value: [
                 {name: 'specific_part', value: 'sulu.io'},
@@ -113,7 +113,7 @@ test('Do not build URL from defaults if value is already given', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
         defaults: {
             value: [
                 {name: 'scheme', value: 'https://'},
@@ -145,7 +145,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
         defaults: {
             value: [
                 {name: 'scheme', value: 'https://'},
@@ -174,7 +174,7 @@ test('Should not pass any arguments to onFinish callback', () => {
                 {name: 'http://'},
                 {name: 'https://'},
             ],
-        } ,
+        },
     };
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
