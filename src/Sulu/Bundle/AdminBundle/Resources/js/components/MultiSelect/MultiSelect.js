@@ -6,16 +6,14 @@ import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
 type Props<T> = SelectProps & {
+    allSelectedText: ?string,
+    noneSelectedText: ?string,
     values: Array<T>,
-    noneSelectedText: string,
-    allSelectedText: string,
     onChange: (values: Array<T>) => void,
 };
 
 export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
-        allSelectedText: translate('sulu_admin.all_selected'),
-        noneSelectedText: translate('sulu_admin.none_selected'),
         skin: 'default',
         values: [],
     };
@@ -47,11 +45,15 @@ export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
         });
 
         if (selectedValues.length === 0) {
-            return this.props.noneSelectedText;
+            const {noneSelectedText} = this.props;
+
+            return noneSelectedText ? noneSelectedText : translate('sulu_admin.none_selected');
         }
 
         if (selectedValues.length === countOptions) {
-            return this.props.allSelectedText;
+            const {allSelectedText} = this.props;
+
+            return allSelectedText ? allSelectedText : translate('sulu_admin.all_selected');
         }
 
         return selectedValues.join(', ');

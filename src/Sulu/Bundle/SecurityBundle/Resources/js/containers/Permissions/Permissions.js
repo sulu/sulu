@@ -3,9 +3,7 @@ import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
-import MultiSelect from 'sulu-admin-bundle/components/MultiSelect/MultiSelect';
-import webspaceStore from 'sulu-content-bundle/stores/WebspaceStore';
-import type {Webspace} from 'sulu-content-bundle/stores/WebspaceStore/types';
+import {MultiSelect} from 'sulu-admin-bundle/containers';
 import securityContextsStore from '../../stores/SecurityContextsStore';
 import type {SecurityContextGroups, SecurityContexts} from '../../stores/SecurityContextsStore/types';
 import type {ContextPermission} from './types';
@@ -23,7 +21,6 @@ export default class Permissions extends React.Component<Props> {
     static webspacePlaceholder = '#webspace#';
 
     @observable securityContextGroups: SecurityContextGroups = {};
-    @observable availableWebspaces: Array<Webspace> = [];
 
     @computed get webspaceContextPermissionPrefix(): string {
         if (this.webspaceSecurityContextGroupKey) {
@@ -74,13 +71,8 @@ export default class Permissions extends React.Component<Props> {
 
     @action componentDidMount() {
         securityContextsStore.loadSecurityContextGroups(this.props.system).then(action((securityContextGroups) => {
+            console.log(securityContextGroups);
             this.securityContextGroups = securityContextGroups;
-
-            if (this.securityContextGroups.hasOwnProperty(this.webspaceSecurityContextGroupKey)) {
-                webspaceStore.loadAllWebspaces().then(action((webspaces) => {
-                    this.availableWebspaces = webspaces;
-                }));
-            }
         }));
     }
 
@@ -107,7 +99,7 @@ export default class Permissions extends React.Component<Props> {
         return securityContexts;
     }
 
-    @action handleWebspaceSelectChange = (newSelectedWebspaces: Array<string>) => {
+    @action handleWebspaceChange = (newSelectedWebspaces: Array<string>) => {
         const {value} = this.props;
         const contextPermissions = value ? value : [];
         const newContextPermissions = [];
@@ -151,27 +143,6 @@ export default class Permissions extends React.Component<Props> {
         this.handleChange(newContextPermissions);
     };
 
-    renderWebspaceSelect() {
-        if (!this.availableWebspaces || this.availableWebspaces.length < 1) {
-            return <Loader />;
-        }
-
-        return (
-            <div className={permissionsStyle.selectContainer}>
-                <MultiSelect
-                    allSelectedText={'All selected'}
-                    noneSelectedText={'None selected'}
-                    onChange={this.handleWebspaceSelectChange}
-                    values={this.selectedWebspaces}
-                >
-                    {this.availableWebspaces.map((webspace, index) => (
-                        <MultiSelect.Option key={index} value={webspace.key}>{webspace.name}</MultiSelect.Option>
-                    ))}
-                </MultiSelect>
-            </div>
-        );
-    }
-
     renderWebspaceMatrixes() {
         if (!this.webspaceSecurityContextGroupKey) {
             return null;
@@ -180,7 +151,16 @@ export default class Permissions extends React.Component<Props> {
         return (
             <Fragment>
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
-                {this.renderWebspaceSelect()}
+                <div className={permissionsStyle.selectContainer}>
+                    <MultiSelect
+                        apiOptions={{'checkForPermissions': 0}}
+                        displayProperty={'name'}
+                        idProperty={'key'}
+                        onChange={this.handleWebspaceChange}
+                        resourceKey={'webspaces'}
+                        values={this.selectedWebspaces}
+                    />
+                </div>
                 <div className={permissionsStyle.matrixContainer}>
                     {this.selectedWebspaces.map((webspace, matrixIndex) => {
                         return (

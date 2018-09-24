@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with minimal 1`] = `
+<Permissions
+  onChange={[MockFunction]}
+  system="Sulu"
+  value={
+    Array [
+      Object {
+        "context": "sulu.contact.people",
+        "id": 1,
+        "permissions": Object {
+          "add": true,
+          "delete": true,
+          "edit": true,
+          "view": true,
+        },
+      },
+      Object {
+        "context": "sulu.contact.organizations",
+        "id": 2,
+        "permissions": Object {
+          "add": true,
+          "delete": true,
+          "edit": true,
+          "view": true,
+        },
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Render with websp 1`] = `
+<div
+  class="matrixContainer"
+>
+  <h2>
+    sulu.contact.organizations
+  </h2>
+  <div
+    class="matrix"
+  />
+</div>
+`;
+
+exports[`Render with webspace part 1`] = `
+<div
+  class="matrixContainer"
+>
+  <h2>
+    sulu.contact.organizations
+  </h2>
+  <div
+    class="matrix"
+  />
+</div>
+`;

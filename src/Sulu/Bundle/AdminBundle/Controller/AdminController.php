@@ -187,7 +187,6 @@ class AdminController
             'translations' => $this->router->generate('sulu_admin.translation'),
             'securityContexts' => $this->router->generate('cget_contexts'),
             'generateUrl' => $this->router->generate('post_resourcelocator', ['action' => 'generate']),
-            'webspaces' => $this->router->generate('get_webspaces'),
         ];
 
         return $this->engine->renderResponse(

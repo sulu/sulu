@@ -7,15 +7,19 @@ export default class ResourceListStore {
     @observable loading: boolean = false;
     @observable data: Array<Object>;
 
-    constructor(resourceKey: string) {
+    constructor(resourceKey: string, apiOptions: Object = {}) {
         this.resourceKey = resourceKey;
 
         this.loading = true;
 
-        ResourceRequester.getList(resourceKey, {
-            limit: 100,
-            page: 1,
-        }).then(action((response) => {
+        if (!apiOptions.hasOwnProperty('limit')) {
+            apiOptions.limit = 100;
+        }
+        if (!apiOptions.hasOwnProperty('page')) {
+            apiOptions.page = 1;
+        }
+
+        ResourceRequester.getList(resourceKey, apiOptions).then(action((response) => {
             this.data = response._embedded[resourceKey];
             this.loading = false;
         })).catch(action(() => {

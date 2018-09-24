@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {mount, render} from 'enzyme';
 import PermissionMatrix from '../PermissionMatrix';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/SecurityContextsStore/types';

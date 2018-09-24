@@ -1,9 +1,9 @@
 // @flow
-import Requester from 'sulu-admin-bundle/services/Requester';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import webspaceStore from '../WebspaceStore';
 
-jest.mock('sulu-admin-bundle/services/Requester', () => ({
-    get: jest.fn().mockReturnValue({
+jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
+    getList: jest.fn().mockReturnValue({
         then: jest.fn(),
     }),
 }));
@@ -26,7 +26,7 @@ test('Load webspaces', () => {
 
     const promise = Promise.resolve(response);
 
-    Requester.get.mockReturnValue(promise);
+    ResourceRequester.getList.mockReturnValue(promise);
 
     const webspacePromise = webspaceStore.loadWebspaces();
 
@@ -55,7 +55,7 @@ test('Load webspace with given key', () => {
 
     const promise = Promise.resolve(response);
 
-    Requester.get.mockReturnValue(promise);
+    ResourceRequester.getList.mockReturnValue(promise);
 
     const webspacePromise = webspaceStore.loadWebspace('sulu');
 
