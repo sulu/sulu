@@ -1,14 +1,13 @@
 // @flow
 import type {ElementRef} from 'react';
 import React from 'react';
-import {action, computed, isObservableArray, observable} from 'mobx';
+import {action, computed, isObservableArray, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
-import type {SidebarConfig} from '../../containers/Sidebar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
@@ -28,7 +27,7 @@ class Form extends React.Component<Props> {
     @observable errors = [];
     showSuccess = observable.box(false);
     @observable toolbarActions = [];
-    @observable sidebarConfig: ?SidebarConfig;
+    @observable hasPreview: boolean = false;
 
     @computed get hasOwnResourceStore() {
         const {
@@ -136,6 +135,8 @@ class Form extends React.Component<Props> {
             router,
             locales
         ));
+
+        when(() => !this.formStore.loading, this.evaluatePreview);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -154,8 +155,8 @@ class Form extends React.Component<Props> {
         }
     }
 
-    @action setSidebarConfig = (sidebarConfig: ?SidebarConfig) => {
-        this.sidebarConfig = sidebarConfig;
+    @action setHasPreview = (hasPreview: boolean) => {
+        this.hasPreview = hasPreview;
     };
 
     @action showSuccessSnackbar = () => {
@@ -167,6 +168,20 @@ class Form extends React.Component<Props> {
             throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
         }
         this.form.submit(action);
+    };
+
+    evaluatePreview = (): void => {
+        const {
+            router: {
+                route: {
+                    options: {
+                        preview,
+                    },
+                },
+            },
+        } = this.props;
+
+        jexl.eval(preview, this.resourceStore.data).then(this.setHasPreview);
     };
 
     handleSubmit = (actionParameter) => {
@@ -203,13 +218,15 @@ class Form extends React.Component<Props> {
         return this.formStore.save(saveOptions)
             .then((response) => {
                 this.showSuccessSnackbar();
+                this.evaluatePreview();
 
                 if (editRoute) {
                     router.navigate(
                         editRoute,
                         {
                             id: resourceStore.id,
-                            locale: resourceStore.locale, ...editRouteParameters,
+                            locale: resourceStore.locale,
+                            ...editRouteParameters,
                         }
                     );
                 }
@@ -299,40 +316,12 @@ const FormWithToolbar = withToolbar(Form, function() {
 });
 
 export default withSidebar(FormWithToolbar, function() {
-    if (undefined !== this.sidebarConfig) {
-        return this.sidebarConfig;
-    }
-
-    const {
-        router: {
-            route: {
-                options: {
-                    preview,
-                },
-            },
+    return this.hasPreview ? {
+        view: 'sulu_preview.preview',
+        sizes: ['medium', 'large'],
+        props: {
+            router: this.props.router,
+            formStore: this.formStore,
         },
-    } = this.props;
-
-    if (this.resourceStore.loading) {
-        return;
-    }
-
-    jexl.eval(preview, this.resourceStore.data).then((preview) => {
-        if (!preview) {
-            this.setSidebarConfig(null);
-
-            return;
-        }
-
-        this.setSidebarConfig({
-            view: 'sulu_preview.preview',
-            sizes: ['medium', 'large'],
-            props: {
-                router: this.props.router,
-                formStore: this.formStore,
-            },
-        });
-    });
-
-    return null;
+    } : null;
 });

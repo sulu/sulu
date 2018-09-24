@@ -115,9 +115,6 @@ test('React and update-context when type is changed', () => {
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    // $FlowFixMe
-    formStore.type = observable.box('default');
-
     const router = new Router({});
     const component = mount(<Preview formStore={formStore} router={router} />);
 

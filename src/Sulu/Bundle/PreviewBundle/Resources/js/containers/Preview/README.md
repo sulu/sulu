@@ -1,5 +1,5 @@
-The `Preview` sidebar-view is registered with the key `sulu_preview.preview`.
-It shows the rendered web-page of the resource represented by the given form-store.
+The `Preview` sidebar is registered with the key `sulu_preview.preview`.
+It shows the rendered web-page of the resource represented by the given `FormStore`.
 
 To initialize the `Preview` for your component use following code-snippet:
 

@@ -2,46 +2,46 @@
 import type {ComponentType} from 'react';
 
 class SidebarRegistry {
-    views: {[string]: ComponentType<*>};
-    disabled = [];
+    sidebars: {[string]: ComponentType<*>};
+    disabledSidebars = [];
 
     constructor() {
         this.clear();
     }
 
     clear() {
-        this.views = {};
+        this.sidebars = {};
     }
 
     has(name: string) {
-        return !!this.views[name];
+        return !!this.sidebars[name];
     }
 
-    add(name: string, adapter: ComponentType<*>) {
-        if (name in this.views) {
+    add(name: string, sidebar: ComponentType<*>) {
+        if (name in this.sidebars) {
             throw new Error('The key "' + name + '" has already been used for another sidebar component');
         }
 
-        this.views[name] = adapter;
+        this.sidebars[name] = sidebar;
     }
 
     get(name: string): ComponentType<*> {
-        if (!(name in this.views)) {
+        if (!(name in this.sidebars)) {
             throw new Error(
                 'The sidebar component with the key "' + name + '" is not defined. ' +
                 'You probably forgot to add it to the store using the "add" method.'
             );
         }
 
-        return this.views[name];
+        return this.sidebars[name];
     }
 
     disable(name: string): void {
-        this.disabled.push(name);
+        this.disabledSidebars.push(name);
     }
 
     isDisabled(name: string): boolean {
-        return this.disabled.indexOf(name) > -1;
+        return this.disabledSidebars.indexOf(name) > -1;
     }
 }
 

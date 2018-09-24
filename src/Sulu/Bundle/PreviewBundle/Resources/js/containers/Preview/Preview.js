@@ -134,15 +134,6 @@ export default class Preview extends React.Component<Props> {
         sidebarStore.setSize('medium');
     };
 
-    handleRefreshClick = () => {
-        const document = this.getPreviewDocument();
-        if (!document) {
-            return;
-        }
-
-        document.location.reload();
-    };
-
     handleStartClick = () => {
         this.startPreview();
     };
@@ -154,10 +145,6 @@ export default class Preview extends React.Component<Props> {
                     <Toolbar.Button
                         icon={sidebarStore.size === 'medium' ? 'su-arrow-left' : 'su-arrow-right'}
                         onClick={this.handleToggleSidebarClick}
-                    />
-                    <Toolbar.Button
-                        icon="fa-refresh"
-                        onClick={this.handleRefreshClick}
                     />
                 </Toolbar.Controls>
             </Toolbar>

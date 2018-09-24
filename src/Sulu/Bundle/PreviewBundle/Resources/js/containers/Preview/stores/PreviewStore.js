@@ -14,7 +14,7 @@ const generateRoute = (name: PreviewRouteName, options: Object): string => {
 };
 
 export default class PreviewStore {
-    static routes: { [PreviewRouteName]: string } = {};
+    static routes: {[PreviewRouteName]: string} = {};
 
     resourceKey: string;
     id: ?string | number;
