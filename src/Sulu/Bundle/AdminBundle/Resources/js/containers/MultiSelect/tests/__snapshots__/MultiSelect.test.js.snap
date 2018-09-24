@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render in loading state 1`] = `
+<div
+  class="spinner"
+  style="width:40px;height:40px"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render with data 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="displayValue default"
+    type="button"
+  >
+    <div
+      aria-label="sulu_admin.none_selected"
+      class="croppedText"
+      title="sulu_admin.none_selected"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        sulu_admin.n
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          one_selected
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        sulu_admin.none_selected
+      </div>
+    </div>
+    <span
+      aria-label="su-angle-down"
+      class="toggle su-angle-down"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render with values 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="displayValue default"
+    type="button"
+  >
+    <div
+      aria-label="Test DEF, Test XYZ"
+      class="croppedText"
+      title="Test DEF, Test XYZ"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Test DEF,
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+           Test XYZ
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test DEF, Test XYZ
+      </div>
+    </div>
+    <span
+      aria-label="su-angle-down"
+      class="toggle su-angle-down"
+    />
+  </button>
+</div>
+`;

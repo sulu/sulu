@@ -13,6 +13,10 @@ import {viewRegistry} from './ViewRenderer';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {fieldRegistry, FormInspector, FormStore} from './Form';
+import MultiSelect from './MultiSelect';
+import MultiAutoComplete from './MultiAutoComplete';
+import MultiSelection from './MultiSelection';
+import SingleAutoComplete from './SingleAutoComplete';
 
 export type {
     DatagridAdapterProps,
@@ -31,8 +35,12 @@ export {
     Form,
     FormInspector,
     FormStore,
+    MultiSelect,
+    MultiAutoComplete,
+    MultiSelection,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
+    SingleAutoComplete,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

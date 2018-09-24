@@ -13,46 +13,65 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="collectionSection"
       >
-        <ul
-          class="breadcrumb"
+        <div
+          class="left"
         >
-          <li>
-            <button
-              class="item"
-            >
-              All Media
-            </button>
+          <ul
+            class="breadcrumb"
+          >
+            <li>
+              <button
+                class="item"
+              >
+                All Media
+              </button>
+              <span
+                aria-label="su-angle-right"
+                class="arrow su-angle-right"
+              />
+            </li>
+            <li>
+              <button
+                class="item"
+                disabled=""
+              />
+            </li>
+          </ul>
+          <div
+            class="icons"
+          >
             <span
-              aria-label="su-angle-right"
-              class="arrow su-angle-right"
+              aria-label="su-pen"
+              class="icon su-pen clickable"
+              role="button"
+              tabindex="0"
             />
-          </li>
-          <li>
+            <span
+              aria-label="su-trash-alt"
+              class="icon su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </div>
+        <div
+          class="right"
+        >
+          <div>
             <button
-              class="item"
-              disabled=""
-            />
-          </li>
-        </ul>
-        <div>
-          <span
-            aria-label="su-plus"
-            class="su-plus clickable"
-            role="button"
-            tabindex="0"
-          />
-          <span
-            aria-label="su-pen"
-            class="su-pen clickable"
-            role="button"
-            tabindex="0"
-          />
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt clickable"
-            role="button"
-            tabindex="0"
-          />
+              class="button icon button"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                <span
+                  aria-label="su-plus"
+                  class="su-plus"
+                />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <div

@@ -80,5 +80,7 @@
     "sulu_admin.order_warning_title": "Rearrange items",
     "sulu_admin.order_warning_text": "The operation you are about to do will rearrange items.",
     "sulu_admin.activate_all": "Activate all",
-    "sulu_admin.deactivate_all": "Deactivate all"
+    "sulu_admin.deactivate_all": "Deactivate all",
+    "sulu_admin.all_selected": "All selected",
+    "sulu_admin.none_selected": "None selected"
 }
