@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, toJS} from 'mobx';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import PermissionsContainer from '../../Permissions';
@@ -31,7 +31,7 @@ export default class Permissions extends React.Component<Props> {
         const {value} = this.props;
 
         return (
-            <PermissionsContainer onChange={this.handleChange} value={value ? toJS(value) : []} system={this.system} />
+            <PermissionsContainer onChange={this.handleChange} system={this.system} value={value ? value : []} />
         );
     }
 }

@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import permissionsStyle from "./permissions.scss";
-import Matrix from "../../../../../AdminBundle/Resources/js/components/Matrix";
-import {translate} from "../../../../../AdminBundle/Resources/js/utils/Translator";
+import Matrix from 'sulu-admin-bundle/components/Matrix';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
+import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {Actions, SecurityContexts} from '../../stores/SecurityContextsStore/types';
-import type {MatrixValues} from '../../../../../AdminBundle/Resources/js/components/Matrix/types';
 import type {ContextPermission} from './types';
+import permissionsStyle from './permissions.scss';
 
 type Props = {
     contextPermissions: Array<ContextPermission>,
@@ -52,12 +53,13 @@ export default class PermissionMatrix extends React.Component<Props> {
 
     handleMatrixChange = (matrixValues: MatrixValues) => {
         const {onChange, contextPermissions} = this.props;
+        const newContextPermissions = toJS(contextPermissions);
 
         Object.keys(matrixValues).map((matrixValuesKey) => {
             const matrixValue = matrixValues[matrixValuesKey];
 
             let valueSet = false;
-            for (const contextPermission of contextPermissions) {
+            for (const contextPermission of newContextPermissions) {
                 if (matrixValuesKey === contextPermission.context) {
                     contextPermission.permissions = matrixValue;
 
@@ -72,13 +74,13 @@ export default class PermissionMatrix extends React.Component<Props> {
                     'context': matrixValuesKey,
                     'permissions': matrixValue,
                 };
-                contextPermissions.push(newContextPermission);
+                newContextPermissions.push(newContextPermission);
             }
         });
 
-        onChange(contextPermissions);
+        onChange(newContextPermissions);
     };
-    
+
     renderMatrixRow(rowIndex: number, securityContextKey: string, actions: Actions) {
         const secondPointPosition = securityContextKey.indexOf('.', securityContextKey.indexOf('.') + 1) + 1;
         const title = securityContextKey.substring(secondPointPosition);

@@ -27,7 +27,7 @@ export default class Matrix extends React.PureComponent<Props> {
             values,
         } = this.props;
 
-        const newValues = Object.assign({}, values);
+        const newValues = {...values};
         newValues[rowName] = rowValues;
 
         onChange(newValues);

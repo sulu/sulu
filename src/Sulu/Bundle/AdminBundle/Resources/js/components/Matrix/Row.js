@@ -44,7 +44,7 @@ export default class Row extends React.Component<Props> {
             return;
         }
 
-        const newValues = Object.assign({}, values);
+        const newValues = {...values};
         newValues[itemName] = value;
 
         onChange(name, newValues);
@@ -82,7 +82,7 @@ export default class Row extends React.Component<Props> {
             return;
         }
 
-        const newValues = Object.assign({}, values);
+        const newValues = {...values};
         for (const value in newValues) {
             newValues[value] = newValue;
         }
