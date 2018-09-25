@@ -59,4 +59,15 @@ class ContentTypeManagerTest extends TestCase
         $res = $this->manager->has($alias);
         $this->assertEquals($expected, $res);
     }
+
+    public function testAll()
+    {
+        $this->assertEquals(
+            [
+                'content_1.alias',
+                'content_2.alias',
+            ],
+            $this->manager->getAll()
+        );
+    }
 }

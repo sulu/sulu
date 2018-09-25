@@ -77,13 +77,8 @@ class ContentTypeManager implements ContentTypeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getAll()
+    public function getAll(): array
     {
-        $result = [];
-        foreach ($this->aliasServiceIdMap as $alias => $id) {
-            $result[$alias] = ['instance' => $this->get($alias), 'id' => $id];
-        }
-
-        return $result;
+        return array_keys($this->aliasServiceIdMap);
     }
 }

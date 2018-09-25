@@ -11,6 +11,7 @@ The websocket-bundle and component was removed without replacement.
 To register a `sulu_preview.object_provider` you have to change your tag definition:
 
 Before:
+
 ```xml
 <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ArticleBundle\Document\ArticleDocument"/>
 ```
@@ -22,6 +23,12 @@ After:
 ```
 
 Additionally the rdfa properties are obsolete and they can be removed from your twig templates.
+
+### Content Type Manager
+
+The `ContentTypeManagerInterface::getAll` function will not longer return instances of the content types.
+Instead it will return a list of the content types aliases for performance reasons.
+Use the `ContentTypeManagerInterface::get($alias)` to get the service instance of the content type.
 
 ### Default folder changed
 
