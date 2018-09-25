@@ -60,14 +60,6 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
       />
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="fa-refresh"
-        onClick={[Function]}
-        primary={false}
-      />
     </Controls>
   </Toolbar>
 </div>
