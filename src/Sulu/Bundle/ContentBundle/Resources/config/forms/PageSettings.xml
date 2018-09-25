@@ -1,86 +1,88 @@
 <?xml version="1.0" ?>
-<properties xmlns="http://schemas.sulu.io/template/template"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="navContexts" type="page_settings_navigation_select" colspan="6">
-        <meta>
-            <title lang="en">Show page in</title>
-            <title lang="de">Zeige Seite in</title>
-        </meta>
-    </property>
-    <section name="pageType">
-        <meta>
-            <title lang="en">Page Type</title>
-            <title lang="de">Inhaltstyp</title>
-        </meta>
-        <properties>
-            <property name="nodeType" type="single_select" mandatory="true" colspan="6">
-                <meta>
-                    <title lang="en">Page Type</title>
-                    <title lang="de">Inhaltstyp</title>
-                </meta>
-                <params>
-                    <param name="default_value" value="1"/>
-                    <param name="values" type="collection">
-                        <param name="1" value="1">
-                            <meta>
-                                <title lang="en">Content</title>
-                                <title lang="de">Inhalt</title>
-                            </meta>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <properties>
+        <property name="navContexts" type="page_settings_navigation_select" colspan="6">
+            <meta>
+                <title lang="en">Show page in</title>
+                <title lang="de">Zeige Seite in</title>
+            </meta>
+        </property>
+        <section name="pageType">
+            <meta>
+                <title lang="en">Page Type</title>
+                <title lang="de">Inhaltstyp</title>
+            </meta>
+            <properties>
+                <property name="nodeType" type="single_select" mandatory="true" colspan="6">
+                    <meta>
+                        <title lang="en">Page Type</title>
+                        <title lang="de">Inhaltstyp</title>
+                    </meta>
+                    <params>
+                        <param name="default_value" value="1"/>
+                        <param name="values" type="collection">
+                            <param name="1" value="1">
+                                <meta>
+                                    <title lang="en">Content</title>
+                                    <title lang="de">Inhalt</title>
+                                </meta>
+                            </param>
+                            <param name="2" value="2">
+                                <meta>
+                                    <title lang="en">Internal Link</title>
+                                    <title lang="de">Interner Link</title>
+                                </meta>
+                            </param>
+                            <param name="4" value="4">
+                                <meta>
+                                    <title lang="en">External Link</title>
+                                    <title lang="de">Externer Link</title>
+                                </meta>
+                            </param>
                         </param>
-                        <param name="2" value="2">
-                            <meta>
-                                <title lang="en">Internal Link</title>
-                                <title lang="de">Interner Link</title>
-                            </meta>
-                        </param>
-                        <param name="4" value="4">
-                            <meta>
-                                <title lang="en">External Link</title>
-                                <title lang="de">Externer Link</title>
-                            </meta>
-                        </param>
-                    </param>
-                </params>
-            </property>
-            <property name="title" type="text_line" visibilityCondition="nodeType != 1">
-                <meta>
-                    <title lang="en">Link title</title>
-                    <title lang="de">Link Titel</title>
-                </meta>
-            </property>
-            <property name="internal_link" type="single_internal_link" visibilityCondition="nodeType == 2">
-                <meta>
-                    <title lang="en">Linked Content</title>
-                    <title lang="de">Verlinkter Inhalt</title>
-                </meta>
-            </property>
-            <property name="external" type="url" visibilityCondition="nodeType == 4">
-                <meta>
-                    <title lang="en">URL</title>
-                    <title lang="de">URL</title>
-                </meta>
-            </property>
-        </properties>
-    </section>
-    <section name="changelog">
-        <meta>
-            <title lang="en">Changelog</title>
-            <title lang="de">Änderungshistorie</title>
-        </meta>
-        <properties>
-            <property name="authored" type="datetime" colspan="6">
-                <meta>
-                    <title lang="en">Authored Date</title>
-                    <title lang="de">Verfasst am</title>
-                </meta>
-            </property>
-            <property name="author" type="single_contact_selection" colspan="6">
-                <meta>
-                    <title lang="en">Author</title>
-                    <title lang="de">Autor</title>
-                </meta>
-            </property>
-        </properties>
-    </section>
-</properties>
+                    </params>
+                </property>
+                <property name="title" type="text_line" visibilityCondition="nodeType != 1">
+                    <meta>
+                        <title lang="en">Link title</title>
+                        <title lang="de">Link Titel</title>
+                    </meta>
+                </property>
+                <property name="internal_link" type="single_internal_link" visibilityCondition="nodeType == 2">
+                    <meta>
+                        <title lang="en">Linked Content</title>
+                        <title lang="de">Verlinkter Inhalt</title>
+                    </meta>
+                </property>
+                <property name="external" type="url" visibilityCondition="nodeType == 4">
+                    <meta>
+                        <title lang="en">URL</title>
+                        <title lang="de">URL</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+        <section name="changelog">
+            <meta>
+                <title lang="en">Changelog</title>
+                <title lang="de">Änderungshistorie</title>
+            </meta>
+            <properties>
+                <property name="authored" type="datetime" colspan="6">
+                    <meta>
+                        <title lang="en">Authored Date</title>
+                        <title lang="de">Verfasst am</title>
+                    </meta>
+                </property>
+                <property name="author" type="single_contact_selection" colspan="6">
+                    <meta>
+                        <title lang="en">Author</title>
+                        <title lang="de">Autor</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>
