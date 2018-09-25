@@ -133,12 +133,10 @@ class ContentAdmin extends Admin
             (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_seo')
                 ->addOption('resourceKey', 'pages_seo')
-                ->addOption('preview', $previewExpression)
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.excerpt', '/excerpt', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
                 ->addOption('resourceKey', 'pages_excerpt')
-                ->addOption('preview', $previewExpression)
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }
