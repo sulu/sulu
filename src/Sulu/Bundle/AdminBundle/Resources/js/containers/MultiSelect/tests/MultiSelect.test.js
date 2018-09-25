@@ -31,7 +31,6 @@ test('Render in loading state', () => {
 test('Render with data', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
-        this.set = jest.fn();
         this.loading = false;
         this.data = [
             {

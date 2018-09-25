@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
@@ -20,7 +20,7 @@ type Props = {
 export default class Permissions extends React.Component<Props> {
     static webspacePlaceholder = '#webspace#';
 
-    @observable securityContextGroups: SecurityContextGroups = {};
+    @observable securityContextGroups: SecurityContextGroups;
 
     @computed get webspaceContextPermissionPrefix(): string {
         if (this.webspaceSecurityContextGroupKey) {
@@ -49,10 +49,6 @@ export default class Permissions extends React.Component<Props> {
     }
 
     @computed get selectedWebspaces(): Array<string> {
-        if (!this.props.value) {
-            return [];
-        }
-
         const selectedWebspaces = [];
         for (const contextPermission of this.props.value) {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
@@ -71,7 +67,6 @@ export default class Permissions extends React.Component<Props> {
 
     @action componentDidMount() {
         securityContextsStore.loadSecurityContextGroups(this.props.system).then(action((securityContextGroups) => {
-            console.log(securityContextGroups);
             this.securityContextGroups = securityContextGroups;
         }));
     }
@@ -100,11 +95,8 @@ export default class Permissions extends React.Component<Props> {
     }
 
     @action handleWebspaceChange = (newSelectedWebspaces: Array<string>) => {
-        const {value} = this.props;
-        const contextPermissions = value ? value : [];
         const newContextPermissions = [];
-
-        for (const contextPermission of contextPermissions) {
+        for (const contextPermission of this.props.value) {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
                 const suffix = contextPermission.context.replace(this.webspaceContextPermissionPrefix, '');
                 const webspaceKey = suffix.indexOf('.') === -1 ? suffix : suffix.substring(0, suffix.indexOf('.'));
@@ -183,10 +175,12 @@ export default class Permissions extends React.Component<Props> {
             return <Loader />;
         }
 
+        const {value} = this.props;
         return (
             <Fragment>
                 {this.renderWebspaceMatrixes()}
                 {Object.keys(this.securityContextGroups).sort().map((securityContextGroupKey, matrixIndex) => {
+                    // ignore webspace group here
                     if (this.webspaceSecurityContextGroupKey
                         && this.webspaceSecurityContextGroupKey === securityContextGroupKey
                     ) {
@@ -195,7 +189,7 @@ export default class Permissions extends React.Component<Props> {
 
                     return (
                         <PermissionMatrix
-                            contextPermissions={this.props.value}
+                            contextPermissions={value}
                             key={matrixIndex}
                             onChange={this.handleChange}
                             securityContexts={this.securityContextGroups[securityContextGroupKey]}

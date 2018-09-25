@@ -1,58 +1,168 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with minimal 1`] = `
-<Permissions
-  onChange={[MockFunction]}
-  system="Sulu"
-  value={
-    Array [
-      Object {
-        "context": "sulu.contact.people",
-        "id": 1,
-        "permissions": Object {
-          "add": true,
-          "delete": true,
-          "edit": true,
-          "view": true,
-        },
-      },
-      Object {
-        "context": "sulu.contact.organizations",
-        "id": 2,
-        "permissions": Object {
-          "add": true,
-          "delete": true,
-          "edit": true,
-          "view": true,
-        },
-      },
-    ]
-  }
-/>
-`;
-
-exports[`Render with websp 1`] = `
 <div
   class="matrixContainer"
 >
   <h2>
-    sulu.contact.organizations
+    Contacts
   </h2>
   <div
     class="matrix"
-  />
+  >
+    <div
+      class="row"
+    >
+      <div>
+        people
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div>
+        organizations
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
-exports[`Render with webspace part 1`] = `
-<div
-  class="matrixContainer"
->
+exports[`Render with webspace section 1`] = `
+<div>
   <h2>
-    sulu.contact.organizations
+    Webspaces
   </h2>
   <div
-    class="matrix"
+    class="selectContainer"
+  >
+    <div
+      class="select"
+    >
+      <button
+        class="displayValue default"
+        type="button"
+      >
+        <div
+          aria-label="sulu_admin.none_selected"
+          class="croppedText"
+          title="sulu_admin.none_selected"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_admin.n
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              one_selected
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_admin.none_selected
+          </div>
+        </div>
+        <span
+          aria-label="su-angle-down"
+          class="toggle su-angle-down"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="matrixContainer"
   />
 </div>
 `;

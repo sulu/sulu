@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
-import type {SecurityContextGroups, SecurityContexts} from '../../../stores/SecurityContextsStore/types';
+import type {SecurityContextGroups} from '../../../stores/SecurityContextsStore/types';
 import securityContextsStore from '../../../stores/SecurityContextsStore/SecurityContextsStore';
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
@@ -41,12 +41,13 @@ test('Render with minimal', () => {
         },
     ];
 
-    // $FlowFixMe
-    const securityContexts: SecurityContexts = {
-        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
-        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+    const securityContextGroups: SecurityContextGroups = {
+        'Contacts': {
+            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+        },
     };
-    const promise = Promise.resolve(securityContexts)
+    const promise = Promise.resolve(securityContextGroups);
     securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     const permissions = mount(
@@ -58,12 +59,13 @@ test('Render with minimal', () => {
     );
 
     return promise.then(() => {
+        expect(securityContextsStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
         permissions.update();
         expect(permissions.render()).toMatchSnapshot();
     });
 });
 
-test('Render with webspace part', () => {
+test('Render with webspace section', () => {
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -87,7 +89,6 @@ test('Render with webspace part', () => {
         },
     ];
 
-    // $FlowFixMe
     const securityContextGroups: SecurityContextGroups = {
         'Contacts': {
             'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
@@ -95,6 +96,8 @@ test('Render with webspace part', () => {
         },
         'Webspaces': {
             'sulu.webspaces.#webspace#': ['view', 'add', 'edit', 'delete', 'live', 'security'],
+            'sulu.webspaces.#webspace#.analytics': ['view', 'add', 'edit', 'delete'],
+            'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
     const promise = Promise.resolve(securityContextGroups);
@@ -128,6 +131,7 @@ test('Render with webspace part', () => {
     );
 
     return promise.then(() => {
+        expect(securityContextsStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
         permissions.update();
         expect(permissions.render()).toMatchSnapshot();
     });
