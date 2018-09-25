@@ -210,7 +210,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if (true === $config['search']['enabled']) {
             if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
                 throw new \InvalidArgumentException(
-                    'You have enabled sulu search integration for the SuluMediaBundle, ' . 'but the SuluSearchBundle must be installed'
+                    'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );
             }
 

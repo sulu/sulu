@@ -44,7 +44,8 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sulu_category.keyword_manager" class="Sulu\Bundle\CategoryBundle\Category\KeywordManager"
+        <service id="sulu_category.keyword_manager"
+                 class="Sulu\Bundle\CategoryBundle\Category\KeywordManager"
                  public="true">
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="sulu.repository.category_translation"/>
