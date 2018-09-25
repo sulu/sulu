@@ -50,10 +50,6 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
             return <Loader />;
         }
 
-        console.log('LOADED');
-        console.log(this.resourceListStore);
-        console.trace();
-
         return (
             <MultiSelectComponent
                 allSelectedText={allSelectedText}
