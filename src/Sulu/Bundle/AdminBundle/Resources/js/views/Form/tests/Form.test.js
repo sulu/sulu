@@ -7,6 +7,10 @@ import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
 jest.mock('jexl', () => ({
     eval: jest.fn().mockImplementation((expression) => {
+        if (undefined === expression) {
+            throw new Error('Expression cannot be undefined');
+        }
+
         return Promise.resolve(expression === 'nodeType == 1');
     }),
 }));
