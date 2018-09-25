@@ -8,8 +8,6 @@ import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/SecurityContextsStore/types';
 import securityContextsStore from '../../../stores/SecurityContextsStore/SecurityContextsStore';
 import PermissionMatrix from '../PermissionMatrix';
-import SingleDatagridOverlay from "sulu-admin-bundle/containers/SingleDatagridOverlay/SingleDatagridOverlay";
-import DatagridStore from "sulu-admin-bundle/containers/Datagrid/stores/DatagridStore";
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
 
