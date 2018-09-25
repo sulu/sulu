@@ -16,9 +16,10 @@
         </meta>
         <params>
             <param name="values" expression="service('sulu_admin.admin_pool').getSecurityContextsValues()"/>
+            <param name="default_value" expression="parameter('sulu_security.system')"/>
         </params>
     </property>
-    
+
     <section name="permissions_section">
         <meta>
             <title lang="en">Berechtigungen</title>

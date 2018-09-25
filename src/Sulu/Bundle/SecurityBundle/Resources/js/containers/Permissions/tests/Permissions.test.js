@@ -8,6 +8,8 @@ import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/SecurityContextsStore/types';
 import securityContextsStore from '../../../stores/SecurityContextsStore/SecurityContextsStore';
 import PermissionMatrix from '../PermissionMatrix';
+import SingleDatagridOverlay from "sulu-admin-bundle/containers/SingleDatagridOverlay/SingleDatagridOverlay";
+import DatagridStore from "sulu-admin-bundle/containers/Datagrid/stores/DatagridStore";
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
 
@@ -715,4 +717,107 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
 
         expect(onChange).toBeCalledWith(expectedNewValue);
     });
+});
+
+test('Should trigger a mobx autorun if the prop system changes', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Contacts': {
+            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    const permissions = mount(
+        <Permissions
+            onChange={jest.fn()}
+            system={'Sulu'}
+            value={value}
+        />
+    );
+
+    return promise.then(() => {
+        // update with the same system, nothing should happen
+        // update it with a other system it should trigger a reload
+        permissions.setProps({system: 'Sulu'});
+        permissions.setProps({system: 'Other-System'});
+
+        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
+        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
+        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
+    });
+});
+
+test('Dispose autorun on unmount', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Contacts': {
+            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    const permissions = mount(
+        <Permissions
+            onChange={jest.fn()}
+            system={'Sulu'}
+            value={value}
+        />
+    );
+
+    permissions.update();
+
+    const systemDisposerSpy = jest.fn();
+    permissions.instance().systemDisposer = systemDisposerSpy;
+    permissions.unmount();
+
+    expect(systemDisposerSpy).toBeCalledWith();
 });

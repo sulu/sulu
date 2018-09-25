@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
@@ -20,7 +20,27 @@ type Props = {
 export default class Permissions extends React.Component<Props> {
     static webspacePlaceholder = '#webspace#';
 
+    systemDisposer: () => void;
+
     @observable securityContextGroups: SecurityContextGroups;
+
+    @action componentDidMount() {
+        this.systemDisposer = autorun(
+            () => {
+                securityContextsStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
+                    this.securityContextGroups = securityContextGroups;
+                }));
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this.systemDisposer();
+    }
+
+    @computed get system(): string {
+        return this.props.system;
+    }
 
     @computed get webspaceContextPermissionPrefix(): string {
         if (this.webspaceSecurityContextGroupKey) {
@@ -63,12 +83,6 @@ export default class Permissions extends React.Component<Props> {
         }
 
         return selectedWebspaces.sort();
-    }
-
-    @action componentDidMount() {
-        securityContextsStore.loadSecurityContextGroups(this.props.system).then(action((securityContextGroups) => {
-            this.securityContextGroups = securityContextGroups;
-        }));
     }
 
     handleChange = (value: Array<ContextPermission>) => {
