@@ -32,7 +32,6 @@
                 <argument type="string" key="analyticsKey">%sulu_preview.defaults.analytics_key%</argument>
             </argument>
             <argument type="string">%kernel.environment%</argument>
-            <argument type="string">%sulu_websocket.server.http_host%</argument>
             <argument type="expression">
                 container.hasParameter('sulu_audience_targeting.headers.target_group')
                     ? parameter('sulu_audience_targeting.headers.target_group')
@@ -46,13 +45,11 @@
             <argument type="service" id="sulu_preview.preview.renderer"/>
         </service>
 
-        <!-- websocket -->
-        <service id="sulu_preview.preview.message_component"
-                 class="Sulu\Bundle\PreviewBundle\Websocket\PreviewMessageHandler">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+        <!-- controller -->
+        <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PreviewController">
             <argument type="service" id="sulu_preview.preview"/>
-
-            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="profiler" on-invalid="null"/>
         </service>
     </services>
 

@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`React and update preview when data is changed 1`] = `
+<Preview
+  formStore={
+    mockConstructor {
+      "data": Object {
+        "title": "New Test",
+      },
+      "loading": false,
+      "type": "default",
+    }
+  }
+  router={
+    mockConstructor {
+      "attributes": Object {
+        "locale": "de",
+      },
+      "history": Object {},
+    }
+  }
+>
+  <button
+    onClick={[Function]}
+  >
+    Start
+  </button>
+</Preview>
+`;
+
+exports[`Render button to start preview 1`] = `
+<button>
+  Start
+</button>
+`;
+
+exports[`Render correct preview 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="iframeContainer"
+  >
+    <iframe
+      className="iframe"
+      src="/render"
+    />
+  </div>
+  <Toolbar
+    skin="dark"
+  >
+    <Controls
+      skin="light"
+    >
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-arrow-right"
+        onClick={[Function]}
+        primary={false}
+      />
+    </Controls>
+  </Toolbar>
+</div>
+`;

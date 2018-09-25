@@ -17,3 +17,7 @@ exports[`Render correct sidebar view with props 1`] = `
   </h1>
 </aside>
 `;
+
+exports[`Return null if view is disabled 1`] = `null`;
+
+exports[`Return null if view is not set 1`] = `null`;

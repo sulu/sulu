@@ -95,6 +95,8 @@ class ContentAdmin extends Admin
             'sulu_admin.save_with_publishing',
         ];
 
+        $previewExpression = 'nodeType == 1';
+
         return [
             (new Route('sulu_content.webspaces', '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
                 ->addAttributeDefault('webspace', $firstWebspace->getKey())
@@ -119,6 +121,7 @@ class ContentAdmin extends Admin
             (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('toolbarActions', $formToolbarActionsWithType)
+                ->addOption('preview', $previewExpression)
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_seo')

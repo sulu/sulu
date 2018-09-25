@@ -24,6 +24,7 @@ import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
 import Navigation from './Navigation';
 import Backdrop from './Backdrop';
+import Toolbar from './Toolbar';
 import withContainerSize from './withContainerSize';
 
 export {
@@ -52,5 +53,6 @@ export {
     Overlay,
     Popover,
     PublishIndicator,
+    Toolbar,
     withContainerSize,
 };

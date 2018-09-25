@@ -92,11 +92,6 @@ class PreviewRendererTest extends TestCase
      */
     private $environment = 'prod';
 
-    /**
-     * @var string
-     */
-    private $defaultHost = 'default-sulu.io';
-
     public function setUp()
     {
         $this->routeDefaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
@@ -117,7 +112,6 @@ class PreviewRendererTest extends TestCase
             new Replacer(),
             $this->previewDefault,
             $this->environment,
-            $this->defaultHost,
             'X-Sulu-Target-Group'
         );
     }
@@ -270,35 +264,6 @@ class PreviewRendererTest extends TestCase
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2);
         $this->assertEquals('<title>Hallo</title>', $response);
-    }
-
-    /**
-     * @dataProvider portalWithoutRequestDataProvider
-     */
-    public function testRenderWithoutRequest($portalUrl)
-    {
-        $object = $this->prophesize(\stdClass::class);
-
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $webspace = $this->prophesize(Webspace::class);
-        $localization = new Localization('de');
-        $webspace->getLocalization('de')->willReturn($localization);
-        $portalInformation->getWebspace()->willReturn($webspace->reveal());
-        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
-        $portalInformation->getUrl()->willReturn($portalUrl);
-        $portalInformation->getPrefix()->willReturn('/de');
-
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
-            ->willReturn([$portalInformation->reveal()]);
-
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
-            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
-
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
-            ->shouldBeCalled();
-
-        $this->render($object, 'http', $portalUrl, 80, false);
     }
 
     public function testRenderPortalNotFound()

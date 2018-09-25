@@ -133,6 +133,16 @@ class AdminController
      */
     private $fallbackLocale;
 
+    /**
+     * @var int
+     */
+    private $previewDelay;
+
+    /**
+     * @var string
+     */
+    private $previewMode;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
@@ -151,7 +161,9 @@ class AdminController
         $environment,
         array $locales,
         $translations,
-        $fallbackLocale
+        $fallbackLocale,
+        $previewDelay,
+        $previewMode
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -171,6 +183,8 @@ class AdminController
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
+        $this->previewDelay = $previewDelay;
+        $this->previewMode = $previewMode;
     }
 
     public function indexAction()
@@ -224,6 +238,17 @@ class AdminController
                 }, $this->dataProviderPool->getAll()),
                 'user' => $user,
                 'contact' => $contact,
+            ],
+            'sulu_preview' => [
+                'routes' => [
+                    'start' => $this->urlGenerator->generate('sulu_preview.start'),
+                    'render' => $this->urlGenerator->generate('sulu_preview.render'),
+                    'update' => $this->urlGenerator->generate('sulu_preview.update'),
+                    'update-context' => $this->urlGenerator->generate('sulu_preview.update-context'),
+                    'stop' => $this->urlGenerator->generate('sulu_preview.stop'),
+                ],
+                'debounceDelay' => $this->previewDelay,
+                'mode' => $this->previewMode,
             ],
         ]);
 

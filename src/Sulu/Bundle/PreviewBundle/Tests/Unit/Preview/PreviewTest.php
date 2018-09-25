@@ -18,6 +18,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
+use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
 class PreviewTest extends TestCase
@@ -25,7 +26,7 @@ class PreviewTest extends TestCase
     /**
      * @var Cache
      */
-    private $dataCache;
+    private $cache;
 
     /**
      * @var PreviewRendererInterface
@@ -35,158 +36,249 @@ class PreviewTest extends TestCase
     /**
      * @var int
      */
-    private $cacheLifeTime = 7200;
+    private $cacheLifeTime = 3600;
+
+    /**
+     * @var PreviewInterface
+     */
+    private $preview;
+
+    /**
+     * @var PreviewObjectProviderInterface
+     */
+    private $provider;
+
+    /**
+     * @var string
+     */
+    private $providerKey = 'test-provider';
+
+    /**
+     * @var string
+     */
+    private $locale = 'de';
+
+    /**
+     * @var string
+     */
+    private $webspaceKey = 'sulu_io';
+
+    /**
+     * @var \stdClass
+     */
+    private $object;
 
     protected function setUp()
     {
-        $this->dataCache = $this->prophesize(Cache::class);
+        $this->cache = $this->prophesize(Cache::class);
         $this->renderer = $this->prophesize(PreviewRendererInterface::class);
-    }
+        $this->provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $this->object = $this->prophesize(\stdClass::class);
 
-    protected function getPreview(array $objectProviderMocks = [])
-    {
-        $objectProvider = [];
-        foreach ($objectProviderMocks as $key => $objectProviderMock) {
-            $objectProvider[$key] = $objectProviderMock->reveal();
-        }
+        $providers = [$this->providerKey => $this->provider->reveal()];
 
-        return new Preview(
-            $objectProvider, $this->dataCache->reveal(), $this->renderer->reveal(), $this->cacheLifeTime
-        );
+        $this->preview = new Preview($providers, $this->cache->reveal(), $this->renderer->reveal());
     }
 
     public function testStart()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->getObject(1, 'de')->willReturn($object->reveal());
-        $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
+        $this->provider->getObject(1, $this->locale)->willReturn($this->object->reveal());
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $token = $preview->start(get_class($object->reveal()), 1, 1, 'sulu_io', 'de', ['title' => 'SULU']);
+        $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $token = $this->preview->start($this->providerKey, 1, $this->locale, 1, $data);
+
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => null,
+        ];
+
+        $this->cache->save(
+            $token,
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
+
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
     }
 
     public function testStartWithoutData()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu is awesome'];
+        $dataJson = json_encode($data);
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->getObject(1, 'de')->willReturn($object->reveal());
-        $provider->setValues(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
-        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
+        $this->provider->getObject(1, $this->locale)->willReturn($this->object->reveal());
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $token = $preview->start(get_class($object->reveal()), 1, 1, 'sulu_io', 'de');
+        $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $token = $this->preview->start($this->providerKey, 1, $this->locale, 1);
+
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => null,
+        ];
+
+        $this->cache->save(
+            $token,
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
+
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
     }
 
     public function testStartWithoutProvider()
     {
         $this->expectException(ProviderNotFoundException::class);
 
-        $preview = $this->getPreview();
-        $preview->start('\\Example', 1, 1, 'sulu_io', 'de');
+        $this->preview->start('xxx', 1, $this->locale, 1);
     }
 
     public function testStop()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(true)->shouldBeCalled();
-        $this->dataCache->delete('123-123-123')->shouldBeCalled();
+        $this->cache->contains('123-123-123')->willReturn(true);
+        $this->cache->delete('123-123-123')->shouldBeCalled();
 
-        $preview = $this->getPreview();
-        $preview->stop('123-123-123');
+        $this->preview->stop('123-123-123');
     }
 
     public function testStopNotExists()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(false)->shouldBeCalled();
-        $this->dataCache->delete(Argument::any())->shouldNotBeCalled();
+        $this->cache->contains('123-123-123')->willReturn(false);
+        $this->cache->delete(Argument::any())->shouldNotBeCalled();
 
-        $preview = $this->getPreview();
-        $preview->stop('123-123-123');
+        $this->preview->stop('123-123-123');
 
         // nothing should happen
     }
 
     public function testExists()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(true);
+        $this->cache->contains('123-123-123')->willReturn(true);
 
-        $preview = $this->getPreview();
-        $this->assertTrue($preview->exists('123-123-123'));
+        $this->assertTrue($this->preview->exists('123-123-123'));
     }
 
     public function testExistsNot()
     {
-        $this->dataCache->contains('123-123-123')->willReturn(false);
+        $this->cache->contains('123-123-123')->willReturn(false);
 
-        $preview = $this->getPreview();
-        $this->assertFalse($preview->exists('123-123-123'));
+        $this->assertFalse($this->preview->exists('123-123-123'));
     }
 
     public function testUpdate()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => json_encode(['title' => 'test']),
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($object->reveal())->willReturn(1);
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, null)
+        $this->provider->deserialize($cacheData['object'], $cacheData['objectClass'])->willReturn($this->object);
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
+        $this->provider->serialize($this->object->reveal())->willReturn($dataJson)->shouldBeCalled();
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, true, null)
             ->willReturn('<h1 property="title">SULU</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
+        $this->cache->save(
+            $token,
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
 
-        $this->assertEquals(['title' => [['property' => 'title', 'html' => 'SULU']]], $changes);
-    }
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
 
-    public function testUpdateWithLink()
-    {
-        $object = $this->prophesize(\stdClass::class);
+        $result = $this->preview->update($token, $this->webspaceKey, $data, null);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($object->reveal())->willReturn(1);
-
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, null)
-            ->willReturn('<a property="title" href="/test">SULU</a>');
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
-
-        $this->assertEquals(['title' => [['property' => 'title', 'href' => '/test', 'html' => 'SULU']]], $changes);
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
+        );
     }
 
     public function testUpdateNoData()
     {
-        $preview = $this->getPreview();
-        $changes = $preview->update('123-123-123', 'sulu_io', 'de', []);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $this->assertEquals([], $changes);
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
+
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
+
+        $this->provider->deserialize($cacheData['object'], $cacheData['objectClass'])->willReturn($this->object);
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize(Argument::cetera())->shouldNotBeCalled();
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, true, null)->willReturn(
+            '<h1 property="title">SULU</h1>'
+        );
+
+        $this->cache->save(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->preview->update($token, $this->webspaceKey, [], null);
+
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
+        );
     }
 
     public function testUpdateTokenNotExists()
@@ -196,358 +288,320 @@ class PreviewTest extends TestCase
         $object = $this->prophesize(\stdClass::class);
 
         $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(false);
-        $this->dataCache->fetch($token)->shouldNotBecalled();
-        $this->dataCache->save($token, Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->cache->contains($token)->willReturn(false);
+        $this->cache->fetch(Argument::cetera())->shouldNotBecalled();
+        $this->cache->save(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->deserialize(Argument::cetera())->shouldNotBeCalled();
+        $this->renderer->render(Argument::cetera())->shouldNotBeCalled();
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize(Argument::any(), Argument::any())->shouldNotBeCalled();
-
-        $this->renderer->render(Argument::any(), Argument::any(), Argument::any(), Argument::any(), Argument::any())
-            ->shouldNotBeCalled();
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
+        $this->preview->update($token, $this->webspaceKey, ['title' => 'SULU'], null);
     }
 
     public function testUpdateWithTargetGroup()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($object->reveal())->willReturn(1);
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2)
+        $this->provider->deserialize($cacheData['object'], $cacheData['objectClass'])->willReturn($this->object);
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize(Argument::cetera())->shouldNotBeCalled();
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, true, 2)
             ->willReturn('<h1 property="title">SULU</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU'], 2);
+        $this->cache->save(Argument::cetera())->shouldNotBeCalled();
 
-        $this->assertEquals(['title' => [['property' => 'title', 'html' => 'SULU']]], $changes);
+        $result = $this->preview->update($token, $this->webspaceKey, [], 2);
+
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
+        );
     }
 
     public function testUpdateContext()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu', 'template' => 'default'];
+        $dataJson = json_encode($data);
+
+        $context = ['template' => 'expert'];
+
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
+
         $newObject = $this->prophesize(\stdClass::class);
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => json_encode(array_merge($data, $context)),
+            'objectClass' => get_class($newObject->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
-            ->shouldBeCalled()->willReturn($newObject->reveal());
-        $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($newObject->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($newObject->reveal())->willReturn(1);
+        $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
-
-        $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, null)->willReturn(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
         );
-        $response = $preview->updateContext(
+
+        $this->cache->save(
             $token,
-            'sulu_io',
-            'de',
-            ['template' => 'test-template'],
-            ['title' => 'SULU']
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
+
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
+
+        $result = $this->preview->updateContext($token, $this->webspaceKey, $context, null);
+
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
         );
-
-        $this->assertEquals('<html><body><h1 property="title">SULU</h1></html></body>', $response);
-    }
-
-    public function testUpdateContextWithLink()
-    {
-        $object = $this->prophesize(\stdClass::class);
-        $newObject = $this->prophesize(\stdClass::class);
-
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
-            ->shouldBeCalled()->willReturn($newObject->reveal());
-        $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($newObject->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($newObject->reveal())->willReturn(1);
-
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<html><body><a property="title" href="/test">SULU</a></html></body>');
-
-        $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
-        );
-        $response = $preview->updateContext(
-            $token,
-            'sulu_io',
-            'de',
-            ['template' => 'test-template'],
-            ['title' => 'SULU']
-        );
-
-        $this->assertEquals('<html><body><a property="title" href="/test">SULU</a></html></body>', $response);
     }
 
     public function testUpdateContextNoContext()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu', 'template' => 'default'];
+        $dataJson = json_encode($data);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $context = [];
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->updateContext(
-            $token,
-            'sulu_io',
-            'de',
-            [],
-            ['title' => 'SULU']
+        $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setContext(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize(Argument::cetera())->shouldNotBeCalled();
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, false, null)->willReturn(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
         );
 
-        $this->assertEquals('<html><body><h1 property="title">SULU</h1></html></body>', $response);
-    }
+        $this->cache->save(Argument::cetera())->shouldNotBeCalled();
 
-    public function testUpdateContextNoContextWithLink()
-    {
-        $object = $this->prophesize(\stdClass::class);
+        $result = $this->preview->updateContext($token, $this->webspaceKey, $context, null);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
-
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<html><body><a property="title" href="/test">SULU</a></html></body>');
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->updateContext(
-            $token,
-            'sulu_io',
-            'de',
-            [],
-            ['title' => 'SULU']
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
         );
-
-        $this->assertEquals('<html><body><a property="title" href="/test">SULU</a></html></body>', $response);
-    }
-
-    public function testUpdateContextNoData()
-    {
-        $object = $this->prophesize(\stdClass::class);
-        $newObject = $this->prophesize(\stdClass::class);
-
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"test\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
-            ->shouldBeCalled()->willReturn($newObject->reveal());
-        $provider->serialize($newObject->reveal())->willReturn('{"title": "test"}');
-        $provider->getId($newObject->reveal())->willReturn(1);
-
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<html><body><h1 property="title">test</h1></html></body>');
-
-        $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
-        );
-        $response = $preview->updateContext(
-            $token,
-            'sulu_io',
-            'de',
-            ['template' => 'test-template'],
-            []
-        );
-
-        $this->assertEquals('<html><body><h1 property="title">test</h1></html></body>', $response);
     }
 
     public function testUpdateContextWithTargetGroup()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu', 'template' => 'default'];
+        $dataJson = json_encode($data);
+
+        $context = ['template' => 'expert'];
+
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
+
         $newObject = $this->prophesize(\stdClass::class);
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => json_encode(array_merge($data, $context)),
+            'objectClass' => get_class($newObject->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
-            ->shouldBeCalled();
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
-            ->shouldBeCalled()->willReturn($newObject->reveal());
-        $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
-        $provider->serialize($newObject->reveal())->willReturn('{"title": "SULU"}');
-        $provider->getId($newObject->reveal())->willReturn(1);
+        $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
-        $this->renderer->render($newObject->reveal(), 1, 'sulu_io', 'de', false, 2)
-            ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
-
-        $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, 2)->willReturn(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
         );
-        $response = $preview->updateContext(
+
+        $this->cache->save(
             $token,
-            'sulu_io',
-            'de',
-            ['template' => 'test-template'],
-            ['title' => 'SULU'],
-            2
-        );
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
 
-        $this->assertEquals('<html><body><h1 property="title">SULU</h1></html></body>', $response);
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
+
+        $result = $this->preview->updateContext($token, $this->webspaceKey, $context, 2);
+
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
+        );
     }
 
     public function testRender()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => null,
+        ];
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<h1 property="title">test</h1>');
+        $this->provider->deserialize($cacheData['object'], $cacheData['objectClass'])->willReturn($this->object);
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize($this->object->reveal())->willReturn($dataJson)->shouldBeCalled();
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->render($token, 'sulu_io', 'de');
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, false, null)
+            ->willReturn('<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>');
 
-        $this->assertEquals('<h1 property="title">test</h1>', $response);
-    }
+        $this->cache->save(
+            $token,
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
 
-    public function testRenderWithLink()
-    {
-        $object = $this->prophesize(\stdClass::class);
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
-
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<a property="title" href="/test">test</a>');
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->render($token, 'sulu_io', 'de');
-
-        $this->assertEquals('<a property="title" href="/test">test</a>', $response);
-    }
-
-    public function testRenderWithStyle()
-    {
-        $object = $this->prophesize(\stdClass::class);
-
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
-
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn('<link rel="stylesheet" type="text/css" href="theme.css">');
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->render($token, 'sulu_io', 'de');
-
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href="theme.css">', $response);
-    }
-
-    public function testRenderWithMultipleTags()
-    {
-        $object = $this->prophesize(\stdClass::class);
-
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
-
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
-            ->willReturn(
-                '<link rel="stylesheet" type="text/css" href="theme.css">' .
-                '<a property="title" href="/test">test</a>' .
-                '<a href="/test">test</a>' .
-                '<form action="/test"></form>' .
-                '<form class="form" action="/test"></form>'
-            );
-
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->render($token, 'sulu_io', 'de');
+        $result = $this->preview->render($token, $this->webspaceKey, $this->locale, null);
 
         $this->assertEquals(
-            '<link rel="stylesheet" type="text/css" href="theme.css">' .
-            '<a property="title" href="/test">test</a>' .
-            '<a href="/test">test</a>' .
-            '<form action="/test"></form>' .
-            '<form class="form" action="/test"></form>',
-            $response
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
         );
     }
 
     public function testRenderWithTargetGroup()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $data = ['title' => 'Sulu'];
+        $dataJson = json_encode($data);
 
-        $token = '123-123-123';
-        $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => null,
+        ];
+        $expectedData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
+        ];
 
-        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
-        $provider->getId($object->reveal())->willReturn(1);
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
 
-        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, 2)
-            ->willReturn('<h1 property="title">test</h1>');
+        $this->provider->deserialize($cacheData['object'], $cacheData['objectClass'])->willReturn($this->object);
+        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->serialize($this->object->reveal())->willReturn($dataJson)->shouldBeCalled();
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $response = $preview->render($token, 'sulu_io', 'de', 2);
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, false, 2)
+            ->willReturn('<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>');
 
-        $this->assertEquals('<h1 property="title">test</h1>', $response);
+        $this->cache->save(
+            $token,
+            Argument::that(
+                function ($json) use ($expectedData) {
+                    $this->assertEquals($expectedData, json_decode($json, true));
+
+                    return true;
+                }
+            ),
+            $this->cacheLifeTime
+        )->shouldBeCalled();
+
+        $result = $this->preview->render($token, $this->webspaceKey, $this->locale, 2);
+
+        $this->assertEquals(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
+            $result
+        );
     }
 }

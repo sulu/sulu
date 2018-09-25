@@ -63,7 +63,7 @@ class StructureResolver implements StructureResolverInterface
         ];
 
         if ($structure instanceof PageBridge) {
-            $data['extension'] = $structure->getExt()->toArray();
+            $data['extension'] = $structure->getExt() ? $structure->getExt()->toArray() : [];
             $data['urls'] = $structure->getUrls();
             $data['published'] = $structure->getPublished();
             $data['shadowBaseLocale'] = $structure->getShadowBaseLanguage();
