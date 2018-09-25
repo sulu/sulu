@@ -70,7 +70,7 @@ class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
                 $reference = new Reference($id);
                 if (!$this->aliasAttribute) {
                     $references[$priority][] = $reference;
-                } else {
+                } elseif (array_key_exists($this->aliasAttribute, $attributes)) {
                     $references[$priority][$attributes[$this->aliasAttribute]] = $reference;
                 }
             }

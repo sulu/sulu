@@ -19,25 +19,17 @@ class ProviderNotFoundException extends PreviewException
     /**
      * @var string
      */
-    private $objectClass;
+    private $providerKey;
 
-    /**
-     * @param string $objectClass
-     */
-    public function __construct($objectClass)
+    public function __construct(string $providerKey)
     {
-        parent::__construct(sprintf('No provider found for object class "%s"', $objectClass), 9900);
+        parent::__construct(sprintf('No provider found for key "%s"', $providerKey), 9900);
 
-        $this->objectClass = $objectClass;
+        $this->providerKey = $providerKey;
     }
 
-    /**
-     * Returns objectClass.
-     *
-     * @return string
-     */
-    public function getObjectClass()
+    public function getProviderKey(): string
     {
-        return $this->objectClass;
+        return $this->providerKey;
     }
 }

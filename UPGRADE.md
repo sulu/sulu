@@ -2,6 +2,27 @@
 
 ## dev-develop
 
+### Websocket
+
+The websocket-bundle and component was removed without replacement.
+
+### Preview
+
+To register a `sulu_preview.object_provider` you have to change your tag definition:
+
+Before:
+```xml
+<tag name="sulu_preview.object_provider" class="Sulu\Bundle\ArticleBundle\Document\ArticleDocument"/>
+```
+
+After:
+
+```xml
+<tag name="sulu_preview.object_provider" provider-key="articles"/>
+```
+
+Additionally the rdfa properties are obsolete and they can be removed from your twig templates.
+
 ### Default folder changed
 
 The following default configurations were changed to use the symfony 4 folder structure.

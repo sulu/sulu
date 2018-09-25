@@ -27,7 +27,9 @@ class SidebarStore {
     }
 
     @action clearConfig() {
-        this.setConfig({});
+        this.view = undefined;
+        this.props = {};
+        this.sizes = SIZES;
         this.size = null;
     }
 

@@ -47,6 +47,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertInternalType('array', $response->sulu_admin->navigation);
         $this->assertInternalType('array', $response->sulu_admin->routes);
         $this->assertInternalType('object', $response->sulu_admin->resourceMetadataEndpoints);
+        $this->assertObjectHasAttribute('sulu_preview', $response);
     }
 
     public function testGetResourcePages()

@@ -60,11 +60,6 @@ sulu_website_api:
     type: rest
     prefix: /admin/api
 
-sulu_websocket:
-    type: rest
-    resource: "@SuluWebsocketBundle/Resources/config/routing.yml"
-    prefix: /admin/websocket
-
 sulu_core:
     type: rest
     resource: "@SuluCoreBundle/Resources/config/routing_api.xml"
@@ -84,3 +79,7 @@ sulu_route_api:
 sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
     prefix: /admin/search
+
+sulu_preview:
+    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    prefix: /admin/preview

@@ -142,6 +142,16 @@ class AdminControllerTest extends TestCase
     private $fallbackLocale = 'de';
 
     /**
+     * @var string
+     */
+    private $previewDelay = 500;
+
+    /**
+     * @var string
+     */
+    private $previewMode = 'off';
+
+    /**
      * @var AdminController
      */
     private $adminController;
@@ -185,7 +195,9 @@ class AdminControllerTest extends TestCase
             $this->environment,
             $this->locales,
             $this->translations,
-            $this->fallbackLocale
+            $this->fallbackLocale,
+            $this->previewDelay,
+            $this->previewMode
         );
     }
 
