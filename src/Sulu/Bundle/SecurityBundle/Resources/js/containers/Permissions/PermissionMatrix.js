@@ -39,16 +39,13 @@ export default class PermissionMatrix extends React.Component<Props> {
     };
 
     getMatrixValueFromContextPermission = (searchedKey: string) => {
-        const {contextPermissions} = this.props;
-        if (!contextPermissions) {
-            return;
-        }
-
-        for (const contextPermission of contextPermissions) {
+        for (const contextPermission of this.props.contextPermissions) {
             if (searchedKey === contextPermission.context) {
                 return contextPermission.permissions;
             }
         }
+
+        return {};
     };
 
     handleMatrixChange = (matrixValues: MatrixValues) => {

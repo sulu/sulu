@@ -1,5 +1,176 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render with empty webspace section 1`] = `
+<h2>
+  Webspaces
+</h2>
+`;
+
+exports[`Render with empty webspace section 2`] = `
+<div
+  class="selectContainer"
+>
+  <div
+    class="select"
+  >
+    <button
+      class="displayValue default"
+      type="button"
+    >
+      <div
+        aria-label="sulu_admin.none_selected"
+        class="croppedText"
+        title="sulu_admin.none_selected"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          sulu_admin.n
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            one_selected
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          sulu_admin.none_selected
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="toggle su-angle-down"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render with empty webspace section 3`] = `
+<div
+  class="matrixContainer"
+/>
+`;
+
+exports[`Render with empty webspace section 4`] = `
+<div
+  class="matrixContainer"
+>
+  <h2>
+    Contacts
+  </h2>
+  <div
+    class="matrix"
+  >
+    <div
+      class="row"
+    >
+      <div>
+        people
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div>
+        organizations
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render with minimal 1`] = `
 <div
   class="matrixContainer"
@@ -115,54 +286,352 @@ exports[`Render with minimal 1`] = `
 `;
 
 exports[`Render with webspace section 1`] = `
-<div>
-  <h2>
-    Webspaces
-  </h2>
+<h2>
+  Webspaces
+</h2>
+`;
+
+exports[`Render with webspace section 2`] = `
+<div
+  class="selectContainer"
+>
   <div
-    class="selectContainer"
+    class="select"
   >
-    <div
-      class="select"
+    <button
+      class="displayValue default"
+      type="button"
     >
-      <button
-        class="displayValue default"
-        type="button"
+      <div
+        aria-label="Example"
+        class="croppedText"
+        title="Example"
       >
         <div
-          aria-label="sulu_admin.none_selected"
-          class="croppedText"
-          title="sulu_admin.none_selected"
+          aria-hidden="true"
+          class="front"
         >
-          <div
-            aria-hidden="true"
-            class="front"
-          >
-            sulu_admin.n
-          </div>
-          <div
-            aria-hidden="true"
-            class="back"
-          >
-            <span>
-              one_selected
-            </span>
-          </div>
-          <div
-            class="whole"
-          >
-            sulu_admin.none_selected
-          </div>
+          Exam
         </div>
-        <span
-          aria-label="su-angle-down"
-          class="toggle su-angle-down"
-        />
-      </button>
-    </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            ple
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          Example
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="toggle su-angle-down"
+      />
+    </button>
   </div>
+</div>
+`;
+
+exports[`Render with webspace section 3`] = `
+<div
+  class="matrixContainer"
+>
   <div
     class="matrixContainer"
-  />
+  >
+    <h3>
+      example
+    </h3>
+    <div
+      class="matrix"
+    >
+      <div
+        class="row"
+      >
+        <div>
+          example
+        </div>
+        <div>
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.live"
+          >
+            <span
+              aria-label="fa-signal"
+              class="fa fa-signal"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.security"
+          >
+            <span
+              aria-label="su-lock"
+              class="su-lock"
+            />
+          </div>
+          <span
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </span>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div>
+          example.analytics
+        </div>
+        <div>
+          <div
+            class="item"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <span
+            class="rowButton"
+          >
+            sulu_admin.activate_all
+          </span>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div>
+          example.default-snippets
+        </div>
+        <div>
+          <div
+            class="item"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <span
+            class="rowButton"
+          >
+            sulu_admin.activate_all
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with webspace section 4`] = `
+<div
+  class="matrixContainer"
+>
+  <h2>
+    Contacts
+  </h2>
+  <div
+    class="matrix"
+  >
+    <div
+      class="row"
+    >
+      <div>
+        people
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div>
+        organizations
+      </div>
+      <div>
+        <div
+          class="item selected"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <span
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
 `;

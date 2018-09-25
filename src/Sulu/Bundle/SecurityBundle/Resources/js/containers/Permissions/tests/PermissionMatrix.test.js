@@ -156,7 +156,7 @@ test('Should trigger onChange correctly', () => {
         'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
     };
 
-    const permissionmatrix = mount(
+    const permissionMatrix = mount(
         <PermissionMatrix
             contextPermissions={contextPermissions}
             onChange={onChange}
@@ -172,7 +172,7 @@ test('Should trigger onChange correctly', () => {
             'edit': false,
         },
     };
-    permissionmatrix.find('Matrix').instance().props.onChange(matrixValues);
+    permissionMatrix.find('Matrix').instance().props.onChange(matrixValues);
 
     const expectedContextPermissions: Array<ContextPermission> = [
         {

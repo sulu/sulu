@@ -170,33 +170,40 @@ export default class Permissions extends React.Component<Props> {
         );
     }
 
+    renderMatrixes(): Array<*> {
+        const {value} = this.props;
+
+        return Object.keys(this.securityContextGroups).sort().map((securityContextGroupKey, matrixIndex) => {
+            // ignore webspace group here
+            if (this.webspaceSecurityContextGroupKey
+                && this.webspaceSecurityContextGroupKey === securityContextGroupKey
+            ) {
+                return null;
+            }
+
+            const securityContexts = this.securityContextGroups[securityContextGroupKey];
+
+            return (
+                <PermissionMatrix
+                    contextPermissions={value}
+                    key={matrixIndex}
+                    onChange={this.handleChange}
+                    securityContexts={securityContexts}
+                    title={securityContextGroupKey}
+                />
+            );
+        });
+    }
+
     render() {
         if (!this.securityContextGroups) {
             return <Loader />;
         }
 
-        const {value} = this.props;
         return (
             <Fragment>
                 {this.renderWebspaceMatrixes()}
-                {Object.keys(this.securityContextGroups).sort().map((securityContextGroupKey, matrixIndex) => {
-                    // ignore webspace group here
-                    if (this.webspaceSecurityContextGroupKey
-                        && this.webspaceSecurityContextGroupKey === securityContextGroupKey
-                    ) {
-                        return null;
-                    }
-
-                    return (
-                        <PermissionMatrix
-                            contextPermissions={value}
-                            key={matrixIndex}
-                            onChange={this.handleChange}
-                            securityContexts={this.securityContextGroups[securityContextGroupKey]}
-                            title={securityContextGroupKey}
-                        />
-                    );
-                })}
+                {this.renderMatrixes()}
             </Fragment>
         );
     }
