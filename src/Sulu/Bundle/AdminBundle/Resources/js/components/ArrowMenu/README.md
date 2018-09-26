@@ -186,3 +186,21 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     </ArrowMenu>
 </div>
 ```
+
+```
+<div>
+    <div>
+        <h3>Current values</h3>
+        <ul>
+            <li>Value 1: {state.value1}</li>
+            <li>Value 2: {state.value2}</li>
+        </ul>
+    </div>
+    
+    <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
+        <Section>
+            <Action onClick={this.handle}>Column Options</Action>
+        </Section>
+    </ArrowMenu>
+</div>
+```

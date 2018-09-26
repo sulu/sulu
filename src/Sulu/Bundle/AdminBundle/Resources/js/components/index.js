@@ -10,6 +10,7 @@ import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
+import DropdownButton from './DropdownButton';
 import Form from './Form';
 import Grid from './Grid';
 import Icon from './Icon';
@@ -39,6 +40,7 @@ export {
     DatePicker,
     Dialog,
     Divider,
+    DropdownButton,
     Form,
     Grid,
     Icon,

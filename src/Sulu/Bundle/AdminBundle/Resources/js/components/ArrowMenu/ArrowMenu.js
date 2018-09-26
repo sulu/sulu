@@ -8,6 +8,7 @@ import Popover from '../Popover';
 import SingleItemSection from './SingleItemSection';
 import Section from './Section';
 import Item from './Item';
+import Action from './Action';
 import arrowMenuStyles from './arrowMenu.scss';
 
 type Props = {
@@ -24,6 +25,7 @@ export default class ArrowMenu extends React.Component<Props> {
     static Section = Section;
     static SingleItemSection = SingleItemSection;
     static Item = Item;
+    static Action = Action;
 
     @observable displayValueRef: ?ElementRef<*>;
 
@@ -59,10 +61,10 @@ export default class ArrowMenu extends React.Component<Props> {
                     verticalOffset={VERTICAL_OFFSET}
                 >
                     {
-                        (setPopoverElementRef, popoverStyle, verticalPosition) => {
+                        (setPopoverElementRef, popoverStyle, verticalPosition, horizontalPosition) => {
                             const arrowVerticalPosition = verticalPosition === 'top' ? 'bottom' : 'top';
 
-                            return this.renderMenu(setPopoverElementRef, popoverStyle, arrowVerticalPosition);
+                            return this.renderMenu(setPopoverElementRef, popoverStyle, arrowVerticalPosition, horizontalPosition);
                         }
                     }
                 </Popover>

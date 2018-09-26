@@ -7,6 +7,8 @@ import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 
 export default class AbstractTableAdapter extends AbstractAdapter {
+    static hasColumnOptions: boolean = true;
+
     static defaultProps = {
         data: [],
     };

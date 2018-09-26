@@ -5,7 +5,7 @@ import sectionStyles from './section.scss';
 
 type Props = {
     children?: ChildrenArray<Element<*>>,
-    title: string,
+    title?: string,
 };
 
 export default class Section extends React.PureComponent<Props> {
@@ -17,7 +17,9 @@ export default class Section extends React.PureComponent<Props> {
 
         return (
             <div className={sectionStyles.section}>
-                <div className={sectionStyles.title}>{title}</div>
+                {title &&
+                    <div className={sectionStyles.title}>{title}</div>
+                }
                 <div className={sectionStyles.children}>
                     {children}
                 </div>

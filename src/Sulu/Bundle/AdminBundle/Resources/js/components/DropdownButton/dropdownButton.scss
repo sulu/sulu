@@ -1,0 +1,15 @@
+@import '../../containers/Application/colors.scss';
+
+.dropdown-button {
+    > span:first-child {
+        margin-left: 5px;
+    }
+
+    > span:last-child {
+        margin-right: 5px;
+    }
+}
+
+.dropdown-icon {
+    margin-left: 5px;
+}

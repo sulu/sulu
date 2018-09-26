@@ -1,0 +1,20 @@
+@import '../../containers/Application/colors.scss';
+
+$hoverColor: $shakespeare;
+$fontColor: $blueZodiac;
+
+.action {
+    width: 100%;
+    position: relative;
+    line-height: 14px;
+    color: $fontColor;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-size: 12px;
+
+    &:hover {
+        color: $hoverColor;
+    }
+}
