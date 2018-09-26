@@ -181,6 +181,12 @@ class Form extends React.Component<Props> {
             },
         } = this.props;
 
+        if (!preview) {
+            this.setHasPreview(false);
+
+            return;
+        }
+
         jexl.eval(preview, this.resourceStore.data).then(this.setHasPreview);
     };
 
