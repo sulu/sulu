@@ -135,5 +135,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         $loader->load('export.xml');
         $loader->load('import.xml');
         $loader->load('admin.xml');
+        $loader->load('command.xml');
     }
 }

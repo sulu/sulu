@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use FFMpeg\FFMpeg;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -164,6 +165,18 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('media_proxy_path')->defaultValue('/uploads/media/{slug}')->end()
                     ->scalarNode('media_download_path')->defaultValue('/media/{id}/download/{slug}')->end()
+                ->end()
+            ->end()
+            ->arrayNode('ffmpeg')
+                ->children()
+                    ->scalarNode('ffmpeg_binary')
+                        ->isRequired()
+                    ->end()
+                    ->scalarNode('ffprobe_binary')
+                        ->isRequired()
+                    ->end()
+                    ->scalarNode('binary_timeout')->defaultValue(60)->end()
+                    ->scalarNode('threads_count')->defaultValue(4)->end()
                 ->end()
             ->end();
 

@@ -23,7 +23,7 @@ class PreviewRendererTest extends KernelTestCase
 
     public function setUp()
     {
-        $this->previewRenderer = $this->getContainer()->get('sulu_preview.preview.renderer');
+        $this->previewRenderer = $this->getContainer()->get('sulu_preview_test.preview.renderer');
     }
 
     public function testTargetGroupProperty()

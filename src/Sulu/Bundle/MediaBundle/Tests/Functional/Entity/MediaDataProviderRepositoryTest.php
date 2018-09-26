@@ -540,7 +540,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
         $this->em->flush();
 
-        $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
+        $repository = $this->getContainer()->get('sulu_media_test.smart_content.data_provider.media.repository');
 
         // if data-source isset replace the index with the id
         if (array_key_exists('dataSource', $filters) && 'root' !== $filters['dataSource']) {
@@ -622,7 +622,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
 
         $mediaResults = $this->getContainer()
-            ->get('sulu_media.smart_content.data_provider.media.repository')
+            ->get('sulu_media_test.smart_content.data_provider.media.repository')
             ->findByFilters($filters, 1, 100, 100, 'de');
 
         $mediaIds = array_map(function(MediaApi $media) {

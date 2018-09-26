@@ -24,6 +24,7 @@ matrix:
       php: 7.2
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
+        - SYMFONY_DEPRECATIONS_HELPER="weak"
 
     - language: php
       php: 7.1
@@ -35,6 +36,7 @@ matrix:
         - DATABASE_COLLATE=
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
+        - SYMFONY_DEPRECATIONS_HELPER="weak"
 
 before_script:
   - if [ ! -d downloads ]; then mkdir downloads; fi

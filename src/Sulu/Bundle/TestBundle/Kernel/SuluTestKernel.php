@@ -45,6 +45,7 @@ class SuluTestKernel extends SuluKernel
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
+            new \DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
 

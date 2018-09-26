@@ -8,7 +8,7 @@
     </parameters>
 
     <services>
-        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%">
+        <service id="sulu.phpcr.session" class="%sulu.phpcr.session.class%" public="true">
             <argument type="service" id="sulu_document_manager.default_session"/>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>

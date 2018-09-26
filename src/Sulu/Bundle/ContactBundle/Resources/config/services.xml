@@ -36,7 +36,7 @@
         <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">
             <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
-        <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%">
+        <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
@@ -46,7 +46,7 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%">
+        <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
@@ -56,7 +56,7 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%">
+        <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_contact.util.id_converter"/>
             <argument type="service" id="sulu_contact.util.index_comparator"/>
@@ -71,7 +71,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%">
+        <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%" public="true">
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
 
@@ -90,7 +90,7 @@
             <tag name="sulu.smart_content.data_provider" alias="accounts"/>
         </service>
 
-        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%"/>
+        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="true"/>
         <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
         <service id="sulu_contact.js_config" class="Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection">

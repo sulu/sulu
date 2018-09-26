@@ -10,7 +10,7 @@
 
     <services>
         <!-- Controller -->
-        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%">
+        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%" public="true">
             <argument type="service" id="massive_search.search_manager"/>
             <argument type="service" id="massive_search.metadata.provider.chain"/>
             <argument type="service" id="sulu_security.security_checker"/>

@@ -58,7 +58,7 @@ trait PersistenceExtensionTrait
                 $container->setDefinition(
                     $this->getContainerKey('repository', $object),
                     $repositoryDefinition
-                );
+                )->setPublic(true);
             }
         }
     }

@@ -27,6 +27,10 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
+        $container->prependExtensionConfig('twig', [
+            'exception_controller' => 'sulu_website.exception.controller:showAction',
+        ]);
+
         if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
             return;
         }
@@ -83,6 +87,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('sitemap.xml');
+        $loader->load('command.xml');
 
         if ($config['analytics']['enabled']) {
             $loader->load('analytics.xml');

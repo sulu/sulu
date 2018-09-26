@@ -18,5 +18,9 @@
             <tag name="console.command" />
         </service>
 
+        <service id="sulu_document_manager.command.subscriber_debug" class="Sulu\Bundle\DocumentManagerBundle\Command\SubscriberDebugCommand">
+            <tag name="console.command" />
+        </service>
+
     </services>
 </container>

@@ -296,7 +296,7 @@ class CreateUserCommand extends ContainerAwareCommand
     private function encodePassword($user, $password, $salt)
     {
         /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
+        $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
     }

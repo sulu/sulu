@@ -1,0 +1,4 @@
+services:
+    sulu_preview_test.preview.renderer:
+        alias: sulu_preview.preview.renderer
+        public: true

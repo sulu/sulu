@@ -43,6 +43,8 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
                 );
             }
 
+            $container->getDefinition($id)->setPublic(true);
+
             $contentTypeManager->addMethodCall(
                 'mapAliasToServiceId',
                 [$attributes[0]['alias'], $id]

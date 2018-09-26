@@ -37,7 +37,7 @@ class ContentLocaleCopyCommandTest extends SuluTestCase
 
     public function setUp()
     {
-        $application = new Application($this->getContainer()->get('kernel'));
+        $application = new Application();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentRegistry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
 

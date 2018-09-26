@@ -34,7 +34,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>            
         </service>
-        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
+        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
         </service>
@@ -44,7 +44,7 @@
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
-        <service id="sulu_media.storage" class="%sulu_media.storage.class%">
+        <service id="sulu_media.storage" class="%sulu_media.storage.class%" public="true">
             <argument>%sulu_media.media.storage.local.path%</argument>
             <argument>%sulu_media.media.storage.local.segments%</argument>
             <argument type="service" id="sulu_media.storage.file_system"/>
@@ -122,7 +122,7 @@
             <tag name="sulu_media.image.transformation" alias="sharpen" />
         </service>
 
-        <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
+        <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%" public="true">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.user" />
@@ -136,7 +136,7 @@
             <argument type="service" id="sulu.content.path_cleaner" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
-            <argument type="service" id="dubture_ffmpeg.ffprobe" on-invalid="null" />
+            <argument type="service" id="sulu_media.ffprobe" on-invalid="null" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
@@ -154,7 +154,7 @@
             <argument>%sulu_media.format_options_entity%</argument>
         </service>
 
-        <service id="sulu_media.format_options_manager" class="%sulu_media.format_options_manager.class%">
+        <service id="sulu_media.format_options_manager" class="%sulu_media.format_options_manager.class%" public="true">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_media.format_options_repository" />
             <argument type="service" id="sulu_media.media_manager" />
@@ -162,7 +162,7 @@
             <argument>%sulu_media.image.formats%</argument>
         </service>
 
-        <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">
+        <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%" public="true">
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
@@ -183,7 +183,7 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
-        <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%">
+        <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%" public="true">
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.format_manager" />
@@ -205,7 +205,7 @@
         </service>
 
         <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">
-            <argument type="service" id="dubture_ffmpeg.ffmpeg" on-invalid="null"/>
+            <argument type="service" id="sulu_media.ffmpeg" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">
@@ -257,7 +257,7 @@
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
         </service>
 
-        <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
+        <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager" public="true">
             <argument>%sulu_media.system_collections%</argument>
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
@@ -278,7 +278,7 @@
             <tag name="sulu_markup.tag" tag="media" type="html"/>
         </service>
 
-        <service id="sulu_media.disposition_type.resolver" class="Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver">
+        <service id="sulu_media.disposition_type.resolver" class="Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver" public="true">
             <argument>%sulu_media.disposition_type.default%</argument>
             <argument>%sulu_media.disposition_type.mime_types_inline%</argument>
             <argument>%sulu_media.disposition_type.mime_types_attachment%</argument>

@@ -13,13 +13,13 @@
     </parameters>
 
     <services>
-        <service id="sulu_snippet.repository" class="%sulu_snippet.repository.class%">
+        <service id="sulu_snippet.repository" class="%sulu_snippet.repository.class%" public="true">
             <argument type="service" id="sulu.phpcr.session" />
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_document_manager.document_manager" />
         </service>
 
-        <service id="sulu_snippet.controller.snippet" class="%sulu_snippet.controller.snippet.class%">
+        <service id="sulu_snippet.controller.snippet" class="%sulu_snippet.controller.snippet.class%" public="true">
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.content.structure_manager"/>

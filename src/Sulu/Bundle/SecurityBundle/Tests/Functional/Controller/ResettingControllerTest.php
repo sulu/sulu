@@ -331,7 +331,7 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
+        $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
         $this->assertEquals($encoder->encodePassword($newPassword, $user->getSalt()), $user->getPassword());
         $this->assertNull($user->getPasswordResetToken());
         $this->assertNull($user->getPasswordResetTokenExpiresAt());

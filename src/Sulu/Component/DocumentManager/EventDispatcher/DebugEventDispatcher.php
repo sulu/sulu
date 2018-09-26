@@ -12,15 +12,14 @@
 namespace Sulu\Component\DocumentManager\EventDispatcher;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Logging and profiling event dispatcher for the document manager.
  */
-class DebugEventDispatcher extends ContainerAwareEventDispatcher
+class DebugEventDispatcher extends EventDispatcher
 {
     /**
      * @var Stopwatch
@@ -33,16 +32,13 @@ class DebugEventDispatcher extends ContainerAwareEventDispatcher
     private $logger;
 
     /**
-     * @param ContainerInterface $container
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      */
     public function __construct(
-        ContainerInterface $container,
         Stopwatch $stopwatch,
         LoggerInterface $logger
     ) {
-        parent::__construct($container);
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
     }

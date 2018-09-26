@@ -35,6 +35,7 @@ class InitializerPass implements CompilerPassInterface
             if (isset($attributes[0]['priority'])) {
                 $priority = $attributes[0]['priority'];
             }
+            $container->getDefinition($id)->setPublic(true);
             $map[$id] = $priority;
         }
 

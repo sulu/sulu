@@ -56,7 +56,7 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
 
         if (!$event->isMasterRequest()
             || !$this->handler instanceof HandlerUpdateResponseInterface
-            || !$request->isMethodSafe()
+            || !$request->isMethodCacheable()
             || false === $request->attributes->has('structure')
             || true === $request->query->has('preview')
         ) {
