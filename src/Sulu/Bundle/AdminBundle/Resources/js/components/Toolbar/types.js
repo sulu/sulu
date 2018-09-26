@@ -1,5 +1,5 @@
 // @flow
-import type {Element, Node} from 'react';
+import type {Element, Node, ElementRef} from 'react';
 import ItemsComponent from './Items';
 import IconsComponent from './Icons';
 import ButtonComponent from './Button';
@@ -17,10 +17,12 @@ export type Group = Element<typeof ItemsComponent> | Element<typeof IconsCompone
 export type Skin = 'light' | 'dark';
 
 export type Button = {
+    buttonRef?: (ref: ElementRef<'button'>) => void,
     children?: Node,
     onClick: () => ?Promise<*>,
     value?: string | number,
     icon?: string,
+    showText?: boolean,
     size?: string,
     disabled?: boolean,
     active?: boolean,
@@ -57,6 +59,7 @@ export type Dropdown = {
     options: Array<DropdownOption>,
     label?: string | number,
     icon?: string,
+    showText?: boolean,
     size?: string,
     disabled?: boolean,
     loading?: boolean,
@@ -69,6 +72,7 @@ export type Select = {
     onChange: (optionValue: string | number) => void,
     label?: string | number,
     icon?: string,
+    showText?: boolean,
     size?: string,
     className?: string,
     disabled?: boolean,

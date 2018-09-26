@@ -115,7 +115,7 @@ export default class Toolbar extends React.Component<*> {
                         visible={this.toolbarStore.showSuccess}
                     />
                 }
-                <ToolbarComponent.Controls>
+                <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
                         icon={navigationOpen ? 'su-times' : 'su-bars'}
