@@ -115,7 +115,6 @@ class PreviewRenderer implements PreviewRendererInterface
         ReplacerInterface $replacer,
         array $previewDefaults,
         $environment,
-        $defaultHost,
         $targetGroupHeader = null
     ) {
         $this->routeDefaultsProvider = $routeDefaultsProvider;
@@ -126,7 +125,6 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->replacer = $replacer;
         $this->previewDefaults = $previewDefaults;
         $this->environment = $environment;
-        $this->defaultHost = $defaultHost;
         $this->targetGroupHeader = $targetGroupHeader;
     }
 
@@ -164,6 +162,9 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
+        $attributes['preview'] = true;
+        $attributes['partial'] = $partial;
+      
         $this->registerPreviewRoute($locale, $attributes);
 
         // get server parameters
@@ -243,7 +244,7 @@ class PreviewRenderer implements PreviewRendererInterface
     {
         // get server parameters
         $server = [];
-        $host = $this->defaultHost;
+        $host = null;
         // FIXME default scheme and port should be configurable.
         $scheme = 'http';
         $port = 80;
@@ -313,7 +314,9 @@ class PreviewRenderer implements PreviewRendererInterface
         $portal->setLocalizations([$localization]);
         $portal->setDefaultLocalization($localization);
         $environment = new Environment();
-        $url = new Url($domain, $this->environment);
+    
+      
+      $url = new Url($domain, $this->environment);
         $environment->setUrls([$url]);
         $portal->setEnvironments([$environment]);
         $webspace->setPortals([$portal]);

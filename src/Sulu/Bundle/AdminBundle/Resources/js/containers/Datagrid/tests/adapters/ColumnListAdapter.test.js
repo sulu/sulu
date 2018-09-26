@@ -558,7 +558,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
                 id: 1,
                 title: 'Page 1',
                 hasChildren: true,
-            },{
+            }, {
                 id: 2,
                 title: 'Page 2',
                 hasChildren: false,

@@ -10,37 +10,56 @@ exports[`Render the MediaCollection 1`] = `
     <div
       class="collectionSection"
     >
-      <ul
-        class="breadcrumb"
+      <div
+        class="left"
       >
-        <li>
+        <ul
+          class="breadcrumb"
+        >
+          <li>
+            <button
+              class="item"
+              disabled=""
+            >
+              All Media
+            </button>
+          </li>
+        </ul>
+        <div
+          class="icons"
+        >
+          <span
+            aria-label="su-pen"
+            class="icon su-pen clickable"
+            role="button"
+            tabindex="0"
+          />
+          <span
+            aria-label="su-trash-alt"
+            class="icon su-trash-alt clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+      </div>
+      <div
+        class="right"
+      >
+        <div>
           <button
-            class="item"
-            disabled=""
+            class="button icon button"
+            type="button"
           >
-            All Media
+            <span
+              class="text"
+            >
+              <span
+                aria-label="su-plus"
+                class="su-plus"
+              />
+            </span>
           </button>
-        </li>
-      </ul>
-      <div>
-        <span
-          aria-label="su-plus"
-          class="su-plus clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-pen"
-          class="su-pen clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt clickable"
-          role="button"
-          tabindex="0"
-        />
+        </div>
       </div>
     </div>
     <div

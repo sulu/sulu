@@ -5,10 +5,10 @@ import {buildHocDisplayName} from '../../services/react';
 import type {SidebarConfig} from './types';
 import sidebarStore from './stores/SidebarStore';
 
-export default function withSidebar(
-    Component: Class<Component<*, *>>,
-    sidebar: () => SidebarConfig
-) {
+export default function withSidebar<P, C: Class<Component<P>>>(
+    Component: C,
+    sidebar: () => ?SidebarConfig
+): C {
     const WithSidebarComponent = class extends Component {
         static hasSidebar = true;
 
@@ -24,7 +24,14 @@ export default function withSidebar(
             }
 
             this.sidebarDisposer = autorun(() => {
-                sidebarStore.setConfig(sidebar.call(this));
+                const sidebarConfig = sidebar.call(this);
+                if (!sidebarConfig) {
+                    sidebarStore.clearConfig();
+
+                    return;
+                }
+
+                sidebarStore.setConfig(sidebarConfig);
             });
         }
 
@@ -39,5 +46,6 @@ export default function withSidebar(
 
     WithSidebarComponent.displayName = buildHocDisplayName('withSidebar', Component);
 
+    // $FlowFixMe
     return WithSidebarComponent;
 }

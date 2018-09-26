@@ -78,5 +78,7 @@
     "sulu_admin.limit_result_to": "Ergebnis limitieren auf",
     "sulu_admin.smart_content_label": "{count} {count, plural, =1 {Element} other {Elemente}} ausgewählt",
     "sulu_admin.order_warning_title": "Elemente neu anordnen",
-    "sulu_admin.order_warning_text": "Sie sind dabei ein Element neu anzuordnen."
+    "sulu_admin.order_warning_text": "Sie sind dabei ein Element neu anzuordnen.",
+    "sulu_admin.all_selected": "Alle ausgewählt",
+    "sulu_admin.none_selected": "Keine ausgewählt"
 }

@@ -1,11 +1,12 @@
 @import '../../containers/Application/colors.scss';
 
+$height: 30px;
 $lineHeight: 28px;
 $fontSize: 12px;
-$color: $blueZodiac;
+$color: $black;
 $backgroundColor: $white;
 $borderSize: 1px;
-$borderColor: $frenchGray;
+$borderColor: $silver;
 $borderRadius: 3px;
 $iconSize: 10px;
 $hoverColor: $shakespeare;
@@ -28,13 +29,14 @@ $darkBackgroundColor: $white;
 
     &.dark,
     &.default {
-        display: block;
+        display: flex;
         width: 100%;
+        height: $height;
         border: $borderSize solid $borderColor;
         border-radius: $borderRadius;
         text-align: left;
         font-size: $fontSize;
-        color: $blueZodiac;
+        color: $color;
         background-color: $backgroundColor;
 
         &:hover {

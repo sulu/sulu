@@ -5,8 +5,19 @@ import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 
+jest.mock('jexl', () => ({
+    eval: jest.fn().mockImplementation((expression) => {
+        if (undefined === expression) {
+            throw new Error('Expression cannot be undefined');
+        }
+
+        return Promise.resolve(expression === 'nodeType == 1');
+    }),
+}));
+
 jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('../../../containers/Sidebar/withSidebar', () => jest.fn((Component) => Component));
 jest.mock('../toolbarActions/DeleteToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveToolbarAction', () => jest.fn());
@@ -284,6 +295,98 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         {type: 'button', value: 'save'},
         {type: 'button', value: 'delete'},
     ]);
+});
+
+test('Should initialize preview sidebar', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
+
+    const route = {
+        options: {
+            toolbarActions: [],
+            preview: 'nodeType == 1',
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
+
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig.view).toEqual('sulu_preview.preview');
+        expect(sidebarConfig.sizes).toEqual(['medium', 'large']);
+        expect(sidebarConfig.props.router).toEqual(router);
+        expect(sidebarConfig.props.formStore).toBeDefined();
+    }, 0);
+});
+
+test('Should not initialize preview sidebar when expression evaluates to false', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
+
+    const route = {
+        options: {
+            toolbarActions: [],
+            preview: 'nodeType == 2',
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
+
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig).toEqual(null);
+    }, 0);
+});
+
+test('Should not initialize preview sidebar when option is not set', () => {
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../Form').default;
+    const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+    resourceStore.loading = false;
+
+    const route = {
+        options: {
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    // trigger evaluation
+    sidebarFunction.call(form.instance());
+
+    setTimeout(() => {
+        const sidebarConfig = sidebarFunction.call(form.instance());
+        expect(sidebarConfig).toEqual(null);
+    }, 0);
 });
 
 test('Should not add PublishIndicator if no publish status is available', () => {

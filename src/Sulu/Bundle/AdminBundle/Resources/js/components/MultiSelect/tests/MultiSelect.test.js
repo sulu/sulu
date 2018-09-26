@@ -9,6 +9,10 @@ const Divider = MultiSelect.Divider;
 
 jest.mock('../../Select');
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 test('The component should render a generic select', () => {
     const onChange = jest.fn();
     const select = shallow(

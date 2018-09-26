@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import type {SelectProps} from '../Select';
 import Select from '../Select';
+import {translate} from '../../utils/Translator';
 
 type Props<T> = SelectProps & {
     values: Array<T>,
@@ -13,6 +14,8 @@ type Props<T> = SelectProps & {
 
 export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        allSelectedText: translate('sulu_admin.all_selected'),
+        noneSelectedText: translate('sulu_admin.none_selected'),
         skin: 'default',
         values: [],
     };

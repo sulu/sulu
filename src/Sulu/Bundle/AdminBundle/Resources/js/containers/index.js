@@ -10,9 +10,14 @@ import Datagrid, {
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
 import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
+import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {fieldRegistry, FormInspector, FormStore} from './Form';
+import MultiSelect from './MultiSelect';
+import MultiAutoComplete from './MultiAutoComplete';
+import MultiSelection from './MultiSelection';
+import SingleAutoComplete from './SingleAutoComplete';
 
 export type {
     DatagridAdapterProps,
@@ -31,8 +36,15 @@ export {
     Form,
     FormInspector,
     FormStore,
+    MultiSelect,
+    MultiAutoComplete,
+    MultiSelection,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
+    SingleAutoComplete,
+    Sidebar,
+    sidebarStore,
+    sidebarRegistry,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

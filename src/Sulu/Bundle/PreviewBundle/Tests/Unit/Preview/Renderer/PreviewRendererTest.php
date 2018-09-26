@@ -98,11 +98,6 @@ class PreviewRendererTest extends TestCase
      */
     private $environment = 'prod';
 
-    /**
-     * @var string
-     */
-    private $defaultHost = 'default-sulu.io';
-
     public function setUp()
     {
         $this->routeDefaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
@@ -129,7 +124,6 @@ class PreviewRendererTest extends TestCase
             new Replacer(),
             $this->previewDefault,
             $this->environment,
-            $this->defaultHost,
             'X-Sulu-Target-Group'
         );
     }

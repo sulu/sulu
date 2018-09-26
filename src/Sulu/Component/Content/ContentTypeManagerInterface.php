@@ -35,9 +35,9 @@ interface ContentTypeManagerInterface
     public function has($contentTypeName);
 
     /**
-     * returns all content types.
+     * returns all content type aliases.
      *
-     * @return ContentTypeInterface[]
+     * @return string[]
      */
-    public function getAll();
+    public function getAll(): array;
 }

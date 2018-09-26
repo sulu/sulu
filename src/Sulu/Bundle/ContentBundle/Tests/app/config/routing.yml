@@ -7,10 +7,6 @@ sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing.yml"
     prefix: /admin/media
 
-sulu_websocket:
-    resource: "@SuluWebsocketBundle/Resources/config/routing.yml"
-    prefix: /admin/websocket
-
 sulu_media_website:
     resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
 
