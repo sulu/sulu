@@ -7,7 +7,6 @@
     <services>
 
         <!-- Core -->
-        <!-- TODO DebugEventDispatcher -->
         <service id="sulu_document_manager.event_dispatcher.debug" class="Sulu\Component\DocumentManager\EventDispatcher\DebugEventDispatcher" public="false">
             <argument type="service" id="debug.stopwatch"/>
             <argument type="service" id="logger"/>

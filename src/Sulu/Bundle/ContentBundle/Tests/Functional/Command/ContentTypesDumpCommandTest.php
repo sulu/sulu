@@ -26,7 +26,7 @@ class ContentTypesDumpCommandTest extends SuluTestCase
 
     public function setUp()
     {
-        $application = new Application();
+        $application = new Application($this->getContainer()->get('kernel'));
 
         $debugContainerCommand = new ContainerDebugCommand();
         $debugContainerCommand->setApplication($application);
