@@ -1,4 +1,5 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $optionListBackgroundLightColor: $wildSand;
 $optionListBackgroundDarkColor: $mirage;
@@ -28,6 +29,6 @@ $optionListShadowColor: $silver;
     }
 
     &.small {
-        width: 60px;
+        width: $smallSelectWidth;
     }
 }
