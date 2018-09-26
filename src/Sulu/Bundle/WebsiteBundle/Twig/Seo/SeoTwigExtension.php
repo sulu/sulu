@@ -88,7 +88,7 @@ class SeoTwigExtension extends \Twig_Extension
         $defaultLocale = null;
         $portal = $this->requestAnalyzer->getPortal();
         if ($portal) {
-            $defaultLocale = $portal->getXDefaultLocalization()->getLocale();
+            $defaultLocale = $portal->getDefaultLocalization()->getLocale();
         }
 
         return $twig->render(
