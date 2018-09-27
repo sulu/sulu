@@ -45,7 +45,7 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.security_systems_select_helper" class="Sulu\Bundle\SecurityBundle\Admin\Helper\SecuritySystemsSelect">
+        <service id="sulu_security.security_systems_select_helper" class="Sulu\Bundle\SecurityBundle\Admin\Helper\SecuritySystemsSelect" public="true">
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument>%sulu_security.system%</argument>
         </service>
