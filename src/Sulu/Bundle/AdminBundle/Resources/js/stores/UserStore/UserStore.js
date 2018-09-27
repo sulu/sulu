@@ -121,7 +121,9 @@ class UserStore {
     }
 
     @action setPersistentSetting(key: string, value: *) {
-        this.persistentSettings[key] = JSON.stringify(value);
+        const newPersistentSettings = {...this.persistentSettings};
+        newPersistentSettings[key] = JSON.stringify(value);
+        this.persistentSettings = newPersistentSettings;
     }
 
     getPersistentSetting(key: string): * {
