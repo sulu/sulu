@@ -25,7 +25,7 @@ export default class ResourceRequester {
         return Requester.put(endpoint + '/' + id + buildQueryString(queryOptions), data);
     }
 
-    static getList(resourceKey: string, options: ListOptions) {
+    static getList(resourceKey: string, options: ListOptions = {}) {
         const endpoint = resourceMetadataStore.getEndpoint(resourceKey);
         const queryOptions = {...options, flat: true};
 

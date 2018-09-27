@@ -18,6 +18,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,15 +31,21 @@ class WebspaceController extends RestController implements ClassResourceInterfac
      *
      * @return Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
+        $checkForPermissions = $request->get('checkForPermissions', true);
         $webspaces = [];
+
         $securityChecker = $this->get('sulu_security.security_checker');
         foreach ($this->get('sulu_core.webspace.webspace_manager')->getWebspaceCollection() as $webspace) {
-            $securityContext = $this->getSecurityContextByWebspace($webspace->getKey());
-            if ($securityChecker->hasPermission(new SecurityCondition($securityContext), PermissionTypes::VIEW)) {
-                $webspaces[] = $webspace;
+            if ($checkForPermissions) {
+                $securityContext = $this->getSecurityContextByWebspace($webspace->getKey());
+                if (!$securityChecker->hasPermission(new SecurityCondition($securityContext), PermissionTypes::VIEW)) {
+                    continue;
+                }
             }
+
+            $webspaces[] = $webspace;
         }
 
         return $this->handleView($this->view(new CollectionRepresentation($webspaces, 'webspaces')));

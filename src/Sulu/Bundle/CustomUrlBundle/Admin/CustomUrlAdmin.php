@@ -31,7 +31,7 @@ class CustomUrlAdmin extends Admin
      */
     public static function getCustomUrlSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
+        return sprintf('%s%s.%s', ContentAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
     }
 
     /**
@@ -52,18 +52,35 @@ class CustomUrlAdmin extends Admin
         $webspaceContexts = [];
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceContexts[self::getCustomUrlSecurityContext($webspace->getKey())] = [
-                 PermissionTypes::VIEW,
-                 PermissionTypes::ADD,
-                 PermissionTypes::EDIT,
-                 PermissionTypes::DELETE,
-             ];
+            $securityContextKey = self::getCustomUrlSecurityContext($webspace->getKey());
+            $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
         }
 
         return [
              'Sulu' => [
-                 'Webspace Settings' => $webspaceContexts,
+                 'Webspaces' => $webspaceContexts,
              ],
          ];
+    }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspaces' => [
+                    self::getCustomUrlSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
+                ],
+            ],
+        ];
+    }
+
+    private function getSecurityContextPermissions()
+    {
+        return [
+            PermissionTypes::VIEW,
+            PermissionTypes::ADD,
+            PermissionTypes::EDIT,
+            PermissionTypes::DELETE,
+        ];
     }
 }

@@ -29,7 +29,7 @@ class WebsiteAdmin extends Admin
      */
     public static function getAnalyticsSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'analytics');
+        return sprintf('%s%s.%s', ContentAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'analytics');
     }
 
     /**
@@ -58,18 +58,35 @@ class WebsiteAdmin extends Admin
         $webspaceContexts = [];
         /* @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceContexts[self::getAnalyticsSecurityContext($webspace->getKey())] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::ADD,
-                PermissionTypes::EDIT,
-                PermissionTypes::DELETE,
-            ];
+            $securityContextKey = self::getAnalyticsSecurityContext($webspace->getKey());
+            $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
         }
 
         return [
             'Sulu' => [
-                'Webspace Settings' => $webspaceContexts,
+                'Webspaces' => $webspaceContexts,
             ],
+        ];
+    }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspaces' => [
+                    self::getAnalyticsSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
+                ],
+            ],
+        ];
+    }
+
+    private function getSecurityContextPermissions()
+    {
+        return [
+            PermissionTypes::VIEW,
+            PermissionTypes::ADD,
+            PermissionTypes::EDIT,
+            PermissionTypes::DELETE,
         ];
     }
 }

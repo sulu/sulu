@@ -1,0 +1,74 @@
+@import '../../containers/Application/colors.scss';
+
+$fontColor: $blueZodiac;
+
+$itemColor: $shakespeare;
+$itemBorderColor: $shakespeare;
+
+$itemBackgroundColorSelected: $shakespeare;
+$itemColorSelected: $white;
+
+.matrix {
+    background: $white;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+.row {
+    border-bottom: 1px solid $mercury;
+    color: $fontColor;
+    padding: 8px 20px;
+
+    > div:first-child {
+        font-size: 12px;
+        line-height: 22px;
+        display: inline-block;
+        width: 50%;
+    }
+
+    > div:last-child {
+        display: inline-block;
+        width: 50%;
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        .row-button {
+            display: inline-block;
+        }
+    }
+}
+
+.row-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 0 7px;
+    display: none;
+}
+
+.item {
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid $itemBorderColor;
+    color: $itemColor;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    margin-right: 5px;
+    text-align: center;
+    height: 26px;
+    width: 26px;
+
+    &.selected {
+        background-color: $itemBackgroundColorSelected;
+        color: $itemColorSelected;
+    }
+}

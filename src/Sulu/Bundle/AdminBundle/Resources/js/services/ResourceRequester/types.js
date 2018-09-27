@@ -1,6 +1,6 @@
 // @flow
 export type ListOptions = {
-    page: number,
-    limit: ?number,
+    page?: ?number,
+    limit?: ?number,
     locale?: ?string,
 };

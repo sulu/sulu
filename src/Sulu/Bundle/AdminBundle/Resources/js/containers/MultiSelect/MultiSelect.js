@@ -13,11 +13,13 @@ type Props<T> = {|
     onChange: (value: Array<T>) => void,
     resourceKey: string,
     values: ?Array<T>,
+    apiOptions: Object,
 |};
 
 @observer
 export default class MultiSelect<T> extends React.Component<Props<T>> {
     static defaultProps = {
+        apiOptions: {},
         idProperty: 'id',
     };
 
@@ -28,9 +30,10 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
 
         const {
             resourceKey,
+            apiOptions,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey);
+        this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
     }
 
     render() {

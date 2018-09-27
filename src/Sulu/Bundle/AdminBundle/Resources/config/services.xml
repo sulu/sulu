@@ -19,7 +19,6 @@
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
-            <argument type="service" id="router"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_content.smart_content.data_provider_pool" />

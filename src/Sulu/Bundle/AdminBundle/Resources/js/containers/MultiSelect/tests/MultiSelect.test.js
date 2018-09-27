@@ -14,7 +14,6 @@ jest.mock('../../../utils/Translator', () => ({
 test('Render in loading state', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
-        this.set = jest.fn();
         this.loading = true;
         this.data = undefined;
     });
@@ -32,7 +31,6 @@ test('Render in loading state', () => {
 test('Render with data', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
-        this.set = jest.fn();
         this.loading = false;
         this.data = [
             {
@@ -62,14 +60,52 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test');
+    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(multiSelect.render()).toMatchSnapshot();
+});
+
+test('Render with data and apiOptions', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+            {
+                'id': 5,
+                'name': 'Test DEF',
+                'someOtherProperty': 'YES YES',
+            },
+            {
+                'id': 99,
+                'name': 'Test XYZ',
+                'someOtherProperty': 'maybe maybe',
+            },
+        ];
+    });
+
+    const apiOptions = {'testOption': 'testValue'};
+
+    const multiSelect = mount(
+        <MultiSelect
+            apiOptions={apiOptions}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledWith('test', apiOptions);
     expect(multiSelect.render()).toMatchSnapshot();
 });
 
 test('Render with values', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
-        this.set = jest.fn();
         this.loading = false;
         this.data = [
             {
@@ -99,14 +135,13 @@ test('Render with values', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test');
+    expect(ResourceListStore).toBeCalledWith('test', {});
     expect(multiSelect.render()).toMatchSnapshot();
 });
 
 test('The component should trigger the change callback', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
-        this.set = jest.fn();
         this.loading = false;
         this.data = [
             {
