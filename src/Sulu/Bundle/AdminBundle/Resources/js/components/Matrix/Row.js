@@ -12,7 +12,7 @@ type Props = {
     children: ChildrenArray<Element<typeof Item>>,
     name: string,
     onChange?: (name: string, value: {[string]: boolean}) => void,
-    title: ?string,
+    title?: string,
     values: MatrixRowValue,
 };
 
@@ -22,15 +22,15 @@ export default class Row extends React.Component<Props> {
         values: {},
     };
 
-    @computed get showDeactiveAllButton(): boolean {
+    @computed get allItemsDeactivated(): boolean {
         const {values} = this.props;
         for (const value in values) {
             if (values[value] === true) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     handleChange = (itemName: string, value: boolean) => {
@@ -63,15 +63,7 @@ export default class Row extends React.Component<Props> {
         ));
     };
 
-    handleDeactivateAllButtonClicked = () => {
-        this.handleAllButtonClicked(false);
-    };
-
-    handleActivateAllButtonClicked = () => {
-        this.handleAllButtonClicked(true);
-    };
-
-    handleAllButtonClicked = (newValue: boolean) => {
+    handleAllButtonClick = () => {
         const {
             name,
             onChange,
@@ -84,25 +76,17 @@ export default class Row extends React.Component<Props> {
 
         const newValues = {...values};
         for (const value in newValues) {
-            newValues[value] = newValue;
+            newValues[value] = this.allItemsDeactivated;
         }
 
         onChange(name, newValues);
     };
 
     renderAllButton() {
-        let clickHandler = this.handleDeactivateAllButtonClicked;
-        let translation = 'sulu_admin.deactivate_all';
-
-        if (!this.showDeactiveAllButton) {
-            clickHandler = this.handleActivateAllButtonClicked;
-            translation = 'sulu_admin.activate_all';
-        }
-
         return (
-            <span className={matrixStyles.rowButton} onClick={clickHandler}>
-                {translate(translation)}
-            </span>
+            <button className={matrixStyles.rowButton} onClick={this.handleAllButtonClick}>
+                {translate(this.allItemsDeactivated ? 'sulu_admin.activate_all' : 'sulu_admin.deactivate_all')}
+            </button>
         );
     }
 

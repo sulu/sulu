@@ -29,4 +29,3 @@ export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
         );
     };
 }
-

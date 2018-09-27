@@ -4,8 +4,8 @@ import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
-import securityContextsStore from '../../stores/SecurityContextsStore';
-import type {SecurityContextGroups, SecurityContexts} from '../../stores/SecurityContextsStore/types';
+import securityContextStore from '../../stores/SecurityContextStore';
+import type {SecurityContextGroups, SecurityContexts} from '../../stores/SecurityContextStore/types';
 import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 import PermissionMatrix from './PermissionMatrix';
@@ -27,7 +27,7 @@ export default class Permissions extends React.Component<Props> {
     @action componentDidMount() {
         this.systemDisposer = autorun(
             () => {
-                securityContextsStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
+                securityContextStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
                     this.securityContextGroups = securityContextGroups;
                 }));
             }
@@ -46,7 +46,7 @@ export default class Permissions extends React.Component<Props> {
         if (this.webspaceSecurityContextGroupKey) {
             const securityContextGroup = this.securityContextGroups[this.webspaceSecurityContextGroupKey];
             for (const securityContextKey of Object.keys(securityContextGroup)) {
-                if (securityContextKey.indexOf(Permissions.webspacePlaceholder) !== -1) {
+                if (securityContextKey.includes(Permissions.webspacePlaceholder)) {
                     return securityContextKey.substring(0, securityContextKey.indexOf('#'));
                 }
             }
@@ -59,7 +59,7 @@ export default class Permissions extends React.Component<Props> {
         for (const securityContextGroupKey of Object.keys(this.securityContextGroups)) {
             const securityContextGroup = this.securityContextGroups[securityContextGroupKey];
             for (const securityContextKey of Object.keys(securityContextGroup)) {
-                if (securityContextKey.indexOf(Permissions.webspacePlaceholder) !== -1) {
+                if (securityContextKey.includes(Permissions.webspacePlaceholder)) {
                     return securityContextGroupKey;
                 }
             }
@@ -74,7 +74,7 @@ export default class Permissions extends React.Component<Props> {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
                 const webspaceKey = contextPermission.context.replace(this.webspaceContextPermissionPrefix, '');
 
-                if (webspaceKey.indexOf('.') !== -1) {
+                if (webspaceKey.includes('.')) {
                     continue;
                 }
 
@@ -113,9 +113,9 @@ export default class Permissions extends React.Component<Props> {
         for (const contextPermission of this.props.value) {
             if (contextPermission.context.startsWith(this.webspaceContextPermissionPrefix)) {
                 const suffix = contextPermission.context.replace(this.webspaceContextPermissionPrefix, '');
-                const webspaceKey = suffix.indexOf('.') === -1 ? suffix : suffix.substring(0, suffix.indexOf('.'));
+                const webspaceKey = !suffix.includes('.') ? suffix : suffix.substring(0, suffix.indexOf('.'));
 
-                if (newSelectedWebspaces.indexOf(webspaceKey) === -1) {
+                if (!newSelectedWebspaces.includes(webspaceKey)) {
                     continue;
                 }
             }
@@ -124,7 +124,7 @@ export default class Permissions extends React.Component<Props> {
         }
 
         const webspacesToAdd = newSelectedWebspaces.filter((newSelectedWebspace) => {
-            return this.selectedWebspaces.indexOf(newSelectedWebspace) < 0;
+            return !this.selectedWebspaces.includes(newSelectedWebspace);
         });
         for (const webspaceToAdd of webspacesToAdd) {
             const securityContexts = this.getWebspaceSecurityContexts(webspaceToAdd.toString());
@@ -159,7 +159,7 @@ export default class Permissions extends React.Component<Props> {
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
                 <div className={permissionsStyle.selectContainer}>
                     <MultiSelect
-                        apiOptions={{'checkForPermissions': 0}}
+                        apiOptions={{checkForPermissions: 0}}
                         displayProperty={'name'}
                         idProperty={'key'}
                         onChange={this.handleWebspaceChange}

@@ -50,11 +50,11 @@ exports[`Render with minimal 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -100,11 +100,11 @@ exports[`Render with minimal 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -164,11 +164,11 @@ exports[`Render with subTitle 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -214,11 +214,11 @@ exports[`Render with subTitle 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -278,11 +278,11 @@ exports[`Render with title 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -328,11 +328,11 @@ exports[`Render with title 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>

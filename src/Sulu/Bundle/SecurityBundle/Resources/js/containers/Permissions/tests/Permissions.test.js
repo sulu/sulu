@@ -5,13 +5,13 @@ import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
-import type {SecurityContextGroups} from '../../../stores/SecurityContextsStore/types';
-import securityContextsStore from '../../../stores/SecurityContextsStore/SecurityContextsStore';
+import type {SecurityContextGroups} from '../../../stores/SecurityContextStore/types';
+import securityContextStore from '../../../stores/SecurityContextStore/SecurityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
 
-jest.mock('../../../stores/SecurityContextsStore/SecurityContextsStore', () => ({
+jest.mock('../../../stores/SecurityContextStore/SecurityContextStore', () => ({
     loadSecurityContextGroups: jest.fn(() => Promise.resolve()),
 }));
 
@@ -54,7 +54,7 @@ test('Render with minimal', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     const permissions = mount(
         <Permissions
@@ -65,7 +65,7 @@ test('Render with minimal', () => {
     );
 
     return promise.then(() => {
-        expect(securityContextsStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
+        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
         permissions.update();
         expect(permissions.render()).toMatchSnapshot();
     });
@@ -102,7 +102,7 @@ test('Should trigger onChange correctly', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     const onChange = jest.fn();
     const permissions = mount(
@@ -178,7 +178,7 @@ test('Render with empty webspace section', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -208,11 +208,11 @@ test('Render with empty webspace section', () => {
     );
 
     return promise.then(() => {
-        expect(securityContextsStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
+        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
         permissions.update();
 
         // Currently we have to load each child separately, because of a bug in enzyme.
-        // Fixme: https://github.com/airbnb/enzyme/issues/1213
+        // TODO: https://github.com/airbnb/enzyme/issues/1213
         const permissionChildren = permissions.children();
         expect(permissionChildren.at(0).render()).toMatchSnapshot();
         expect(permissionChildren.at(1).render()).toMatchSnapshot();
@@ -269,7 +269,7 @@ test('Render with webspace section', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -299,11 +299,11 @@ test('Render with webspace section', () => {
     );
 
     return promise.then(() => {
-        expect(securityContextsStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
+        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
         permissions.update();
 
         // Currently we have to load each child separately, because of a bug in enzyme.
-        // Fixme: https://github.com/airbnb/enzyme/issues/1213
+        // TODO: https://github.com/airbnb/enzyme/issues/1213
         const permissionChildren = permissions.children();
         expect(permissionChildren.at(0).render()).toMatchSnapshot();
         expect(permissionChildren.at(1).render()).toMatchSnapshot();
@@ -360,7 +360,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -479,7 +479,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -644,7 +644,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -748,7 +748,7 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     const permissions = mount(
         <Permissions
@@ -764,9 +764,9 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
         permissions.setProps({system: 'Sulu'});
         permissions.setProps({system: 'Other-System'});
 
-        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
-        expect(securityContextsStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
+        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
+        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
+        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -801,7 +801,7 @@ test('Dispose autorun on unmount', () => {
         },
     };
     const promise = Promise.resolve(securityContextGroups);
-    securityContextsStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     const permissions = mount(
         <Permissions

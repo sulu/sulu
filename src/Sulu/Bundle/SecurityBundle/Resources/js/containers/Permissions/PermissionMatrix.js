@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import Matrix from 'sulu-admin-bundle/components/Matrix';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
-import type {Actions, SecurityContexts} from '../../stores/SecurityContextsStore/types';
+import type {Actions, SecurityContexts} from '../../stores/SecurityContextStore/types';
 import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 
@@ -38,9 +38,9 @@ export default class PermissionMatrix extends React.Component<Props> {
         }
     };
 
-    getMatrixValueFromContextPermission = (searchedKey: string) => {
+    getMatrixValueFromContextPermission = (securityContextKey: string) => {
         for (const contextPermission of this.props.contextPermissions) {
-            if (searchedKey === contextPermission.context) {
+            if (securityContextKey === contextPermission.context) {
                 return contextPermission.permissions;
             }
         }
@@ -55,24 +55,19 @@ export default class PermissionMatrix extends React.Component<Props> {
         Object.keys(matrixValues).map((matrixValuesKey) => {
             const matrixValue = matrixValues[matrixValuesKey];
 
-            let valueSet = false;
             for (const contextPermission of newContextPermissions) {
                 if (matrixValuesKey === contextPermission.context) {
                     contextPermission.permissions = matrixValue;
 
-                    valueSet = true;
-                    break;
+                    return;
                 }
             }
 
-            if (!valueSet) {
-                const newContextPermission: ContextPermission = {
-                    'id': undefined,
-                    'context': matrixValuesKey,
-                    'permissions': matrixValue,
-                };
-                newContextPermissions.push(newContextPermission);
-            }
+            newContextPermissions.push({
+                'id': undefined,
+                'context': matrixValuesKey,
+                'permissions': matrixValue,
+            });
         });
 
         onChange(newContextPermissions);

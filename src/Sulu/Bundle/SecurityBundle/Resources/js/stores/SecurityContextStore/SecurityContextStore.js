@@ -1,13 +1,14 @@
 // @flow
-import {Config, Requester} from 'sulu-admin-bundle/services';
+import {Requester} from 'sulu-admin-bundle/services';
 import type {SecurityContextGroups, Systems} from './types';
 
-class SecurityContextsStore {
+class SecurityContextStore {
+    endpoint: string;
     promise: Promise<Systems>;
 
     sendRequest(): Promise<Systems> {
         if (!this.promise) {
-            this.promise = Requester.get(Config.endpoints.securityContexts);
+            this.promise = Requester.get(this.endpoint);
         }
 
         return this.promise;
@@ -20,4 +21,4 @@ class SecurityContextsStore {
     }
 }
 
-export default new SecurityContextsStore();
+export default new SecurityContextStore();

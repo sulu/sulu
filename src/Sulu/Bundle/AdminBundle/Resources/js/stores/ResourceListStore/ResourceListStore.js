@@ -11,14 +11,6 @@ export default class ResourceListStore {
         this.resourceKey = resourceKey;
 
         this.loading = true;
-
-        if (!apiOptions.hasOwnProperty('limit')) {
-            apiOptions.limit = 100;
-        }
-        if (!apiOptions.hasOwnProperty('page')) {
-            apiOptions.page = 1;
-        }
-
         ResourceRequester.getList(resourceKey, apiOptions).then(action((response) => {
             this.data = response._embedded[resourceKey];
             this.loading = false;

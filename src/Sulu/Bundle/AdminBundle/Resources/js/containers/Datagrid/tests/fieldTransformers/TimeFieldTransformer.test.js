@@ -25,4 +25,3 @@ test('Test invalid format', () => {
 test('Test valid example', () => {
     expect(timeFieldTransformer.transform('14:09')).toBe('2:09 PM');
 });
-

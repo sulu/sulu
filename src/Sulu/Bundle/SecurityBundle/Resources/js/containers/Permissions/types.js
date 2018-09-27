@@ -4,4 +4,3 @@ export type ContextPermission = {
     id: ?number,
     permissions: {[string]: boolean},
 };
-

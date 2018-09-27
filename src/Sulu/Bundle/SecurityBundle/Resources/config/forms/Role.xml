@@ -15,8 +15,8 @@
             <title lang="de">System</title>
         </meta>
         <params>
-            <param name="values" expression="service('sulu_admin.admin_pool').getSecurityContextsValues()"/>
-            <param name="default_value" expression="parameter('sulu_security.system')"/>
+            <param name="values" expression="service('sulu_security.security_systems_select_helper').getValues()"/>
+            <param name="default_value" expression="service('sulu_security.security_systems_select_helper').getDefaultValue()"/>
         </params>
     </property>
 

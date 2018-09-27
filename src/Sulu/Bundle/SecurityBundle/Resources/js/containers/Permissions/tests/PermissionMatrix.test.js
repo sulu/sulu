@@ -4,7 +4,7 @@ import {mount, render} from 'enzyme';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import PermissionMatrix from '../PermissionMatrix';
 import type {ContextPermission} from '../types';
-import type {SecurityContexts} from '../../../stores/SecurityContextsStore/types';
+import type {SecurityContexts} from '../../../stores/SecurityContextStore/types';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: (key) => key,

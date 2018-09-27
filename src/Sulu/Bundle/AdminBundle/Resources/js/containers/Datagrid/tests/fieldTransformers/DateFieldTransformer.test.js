@@ -25,4 +25,3 @@ test('Test invalid format', () => {
 test('Test valid example', () => {
     expect(dateFieldTransformer.transform('2018-03-10')).toBe('03/10/2018');
 });
-

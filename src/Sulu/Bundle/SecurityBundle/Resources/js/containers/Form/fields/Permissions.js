@@ -10,12 +10,12 @@ type Props = FieldTypeProps<?Array<ContextPermission>>;
 
 @observer
 export default class Permissions extends React.Component<Props> {
-    @computed get system(): string {
+    @computed get system(): ?string {
         const {formInspector} = this.props;
         const system = formInspector.getValueByPath('/system');
 
         if (!system || typeof system !== 'string') {
-            throw new Error('Value "system" needs to be provided as string');
+            return null;
         }
 
         return system;
@@ -29,6 +29,10 @@ export default class Permissions extends React.Component<Props> {
 
     render() {
         const {value} = this.props;
+
+        if (!this.system) {
+            return null;
+        }
 
         return (
             <PermissionsContainer onChange={this.handleChange} system={this.system} value={value ? value : []} />

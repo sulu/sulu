@@ -94,11 +94,6 @@ class AdminController
     private $navigationRegistry;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var FieldTypeOptionRegistryInterface
      */
     private $fieldTypeOptionRegistry;
@@ -154,7 +149,6 @@ class AdminController
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
-        RouterInterface $router,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
@@ -175,7 +169,6 @@ class AdminController
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
-        $this->router = $router;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
@@ -190,16 +183,15 @@ class AdminController
     public function indexAction()
     {
         $endpoints = [
-            'config' => $this->router->generate('sulu_admin.config'),
-            'items' => $this->router->generate('get_items'),
-            'loginCheck' => $this->router->generate('sulu_admin.login_check'),
-            'logout' => $this->router->generate('sulu_admin.logout'),
-            'reset' => $this->router->generate('sulu_security.reset_password.email'),
-            'resetResend' => $this->router->generate('sulu_security.reset_password.email.resend'),
-            'resources' => $this->router->generate('sulu_admin.resources', ['resource' => ':resource']),
-            'translations' => $this->router->generate('sulu_admin.translation'),
-            'securityContexts' => $this->router->generate('cget_contexts'),
-            'generateUrl' => $this->router->generate('post_resourcelocator', ['action' => 'generate']),
+            'config' => $this->urlGenerator->generate('sulu_admin.config'),
+            'items' => $this->urlGenerator->generate('get_items'),
+            'loginCheck' => $this->urlGenerator->generate('sulu_admin.login_check'),
+            'logout' => $this->urlGenerator->generate('sulu_admin.logout'),
+            'reset' => $this->urlGenerator->generate('sulu_security.reset_password.email'),
+            'resetResend' => $this->urlGenerator->generate('sulu_security.reset_password.email.resend'),
+            'resources' => $this->urlGenerator->generate('sulu_admin.resources', ['resource' => ':resource']),
+            'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
+            'generateUrl' => $this->urlGenerator->generate('post_resourcelocator', ['action' => 'generate']),
         ];
 
         return $this->engine->renderResponse(
@@ -223,7 +215,7 @@ class AdminController
         $resourceMetadataEndpoints = [];
         foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
             if ($resourceMetadata instanceof EndpointInterface) {
-                $resourceMetadataEndpoints[$resourceMetadata->getKey()] = $this->router->generate($resourceMetadata->getEndpoint());
+                $resourceMetadataEndpoints[$resourceMetadata->getKey()] = $this->urlGenerator->generate($resourceMetadata->getEndpoint());
             }
         }
 
@@ -249,6 +241,11 @@ class AdminController
                 ],
                 'debounceDelay' => $this->previewDelay,
                 'mode' => $this->previewMode,
+            ],
+            'sulu_security' => [
+                'routes' => [
+                    'contexts' => $this->urlGenerator->generate('cget_contexts'),
+                ],
             ],
         ]);
 

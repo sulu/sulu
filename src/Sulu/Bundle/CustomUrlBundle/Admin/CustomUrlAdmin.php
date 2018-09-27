@@ -74,11 +74,6 @@ class CustomUrlAdmin extends Admin
         ];
     }
 
-    public function getSecurityContextsFieldType()
-    {
-        return 'sulu_content.webspace_permissions';
-    }
-
     private function getSecurityContextPermissions()
     {
         return [

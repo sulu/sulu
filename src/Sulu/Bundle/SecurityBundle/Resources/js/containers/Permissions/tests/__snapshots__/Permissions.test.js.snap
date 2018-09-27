@@ -110,11 +110,11 @@ exports[`Render with empty webspace section 4`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -160,11 +160,11 @@ exports[`Render with empty webspace section 4`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -224,11 +224,11 @@ exports[`Render with minimal 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -274,11 +274,11 @@ exports[`Render with minimal 1`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>
@@ -410,11 +410,11 @@ exports[`Render with webspace section 3`] = `
               class="su-lock"
             />
           </div>
-          <span
+          <button
             class="rowButton"
           >
             sulu_admin.deactivate_all
-          </span>
+          </button>
         </div>
       </div>
       <div
@@ -460,11 +460,11 @@ exports[`Render with webspace section 3`] = `
               class="su-trash-alt"
             />
           </div>
-          <span
+          <button
             class="rowButton"
           >
             sulu_admin.activate_all
-          </span>
+          </button>
         </div>
       </div>
       <div
@@ -510,11 +510,11 @@ exports[`Render with webspace section 3`] = `
               class="su-trash-alt"
             />
           </div>
-          <span
+          <button
             class="rowButton"
           >
             sulu_admin.activate_all
-          </span>
+          </button>
         </div>
       </div>
     </div>
@@ -575,11 +575,11 @@ exports[`Render with webspace section 4`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
     <div
@@ -625,11 +625,11 @@ exports[`Render with webspace section 4`] = `
             class="su-trash-alt"
           />
         </div>
-        <span
+        <button
           class="rowButton"
         >
           sulu_admin.deactivate_all
-        </span>
+        </button>
       </div>
     </div>
   </div>
