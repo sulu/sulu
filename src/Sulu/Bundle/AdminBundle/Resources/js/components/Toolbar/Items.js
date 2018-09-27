@@ -17,10 +17,8 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 export default class Items extends React.Component<Props> {
-    @observable
-    expandedWidth: number = 0;
-    @observable
-    parentWidth: number = 0;
+    @observable expandedWidth: number = 0;
+    @observable parentWidth: number = 0;
 
     static defaultProps = {
         skin: 'light',
@@ -54,10 +52,8 @@ export default class Items extends React.Component<Props> {
         resizeObserver.observe(this.parentRef);
     }
 
-    @action
-    setDimensions = () => {
-        const {parentRef} = this;
-        const {childRef} = this;
+    @action setDimensions = () => {
+        const {parentRef, childRef} = this;
 
         if (childRef && childRef.offsetWidth > this.expandedWidth) {
             this.expandedWidth = childRef.offsetWidth;
@@ -70,13 +66,8 @@ export default class Items extends React.Component<Props> {
         this.parentWidth = parentRef.offsetWidth;
     };
 
-    @computed
-    get showText(): boolean {
-        if (this.parentWidth >= this.expandedWidth) {
-            return true;
-        } else {
-            return false;
-        }
+    @computed get showText(): boolean {
+        return this.parentWidth >= this.expandedWidth;
     }
 
     render() {
@@ -88,17 +79,16 @@ export default class Items extends React.Component<Props> {
             <div className={itemsStyles.itemsContainer} ref={this.setParentRef}>
                 <ul className={itemsClass} ref={this.setChildRef}>
                     {children &&
-                        React.Children.map(children, (item, index) => {
-                            return (
-                                <li key={index}>
-                                    {React.cloneElement(item, {
-                                        ...item.props,
-                                        showText: this.showText,
-                                        skin: skin,
-                                    })}
-                                </li>
-                            );
-                        })}
+                        React.Children.map(children, (item, index) => (
+                            <li key={index}>
+                                {React.cloneElement(item, {
+                                    ...item.props,
+                                    showText: this.showText,
+                                    skin: skin,
+                                })}
+                            </li>
+                        ))
+                    }
                 </ul>
             </div>
         );
