@@ -10,7 +10,7 @@
             <tag name="jms_serializer.event_subscriber" />
         </service>
 
-        <service id="sulu_hash.request_hash_checker" class="Sulu\Component\Hash\RequestHashChecker">
+        <service id="sulu_hash.request_hash_checker" class="Sulu\Component\Hash\RequestHashChecker" public="true">
             <argument type="service" id="sulu_hash.auditable_hasher"/>
         </service>
     </services>

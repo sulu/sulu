@@ -22,7 +22,7 @@
         </service>
 
         <service id="sulu_website.analytics.manager"
-                 class="Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager">
+                 class="Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_website.analytics.repository"/>
             <argument type="service" id="sulu_website.domains.repository"/>

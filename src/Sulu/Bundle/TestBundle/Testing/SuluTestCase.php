@@ -311,7 +311,7 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected function getPhpcrDefaultSession()
     {
-        return $this->getContainer()->get('doctrine_phpcr.session');
+        return $this->getContainer()->get('sulu_test.doctrine_phpcr.session');
     }
 
     /**
@@ -319,6 +319,6 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected function getPhpcrLiveSession()
     {
-        return $this->getContainer()->get('doctrine_phpcr.live_session');
+        return $this->getContainer()->get('sulu_test.doctrine_phpcr.live_session');
     }
 }

@@ -399,8 +399,8 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
         $this->assertEquals(
-            'attachment; filename="photo.jpeg"',
-            $client->getResponse()->headers->get('Content-Disposition')
+            'attachment; filename=photo.jpeg',
+            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -418,8 +418,8 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
         $this->assertEquals(
-            'inline; filename="photo.jpeg"',
-            $client->getResponse()->headers->get('Content-Disposition')
+            'inline; filename=photo.jpeg',
+            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -437,8 +437,8 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
         $this->assertEquals(
-            'inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
-            $client->getResponse()->headers->get('Content-Disposition')
+            'inline; filename=woechentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -873,7 +873,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -995,7 +995,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -1031,7 +1031,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -1103,7 +1103,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -1173,7 +1173,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -1250,7 +1250,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',
@@ -1375,7 +1375,7 @@ class MediaControllerTest extends SuluTestCase
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
-        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
+        $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
             'POST',

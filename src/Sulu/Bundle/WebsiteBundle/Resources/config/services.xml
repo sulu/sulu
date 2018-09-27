@@ -144,7 +144,7 @@
             <tag name="routing.loader"/>
         </service>
 
-        <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%">
+        <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%" public="true">
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_content.extension.manager"/>
         </service>
@@ -165,7 +165,7 @@
             <argument>%kernel.environment%</argument>
         </service>
 
-        <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
+        <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%" public="true">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
         </service>
@@ -189,10 +189,10 @@
             <tag name="sulu.context" context="website"/>
         </service>
 
-        <service id="sulu_website.exception.controller" alias="twig.controller.exception" />
+        <service id="sulu_website.exception.controller" alias="twig.controller.exception" public="true" />
 
         <!-- cache clearer -->
-        <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer">
+        <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer" public="true">
             <argument type="service" id="filesystem"/>
             <argument type="string">%kernel.environment%</argument>
             <argument type="string">%kernel.root_dir%</argument>

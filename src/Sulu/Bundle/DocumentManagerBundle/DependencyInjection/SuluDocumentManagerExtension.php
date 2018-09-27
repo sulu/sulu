@@ -153,7 +153,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $container->setAlias(
             'sulu_document_manager.default_session',
             $defaultSessionId
-        );
+        )->setPublic(true);
 
         $defaultSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_default_session.inner')]);
         $defaultSessionDefinition->setDecoratedService($defaultSessionId);
@@ -163,7 +163,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $container->setAlias(
             'sulu_document_manager.live_session',
             $liveSessionId
-        );
+        )->setPublic(true);
 
         $liveSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_live_session.inner')]);
         $liveSessionDefinition->setDecoratedService($liveSessionId);

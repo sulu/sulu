@@ -9,7 +9,7 @@
 
     <services>
 
-        <service id="sulu_content.extension.manager" class="%sulu_content.extension.manager.class%" />
+        <service id="sulu_content.extension.manager" class="%sulu_content.extension.manager.class%" public="true" />
 
     </services>
 

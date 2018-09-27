@@ -97,7 +97,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
             $visitorTargetGroup = $this->requestTargetGroup($request, $kernel, $visitorTargetGroup);
         }
 
-        if ($request->isMethodSafe()) {
+        if ($request->isMethodCacheable()) {
             // add the target group as separate header to vary on it
             $request->headers->set(static::TARGET_GROUP_HEADER, (string) $visitorTargetGroup);
         }

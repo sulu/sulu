@@ -12,6 +12,7 @@ environment:
   DATABASE_URL: mysql://root:Password12!@127.0.0.1/sulu_test
   DATABASE_CHARSET: utf8mb4
   DATABASE_COLLATE: utf8mb4_unicode_ci
+  SYMFONY_DEPRECATIONS_HELPER: weak
   matrix:
    - PHP_VERSION: 7.2.4
 

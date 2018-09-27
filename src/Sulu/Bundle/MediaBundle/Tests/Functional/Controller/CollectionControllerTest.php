@@ -67,7 +67,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->em = $this->getEntityManager();
         $this->initOrm();
 
-        $this->systemCollectionCache = $this->getContainer()->get('sulu_media.system_collections.cache');
+        $this->systemCollectionCache = $this->getContainer()->get('sulu_media_test.system_collections.cache');
         $this->systemCollectionConfig = $this->getContainer()->getParameter('sulu_media.system_collections');
 
         // to be sure that the system collections will rebuild after purge database

@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sulu_snippet.import.snippet" class="Sulu\Component\Snippet\Import\SnippetImport">
+        <service id="sulu_snippet.import.snippet" class="Sulu\Component\Snippet\Import\SnippetImport" public="true">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_document_manager.document_registry" />

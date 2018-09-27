@@ -94,4 +94,9 @@ class SuluCollector extends DataCollector
     {
         return 'sulu';
     }
+
+    public function reset()
+    {
+        $this->data = [];
+    }
 }

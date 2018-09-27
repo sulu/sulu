@@ -5,3 +5,5 @@ framework:
 swiftmailer:
     disable_delivery: true
     transport: "null"
+
+security: ~

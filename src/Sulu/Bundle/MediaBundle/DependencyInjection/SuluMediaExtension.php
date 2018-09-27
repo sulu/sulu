@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use FFMpeg\FFMpeg;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -192,6 +194,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('command.xml');
 
         if ('auto' === $config['adapter']) {
             $container->setAlias(
@@ -207,8 +210,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if (true === $config['search']['enabled']) {
             if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
                 throw new \InvalidArgumentException(
-                    'You have enabled sulu search integration for the SuluMediaBundle, ' .
-                    'but the SuluSearchBundle must be installed'
+                    'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );
             }
 
@@ -217,6 +219,19 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('audience_targeting.xml');
+        }
+
+        if (class_exists(FFMpeg::class)) {
+            if (!array_key_exists('ffmpeg', $config)) {
+                throw new InvalidConfigurationException('The child node "ffmpeg" at path "sulu_media" must be configured.');
+            }
+
+            $container->setParameter('sulu_media.ffmpeg.binary', $config['ffmpeg']['ffmpeg_binary']);
+            $container->setParameter('sulu_media.ffprobe.binary', $config['ffmpeg']['ffprobe_binary']);
+            $container->setParameter('sulu_media.ffmpeg.binary_timeout', $config['ffmpeg']['binary_timeout']);
+            $container->setParameter('sulu_media.ffmpeg.threads_count', $config['ffmpeg']['threads_count']);
+
+            $loader->load('ffmpeg.xml');
         }
 
         $this->configurePersistence($config['objects'], $container);

@@ -16,15 +16,17 @@
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%">
+        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%" public="true">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%">
+        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" public="true">
             <argument type="service" id="request_stack"/>
         </service>
 
-        <service id="sulu_core.doctrine_list_builder_factory" class="%sulu_core.doctrine_list_builder_factory.class%">
+        <service id="sulu_core.doctrine_list_builder_factory"
+                 class="%sulu_core.doctrine_list_builder_factory.class%"
+                 public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%sulu_security.permissions%</argument>

@@ -21,6 +21,55 @@
             <argument type="service" id="sulu_document_manager.live_session"/>
             <tag name="console.command"/>
         </service>
+
+        <service id="sulu_content.command.copy_locale"
+                 class="Sulu\Bundle\ContentBundle\Command\ContentLocaleCopyCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.dump_content_types"
+                 class="Sulu\Bundle\ContentBundle\Command\ContentTypesDumpCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.phpcr_init"
+                 class="Sulu\Bundle\ContentBundle\Command\PHPCRInitCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.validate_pages"
+                 class="Sulu\Bundle\ContentBundle\Command\ValidatePagesCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.validate_webspaces"
+                 class="Sulu\Bundle\ContentBundle\Command\ValidateWebspacesCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.webspace_copy"
+                 class="Sulu\Bundle\ContentBundle\Command\WebspaceCopyCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.webspace_export"
+                 class="Sulu\Bundle\ContentBundle\Command\WebspaceExportCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.webspace_import"
+                 class="Sulu\Bundle\ContentBundle\Command\WebspaceImportCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.webspace_init"
+                 class="Sulu\Bundle\ContentBundle\Command\WebspacesInitCommand">
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_content.command.workspace_import"
+                 class="Sulu\Bundle\ContentBundle\Command\WorkspaceImportCommand">
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
-

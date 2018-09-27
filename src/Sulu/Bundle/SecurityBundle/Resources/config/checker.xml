@@ -9,7 +9,7 @@
     </parameters>
 
     <services>
-        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%">
+        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%" public="true">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authorization_checker"/>
         </service>

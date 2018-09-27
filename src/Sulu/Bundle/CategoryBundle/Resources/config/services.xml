@@ -16,7 +16,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>
         </service>
-        <service id="sulu_category.category_manager" class="%sulu_category.category_manager.class%">
+        <service id="sulu_category.category_manager" class="%sulu_category.category_manager.class%" public="true">
             <argument type="service" id="sulu.repository.category"/>
             <argument type="service" id="sulu.repository.category_meta"/>
             <argument type="service" id="sulu.repository.category_translation"/>
@@ -44,7 +44,9 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sulu_category.keyword_manager" class="Sulu\Bundle\CategoryBundle\Category\KeywordManager">
+        <service id="sulu_category.keyword_manager"
+                 class="Sulu\Bundle\CategoryBundle\Category\KeywordManager"
+                 public="true">
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>

@@ -118,6 +118,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('content.xml');
+        $loader->load('command.xml');
 
         $container->setParameter(
             'sulu_contact.defaults',

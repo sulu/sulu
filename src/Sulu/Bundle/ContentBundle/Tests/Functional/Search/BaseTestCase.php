@@ -40,7 +40,7 @@ class BaseTestCase extends SuluTestCase
     {
         $this->initPhpcr();
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->session = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->getSearchManager()->purge('page_');
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');

@@ -103,7 +103,7 @@
         </service>
         <!--TARGET GROUPS-->
         <service id="sulu_audience_targeting.target_group_evaluation_controller"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController">
+                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController" public="true">
             <argument type="service" id="sulu_audience_targeting.target_group_evaluator"/>
             <argument type="service" id="sulu.repository.target_group"/>
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
@@ -128,7 +128,7 @@
             <tag name="sulu.context" context="website" />
         </service>
         <service id="sulu_audience_targeting.target_group_store"
-                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore">
+                 class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore" public="true">
         </service>
     </services>
 </container>

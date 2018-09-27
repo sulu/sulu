@@ -51,7 +51,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         parent::setUp();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->phpcrSession = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
         $this->initPhpcr();
         $this->loadFixtures();
         $this->client = $this->createAuthenticatedClient();

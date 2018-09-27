@@ -43,6 +43,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('command.xml');
 
         $this->configurePersistence($config['objects'], $container);
     }
