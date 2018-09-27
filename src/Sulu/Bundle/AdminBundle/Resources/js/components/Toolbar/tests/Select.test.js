@@ -40,6 +40,15 @@ test('Render select with a prepended icon', () => {
     )).toMatchSnapshot();
 });
 
+test('Render select without text', () => {
+    expect(render(
+        <Select
+            {...selectPropsMock}
+            showText={false}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render select with a different size', () => {
     expect(render(
         <Select

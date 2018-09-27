@@ -20,7 +20,7 @@ $itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;
     border-right: $itemsContainerBorderDark;
 }
 
-.itemsWrapper {
+.items-container {
     position: relative;
     flex-grow: 1;
     overflow-x: auto;

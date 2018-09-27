@@ -59,6 +59,12 @@ exports[`Render button with value 1`] = `
 </button>
 `;
 
+exports[`Render button without text 1`] = `
+<button
+  class="button"
+/>
+`;
+
 exports[`Render disabled button 1`] = `
 <button
   class="button"

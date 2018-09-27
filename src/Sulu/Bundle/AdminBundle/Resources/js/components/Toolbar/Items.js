@@ -1,9 +1,10 @@
 // @flow
-import type {ChildrenArray} from 'react';
+import type {ChildrenArray, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import classNames from 'classnames';
+import debounce from 'debounce';
 import type {Item, Skin} from './types';
 import itemsStyles from './items.scss';
 
@@ -12,85 +13,92 @@ type Props = {
     skin?: Skin,
 };
 
+const DEBOUNCE_TIME = 200;
+
 @observer
 export default class Items extends React.Component<Props> {
-    @observable expandedWidth = 0;
-    @observable showText = true;
+    @observable
+    expandedWidth: number = 0;
+    @observable
+    parentWidth: number = 0;
 
     static defaultProps = {
         skin: 'light',
     };
 
-    parentRef: { current: null | HTMLDivElement } = React.createRef();
-    childRef: { current: null | HTMLUListElement } = React.createRef();
+    parentRef: ?ElementRef<'div'>;
+    childRef: ?ElementRef<'ul'>;
 
-    componentDidMount() {
-        this.setExpandedWidth();
-        window.addEventListener('resize', this.setExpandedWidth);
-    }
-
-    componentDidUpdate() {
-        this.setExpandedWidth();
-    }
-
-    @action setExpandedWidth = () => {
-        if (this.childRef.current && this.childRef.current.offsetWidth) {
-            const childWidth = this.childRef.current.offsetWidth;
-            if (this.showText) {
-                this.expandedWidth = childWidth;
-            } else {
-                if (childWidth > this.expandedWidth) {
-                    this.expandedWidth = childWidth;
-                }
-            }
-        }
-
-        this.setShowText();
+    setParentRef = (ref: ?ElementRef<'div'>) => {
+        this.parentRef = ref;
     };
 
-    @action setShowText = () => {
-        if (!this.parentRef.current || !this.parentRef.current.offsetWidth || !this.expandedWidth) {
+    setChildRef = (ref: ?ElementRef<'ul'>) => {
+        this.childRef = ref;
+    };
+
+    componentDidMount() {
+        this.setDimensions();
+
+        // $FlowFixMe
+        const resizeObserver = new ResizeObserver(
+            debounce(() => {
+                this.setDimensions();
+            }, DEBOUNCE_TIME)
+        );
+
+        if (!this.parentRef) {
             return;
         }
 
-        const parentWidth = this.parentRef.current.offsetWidth;
+        resizeObserver.observe(this.parentRef);
+    }
 
-        if (parentWidth >= this.expandedWidth) {
-            this.showText = true;
-        } else {
-            this.showText = false;
+    @action
+    setDimensions = () => {
+        const {parentRef} = this;
+        const {childRef} = this;
+
+        if (childRef && childRef.offsetWidth > this.expandedWidth) {
+            this.expandedWidth = childRef.offsetWidth;
         }
+
+        if (!parentRef) {
+            return;
+        }
+
+        this.parentWidth = parentRef.offsetWidth;
     };
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.setExpandedWidth);
+    @computed
+    get showText(): boolean {
+        if (this.parentWidth >= this.expandedWidth) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render() {
-        const {
-            skin,
-            children,
-        } = this.props;
+        const {skin, children} = this.props;
 
-        const itemsClass = classNames(
-            itemsStyles.items,
-            itemsStyles[skin]
-        );
+        const itemsClass = classNames(itemsStyles.items, itemsStyles[skin]);
 
         return (
-            <div className={itemsStyles.itemsWrapper} ref={this.parentRef}>
-                <ul className={itemsClass} ref={this.childRef}>
-                    {children && React.Children.map(children, (item, index) => {
-                        return (
-                            <li key={index}>
-                                {React.cloneElement(item, {
-                                    ...item.props,
-                                    showText: this.showText,
-                                    skin: skin,
-                                })}
-                            </li>
-                        );
-                    })}
+            <div className={itemsStyles.itemsContainer} ref={this.setParentRef}>
+                <ul className={itemsClass} ref={this.setChildRef}>
+                    {children &&
+                        React.Children.map(children, (item, index) => {
+                            return (
+                                <li key={index}>
+                                    {React.cloneElement(item, {
+                                        ...item.props,
+                                        showText: this.showText,
+                                        skin: skin,
+                                    })}
+                                </li>
+                            );
+                        })}
                 </ul>
             </div>
         );

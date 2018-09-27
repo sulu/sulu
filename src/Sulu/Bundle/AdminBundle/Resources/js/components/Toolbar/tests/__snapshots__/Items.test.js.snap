@@ -2,7 +2,7 @@
 
 exports[`Render items 1`] = `
 <div
-  class="itemsWrapper"
+  class="itemsContainer"
 >
   <ul
     class="items light"
@@ -12,7 +12,7 @@ exports[`Render items 1`] = `
 
 exports[`Render items with children 1`] = `
 <div
-  class="itemsWrapper"
+  class="itemsContainer"
 >
   <ul
     class="items light"

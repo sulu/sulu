@@ -120,3 +120,18 @@ exports[`Render select with a prepended icon 1`] = `
   </button>
 </div>
 `;
+
+exports[`Render select without text 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
+    />
+  </button>
+</div>
+`;

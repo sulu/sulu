@@ -40,7 +40,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
     class="controls light grow"
   >
     <div
-      class="itemsWrapper"
+      class="itemsContainer"
     >
       <ul
         class="items light"

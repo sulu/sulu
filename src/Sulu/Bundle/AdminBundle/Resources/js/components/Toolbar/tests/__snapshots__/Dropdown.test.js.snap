@@ -89,6 +89,21 @@ exports[`Render dropdown with a prepended icon 1`] = `
 </div>
 `;
 
+exports[`Render dropdown without text 1`] = `
+<div
+  class="dropdown"
+>
+  <button
+    class="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="dropdownIcon su-angle-down"
+    />
+  </button>
+</div>
+`;
+
 exports[`Render loading dropdown 1`] = `
 <div
   class="dropdown"
