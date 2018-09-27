@@ -219,6 +219,7 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
         $this->urlGenerator->generate('sulu_preview.update-context')->willReturn('/preview/update-context');
         $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
+        $this->urlGenerator->generate('cget_contexts')->willReturn('/security/contexts');
 
         $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
