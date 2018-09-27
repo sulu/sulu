@@ -127,7 +127,7 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Get keywords.
      *
-     * @return Collection
+     * @return Collection|KeywordInterface[]
      */
     public function getKeywords();
 

@@ -16,14 +16,16 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Group.
  */
 class Group extends ApiEntity implements AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      *
@@ -51,27 +53,17 @@ class Group extends ApiEntity implements AuditableInterface
     private $name;
 
     /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
      * @var int
      */
     private $id;
 
     /**
-     * @var Collection
+     * @var Collection|self[]
      */
     private $children;
 
     /**
-     * @var Collection
+     * @var Collection|UserGroup[]
      */
     private $userGroups;
 
@@ -81,23 +73,9 @@ class Group extends ApiEntity implements AuditableInterface
     private $parent;
 
     /**
-     * @var Collection
+     * @var Collection|RoleInterface[]
      */
     private $roles;
-
-    /**
-     * @var UserInterface
-     *
-     * @Exclude
-     */
-    private $changer;
-
-    /**
-     * @var UserInterface
-     *
-     * @Exclude
-     */
-    private $creator;
 
     public function __construct()
     {
@@ -203,26 +181,6 @@ class Group extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
      * Get id.
      *
      * @return int
@@ -259,7 +217,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get children.
      *
-     * @return Collection
+     * @return Collection|self[]
      */
     public function getChildren()
     {
@@ -293,7 +251,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get userGroups.
      *
-     * @return Collection
+     * @return Collection|UserGroup[]
      */
     public function getUserGroups()
     {
@@ -351,58 +309,10 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get roles.
      *
-     * @return Collection
+     * @return Collection|RoleInterface[]
      */
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return Group
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return Group
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 }

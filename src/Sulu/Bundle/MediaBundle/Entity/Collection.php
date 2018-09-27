@@ -21,18 +21,18 @@ use JMS\Serializer\Annotation\Exclude;
 class Collection extends BaseCollection
 {
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection|CollectionMeta[]
      */
     private $meta;
 
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection|MediaInterface[]
      * @Exclude
      */
     private $media;
 
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection|CollectionInterface[]
      */
     private $children;
 
@@ -120,7 +120,7 @@ class Collection extends BaseCollection
     /**
      * Get meta.
      *
-     * @return DoctrineCollection
+     * @return DoctrineCollection|CollectionMeta[]
      */
     public function getMeta()
     {
@@ -154,7 +154,7 @@ class Collection extends BaseCollection
     /**
      * Get media.
      *
-     * @return DoctrineCollection
+     * @return DoctrineCollection|MediaInterface[]
      */
     public function getMedia()
     {

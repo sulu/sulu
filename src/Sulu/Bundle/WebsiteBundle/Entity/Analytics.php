@@ -53,7 +53,7 @@ class Analytics
     private $webspaceKey;
 
     /**
-     * @var Collection
+     * @var Collection|Domain[]
      *
      * @Exclude
      */
@@ -233,7 +233,7 @@ class Analytics
     /**
      * Get domains.
      *
-     * @return Collection
+     * @return Collection|Domain[]
      */
     public function getDomains()
     {

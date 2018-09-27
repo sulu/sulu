@@ -36,7 +36,7 @@ class SocialMediaProfileType implements \JsonSerializable
     private $name;
 
     /**
-     * @var Collection
+     * @var Collection|SocialMediaProfile[]
      */
     private $socialMediaProfiles;
 
@@ -116,7 +116,7 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * @return Collection
+     * @return Collection|SocialMediaProfile[]
      */
     public function getSocialMediaProfiles()
     {

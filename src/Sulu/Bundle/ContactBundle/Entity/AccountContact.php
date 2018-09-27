@@ -37,7 +37,7 @@ class AccountContact
     private $account;
 
     /**
-     * @var string
+     * @var Position|null
      */
     private $position;
 
@@ -126,11 +126,11 @@ class AccountContact
     /**
      * Set position.
      *
-     * @param string $position
+     * @param Position|null $position
      *
      * @return AccountContact
      */
-    public function setPosition($position)
+    public function setPosition(Position $position = null)
     {
         $this->position = $position;
 
@@ -140,7 +140,7 @@ class AccountContact
     /**
      * Get position.
      *
-     * @return string
+     * @return Position|null
      */
     public function getPosition()
     {

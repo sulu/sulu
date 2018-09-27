@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 
 /**
@@ -23,6 +26,8 @@ use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
  */
 class FileVersion implements AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var string
      */
@@ -64,37 +69,27 @@ class FileVersion implements AuditableInterface
     private $downloadCounter = 0;
 
     /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
      * @var int
      */
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|FileVersionContentLanguage[]
      */
     private $contentLanguages = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|FileVersionPublishLanguage[]
      */
     private $publishLanguages = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|FileVersionMeta[]
      */
     private $meta = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|FormatOptions[]
      */
     private $formatOptions = [];
 
@@ -105,19 +100,9 @@ class FileVersion implements AuditableInterface
     private $file;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|TagInterface[]
      */
     private $tags = [];
-
-    /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
-     */
-    private $changer;
-
-    /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
-     */
-    private $creator;
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
@@ -130,12 +115,12 @@ class FileVersion implements AuditableInterface
     private $properties = '{}';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection|CategoryInterface[]
      */
     private $categories = [];
 
     /**
-     * @var TargetGroupInterface[]
+     * @var Collection|TargetGroupInterface[]
      */
     private $targetGroups;
 
@@ -154,13 +139,13 @@ class FileVersion implements AuditableInterface
      */
     public function __construct()
     {
-        $this->contentLanguages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->publishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formatOptions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->targetGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contentLanguages = new ArrayCollection();
+        $this->publishLanguages = new ArrayCollection();
+        $this->meta = new ArrayCollection();
+        $this->formatOptions = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->targetGroups = new ArrayCollection();
     }
 
     /**
@@ -351,54 +336,6 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get created.
-     *
-     * @param \DateTime $created
-     *
-     * @return $this
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * Set changed.
-     *
-     * @param \DateTime $changed
-     *
-     * @return $this
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    /**
      * Get id.
      *
      * @return int
@@ -411,11 +348,11 @@ class FileVersion implements AuditableInterface
     /**
      * Add contentLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     * @param FileVersionContentLanguage $contentLanguages
      *
      * @return FileVersion
      */
-    public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function addContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages[] = $contentLanguages;
 
@@ -425,9 +362,9 @@ class FileVersion implements AuditableInterface
     /**
      * Remove contentLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages
+     * @param FileVersionContentLanguage $contentLanguages
      */
-    public function removeContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function removeContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages->removeElement($contentLanguages);
     }
@@ -435,7 +372,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get contentLanguages.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|FileVersionContentLanguage[]
      */
     public function getContentLanguages()
     {
@@ -469,7 +406,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get publishLanguages.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPublishLanguages()
     {
@@ -527,7 +464,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get formatOptions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFormatOptions()
     {
@@ -593,59 +530,11 @@ class FileVersion implements AuditableInterface
     /**
      * Get tags.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTags()
     {
         return $this->tags;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
-     *
-     * @return FileVersion
-     */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
-     *
-     * @return FileVersion
-     */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 
     /**
@@ -819,7 +708,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get categories.
      *
-     * @return Collection
+     * @return Collection|CategoryInterface[]
      */
     public function getCategories()
     {

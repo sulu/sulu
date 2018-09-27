@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -156,7 +157,7 @@ class CollectionType
     /**
      * Get collections.
      *
-     * @return Collection
+     * @return Collection|CollectionInterface[]
      */
     public function getCollections()
     {

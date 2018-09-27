@@ -35,19 +35,19 @@ class User extends BaseUser
     protected $contact;
 
     /**
-     * @var UserRole[]
+     * @var Collection|UserRole[]
      * @Expose
      */
     protected $userRoles;
 
     /**
-     * @var UserGroup[]
+     * @var Collection|UserGroup[]
      * @Expose
      */
     protected $userGroups;
 
     /**
-     * @var UserSetting[]
+     * @var Collection|UserSetting[]
      */
     protected $userSettings;
 
@@ -187,7 +187,7 @@ class User extends BaseUser
     /**
      * Get userSettings.
      *
-     * @return Collection
+     * @return Collection|UserSetting[]
      */
     public function getUserSettings()
     {

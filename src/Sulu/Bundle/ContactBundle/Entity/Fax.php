@@ -39,13 +39,13 @@ class Fax
     private $faxType;
 
     /**
-     * @var Collection
+     * @var Collection|ContactInterface[]
      * @Exclude
      */
     private $contacts;
 
     /**
-     * @var Collection
+     * @var Collection|AccountInterface[]
      * @Exclude
      */
     private $accounts;
@@ -120,11 +120,11 @@ class Fax
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
+     * @param ContactInterface $contacts
      *
      * @return Fax
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -134,9 +134,9 @@ class Fax
     /**
      * Remove contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
+     * @param ContactInterface $contacts
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }
@@ -144,7 +144,7 @@ class Fax
     /**
      * Get contacts.
      *
-     * @return Collection
+     * @return Collection|ContactInterface[]
      */
     public function getContacts()
     {
@@ -178,7 +178,7 @@ class Fax
     /**
      * Get accounts.
      *
-     * @return Collection
+     * @return Collection|AccountInterface[]
      */
     public function getAccounts()
     {

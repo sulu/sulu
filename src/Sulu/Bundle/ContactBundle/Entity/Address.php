@@ -130,12 +130,12 @@ class Address
     private $postboxCity;
 
     /**
-     * @var Collection
+     * @var Collection|ContactAddress[]
      */
     private $contactAddresses;
 
     /**
-     * @var Collection
+     * @var Collection|AccountAddress[]
      */
     private $accountAddresses;
 
@@ -549,7 +549,7 @@ class Address
     /**
      * Get contactAddresses.
      *
-     * @return Collection
+     * @return Collection|ContactAddress[]
      */
     public function getContactAddresses()
     {
@@ -583,7 +583,7 @@ class Address
     /**
      * Get accountAddresses.
      *
-     * @return Collection
+     * @return Collection|AccountAddress[]
      */
     public function getAccountAddresses()
     {

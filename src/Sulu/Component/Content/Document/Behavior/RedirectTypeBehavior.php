@@ -20,14 +20,14 @@ interface RedirectTypeBehavior
     /**
      * Return the redirect type.
      *
-     * @return string
+     * @return int
      */
     public function getRedirectType();
 
     /**
      * Set the redirect type.
      *
-     * @param string $redirectType
+     * @param int $redirectType
      */
     public function setRedirectType($redirectType);
 

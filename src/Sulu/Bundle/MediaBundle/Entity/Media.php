@@ -14,27 +14,19 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 
 /**
  * Media.
  */
 class Media implements MediaInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
     protected $id;
-
-    /**
-     * @var \DateTime
-     */
-    protected $created;
-
-    /**
-     * @var \DateTime
-     */
-    protected $changed;
 
     /**
      * @var DoctrineCollection
@@ -51,16 +43,6 @@ class Media implements MediaInterface
      * @var MediaType
      */
     protected $type;
-
-    /**
-     * @var UserInterface
-     */
-    protected $changer;
-
-    /**
-     * @var UserInterface
-     */
-    protected $creator;
 
     /**
      * @var Media
@@ -83,40 +65,6 @@ class Media implements MediaInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set changed.
-     *
-     * @param \DateTime $changed
-     *
-     * @return $this
-     */
-    public function setChanged(\DateTime $changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
     }
 
     /**
@@ -199,54 +147,6 @@ class Media implements MediaInterface
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return Media
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return Media
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 
     /**
