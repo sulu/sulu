@@ -444,7 +444,7 @@ class ResettingController extends Controller
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
-        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        $encoder = $this->get('sulu_security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
     }

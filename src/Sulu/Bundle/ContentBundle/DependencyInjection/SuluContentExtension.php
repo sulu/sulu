@@ -243,6 +243,9 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $this->appendDefaultAuthor($config, $container);
 
         $container->setParameter('sulu_content.seo', $config['seo']);
+
+        // the service "controller_name_converter" is private use an alias to make it public
+        $container->setAlias('sulu_content.controller_name_converter', 'controller_name_converter')->setPublic(true);
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)

@@ -8,7 +8,7 @@
     </parameters>
 
     <services>
-        <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%">
+        <service id="sulu_admin.admin_controller" class="%sulu_admin.admin_controller.class%" public="true">
             <argument type="service" id="router"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
@@ -31,7 +31,7 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%"/>
+        <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />

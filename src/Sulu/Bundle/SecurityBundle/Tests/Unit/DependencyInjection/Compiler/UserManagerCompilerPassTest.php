@@ -40,7 +40,7 @@ class UserManagerCompilerPassTest extends TestCase
         $this->containerBuilder->hasDefinition('security.token_storage')->willReturn(true);
         $this->containerBuilder->setDefinition(
             'sulu_security.user_manager',
-            new Definition(
+            (new Definition(
                 'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                 [
                     new Reference('doctrine.orm.entity_manager'),
@@ -51,7 +51,7 @@ class UserManagerCompilerPassTest extends TestCase
                     new Reference('sulu_security.salt_generator'),
                     new Reference('sulu.repository.user'),
                 ]
-            )
+            ))->setPublic(true)
         )->shouldBeCalled();
         $this->userManagerCompilerPass->process($this->containerBuilder->reveal());
     }
@@ -61,7 +61,7 @@ class UserManagerCompilerPassTest extends TestCase
         $this->containerBuilder->hasDefinition('security.token_storage')->willReturn(false);
         $this->containerBuilder->setDefinition(
             'sulu_security.user_manager',
-            new Definition(
+            (new Definition(
                 'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
                 [
                     new Reference('doctrine.orm.entity_manager'),
@@ -72,7 +72,7 @@ class UserManagerCompilerPassTest extends TestCase
                     new Reference('sulu_security.salt_generator'),
                     new Reference('sulu.repository.user'),
                 ]
-            )
+            ))->setPublic(true)
         )->shouldBeCalled();
         $this->userManagerCompilerPass->process($this->containerBuilder->reveal());
     }

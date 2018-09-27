@@ -44,7 +44,7 @@
         </service>
 
         <!-- nodes -->
-        <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
+        <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%" public="true">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
@@ -57,13 +57,14 @@
         </service>
 
         <!-- resource locator -->
-        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
+        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%" public="true">
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
         </service>
         <service
             id="sulu_content.resource_locator_controller"
             class="Sulu\Bundle\ContentBundle\Controller\ResourcelocatorController"
+            public="true"
         >
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="fos_rest.view_handler"/>
@@ -108,7 +109,7 @@
         </service>
 
         <!-- Content Repository -->
-        <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository">
+        <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository" public="true">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>

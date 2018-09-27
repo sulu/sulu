@@ -38,6 +38,7 @@ class SuluRouteExtension extends Extension
         $loader->load('routing.xml');
         $loader->load('manager.xml');
         $loader->load('generator.xml');
+        $loader->load('command.xml');
 
         $this->configurePersistence($config['objects'], $container);
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="sulu_media.ffmpeg" class="FFMpeg\FFMpeg" lazy="true">
+            <factory class="FFMpeg\FFMpeg" method="create"/>
+            <argument type="collection">
+                <argument key="ffmpeg.binaries">%sulu_media.ffmpeg.binary%</argument>
+                <argument key="ffprobe.binaries">%sulu_media.ffmpeg.binary%</argument>
+                <argument key="timeout">%sulu_media.ffmpeg.binary_timeout%</argument>
+                <argument key="ffmpeg.threads">%sulu_media.ffmpeg.threads_count%</argument>
+            </argument>
+            <argument id="logger" type="service"/>
+        </service>
+
+        <service id="sulu_media.ffprobe" class="FFMpeg\FFProbe" lazy="true">
+            <factory class="FFMpeg\FFProbe" method="create"/>
+            <argument type="collection">
+                <argument key="ffmpeg.binaries">%sulu_media.ffmpeg.binary%</argument>
+                <argument key="ffprobe.binaries">%sulu_media.ffmpeg.binary%</argument>
+            </argument>
+            <argument id="logger" type="service"/>
+        </service>
+    </services>
+</container>

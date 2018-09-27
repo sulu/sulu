@@ -46,7 +46,7 @@
         </service>
 
         <!-- controller -->
-        <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PreviewController">
+        <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PreviewController" public="true">
             <argument type="service" id="sulu_preview.preview"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="profiler" on-invalid="null"/>

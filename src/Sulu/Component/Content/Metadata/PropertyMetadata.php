@@ -173,7 +173,7 @@ class PropertyMetadata extends ItemMetadata
     public function setColSpan(int $colSpan = null): self
     {
         @trigger_error(
-            sprintf('Do not use setter "%s" from "%s"', 'getColSpan', __CLASS__),
+            sprintf('Do not use setter "%s" from "%s"', 'setColSpan', __CLASS__),
             E_USER_DEPRECATED
         );
 

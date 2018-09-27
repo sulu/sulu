@@ -25,7 +25,7 @@ class AdminControllerTest extends SuluTestCase
     public function setUp()
     {
         $this->purgeDatabase();
-        $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $this->em = $this->getContainer()->get('sulu_test.doctrine.orm.default_entity_manager');
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
     }

@@ -11,7 +11,7 @@
             <argument type="service" id="sulu_security.user_manager"/>
         </service>
 
-        <service id="sulu_custom_urls.manager" class="Sulu\Component\CustomUrl\Manager\CustomUrlManager">
+        <service id="sulu_custom_urls.manager" class="Sulu\Component\CustomUrl\Manager\CustomUrlManager" public="true">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_custom_urls.repository"/>
             <argument type="service" id="sulu_document_manager.metadata_factory"/>

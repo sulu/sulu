@@ -16,7 +16,7 @@
     <services>
         <!-- data provider -->
         <service id="sulu_content.smart_content.data_provider_pool"
-                 class="%sulu_content.smart_content.data_provider_pool.class%">
+                 class="%sulu_content.smart_content.data_provider_pool.class%" public="true">
             <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
         </service>
 

@@ -39,7 +39,7 @@ class BaseFunctional extends SuluTestCase
     {
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');
-        $this->domainRepository = $this->getContainer()->get('sulu_website.domains.repository');
+        $this->domainRepository = $this->getContainer()->get('sulu_website_test.domains.repository');
     }
 
     /**

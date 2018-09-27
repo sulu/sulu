@@ -68,7 +68,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->session = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
         $this->loadFixtures();
         $this->parent = $this->documentManager->find('/cmf/sulu_io/contents');
     }

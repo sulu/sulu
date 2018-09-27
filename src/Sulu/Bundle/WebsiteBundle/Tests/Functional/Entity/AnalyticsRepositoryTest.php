@@ -27,7 +27,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
     {
         parent::setUp();
 
-        $this->analyticsRepository = $this->getContainer()->get('sulu_website.analytics.repository');
+        $this->analyticsRepository = $this->getContainer()->get('sulu_website_test.analytics.repository');
     }
 
     public function testFindByWebspaceKey()

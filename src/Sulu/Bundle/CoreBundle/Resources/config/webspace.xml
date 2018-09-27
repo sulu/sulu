@@ -31,7 +31,7 @@
 
         <service id="sulu_core.webspace.webspace_manager.url_replacer" class="Sulu\Component\Webspace\Url\Replacer"/>
 
-        <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%">
+        <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%" public="true">
             <argument type="service" id="sulu_core.webspace.loader.delegator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="collection">

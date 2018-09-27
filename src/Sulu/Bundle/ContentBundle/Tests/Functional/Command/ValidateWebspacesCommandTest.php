@@ -31,7 +31,7 @@ class ValidateWebspacesCommandTest extends SuluTestCase
 
     public function setUp()
     {
-        $application = new Application($this->getContainer()->get('kernel'));
+        $application = new Application();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $command = new ValidateWebspacesCommand();

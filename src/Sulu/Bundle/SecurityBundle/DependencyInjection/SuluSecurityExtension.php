@@ -41,6 +41,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('command.xml');
 
         if ($config['checker']['enabled']) {
             $loader->load('checker.xml');

@@ -76,7 +76,7 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
         $this->output = $output;
         $this->twig = $this->getContainer()->get('twig');
         $this->structureMetadataFactory = $this->getContainer()->get('sulu_content.structure.factory');
-        $this->controllerNameConverter = $this->getContainer()->get('controller_name_converter');
+        $this->controllerNameConverter = $this->getContainer()->get('sulu_content.controller_name_converter');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->structureProvider = $this->getContainer()->get('sulu.content.webspace_structure_provider');
 

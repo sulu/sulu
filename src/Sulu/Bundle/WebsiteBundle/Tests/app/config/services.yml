@@ -1,0 +1,8 @@
+services:
+    sulu_website_test.domains.repository:
+        alias: sulu_website.domains.repository
+        public: true
+
+    sulu_website_test.analytics.repository:
+        alias: sulu_website.analytics.repository
+        public: true

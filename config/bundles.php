@@ -46,7 +46,6 @@ return [
     DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle::class => ['all' => true],
     Massive\Bundle\BuildBundle\MassiveBuildBundle::class => ['all' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
-    Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle::class => ['dev' => true, 'test' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true, 'test' => true],
     Sulu\Bundle\TestBundle\SuluTestBundle::class => ['dev' => true, 'test' => true],
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],

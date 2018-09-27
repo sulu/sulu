@@ -37,11 +37,11 @@
         <service id="sulu.content.path_cleaner.replacer_loader" class="%sulu.content.path_cleaner.replacer_loader.class%" synthetic="false">
             <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
         </service>
-        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%"/>
+        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%" public="true"/>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
         <!-- content mapper -->
-        <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
+        <service id="sulu.content.mapper" class="%sulu.content.mapper.class%" public="true">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="form.factory" />
@@ -57,12 +57,12 @@
         </service>
 
         <!-- content type manager -->
-        <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%">
+        <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%" public="true">
             <argument type="service" id="service_container"/>
         </service>
 
         <!-- structure manager -->
-        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
+        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%" public="true">
             <argument type="service" id="sulu_content.structure.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
@@ -73,7 +73,7 @@
             <argument type="string">%sulu.cache_dir%/webspace_structures</argument>
         </service>
 
-        <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%">
+        <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%" public="true">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
@@ -171,7 +171,7 @@
         </service>
 
         <!-- sulu node helper -->
-        <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%">
+        <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%" public="true">
             <argument type="service" id="sulu_document_manager.default_session"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="collection">
@@ -183,7 +183,7 @@
             <argument type="service" id="sulu_content.structure.factory"/>
         </service>
 
-        <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder">
+        <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder" public="true">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
     </services>

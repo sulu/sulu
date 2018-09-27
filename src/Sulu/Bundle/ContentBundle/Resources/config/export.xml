@@ -14,7 +14,7 @@
         </service>
 
         <!-- Webspace export -->
-        <service id="sulu_content.export.webspace" class="Sulu\Component\Content\Export\WebspaceExport">
+        <service id="sulu_content.export.webspace" class="Sulu\Component\Content\Export\WebspaceExport" public="true">
             <argument type="service" id="templating" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
@@ -25,7 +25,7 @@
         </service>
 
         <!-- Webspace import -->
-        <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\WebspaceImport">
+        <service id="sulu_content.import.webspace" class="Sulu\Component\Content\Import\WebspaceImport" public="true">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
