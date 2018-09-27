@@ -102,11 +102,6 @@ class AdminControllerTest extends TestCase
     private $navigationRegistry;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var FieldTypeOptionRegistryInterface
      */
     private $fieldTypeOptionRegistry;
@@ -172,7 +167,6 @@ class AdminControllerTest extends TestCase
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
-        $this->router = $this->prophesize(RouterInterface::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
@@ -188,7 +182,6 @@ class AdminControllerTest extends TestCase
             $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
-            $this->router->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
@@ -220,8 +213,8 @@ class AdminControllerTest extends TestCase
         $resourceMetadata2->getKey()->willReturn('test2');
         $resourceMetadata2->getEndpoint()->willReturn('route_id_2');
 
-        $this->router->generate('route_id_1')->willReturn('/path1');
-        $this->router->generate('route_id_2')->willReturn('/path2');
+        $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
+        $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
 
         $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
