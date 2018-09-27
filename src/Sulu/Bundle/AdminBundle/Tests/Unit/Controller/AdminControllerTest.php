@@ -214,6 +214,11 @@ class AdminControllerTest extends TestCase
 
         $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
         $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
+        $this->urlGenerator->generate('sulu_preview.start')->willReturn('/preview/start');
+        $this->urlGenerator->generate('sulu_preview.render')->willReturn('/preview/render');
+        $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
+        $this->urlGenerator->generate('sulu_preview.update-context')->willReturn('/preview/update-context');
+        $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
 
         $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
