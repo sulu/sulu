@@ -25,6 +25,11 @@ class Document extends BaseDocument
     protected $created;
 
     /**
+     * @var \DateTime
+     */
+    protected $authored;
+
+    /**
      * @var string
      */
     protected $creatorName;
@@ -84,6 +89,30 @@ class Document extends BaseDocument
     public function setChanged($changed)
     {
         $this->changed = $changed;
+    }
+
+    /**
+     * Get authored.
+     *
+     * @return \DateTime
+     */
+    public function getAuthored()
+    {
+        return $this->authored;
+    }
+
+    /**
+     * Set authored.
+     *
+     * @param \DateTime $authored
+     *
+     * @return $this
+     */
+    public function setAuthored($authored)
+    {
+        $this->authored = $authored;
+
+        return $this;
     }
 
     /**

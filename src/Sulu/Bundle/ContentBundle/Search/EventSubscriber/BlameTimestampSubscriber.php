@@ -102,6 +102,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         $document->setCreatorId($this->getFieldValue($document, 'creator_id'));
         $document->setChangerId($this->getFieldValue($document, 'changer_id'));
         $document->setCreated($this->getFieldValue($document, 'created'));
+        $document->setAuthored($this->getFieldValue($document, 'authored'));
         $document->setChanged($this->getFieldValue($document, 'changed'));
     }
 
@@ -110,11 +111,13 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
      *
      * @param mixed $document
      * @param mixed $fieldName
+     *
+     * @return mixed
      */
     private function getFieldValue($document, $fieldName)
     {
         if (false === $document->hasField($fieldName)) {
-            return;
+            return null;
         }
 
         return $document->getField($fieldName)->getValue();
