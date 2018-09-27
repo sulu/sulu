@@ -6,7 +6,7 @@ import initializer from '../../services/Initializer';
 import type {Contact, User} from './types';
 
 class UserStore {
-    persistentSettings: {[string]: string} = {};
+    @observable persistentSettings: {[string]: string} = {};
 
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
@@ -120,7 +120,7 @@ class UserStore {
         });
     }
 
-    setPersistentSetting(key: string, value: *) {
+    @action setPersistentSetting(key: string, value: *) {
         this.persistentSettings[key] = JSON.stringify(value);
     }
 

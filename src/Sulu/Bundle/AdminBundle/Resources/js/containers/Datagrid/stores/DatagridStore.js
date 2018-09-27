@@ -22,7 +22,6 @@ export default class DatagridStore {
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
     @observable schema: Schema = {};
-    @observable schemaSettings: Object;
     active: IObservableValue<?string | number> = observable.box();
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
@@ -67,8 +66,6 @@ export default class DatagridStore {
         this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
         this.limitDisposer = intercept(this.limit, '', callResetForChangedObservable);
 
-        this.schemaSettings = userStore.getPersistentSetting('sulu_admin.datagrid.' + this.resourceKey + '.schema');
-
         metadataStore.getSchema(this.resourceKey)
             .then(action((schema) => {
                 this.schema = schema;
@@ -108,13 +105,15 @@ export default class DatagridStore {
     }
 
     @computed get userSchema(): Schema {
-        if (!this.schemaSettings) {
-            return this.schema;
+        const schemaSettings = userStore.getPersistentSetting('sulu_admin.datagrid.' + this.resourceKey + '.schema');
+        const schema = this.schema;
+        if (!schemaSettings) {
+            return schema;
         }
 
-        const availableSchema = {...this.schema};
+        const availableSchema = {...schema};
         const userSchema = {};
-        for (const schemaSettingsEntry of this.schemaSettings) {
+        for (const schemaSettingsEntry of schemaSettings) {
             if (!availableSchema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
                 continue;
             }
@@ -126,18 +125,6 @@ export default class DatagridStore {
         }
 
         return userSchema;
-    }
-
-    @computed get fields(): Array<string> {
-        const fields = [];
-        Object.keys(this.userSchema).map((schemaKey) => {
-            const schemaEntry = this.userSchema[schemaKey];
-            if (schemaEntry.visibility === 'yes' || schemaEntry.visibility === 'always') {
-                fields.push(schemaKey);
-            }
-        });
-
-        return fields;
     }
 
     changeUserSchema = (schema: Schema) => {
@@ -154,6 +141,18 @@ export default class DatagridStore {
         userStore.setPersistentSetting('sulu_admin.datagrid.' + this.resourceKey + '.schema', schemaSettings);
         this.reload();
     };
+
+    @computed get fields(): Array<string> {
+        const fields = [];
+        Object.keys(this.userSchema).map((schemaKey) => {
+            const schemaEntry = this.userSchema[schemaKey];
+            if (schemaEntry.visibility === 'yes' || schemaEntry.visibility === 'always') {
+                fields.push(schemaKey);
+            }
+        });
+
+        return fields;
+    }
 
     @action updateLoadingStrategy = (loadingStrategy: LoadingStrategyInterface) => {
         if (this.loadingStrategy && this.loadingStrategy === loadingStrategy) {
@@ -200,7 +199,6 @@ export default class DatagridStore {
 
         this.setActive(undefined);
         this.pageCount = 0;
-        this.schemaSettings = userStore.getPersistentSetting('sulu_admin.datagrid.' + this.resourceKey + '.schema');
 
         if (page && page > 1) {
             this.setPage(1);
