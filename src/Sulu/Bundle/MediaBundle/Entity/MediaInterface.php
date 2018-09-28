@@ -27,27 +27,13 @@ interface MediaInterface extends AuditableInterface
     public function getId();
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated();
-
-    /**
      * Set changed.
      *
      * @param \DateTime $changed
      *
      * @return $this
      */
-    public function setChanged(\DateTime $changed);
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged();
+    public function setChanged($changed);
 
     /**
      * Add files.
@@ -111,14 +97,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @return Media
      */
-    public function setChanger(UserInterface $changer = null);
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger();
+    public function setChanger($changer);
 
     /**
      * Set creator.
@@ -127,14 +106,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @return Media
      */
-    public function setCreator(UserInterface $creator = null);
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator();
+    public function setCreator($creator);
 
     /**
      * Set preview image.
