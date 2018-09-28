@@ -10,8 +10,8 @@ import type {
     SortOrder,
     StructureStrategyInterface,
 } from '../types';
-import metadataStore from './MetadataStore';
 import userStore from '../../../stores/UserStore';
+import metadataStore from './MetadataStore';
 
 export default class DatagridStore {
     @observable pageCount: number = 0;
@@ -21,7 +21,7 @@ export default class DatagridStore {
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
-    @observable schema: Schema = {};
+    @observable schema: Schema;
     active: IObservableValue<?string | number> = observable.box();
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
@@ -74,7 +74,7 @@ export default class DatagridStore {
     }
 
     @computed get initialized(): boolean {
-        return !!this.loadingStrategy && !!this.structureStrategy;
+        return !!this.loadingStrategy && !!this.structureStrategy && !!this.schema;
     }
 
     @computed get loading(): boolean {
@@ -105,20 +105,23 @@ export default class DatagridStore {
     }
 
     @computed get userSchema(): Schema {
+        if (!this.initialized) {
+            return {};
+        }
+
         const schemaSettings = userStore.getPersistentSetting('sulu_admin.datagrid.' + this.resourceKey + '.schema');
         const schema = this.schema;
         if (!schemaSettings) {
             return schema;
         }
 
-        const availableSchema = {...schema};
         const userSchema = {};
         for (const schemaSettingsEntry of schemaSettings) {
-            if (!availableSchema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
+            if (!schema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
                 continue;
             }
 
-            const newUserSchemaEntry = {...availableSchema[schemaSettingsEntry.schemaKey]};
+            const newUserSchemaEntry = {...schema[schemaSettingsEntry.schemaKey]};
             newUserSchemaEntry.visibility = schemaSettingsEntry.visibility;
 
             userSchema[schemaSettingsEntry.schemaKey] = newUserSchemaEntry;
@@ -150,6 +153,11 @@ export default class DatagridStore {
                 fields.push(schemaKey);
             }
         });
+
+        // TODO do not hardcode id but use metdata instead
+        if (!fields.includes('id')) {
+            fields.push('id');
+        }
 
         return fields;
     }

@@ -1,6 +1,8 @@
 @import '../Application/colors.scss';
 @import '../Application/variables.scss';
 
+$dragBoxShadowColor: rgba($black, .1);
+
 .overlay {
     display: flex;
     flex-direction: column;
@@ -10,17 +12,19 @@
 .column-option {
     display: flex;
     font-size: 14px;
-    padding: 15px 20px;
-    margin: 0 5px;
+    padding: 15px 0;
+    margin: 5px 0;
+    user-select: none;
     width: 100%;
+    z-index: 100;
 
     &:hover {
-        background: $dustyGray;
+        background: $silver;
     }
 
     .drag-handle {
-        cursor: pointer;
-        padding: 0 10px;
+        cursor: move;
+        padding: 0 20px;
     }
 
     .label {
@@ -30,9 +34,20 @@
     .icon {
         align-self: flex-end;
         font-size: 20px;
+        padding: 0 20px;
+    }
+
+    &.dragging {
+        box-shadow:
+                0 3px 6px $dragBoxShadowColor,
+                0 -3px 6px $dragBoxShadowColor;
     }
 }
 
 .column-option-disabled {
-    color: $doveGray;
+    color: $dustyGray;
+
+    &:hover {
+        background: $mercury;
+    }
 }

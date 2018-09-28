@@ -14,6 +14,14 @@ type Props = {
     onChange: (schemaKey: string, visibility: 'yes' | 'no') => void,
 };
 
+const DragHandle = SortableHandle(() => {
+    return (
+        <span className={columnOptionsStyles.dragHandle}>
+            <Icon name={DRAG_ICON} />
+        </span>
+    );
+});
+
 export default class ColumnOptionComponent extends React.Component<Props> {
     handleIconClick = () => {
         const {
@@ -24,14 +32,6 @@ export default class ColumnOptionComponent extends React.Component<Props> {
 
         onChange(schemaKey, visibility === 'yes' ? 'no' : 'yes');
     };
-
-    createDragHandle() {
-        const handle = ({className, children}: Object) => (
-            <span className={className}>{children}</span>
-        );
-
-        return SortableHandle(handle);
-    }
 
     render() {
         const {
@@ -46,13 +46,9 @@ export default class ColumnOptionComponent extends React.Component<Props> {
             }
         );
 
-        const DragHandle = this.createDragHandle();
-
         return (
             <div className={className}>
-                <DragHandle className={columnOptionsStyles.dragHandle}>
-                    <Icon name={DRAG_ICON} />
-                </DragHandle>
+                <DragHandle />
                 <span className={columnOptionsStyles.label}>{label}</span>
                 {visibility !== 'always' &&
                     <Icon className={columnOptionsStyles.icon} name={'su-eye'} onClick={this.handleIconClick} />

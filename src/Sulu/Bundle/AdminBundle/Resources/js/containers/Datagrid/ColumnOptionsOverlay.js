@@ -98,7 +98,9 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
             >
                 <SortableList
                     axis="y"
+                    helperClass={columnOptionsStyles.dragging}
                     lockAxis="y"
+                    lockToContainerEdges={true}
                     onSortEnd={this.handleItemsSorted}
                     useDragHandle={true}
                 >

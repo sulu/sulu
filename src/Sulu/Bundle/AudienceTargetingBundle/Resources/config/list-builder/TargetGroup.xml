@@ -2,7 +2,7 @@
        xmlns:orm="http://schemas.sulu.io/class/doctrine"
        xmlns:list="http://schemas.sulu.io/class/list">
     <properties>
-        <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
+        <property name="id" filter-type="integer" list:translation="public.id" list:type="string">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.target_group.class%</orm:entity-name>
         </property>
