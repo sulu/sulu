@@ -34,6 +34,7 @@ test('The component should render and handle clicks correctly', () => {
 test('The component should render with all available props and handle clicks correctly', () => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
+    const handlePinClick = jest.fn();
     const handleProfileClick = jest.fn();
 
     const navigation = mount(
@@ -41,6 +42,7 @@ test('The component should render with all available props and handle clicks cor
             appVersion="1.0.0"
             appVersionLink="http://link.com"
             onLogoutClick={handleLogoutClick}
+            onPinClick={handlePinClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
@@ -74,6 +76,9 @@ test('The component should render with all available props and handle clicks cor
 
     navigation.find('.userProfile button').simulate('click');
     expect(handleLogoutClick).toBeCalled();
+
+    navigation.find('.pin-container button').first().simulate('click');
+    expect(handlePinClick).toBeCalled();
 
     navigation.find('.userContent img').simulate('click');
     navigation.find('.userProfile span').at(0).simulate('click');

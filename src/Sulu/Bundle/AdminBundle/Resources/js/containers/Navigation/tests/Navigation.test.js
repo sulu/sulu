@@ -66,9 +66,16 @@ test('Should render navigation', () => {
         path: '/form',
         rerenderAttributes: [],
     };
-    const handleNavigate = jest.fn();
 
-    const navigation = render(<Navigation onLogout={jest.fn()} onNavigate={handleNavigate} router={router} />);
+    const navigation = render(
+        <Navigation
+            onLogout={jest.fn()}
+            onNavigate={jest.fn()}
+            onPin={jest.fn()}
+            router={router}
+        />
+    );
+
     expect(navigation).toMatchSnapshot();
 });
 
@@ -85,9 +92,21 @@ test('Should call the navigation callback and router navigate', () => {
         rerenderAttributes: [],
     };
     const handleNavigate = jest.fn();
+    const handlePin = jest.fn();
 
-    const navigation = mount(<Navigation onLogout={jest.fn()} onNavigate={handleNavigate} router={router} />);
+    const navigation = mount(
+        <Navigation
+            onLogout={jest.fn()}
+            onNavigate={handleNavigate}
+            onPin={handlePin}
+            router={router}
+        />
+    );
+
     navigation.find('Item').at(4).find('.title').simulate('click');
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
+
+    navigation.find('.pin-container button').first().simulate('click');
+    expect(handlePin).toBeCalled();
 });

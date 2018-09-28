@@ -117,18 +117,41 @@ exports[`Should render navigation 1`] = `
     </div>
   </div>
   <div
-    class="versions"
+    class="footer"
   >
-    <div>
-      Sulu (
-      <a
-        href="https://github.com/sulu/sulu/releases"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        2.0.0-RC1
-      </a>
-      )
+    <div
+      class="pinContainer"
+    >
+      <div>
+        <button
+          class="button icon button pin"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            <span
+              aria-label="fa-thumb-tack"
+              class="fa fa-thumb-tack"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="versions"
+    >
+      <div>
+        Sulu (
+        <a
+          href="https://github.com/sulu/sulu/releases"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          2.0.0-RC1
+        </a>
+        )
+      </div>
     </div>
   </div>
 </div>

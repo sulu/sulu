@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import classNames from 'classnames';
 import type {ChildrenArray, Element} from 'react';
 import Button from '../Button';
 import buttonGroupStyles from './buttonGroup.scss';
@@ -14,10 +15,15 @@ export default class ButtonGroup extends React.PureComponent<Props> {
         const {children} = this.props;
 
         return React.Children.map(children, (child) => {
+            const buttonClass = classNames(
+                buttonGroupStyles.button,
+                child.props.className
+            );
+
             return React.cloneElement(
                 child,
                 {
-                    className: buttonGroupStyles.button,
+                    className: buttonClass,
                     skin: 'icon',
                 }
             );

@@ -4,6 +4,8 @@ import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Icon from '../Icon';
+import Button from '../Button';
+import ButtonGroup from '../ButtonGroup';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
 
@@ -13,6 +15,7 @@ type Props = {
     username: string,
     userImage: ?string,
     onLogoutClick: () => void,
+    onPinClick?: () => void,
     onProfileClick: () => void,
     suluVersion: string,
     suluVersionLink: string,
@@ -93,6 +96,14 @@ export default class Navigation extends React.Component<Props> {
         );
     }
 
+    handlePinClick = () => {
+        const {onPinClick} = this.props;
+
+        if (onPinClick) {
+            onPinClick();
+        }
+    };
+
     renderAppVersion() {
         const {
             title,
@@ -119,6 +130,7 @@ export default class Navigation extends React.Component<Props> {
             onProfileClick,
             suluVersion,
             suluVersionLink,
+            onPinClick,
         } = this.props;
 
         return (
@@ -141,10 +153,21 @@ export default class Navigation extends React.Component<Props> {
                 <div className={navigationStyles.items}>
                     {this.cloneChildren()}
                 </div>
-                <div className={navigationStyles.versions}>
-                    {this.renderAppVersion()}
-                    <div>
-                        Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
+                <div className={navigationStyles.footer}>
+                    {onPinClick &&
+                        <div className={navigationStyles.pinContainer}>
+                            <ButtonGroup>
+                                <Button className={navigationStyles.pin} onClick={this.handlePinClick}>
+                                    <Icon name="fa-thumb-tack" />
+                                </Button>
+                            </ButtonGroup>
+                        </div>
+                    }
+                    <div className={navigationStyles.versions}>
+                        {this.renderAppVersion()}
+                        <div>
+                            Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
+                        </div>
                     </div>
                 </div>
             </div>

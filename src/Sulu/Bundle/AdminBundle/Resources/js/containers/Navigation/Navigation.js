@@ -12,6 +12,7 @@ type Props = {
     router: Router,
     onNavigate: (route: string) => void,
     onLogout: () => void,
+    onPin: () => void,
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
@@ -45,6 +46,10 @@ export default class Navigation extends React.Component<Props> {
         // TODO: Open profile edit overlay here.
     };
 
+    handlePinClick = () => {
+        this.props.onPin();
+    };
+
     isItemActive = (navigationItem: NavigationItem) => {
         const {router} = this.props;
 
@@ -62,6 +67,7 @@ export default class Navigation extends React.Component<Props> {
         return (
             <NavigationComponent
                 onLogoutClick={this.props.onLogout}
+                onPinClick={this.handlePinClick}
                 onProfileClick={this.handleProfileEditClick}
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}

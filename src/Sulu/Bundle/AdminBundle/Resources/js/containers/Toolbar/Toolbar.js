@@ -35,6 +35,7 @@ function getItemComponentByType(itemConfig, key) {
 export default class Toolbar extends React.Component<*> {
     static defaultProps = {
         navigationOpen: false,
+        navigationPinned: false,
     };
 
     props: ToolbarProps;
@@ -97,7 +98,7 @@ export default class Toolbar extends React.Component<*> {
     }
 
     render() {
-        const {onNavigationButtonClick, navigationOpen} = this.props;
+        const {onNavigationButtonClick, navigationOpen, navigationPinned} = this.props;
 
         return (
             <ToolbarComponent>
@@ -110,7 +111,7 @@ export default class Toolbar extends React.Component<*> {
                 }
                 {!!Initializer.initializedTranslationsLocale &&
                     <ToolbarComponent.Snackbar
-                        onClick={onNavigationButtonClick}
+                        onClick={navigationPinned ? undefined : onNavigationButtonClick}
                         type="success"
                         visible={this.toolbarStore.showSuccess}
                     />
@@ -118,7 +119,8 @@ export default class Toolbar extends React.Component<*> {
                 <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
-                        icon={navigationOpen ? 'su-times' : 'su-bars'}
+                        disabled={navigationPinned}
+                        icon={navigationPinned ? 'su-sulu' : (navigationOpen ? 'su-times' : 'su-bars')}
                         onClick={onNavigationButtonClick}
                         primary={true}
                     />

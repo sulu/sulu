@@ -84,18 +84,22 @@ exports[`The component should render and handle clicks correctly 1`] = `
     </div>
   </div>
   <div
-    class="versions"
+    class="footer"
   >
-    <div>
-      Sulu (
-      <a
-        href="http://link.com"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        2.0.0-RC1
-      </a>
-      )
+    <div
+      class="versions"
+    >
+      <div>
+        Sulu (
+        <a
+          href="http://link.com"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          2.0.0-RC1
+        </a>
+        )
+      </div>
     </div>
   </div>
 </div>
@@ -295,29 +299,52 @@ exports[`The component should render with all available props and handle clicks 
     </div>
   </div>
   <div
-    class="versions"
+    class="footer"
   >
-    <div>
-      sulu.io (
-      <a
-        href="http://link.com"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        1.0.0
-      </a>
-      )
+    <div
+      class="pinContainer"
+    >
+      <div>
+        <button
+          class="button icon button pin"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            <span
+              aria-label="fa-thumb-tack"
+              class="fa fa-thumb-tack"
+            />
+          </span>
+        </button>
+      </div>
     </div>
-    <div>
-      Sulu (
-      <a
-        href="http://link.com"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        2.0.0-RC1
-      </a>
-      )
+    <div
+      class="versions"
+    >
+      <div>
+        sulu.io (
+        <a
+          href="http://link.com"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          1.0.0
+        </a>
+        )
+      </div>
+      <div>
+        Sulu (
+        <a
+          href="http://link.com"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          2.0.0-RC1
+        </a>
+        )
+      </div>
     </div>
   </div>
 </div>

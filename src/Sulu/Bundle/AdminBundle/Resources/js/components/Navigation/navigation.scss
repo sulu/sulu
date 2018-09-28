@@ -5,6 +5,8 @@ $color: $white;
 $versionColor: $silver;
 $userBackgroundColor: $pickledBluewood;
 $buttonColor: $silver;
+$pinColorLight: $shakespeare;
+$pinColorDark: $cloudBurst;
 
 .navigation {
     width: 260px;
@@ -102,13 +104,38 @@ $buttonColor: $silver;
     flex-grow: 1;
 }
 
+.footer {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.pin-container {
+    flex: 0 0 auto;
+}
+
+.pin {
+    background-color: transparent;
+    border-color: $pinColorLight;
+    color: $pinColorLight;
+    margin-right: 20px;
+
+    &:hover {
+        background-color: $pinColorLight;
+        color: $pinColorDark;
+    }
+}
+
 .versions {
+    flex: 1 1 auto;
     font-size: 10px;
     line-height: 14px;
-    padding: 13px 40px;
     text-align: center;
-    width: 100%;
     color: $versionColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     a {
         color: $versionColor;

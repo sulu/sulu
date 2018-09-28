@@ -1,7 +1,7 @@
 // @flow
 import './global.scss';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, autorun} from 'mobx';
 import classNames from 'classnames';
 import React, {Fragment} from 'react';
 import Navigation from '../Navigation';
@@ -15,6 +15,13 @@ import {Backdrop} from '../../components';
 import Login from '../Login';
 import applicationStyles from './application.scss';
 
+const USER_SETTING_PREFIX = 'sulu_admin.application';
+const USER_SETTING_NAVIGATION_PINNED = 'navigation_pinned';
+
+function getNavigationPinnedSettingKey() {
+    return USER_SETTING_PREFIX + '.' + USER_SETTING_NAVIGATION_PINNED;
+}
+
 type Props = {
     router: Router,
 };
@@ -22,13 +29,52 @@ type Props = {
 @observer
 export default class Application extends React.Component<Props> {
     @observable navigationVisible: boolean = false;
+    @observable navigationPinned: boolean = false;
+
+    navigationPinnedDisposer: () => void;
+
+    constructor() {
+        super();
+
+        this.pinNavigation(!!userStore.getPersistentSetting(getNavigationPinnedSettingKey()));
+
+        this.navigationPinnedDisposer = autorun(
+            () => userStore.setPersistentSetting(getNavigationPinnedSettingKey(), this.navigationPinned ? 1 : 0)
+        );
+    }
 
     @action toggleNavigation() {
+        if (this.navigationPinned) {
+            return;
+        }
+
         this.navigationVisible = !this.navigationVisible;
+    }
+
+    @action pinNavigation(value?: boolean) {
+        if (value !== undefined) {
+            this.navigationPinned = value;
+        } else {
+            this.navigationPinned = !this.navigationPinned;
+        }
+
+        if (this.navigationPinned) {
+            this.navigationVisible = true;
+        } else {
+            this.navigationVisible = false;
+        }
+    }
+
+    componentWillUnmount() {
+        this.navigationPinnedDisposer();
     }
 
     handleNavigationButtonClick = () => {
         this.toggleNavigation();
+    };
+
+    handleNavigationPin = () => {
+        this.pinNavigation();
     };
 
     handleNavigate = () => {
@@ -41,7 +87,7 @@ export default class Application extends React.Component<Props> {
 
     handleLogout = () => {
         userStore.logout().then(() => {
-            this.toggleNavigation();
+            this.pinNavigation(false);
         });
     };
 
@@ -54,6 +100,7 @@ export default class Application extends React.Component<Props> {
             {
                 [applicationStyles.visible]: loggedIn,
                 [applicationStyles.navigationVisible]: this.navigationVisible,
+                [applicationStyles.navigationPinned]: this.navigationPinned,
             }
         );
 
@@ -68,6 +115,7 @@ export default class Application extends React.Component<Props> {
             applicationStyles.content,
             {
                 [applicationStyles.withSidebar]: sidebarStore.view,
+                [applicationStyles.withPinnedNavigation]: this.navigationPinned,
             }
         );
 
@@ -83,20 +131,26 @@ export default class Application extends React.Component<Props> {
                 {initializer.initialized &&
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
-                            <Navigation onLogout={this.handleLogout} onNavigate={this.handleNavigate} router={router} />
+                            <Navigation
+                                onLogout={this.handleLogout}
+                                onNavigate={this.handleNavigate}
+                                onPin={this.handleNavigationPin}
+                                router={router}
+                            />
                         </nav>
                         <div className={contentClass}>
                             <Backdrop
                                 fixed={false}
                                 local={true}
                                 onClick={this.handleNavigationButtonClick}
-                                open={this.navigationVisible}
+                                open={this.navigationVisible && !this.navigationPinned}
                                 visible={false}
                             />
                             <main className={applicationStyles.main}>
                                 <header className={applicationStyles.header}>
                                     <Toolbar
                                         navigationOpen={this.navigationVisible}
+                                        navigationPinned={this.navigationPinned}
                                         onNavigationButtonClick={this.handleNavigationButtonClick}
                                     />
                                 </header>

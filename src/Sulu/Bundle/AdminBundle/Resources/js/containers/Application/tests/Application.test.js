@@ -43,6 +43,13 @@ jest.mock('../../../stores/UserStore', () => {
         get contact() {
             return mockUserStoreContact();
         }
+
+        getPersistentSetting() {
+            return 1;
+        }
+
+        setPersistentSetting() {
+        }
     };
 });
 
@@ -137,6 +144,26 @@ test('Application should render opened navigation', () => {
 
     const view = mount(<Application router={router} />);
     view.find('Button[icon="su-bars"]').simulate('click');
+
+    expect(view).toMatchSnapshot();
+});
+
+test('Application should render pinned navigation', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
+    };
+
+    const view = mount(<Application router={router} />);
+    view.find('Button[icon="su-bars"]').simulate('click');
+    view.find('.pin-container button').simulate('click');
 
     expect(view).toMatchSnapshot();
 });

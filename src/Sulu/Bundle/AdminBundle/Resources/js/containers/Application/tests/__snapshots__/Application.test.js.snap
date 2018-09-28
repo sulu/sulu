@@ -2,7 +2,7 @@
 
 exports[`Application should not fail if current route does not exist 1`] = `
 <div
-  class="root visible"
+  class="root visible navigationVisible navigationPinned"
 >
   <nav
     class="navigation"
@@ -61,24 +61,47 @@ exports[`Application should not fail if current route does not exist 1`] = `
         class="items"
       />
       <div
-        class="versions"
+        class="footer"
       >
-        <div>
-          Sulu (
-          <a
-            href="https://github.com/sulu/sulu/releases"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            2.0.0-RC1
-          </a>
-          )
+        <div
+          class="pinContainer"
+        >
+          <div>
+            <button
+              class="button icon button pin"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                <span
+                  aria-label="fa-thumb-tack"
+                  class="fa fa-thumb-tack"
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="versions"
+        >
+          <div>
+            Sulu (
+            <a
+              href="https://github.com/sulu/sulu/releases"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              2.0.0-RC1
+            </a>
+            )
+          </div>
         </div>
       </div>
     </div>
   </nav>
   <div
-    class="content"
+    class="content withPinnedNavigation"
   >
     <main
       class="main"
@@ -114,7 +137,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
             </div>
           </div>
           <div
-            class="snackbar success clickable"
+            class="snackbar success"
           >
             <span
               aria-label="su-check"
@@ -126,10 +149,11 @@ exports[`Application should not fail if current route does not exist 1`] = `
           >
             <button
               class="button light primary"
+              disabled=""
             >
               <span
-                aria-label="su-bars"
-                class="icon su-bars"
+                aria-label="su-sulu"
+                class="icon su-sulu"
               />
             </button>
           </div>
@@ -148,7 +172,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
 
 exports[`Application should render based on current route 1`] = `
 <div
-  class="root visible"
+  class="root visible navigationVisible navigationPinned"
 >
   <nav
     class="navigation"
@@ -207,24 +231,47 @@ exports[`Application should render based on current route 1`] = `
         class="items"
       />
       <div
-        class="versions"
+        class="footer"
       >
-        <div>
-          Sulu (
-          <a
-            href="https://github.com/sulu/sulu/releases"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            2.0.0-RC1
-          </a>
-          )
+        <div
+          class="pinContainer"
+        >
+          <div>
+            <button
+              class="button icon button pin"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                <span
+                  aria-label="fa-thumb-tack"
+                  class="fa fa-thumb-tack"
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="versions"
+        >
+          <div>
+            Sulu (
+            <a
+              href="https://github.com/sulu/sulu/releases"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              2.0.0-RC1
+            </a>
+            )
+          </div>
         </div>
       </div>
     </div>
   </nav>
   <div
-    class="content"
+    class="content withPinnedNavigation"
   >
     <main
       class="main"
@@ -260,7 +307,7 @@ exports[`Application should render based on current route 1`] = `
             </div>
           </div>
           <div
-            class="snackbar success clickable"
+            class="snackbar success"
           >
             <span
               aria-label="su-check"
@@ -272,10 +319,11 @@ exports[`Application should render based on current route 1`] = `
           >
             <button
               class="button light primary"
+              disabled=""
             >
               <span
-                aria-label="su-bars"
-                class="icon su-bars"
+                aria-label="su-sulu"
+                class="icon su-sulu"
               />
             </button>
           </div>
