@@ -52,10 +52,20 @@ export default class Items extends React.Component<Props> {
         resizeObserver.observe(this.parentRef);
     }
 
+    @action componentDidUpdate() {
+        if (this.parentRef && this.parentWidth !== this.parentRef.offsetWidth) {
+            this.parentWidth = this.parentRef.offsetWidth;
+        }
+
+        if (this.childRef && this.showText && this.expandedWidth !== this.childRef.offsetWidth) {
+            this.expandedWidth = this.childRef.offsetWidth;
+        }
+    }
+
     @action setDimensions = () => {
         const {parentRef, childRef} = this;
 
-        if (childRef && childRef.offsetWidth > this.expandedWidth) {
+        if (childRef && (this.showText || childRef.offsetWidth > this.expandedWidth)) {
             this.expandedWidth = childRef.offsetWidth;
         }
 
