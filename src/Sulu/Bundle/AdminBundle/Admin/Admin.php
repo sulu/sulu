@@ -56,6 +56,16 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
         return [];
     }
 
+    /**
+     * Returns all the security contexts, which are available in the concrete bundle.
+     *
+     * @return array
+     */
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return $this->getSecurityContexts();
+    }
+
     public function getNavigation(): Navigation
     {
         $rootNavigationItem = new NavigationItem('root');

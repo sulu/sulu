@@ -9,7 +9,7 @@ import {userStore} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import WebspaceSelect from '../../components/WebspaceSelect';
-import WebspaceStore from '../../stores/WebspaceStore';
+import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
@@ -137,7 +137,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
             }
         );
 
-        WebspaceStore.loadWebspaces()
+        webspaceStore.loadWebspaces()
             .then(action((webspaces) => {
                 this.webspaces = webspaces;
             }));

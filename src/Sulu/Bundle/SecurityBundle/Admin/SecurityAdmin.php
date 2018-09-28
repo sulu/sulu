@@ -39,7 +39,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
             $roles = new NavigationItem('sulu_security.roles', $settings);
             $roles->setPosition(10);
-            $roles->setMainRoute('sulu_security.datagrid');
+            $roles->setMainRoute('sulu_security.roles_datagrid');
         }
 
         if ($settings->hasChildren()) {
@@ -79,11 +79,34 @@ class SecurityAdmin extends Admin
 
     public function getRoutes(): array
     {
+        $formToolbarActions = [
+            'sulu_admin.save',
+        ];
+
         return [
-            (new Route('sulu_security.datagrid', '/roles', 'sulu_admin.datagrid'))
+            (new Route('sulu_security.roles_datagrid', '/roles', 'sulu_admin.datagrid'))
                 ->addOption('title', 'sulu_security.roles')
                 ->addOption('adapters', ['table'])
-                ->addOption('resourceKey', 'roles'),
+                ->addOption('resourceKey', 'roles')
+                ->addOption('addRoute', 'sulu_security.role_add_form.detail')
+                ->addOption('editRoute', 'sulu_security.role_edit_form.detail'),
+            (new Route('sulu_security.role_add_form', '/roles/add', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'roles')
+                ->addOption('backRoute', 'sulu_security.roles_datagrid')
+                ->addOption('toolbarActions', $formToolbarActions),
+            (new Route('sulu_security.role_add_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_security.role_form_detail')
+                ->addOption('editRoute', 'sulu_security.role_edit_form.detail')
+                ->addOption('toolbarActions', $formToolbarActions)
+                ->setParent('sulu_security.role_add_form'),
+            (new Route('sulu_security.role_edit_form', '/roles/:id', 'sulu_admin.resource_tabs'))
+                ->addOption('resourceKey', 'roles')
+                ->addOption('toolbarActions', $formToolbarActions),
+            (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('tabTitle', 'sulu_security.role_form_detail')
+                ->addOption('backRoute', 'sulu_security.roles_datagrid')
+                ->addOption('toolbarActions', $formToolbarActions)
+                ->setParent('sulu_security.role_edit_form'),
             (new Route('sulu_security.form.permissions', '/permissions', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.permissions')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')

@@ -1,6 +1,5 @@
 // @flow
-import {bundleReady} from 'sulu-admin-bundle/services';
-import initializer from 'sulu-admin-bundle/services/Initializer';
+import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {sidebarRegistry} from 'sulu-admin-bundle/containers';
 import Preview, {PreviewStore} from './containers';
 

@@ -16,6 +16,7 @@ import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
 import Loader from './Loader';
+import Matrix from './Matrix';
 import Menu from './Menu';
 import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
@@ -46,6 +47,7 @@ export {
     Icon,
     InfiniteScroller,
     Loader,
+    Matrix,
     Menu,
     Masonry,
     MultiItemSelection,

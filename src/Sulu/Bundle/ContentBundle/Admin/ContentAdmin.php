@@ -31,13 +31,6 @@ class ContentAdmin extends Admin
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
     /**
-     * The prefix for the settings security context, the key of the webspace has to be appended.
-     *
-     * @var string
-     */
-    const SECURITY_SETTINGS_CONTEXT_PREFIX = 'sulu.webspace_settings.';
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -162,6 +155,24 @@ class ContentAdmin extends Admin
         return [
             'Sulu' => [
                 'Webspaces' => $webspaceContexts,
+            ],
+        ];
+    }
+
+    public function getSecurityContextsWithPlaceholder()
+    {
+        return [
+            'Sulu' => [
+                'Webspaces' => [
+                    self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                        PermissionTypes::LIVE,
+                        PermissionTypes::SECURITY,
+                    ],
+                ],
             ],
         ];
     }

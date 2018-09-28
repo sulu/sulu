@@ -19,6 +19,7 @@ use Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType;
 use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -184,6 +185,20 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                         'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
                         'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home', 'form_type' => HomeDocumentType::class],
                         'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'webspaces' => [
+                            'form' => [],
+                            'endpoint' => 'get_webspaces',
+                        ],
                     ],
                 ]
             );
