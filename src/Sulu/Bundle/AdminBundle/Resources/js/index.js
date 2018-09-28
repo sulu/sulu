@@ -4,6 +4,7 @@ import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
 import {configure} from 'mobx';
+import ResizeObserver from 'resize-observer-polyfill';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
@@ -65,6 +66,10 @@ import {smartContentConfigStore} from './containers/SmartContent';
 
 // $FlowFixMe
 configure({enforceActions: 'observed'});
+
+if (!window.ResizeObserver) {
+    window.ResizeObserver = ResizeObserver;
+}
 
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);

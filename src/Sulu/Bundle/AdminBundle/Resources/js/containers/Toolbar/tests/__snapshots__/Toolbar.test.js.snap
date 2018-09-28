@@ -37,73 +37,77 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
     />
   </div>
   <div
-    class="controls light"
+    class="controls light grow"
   >
-    <ul
-      class="items light"
+    <div
+      class="itemsContainer"
     >
-      <li>
-        <button
-          class="button light"
-          disabled=""
-        >
-          <span
-            aria-label="fa-trash-o"
-            class="icon fa fa-trash-o"
-          />
-        </button>
-      </li>
-      <li>
-        <div
-          class="dropdown"
-        >
+      <ul
+        class="items light"
+      >
+        <li>
           <button
             class="button light"
-            value="Save"
+            disabled=""
           >
             <span
-              aria-label="fa-floppy-more"
-              class="icon fa fa-floppy-more"
-            />
-            <span
-              class="label"
-            >
-              Save
-            </span>
-            <span
-              aria-label="su-angle-down"
-              class="dropdownIcon su-angle-down"
+              aria-label="fa-trash-o"
+              class="icon fa fa-trash-o"
             />
           </button>
-        </div>
-      </li>
-      <li>
-        <button
-          class="button light"
-        >
-          <span
-            class="label"
+        </li>
+        <li>
+          <div
+            class="dropdown"
           >
-            <label
-              class="label"
+            <button
+              class="button light"
+              value="Save"
             >
               <span
-                class="switch toggler"
+                aria-label="fa-floppy-more"
+                class="icon fa fa-floppy-more"
+              />
+              <span
+                class="label"
               >
-                <input
-                  checked=""
-                  type="checkbox"
-                />
-                <span />
+                Save
               </span>
-              <div>
-                Toggler
-              </div>
-            </label>
-          </span>
-        </button>
-      </li>
-    </ul>
+              <span
+                aria-label="su-angle-down"
+                class="dropdownIcon su-angle-down"
+              />
+            </button>
+          </div>
+        </li>
+        <li>
+          <button
+            class="button light"
+          >
+            <span
+              class="label"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch toggler"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+                <div>
+                  Toggler
+                </div>
+              </label>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
   <div
     class="controls light"

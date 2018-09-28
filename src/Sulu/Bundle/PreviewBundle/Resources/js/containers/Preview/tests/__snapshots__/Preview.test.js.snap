@@ -50,6 +50,7 @@ exports[`Render correct preview 1`] = `
     skin="dark"
   >
     <Controls
+      grow={false}
       skin="light"
     >
       <Button
@@ -59,6 +60,7 @@ exports[`Render correct preview 1`] = `
         icon="su-arrow-right"
         onClick={[Function]}
         primary={false}
+        showText={true}
       />
     </Controls>
   </Toolbar>
