@@ -202,9 +202,10 @@
         </service>
 
         <service id="sulu_website.translator.request_analyzer"
-                 class="Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator" decorates="translator">
+                 class="Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator"
+                 decorates="translator">
             <argument type="service" id="sulu_website.translator.request_analyzer.inner"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="request_stack"/>
         </service>
 
         <service id="sulu_website.router_listener"
