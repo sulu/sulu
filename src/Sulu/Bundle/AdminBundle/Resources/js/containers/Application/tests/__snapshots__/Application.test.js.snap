@@ -1155,11 +1155,12 @@ exports[`Application should render pinned navigation 1`] = `
                   </div>
                 </Snackbar>
                 <Controls
+                  grow={true}
                   key=".2"
                   skin="light"
                 >
                   <div
-                    className="controls light"
+                    className="controls light grow"
                   >
                     <Button
                       active={false}
@@ -1169,6 +1170,7 @@ exports[`Application should render pinned navigation 1`] = `
                       key=".0"
                       onClick={[Function]}
                       primary={true}
+                      showText={true}
                       skin="light"
                     >
                       <button
@@ -1190,6 +1192,7 @@ exports[`Application should render pinned navigation 1`] = `
                   </div>
                 </Controls>
                 <Controls
+                  grow={false}
                   key=".3"
                   skin="light"
                 >
@@ -1514,11 +1517,12 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                   </div>
                 </Snackbar>
                 <Controls
+                  grow={true}
                   key=".2"
                   skin="light"
                 >
                   <div
-                    className="controls light"
+                    className="controls light grow"
                   >
                     <Button
                       active={false}
@@ -1528,6 +1532,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                       key=".0"
                       onClick={[Function]}
                       primary={true}
+                      showText={true}
                       skin="light"
                     >
                       <button
@@ -1549,6 +1554,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                   </div>
                 </Controls>
                 <Controls
+                  grow={false}
                   key=".3"
                   skin="light"
                 >
