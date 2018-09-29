@@ -112,6 +112,8 @@ $pinColorDark: $cloudBurst;
 
 .pin-container {
     flex: 0 0 auto;
+    display: flex;
+    align-items: center;
 }
 
 .pin {
@@ -136,6 +138,7 @@ $pinColorDark: $cloudBurst;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    word-break: break-word;
 
     a {
         color: $versionColor;
