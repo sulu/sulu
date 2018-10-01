@@ -699,7 +699,7 @@ class ContentMapper implements ContentMapperInterface
             if (RedirectType::INTERNAL === $redirectType) {
                 $target = $document->getRedirectTarget();
 
-                if ($target) {
+                if ($target && $target instanceof RedirectTypeBehavior) {
                     $url = $target->getResourceSegment();
 
                     $document = $target;
