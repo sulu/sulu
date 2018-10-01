@@ -3,23 +3,31 @@
 
 $dragBoxShadowColor: rgba($black, .1);
 
+$optionColor: $black;
+$optionBackgroundColor: $silver;
+
+$optionDisabledColor: $dustyGray;
+$optionDisabledBackgroundColor: $mercury;
+
 .overlay {
     display: flex;
     flex-direction: column;
     padding: $viewPadding;
+
+    &.sorting {
+        user-select: none;
+    }
 }
 
 .column-option {
+    color: $optionColor;
     display: flex;
     font-size: 14px;
     padding: 15px 0;
-    margin: 5px 0;
-    user-select: none;
     width: 100%;
-    z-index: 100;
 
     &:hover {
-        background: $silver;
+        background: $optionBackgroundColor;
     }
 
     .drag-handle {
@@ -38,16 +46,22 @@ $dragBoxShadowColor: rgba($black, .1);
     }
 
     &.dragging {
+        background: $optionBackgroundColor;
         box-shadow:
                 0 3px 6px $dragBoxShadowColor,
                 0 -3px 6px $dragBoxShadowColor;
+        z-index: 200;
     }
 }
 
 .column-option-disabled {
-    color: $dustyGray;
+    color: $optionDisabledColor;
 
     &:hover {
-        background: $mercury;
+        background: $optionDisabledBackgroundColor;
+    }
+
+    &.dragging {
+        background: $optionDisabledBackgroundColor;
     }
 }

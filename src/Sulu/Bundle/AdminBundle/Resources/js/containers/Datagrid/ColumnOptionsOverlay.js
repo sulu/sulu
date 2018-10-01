@@ -2,8 +2,9 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
+import classNames from 'classnames';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {arrayMove, Overlay} from '../../components'
+import {arrayMove, Overlay} from '../../components';
 import {translate} from '../../utils';
 import type {Schema, SchemaEntry} from './types';
 import ColumnOptionComponent from './ColumnOption';
@@ -23,9 +24,9 @@ type ColumnOption = {|
 
 const SortableItem = SortableElement(ColumnOptionComponent);
 
-const SortableList = SortableContainer(({children}) => {
+const SortableList = SortableContainer(({children, className}) => {
     return (
-        <div className={columnOptionsStyles.overlay}>
+        <div className={className}>
             {children}
         </div>
     );
@@ -34,6 +35,7 @@ const SortableList = SortableContainer(({children}) => {
 @observer
 export default class ColumnOptionsOverlay extends React.Component<Props> {
     @observable columnOptions: Array<ColumnOption> = [];
+    @observable sorting: boolean = false;
 
     handleConfirm = () => {
         const newSchema = {};
@@ -78,8 +80,13 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
         }
     }
 
-    @action handleItemsSorted = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    @action handleItemsSortStart = () => {
+        this.sorting = true;
+    };
+
+    @action handleItemsSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
         this.columnOptions = arrayMove(this.columnOptions, oldIndex, newIndex);
+        this.sorting = false;
     };
 
     render() {
@@ -87,6 +94,15 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
             onClose,
             open,
         } = this.props;
+
+        const className = classNames(
+            columnOptionsStyles.overlay,
+            {
+                // TODO: This could be removed when following issue is fixed:
+                // https://github.com/clauderic/react-sortable-hoc/issues/403
+                [columnOptionsStyles.sorting]: this.sorting,
+            }
+        );
 
         return (
             <Overlay
@@ -99,10 +115,12 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
             >
                 <SortableList
                     axis="y"
+                    className={className}
                     helperClass={columnOptionsStyles.dragging}
                     lockAxis="y"
                     lockToContainerEdges={true}
-                    onSortEnd={this.handleItemsSorted}
+                    onSortEnd={this.handleItemsSortEnd}
+                    onSortStart={this.handleItemsSortStart}
                     useDragHandle={true}
                 >
                     {this.columnOptions.map((columnOption, index) => {

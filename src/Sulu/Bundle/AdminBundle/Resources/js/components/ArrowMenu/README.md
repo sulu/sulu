@@ -3,6 +3,7 @@ SuluContentBundle.
 
 Possible Children of this component are `Section`, for custom sections and the default `SingleSingleItemSection`.
 The component `SingleSingleItemSection` can receive `Item` as children.
+The component `Action` can be used inside `Section` components.
 
 Important for this component is the render prop `anchorElement`.
 This prop will be rendered into the component. Internally there is used an [`Popover`](#popover) to position the menu correctly.
@@ -187,20 +188,58 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
 </div>
 ```
 
-```
-<div>
-    <div>
-        <h3>Current values</h3>
-        <ul>
-            <li>Value 1: {state.value1}</li>
-            <li>Value 2: {state.value2}</li>
-        </ul>
-    </div>
-    
-    <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <Section>
-            <Action onClick={this.handle}>Column Options</Action>
-        </Section>
-    </ArrowMenu>
-</div>
+
+Example with actions:
+
+```javascript
+
+const Action = ArrowMenu.Action;
+const Section = ArrowMenu.Section;
+
+initialState = {
+    open: false,
+};
+
+const handleAction1Click = (value) => {
+    setState(() => ({
+        open: false,
+    }));
+    alert('Action 1 clicked');
+};
+
+const handleAction2Click = (value) => {
+    setState(() => ({
+        open: true,
+    }));
+    alert('Action 2 clicked');
+};
+
+const handleAction3Click = (value) => {
+    setState(() => ({
+        open: true,
+    }));
+    alert('Action 3 clicked');
+};
+
+const handleButtonClick = () => {
+    setState(() => ({
+        open: true,
+    }));
+};
+
+const handleClose = () => {
+    setState(() => ({
+        open: false,
+    }));
+};
+
+const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
+
+<ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
+    <Section>
+        <Action onClick={this.handleAction1Click}>Action 1</Action>
+        <Action onClick={this.handleAction2Click}>Action 2</Action>
+        <Action onClick={this.handleAction3Click}>Action 3</Action>
+    </Section>
+</ArrowMenu>
 ```
