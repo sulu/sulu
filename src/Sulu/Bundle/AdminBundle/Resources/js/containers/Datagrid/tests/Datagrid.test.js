@@ -47,7 +47,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observa
     this.selections = [];
     this.selectionIds = [];
     this.loading = false;
-    this.schema = {
+    this.userSchema = {
         title: {
             type: 'string',
             sortable: true,

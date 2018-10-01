@@ -43,6 +43,11 @@ test('Render ArrowMenu closed', () => {
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
+            <ArrowMenu.Section>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 1</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 2</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 3</ArrowMenu.Action>
+            </ArrowMenu.Section>
         </ArrowMenu>
     );
 
@@ -83,6 +88,11 @@ test('Render ArrowMenu open', () => {
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
+            <ArrowMenu.Section>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 1</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 2</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 3</ArrowMenu.Action>
+            </ArrowMenu.Section>
         </ArrowMenu>
     );
 
@@ -98,6 +108,9 @@ test('Events should be called correctly', () => {
     const button = (<button>Nice button</button>);
     const value1 = 'sulu';
     const value2 = undefined;
+    const handleActionClick1 = jest.fn();
+    const handleActionClick2 = jest.fn();
+    const handleActionClick3 = jest.fn();
 
     const arrowMenu = mount(
         <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
@@ -123,11 +136,19 @@ test('Events should be called correctly', () => {
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
             </ArrowMenu.SingleItemSection>
+            <ArrowMenu.Section>
+                <ArrowMenu.Action onClick={handleActionClick1}>Test Action 1</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={handleActionClick2}>Test Action 2</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={handleActionClick3}>Test Action 3</ArrowMenu.Action>
+            </ArrowMenu.Section>
         </ArrowMenu>
     );
 
     arrowMenu.find('SingleItemSection').at(0).find('Item').at(1).simulate('click');
     expect(handleChangeSection1).toBeCalledWith('sulu_blog');
+
+    arrowMenu.find('Action').at(1).simulate('click');
+    expect(handleActionClick2).toBeCalled();
 
     arrowMenu.find('SingleItemSection').at(1).find('Item').at(0).simulate('click');
     expect(handleChangeSection2).toBeCalledWith('title');

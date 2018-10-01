@@ -56,10 +56,6 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
             <div class=\\"loader\\"></div><span>Page:</span><span class=\\"inputContainer\\"><label class=\\"input dark center\\"><input inputmode=\\"numeric\\" type=\\"text\\" value=\\"2\\"></label></span><span class=\\"display\\">of 3</span><button class=\\"previous\\"><span aria-label=\\"su-angle-left\\" class=\\"su-angle-left\\"></span></button><button class=\\"next\\"><span aria-label=\\"su-angle-right\\" class=\\"su-angle-right\\"></span></button></nav>
       </section>
     </div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
   </div>
   <div class=\\"divider\\"></div>
   <div>
@@ -135,8 +131,6 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
         <div class=\\"indicator\\"></div>
       </section>
     </div>
-    <div></div>
-    <div></div>
   </div><input type=\\"file\\" style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;\\" multiple=\\"\\" autocomplete=\\"off\\">
 </div>
 </div>

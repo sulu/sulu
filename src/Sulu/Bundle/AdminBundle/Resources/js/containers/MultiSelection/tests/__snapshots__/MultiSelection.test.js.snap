@@ -46,7 +46,6 @@ Array [
   <ul
     class="list"
   />,
-  <div />,
 ]
 `;
 
@@ -71,7 +70,6 @@ Array [
   <ul
     class="list"
   />,
-  <div />,
 ]
 `;
 
@@ -98,7 +96,6 @@ Array [
   <ul
     class="list"
   />,
-  <div />,
 ]
 `;
 
@@ -268,6 +265,5 @@ Array [
       </div>
     </li>
   </ul>,
-  <div />,
 ]
 `;

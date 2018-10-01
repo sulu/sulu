@@ -64,7 +64,13 @@ export default class PopoverPositioner {
         // If after making sure, the popover does not overflow the top and the bottom border of the screen,
         // the popover succeeds the minimum height, no more steps have to be taken.
         if (!alignOnVerticalAnchorEdges && crop.dimensions.height >= MIN_HEIGHT) {
-            return PopoverPositioner.cropHorizontalDimensions(crop.dimensions, windowWidth, popoverWidth, anchorLeft, anchorWidth);
+            return PopoverPositioner.cropHorizontalDimensions(
+                crop.dimensions,
+                windowWidth,
+                popoverWidth,
+                anchorLeft,
+                anchorWidth
+            );
         }
 
         // If the minimum height is undercut and the top border of the screen is touched, the popover gets
@@ -85,7 +91,13 @@ export default class PopoverPositioner {
         // After moving the popover it has to be made sure one more time that the popover does not overflow the borders.
         crop = PopoverPositioner.cropVerticalDimensions(dimensions, windowHeight);
 
-        return PopoverPositioner.cropHorizontalDimensions(crop.dimensions, windowWidth, popoverWidth, anchorLeft, anchorWidth);
+        return PopoverPositioner.cropHorizontalDimensions(
+            crop.dimensions,
+            windowWidth,
+            popoverWidth,
+            anchorLeft,
+            anchorWidth
+        );
     }
 
     static cropVerticalDimensions(dimensions: PopoverDimensions, windowHeight: number): VerticalCrop {
@@ -119,7 +131,7 @@ export default class PopoverPositioner {
         const newDimensions = {...dimensions};
         newDimensions.left = Math.max(PADDING_TO_WINDOW, newDimensions.left);
 
-        if ((popoverWidth + newDimensions.left) > windowWidth) {
+        if ((popoverWidth + newDimensions.left + PADDING_TO_WINDOW) > windowWidth) {
             // calc from right side
             newDimensions.left = anchorLeft + anchorWidth - popoverWidth;
         }

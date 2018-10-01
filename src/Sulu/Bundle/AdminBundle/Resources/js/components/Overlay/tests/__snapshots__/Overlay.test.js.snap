@@ -1,8 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when closed 1`] = `<div />`;
+exports[`The component should not render in body when closed 1`] = `null`;
 
-exports[`The component should render in body when open 1`] = `<div />`;
+exports[`The component should render in body when open 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
@@ -25,7 +29,11 @@ exports[`The component should render in body when open 2`] = `
 </div>"
 `;
 
-exports[`The component should render in body with actions when open 1`] = `<div />`;
+exports[`The component should render in body with actions when open 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body with actions when open 2`] = `
 "<div>
@@ -50,7 +58,11 @@ exports[`The component should render in body with actions when open 2`] = `
 </div>"
 `;
 
-exports[`The component should render in body with loader instead of confirm button 1`] = `<div />`;
+exports[`The component should render in body with loader instead of confirm button 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body with loader instead of confirm button 2`] = `
 "<div>
@@ -79,7 +91,11 @@ exports[`The component should render in body with loader instead of confirm butt
 </div>"
 `;
 
-exports[`The component should render with a disabled confirm button 1`] = `<div />`;
+exports[`The component should render with a disabled confirm button 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render with a disabled confirm button 2`] = `
 "<div>

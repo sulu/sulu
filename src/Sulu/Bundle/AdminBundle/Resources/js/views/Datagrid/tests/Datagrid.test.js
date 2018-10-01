@@ -59,7 +59,7 @@ jest.mock(
         this.selectionIds = [];
         this.deleteSelection = jest.fn();
         this.getPage = jest.fn().mockReturnValue(2);
-        this.schema = {
+        this.userSchema = {
             title: {
                 type: 'string',
                 sortable: true,

@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import type {Node} from 'react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import Icon from '../Icon';
 import Button from '../Button';
@@ -129,7 +129,7 @@ export default class Overlay extends React.Component<Props> {
         const showPortal = open || this.openHasChanged;
 
         return (
-            <div>
+            <Fragment>
                 <Backdrop onClick={onClose} open={showPortal} />
                 {showPortal &&
                     <Portal>
@@ -164,7 +164,7 @@ export default class Overlay extends React.Component<Props> {
                         </div>
                     </Portal>
                 }
-            </div>
+            </Fragment>
         );
     }
 }

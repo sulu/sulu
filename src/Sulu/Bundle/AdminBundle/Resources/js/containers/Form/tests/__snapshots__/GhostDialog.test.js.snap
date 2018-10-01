@@ -23,7 +23,7 @@ exports[`Should render a Dialog 1`] = `
             </div>
           </div>
         </article>
-        <footer><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"></span></button><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\"></span></button></footer>
+        <footer><button class=\\"button secondary\\" type=\\"button\\"></button><button class=\\"button primary\\" type=\\"button\\"></button></footer>
       </section>
     </div>
   </div>

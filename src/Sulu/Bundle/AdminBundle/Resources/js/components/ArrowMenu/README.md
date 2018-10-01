@@ -188,7 +188,6 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
 </div>
 ```
 
-
 Example with actions:
 
 ```javascript
