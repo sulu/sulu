@@ -3,7 +3,8 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {arrayMove, Overlay} from '../../components';
+import {arrayMove, Overlay} from '../../components'
+import {translate} from '../../utils';
 import type {Schema, SchemaEntry} from './types';
 import ColumnOptionComponent from './ColumnOption';
 import columnOptionsStyles from './columnOptions.scss';
@@ -89,12 +90,12 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
 
         return (
             <Overlay
-                confirmText="Apply"
+                confirmText={translate('sulu_admin.confirm')}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
                 size={'small'}
-                title="Change schema amigo"
+                title={translate('sulu_admin.column_options')}
             >
                 <SortableList
                     axis="y"
