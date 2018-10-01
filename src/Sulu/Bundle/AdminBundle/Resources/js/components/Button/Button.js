@@ -10,12 +10,13 @@ const LOADER_SIZE = 25;
 
 type Props = {|
     active: boolean,
-    children: Node,
+    children?: Node,
     className?: string,
     disabled: boolean,
     icon?: string,
     loading: boolean,
     onClick?: (value: *) => void,
+    showDropdownIcon: boolean,
     size: 'small' | 'large',
     skin: 'primary' | 'secondary' | 'link' | 'icon',
     type: 'button' | 'submit' | 'reset',
@@ -27,6 +28,7 @@ export default class Button extends React.PureComponent<Props> {
         active: false,
         disabled: false,
         loading: false,
+        showDropdownIcon: false,
         size: 'large',
         skin: 'secondary',
         type: 'button',
@@ -50,6 +52,7 @@ export default class Button extends React.PureComponent<Props> {
             icon,
             loading,
             onClick,
+            showDropdownIcon,
             skin,
             type,
         } = this.props;
@@ -70,8 +73,18 @@ export default class Button extends React.PureComponent<Props> {
                 onClick={onClick ? this.handleClick : undefined}
                 type={type}
             >
-                {icon && <Icon className={buttonStyles.buttonIcon} name={icon} />}
-                <span className={buttonStyles.text}>{children}</span>
+                {icon &&
+                    <Icon className={buttonStyles.buttonIcon} name={icon} />
+                }
+                {children &&
+                    <span className={buttonStyles.text}>{children}</span>
+                }
+                {showDropdownIcon &&
+                    <Icon
+                        className={classNames(buttonStyles.buttonIcon, buttonStyles.dropdownIcon)}
+                        name={'su-angle-down'}
+                    />
+                }
                 {loading &&
                     <div className={buttonStyles.loader}>
                         <Loader size={LOADER_SIZE} />

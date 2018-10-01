@@ -49,6 +49,11 @@ $iconColorActive: $white;
         bottom: 0;
         left: 10px;
     }
+
+    .dropdown-icon {
+        left: auto;
+        right: 10px;
+    }
 }
 
 .primary {
@@ -88,6 +93,10 @@ $iconColorActive: $white;
     .button-icon {
         margin-right: 10px;
     }
+
+    .dropdown-icon {
+        margin-left: 10px;
+    }
 }
 
 .icon {
@@ -108,8 +117,16 @@ $iconColorActive: $white;
         color: $iconColorActive;
     }
 
-    span {
+    > span {
         line-height: 28px;
+    }
+
+    .button-icon {
+        margin-left: 5px;
+    }
+
+    .dropdown-icon {
+        margin-right: 5px;
     }
 }
 

@@ -39,6 +39,18 @@ exports[`Should render with skin icon and active 1`] = `
 </button>
 `;
 
+exports[`Should render with skin icon and dropdown icon 1`] = `
+<button
+  class="button icon"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="buttonIcon dropdownIcon su-angle-down"
+  />
+</button>
+`;
+
 exports[`Should render with skin link 1`] = `
 <button
   class="button link"
@@ -46,6 +58,18 @@ exports[`Should render with skin link 1`] = `
 >
   <span
     class="text"
+  />
+</button>
+`;
+
+exports[`Should render with skin link and dropdown icon 1`] = `
+<button
+  class="button link"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="buttonIcon dropdownIcon su-angle-down"
   />
 </button>
 `;
@@ -61,6 +85,18 @@ exports[`Should render with skin primary 1`] = `
 </button>
 `;
 
+exports[`Should render with skin primary and dropdown icon 1`] = `
+<button
+  class="button primary"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="buttonIcon dropdownIcon su-angle-down"
+  />
+</button>
+`;
+
 exports[`Should render with skin secondary 1`] = `
 <button
   class="button secondary"
@@ -68,6 +104,18 @@ exports[`Should render with skin secondary 1`] = `
 >
   <span
     class="text"
+  />
+</button>
+`;
+
+exports[`Should render with skin secondary and dropdown icon 1`] = `
+<button
+  class="button secondary"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="buttonIcon dropdownIcon su-angle-down"
   />
 </button>
 `;

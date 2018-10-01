@@ -4,7 +4,7 @@ import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
-import {ArrowMenu, DropdownButton, Dialog} from '../../components';
+import {ArrowMenu, Button, Dialog} from '../../components';
 import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {Schema, SortOrder} from './types';
@@ -353,7 +353,12 @@ export default class Datagrid extends React.Component<Props> {
     renderAdapterOptionsButton() {
         return (
             <div>
-                <DropdownButton icon={'su-sort'} onClick={this.handleAdapterOptionsButtonClick} skin={'icon'} />
+                <Button
+                    icon={'su-sort'}
+                    onClick={this.handleAdapterOptionsButtonClick}
+                    showDropdownIcon={true}
+                    skin={'icon'}
+                />
             </div>
         );
     }
