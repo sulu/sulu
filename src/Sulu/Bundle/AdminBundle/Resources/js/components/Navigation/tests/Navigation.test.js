@@ -41,8 +41,9 @@ test('The component should render with all available props and handle clicks cor
         <Navigation
             appVersion="1.0.0"
             appVersionLink="http://link.com"
+            isPinned={false}
             onLogoutClick={handleLogoutClick}
-            onPinClick={handlePinClick}
+            onPinToggle={handlePinClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"

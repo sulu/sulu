@@ -1,10 +1,11 @@
 @import './variables.scss';
+@import '../../components/Navigation/variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
 .root {
-    width: calc(100vw + 260px);
+    width: calc(100vw + $navigationWidth);
     display: none;
-    left: -260px;
+    left: -$navigationWidth;
     position: absolute;
     transition: left $navigationMoveAnimationDuration;
     will-change: left;
@@ -26,7 +27,7 @@
     transition: width $navigationMoveAnimationDuration;
 
     &.with-pinned-navigation {
-        width: calc(100vw - 260px);
+        width: calc(100vw - $navigationWidth);
     }
 
     &.with-sidebar {

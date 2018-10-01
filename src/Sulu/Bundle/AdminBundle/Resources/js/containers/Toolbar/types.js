@@ -14,7 +14,6 @@ export type ToolbarProps = {
     storeKey?: string,
     onNavigationButtonClick?: () => void,
     navigationOpen?: boolean,
-    navigationPinned?: boolean,
 };
 
 type Error = {

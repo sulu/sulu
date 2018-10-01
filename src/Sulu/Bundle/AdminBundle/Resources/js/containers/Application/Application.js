@@ -1,9 +1,11 @@
 // @flow
 import './global.scss';
 import {observer} from 'mobx-react';
-import {action, observable, autorun} from 'mobx';
+import {action, observable, autorun, intercept, observe} from 'mobx';
+import type {IValueWillChange, IValueDidChange} from 'mobx';
 import classNames from 'classnames';
 import React, {Fragment} from 'react';
+import log from 'loglevel';
 import Navigation from '../Navigation';
 import Router from '../../services/Router';
 import initializer from '../../services/Initializer';
@@ -15,12 +17,7 @@ import {Backdrop} from '../../components';
 import Login from '../Login';
 import applicationStyles from './application.scss';
 
-const USER_SETTING_PREFIX = 'sulu_admin.application';
-const USER_SETTING_NAVIGATION_PINNED = 'navigation_pinned';
-
-function getNavigationPinnedSettingKey() {
-    return USER_SETTING_PREFIX + '.' + USER_SETTING_NAVIGATION_PINNED;
-}
+const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
 type Props = {
     router: Router,
@@ -36,33 +33,46 @@ export default class Application extends React.Component<Props> {
     constructor() {
         super();
 
-        this.pinNavigation(!!userStore.getPersistentSetting(getNavigationPinnedSettingKey()));
+        intercept(this, 'navigationVisible', (change: IValueWillChange<boolean>) => {
+            if (this.navigationPinned) {
+                log('Cannot change "navigationVisible" while navigation is pinned.');
+                return null;
+            }
+
+            return change;
+        });
+
+        intercept(this, 'navigationPinned', (change: IValueWillChange<boolean>) => {
+            if (change.newValue) {
+                this.navigationVisible = true;
+            }
+
+            return change;
+        });
+
+        observe(this, 'navigationPinned', (change: IValueDidChange<boolean>) => {
+            if (!change.newValue) {
+                this.navigationVisible = false;
+            }
+        });
+
+        this.setNavigationPinned(!!userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY));
 
         this.navigationPinnedDisposer = autorun(
-            () => userStore.setPersistentSetting(getNavigationPinnedSettingKey(), this.navigationPinned ? 1 : 0)
+            () => userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned ? 1 : 0)
         );
     }
 
     @action toggleNavigation() {
-        if (this.navigationPinned) {
-            return;
-        }
-
         this.navigationVisible = !this.navigationVisible;
     }
 
-    @action pinNavigation(value?: boolean) {
-        if (value !== undefined) {
-            this.navigationPinned = value;
-        } else {
-            this.navigationPinned = !this.navigationPinned;
-        }
+    @action setNavigationPinned(value: boolean) {
+        this.navigationPinned = value;
+    }
 
-        if (this.navigationPinned) {
-            this.navigationVisible = true;
-        } else {
-            this.navigationVisible = false;
-        }
+    toggleNavigationPinned() {
+        this.setNavigationPinned(!this.navigationPinned);
     }
 
     componentWillUnmount() {
@@ -70,15 +80,19 @@ export default class Application extends React.Component<Props> {
     }
 
     handleNavigationButtonClick = () => {
-        this.toggleNavigation();
+        if (!this.navigationPinned) {
+            this.toggleNavigation();
+        }
     };
 
-    handleNavigationPin = () => {
-        this.pinNavigation();
+    handleToggleNavigationPinned = () => {
+        this.toggleNavigationPinned();
     };
 
     handleNavigate = () => {
-        this.toggleNavigation();
+        if (!this.navigationPinned) {
+            this.toggleNavigation();
+        }
     };
 
     handleLoginSuccess = () => {
@@ -87,7 +101,9 @@ export default class Application extends React.Component<Props> {
 
     handleLogout = () => {
         userStore.logout().then(() => {
-            this.pinNavigation(false);
+            if (this.navigationVisible && !this.navigationPinned) {
+                this.toggleNavigation();
+            }
         });
     };
 
@@ -132,9 +148,10 @@ export default class Application extends React.Component<Props> {
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation
+                                isPinned={this.navigationPinned}
                                 onLogout={this.handleLogout}
                                 onNavigate={this.handleNavigate}
-                                onPin={this.handleNavigationPin}
+                                onPinToggle={this.handleToggleNavigationPinned}
                                 router={router}
                             />
                         </nav>
@@ -150,8 +167,11 @@ export default class Application extends React.Component<Props> {
                                 <header className={applicationStyles.header}>
                                     <Toolbar
                                         navigationOpen={this.navigationVisible}
-                                        navigationPinned={this.navigationPinned}
-                                        onNavigationButtonClick={this.handleNavigationButtonClick}
+                                        onNavigationButtonClick={
+                                            this.navigationPinned
+                                                ? undefined
+                                                : this.handleNavigationButtonClick
+                                        }
                                     />
                                 </header>
                                 <div className={applicationStyles.viewContainer}>

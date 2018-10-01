@@ -5,17 +5,17 @@ import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Icon from '../Icon';
 import Button from '../Button';
-import ButtonGroup from '../ButtonGroup';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
 
 type Props = {
+    isPinned?: boolean,
     children: ChildrenArray<Element<typeof Item>>,
     title: string,
     username: string,
     userImage: ?string,
     onLogoutClick: () => void,
-    onPinClick?: () => void,
+    onPinToggle?: () => void,
     onProfileClick: () => void,
     suluVersion: string,
     suluVersionLink: string,
@@ -27,6 +27,7 @@ type Props = {
 export default class Navigation extends React.Component<Props> {
     static defaultProps = {
         appVersion: undefined,
+        isPinned: false,
         userImage: undefined,
     };
 
@@ -96,11 +97,11 @@ export default class Navigation extends React.Component<Props> {
         );
     }
 
-    handlePinClick = () => {
-        const {onPinClick} = this.props;
+    handlePinToggle = () => {
+        const {onPinToggle} = this.props;
 
-        if (onPinClick) {
-            onPinClick();
+        if (onPinToggle) {
+            onPinToggle();
         }
     };
 
@@ -124,13 +125,14 @@ export default class Navigation extends React.Component<Props> {
 
     render() {
         const {
+            isPinned,
             title,
             username,
             onLogoutClick,
             onProfileClick,
             suluVersion,
             suluVersionLink,
-            onPinClick,
+            onPinToggle,
         } = this.props;
 
         return (
@@ -154,14 +156,16 @@ export default class Navigation extends React.Component<Props> {
                     {this.cloneChildren()}
                 </div>
                 <div className={navigationStyles.footer}>
-                    {onPinClick &&
-                        <div className={navigationStyles.pinContainer}>
-                            <ButtonGroup>
-                                <Button className={navigationStyles.pin} onClick={this.handlePinClick}>
-                                    <Icon name="fa-thumb-tack" />
-                                </Button>
-                            </ButtonGroup>
-                        </div>
+                    {onPinToggle &&
+                        <Button
+                            active={isPinned}
+                            activeClassName={navigationStyles.pinActive}
+                            className={navigationStyles.pin}
+                            icon="fa-thumb-tack"
+                            iconClassName={navigationStyles.pinIcon}
+                            onClick={this.handlePinToggle}
+                            skin="icon"
+                        />
                     }
                     <div className={navigationStyles.versions}>
                         {this.renderAppVersion()}

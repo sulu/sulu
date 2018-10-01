@@ -92,6 +92,7 @@ $iconColorActive: $white;
 
 .icon {
     background: none;
+    width: 30px;
     height: 30px;
     border-radius: $iconBorderRadius;
     border: 1px solid $iconBorderColor;
@@ -107,10 +108,10 @@ $iconColorActive: $white;
         background-color: $iconBorderColor;
         color: $iconColorActive;
     }
+}
 
-    span {
-        line-height: 28px;
-    }
+.icon-span {
+    line-height: 28px;
 }
 
 .loader {

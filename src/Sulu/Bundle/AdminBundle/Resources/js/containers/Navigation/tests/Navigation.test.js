@@ -69,9 +69,10 @@ test('Should render navigation', () => {
 
     const navigation = render(
         <Navigation
+            isPinned={false}
             onLogout={jest.fn()}
             onNavigate={jest.fn()}
-            onPin={jest.fn()}
+            onPinToggle={jest.fn()}
             router={router}
         />
     );
@@ -79,7 +80,7 @@ test('Should render navigation', () => {
     expect(navigation).toMatchSnapshot();
 });
 
-test('Should call the navigation callback and router navigate', () => {
+test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
     router.route = {
         name: 'sulu_admin.form_tab',
@@ -96,9 +97,10 @@ test('Should call the navigation callback and router navigate', () => {
 
     const navigation = mount(
         <Navigation
+            isPinned={false}
             onLogout={jest.fn()}
             onNavigate={handleNavigate}
-            onPin={handlePin}
+            onPinToggle={handlePin}
             router={router}
         />
     );

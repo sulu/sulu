@@ -1,15 +1,8 @@
+@import './variables.scss';
 @import '../../containers/Application/colors.scss';
 
-$navigationBackgroundColor: $cloudBurst;
-$color: $white;
-$versionColor: $silver;
-$userBackgroundColor: $pickledBluewood;
-$buttonColor: $silver;
-$pinColorLight: $shakespeare;
-$pinColorDark: $cloudBurst;
-
 .navigation {
-    width: 260px;
+    width: $navigationWidth;
     background-color: $navigationBackgroundColor;
     color: $color;
     min-height: 100%;
@@ -107,25 +100,31 @@ $pinColorDark: $cloudBurst;
 .footer {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 20px;
 }
 
-.pin-container {
+.pin {
     flex: 0 0 auto;
-    display: flex;
-    align-items: center;
+    align-self: flex-end;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border-color: $pinBorderColor;
+    margin-right: 20px;
+    background-color: $pinBackgroundColor;
+    color: $pinColor;
+
+    &:hover,
+    &.pin-active {
+        background-color: $pinActiveBackgroundColor;
+        color: $pinActiveColor;
+    }
 }
 
-.pin {
-    background-color: transparent;
-    border-color: $pinColorLight;
-    color: $pinColorLight;
-    margin-right: 20px;
-
-    &:hover {
-        background-color: $pinColorLight;
-        color: $pinColorDark;
-    }
+.pin-icon {
+    line-height: 23px;
+    font-size: 14px;
 }
 
 .versions {
@@ -134,10 +133,6 @@ $pinColorDark: $cloudBurst;
     line-height: 14px;
     text-align: center;
     color: $versionColor;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     word-break: break-word;
 
     a {
