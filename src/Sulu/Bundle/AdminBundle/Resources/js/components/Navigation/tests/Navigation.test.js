@@ -78,7 +78,7 @@ test('The component should render with all available props and handle clicks cor
     navigation.find('.userProfile button').simulate('click');
     expect(handleLogoutClick).toBeCalled();
 
-    navigation.find('.pinContainer button').simulate('click');
+    navigation.find('button.pin').simulate('click');
     expect(handlePinClick).toBeCalled();
 
     navigation.find('.userContent img').simulate('click');

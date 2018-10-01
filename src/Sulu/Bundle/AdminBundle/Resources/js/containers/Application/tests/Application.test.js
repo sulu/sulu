@@ -166,7 +166,7 @@ test('Application should render pinned navigation', () => {
 
     const view = mount(<Application router={router} />);
     view.find('Button[icon="su-bars"]').simulate('click');
-    view.find('.pinContainer button').simulate('click');
+    view.find('button.pin').simulate('click');
 
     expect(view).toMatchSnapshot();
 });
@@ -188,8 +188,8 @@ test('Application should render pinned navigation from beginning', () => {
 
     const view = mount(<Application router={router} />);
     expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
-    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(1);
-    expect(view.find('.pinContainer button')).toHaveLength(1);
+    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
+    expect(view.find('button.pin')).toHaveLength(1);
 
     expect(view).toMatchSnapshot();
 });

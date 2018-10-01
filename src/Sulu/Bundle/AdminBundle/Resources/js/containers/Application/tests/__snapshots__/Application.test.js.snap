@@ -877,9 +877,10 @@ exports[`Application should render pinned navigation 1`] = `
       className="navigation"
     >
       <Navigation
+        isPinned={true}
         onLogout={[Function]}
         onNavigate={[Function]}
-        onPin={[Function]}
+        onPinToggle={[Function]}
         router={
           Object {
             "route": Object {
@@ -896,8 +897,9 @@ exports[`Application should render pinned navigation 1`] = `
         }
       >
         <Navigation
+          isPinned={true}
           onLogoutClick={[Function]}
-          onPinClick={[Function]}
+          onPinToggle={[Function]}
           onProfileClick={[Function]}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
@@ -919,7 +921,7 @@ exports[`Application should render pinned navigation 1`] = `
                 >
                   <span
                     aria-label="su-sulu"
-                    className="headerIcon su-sulu"
+                    className="su-sulu headerIcon"
                   />
                 </Icon>
                 <span
@@ -978,45 +980,36 @@ exports[`Application should render pinned navigation 1`] = `
             <div
               className="footer"
             >
-              <div
-                className="pinContainer"
+              <Button
+                active={true}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
               >
-                <ButtonGroup>
-                  <div>
-                    <Button
-                      active={false}
-                      className="button pin"
-                      disabled={false}
-                      key=".0"
-                      loading={false}
-                      onClick={[Function]}
-                      size="large"
-                      skin="icon"
-                      type="button"
-                    >
-                      <button
-                        className="button icon button pin"
-                        disabled={false}
-                        onClick={[Function]}
-                        type="button"
-                      >
-                        <span
-                          className="text"
-                        >
-                          <Icon
-                            name="fa-thumb-tack"
-                          >
-                            <span
-                              aria-label="fa-thumb-tack"
-                              className="fa fa-thumb-tack"
-                            />
-                          </Icon>
-                        </span>
-                      </button>
-                    </Button>
-                  </div>
-                </ButtonGroup>
-              </div>
+                <button
+                  className="button icon active pinActive pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
               <div
                 className="versions"
               >
@@ -1055,14 +1048,13 @@ exports[`Application should render pinned navigation 1`] = `
         >
           <Toolbar
             navigationOpen={true}
-            navigationPinned={true}
-            onNavigationButtonClick={[Function]}
           >
             <Toolbar
+              hasWhitespace={true}
               skin="light"
             >
               <nav
-                className="toolbar light"
+                className="toolbar light whitespace"
               >
                 <Snackbar
                   key=".0"
@@ -1080,7 +1072,7 @@ exports[`Application should render pinned navigation 1`] = `
                     >
                       <span
                         aria-label="su-exclamation-triangle"
-                        className="icon su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
                       />
                     </Icon>
                     <div
@@ -1100,7 +1092,7 @@ exports[`Application should render pinned navigation 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="closeButtonIcon su-times"
+                            className="su-times closeButtonIcon"
                           />
                         </Icon>
                       </button>
@@ -1122,7 +1114,7 @@ exports[`Application should render pinned navigation 1`] = `
                     >
                       <span
                         aria-label="su-check"
-                        className="icon su-check"
+                        className="su-check icon"
                       />
                     </Icon>
                   </div>
@@ -1134,35 +1126,7 @@ exports[`Application should render pinned navigation 1`] = `
                 >
                   <div
                     className="controls light grow"
-                  >
-                    <Button
-                      active={false}
-                      disabled={true}
-                      hasOptions={false}
-                      icon="su-sulu"
-                      key=".0"
-                      onClick={[Function]}
-                      primary={true}
-                      showText={true}
-                      skin="light"
-                    >
-                      <button
-                        className="button light primary"
-                        disabled={true}
-                        onClick={[Function]}
-                      >
-                        <Icon
-                          className="icon"
-                          name="su-sulu"
-                        >
-                          <span
-                            aria-label="su-sulu"
-                            className="icon su-sulu"
-                          />
-                        </Icon>
-                      </button>
-                    </Button>
-                  </div>
+                  />
                 </Controls>
                 <Controls
                   grow={false}
@@ -1239,9 +1203,10 @@ exports[`Application should render pinned navigation from beginning 1`] = `
       className="navigation"
     >
       <Navigation
+        isPinned={true}
         onLogout={[Function]}
         onNavigate={[Function]}
-        onPin={[Function]}
+        onPinToggle={[Function]}
         router={
           Object {
             "route": Object {
@@ -1258,8 +1223,9 @@ exports[`Application should render pinned navigation from beginning 1`] = `
         }
       >
         <Navigation
+          isPinned={true}
           onLogoutClick={[Function]}
-          onPinClick={[Function]}
+          onPinToggle={[Function]}
           onProfileClick={[Function]}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
@@ -1281,7 +1247,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                 >
                   <span
                     aria-label="su-sulu"
-                    className="headerIcon su-sulu"
+                    className="su-sulu headerIcon"
                   />
                 </Icon>
                 <span
@@ -1340,45 +1306,36 @@ exports[`Application should render pinned navigation from beginning 1`] = `
             <div
               className="footer"
             >
-              <div
-                className="pinContainer"
+              <Button
+                active={true}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
               >
-                <ButtonGroup>
-                  <div>
-                    <Button
-                      active={false}
-                      className="button pin"
-                      disabled={false}
-                      key=".0"
-                      loading={false}
-                      onClick={[Function]}
-                      size="large"
-                      skin="icon"
-                      type="button"
-                    >
-                      <button
-                        className="button icon button pin"
-                        disabled={false}
-                        onClick={[Function]}
-                        type="button"
-                      >
-                        <span
-                          className="text"
-                        >
-                          <Icon
-                            name="fa-thumb-tack"
-                          >
-                            <span
-                              aria-label="fa-thumb-tack"
-                              className="fa fa-thumb-tack"
-                            />
-                          </Icon>
-                        </span>
-                      </button>
-                    </Button>
-                  </div>
-                </ButtonGroup>
-              </div>
+                <button
+                  className="button icon active pinActive pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
               <div
                 className="versions"
               >
@@ -1417,14 +1374,13 @@ exports[`Application should render pinned navigation from beginning 1`] = `
         >
           <Toolbar
             navigationOpen={true}
-            navigationPinned={true}
-            onNavigationButtonClick={[Function]}
           >
             <Toolbar
+              hasWhitespace={true}
               skin="light"
             >
               <nav
-                className="toolbar light"
+                className="toolbar light whitespace"
               >
                 <Snackbar
                   key=".0"
@@ -1442,7 +1398,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                     >
                       <span
                         aria-label="su-exclamation-triangle"
-                        className="icon su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
                       />
                     </Icon>
                     <div
@@ -1462,7 +1418,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="closeButtonIcon su-times"
+                            className="su-times closeButtonIcon"
                           />
                         </Icon>
                       </button>
@@ -1484,7 +1440,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                     >
                       <span
                         aria-label="su-check"
-                        className="icon su-check"
+                        className="su-check icon"
                       />
                     </Icon>
                   </div>
@@ -1496,35 +1452,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                 >
                   <div
                     className="controls light grow"
-                  >
-                    <Button
-                      active={false}
-                      disabled={true}
-                      hasOptions={false}
-                      icon="su-sulu"
-                      key=".0"
-                      onClick={[Function]}
-                      primary={true}
-                      showText={true}
-                      skin="light"
-                    >
-                      <button
-                        className="button light primary"
-                        disabled={true}
-                        onClick={[Function]}
-                      >
-                        <Icon
-                          className="icon"
-                          name="su-sulu"
-                        >
-                          <span
-                            aria-label="su-sulu"
-                            className="icon su-sulu"
-                          />
-                        </Icon>
-                      </button>
-                    </Button>
-                  </div>
+                  />
                 </Controls>
                 <Controls
                   grow={false}
