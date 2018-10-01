@@ -48,8 +48,8 @@ $optionDisabledBackgroundColor: $mercury;
     &.dragging {
         background: $optionBackgroundColor;
         box-shadow:
-                0 3px 6px $dragBoxShadowColor,
-                0 -3px 6px $dragBoxShadowColor;
+            0 3px 6px $dragBoxShadowColor,
+            0 -3px 6px $dragBoxShadowColor;
         z-index: 200;
     }
 }
