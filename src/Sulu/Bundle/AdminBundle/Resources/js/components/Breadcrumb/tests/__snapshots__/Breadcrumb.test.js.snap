@@ -12,7 +12,7 @@ exports[`Render a Breadcrumb 1`] = `
     </button>
     <span
       aria-label="su-angle-right"
-      class="arrow su-angle-right"
+      class="su-angle-right arrow"
     />
   </li>
   <li>
@@ -23,7 +23,7 @@ exports[`Render a Breadcrumb 1`] = `
     </button>
     <span
       aria-label="su-angle-right"
-      class="arrow su-angle-right"
+      class="su-angle-right arrow"
     />
   </li>
   <li>

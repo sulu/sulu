@@ -18,7 +18,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
             ColumnTitle
             <span
               aria-label="su-angle-up"
-              class="headerCellSortIcon su-angle-up"
+              class="su-angle-up headerCellSortIcon"
             />
           </button>
         </th>
@@ -29,7 +29,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
             ColumnTitle
             <span
               aria-label="su-angle-down"
-              class="headerCellSortIcon su-angle-down"
+              class="su-angle-down headerCellSortIcon"
             />
           </button>
         </th>
@@ -182,7 +182,7 @@ exports[`Render an empty table 1`] = `
   >
     <span
       aria-label="su-battery-low"
-      class="tablePlaceholderIcon su-battery-low"
+      class="su-battery-low tablePlaceholderIcon"
     />
     <div
       class="tablePlaceholderText"

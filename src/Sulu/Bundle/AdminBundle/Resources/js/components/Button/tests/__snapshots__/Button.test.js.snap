@@ -7,7 +7,7 @@ exports[`Should render the button with icon 1`] = `
 >
   <span
     aria-label="su-plus"
-    class="buttonIcon su-plus"
+    class="su-plus buttonIcon"
   />
   <span
     class="text"
@@ -21,55 +21,35 @@ exports[`Should render with skin icon 1`] = `
 <button
   class="button icon"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin icon and active 1`] = `
 <button
-  class="button icon active"
+  class="button icon active "
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin link 1`] = `
 <button
   class="button link"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin primary 1`] = `
 <button
   class="button primary"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin secondary 1`] = `
 <button
   class="button secondary"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`should render disabled with skin secondary 1`] = `
@@ -77,9 +57,5 @@ exports[`should render disabled with skin secondary 1`] = `
   class="button secondary"
   disabled=""
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;

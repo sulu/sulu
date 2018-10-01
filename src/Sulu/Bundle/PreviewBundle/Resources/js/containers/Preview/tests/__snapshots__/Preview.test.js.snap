@@ -47,6 +47,7 @@ exports[`Render correct preview 1`] = `
     />
   </div>
   <Toolbar
+    hasWhitespace={false}
     skin="dark"
   >
     <Controls

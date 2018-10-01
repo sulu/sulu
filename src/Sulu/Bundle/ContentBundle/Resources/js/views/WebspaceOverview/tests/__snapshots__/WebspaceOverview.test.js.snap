@@ -15,14 +15,14 @@ exports[`Render WebspaceOverview 1`] = `
       >
         <span
           aria-label="su-webspace"
-          class="buttonIcon su-webspace"
+          class="su-webspace buttonIcon"
         />
         <span
           class="buttonValue"
         />
         <span
           aria-label="su-angle-down"
-          class="buttonIcon su-angle-down"
+          class="su-angle-down buttonIcon"
         />
       </button>
     </div>
@@ -31,7 +31,7 @@ exports[`Render WebspaceOverview 1`] = `
     >
       <div>
         <button
-          class="button icon active button"
+          class="button icon active  button"
           type="button"
         >
           <span
@@ -111,7 +111,7 @@ exports[`Render WebspaceOverview 1`] = `
                 >
                   <span
                     aria-label="su-pen"
-                    class="button su-pen clickable"
+                    class="su-pen clickable button"
                     role="button"
                     tabindex="0"
                   />

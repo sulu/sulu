@@ -12,7 +12,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
     >
       <span
         aria-label="su-sulu"
-        class="headerIcon su-sulu"
+        class="su-sulu headerIcon"
       />
       <span
         class="headerTitle"
@@ -117,7 +117,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <span
         aria-label="su-sulu"
-        class="headerIcon su-sulu"
+        class="su-sulu headerIcon"
       />
       <span
         class="headerTitle"
@@ -272,7 +272,7 @@ exports[`The component should render with all available props and handle clicks 
       </div>
       <span
         aria-label="su-angle-down"
-        class="childrenIndicator su-angle-down clickable"
+        class="su-angle-down clickable childrenIndicator"
         role="button"
         tabindex="0"
       />
@@ -292,7 +292,7 @@ exports[`The component should render with all available props and handle clicks 
       </div>
       <span
         aria-label="su-angle-right"
-        class="childrenIndicator su-angle-right clickable"
+        class="su-angle-right clickable childrenIndicator"
         role="button"
         tabindex="0"
       />
@@ -301,25 +301,15 @@ exports[`The component should render with all available props and handle clicks 
   <div
     class="footer"
   >
-    <div
-      class="pinContainer"
+    <button
+      class="button icon pin"
+      type="button"
     >
-      <div>
-        <button
-          class="button icon button pin"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack"
-            />
-          </span>
-        </button>
-      </div>
-    </div>
+      <span
+        aria-label="fa-thumb-tack"
+        class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+      />
+    </button>
     <div
       class="versions"
     >

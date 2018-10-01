@@ -30,7 +30,7 @@ exports[`Render ArrowMenu open 2`] = `
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"icon su-webspace\\"></span></span><span>Sulu</span></div>
+            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
           </div>

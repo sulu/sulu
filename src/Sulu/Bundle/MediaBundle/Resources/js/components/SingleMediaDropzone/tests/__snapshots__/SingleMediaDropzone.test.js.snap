@@ -19,7 +19,7 @@ exports[`Render a SingleMediaDropzone 1`] = `
       <div>
         <span
           aria-label="fa-cloud-upload"
-          class="uploadIcon fa fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
         />
       </div>
     </div>
@@ -119,7 +119,7 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
       <div>
         <span
           aria-label="fa-cloud-upload"
-          class="uploadIcon fa fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
         />
       </div>
     </div>
@@ -155,7 +155,7 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
       <div>
         <span
           aria-label="fa-cloud-upload"
-          class="uploadIcon fa fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
         />
       </div>
     </div>
@@ -187,7 +187,7 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
       <div>
         <span
           aria-label="fa-cloud-upload"
-          class="uploadIcon fa fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
         />
       </div>
     </div>

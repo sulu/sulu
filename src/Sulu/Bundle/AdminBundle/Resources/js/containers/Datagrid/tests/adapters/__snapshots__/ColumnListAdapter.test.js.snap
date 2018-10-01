@@ -42,7 +42,7 @@ exports[`Render data with disabled items 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="button su-check clickable"
+                class="su-check clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -101,7 +101,7 @@ exports[`Render data with disabled items 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="button su-check clickable"
+                class="su-check clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -344,7 +344,7 @@ exports[`Render data with selection 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="button su-check clickable"
+                class="su-check clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -535,7 +535,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="button su-pen clickable"
+                class="su-pen clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -594,7 +594,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="button su-pen clickable"
+                class="su-pen clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -655,7 +655,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-plus-circle"
-                class="button su-plus-circle clickable"
+                class="su-plus-circle clickable button"
                 role="button"
                 tabindex="0"
               />
@@ -716,7 +716,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-plus-circle"
-                class="button su-plus-circle clickable"
+                class="su-plus-circle clickable button"
                 role="button"
                 tabindex="0"
               />

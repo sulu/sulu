@@ -119,7 +119,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="mediaIcon su-pen"
+                class="su-pen mediaIcon"
               />
             </div>
           </div>
@@ -238,7 +238,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="mediaIcon su-pen"
+                class="su-pen mediaIcon"
               />
             </div>
           </div>

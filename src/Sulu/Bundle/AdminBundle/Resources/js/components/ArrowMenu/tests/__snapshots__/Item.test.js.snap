@@ -9,7 +9,7 @@ exports[`Render active Item 1`] = `
   >
     <span
       aria-label="fa-home"
-      class="icon fa fa-home"
+      class="fa fa-home icon"
     />
   </span>
   <span>

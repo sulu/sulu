@@ -12,7 +12,7 @@ exports[`Should render navigation 1`] = `
     >
       <span
         aria-label="su-sulu"
-        class="headerIcon su-sulu"
+        class="su-sulu headerIcon"
       />
       <span
         class="headerTitle"
@@ -110,7 +110,7 @@ exports[`Should render navigation 1`] = `
       </div>
       <span
         aria-label="su-angle-down"
-        class="childrenIndicator su-angle-down clickable"
+        class="su-angle-down clickable childrenIndicator"
         role="button"
         tabindex="0"
       />
@@ -119,25 +119,15 @@ exports[`Should render navigation 1`] = `
   <div
     class="footer"
   >
-    <div
-      class="pinContainer"
+    <button
+      class="button icon pin"
+      type="button"
     >
-      <div>
-        <button
-          class="button icon button pin"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack"
-            />
-          </span>
-        </button>
-      </div>
-    </div>
+      <span
+        aria-label="fa-thumb-tack"
+        class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+      />
+    </button>
     <div
       class="versions"
     >

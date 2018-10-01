@@ -9,7 +9,7 @@ exports[`Render WebspaceSelect closed 1`] = `
   >
     <span
       aria-label="su-webspace"
-      class="buttonIcon su-webspace"
+      class="su-webspace buttonIcon"
     />
     <span
       class="buttonValue"
@@ -18,7 +18,7 @@ exports[`Render WebspaceSelect closed 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="buttonIcon su-angle-down"
+      class="su-angle-down buttonIcon"
     />
   </button>
 </div>
@@ -35,7 +35,7 @@ exports[`Render WebspaceSelect opened 1`] = `
   >
     <span
       aria-label="su-webspace"
-      class="buttonIcon su-webspace"
+      class="su-webspace buttonIcon"
     />
     <span
       class="buttonValue"
@@ -44,7 +44,7 @@ exports[`Render WebspaceSelect opened 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="buttonIcon su-angle-down"
+      class="su-angle-down buttonIcon"
     />
   </button>
 </div>
@@ -62,7 +62,7 @@ exports[`Render WebspaceSelect opened 2`] = `
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"icon su-webspace\\"></span></span><span>Sulu</span></div>
+            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
           </div>

@@ -16,7 +16,7 @@ exports[`The component should render with current adapter "folder" 1`] = `
     </span>
   </button>
   <button
-    class="button icon active button"
+    class="button icon active  button"
     type="button"
   >
     <span
@@ -34,7 +34,7 @@ exports[`The component should render with current adapter "folder" 1`] = `
 exports[`The component should render with current adapter "table" 1`] = `
 <div>
   <button
-    class="button icon active button"
+    class="button icon active  button"
     type="button"
   >
     <span

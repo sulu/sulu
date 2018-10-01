@@ -18,7 +18,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
         >
           <span
             aria-label="su-sulu"
-            class="headerIcon su-sulu"
+            class="su-sulu headerIcon"
           />
           <span
             class="headerTitle"
@@ -63,25 +63,15 @@ exports[`Application should not fail if current route does not exist 1`] = `
       <div
         class="footer"
       >
-        <div
-          class="pinContainer"
+        <button
+          class="button icon pin"
+          type="button"
         >
-          <div>
-            <button
-              class="button icon button pin"
-              type="button"
-            >
-              <span
-                class="text"
-              >
-                <span
-                  aria-label="fa-thumb-tack"
-                  class="fa fa-thumb-tack"
-                />
-              </span>
-            </button>
-          </div>
-        </div>
+          <span
+            aria-label="fa-thumb-tack"
+            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+          />
+        </button>
         <div
           class="versions"
         >
@@ -117,7 +107,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           >
             <span
               aria-label="su-exclamation-triangle"
-              class="icon su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
@@ -131,7 +121,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
                 sulu_admin.close
                 <span
                   aria-label="su-times"
-                  class="closeButtonIcon su-times"
+                  class="su-times closeButtonIcon"
                 />
               </button>
             </div>
@@ -141,7 +131,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           >
             <span
               aria-label="su-check"
-              class="icon su-check"
+              class="su-check icon"
             />
           </div>
           <div
@@ -152,7 +142,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
             >
               <span
                 aria-label="su-bars"
-                class="icon su-bars"
+                class="su-bars icon"
               />
             </button>
           </div>
@@ -187,7 +177,7 @@ exports[`Application should render based on current route 1`] = `
         >
           <span
             aria-label="su-sulu"
-            class="headerIcon su-sulu"
+            class="su-sulu headerIcon"
           />
           <span
             class="headerTitle"
@@ -232,25 +222,15 @@ exports[`Application should render based on current route 1`] = `
       <div
         class="footer"
       >
-        <div
-          class="pinContainer"
+        <button
+          class="button icon pin"
+          type="button"
         >
-          <div>
-            <button
-              class="button icon button pin"
-              type="button"
-            >
-              <span
-                class="text"
-              >
-                <span
-                  aria-label="fa-thumb-tack"
-                  class="fa fa-thumb-tack"
-                />
-              </span>
-            </button>
-          </div>
-        </div>
+          <span
+            aria-label="fa-thumb-tack"
+            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+          />
+        </button>
         <div
           class="versions"
         >
@@ -286,7 +266,7 @@ exports[`Application should render based on current route 1`] = `
           >
             <span
               aria-label="su-exclamation-triangle"
-              class="icon su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
@@ -300,7 +280,7 @@ exports[`Application should render based on current route 1`] = `
                 sulu_admin.close
                 <span
                   aria-label="su-times"
-                  class="closeButtonIcon su-times"
+                  class="su-times closeButtonIcon"
                 />
               </button>
             </div>
@@ -310,7 +290,7 @@ exports[`Application should render based on current route 1`] = `
           >
             <span
               aria-label="su-check"
-              class="icon su-check"
+              class="su-check icon"
             />
           </div>
           <div
@@ -321,7 +301,7 @@ exports[`Application should render based on current route 1`] = `
             >
               <span
                 aria-label="su-bars"
-                class="icon su-bars"
+                class="su-bars icon"
               />
             </button>
           </div>
@@ -390,7 +370,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -415,7 +395,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               >
                 <span
                   aria-label="su-lock"
-                  class="icon default su-lock"
+                  class="su-lock icon default"
                 />
               </div>
               <input
@@ -461,7 +441,7 @@ exports[`Application should render login when user is not logged in 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>
@@ -535,9 +515,10 @@ exports[`Application should render opened navigation 1`] = `
       className="navigation"
     >
       <Navigation
+        isPinned={false}
         onLogout={[Function]}
         onNavigate={[Function]}
-        onPin={[Function]}
+        onPinToggle={[Function]}
         router={
           Object {
             "route": Object {
@@ -554,8 +535,9 @@ exports[`Application should render opened navigation 1`] = `
         }
       >
         <Navigation
+          isPinned={false}
           onLogoutClick={[Function]}
-          onPinClick={[Function]}
+          onPinToggle={[Function]}
           onProfileClick={[Function]}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
@@ -577,7 +559,7 @@ exports[`Application should render opened navigation 1`] = `
                 >
                   <span
                     aria-label="su-sulu"
-                    className="headerIcon su-sulu"
+                    className="su-sulu headerIcon"
                   />
                 </Icon>
                 <span
@@ -636,45 +618,36 @@ exports[`Application should render opened navigation 1`] = `
             <div
               className="footer"
             >
-              <div
-                className="pinContainer"
+              <Button
+                active={false}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
               >
-                <ButtonGroup>
-                  <div>
-                    <Button
-                      active={false}
-                      className="button pin"
-                      disabled={false}
-                      key=".0"
-                      loading={false}
-                      onClick={[Function]}
-                      size="large"
-                      skin="icon"
-                      type="button"
-                    >
-                      <button
-                        className="button icon button pin"
-                        disabled={false}
-                        onClick={[Function]}
-                        type="button"
-                      >
-                        <span
-                          className="text"
-                        >
-                          <Icon
-                            name="fa-thumb-tack"
-                          >
-                            <span
-                              aria-label="fa-thumb-tack"
-                              className="fa fa-thumb-tack"
-                            />
-                          </Icon>
-                        </span>
-                      </button>
-                    </Button>
-                  </div>
-                </ButtonGroup>
-              </div>
+                <button
+                  className="button icon pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
               <div
                 className="versions"
               >
@@ -718,10 +691,10 @@ exports[`Application should render opened navigation 1`] = `
         >
           <Toolbar
             navigationOpen={true}
-            navigationPinned={false}
             onNavigationButtonClick={[Function]}
           >
             <Toolbar
+              hasWhitespace={false}
               skin="light"
             >
               <nav
@@ -743,7 +716,7 @@ exports[`Application should render opened navigation 1`] = `
                     >
                       <span
                         aria-label="su-exclamation-triangle"
-                        className="icon su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
                       />
                     </Icon>
                     <div
@@ -763,7 +736,7 @@ exports[`Application should render opened navigation 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="closeButtonIcon su-times"
+                            className="su-times closeButtonIcon"
                           />
                         </Icon>
                       </button>
@@ -787,7 +760,7 @@ exports[`Application should render opened navigation 1`] = `
                     >
                       <span
                         aria-label="su-check"
-                        className="icon su-check"
+                        className="su-check icon"
                       />
                     </Icon>
                   </div>
@@ -822,7 +795,7 @@ exports[`Application should render opened navigation 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="icon su-times"
+                            className="su-times icon"
                           />
                         </Icon>
                       </button>
