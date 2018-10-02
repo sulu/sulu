@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use function Clue\StreamFilter\remove;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;

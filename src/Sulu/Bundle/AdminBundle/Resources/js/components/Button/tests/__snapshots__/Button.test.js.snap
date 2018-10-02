@@ -21,22 +21,14 @@ exports[`Should render with skin icon 1`] = `
 <button
   class="button icon"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin icon and active 1`] = `
 <button
   class="button icon active"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin icon and dropdown icon 1`] = `
@@ -55,11 +47,7 @@ exports[`Should render with skin link 1`] = `
 <button
   class="button link"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin link and dropdown icon 1`] = `
@@ -78,11 +66,7 @@ exports[`Should render with skin primary 1`] = `
 <button
   class="button primary"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin primary and dropdown icon 1`] = `
@@ -101,11 +85,7 @@ exports[`Should render with skin secondary 1`] = `
 <button
   class="button secondary"
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;
 
 exports[`Should render with skin secondary and dropdown icon 1`] = `
@@ -125,9 +105,5 @@ exports[`should render disabled with skin secondary 1`] = `
   class="button secondary"
   disabled=""
   type="button"
->
-  <span
-    class="text"
-  />
-</button>
+/>
 `;

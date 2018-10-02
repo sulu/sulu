@@ -289,6 +289,94 @@ test('The loading strategy should be called with a different page when a request
     datagridStore.destroy();
 });
 
+test('The user store should be called ', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const locale = observable.box();
+    const datagridStore = new DatagridStore(
+        'snippets',
+        {
+            page,
+            locale,
+        },
+        {
+            test: 'value',
+        }
+    );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    datagridStore.updateLoadingStrategy(loadingStrategy);
+    datagridStore.updateStructureStrategy(structureStrategy);
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        'snippets',
+        {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
+            locale: undefined,
+            page: 1,
+            test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
+
+    page.set(3);
+    expect(loadingStrategy.load).toBeCalledWith(
+        'snippets',
+        {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
+            locale: undefined,
+            page: 3,
+            test: 'value',
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
+
+    datagridStore.destroy();
+});
+
 test('The loading strategy should be called with a different locale when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
