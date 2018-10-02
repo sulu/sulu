@@ -155,7 +155,19 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', ['metadata' => ['debug' => '%kernel.debug%']]);
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'debug' => '%kernel.debug%',
+                    ],
+                    'handlers' => [
+                        'datetime' => [
+                            'default_format' => 'Y-m-d\\TH:i:s',
+                        ],
+                    ],
+                ]
+            );
         }
 
         if ($container->hasExtension('fos_rest')) {

@@ -139,7 +139,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(['tag1', 'tag2'], $response->tags);
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->changer);
-        $this->assertNotFalse(\DateTime::createFromFormat(\DateTime::ATOM, $response->authored));
 
         /** @var NodeInterface $content */
         $defaultContent = $this->session->getNode('/cmf/sulu_io/contents/news/test-1');
@@ -267,7 +266,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(['tag1', 'tag2'], $response['tags']);
         $this->assertEquals('/test_en', $response['url']);
         $this->assertEquals('Test English', $response['article']);
-        $this->assertNotFalse(\DateTime::createFromFormat(\DateTime::ATOM, $response['authored']));
 
         $client->request('GET', '/api/nodes/' . $document->getUuid() . '?language=de');
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -562,7 +560,7 @@ class NodeControllerTest extends SuluTestCase
                 'title' => 'Testtitle DE',
                 'template' => 'default',
                 'url' => '/test-de',
-                'authored' => '2017-11-20T13:15:00+00:00',
+                'authored' => '2017-11-20T13:15:00',
                 'author' => 1,
             ]
         );
@@ -574,7 +572,7 @@ class NodeControllerTest extends SuluTestCase
                 'title' => 'Testtitle EN',
                 'template' => 'default',
                 'url' => '/test-en',
-                'authored' => '2017-11-20T13:15:00+00:00',
+                'authored' => '2017-11-20T13:15:00',
                 'author' => 1,
             ]
         );
@@ -589,8 +587,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response['changer']);
         $this->assertEquals($this->getTestUserId(), $response['creator']);
 
-        $this->assertNotFalse(\DateTime::createFromFormat(\DateTime::ATOM, $response['authored']));
-        $this->assertEquals('2017-11-20T13:15:00+00:00', $response['authored']);
+        $this->assertEquals('2017-11-20T13:15:00', $response['authored']);
         $this->assertEquals(1, $response['author']);
 
         $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en');
@@ -602,7 +599,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response['changer']);
         $this->assertEquals($this->getTestUserId(), $response['creator']);
 
-        $this->assertEquals('2017-11-20T13:15:00+00:00', $response['authored']);
+        $this->assertEquals('2017-11-20T13:15:00', $response['authored']);
         $this->assertEquals(1, $response['author']);
 
         $this->assertFalse(
