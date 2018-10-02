@@ -288,7 +288,7 @@ class AdminController
                     'name' => $type->getName(),
                     'title' => $type->getTitle(),
                     'form' => $type->getForm(),
-                    'schema' => $type->getSchema(),
+                    'schema' => $type->getSchema()->toJsonSchema(),
                 ];
             }
         }
@@ -296,7 +296,7 @@ class AdminController
             $resourceMetadataArray['form'] = $resourceMetadata->getForm();
         }
         if ($resourceMetadata instanceof SchemaInterface) {
-            $resourceMetadataArray['schema'] = $resourceMetadata->getSchema();
+            $resourceMetadataArray['schema'] = $resourceMetadata->getSchema()->toJsonSchema();
         }
         if ($resourceMetadata instanceof DatagridInterface) {
             $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();

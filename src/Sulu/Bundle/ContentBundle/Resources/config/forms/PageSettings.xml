@@ -2,6 +2,29 @@
 <form xmlns="http://schemas.sulu.io/template/template"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <schema>
+        <anyOf>
+            <schema>
+                <properties>
+                    <property name="nodeType" value="1" />
+                </properties>
+            </schema>
+            <schema>
+                <properties>
+                    <property name="nodeType" value="2" />
+                    <property name="title" mandatory="true" />
+                    <property name="internal_link" mandatory="true" />
+                </properties>
+            </schema>
+            <schema>
+                <properties>
+                    <property name="nodeType" value="4" />
+                    <property name="title" mandatory="true" />
+                    <property name="external" mandatory="true" />
+                </properties>
+            </schema>
+        </anyOf>
+    </schema>
     <properties>
         <property name="navContexts" type="page_settings_navigation_select" colspan="6">
             <meta>

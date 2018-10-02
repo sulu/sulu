@@ -13,6 +13,7 @@
                  public="false">
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
+            <argument type="service" id="sulu_content.structure.schema_xml_parser"/>
             <argument type="service" id="sulu.content.type_manager" />
         </service>
 
@@ -20,6 +21,11 @@
                  class="Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser"
                  public="false">
             <argument type="service" id="sulu_core.expression_language" />
+        </service>
+
+        <service id="sulu_content.structure.schema_xml_parser"
+                 class="Sulu\Component\Content\Metadata\Parser\SchemaXmlParser"
+                 public="false">
         </service>
 
         <service id="sulu_content.structure.factory" class="%sulu_content.structure.factory.class%" public="true">

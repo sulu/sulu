@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 
 /**
  * Load structure from an XML file.
@@ -28,10 +29,17 @@ class FormXmlLoader extends AbstractLoader
      */
     private $propertiesXmlParser;
 
+    /**
+     * @var SchemaXmlParser
+     */
+    private $schemaXmlParser;
+
     public function __construct(
-        PropertiesXmlParser $propertiesXmlParser
+        PropertiesXmlParser $propertiesXmlParser,
+        SchemaXmlParser $schemaXmlParser
     ) {
         $this->propertiesXmlParser = $propertiesXmlParser;
+        $this->schemaXmlParser = $schemaXmlParser;
 
         parent::__construct(
             self::SCHEMA_PATH,
@@ -53,6 +61,11 @@ class FormXmlLoader extends AbstractLoader
             $tags,
             $xpath
         );
+
+        $schemaNode = $xpath->query('/x:form/x:schema')->item(0);
+        if ($schemaNode) {
+            $form->setSchema($this->schemaXmlParser->load($xpath, $schemaNode));
+        }
 
         foreach ($properties as $property) {
             $form->addChild($property);

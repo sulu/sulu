@@ -15,6 +15,7 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\XmlParserTrait;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
@@ -22,6 +23,8 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class PropertiesXmlParser
 {
+    use XmlParserTrait;
+
     /**
      * @var ExpressionLanguage
      */
@@ -296,36 +299,6 @@ class PropertiesXmlParser
         }
 
         return $result;
-    }
-
-    /**
-     * returns value of path.
-     */
-    private function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
-    {
-        try {
-            $result = $xpath->query($path, $context);
-            if (0 === $result->length) {
-                return $default;
-            }
-
-            $item = $result->item(0);
-            if (null === $item) {
-                return $default;
-            }
-
-            if ('true' === $item->nodeValue) {
-                return true;
-            }
-
-            if ('false' === $item->nodeValue) {
-                return false;
-            }
-
-            return $item->nodeValue;
-        } catch (\Exception $ex) {
-            return $default;
-        }
     }
 
     private function mapProperties(array $data): array

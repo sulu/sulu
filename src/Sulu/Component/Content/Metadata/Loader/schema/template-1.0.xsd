@@ -11,6 +11,7 @@
     <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
 
     <xs:include schemaLocation="properties-1.0.xsd"/>
+    <xs:include schemaLocation="schema-1.0.xsd"/>
 
     <xs:element name="template" type="templateType"/>
 
@@ -24,6 +25,7 @@
             <xs:element type="xs:string" name="internal" minOccurs="0" maxOccurs="1"/>
             <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="areasType" name="areas"/>
+            <xs:element type="schemaType" name="schema" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">

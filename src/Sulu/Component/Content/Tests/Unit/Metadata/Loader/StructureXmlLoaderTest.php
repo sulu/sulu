@@ -17,9 +17,10 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class XmlLoaderTest extends TestCase
+class StructureXmlLoaderTest extends TestCase
 {
     /**
      * @var StructureXmlLoader
@@ -48,10 +49,12 @@ class XmlLoaderTest extends TestCase
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
 
         $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
+        $schemaXmlParser = new SchemaXmlParser();
 
         $this->loader = new StructureXmlLoader(
             $this->cacheLifetimeResolver->reveal(),
             $propertiesXmlParser,
+            $schemaXmlParser,
             $this->contentTypeManager->reveal()
         );
     }
@@ -70,6 +73,39 @@ class XmlLoaderTest extends TestCase
         $result = $this->load('template.xml');
 
         $this->assertFalse($result->isInternal());
+        $this->assertNull($result->getSchema());
+    }
+
+    public function testLoadTemplateWithSchema()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->has('text_area')->willReturn(true);
+        $this->contentTypeManager->has('smart_content_selection')->willReturn(true);
+        $this->contentTypeManager->has('image_selection')->willReturn(true);
+
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
+        $result = $this->load('template_with_schema.xml');
+
+        $this->assertEquals(
+            [
+                'anyOf' => [
+                    [
+                        'required' => [
+                            'article1',
+                        ],
+                    ],
+                    [
+                        'required' => [
+                            'article2',
+                        ],
+                    ],
+                ],
+            ],
+            $result->getSchema()->toJsonSchema()
+        );
     }
 
     public function testLoadInternalTemplate()

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/template/template"
+           xmlns="http://schemas.sulu.io/template/template"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--
+    Import XML namespace (used by xincludes)
+    -->
+    <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
+
+    <xs:element name="schema" type="schemaType"/>
+
+    <xs:complexType name="schemaType">
+        <xs:all>
+            <xs:element name="anyOf" type="schemaAnyOfType" minOccurs="0"/>
+            <xs:element name="properties" type="schemaPropertiesType" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="schemaAnyOfType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="schema" type="schemaType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="schemaPropertiesType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="property" type="schemaPropertyType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="schemaPropertyType">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:boolean" name="mandatory"/>
+        <xs:attribute type="xs:string" name="value"/>
+    </xs:complexType>
+</xs:schema>

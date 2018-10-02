@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Tag;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -223,14 +224,14 @@ class ResourceMetadataMapper
      */
     public function mapSchema(array $properties): Schema
     {
-        $schema = new Schema();
-
-        foreach ($properties as $property) {
-            if ($property->isRequired()) {
-                $schema->addRequired($property->getName());
+        $schemaProperties = array_filter(array_map(function(PropertyMetadata $property) {
+            if (!$property->isRequired()) {
+                return;
             }
-        }
 
-        return $schema;
+            return new Property($property->getName(), $property->isRequired());
+        }, $properties));
+
+        return new Schema($schemaProperties);
     }
 }
