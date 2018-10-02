@@ -95,7 +95,8 @@
         </service>
 
         <service id="sulu_custom_urls.request_processor"
-                 class="Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor" lazy="true">
+                 class="Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor"
+                 lazy="true">
             <argument type="service" id="sulu_custom_urls.manager"/>
             <argument type="service" id="sulu_custom_urls.domain_generator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
