@@ -4,17 +4,25 @@
     <properties>
         <property
             name="id"
-            visibility="no"
-            filter-type="string"
+            visibility="always"
             list:sortable="false"
             list:translation="sulu_admin.id"
         />
         <property
             name="title"
             visibility="always"
-            filter-type="string"
-            list:sortable="false"
             list:translation="sulu_content.title"
+        />
+        <property
+            name="order"
+            visibility="always"
+            list:translation="sulu_content.order"
+        />
+        <property
+            name="published"
+            list:type="datetime"
+            visibility="always"
+            list:translation="sulu_content.published"
         />
     </properties>
 </class>

@@ -59,6 +59,39 @@ test('The loading strategy should be called when a request is sent', () => {
     const page = observable.box(1);
     const locale = observable.box();
     const additionalValue = observable.box(5);
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+
     const datagridStore = new DatagridStore(
         'tests',
         {
@@ -71,24 +104,31 @@ test('The loading strategy should be called when a request is sent', () => {
         }
     );
 
-    datagridStore.updateLoadingStrategy(loadingStrategy);
-    datagridStore.updateStructureStrategy(structureStrategy);
+    return schemaPromise.then(() => {
+        datagridStore.updateLoadingStrategy(loadingStrategy);
+        datagridStore.updateStructureStrategy(structureStrategy);
 
-    expect(loadingStrategy.load).toBeCalledWith(
-        'tests',
-        {
-            additionalValue: 5,
-            locale: undefined,
-            page: 1,
-            test: 'value',
-            limit: 10,
-            sortBy: undefined,
-            sortOrder: undefined,
-        },
-        undefined
-    );
+        expect(loadingStrategy.load).toBeCalledWith(
+            'tests',
+            {
+                additionalValue: 5,
+                fields: [
+                    'title',
+                    'name',
+                    'id',
+                ],
+                locale: undefined,
+                page: 1,
+                test: 'value',
+                limit: 10,
+                sortBy: undefined,
+                sortOrder: undefined,
+            },
+            undefined
+        );
 
-    datagridStore.destroy();
+        datagridStore.destroy();
+    });
 });
 
 test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
@@ -106,6 +146,36 @@ test('The loading strategy should be called with a different resourceKey when a 
             test: 'value',
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
@@ -113,6 +183,11 @@ test('The loading strategy should be called with a different resourceKey when a 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             locale: undefined,
             page: 1,
             test: 'value',
@@ -141,13 +216,47 @@ test('The loading strategy should be called with a different page when a request
             test: 'value',
         }
     );
-
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             locale: undefined,
             page: 1,
             test: 'value',
@@ -162,6 +271,11 @@ test('The loading strategy should be called with a different page when a request
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             locale: undefined,
             page: 3,
             test: 'value',
@@ -190,13 +304,47 @@ test('The loading strategy should be called with a different locale when a reque
             test: 'value',
         }
     );
-
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             locale: 'en',
             page: 1,
             test: 'value',
@@ -211,6 +359,11 @@ test('The loading strategy should be called with a different locale when a reque
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             locale: 'de',
             page: 1,
             test: 'value',
@@ -234,7 +387,36 @@ test('The loading strategy should be called with the defined sortings', () => {
             page,
         }
     );
-
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.sort('title', 'desc');
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
@@ -242,6 +424,11 @@ test('The loading strategy should be called with the defined sortings', () => {
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             page: 1,
             sortBy: 'title',
             sortOrder: 'desc',
@@ -263,6 +450,36 @@ test('The loading strategy should be called with the defined search', () => {
             page,
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     structureStrategy.clear = jest.fn();
     datagridStore.updateLoadingStrategy(loadingStrategy);
@@ -273,6 +490,11 @@ test('The loading strategy should be called with the defined search', () => {
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             page: 1,
             search: 'search-value',
             limit: 10,
@@ -297,6 +519,36 @@ test('The loading strategy should be called with the active item as parentId', (
             page,
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     structureStrategy.findById.mockReturnValue({});
     datagridStore.setActive('some-uuid');
@@ -307,6 +559,11 @@ test('The loading strategy should be called with the active item as parentId', (
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             page: 1,
             parentId: 'some-uuid',
             limit: 10,
@@ -329,6 +586,36 @@ test('The loading strategy should be called with expandedIds if the active item 
             page,
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setActive('some-uuid');
     datagridStore.updateLoadingStrategy(loadingStrategy);
@@ -339,6 +626,11 @@ test('The loading strategy should be called with expandedIds if the active item 
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             expandedIds: 'some-uuid',
             page: 1,
             limit: 10,
@@ -363,6 +655,36 @@ test('The loading strategy should be called with expandedIds if some items are a
         {},
         [1, 5, 10]
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const promise = Promise.resolve({});
     loadingStrategy.load.mockReturnValue(promise);
@@ -384,6 +706,11 @@ test('The loading strategy should be called with expandedIds if some items are a
     expect(loadingStrategy.load).toBeCalledWith(
         'categories',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             selectedIds: '1,5,10',
             page: 1,
             limit: 10,
@@ -415,6 +742,36 @@ test('The loading strategy should be called only once even if the data changes a
             page,
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setActive('some-uuid');
     structureStrategy.findById.mockImplementation(() => Array.from(structureStrategy.data));
@@ -442,6 +799,36 @@ test('The active item should not be passed as parent if undefined', () => {
             parent: 9,
         }
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
@@ -449,6 +836,11 @@ test('The active item should not be passed as parent if undefined', () => {
     expect(loadingStrategy.load).toBeCalledWith(
         'snippets',
         {
+            fields: [
+                'title',
+                'name',
+                'id',
+            ],
             page: 1,
             parent: 9,
             limit: 10,
@@ -479,7 +871,7 @@ test('The activeItems from the StructureStrategy should be passed', () => {
 
 test('Set loading flag to true before schema is loaded', () => {
     const promise = Promise.resolve();
-    metadataStore.getSchema.mockReturnValue(promise);
+    metadataStore.getSchema.mockReturnValueOnce(promise);
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -508,6 +900,36 @@ test('Set loading flag to true before request', () => {
 test('Set loading flag to false after request', (done) => {
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const promise = Promise.resolve({
         pages: 3,
     });
@@ -524,12 +946,39 @@ test('Set loading flag to false after request', (done) => {
     });
 });
 
-test('Get fields from MetadataStore for correct resourceKey', () => {
-    const fields = {
-        test: {},
+test('Get schema from MetadataStore for correct resourceKey', () => {
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
     };
-    const promise = Promise.resolve(fields);
-    metadataStore.getSchema.mockReturnValue(promise);
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
 
     const page = observable.box();
     const datagridStore = new DatagridStore('tests', {
@@ -538,8 +987,8 @@ test('Get fields from MetadataStore for correct resourceKey', () => {
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
     expect(metadataStore.getSchema).toBeCalledWith('tests');
-    return promise.then(() => {
-        expect(datagridStore.schema).toBe(fields);
+    return schemaPromise.then(() => {
+        expect(datagridStore.schema).toEqual(schema);
         datagridStore.destroy();
     });
 });
@@ -683,6 +1132,36 @@ test('Should reset the data array and set page to 1 when the reload method is ca
         },
         {}
     );
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
@@ -714,6 +1193,36 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -734,6 +1243,36 @@ test('Should not reset page count to 0 and page to 1 when locale is changed befo
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -748,6 +1287,36 @@ test('Should not reset page count to 0 and page to 1 when locale stays the same'
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -767,6 +1336,36 @@ test('Should reset page count to 0 and page to 1 when search is changed', () => 
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -787,6 +1386,36 @@ test('Should not reset page count to 0 and page to 1 when search is changed befo
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -801,6 +1430,36 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.searchTerm.set('test');
 
     const loadingStrategy = new LoadingStrategy();
@@ -822,6 +1481,36 @@ test('Should reset page count to 0 and page to 1 when sort column is changed', (
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -842,6 +1531,36 @@ test('Should not reset page count to 0 and page to 1 when sort column is changed
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -856,6 +1575,36 @@ test('Should not reset page count to 0 and page to 1 when sort column stays the 
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.sortColumn.set('test');
 
     const loadingStrategy = new LoadingStrategy();
@@ -877,6 +1626,36 @@ test('Should reset page count to 0 and page to 1 when sort order is changed', ()
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -897,6 +1676,36 @@ test('Should not reset page count to 0 and page to 1 when sort order is changed 
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     datagridStore.setPage(2);
     datagridStore.pageCount = 7;
@@ -911,6 +1720,36 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.sortOrder.set('asc');
 
     const loadingStrategy = new LoadingStrategy();
@@ -932,6 +1771,36 @@ test('Should reset page count to 0 and page to 1 when limit is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -952,6 +1821,36 @@ test('Should not reset page count to 0 and page to 1 when limit stays the same',
     const page = observable.box(3);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     datagridStore.limit.set(20);
 
     const loadingStrategy = new LoadingStrategy();
@@ -972,6 +1871,36 @@ test('Should not reset page count to 0 and page to 1 when limit stays the same',
 test('Should reset page count and page when loading strategy changes', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -991,6 +1920,36 @@ test('Should reset page count and page when loading strategy changes', () => {
 
 test('Should clear the StructureStrategy when the clear method is called', () => {
     const datagridStore = new DatagridStore('snippets', {page: observable.box()});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const structureStrategy = new StructureStrategy();
     datagridStore.clear();
@@ -1005,6 +1964,36 @@ test('Should clear the StructureStrategy when the clear method is called', () =>
 test('Should trigger a mobx autorun if activate is called with the same id', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     structureStrategy.findById.mockReturnValue({});
@@ -1027,6 +2016,36 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
 test('Should activate the current item if structure strategy is changed to trigger a reload', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1044,6 +2063,36 @@ test('Should activate the current item if structure strategy is changed to trigg
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1059,6 +2108,36 @@ test('Should call the activate method of the structure strategy if an item gets 
 test('Should call the deactivate method of the structure strategy if an item gets deactivated', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1073,6 +2152,36 @@ test('Should call the deactivate method of the structure strategy if an item get
 test('Should call the remove method of the structure strategy if an item gets removed', () => {
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1085,62 +2194,152 @@ test('Should call the remove method of the structure strategy if an item gets re
 });
 
 test('Should move the item with the given ID to the new given parent and reload the datagrid', () => {
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
     const locale = observable.box('de');
+
     const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
-    const postWithIdPromise = Promise.resolve();
-    ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
-    const loadingStrategy = new LoadingStrategy();
-    const structureStrategy = new StructureStrategy();
-    datagridStore.updateLoadingStrategy(loadingStrategy);
-    datagridStore.updateStructureStrategy(structureStrategy);
+    return schemaPromise.then(() => {
+        const loadingStrategy = new LoadingStrategy();
+        const structureStrategy = new StructureStrategy();
+        datagridStore.updateLoadingStrategy(loadingStrategy);
+        datagridStore.updateStructureStrategy(structureStrategy);
 
-    datagridStore.move(3, 8);
+        const postWithIdPromise = Promise.resolve();
+        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
-    expect(ResourceRequester.postWithId)
-        .toBeCalledWith('snippets', 3, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
+        datagridStore.move(3, 8);
 
-    return postWithIdPromise.then(() => {
-        expect(structureStrategy.clear).toBeCalledWith();
-        expect(loadingStrategy.load).toHaveBeenLastCalledWith(
-            'snippets',
-            {expandedIds: 3, limit: 10, locale: 'de', sortBy: undefined, sortOrder: undefined, webspace: 'sulu'},
-            undefined
-        );
+        expect(ResourceRequester.postWithId)
+            .toBeCalledWith('snippets', 3, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
+
+        return postWithIdPromise.then(() => {
+            expect(structureStrategy.clear).toBeCalledWith();
+            expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+                'snippets',
+                {
+                    fields: [
+                        'title',
+                        'name',
+                        'id',
+                    ],
+                    expandedIds: 3,
+                    limit: 10,
+                    locale: 'de',
+                    page: undefined,
+                    sortBy: undefined,
+                    sortOrder: undefined,
+                    webspace: 'sulu',
+                },
+                undefined
+            );
+        });
     });
 });
 
 test('Should copy the item with the given ID to the new given parent and reload the datagrid', () => {
     const locale = observable.box('de');
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+
     const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
-    const postWithIdPromise = Promise.resolve({id: 9});
-    ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
-    datagridStore.copy(3, 8);
+    return schemaPromise.then(() => {
+        const postWithIdPromise = Promise.resolve({id: 9});
+        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
 
-    expect(ResourceRequester.postWithId)
-        .toBeCalledWith('snippets', 3, {action: 'copy', destination: 8, locale: 'de', webspace: 'sulu'});
+        datagridStore.copy(3, 8);
 
-    return postWithIdPromise.then(() => {
-        expect(structureStrategy.clear).toBeCalledWith();
-        expect(loadingStrategy.load).toHaveBeenLastCalledWith(
-            'snippets',
-            {
-                expandedIds: 9,
-                limit: 10,
-                locale: 'de',
-                page: undefined,
-                sortBy: undefined,
-                sortOrder: undefined,
-                webspace: 'sulu',
-            },
-            undefined
-        );
+        expect(ResourceRequester.postWithId)
+            .toBeCalledWith('snippets', 3, {action: 'copy', destination: 8, locale: 'de', webspace: 'sulu'});
+
+        return postWithIdPromise.then(() => {
+            expect(structureStrategy.clear).toBeCalledWith();
+            expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+                'snippets',
+                {
+                    fields: [
+                        'title',
+                        'name',
+                        'id',
+                    ],
+                    expandedIds: 9,
+                    limit: 10,
+                    locale: 'de',
+                    page: undefined,
+                    sortBy: undefined,
+                    sortOrder: undefined,
+                    webspace: 'sulu',
+                },
+                undefined
+            );
+        });
     });
 });
 
@@ -1148,6 +2347,36 @@ test('Should delete the item with the given ID and options', () => {
     const page = observable.box(1);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const deletePromise = Promise.resolve();
     ResourceRequester.delete.mockReturnValue(deletePromise);
 
@@ -1169,6 +2398,36 @@ test('Should delete the item with the given ID and remove it from the selection 
     const page = observable.box(1);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const deletePromise = Promise.resolve({id: 5});
     ResourceRequester.delete.mockReturnValue(deletePromise);
 
@@ -1192,6 +2451,36 @@ test('Should delete the item with the given ID and remove it from the selection 
 test('Should delete the item with the given ID without locale', () => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore('snippets', {page}, {webspace: 'sulu'});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const deletePromise = Promise.resolve();
     ResourceRequester.delete.mockReturnValue(deletePromise);
 
@@ -1212,6 +2501,36 @@ test('Should delete the item with the given ID without locale', () => {
 test('Should delete all selected items', () => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const structureStrategy = new StructureStrategy();
     datagridStore.updateStructureStrategy(structureStrategy);
 
@@ -1233,6 +2552,36 @@ test('Should delete all selected items', () => {
 test('Should delete all selected items and succeed even if one of them returns a 404', () => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const structureStrategy = new StructureStrategy();
     datagridStore.updateStructureStrategy(structureStrategy);
 
@@ -1256,6 +2605,36 @@ test('Should delete all selected items and succeed even if one of them returns a
 test('Should crash when deleting all selected items and one request fails with another error than 404', (done) => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore('snippets', {page});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const structureStrategy = new StructureStrategy();
     datagridStore.updateStructureStrategy(structureStrategy);
 
@@ -1275,6 +2654,36 @@ test('Should order the item with the given ID and options to the given position'
     const page = observable.box(1);
     const locale = observable.box('en');
     const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    datagridStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
     const orderPromise = Promise.resolve();
     ResourceRequester.postWithId.mockReturnValue(orderPromise);
 

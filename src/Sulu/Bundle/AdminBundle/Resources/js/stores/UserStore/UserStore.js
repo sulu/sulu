@@ -17,7 +17,7 @@ class UserStore {
     @observable resetSuccess: boolean = false;
 
     @action clear() {
-        this.persistentSettings = {};
+        this.persistentSettings = new Map();
         this.loggedIn = false;
         this.loading = false;
         this.user = undefined;
