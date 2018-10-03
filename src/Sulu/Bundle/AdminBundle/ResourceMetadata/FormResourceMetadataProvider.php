@@ -140,7 +140,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
 
         $children = [];
         $properties = [];
-        $schema = null;
+        $fileSchema = null;
 
         // load and merge all given forms
         foreach ($forms as $form) {
@@ -158,10 +158,10 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
                 $properties = array_merge($properties, $newProperties);
             }
             if ($newSchema) {
-                if ($schema) {
-                    $schema = $schema->merge($newSchema);
+                if ($fileSchema) {
+                    $fileSchema = $fileSchema->merge($newSchema);
                 } else {
-                    $schema = $newSchema;
+                    $fileSchema = $newSchema;
                 }
             }
 
@@ -178,8 +178,9 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
             $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
             $formSchema = $this->resourceMetadataMapper->mapSchema($properties);
-            if ($schema) {
-                $schema = $schema->merge($formSchema);
+            $schema = null;
+            if ($fileSchema) {
+                $schema = $fileSchema->merge($formSchema);
             } else {
                 $schema = $formSchema;
             }
