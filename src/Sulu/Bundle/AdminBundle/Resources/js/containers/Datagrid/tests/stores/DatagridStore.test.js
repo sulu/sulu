@@ -4,6 +4,7 @@ import {autorun, observable, toJS, when} from 'mobx';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import DatagridStore from '../../stores/DatagridStore';
 import metadataStore from '../../stores/MetadataStore';
+import {userStore} from '../../../../stores';
 
 jest.mock('../../stores/MetadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
@@ -12,6 +13,11 @@ jest.mock('../../stores/MetadataStore', () => ({
 jest.mock('../../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
     postWithId: jest.fn(),
+}));
+
+jest.mock('../../../../stores/UserStore', () => ({
+    getPersistentSetting: jest.fn(),
+    setPersistentSetting: jest.fn(),
 }));
 
 class LoadingStrategy {
@@ -47,7 +53,7 @@ test('The loading strategy should get passed the structure strategy', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
-    const datagridStore = new DatagridStore('tests', {page: observable.box()});
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {page: observable.box()});
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
     expect(loadingStrategy.setStructureStrategy).toBeCalledWith(structureStrategy);
@@ -94,6 +100,7 @@ test('The loading strategy should be called when a request is sent', () => {
 
     const datagridStore = new DatagridStore(
         'tests',
+        'datagrid_test',
         {
             page,
             locale,
@@ -131,6 +138,115 @@ test('The loading strategy should be called when a request is sent', () => {
     });
 });
 
+test('The user store should be called correctly when changing the schema', () => {
+    const page = observable.box(1);
+    const locale = observable.box();
+    const additionalValue = observable.box(5);
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+
+    const datagridStore = new DatagridStore(
+        'tests',
+        'datagrid_test',
+        {
+            page,
+            locale,
+            additionalValue,
+        },
+        {
+            test: 'value',
+        }
+    );
+
+    return schemaPromise.then(() => {
+        const newSchema = {
+            id: {
+                label: 'ID',
+                name: 'id',
+                sortable: true,
+                type: 'string',
+                visibility: 'no',
+            },
+            changed: {
+                label: 'Changed at',
+                name: 'changed',
+                sortable: true,
+                type: 'datetime',
+                visibility: 'no',
+            },
+            title: {
+                label: 'Title',
+                name: 'title',
+                sortable: true,
+                type: 'string',
+                visibility: 'no',
+            },
+            name: {
+                label: 'Name',
+                name: 'name',
+                sortable: true,
+                type: 'string',
+                visibility: 'always',
+            },
+        };
+        datagridStore.changeUserSchema(newSchema);
+
+        expect(userStore.setPersistentSetting).toBeCalledWith(
+            'sulu_admin.datagrid_store.tests.datagrid_test.schema',
+            [
+                {
+                    'schemaKey': 'id',
+                    'visibility': 'no',
+                },
+                {
+                    'schemaKey': 'changed',
+                    'visibility': 'no',
+                },
+                {
+                    'schemaKey': 'title',
+                    'visibility': 'no',
+                },
+                {
+                    'schemaKey': 'name',
+                    'visibility': 'always',
+                },
+            ]
+        );
+
+        datagridStore.destroy();
+    });
+});
+
 test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -138,6 +254,7 @@ test('The loading strategy should be called with a different resourceKey when a 
     const locale = observable.box();
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
             locale,
@@ -208,6 +325,7 @@ test('The loading strategy should be called with a different page when a request
     const locale = observable.box();
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
             locale,
@@ -296,6 +414,7 @@ test('The user store should be called ', () => {
     const locale = observable.box();
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
             locale,
@@ -384,6 +503,7 @@ test('The loading strategy should be called with a different locale when a reque
     const locale = observable.box('en');
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
             locale,
@@ -471,6 +591,7 @@ test('The loading strategy should be called with the defined sortings', () => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         }
@@ -534,6 +655,7 @@ test('The loading strategy should be called with the defined search', () => {
     const page = observable.box(2);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         }
@@ -603,6 +725,7 @@ test('The loading strategy should be called with the active item as parentId', (
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         }
@@ -670,6 +793,7 @@ test('The loading strategy should be called with expandedIds if the active item 
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         }
@@ -737,6 +861,7 @@ test('The loading strategy should be called with expandedIds if some items are a
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'categories',
+        'datagrid_test',
         {
             page,
         },
@@ -826,6 +951,7 @@ test('The loading strategy should be called only once even if the data changes a
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         }
@@ -880,6 +1006,7 @@ test('The active item should not be passed as parent if undefined', () => {
     const page = observable.box(1);
     const datagridStore = new DatagridStore(
         'snippets',
+        'datagrid_test',
         {
             page,
         },
@@ -946,7 +1073,7 @@ test('The activeItems from the StructureStrategy should be passed', () => {
     const structureStrategy = new StructureStrategy();
     const page = observable.box(1);
 
-    const datagridStore = new DatagridStore('snippets', {
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(loadingStrategy);
@@ -961,7 +1088,7 @@ test('Set loading flag to true before schema is loaded', () => {
     const promise = Promise.resolve();
     metadataStore.getSchema.mockReturnValueOnce(promise);
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {page});
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {page});
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
     page.set(1);
@@ -975,7 +1102,7 @@ test('Set loading flag to true before schema is loaded', () => {
 
 test('Set loading flag to true before request', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {page});
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {page});
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
     page.set(1);
@@ -987,7 +1114,7 @@ test('Set loading flag to true before request', () => {
 
 test('Set loading flag to false after request', (done) => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {page});
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1069,7 +1196,7 @@ test('Get schema from MetadataStore for correct resourceKey', () => {
     metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
 
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1083,7 +1210,7 @@ test('Get schema from MetadataStore for correct resourceKey', () => {
 
 test('After initialization no row should be selected', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1094,7 +1221,7 @@ test('After initialization no row should be selected', () => {
 
 test('Select an item', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1110,7 +1237,7 @@ test('Select an item', () => {
 
 test('Deselect an item that has not been selected yet', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1124,7 +1251,7 @@ test('Deselect an item that has not been selected yet', () => {
 
 test('Select all visible items', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {page});
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {page});
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(new StructureStrategy());
     // $FlowFixMe
@@ -1140,7 +1267,7 @@ test('Select all visible items', () => {
 
 test('Deselect all visible items', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1159,7 +1286,7 @@ test('Deselect all visible items', () => {
 
 test('Deselect an item by id', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1178,7 +1305,7 @@ test('Deselect an item by id', () => {
 
 test('Clear the selection', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page,
     });
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
@@ -1192,7 +1319,7 @@ test('Clear the selection', () => {
 });
 
 test('Clear the data', () => {
-    const datagridStore = new DatagridStore('tests', {
+    const datagridStore = new DatagridStore('tests', 'datagrid_test', {
         page: observable.box(),
     });
     const structureStrategy = new StructureStrategy();
@@ -1214,6 +1341,7 @@ test('Should reset the data array and set page to 1 when the reload method is ca
     const locale = observable.box();
     const datagridStore = new DatagridStore(
         'tests',
+        'datagrid_test',
         {
             page,
             locale,
@@ -1280,7 +1408,7 @@ test('Should reset the data array and set page to 1 when the reload method is ca
 test('Should reset page count to 0 and page to 1 when locale is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1330,7 +1458,7 @@ test('Should reset page count to 0 and page to 1 when locale is changed', () => 
 test('Should not reset page count to 0 and page to 1 when locale is changed before completely initialized', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1374,7 +1502,7 @@ test('Should not reset page count to 0 and page to 1 when locale is changed befo
 test('Should not reset page count to 0 and page to 1 when locale stays the same', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1423,7 +1551,7 @@ test('Should not reset page count to 0 and page to 1 when locale stays the same'
 test('Should reset page count to 0 and page to 1 when search is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1473,7 +1601,7 @@ test('Should reset page count to 0 and page to 1 when search is changed', () => 
 test('Should not reset page count to 0 and page to 1 when search is changed before completely initialized', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1517,7 +1645,7 @@ test('Should not reset page count to 0 and page to 1 when search is changed befo
 test('Should not reset page count to 0 and page to 1 when search stays the same', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1568,7 +1696,7 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
 test('Should reset page count to 0 and page to 1 when sort column is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1618,7 +1746,7 @@ test('Should reset page count to 0 and page to 1 when sort column is changed', (
 test('Should not reset page count to 0 and page to 1 when sort column is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1662,7 +1790,7 @@ test('Should not reset page count to 0 and page to 1 when sort column is changed
 test('Should not reset page count to 0 and page to 1 when sort column stays the same', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1713,7 +1841,7 @@ test('Should not reset page count to 0 and page to 1 when sort column stays the 
 test('Should reset page count to 0 and page to 1 when sort order is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1763,7 +1891,7 @@ test('Should reset page count to 0 and page to 1 when sort order is changed', ()
 test('Should not reset page count to 0 and page to 1 when sort order is changed before completely initialized', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1807,7 +1935,7 @@ test('Should not reset page count to 0 and page to 1 when sort order is changed 
 test('Should not reset page count to 0 and page to 1 when sort order stays the same', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1858,7 +1986,7 @@ test('Should not reset page count to 0 and page to 1 when sort order stays the s
 test('Should reset page count to 0 and page to 1 when limit is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1908,7 +2036,7 @@ test('Should reset page count to 0 and page to 1 when limit is changed', () => {
 test('Should not reset page count to 0 and page to 1 when limit stays the same', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -1958,7 +2086,7 @@ test('Should not reset page count to 0 and page to 1 when limit stays the same',
 
 test('Should reset page count and page when loading strategy changes', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2007,7 +2135,7 @@ test('Should reset page count and page when loading strategy changes', () => {
 });
 
 test('Should clear the StructureStrategy when the clear method is called', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box()});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page: observable.box()});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2051,7 +2179,7 @@ test('Should clear the StructureStrategy when the clear method is called', () =>
 
 test('Should trigger a mobx autorun if activate is called with the same id', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2103,7 +2231,7 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
 
 test('Should activate the current item if structure strategy is changed to trigger a reload', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2137,20 +2265,20 @@ test('Should activate the current item if structure strategy is changed to trigg
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
-    const otherStructureStrategy = new StructureStrategy();
     structureStrategy.findById.mockReturnValue({});
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
     datagridStore.activate(3);
 
+    const otherStructureStrategy = new StructureStrategy();
     datagridStore.updateStructureStrategy(otherStructureStrategy);
     expect(otherStructureStrategy.activate).toBeCalledWith(3);
 });
 
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2195,7 +2323,7 @@ test('Should call the activate method of the structure strategy if an item gets 
 
 test('Should call the deactivate method of the structure strategy if an item gets deactivated', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2239,7 +2367,7 @@ test('Should call the deactivate method of the structure strategy if an item get
 
 test('Should call the remove method of the structure strategy if an item gets removed', () => {
     const page = observable.box();
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2316,7 +2444,12 @@ test('Should move the item with the given ID to the new given parent and reload 
     metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
     const locale = observable.box('de');
 
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore(
+        'snippets',
+        'datagrid_test',
+        {page: observable.box(), locale},
+        {webspace: 'sulu'}
+    );
 
     return schemaPromise.then(() => {
         const loadingStrategy = new LoadingStrategy();
@@ -2391,7 +2524,12 @@ test('Should copy the item with the given ID to the new given parent and reload 
     const schemaPromise = Promise.resolve(schema);
     metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
 
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(), locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore(
+        'snippets',
+        'datagrid_test',
+        {page: observable.box(), locale},
+        {webspace: 'sulu'}
+    );
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -2434,7 +2572,7 @@ test('Should copy the item with the given ID to the new given parent and reload 
 test('Should delete the item with the given ID and options', () => {
     const page = observable.box(1);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale}, {webspace: 'sulu'});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2485,7 +2623,7 @@ test('Should delete the item with the given ID and options', () => {
 test('Should delete the item with the given ID and remove it from the selection afterwards', () => {
     const page = observable.box(1);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2538,7 +2676,7 @@ test('Should delete the item with the given ID and remove it from the selection 
 
 test('Should delete the item with the given ID without locale', () => {
     const page = observable.box(1);
-    const datagridStore = new DatagridStore('snippets', {page}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page}, {webspace: 'sulu'});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2588,7 +2726,7 @@ test('Should delete the item with the given ID without locale', () => {
 
 test('Should delete all selected items', () => {
     const page = observable.box(1);
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2639,7 +2777,7 @@ test('Should delete all selected items', () => {
 
 test('Should delete all selected items and succeed even if one of them returns a 404', () => {
     const page = observable.box(1);
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2692,7 +2830,7 @@ test('Should delete all selected items and succeed even if one of them returns a
 
 test('Should crash when deleting all selected items and one request fails with another error than 404', (done) => {
     const page = observable.box(1);
-    const datagridStore = new DatagridStore('snippets', {page});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2741,7 +2879,7 @@ test('Should crash when deleting all selected items and one request fails with a
 test('Should order the item with the given ID and options to the given position', () => {
     const page = observable.box(1);
     const locale = observable.box('en');
-    const datagridStore = new DatagridStore('snippets', {page, locale}, {webspace: 'sulu'});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page, locale}, {webspace: 'sulu'});
     datagridStore.schema = {
         id: {
             label: 'ID',
@@ -2791,7 +2929,7 @@ test('Should order the item with the given ID and options to the given position'
 });
 
 test('Should call all disposers if destroy is called', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box()});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page: observable.box()});
     datagridStore.sendRequestDisposer = jest.fn();
     datagridStore.localeDisposer = jest.fn();
     datagridStore.searchDisposer = jest.fn();

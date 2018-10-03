@@ -12,12 +12,17 @@ import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
+import type {Route} from "sulu-admin-bundle/services/Router";
+
+const USER_SETTINGS_KEY = 'webspace_overview';
 
 const USER_SETTING_PREFIX = 'sulu_content.webspace_overview';
 const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
 
-function getWebspaceActiveKey(webspace) {
-    return [USER_SETTING_PREFIX, 'webspace', webspace, 'active'].join('.');
+const PAGES_RESOURCE_KEY = 'pages';
+
+function getUserSettingsKeyForWebspace(webspace: string) {
+    return [USER_SETTINGS_KEY, webspace].join('_');
 }
 
 @observer
@@ -28,15 +33,14 @@ class WebspaceOverview extends React.Component<ViewProps> {
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
-    activeDisposer: () => void;
     excludeGhostsAndShadowsDisposer: () => void;
     webspaceDisposer: () => void;
 
-    static getDerivedRouteAttributes() {
-        const webspace = userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
+    static getDerivedRouteAttributes(route, attributes) {
+        const webspace = attributes.webspace ? attributes.webspace : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
 
         return {
-            active: userStore.getPersistentSetting(getWebspaceActiveKey(webspace)),
+            active: DatagridStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
             webspace,
         };
     }
@@ -109,7 +113,12 @@ class WebspaceOverview extends React.Component<ViewProps> {
         router.bind('webspace', this.webspace);
         apiOptions.webspace = this.webspace;
 
-        this.datagridStore = new DatagridStore('pages', observableOptions, apiOptions);
+        this.datagridStore = new DatagridStore(
+            'pages',
+            getUserSettingsKeyForWebspace(this.webspace.get()),
+            observableOptions,
+            apiOptions
+        );
         router.bind('active', this.datagridStore.active);
 
         this.excludeGhostsAndShadowsDisposer = intercept(this.excludeGhostsAndShadows, '', (change) => {
@@ -123,20 +132,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
             return change;
         });
 
-        this.activeDisposer = reaction(
-            () => this.datagridStore.active.get(),
-            (active) => {
-                if (!active) {
-                    return;
-                }
-
-                userStore.setPersistentSetting(
-                    getWebspaceActiveKey(this.webspace.get()),
-                    active
-                );
-            }
-        );
-
         webspaceStore.loadWebspaces()
             .then(action((webspaces) => {
                 this.webspaces = webspaces;
@@ -145,7 +140,6 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     componentWillUnmount() {
         this.datagridStore.destroy();
-        this.activeDisposer();
         this.excludeGhostsAndShadowsDisposer();
         this.webspaceDisposer();
     }

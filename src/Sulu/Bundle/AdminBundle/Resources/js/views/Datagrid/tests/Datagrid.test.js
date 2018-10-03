@@ -19,8 +19,9 @@ jest.mock('../../../stores/UserStore', () => ({
 
 jest.mock(
     '../../../containers/Datagrid/stores/DatagridStore',
-    () => jest.fn(function(resourceKey, observableOptions, options) {
+    () => jest.fn(function(resourceKey, userSettingsKey, observableOptions, options) {
         this.resourceKey = resourceKey;
+        this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;
         this.loading = false;
@@ -280,26 +281,9 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('sortOrder', datagridStore.sortOrder);
     expect(router.bind).toBeCalledWith('limit', datagridStore.limit, 10);
 
-    expect(datagrid.instance().sortColumnDisposer).toBeDefined();
-    expect(datagrid.instance().sortOrderDisposer).toBeDefined();
-    expect(datagrid.instance().limitDisposer).toBeDefined();
-
-    const activeDisposerSpy = jest.fn();
-    const sortColumnDisposerSpy = jest.fn();
-    const sortOrderDisposerSpy = jest.fn();
-    const limitDisposerSpy = jest.fn();
-    datagrid.instance().activeDisposer = activeDisposerSpy;
-    datagrid.instance().sortColumnDisposer = sortColumnDisposerSpy;
-    datagrid.instance().sortOrderDisposer = sortOrderDisposerSpy;
-    datagrid.instance().limitDisposer = limitDisposerSpy;
-
     datagrid.unmount();
 
     expect(datagridStore.destroy).toBeCalled();
-    expect(activeDisposerSpy).toBeCalledWith();
-    expect(sortColumnDisposerSpy).toBeCalledWith();
-    expect(sortOrderDisposerSpy).toBeCalledWith();
-    expect(limitDisposerSpy).toBeCalledWith();
 });
 
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
@@ -427,43 +411,18 @@ test('Should navigate without locale when pencil button is clicked', () => {
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
 
-test('Should update user settings when sorting or limit is changed', () => {
-    const userStore = require('../../../stores/UserStore');
+test('Should load the route attributes from the DatagridStore', () => {
     const Datagrid = require('../Datagrid').default;
-    const router = {
-        navigate: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'test',
-                adapters: ['table'],
-            },
-        },
-    };
+    const DatagridStore = require('../../../containers/Datagrid').DatagridStore;
+    DatagridStore.getActiveSetting = jest.fn();
+    DatagridStore.getSortColumnSetting = jest.fn();
+    DatagridStore.getSortOrderSetting = jest.fn();
+    DatagridStore.getLimitSetting = jest.fn();
 
-    mount(<Datagrid router={router} />);
-
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_order', undefined);
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.sort_column', undefined);
-    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.datagrid.test.limit', 10);
-});
-
-test('Should load the route attributes from the UserStore', () => {
-    const Datagrid = require('../Datagrid').default;
-    const userStore = require('../../../stores/UserStore');
-
-    userStore.getPersistentSetting.mockImplementation((key) => {
-        switch (key) {
-            case 'sulu_admin.datagrid.test.active':
-                return 'some-uuid';
-            case 'sulu_admin.datagrid.test.sort_column':
-                return 'title';
-            case 'sulu_admin.datagrid.test.sort_order':
-                return 'desc';
-            case 'sulu_admin.datagrid.test.limit':
-                return 20;
-        }
-    });
+    DatagridStore.getActiveSetting.mockReturnValueOnce('some-uuid');
+    DatagridStore.getSortColumnSetting.mockReturnValueOnce('title');
+    DatagridStore.getSortOrderSetting.mockReturnValueOnce('desc');
+    DatagridStore.getLimitSetting.mockReturnValueOnce(50);
 
     expect(Datagrid.getDerivedRouteAttributes({
         options: {
@@ -473,7 +432,7 @@ test('Should load the route attributes from the UserStore', () => {
         active: 'some-uuid',
         sortColumn: 'title',
         sortOrder: 'desc',
-        limit: 20,
+        limit: 50,
     });
 });
 
@@ -535,7 +494,7 @@ test('Should render the locale dropdown with the options from router', () => {
     ]);
 });
 
-test('Should pass options from router to the DatagridStore', () => {
+test('Should pass apiOptions from router to the DatagridStore', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
