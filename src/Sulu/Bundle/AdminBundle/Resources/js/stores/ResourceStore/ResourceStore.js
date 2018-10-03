@@ -9,7 +9,7 @@ export default class ResourceStore {
     @observable id: ?string | number;
     observableOptions: ObservableOptions;
     disposer: () => void;
-    @observable loading: boolean = true;
+    @observable loading: boolean = false;
     @observable saving: boolean = false;
     @observable deleting: boolean = false;
     @observable data: Object = {};
@@ -50,6 +50,8 @@ export default class ResourceStore {
             return;
         }
 
+        this.setLoading(true);
+
         const {locale} = this.observableOptions;
 
         if (locale) {
@@ -58,8 +60,6 @@ export default class ResourceStore {
             }
             options.locale = locale.get();
         }
-
-        this.setLoading(true);
 
         const promise = this.idQueryParameter
             ? ResourceRequester.get(
