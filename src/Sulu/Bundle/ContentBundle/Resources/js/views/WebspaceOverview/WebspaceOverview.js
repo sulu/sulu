@@ -8,11 +8,11 @@ import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
+import type {Route} from 'sulu-admin-bundle/services/Router';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
-import type {Route} from "sulu-admin-bundle/services/Router";
 
 const USER_SETTINGS_KEY = 'webspace_overview';
 
