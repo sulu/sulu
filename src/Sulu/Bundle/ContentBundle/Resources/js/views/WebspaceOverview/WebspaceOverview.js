@@ -1,6 +1,6 @@
 // @flow
-import {action, computed, intercept, observable, reaction} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, computed, intercept, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
@@ -8,7 +8,6 @@ import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {Route} from 'sulu-admin-bundle/services/Router';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
@@ -37,7 +36,8 @@ class WebspaceOverview extends React.Component<ViewProps> {
     webspaceDisposer: () => void;
 
     static getDerivedRouteAttributes(route, attributes) {
-        const webspace = attributes.webspace ? attributes.webspace : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
+        const webspace = attributes.webspace ? attributes.webspace :
+            userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
 
         return {
             active: DatagridStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
