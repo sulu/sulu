@@ -12,6 +12,8 @@ import selectionStyles from './selection.scss';
 
 type Props = FieldTypeProps<Array<string | number>>;
 
+const USER_SETTINGS_KEY = 'selection';
+
 export default class Selection extends React.Component<Props> {
     datagridStore: ?DatagridStore;
     changeDatagridDisposer: ?() => void;
@@ -44,6 +46,7 @@ export default class Selection extends React.Component<Props> {
 
             this.datagridStore = new DatagridStore(
                 resourceKey,
+                USER_SETTINGS_KEY,
                 {locale: formInspector.locale, page: observable.box()},
                 {},
                 value

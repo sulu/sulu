@@ -13,6 +13,8 @@ import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
+const USER_SETTINGS_KEY = 'media_selection_overlay';
+
 type Props = {
     open: boolean,
     locale: IObservableValue<string>,
@@ -101,6 +103,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     @action createCollectionDatagridStore() {
         this.collectionDatagridStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
+            USER_SETTINGS_KEY,
             {
                 page: this.collectionPage,
                 locale: this.locale,
@@ -143,6 +146,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
         this.mediaDatagridStore = new DatagridStore(
             MEDIA_RESOURCE_KEY,
+            USER_SETTINGS_KEY,
             {
                 page: this.mediaPage,
                 locale: this.locale,

@@ -28,7 +28,7 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
 ));
 
 test('Should use an Overlay by default', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -48,7 +48,7 @@ test('Should use an Overlay by default', () => {
 });
 
 test('Should use a dialog if overlayType is set to dialog', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -69,7 +69,7 @@ test('Should use a dialog if overlayType is set to dialog', () => {
 });
 
 test('Should pass disabledIds to the Datagrid', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -89,7 +89,7 @@ test('Should pass disabledIds to the Datagrid', () => {
 });
 
 test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -110,7 +110,7 @@ test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
 });
 
 test('Should pass correct flags to the Datagrid', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
     const datagridOverlay = shallow(
@@ -132,7 +132,7 @@ test('Should pass correct flags to the Datagrid', () => {
 });
 
 test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay = shallow(
         <DatagridOverlay
@@ -150,7 +150,7 @@ test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () =>
 });
 
 test('Should pass confirmLoading and negative confirmDisabled flag to the Overlay', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay = shallow(
         <DatagridOverlay
@@ -170,7 +170,7 @@ test('Should pass confirmLoading and negative confirmDisabled flag to the Overla
 });
 
 test('Should call onConfirm when the confirm button is clicked', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
     const confirmSpy = jest.fn();
     mount(
         <DatagridOverlay
@@ -195,7 +195,7 @@ test('Should call onConfirm when the confirm button is clicked', () => {
 });
 
 test('Should instantiate the datagrid with the passed adapter', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay1 = mount(
         <DatagridOverlay
@@ -223,7 +223,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
 });
 
 test('Should not clear selection on close if clearSelectionOnClose prop is not set', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay = mount(
         <DatagridOverlay
@@ -252,7 +252,7 @@ test('Should not clear selection on close if clearSelectionOnClose prop is not s
 });
 
 test('Should clear selection on close if clearSelectionOnClose prop is set', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay = mount(
         <DatagridOverlay
@@ -281,7 +281,7 @@ test('Should clear selection on close if clearSelectionOnClose prop is set', () 
 });
 
 test('Should update selection if passed preSelectedItems prop changes', () => {
-    const datagridStore = new DatagridStore('snippets', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
 
     const datagridOverlay = mount(
         <DatagridOverlay
