@@ -10,7 +10,7 @@ const LOADER_SIZE = 25;
 
 type Props = {|
     active: boolean,
-    activeClassName: string,
+    activeClassName?: string,
     children?: Node,
     className?: string,
     disabled: boolean,
@@ -27,7 +27,6 @@ type Props = {|
 export default class Button extends React.PureComponent<Props> {
     static defaultProps = {
         active: false,
-        activeClassName: '',
         disabled: false,
         loading: false,
         size: 'large',
@@ -58,14 +57,20 @@ export default class Button extends React.PureComponent<Props> {
             skin,
             type,
         } = this.props;
+
+        const activeClass = {};
+        if (active && activeClassName) {
+            activeClass[activeClassName] = true;
+        }
+
         const buttonClass = classNames(
             buttonStyles.button,
             buttonStyles[skin],
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
-                [activeClassName]: active,
             },
+            activeClass,
             className
         );
         const iconClass = classNames(

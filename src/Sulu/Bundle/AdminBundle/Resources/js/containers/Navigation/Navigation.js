@@ -9,7 +9,7 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
-    isPinned: boolean,
+    pinned: boolean,
     router: Router,
     onNavigate: (route: string) => void,
     onLogout: () => void,
@@ -67,10 +67,10 @@ export default class Navigation extends React.Component<Props> {
 
         return (
             <NavigationComponent
-                isPinned={this.props.isPinned}
                 onLogoutClick={this.props.onLogout}
                 onPinToggle={this.handlePinToggle}
                 onProfileClick={this.handleProfileEditClick}
+                pinned={this.props.pinned}
                 suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
                 suluVersionLink={SULU_CHANGELOG_URL}
                 title="Sulu" // TODO: Get this dynamically from server

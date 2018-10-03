@@ -31,7 +31,7 @@ exports[`Render WebspaceOverview 1`] = `
     >
       <div>
         <button
-          class="button icon active  button"
+          class="button icon active button"
           type="button"
         >
           <span

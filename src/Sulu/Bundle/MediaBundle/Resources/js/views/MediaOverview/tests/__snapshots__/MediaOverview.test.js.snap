@@ -268,7 +268,7 @@ exports[`Render a simple MediaOverview 1`] = `
           </label>
           <div>
             <button
-              class="button icon active  button"
+              class="button icon active button"
               type="button"
             >
               <span

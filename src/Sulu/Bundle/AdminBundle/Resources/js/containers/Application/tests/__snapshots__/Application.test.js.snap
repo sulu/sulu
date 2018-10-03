@@ -515,10 +515,10 @@ exports[`Application should render opened navigation 1`] = `
       className="navigation"
     >
       <Navigation
-        isPinned={false}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
+        pinned={false}
         router={
           Object {
             "route": Object {
@@ -535,10 +535,10 @@ exports[`Application should render opened navigation 1`] = `
         }
       >
         <Navigation
-          isPinned={false}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
+          pinned={false}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
           title="Sulu"
@@ -877,10 +877,10 @@ exports[`Application should render pinned navigation 1`] = `
       className="navigation"
     >
       <Navigation
-        isPinned={true}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
+        pinned={true}
         router={
           Object {
             "route": Object {
@@ -897,10 +897,10 @@ exports[`Application should render pinned navigation 1`] = `
         }
       >
         <Navigation
-          isPinned={true}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
+          pinned={true}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
           title="Sulu"
@@ -1203,10 +1203,10 @@ exports[`Application should render pinned navigation from beginning 1`] = `
       className="navigation"
     >
       <Navigation
-        isPinned={true}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
+        pinned={true}
         router={
           Object {
             "route": Object {
@@ -1223,10 +1223,10 @@ exports[`Application should render pinned navigation from beginning 1`] = `
         }
       >
         <Navigation
-          isPinned={true}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
+          pinned={true}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
           title="Sulu"

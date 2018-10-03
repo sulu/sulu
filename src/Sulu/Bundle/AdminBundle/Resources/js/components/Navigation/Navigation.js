@@ -9,7 +9,6 @@ import Item from './Item';
 import navigationStyles from './navigation.scss';
 
 type Props = {
-    isPinned?: boolean,
     children: ChildrenArray<Element<typeof Item>>,
     title: string,
     username: string,
@@ -17,6 +16,7 @@ type Props = {
     onLogoutClick: () => void,
     onPinToggle?: () => void,
     onProfileClick: () => void,
+    pinned?: boolean,
     suluVersion: string,
     suluVersionLink: string,
     appVersion: ?string,
@@ -27,7 +27,7 @@ type Props = {
 export default class Navigation extends React.Component<Props> {
     static defaultProps = {
         appVersion: undefined,
-        isPinned: false,
+        pinned: false,
         userImage: undefined,
     };
 
@@ -125,7 +125,7 @@ export default class Navigation extends React.Component<Props> {
 
     render() {
         const {
-            isPinned,
+            pinned,
             title,
             username,
             onLogoutClick,
@@ -158,7 +158,7 @@ export default class Navigation extends React.Component<Props> {
                 <div className={navigationStyles.footer}>
                     {onPinToggle &&
                         <Button
-                            active={isPinned}
+                            active={pinned}
                             activeClassName={navigationStyles.pinActive}
                             className={navigationStyles.pin}
                             icon="fa-thumb-tack"

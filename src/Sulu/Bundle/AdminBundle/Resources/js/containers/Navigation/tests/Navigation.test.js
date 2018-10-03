@@ -69,10 +69,10 @@ test('Should render navigation', () => {
 
     const navigation = render(
         <Navigation
-            isPinned={false}
             onLogout={jest.fn()}
             onNavigate={jest.fn()}
             onPinToggle={jest.fn()}
+            pinned={false}
             router={router}
         />
     );
@@ -97,10 +97,10 @@ test('Should call the navigation callback, pin callback and router navigate', ()
 
     const navigation = mount(
         <Navigation
-            isPinned={false}
             onLogout={jest.fn()}
             onNavigate={handleNavigate}
             onPinToggle={handlePin}
+            pinned={false}
             router={router}
         />
     );

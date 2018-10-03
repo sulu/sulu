@@ -1,8 +1,7 @@
 // @flow
 import './global.scss';
 import {observer} from 'mobx-react';
-import {action, observable, autorun, intercept, observe} from 'mobx';
-import type {IValueWillChange, IValueDidChange} from 'mobx';
+import {action, observable, autorun, computed} from 'mobx';
 import classNames from 'classnames';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
@@ -23,69 +22,71 @@ type Props = {
     router: Router,
 };
 
+type NavigationState = 'pinned' | 'hidden' | 'visible';
+
 @observer
 export default class Application extends React.Component<Props> {
-    @observable navigationVisible: boolean = false;
-    @observable navigationPinned: boolean = false;
+    @observable navigationState: NavigationState;
+
+    @computed get navigationPinned() {
+        return this.navigationState === 'pinned';
+    }
+
+    @computed get navigationVisible() {
+        return this.navigationPinned || this.navigationState === 'visible';
+    }
+
+    @action setNavigationState(state: NavigationState) {
+        this.navigationState = state;
+    }
+
+    set navigationPinned(value: boolean) {
+        this.setNavigationState(value ? 'pinned' : 'hidden');
+    }
+
+    set navigationVisible(value: boolean) {
+        if (this.navigationPinned) {
+            log.warn('Changing the visibility of the navigation is not allowed while navigation is pinned!');
+            return;
+        }
+
+        this.setNavigationState(value ? 'visible' : 'hidden');
+    }
 
     navigationPinnedDisposer: () => void;
 
     constructor() {
         super();
 
-        intercept(this, 'navigationVisible', (change: IValueWillChange<boolean>) => {
-            if (this.navigationPinned) {
-                log('Cannot change "navigationVisible" while navigation is pinned.');
-                return null;
-            }
-
-            return change;
-        });
-
-        intercept(this, 'navigationPinned', (change: IValueWillChange<boolean>) => {
-            if (change.newValue) {
-                this.navigationVisible = true;
-            }
-
-            return change;
-        });
-
-        observe(this, 'navigationPinned', (change: IValueDidChange<boolean>) => {
-            if (!change.newValue) {
-                this.navigationVisible = false;
-            }
-        });
-
-        this.setNavigationPinned(!!userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY));
+        this.navigationPinned = !!userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY);
 
         this.navigationPinnedDisposer = autorun(
             () => userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned ? 1 : 0)
         );
     }
 
-    @action toggleNavigation() {
-        this.navigationVisible = !this.navigationVisible;
-    }
-
-    @action setNavigationPinned(value: boolean) {
-        this.navigationPinned = value;
-    }
-
-    toggleNavigationPinned() {
-        this.setNavigationPinned(!this.navigationPinned);
-    }
-
     componentWillUnmount() {
         this.navigationPinnedDisposer();
     }
 
+    toggleNavigation() {
+        this.navigationVisible = !this.navigationVisible;
+    }
+
+    toggleNavigationPinned() {
+        this.navigationPinned = !this.navigationPinned;
+    }
+
     handleNavigationButtonClick = () => {
-        if (!this.navigationPinned) {
-            this.toggleNavigation();
+        if (this.navigationPinned) {
+            log.warn('Clicking navigation button is not allowed while navigation is pinned!');
+            return;
         }
+
+        this.toggleNavigation();
     };
 
-    handleToggleNavigationPinned = () => {
+    handlePinToggle = () => {
         this.toggleNavigationPinned();
     };
 
@@ -148,10 +149,10 @@ export default class Application extends React.Component<Props> {
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation
-                                isPinned={this.navigationPinned}
                                 onLogout={this.handleLogout}
                                 onNavigate={this.handleNavigate}
-                                onPinToggle={this.handleToggleNavigationPinned}
+                                onPinToggle={this.handlePinToggle}
+                                pinned={this.navigationPinned}
                                 router={router}
                             />
                         </nav>

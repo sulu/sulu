@@ -1,6 +1,17 @@
 @import './variables.scss';
 @import '../../containers/Application/colors.scss';
 
+$navigationBackgroundColor: $cloudBurst;
+$color: $white;
+$versionColor: $silver;
+$userBackgroundColor: $pickledBluewood;
+$buttonColor: $silver;
+$pinColor: $shakespeare;
+$pinBackgroundColor: $cloudBurst;
+$pinActiveColor: $cloudBurst;
+$pinActiveBackgroundColor: $shakespeare;
+$pinBorderColor: $shakespeare;
+
 .navigation {
     width: $navigationWidth;
     background-color: $navigationBackgroundColor;
