@@ -258,12 +258,13 @@ export default class DatagridStore {
             this.loadingStrategy.setStructureStrategy(structureStrategy);
         }
 
-        if (this.structureStrategy) {
+        const hadStructureStrategy = !!this.structureStrategy;
+        this.structureStrategy = structureStrategy;
+
+        if (hadStructureStrategy) {
             // force a reload with the currently active item to match new structure
             this.activate(this.active.get());
         }
-
-        this.structureStrategy = structureStrategy;
     };
 
     @action clear = () => {

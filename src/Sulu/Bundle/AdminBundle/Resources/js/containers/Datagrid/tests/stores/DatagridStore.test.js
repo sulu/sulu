@@ -2230,6 +2230,38 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
 });
 
 test('Should activate the current item if structure strategy is changed to trigger a reload', () => {
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        changed: {
+            label: 'Changed at',
+            name: 'changed',
+            sortable: true,
+            type: 'datetime',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+        name: {
+            label: 'Name',
+            name: 'name',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
     datagridStore.schema = {
@@ -2269,11 +2301,13 @@ test('Should activate the current item if structure strategy is changed to trigg
     datagridStore.updateLoadingStrategy(loadingStrategy);
     datagridStore.updateStructureStrategy(structureStrategy);
 
-    datagridStore.activate(3);
+    return schemaPromise.then(() => {
+        datagridStore.activate(3);
 
-    const otherStructureStrategy = new StructureStrategy();
-    datagridStore.updateStructureStrategy(otherStructureStrategy);
-    expect(otherStructureStrategy.activate).toBeCalledWith(3);
+        const otherStructureStrategy = new StructureStrategy();
+        datagridStore.updateStructureStrategy(otherStructureStrategy);
+        expect(otherStructureStrategy.activate).toBeCalledWith(3);
+    });
 });
 
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
