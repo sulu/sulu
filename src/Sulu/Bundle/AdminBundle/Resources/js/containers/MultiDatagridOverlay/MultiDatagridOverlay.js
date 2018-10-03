@@ -6,6 +6,8 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../DatagridOverlay';
 import type {OverlayType} from '../DatagridOverlay';
 
+const USER_SETTINGS_KEY = 'multi_datagrid_overlay';
+
 type Props = {|
     adapter: string,
     allowActivateForDisabledItems?: boolean,
@@ -46,6 +48,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
 
         this.datagridStore = new DatagridStore(
             resourceKey,
+            USER_SETTINGS_KEY,
             observableOptions,
             options,
             preSelectedItems.map((preSelectedItem) => preSelectedItem.id)
