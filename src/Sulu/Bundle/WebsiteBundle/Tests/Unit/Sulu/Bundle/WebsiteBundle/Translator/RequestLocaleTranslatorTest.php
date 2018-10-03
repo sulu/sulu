@@ -12,20 +12,44 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Translator;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator;
+use Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class RequestAnalyzerTranslatorTest extends TestCase
+class RequestLocaleTranslatorTest extends TestCase
 {
+    protected function mockRequest(?string $locale): Request
+    {
+        $request = $this->prophesize(Request::class);
+        $attributes = $this->prophesize(ParameterBag::class);
+        $request->attributes = $attributes->reveal();
+
+        $requestAttributes = $this->prophesize(RequestAttributes::class);
+        $attributes->has('_sulu')->willReturn(true);
+        $attributes->get('_sulu')->willReturn($requestAttributes->reveal());
+
+        $localization = null;
+        if ($locale) {
+            $localization = $this->prophesize(Localization::class);
+        }
+
+        $requestAttributes->getAttribute('localization')->willReturn($localization->reveal());
+        $localization->getLocale(Localization::LCID)->willReturn($locale);
+
+        return $request->reveal();
+    }
+
     public function testGetLocale()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->getLocale()->willReturn('de');
 
@@ -35,10 +59,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testGetLocaleWithCountry()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de', 'at'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de_AT'));
         $translator->setLocale('de_AT')->shouldBeCalledTimes(1);
         $translator->getLocale()->willReturn('de_AT');
 
@@ -48,10 +72,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testGetLocaleTwice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->getLocale()->willReturn('de');
 
@@ -62,10 +86,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testSetLocale()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldNotBeCalled();
         $translator->setLocale('en')->shouldBeCalled();
 
@@ -75,10 +99,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testSetLocaleTwice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldNotBeCalled();
         $translator->setLocale('en')->shouldBeCalled();
 
@@ -89,10 +113,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testTrans()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->trans('folder', ['test-1'], 'messages', 'de')->willReturn('Ordner');
 
@@ -102,10 +126,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testTransTwice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->trans('folder', ['test-1'], 'messages', 'de')->willReturn('Ordner');
 
@@ -116,10 +140,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testTransChoice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->transChoice('folder', 2, ['test-1'], 'messages', 'de')->willReturn('Ordner');
 
@@ -132,10 +156,10 @@ class RequestAnalyzerTranslatorTest extends TestCase
     public function testTransChoiceTwice()
     {
         $translator = $this->prophesize(TranslatorInterface::class);
-        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $requestAnalyzerTranslator = new RequestAnalyzerTranslator($translator->reveal(), $requestAnalyzer->reveal());
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestAnalyzerTranslator = new RequestLocaleTranslator($translator->reveal(), $requestStack->reveal());
 
-        $requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('de'));
+        $requestStack->getCurrentRequest()->willReturn($this->mockRequest('de'));
         $translator->setLocale('de')->shouldBeCalledTimes(1);
         $translator->transChoice('folder', 2, ['test-1'], 'messages', 'de')->willReturn('Ordner');
 

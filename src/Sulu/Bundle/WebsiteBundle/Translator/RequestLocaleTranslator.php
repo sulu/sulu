@@ -12,13 +12,14 @@
 namespace Sulu\Bundle\WebsiteBundle\Translator;
 
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Wrapper for translator to lazy initialize locale with request-analyzer.
  */
-class RequestAnalyzerTranslator implements TranslatorInterface
+class RequestLocaleTranslator implements TranslatorInterface
 {
     /**
      * @var bool
@@ -31,14 +32,14 @@ class RequestAnalyzerTranslator implements TranslatorInterface
     private $translator;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var RequestStack
      */
-    private $requestAnalyzer;
+    private $requestStack;
 
-    public function __construct(TranslatorInterface $translator, RequestAnalyzerInterface $requestAnalyzer)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->translator = $translator;
-        $this->requestAnalyzer = $requestAnalyzer;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -83,11 +84,19 @@ class RequestAnalyzerTranslator implements TranslatorInterface
 
     private function initialize()
     {
-        if ($this->initialized || null === $this->requestAnalyzer->getCurrentLocalization()) {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($this->initialized || !$request || !$request->attributes->has('_sulu')) {
             return;
         }
 
-        $this->translator->setLocale($this->requestAnalyzer->getCurrentLocalization()->getLocale(Localization::LCID));
+        /** @var RequestAttributes $requestAttributes */
+        $requestAttributes = $request->attributes->get('_sulu');
+        $localization = $requestAttributes->getAttribute('localization');
+        if (!$localization) {
+            return;
+        }
+
+        $this->translator->setLocale($localization->getLocale(Localization::LCID));
         $this->initialized = true;
     }
 }
