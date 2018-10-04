@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {Router} from 'sulu-admin-bundle/services';
@@ -62,23 +62,32 @@ export default class Preview extends React.Component<Props> {
 
         this.previewStore.start();
 
-        this.dataDisposer = autorun(() => {
-            if (this.previewStore.starting || formStore.loading || !this.iframeRef) {
-                return;
-            }
-
-            this.updatePreview(toJS(formStore.data));
-        });
-
-        this.typeDisposer = autorun(() => {
-            if (this.previewStore.starting || formStore.loading || !this.iframeRef) {
-                return;
-            }
-
-            this.previewStore.updateContext(toJS(formStore.type)).then(this.setContent);
-        });
+        when(
+            () => !formStore.loading && !this.previewStore.starting && this.iframeRef !== null,
+            this.initializeReaction
+        );
 
         this.setStarted(true);
+    };
+
+    initializeReaction = (): void => {
+        const {
+            formStore,
+        } = this.props;
+
+        this.dataDisposer = reaction(
+            () => toJS(formStore.data),
+            (data) => {
+                this.updatePreview(data);
+            }
+        );
+
+        this.typeDisposer = reaction(
+            () => toJS(formStore.type),
+            (type) => {
+                this.previewStore.updateContext(type).then(this.setContent);
+            }
+        );
     };
 
     updatePreview = debounce((data: Object) => {

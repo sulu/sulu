@@ -1,5 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Dont react or update preview when data is changed during formstore is loading 1`] = `
+<Preview
+  formStore={
+    mockConstructor {
+      "data": Object {
+        "title": "New Test",
+      },
+      "loading": true,
+      "type": "default",
+    }
+  }
+  router={
+    mockConstructor {
+      "attributes": Object {
+        "locale": "de",
+      },
+      "history": Object {},
+    }
+  }
+>
+  <button
+    onClick={[Function]}
+  >
+    Start
+  </button>
+</Preview>
+`;
+
+exports[`Dont react or update preview when data is changed during preview-store is starting 1`] = `
+<Preview
+  formStore={
+    mockConstructor {
+      "data": Object {
+        "title": "New Test",
+      },
+      "loading": false,
+      "type": "default",
+    }
+  }
+  router={
+    mockConstructor {
+      "attributes": Object {
+        "locale": "de",
+      },
+      "history": Object {},
+    }
+  }
+>
+  <button
+    onClick={[Function]}
+  >
+    Start
+  </button>
+</Preview>
+`;
+
 exports[`React and update preview when data is changed 1`] = `
 <Preview
   formStore={
