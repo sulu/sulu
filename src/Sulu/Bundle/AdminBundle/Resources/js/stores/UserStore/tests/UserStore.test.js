@@ -12,6 +12,10 @@ jest.mock('../../../services/Initializer', () => ({
     initialize: jest.fn(),
 }));
 
+beforeEach(() => {
+    userStore.clear();
+});
+
 test('Should clear the user store', () => {
     const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
     const contact = {id: 12, avatar: undefined, firstName: 'Firsti', lastName: 'Lasti', fullName: 'Firsti Lasti'};
@@ -34,6 +38,21 @@ test('Should clear the user store', () => {
     userStore.clear();
 
     expect(userStore.persistentSettings.size).toBe(0);
+});
+
+test('Should return the locale of the user', () => {
+    userStore.setUser({
+        id: 5,
+        locale: 'de',
+        settings: [],
+        username: 'test',
+    });
+
+    expect(userStore.locale).toEqual('de');
+});
+
+test('Should return the fallback locale if the user has none set', () => {
+    expect(userStore.locale).toEqual('en');
 });
 
 test('Should set persistent setting', () => {

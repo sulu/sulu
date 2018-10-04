@@ -89,8 +89,8 @@
         </section>
         <section name="changelog">
             <meta>
-                <title lang="en">Changelog</title>
-                <title lang="de">Änderungshistorie</title>
+                <title lang="en">Editing information</title>
+                <title lang="de">Bearbeitungsinformationen</title>
             </meta>
             <properties>
                 <property name="authored" type="datetime" colspan="6">
@@ -103,6 +103,12 @@
                     <meta>
                         <title lang="en">Author</title>
                         <title lang="de">Autor</title>
+                    </meta>
+                </property>
+                <property name="changelog" type="changelog_line">
+                    <meta>
+                        <title lang="en">Changelog</title>
+                        <title lang="de">Änderungshistorie</title>
                     </meta>
                 </property>
             </properties>

@@ -35,6 +35,7 @@ import FieldBlocks from './containers/FieldBlocks';
 import {
     Checkbox,
     ColorPicker,
+    ChangelogLine,
     DatePicker,
     Email,
     fieldRegistry,
@@ -121,6 +122,7 @@ function registerDatagridFieldTransformers() {
 
 function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('block', FieldBlocks);
+    fieldRegistry.add('changelog_line', ChangelogLine);
     fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('color', ColorPicker);
     fieldRegistry.add('date', DatePicker, {dateFormat: true, timeFormat: false});

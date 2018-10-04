@@ -3,6 +3,7 @@ import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
+import ChangelogLine from './fields/ChangelogLine';
 import Selection from './fields/Selection';
 import SingleSelection from './fields/SingleSelection';
 import Checkbox from './fields/Checkbox';
@@ -27,6 +28,7 @@ export {
     Selection,
     Checkbox,
     ColorPicker,
+    ChangelogLine,
     DatePicker,
     Email,
     Input,
