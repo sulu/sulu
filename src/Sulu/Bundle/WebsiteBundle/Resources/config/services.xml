@@ -156,7 +156,8 @@
         </service>
 
         <service id="sulu_website.resolver.template_attribute"
-                 class="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver">
+                 class="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver"
+                 public="true">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
