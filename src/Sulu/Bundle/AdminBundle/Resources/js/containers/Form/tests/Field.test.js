@@ -151,6 +151,28 @@ test('Render a field with an error', () => {
     ).toMatchSnapshot();
 });
 
+test('Render a field without a const error', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+    expect(
+        render(
+            <Field
+                dataPath=""
+                error={{keyword: 'const', parameters: {}}}
+                formInspector={formInspector}
+                name="test"
+                onChange={jest.fn()}
+                onFinish={jest.fn()}
+                schema={{label: 'label1', type: 'text', visible: true}}
+                schemaPath=""
+            />
+        )
+    ).toMatchSnapshot();
+});
+
 test('Render a field with a error collection', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

@@ -50,6 +50,13 @@ export default class Field extends React.Component<Props> {
             return;
         }
 
+        if (error.keyword === 'const') {
+            // the const validation only makes sense in combination with other dependant constraints, since it would
+            // not make sense to have a field with a single value with no possibility to change it
+            // therefore we are only showing the other errors, since the const error would just confuse users
+            return;
+        }
+
         if (typeof error.keyword === 'string') {
             return error.keyword;
         }
