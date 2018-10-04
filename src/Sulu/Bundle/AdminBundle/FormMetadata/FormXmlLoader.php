@@ -19,7 +19,7 @@ use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
  */
 class FormXmlLoader extends AbstractLoader
 {
-    const SCHEMA_PATH = '/schema/properties-1.0.xsd';
+    const SCHEMA_PATH = '/schema/form-1.0.xsd';
 
     const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
@@ -49,7 +49,7 @@ class FormXmlLoader extends AbstractLoader
 
         $properties = $this->propertiesXmlParser->loadAndCreateProperties(
             $type,
-            '/x:properties/x:*',
+            '/x:form/x:properties/x:*',
             $tags,
             $xpath
         );

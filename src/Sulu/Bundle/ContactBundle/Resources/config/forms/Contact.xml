@@ -1,84 +1,86 @@
 <?xml version="1.0" ?>
-<properties xmlns="http://schemas.sulu.io/template/template"
+<form xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <section name="avatar" colspan="4">
-        <properties>
-            <property name="avatar" type="single_media_upload" label="false">
-                <params>
-                    <param name="upload_text">
-                        <meta>
-                            <info_text lang="en">Drop image or click to change avatar</info_text>
-                            <info_text lang="de">Bild ablegen oder klicken um das Avatar zu ändern</info_text>
-                        </meta>
-                    </param>
-                    <param name="skin" value="round"/>
-                    <param name="empty_icon" value="su-user"/>
-                    <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.contact')"/>
-                </params>
-            </property>
-        </properties>
-    </section>
-    <section name="contact" colspan="8">
-        <properties>
-            <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
-                <meta>
-                    <title lang="en">Form of Address</title>
-                    <title lang="de">Anrede</title>
-                </meta>
-                <params>
-                    <param name="default_value" value="0"/>
-                    <param name="values" type="collection">
-                        <param name="0" value="0">
+    <properties>
+        <section name="avatar" colspan="4">
+            <properties>
+                <property name="avatar" type="single_media_upload" label="false">
+                    <params>
+                        <param name="upload_text">
                             <meta>
-                                <title lang="en">Mr.</title>
-                                <title lang="de">Herr</title>
+                                <info_text lang="en">Drop image or click to change avatar</info_text>
+                                <info_text lang="de">Bild ablegen oder klicken um das Avatar zu ändern</info_text>
                             </meta>
                         </param>
-                        <param name="1" value="1">
-                            <meta>
-                                <title lang="en">Ms.</title>
-                                <title lang="de">Frau</title>
-                            </meta>
+                        <param name="skin" value="round"/>
+                        <param name="empty_icon" value="su-user"/>
+                        <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.contact')"/>
+                    </params>
+                </property>
+            </properties>
+        </section>
+        <section name="contact" colspan="8">
+            <properties>
+                <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
+                    <meta>
+                        <title lang="en">Form of Address</title>
+                        <title lang="de">Anrede</title>
+                    </meta>
+                    <params>
+                        <param name="default_value" value="0"/>
+                        <param name="values" type="collection">
+                            <param name="0" value="0">
+                                <meta>
+                                    <title lang="en">Mr.</title>
+                                    <title lang="de">Herr</title>
+                                </meta>
+                            </param>
+                            <param name="1" value="1">
+                                <meta>
+                                    <title lang="en">Ms.</title>
+                                    <title lang="de">Frau</title>
+                                </meta>
+                            </param>
                         </param>
-                    </param>
-                </params>
-            </property>
+                    </params>
+                </property>
 
-            <property name="firstName" type="text_line" mandatory="true" colspan="6">
-                <meta>
-                    <title lang="en">First Name</title>
-                    <title lang="de">Vorname</title>
-                </meta>
-            </property>
+                <property name="firstName" type="text_line" mandatory="true" colspan="6">
+                    <meta>
+                        <title lang="en">First Name</title>
+                        <title lang="de">Vorname</title>
+                    </meta>
+                </property>
 
-            <property name="lastName" type="text_line" mandatory="true" colspan="6">
-                <meta>
-                    <title lang="en">Last Name</title>
-                    <title lang="de">Nachname</title>
-                </meta>
-            </property>
+                <property name="lastName" type="text_line" mandatory="true" colspan="6">
+                    <meta>
+                        <title lang="en">Last Name</title>
+                        <title lang="de">Nachname</title>
+                    </meta>
+                </property>
 
-            <property name="account" type="single_account_selection" colspan="6">
-                <meta>
-                    <title lang="en">Organization</title>
-                    <title lang="de">Organisation</title>
-                </meta>
-            </property>
+                <property name="account" type="single_account_selection" colspan="6">
+                    <meta>
+                        <title lang="en">Organization</title>
+                        <title lang="de">Organisation</title>
+                    </meta>
+                </property>
 
-            <property name="salutation" type="text_line">
-                <meta>
-                    <title lang="en">Salutation</title>
-                    <title lang="de">Grußformel</title>
-                </meta>
-            </property>
+                <property name="salutation" type="text_line">
+                    <meta>
+                        <title lang="en">Salutation</title>
+                        <title lang="de">Grußformel</title>
+                    </meta>
+                </property>
 
-            <property name="note" type="text_area">
-                <meta>
-                    <title lang="en">Note</title>
-                    <title lang="de">Notiz</title>
-                </meta>
-            </property>
-        </properties>
-    </section>
-</properties>
+                <property name="note" type="text_area">
+                    <meta>
+                        <title lang="en">Note</title>
+                        <title lang="de">Notiz</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>
