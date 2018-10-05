@@ -1,49 +1,51 @@
 <?xml version="1.0" ?>
-<properties xmlns="http://schemas.sulu.io/template/template"
+<form xmlns="http://schemas.sulu.io/template/template"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
-        <meta>
-            <title lang="en">Salutation</title>
-            <title lang="de">Anrede</title>
-        </meta>
-        <params>
-            <param name="default_value" value="0"/>
-            <param name="values" type="collection">
-                <param name="0" value="0">
-                    <meta>
-                        <title lang="en">Mr.</title>
-                        <title lang="de">Herr</title>
-                    </meta>
+    <properties>
+        <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
+            <meta>
+                <title lang="en">Salutation</title>
+                <title lang="de">Anrede</title>
+            </meta>
+            <params>
+                <param name="default_value" value="0"/>
+                <param name="values" type="collection">
+                    <param name="0" value="0">
+                        <meta>
+                            <title lang="en">Mr.</title>
+                            <title lang="de">Herr</title>
+                        </meta>
+                    </param>
+                    <param name="1" value="1">
+                        <meta>
+                            <title lang="en">Ms.</title>
+                            <title lang="de">Frau</title>
+                        </meta>
+                    </param>
                 </param>
-                <param name="1" value="1">
-                    <meta>
-                        <title lang="en">Ms.</title>
-                        <title lang="de">Frau</title>
-                    </meta>
-                </param>
-            </param>
-        </params>
-    </property>
+            </params>
+        </property>
 
-    <property name="firstName" type="text_line" mandatory="true" colspan="6">
-        <meta>
-            <title lang="en">First Name</title>
-            <title lang="de">Vorname</title>
-        </meta>
-    </property>
+        <property name="firstName" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title lang="en">First Name</title>
+                <title lang="de">Vorname</title>
+            </meta>
+        </property>
 
-    <property name="lastName" type="text_line" mandatory="true" colspan="6">
-        <meta>
-            <title lang="en">Last Name</title>
-            <title lang="de">Nachname</title>
-        </meta>
-    </property>
+        <property name="lastName" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title lang="en">Last Name</title>
+                <title lang="de">Nachname</title>
+            </meta>
+        </property>
 
-    <property name="salutation" type="text_line">
-        <meta>
-            <title lang="en">Salutation</title>
-            <title lang="de">Anrede</title>
-        </meta>
-    </property>
-</properties>
+        <property name="salutation" type="text_line">
+            <meta>
+                <title lang="en">Salutation</title>
+                <title lang="de">Anrede</title>
+            </meta>
+        </property>
+    </properties>
+</form>
