@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/template/template"
+           xmlns="http://schemas.sulu.io/template/template"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--
+    Import XML namespace (used by xincludes)
+    -->
+    <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
+
+    <xs:include schemaLocation="properties-1.0.xsd"/>
+
+    <xs:element name="form" type="formType"/>
+
+    <xs:complexType name="formType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+        </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
+    </xs:complexType>
+</xs:schema>
