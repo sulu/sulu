@@ -58,19 +58,14 @@ export default class Button extends React.PureComponent<Props> {
             type,
         } = this.props;
 
-        const activeClass = {};
-        if (active && activeClassName) {
-            activeClass[activeClassName] = true;
-        }
-
         const buttonClass = classNames(
             buttonStyles.button,
             buttonStyles[skin],
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
+                [activeClassName || '']: active && activeClassName,
             },
-            activeClass,
             className
         );
         const iconClass = classNames(

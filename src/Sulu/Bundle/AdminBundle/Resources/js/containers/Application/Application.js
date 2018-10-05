@@ -78,11 +78,6 @@ export default class Application extends React.Component<Props> {
     }
 
     handleNavigationButtonClick = () => {
-        if (this.navigationPinned) {
-            log.warn('Clicking navigation button is not allowed while navigation is pinned!');
-            return;
-        }
-
         this.toggleNavigation();
     };
 
