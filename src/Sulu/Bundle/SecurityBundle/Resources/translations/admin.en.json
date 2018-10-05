@@ -10,5 +10,6 @@
     "sulu_security.delete": "Delete",
     "sulu_security.live": "Live",
     "sulu_security.security": "Security",
-    "sulu_security.role_form_detail": "Details"
+    "sulu_security.role_form_detail": "Details",
+    "sulu_security.role_locales_selection": "Locales selection"
 }

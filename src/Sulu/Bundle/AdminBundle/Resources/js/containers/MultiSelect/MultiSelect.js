@@ -10,7 +10,7 @@ type Props<T> = {|
     displayProperty: string,
     idProperty: string,
     noneSelectedText?: string,
-    onChange: (value: Array<T>) => void,
+    onChange: (values: Array<T>, valueObjects?: Array<Object>) => void,
     resourceKey: string,
     values: ?Array<T>,
     apiOptions: Object,
@@ -36,6 +36,23 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
         this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
     }
 
+    handleChange = (values: Array<T>) => {
+        const {
+            onChange,
+            idProperty,
+        } = this.props;
+
+        if (onChange.length === 1) {
+            onChange(values);
+        }
+
+        const valueObjects = this.resourceListStore.data.filter((dataValue) => {
+            return values.includes(dataValue[idProperty]);
+        });
+
+        onChange(values, valueObjects);
+    }
+
     render() {
         const {
             allSelectedText,
@@ -54,7 +71,7 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
             <MultiSelectComponent
                 allSelectedText={allSelectedText}
                 noneSelectedText={noneSelectedText}
-                onChange={onChange}
+                onChange={this.handleChange}
                 values={values ? values : []}
             >
                 {this.resourceListStore.data.map((object, index) => (

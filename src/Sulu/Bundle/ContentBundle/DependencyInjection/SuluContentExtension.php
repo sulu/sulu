@@ -76,6 +76,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             'form' => ['@SuluContentBundle/Resources/config/forms/PageExcerpt.xml'],
                             'endpoint' => 'get_page-excerpts',
                         ],
+                        'localizations' => [
+                            'form' => [],
+                            'endpoint' => 'get_localizations',
+                        ],
                     ],
                 ]
             );

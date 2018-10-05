@@ -51,6 +51,11 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_security.system_language_select_helper" class="Sulu\Bundle\SecurityBundle\Admin\Helper\SystemLanguageSelect" public="true">
+            <argument>%sulu_core.translated_locales%</argument>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service
             id="sulu_security.authentication_entry_point"
             class="%sulu_security.authentication_entry_point.class%"
