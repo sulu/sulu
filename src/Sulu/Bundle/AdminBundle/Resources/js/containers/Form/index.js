@@ -19,7 +19,6 @@ import Renderer from './Renderer';
 import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
 import TextEditor from './fields/TextEditor';
-import Time from './fields/Time';
 import Url from './fields/Url';
 import type {Schema, Types} from './types';
 
@@ -43,7 +42,6 @@ export {
     SingleSelection,
     TextArea,
     TextEditor,
-    Time,
     Url,
 };
 export type {Schema, Types};
