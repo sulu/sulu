@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.5
+* 1.5.18 (2018-10-05)
     * HOTFIX      #4092 [TestBundle]            Fixed firewall in test website kernel for community bundle
 
 * 1.5.17 (2018-07-18)
