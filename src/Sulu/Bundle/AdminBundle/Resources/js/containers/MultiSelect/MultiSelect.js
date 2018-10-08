@@ -51,7 +51,7 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
         });
 
         onChange(values, valueObjects);
-    }
+    };
 
     render() {
         const {

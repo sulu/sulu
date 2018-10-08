@@ -21,8 +21,6 @@ export default class RoleAssignments extends React.Component<Props> {
     render() {
         const {value} = this.props;
 
-        console.log(value);
-
         return (
             <div className={roleAssignmentsStyle.roleAssignmentContainer}>
                 <div>{value.role.name}</div>

@@ -41,7 +41,7 @@ export default class RoleAssignments extends React.Component<Props> {
             newValue.push({
                 locales: [],
                 role: role,
-            })
+            });
         }
 
         this.props.onChange(newValue);
@@ -66,8 +66,6 @@ export default class RoleAssignments extends React.Component<Props> {
     render() {
         const {value} = this.props;
 
-        console.log(value);
-
         return (
             <Fragment>
                 <div className={roleAssignmentsStyle.selectContainer}>
@@ -83,10 +81,14 @@ export default class RoleAssignments extends React.Component<Props> {
                         <div className={roleAssignmentsStyle.roleAssignmentsTitle}>
                             {translate('sulu_security.role_locales_selection')}
                         </div>
-                            <div className={roleAssignmentsStyle.roleAssignmentsContainer}>
+                        <div className={roleAssignmentsStyle.roleAssignmentsContainer}>
                             {value.map((userRole, key) => {
                                 return (
-                                <RoleAssignment key={key} onChange={this.handleRoleAssignmentChange} value={userRole} />
+                                    <RoleAssignment
+                                        key={key}
+                                        onChange={this.handleRoleAssignmentChange}
+                                        value={userRole}
+                                    />
                                 );
                             })}
                         </div>
