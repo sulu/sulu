@@ -6,7 +6,7 @@ exports[`Render a clickable success snackbar 1`] = `
 >
   <span
     aria-label="su-check"
-    class="icon su-check"
+    class="su-check icon"
   />
 </div>
 `;
@@ -17,7 +17,7 @@ exports[`Render a success snackbar 1`] = `
 >
   <span
     aria-label="su-check"
-    class="icon su-check"
+    class="su-check icon"
   />
 </div>
 `;
@@ -28,7 +28,7 @@ exports[`Render an error snackbar 1`] = `
 >
   <span
     aria-label="su-exclamation-triangle"
-    class="icon su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
   />
   <div
     class="text"
@@ -42,7 +42,7 @@ exports[`Render an error snackbar 1`] = `
       sulu_admin.close
       <span
         aria-label="su-times"
-        class="closeButtonIcon su-times"
+        class="su-times closeButtonIcon"
       />
     </button>
   </div>
@@ -55,7 +55,7 @@ exports[`Render an error snackbar without close button 1`] = `
 >
   <span
     aria-label="su-exclamation-triangle"
-    class="icon su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
   />
   <div
     class="text"
@@ -73,7 +73,7 @@ exports[`Render an invisible success snackbar 1`] = `
 >
   <span
     aria-label="su-check"
-    class="icon su-check"
+    class="su-check icon"
   />
 </div>
 `;

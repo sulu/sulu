@@ -48,7 +48,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -146,7 +146,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -258,7 +258,7 @@ exports[`Render pagination with loader 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -367,7 +367,7 @@ exports[`Render pagination with page numbers 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>

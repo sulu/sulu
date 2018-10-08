@@ -50,7 +50,7 @@ exports[`The component should render with children 1`] = `
   </div>
   <span
     aria-label="su-angle-right"
-    class="childrenIndicator su-angle-right clickable"
+    class="su-angle-right clickable childrenIndicator"
     role="button"
     tabindex="0"
   />
@@ -95,7 +95,7 @@ exports[`The component should render with children an active child and expanded 
   </div>
   <span
     aria-label="su-angle-down"
-    class="childrenIndicator su-angle-down clickable"
+    class="su-angle-down clickable childrenIndicator"
     role="button"
     tabindex="0"
   />

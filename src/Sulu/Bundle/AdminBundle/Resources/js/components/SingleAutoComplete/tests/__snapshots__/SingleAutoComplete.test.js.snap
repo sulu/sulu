@@ -12,7 +12,7 @@ exports[`Render the SingleAutoComplete with open suggestions list 1`] = `
     >
       <span
         aria-label="su-search"
-        class="icon default su-search"
+        class="su-search icon default"
       />
     </div>
     <input
@@ -51,7 +51,7 @@ exports[`SingleAutoComplete should render 1`] = `
     >
       <span
         aria-label="su-search"
-        class="icon default su-search"
+        class="su-search icon default"
       />
     </div>
     <input

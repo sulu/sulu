@@ -15,7 +15,7 @@ exports[`Should render a block list 1`] = `
       >
         <span
           aria-label="su-more"
-          class="sortableHandle su-more"
+          class="su-more sortableHandle"
         />
       </div>
       <div
@@ -32,7 +32,7 @@ exports[`Should render a block list 1`] = `
       >
         <span
           aria-label="su-more"
-          class="sortableHandle su-more"
+          class="su-more sortableHandle"
         />
       </div>
       <div
@@ -48,7 +48,7 @@ exports[`Should render a block list 1`] = `
   >
     <span
       aria-label="su-plus"
-      class="buttonIcon su-plus"
+      class="su-plus buttonIcon"
     />
     <span
       class="text"
@@ -74,7 +74,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       >
         <span
           aria-label="su-more"
-          class="sortableHandle su-more"
+          class="su-more sortableHandle"
         />
       </div>
       <div
@@ -91,7 +91,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       >
         <span
           aria-label="su-more"
-          class="sortableHandle su-more"
+          class="su-more sortableHandle"
         />
       </div>
       <div
@@ -108,7 +108,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
   >
     <span
       aria-label="su-plus"
-      class="buttonIcon su-plus"
+      class="su-plus buttonIcon"
     />
     <span
       class="text"
@@ -132,7 +132,7 @@ exports[`Should render an empty block list 1`] = `
   >
     <span
       aria-label="su-plus"
-      class="buttonIcon su-plus"
+      class="su-plus buttonIcon"
     />
     <span
       class="text"

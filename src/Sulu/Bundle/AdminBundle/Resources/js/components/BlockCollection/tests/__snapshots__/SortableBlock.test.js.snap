@@ -9,7 +9,7 @@ exports[`Render collapsed sortable block 1`] = `
   >
     <span
       aria-label="su-more"
-      class="sortableHandle su-more"
+      class="su-more sortableHandle"
     />
   </div>
   <div
@@ -29,7 +29,7 @@ exports[`Render expanded sortable block 1`] = `
   >
     <span
       aria-label="su-more"
-      class="sortableHandle su-more"
+      class="su-more sortableHandle"
     />
   </div>
   <div
@@ -71,7 +71,7 @@ exports[`Render expanded sortable block with types 1`] = `
   >
     <span
       aria-label="su-more"
-      class="sortableHandle su-more"
+      class="su-more sortableHandle"
     />
   </div>
   <div
@@ -117,7 +117,7 @@ exports[`Render expanded sortable block with types 1`] = `
             </div>
             <span
               aria-label="su-angle-down"
-              class="toggle su-angle-down"
+              class="su-angle-down toggle"
             />
           </button>
         </div>
@@ -155,7 +155,7 @@ exports[`Render expanded sortable block without remove icon 1`] = `
   >
     <span
       aria-label="su-more"
-      class="sortableHandle su-more"
+      class="su-more sortableHandle"
     />
   </div>
   <div

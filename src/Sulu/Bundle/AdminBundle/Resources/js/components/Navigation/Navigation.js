@@ -4,6 +4,7 @@ import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Icon from '../Icon';
+import Button from '../Button';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
 
@@ -13,7 +14,9 @@ type Props = {
     username: string,
     userImage: ?string,
     onLogoutClick: () => void,
+    onPinToggle?: () => void,
     onProfileClick: () => void,
+    pinned?: boolean,
     suluVersion: string,
     suluVersionLink: string,
     appVersion: ?string,
@@ -24,6 +27,7 @@ type Props = {
 export default class Navigation extends React.Component<Props> {
     static defaultProps = {
         appVersion: undefined,
+        pinned: false,
         userImage: undefined,
     };
 
@@ -93,6 +97,14 @@ export default class Navigation extends React.Component<Props> {
         );
     }
 
+    handlePinToggle = () => {
+        const {onPinToggle} = this.props;
+
+        if (onPinToggle) {
+            onPinToggle();
+        }
+    };
+
     renderAppVersion() {
         const {
             title,
@@ -113,12 +125,14 @@ export default class Navigation extends React.Component<Props> {
 
     render() {
         const {
+            pinned,
             title,
             username,
             onLogoutClick,
             onProfileClick,
             suluVersion,
             suluVersionLink,
+            onPinToggle,
         } = this.props;
 
         return (
@@ -141,10 +155,23 @@ export default class Navigation extends React.Component<Props> {
                 <div className={navigationStyles.items}>
                     {this.cloneChildren()}
                 </div>
-                <div className={navigationStyles.versions}>
-                    {this.renderAppVersion()}
-                    <div>
-                        Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
+                <div className={navigationStyles.footer}>
+                    {onPinToggle &&
+                        <Button
+                            active={pinned}
+                            activeClassName={navigationStyles.pinActive}
+                            className={navigationStyles.pin}
+                            icon="fa-thumb-tack"
+                            iconClassName={navigationStyles.pinIcon}
+                            onClick={this.handlePinToggle}
+                            skin="icon"
+                        />
+                    }
+                    <div className={navigationStyles.versions}>
+                        {this.renderAppVersion()}
+                        <div>
+                            Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
+                        </div>
                     </div>
                 </div>
             </div>

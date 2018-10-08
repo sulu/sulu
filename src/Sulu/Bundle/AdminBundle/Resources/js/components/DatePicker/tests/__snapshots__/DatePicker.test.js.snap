@@ -20,7 +20,7 @@ exports[`DatePicker should render 1`] = `
             >
               <span
                 aria-label="su-calendar"
-                class="icon default iconClickable su-calendar clickable"
+                class="su-calendar clickable icon default iconClickable"
                 role="button"
                 tabindex="0"
               />
@@ -456,7 +456,7 @@ exports[`DatePicker should render 1`] = `
                             >
                               <span
                                 aria-label="su-calendar"
-                                class="icon default iconClickable su-calendar clickable"
+                                class="su-calendar clickable icon default iconClickable"
                                 role="button"
                                 tabindex="0"
                               />
@@ -500,7 +500,7 @@ exports[`DatePicker should render 1`] = `
                             >
                               <span
                                 aria-label="su-calendar"
-                                className="icon default iconClickable su-calendar clickable"
+                                className="su-calendar clickable icon default iconClickable"
                                 onClick={[Function]}
                                 role="button"
                                 tabIndex={0}

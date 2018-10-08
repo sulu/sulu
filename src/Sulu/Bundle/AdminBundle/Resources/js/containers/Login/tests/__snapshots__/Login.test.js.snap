@@ -43,7 +43,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -68,7 +68,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               >
                 <span
                   aria-label="su-lock"
-                  class="icon default su-lock"
+                  class="su-lock icon default"
                 />
               </div>
               <input
@@ -114,7 +114,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>
@@ -166,7 +166,7 @@ exports[`Should render the Login with reset password view 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -212,7 +212,7 @@ exports[`Should render the Login with reset password view 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>
@@ -264,7 +264,7 @@ exports[`Should render the Login with reset password with success 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -310,7 +310,7 @@ exports[`Should render the Login with reset password with success 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>
@@ -362,7 +362,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -387,7 +387,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               >
                 <span
                   aria-label="su-lock"
-                  class="icon default su-lock"
+                  class="su-lock icon default"
                 />
               </div>
               <input
@@ -448,7 +448,7 @@ exports[`Should render the LoginForm component with error 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>

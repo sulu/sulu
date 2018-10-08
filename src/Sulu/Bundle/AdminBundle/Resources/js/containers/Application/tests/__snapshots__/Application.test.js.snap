@@ -18,7 +18,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
         >
           <span
             aria-label="su-sulu"
-            class="headerIcon su-sulu"
+            class="su-sulu headerIcon"
           />
           <span
             class="headerTitle"
@@ -61,18 +61,31 @@ exports[`Application should not fail if current route does not exist 1`] = `
         class="items"
       />
       <div
-        class="versions"
+        class="footer"
       >
-        <div>
-          Sulu (
-          <a
-            href="https://github.com/sulu/sulu/releases"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            2.0.0-RC1
-          </a>
-          )
+        <button
+          class="button icon pin"
+          type="button"
+        >
+          <span
+            aria-label="fa-thumb-tack"
+            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+          />
+        </button>
+        <div
+          class="versions"
+        >
+          <div>
+            Sulu (
+            <a
+              href="https://github.com/sulu/sulu/releases"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              2.0.0-RC1
+            </a>
+            )
+          </div>
         </div>
       </div>
     </div>
@@ -94,7 +107,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           >
             <span
               aria-label="su-exclamation-triangle"
-              class="icon su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
@@ -108,7 +121,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
                 sulu_admin.close
                 <span
                   aria-label="su-times"
-                  class="closeButtonIcon su-times"
+                  class="su-times closeButtonIcon"
                 />
               </button>
             </div>
@@ -118,7 +131,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
           >
             <span
               aria-label="su-check"
-              class="icon su-check"
+              class="su-check icon"
             />
           </div>
           <div
@@ -129,7 +142,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
             >
               <span
                 aria-label="su-bars"
-                class="icon su-bars"
+                class="su-bars icon"
               />
             </button>
           </div>
@@ -164,7 +177,7 @@ exports[`Application should render based on current route 1`] = `
         >
           <span
             aria-label="su-sulu"
-            class="headerIcon su-sulu"
+            class="su-sulu headerIcon"
           />
           <span
             class="headerTitle"
@@ -207,18 +220,31 @@ exports[`Application should render based on current route 1`] = `
         class="items"
       />
       <div
-        class="versions"
+        class="footer"
       >
-        <div>
-          Sulu (
-          <a
-            href="https://github.com/sulu/sulu/releases"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            2.0.0-RC1
-          </a>
-          )
+        <button
+          class="button icon pin"
+          type="button"
+        >
+          <span
+            aria-label="fa-thumb-tack"
+            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+          />
+        </button>
+        <div
+          class="versions"
+        >
+          <div>
+            Sulu (
+            <a
+              href="https://github.com/sulu/sulu/releases"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              2.0.0-RC1
+            </a>
+            )
+          </div>
         </div>
       </div>
     </div>
@@ -240,7 +266,7 @@ exports[`Application should render based on current route 1`] = `
           >
             <span
               aria-label="su-exclamation-triangle"
-              class="icon su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
@@ -254,7 +280,7 @@ exports[`Application should render based on current route 1`] = `
                 sulu_admin.close
                 <span
                   aria-label="su-times"
-                  class="closeButtonIcon su-times"
+                  class="su-times closeButtonIcon"
                 />
               </button>
             </div>
@@ -264,7 +290,7 @@ exports[`Application should render based on current route 1`] = `
           >
             <span
               aria-label="su-check"
-              class="icon su-check"
+              class="su-check icon"
             />
           </div>
           <div
@@ -275,7 +301,7 @@ exports[`Application should render based on current route 1`] = `
             >
               <span
                 aria-label="su-bars"
-                class="icon su-bars"
+                class="su-bars icon"
               />
             </button>
           </div>
@@ -344,7 +370,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               >
                 <span
                   aria-label="su-user"
-                  class="icon default su-user"
+                  class="su-user icon default"
                 />
               </div>
               <input
@@ -369,7 +395,7 @@ exports[`Application should render login when user is not logged in 1`] = `
               >
                 <span
                   aria-label="su-lock"
-                  class="icon default su-lock"
+                  class="su-lock icon default"
                 />
               </div>
               <input
@@ -415,7 +441,7 @@ exports[`Application should render login when user is not logged in 1`] = `
       >
         <span
           aria-label="su-angle-left"
-          class="backLinkIcon su-angle-left"
+          class="su-angle-left backLinkIcon"
         />
         sulu_admin.back_to_website
       </a>
@@ -491,6 +517,8 @@ exports[`Application should render opened navigation 1`] = `
       <Navigation
         onLogout={[Function]}
         onNavigate={[Function]}
+        onPinToggle={[Function]}
+        pinned={false}
         router={
           Object {
             "route": Object {
@@ -508,7 +536,9 @@ exports[`Application should render opened navigation 1`] = `
       >
         <Navigation
           onLogoutClick={[Function]}
+          onPinToggle={[Function]}
           onProfileClick={[Function]}
+          pinned={false}
           suluVersion="2.0.0-RC1"
           suluVersionLink="https://github.com/sulu/sulu/releases"
           title="Sulu"
@@ -529,7 +559,7 @@ exports[`Application should render opened navigation 1`] = `
                 >
                   <span
                     aria-label="su-sulu"
-                    className="headerIcon su-sulu"
+                    className="su-sulu headerIcon"
                   />
                 </Icon>
                 <span
@@ -586,18 +616,52 @@ exports[`Application should render opened navigation 1`] = `
               className="items"
             />
             <div
-              className="versions"
+              className="footer"
             >
-              <div>
-                Sulu (
-                <a
-                  href="https://github.com/sulu/sulu/releases"
-                  rel="noopener noreferrer"
-                  target="_blank"
+              <Button
+                active={false}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
+              >
+                <button
+                  className="button icon pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
                 >
-                  2.0.0-RC1
-                </a>
-                )
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
+              <div
+                className="versions"
+              >
+                <div>
+                  Sulu (
+                  <a
+                    href="https://github.com/sulu/sulu/releases"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    2.0.0-RC1
+                  </a>
+                  )
+                </div>
               </div>
             </div>
           </div>
@@ -651,7 +715,7 @@ exports[`Application should render opened navigation 1`] = `
                     >
                       <span
                         aria-label="su-exclamation-triangle"
-                        className="icon su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
                       />
                     </Icon>
                     <div
@@ -671,7 +735,7 @@ exports[`Application should render opened navigation 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="closeButtonIcon su-times"
+                            className="su-times closeButtonIcon"
                           />
                         </Icon>
                       </button>
@@ -695,7 +759,7 @@ exports[`Application should render opened navigation 1`] = `
                     >
                       <span
                         aria-label="su-check"
-                        className="icon su-check"
+                        className="su-check icon"
                       />
                     </Icon>
                   </div>
@@ -730,12 +794,662 @@ exports[`Application should render opened navigation 1`] = `
                         >
                           <span
                             aria-label="su-times"
-                            className="icon su-times"
+                            className="su-times icon"
                           />
                         </Icon>
                       </button>
                     </Button>
                   </div>
+                </Controls>
+                <Controls
+                  grow={false}
+                  key=".3"
+                  skin="light"
+                >
+                  <div
+                    className="controls light"
+                  />
+                </Controls>
+              </nav>
+            </Toolbar>
+          </Toolbar>
+        </header>
+        <div
+          className="viewContainer"
+        >
+          <Test
+            router={
+              Object {
+                "route": Object {
+                  "attributeDefaults": Object {},
+                  "children": Array [],
+                  "name": "test",
+                  "options": Object {},
+                  "parent": null,
+                  "path": "/webspaces",
+                  "rerenderAttributes": Array [],
+                  "view": "test",
+                },
+              }
+            }
+          >
+            <div>
+              <h1>
+                Test
+              </h1>
+              <h2>
+                test
+              </h2>
+            </div>
+          </Test>
+        </div>
+      </main>
+      <Sidebar
+        className="sidebar"
+      />
+    </div>
+  </div>
+</Application>
+`;
+
+exports[`Application should render pinned navigation 1`] = `
+<Application
+  router={
+    Object {
+      "route": Object {
+        "attributeDefaults": Object {},
+        "children": Array [],
+        "name": "test",
+        "options": Object {},
+        "parent": null,
+        "path": "/webspaces",
+        "rerenderAttributes": Array [],
+        "view": "test",
+      },
+    }
+  }
+>
+  <div
+    className="root visible navigationVisible navigationPinned"
+  >
+    <nav
+      className="navigation"
+    >
+      <Navigation
+        onLogout={[Function]}
+        onNavigate={[Function]}
+        onPinToggle={[Function]}
+        pinned={true}
+        router={
+          Object {
+            "route": Object {
+              "attributeDefaults": Object {},
+              "children": Array [],
+              "name": "test",
+              "options": Object {},
+              "parent": null,
+              "path": "/webspaces",
+              "rerenderAttributes": Array [],
+              "view": "test",
+            },
+          }
+        }
+      >
+        <Navigation
+          onLogoutClick={[Function]}
+          onPinToggle={[Function]}
+          onProfileClick={[Function]}
+          pinned={true}
+          suluVersion="2.0.0-RC1"
+          suluVersionLink="https://github.com/sulu/sulu/releases"
+          title="Sulu"
+          username="Hikaru Sulu"
+        >
+          <div
+            className="navigation"
+          >
+            <div
+              className="header"
+            >
+              <div
+                className="headerContent"
+              >
+                <Icon
+                  className="headerIcon"
+                  name="su-sulu"
+                >
+                  <span
+                    aria-label="su-sulu"
+                    className="su-sulu headerIcon"
+                  />
+                </Icon>
+                <span
+                  className="headerTitle"
+                >
+                  Sulu
+                </span>
+              </div>
+            </div>
+            <div
+              className="user"
+            >
+              <div
+                className="userContent"
+              >
+                <div
+                  className="noUserImage"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-user"
+                  >
+                    <span
+                      aria-label="fa-user"
+                      className="fa fa-user"
+                    />
+                  </Icon>
+                </div>
+                <div
+                  className="userProfile"
+                >
+                  <span
+                    onClick={[Function]}
+                  >
+                    Hikaru Sulu
+                  </span>
+                  <button
+                    onClick={[Function]}
+                  >
+                    <Icon
+                      name="su-exit"
+                    >
+                      <span
+                        aria-label="su-exit"
+                        className="su-exit"
+                      />
+                    </Icon>
+                    Log out
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="items"
+            />
+            <div
+              className="footer"
+            >
+              <Button
+                active={true}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
+              >
+                <button
+                  className="button icon active pinActive pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
+              <div
+                className="versions"
+              >
+                <div>
+                  Sulu (
+                  <a
+                    href="https://github.com/sulu/sulu/releases"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    2.0.0-RC1
+                  </a>
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+        </Navigation>
+      </Navigation>
+    </nav>
+    <div
+      className="content withPinnedNavigation"
+    >
+      <Backdrop
+        fixed={false}
+        local={true}
+        onClick={[Function]}
+        open={false}
+        visible={false}
+      />
+      <main
+        className="main"
+      >
+        <header
+          className="header"
+        >
+          <Toolbar
+            navigationOpen={true}
+          >
+            <Toolbar
+              skin="light"
+            >
+              <nav
+                className="toolbar light"
+              >
+                <Snackbar
+                  key=".0"
+                  onCloseClick={[Function]}
+                  skin="light"
+                  type="error"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar error"
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-exclamation-triangle"
+                    >
+                      <span
+                        aria-label="su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
+                      />
+                    </Icon>
+                    <div
+                      className="text"
+                    >
+                      <strong>
+                        sulu_admin.error
+                      </strong>
+                      <button
+                        className="closeButton"
+                        onClick={[Function]}
+                      >
+                        sulu_admin.close
+                        <Icon
+                          className="closeButtonIcon"
+                          name="su-times"
+                        >
+                          <span
+                            aria-label="su-times"
+                            className="su-times closeButtonIcon"
+                          />
+                        </Icon>
+                      </button>
+                    </div>
+                  </div>
+                </Snackbar>
+                <Snackbar
+                  key=".1"
+                  skin="light"
+                  type="success"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar success"
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-check"
+                    >
+                      <span
+                        aria-label="su-check"
+                        className="su-check icon"
+                      />
+                    </Icon>
+                  </div>
+                </Snackbar>
+                <Controls
+                  grow={true}
+                  key=".2"
+                  skin="light"
+                >
+                  <div
+                    className="controls light grow"
+                  />
+                </Controls>
+                <Controls
+                  grow={false}
+                  key=".3"
+                  skin="light"
+                >
+                  <div
+                    className="controls light"
+                  />
+                </Controls>
+              </nav>
+            </Toolbar>
+          </Toolbar>
+        </header>
+        <div
+          className="viewContainer"
+        >
+          <Test
+            router={
+              Object {
+                "route": Object {
+                  "attributeDefaults": Object {},
+                  "children": Array [],
+                  "name": "test",
+                  "options": Object {},
+                  "parent": null,
+                  "path": "/webspaces",
+                  "rerenderAttributes": Array [],
+                  "view": "test",
+                },
+              }
+            }
+          >
+            <div>
+              <h1>
+                Test
+              </h1>
+              <h2>
+                test
+              </h2>
+            </div>
+          </Test>
+        </div>
+      </main>
+      <Sidebar
+        className="sidebar"
+      />
+    </div>
+  </div>
+</Application>
+`;
+
+exports[`Application should render pinned navigation from beginning 1`] = `
+<Application
+  router={
+    Object {
+      "route": Object {
+        "attributeDefaults": Object {},
+        "children": Array [],
+        "name": "test",
+        "options": Object {},
+        "parent": null,
+        "path": "/webspaces",
+        "rerenderAttributes": Array [],
+        "view": "test",
+      },
+    }
+  }
+>
+  <div
+    className="root visible navigationVisible navigationPinned"
+  >
+    <nav
+      className="navigation"
+    >
+      <Navigation
+        onLogout={[Function]}
+        onNavigate={[Function]}
+        onPinToggle={[Function]}
+        pinned={true}
+        router={
+          Object {
+            "route": Object {
+              "attributeDefaults": Object {},
+              "children": Array [],
+              "name": "test",
+              "options": Object {},
+              "parent": null,
+              "path": "/webspaces",
+              "rerenderAttributes": Array [],
+              "view": "test",
+            },
+          }
+        }
+      >
+        <Navigation
+          onLogoutClick={[Function]}
+          onPinToggle={[Function]}
+          onProfileClick={[Function]}
+          pinned={true}
+          suluVersion="2.0.0-RC1"
+          suluVersionLink="https://github.com/sulu/sulu/releases"
+          title="Sulu"
+          username="Hikaru Sulu"
+        >
+          <div
+            className="navigation"
+          >
+            <div
+              className="header"
+            >
+              <div
+                className="headerContent"
+              >
+                <Icon
+                  className="headerIcon"
+                  name="su-sulu"
+                >
+                  <span
+                    aria-label="su-sulu"
+                    className="su-sulu headerIcon"
+                  />
+                </Icon>
+                <span
+                  className="headerTitle"
+                >
+                  Sulu
+                </span>
+              </div>
+            </div>
+            <div
+              className="user"
+            >
+              <div
+                className="userContent"
+              >
+                <div
+                  className="noUserImage"
+                  onClick={[Function]}
+                >
+                  <Icon
+                    name="fa-user"
+                  >
+                    <span
+                      aria-label="fa-user"
+                      className="fa fa-user"
+                    />
+                  </Icon>
+                </div>
+                <div
+                  className="userProfile"
+                >
+                  <span
+                    onClick={[Function]}
+                  >
+                    Hikaru Sulu
+                  </span>
+                  <button
+                    onClick={[Function]}
+                  >
+                    <Icon
+                      name="su-exit"
+                    >
+                      <span
+                        aria-label="su-exit"
+                        className="su-exit"
+                      />
+                    </Icon>
+                    Log out
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="items"
+            />
+            <div
+              className="footer"
+            >
+              <Button
+                active={true}
+                activeClassName="pinActive"
+                className="pin"
+                disabled={false}
+                icon="fa-thumb-tack"
+                iconClassName="pinIcon"
+                loading={false}
+                onClick={[Function]}
+                size="large"
+                skin="icon"
+                type="button"
+              >
+                <button
+                  className="button icon active pinActive pin"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <Icon
+                    className="buttonIcon iconSpan pinIcon"
+                    name="fa-thumb-tack"
+                  >
+                    <span
+                      aria-label="fa-thumb-tack"
+                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                    />
+                  </Icon>
+                </button>
+              </Button>
+              <div
+                className="versions"
+              >
+                <div>
+                  Sulu (
+                  <a
+                    href="https://github.com/sulu/sulu/releases"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    2.0.0-RC1
+                  </a>
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+        </Navigation>
+      </Navigation>
+    </nav>
+    <div
+      className="content withPinnedNavigation"
+    >
+      <Backdrop
+        fixed={false}
+        local={true}
+        onClick={[Function]}
+        open={false}
+        visible={false}
+      />
+      <main
+        className="main"
+      >
+        <header
+          className="header"
+        >
+          <Toolbar
+            navigationOpen={true}
+          >
+            <Toolbar
+              skin="light"
+            >
+              <nav
+                className="toolbar light"
+              >
+                <Snackbar
+                  key=".0"
+                  onCloseClick={[Function]}
+                  skin="light"
+                  type="error"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar error"
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-exclamation-triangle"
+                    >
+                      <span
+                        aria-label="su-exclamation-triangle"
+                        className="su-exclamation-triangle icon"
+                      />
+                    </Icon>
+                    <div
+                      className="text"
+                    >
+                      <strong>
+                        sulu_admin.error
+                      </strong>
+                      <button
+                        className="closeButton"
+                        onClick={[Function]}
+                      >
+                        sulu_admin.close
+                        <Icon
+                          className="closeButtonIcon"
+                          name="su-times"
+                        >
+                          <span
+                            aria-label="su-times"
+                            className="su-times closeButtonIcon"
+                          />
+                        </Icon>
+                      </button>
+                    </div>
+                  </div>
+                </Snackbar>
+                <Snackbar
+                  key=".1"
+                  skin="light"
+                  type="success"
+                  visible={false}
+                >
+                  <div
+                    className="snackbar success"
+                  >
+                    <Icon
+                      className="icon"
+                      name="su-check"
+                    >
+                      <span
+                        aria-label="su-check"
+                        className="su-check icon"
+                      />
+                    </Icon>
+                  </div>
+                </Snackbar>
+                <Controls
+                  grow={true}
+                  key=".2"
+                  skin="light"
+                >
+                  <div
+                    className="controls light grow"
+                  />
                 </Controls>
                 <Controls
                   grow={false}

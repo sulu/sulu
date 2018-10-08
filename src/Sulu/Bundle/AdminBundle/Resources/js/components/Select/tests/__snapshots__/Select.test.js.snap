@@ -35,7 +35,7 @@ exports[`The component should open the popover when the display value is clicked
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>
@@ -92,7 +92,7 @@ exports[`The component should render with a dark skin 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>
@@ -108,7 +108,7 @@ exports[`The component should render with an icon 1`] = `
   >
     <span
       aria-label="su-plus"
-      class="frontIcon su-plus"
+      class="su-plus frontIcon"
     />
     <div
       aria-label="My text"
@@ -137,7 +137,7 @@ exports[`The component should render with an icon 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>
@@ -178,7 +178,7 @@ exports[`The component should render with the popover closed 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>

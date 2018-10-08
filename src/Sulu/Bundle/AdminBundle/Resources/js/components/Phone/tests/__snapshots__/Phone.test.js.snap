@@ -9,7 +9,7 @@ exports[`Phone should render 1`] = `
   >
     <span
       aria-label="su-phone"
-      class="icon default su-phone"
+      class="su-phone icon default"
     />
   </div>
   <input
@@ -28,7 +28,7 @@ exports[`Phone should render error 1`] = `
   >
     <span
       aria-label="su-phone"
-      class="icon default su-phone"
+      class="su-phone icon default"
     />
   </div>
   <input
@@ -47,7 +47,7 @@ exports[`Phone should render null value as empty string 1`] = `
   >
     <span
       aria-label="su-phone"
-      class="icon default su-phone"
+      class="su-phone icon default"
     />
   </div>
   <input
@@ -66,7 +66,7 @@ exports[`Phone should render with placeholder 1`] = `
   >
     <span
       aria-label="su-phone"
-      class="icon default su-phone"
+      class="su-phone icon default"
     />
   </div>
   <input
@@ -86,7 +86,7 @@ exports[`Phone should render with value 1`] = `
   >
     <span
       aria-label="su-phone"
-      class="icon default iconClickable su-phone clickable"
+      class="su-phone clickable icon default iconClickable"
       role="button"
       tabindex="0"
     />
