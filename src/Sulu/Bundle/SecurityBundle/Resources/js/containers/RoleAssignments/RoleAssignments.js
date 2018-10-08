@@ -1,9 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {Loader} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
+import {localizationStore} from 'sulu-admin-bundle/stores';
+import type {Localization} from 'sulu-admin-bundle/stores';
 import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
 
@@ -14,6 +17,15 @@ type Props = {
 
 @observer
 export default class RoleAssignments extends React.Component<Props> {
+    @observable localizations: Array<Localization>;
+
+    componentDidMount() {
+        localizationStore.loadLocalizations()
+            .then(action((localizations) => {
+                this.localizations = localizations;
+            }));
+    }
+
     @computed get selectedRoles(): Array<string> {
         const selectedRoles = [];
         for (const currentUserRole of this.props.value) {
@@ -66,6 +78,10 @@ export default class RoleAssignments extends React.Component<Props> {
     render() {
         const {value} = this.props;
 
+        if (!this.localizations) {
+            return <Loader />;
+        }
+
         return (
             <Fragment>
                 <div className={roleAssignmentsStyle.selectContainer}>
@@ -86,6 +102,7 @@ export default class RoleAssignments extends React.Component<Props> {
                                 return (
                                     <RoleAssignment
                                         key={key}
+                                        localizations={this.localizations}
                                         onChange={this.handleRoleAssignmentChange}
                                         value={userRole}
                                     />

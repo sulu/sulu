@@ -5,14 +5,14 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
-type Props<T> = SelectProps & {
-    allSelectedText: ?string,
-    noneSelectedText: ?string,
+type Props<T: string | number> = SelectProps & {
+    allSelectedText?: string,
+    noneSelectedText?: string,
     values: Array<T>,
     onChange: (values: Array<T>) => void,
 };
 
-export default class MultiSelect<T> extends React.PureComponent<Props<T>> {
+export default class MultiSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         skin: 'default',
         values: [],

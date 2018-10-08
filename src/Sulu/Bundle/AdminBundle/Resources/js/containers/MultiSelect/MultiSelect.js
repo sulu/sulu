@@ -3,24 +3,25 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
-import Loader from '../../components/Loader/Loader';
+import Loader from '../../components/Loader';
 
-type Props<T> = {|
+type Props<T: string | number> = {|
+    apiOptions: Object,
     allSelectedText?: string,
     displayProperty: string,
     idProperty: string,
     noneSelectedText?: string,
     onChange: (values: Array<T>, valueObjects?: Array<Object>) => void,
     resourceKey: string,
-    values: ?Array<T>,
-    apiOptions: Object,
+    values: Array<T>,
 |};
 
 @observer
-export default class MultiSelect<T> extends React.Component<Props<T>> {
+export default class MultiSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         apiOptions: {},
         idProperty: 'id',
+        values: [],
     };
 
     resourceListStore: ResourceListStore;
@@ -42,10 +43,6 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
             idProperty,
         } = this.props;
 
-        if (onChange.length === 1) {
-            onChange(values);
-        }
-
         const valueObjects = this.resourceListStore.data.filter((dataValue) => {
             return values.includes(dataValue[idProperty]);
         });
@@ -57,7 +54,6 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
         const {
             allSelectedText,
             noneSelectedText,
-            onChange,
             displayProperty,
             idProperty,
             values,
@@ -71,8 +67,8 @@ export default class MultiSelect<T> extends React.Component<Props<T>> {
             <MultiSelectComponent
                 allSelectedText={allSelectedText}
                 noneSelectedText={noneSelectedText}
-                onChange={this.handleChange}
-                values={values ? values : []}
+                onChange={this.props.onChange}
+                values={values}
             >
                 {this.resourceListStore.data.map((object, index) => (
                     <MultiSelectComponent.Option key={index} value={object[idProperty]}>

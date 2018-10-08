@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {MultiSelect} from 'sulu-admin-bundle/components';
+import type {Localization} from 'sulu-admin-bundle/stores';
 import roleAssignmentsStyle from './roleAssignments.scss';
 
 type Props = {
+    localizations: Array<Localization>,
     onChange: (value: Object) => void,
     value: Object,
 };
@@ -19,7 +21,7 @@ export default class RoleAssignments extends React.Component<Props> {
     };
 
     render() {
-        const {value} = this.props;
+        const {localizations, value} = this.props;
 
         return (
             <div className={roleAssignmentsStyle.roleAssignmentContainer}>
@@ -27,12 +29,15 @@ export default class RoleAssignments extends React.Component<Props> {
                 <div>{value.role.system}</div>
                 <div>
                     <MultiSelect
-                        displayProperty={'locale'}
-                        idProperty={'locale'}
                         onChange={this.handleLocalizationChange}
-                        resourceKey={'localizations'}
                         values={value.locales}
-                    />
+                    >
+                        {localizations.map((localization, index) => (
+                            <MultiSelect.Option key={index} value={localization.locale}>
+                                {localization.locale}
+                            </MultiSelect.Option>
+                        ))}
+                    </MultiSelect>
                 </div>
             </div>
         );

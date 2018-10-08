@@ -1,4 +1,6 @@
 // @flow
+import type {Localization} from 'sulu-admin-bundle/stores';
+
 export type Webspace = {
     name: string,
     key: string,
@@ -6,16 +8,6 @@ export type Webspace = {
     urls: Array<Url>,
     allLocalizations: Array<LocalizationItem>,
     portalInformation: Array<PortalInformation>,
-};
-
-export type Localization = {
-    locale: string,
-    language: string,
-    country: string,
-    shadow: string,
-    default: boolean,
-    xDefault: boolean,
-    children: Array<Localization>,
 };
 
 export type Url = {

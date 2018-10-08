@@ -6,11 +6,12 @@ import React from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
 import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
+import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/WebspaceStore';
-import type {Webspace, Localization} from '../../stores/WebspaceStore/types';
+import type {Webspace} from '../../stores/WebspaceStore/types';
 import webspaceOverviewStyles from './webspaceOverview.scss';
 
 const USER_SETTING_PREFIX = 'sulu_content.webspace_overview';
