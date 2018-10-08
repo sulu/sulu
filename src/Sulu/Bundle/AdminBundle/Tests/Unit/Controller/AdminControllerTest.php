@@ -23,8 +23,13 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -170,6 +175,9 @@ class AdminControllerTest extends TestCase
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
 
+        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
+        $this->token->getUser()->willReturn($this->user->reveal());
+
         $this->adminController = new AdminController(
             $this->urlGenerator->reveal(),
             $this->tokenStorage->reveal(),
@@ -228,8 +236,6 @@ class AdminControllerTest extends TestCase
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
@@ -256,6 +262,112 @@ class AdminControllerTest extends TestCase
         $this->adminController->configAction();
     }
 
+    public function testResourcesActionWithSchema()
+    {
+        $this->user->getLocale()->willReturn('en');
+
+        $form = new Form();
+        $schema = new Schema([new Property('test', true)]);
+        $resourceMetadata = $this->prophesize(ResourceMetadata::class);
+        $resourceMetadata->getSchema()->willReturn($schema);
+        $resourceMetadata->getForm()->willReturn($form);
+        $resourceMetadata->getDatagrid()->willReturn(null);
+        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
+
+        $responseData = '[]';
+        $this->serializer->serialize(
+            Argument::that(function($resourceMetadata) {
+                return $resourceMetadata['schema']['required'] === ['test'];
+            }),
+            'json'
+        )->willReturn($responseData);
+
+        $response = $this->adminController->resourcesAction('pages');
+
+        $this->assertSame($responseData, $response->getContent());
+    }
+
+    public function testResourcesActionWithEmptySchema()
+    {
+        $this->user->getLocale()->willReturn('en');
+
+        $form = new Form();
+        $schema = new Schema();
+        $resourceMetadata = $this->prophesize(ResourceMetadata::class);
+        $resourceMetadata->getSchema()->willReturn($schema);
+        $resourceMetadata->getForm()->willReturn($form);
+        $resourceMetadata->getDatagrid()->willReturn(null);
+        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
+
+        $responseData = '[]';
+        $this->serializer->serialize(
+            Argument::that(function($resourceMetadata) {
+                return $resourceMetadata['schema'] instanceof \stdClass;
+            }),
+            'json'
+        )->willReturn($responseData);
+
+        $response = $this->adminController->resourcesAction('pages');
+
+        $this->assertSame($responseData, $response->getContent());
+    }
+
+    public function testResourcesActionWithTypeSchema()
+    {
+        $this->user->getLocale()->willReturn('en');
+
+        $form = new Form();
+        $schema = new Schema();
+        $type = $this->prophesize(Type::class);
+        $type->getName()->willReturn('test');
+        $type->getTitle()->willReturn('Test');
+        $type->getSchema()->willReturn($schema);
+        $type->getForm()->willReturn($form);
+        $resourceMetadata = $this->prophesize(TypesInterface::class);
+        $resourceMetadata->getTypes()->willReturn([$type]);
+        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
+
+        $responseData = '[]';
+        $this->serializer->serialize(
+            Argument::that(function($resourceMetadata) {
+                return $resourceMetadata['types'][0]['schema'] instanceof \stdClass;
+            }),
+            'json'
+        )->willReturn($responseData);
+
+        $response = $this->adminController->resourcesAction('pages');
+
+        $this->assertSame($responseData, $response->getContent());
+    }
+
+    public function testResourcesActionWithEmptyTypeSchema()
+    {
+        $this->user->getLocale()->willReturn('en');
+
+        $form = new Form();
+        $schema = new Schema([new Property('test', true)]);
+        $type = $this->prophesize(Type::class);
+        $type->getName()->willReturn('test');
+        $type->getTitle()->willReturn('Test');
+        $type->getSchema()->willReturn($schema);
+        $type->getForm()->willReturn($form);
+        $resourceMetadata = $this->prophesize(TypesInterface::class);
+        $resourceMetadata->getTypes()->willReturn([$type]);
+        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
+
+        $responseData = '[]';
+        $this->serializer->serialize(
+            Argument::that(function($resourceMetadata) {
+                return $resourceMetadata['types'][0]['schema']['required'] === ['test'];
+            }),
+            'json'
+        )->willReturn($responseData);
+
+        $response = $this->adminController->resourcesAction('pages');
+
+        $this->assertSame($responseData, $response->getContent());
+    }
+
     public function provideTranslationsAction()
     {
         return [
@@ -280,8 +392,6 @@ class AdminControllerTest extends TestCase
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
@@ -303,8 +413,6 @@ class AdminControllerTest extends TestCase
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
-        $this->tokenStorage->getToken()->willReturn($this->token->reveal());
-        $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getContact()->willReturn($contact->reveal());
         $this->user->getLocale()->willReturn('en');
 
