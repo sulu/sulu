@@ -5,7 +5,7 @@ import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
 
-type Props<T: string | number> = {|
+type Props<T> = {|
     apiOptions: Object,
     allSelectedText?: string,
     displayProperty: string,

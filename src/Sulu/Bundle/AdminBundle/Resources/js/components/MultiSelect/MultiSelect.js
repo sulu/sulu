@@ -5,7 +5,7 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
-type Props<T: string | number> = SelectProps & {
+type Props<T> = SelectProps & {
     allSelectedText?: string,
     noneSelectedText?: string,
     values: Array<T>,
