@@ -2,7 +2,7 @@
 
 exports[`Render the items and icons from the ToolbarStore 1`] = `
 <nav
-  class="toolbar light whitespace"
+  class="toolbar light"
 >
   <div
     class="snackbar error"

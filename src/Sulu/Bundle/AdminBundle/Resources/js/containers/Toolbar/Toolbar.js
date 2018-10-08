@@ -96,9 +96,9 @@ export default class Toolbar extends React.Component<*> {
         return itemsConfig;
     }
 
-    @computed get hasWhitespace() {
+    @computed get snackbarClickZoneAvailable(): boolean {
         const {onNavigationButtonClick} = this.props;
-        return !onNavigationButtonClick && !this.backButtonConfig;
+        return !!onNavigationButtonClick || !!this.backButtonConfig;
     }
 
     handleSnackbarClick = () => {
@@ -115,11 +115,11 @@ export default class Toolbar extends React.Component<*> {
     };
 
     render() {
-        const {hasWhitespace, handleSnackbarClick, handleSnackbarCloseClick} = this;
+        const {snackbarClickZoneAvailable, handleSnackbarClick, handleSnackbarCloseClick} = this;
         const {onNavigationButtonClick, navigationOpen} = this.props;
 
         return (
-            <ToolbarComponent hasWhitespace={hasWhitespace}>
+            <ToolbarComponent>
                 {!!Initializer.initializedTranslationsLocale &&
                     <ToolbarComponent.Snackbar
                         onCloseClick={handleSnackbarCloseClick}
@@ -129,7 +129,7 @@ export default class Toolbar extends React.Component<*> {
                 }
                 {!!Initializer.initializedTranslationsLocale &&
                     <ToolbarComponent.Snackbar
-                        onClick={hasWhitespace ? undefined : handleSnackbarClick}
+                        onClick={snackbarClickZoneAvailable ? handleSnackbarClick : undefined}
                         type="success"
                         visible={this.toolbarStore.showSuccess}
                     />

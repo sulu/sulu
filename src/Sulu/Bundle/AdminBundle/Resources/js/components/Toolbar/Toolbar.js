@@ -15,13 +15,11 @@ import toolbarStyles from './toolbar.scss';
 
 type Props = {
     children: ChildrenArray<false | Element<typeof Controls | typeof Snackbar>>,
-    hasWhitespace: boolean,
     skin?: Skin,
 };
 
 export default class Toolbar extends React.PureComponent<Props> {
     static defaultProps = {
-        hasWhitespace: false,
         skin: 'light',
     };
 
@@ -53,16 +51,12 @@ export default class Toolbar extends React.PureComponent<Props> {
     render() {
         const {
             children,
-            hasWhitespace,
             skin,
         } = this.props;
 
         const toolbarClass = classNames(
             toolbarStyles.toolbar,
-            toolbarStyles[skin],
-            {
-                [toolbarStyles.whitespace]: hasWhitespace,
-            }
+            toolbarStyles[skin]
         );
 
         return (

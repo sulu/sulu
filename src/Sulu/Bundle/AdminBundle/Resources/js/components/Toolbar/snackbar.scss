@@ -77,11 +77,13 @@ $closeButtonBorderColor: $white;
     display: flex;
     align-items: center;
     opacity: 0;
+    visibility: hidden;
     will-change: opacity;
-    transition: opacity .25s;
+    transition: opacity .25s, visibility .25s;
 
     &.visible {
         opacity: 1;
+        visibility: visible;
     }
 
     .icon {

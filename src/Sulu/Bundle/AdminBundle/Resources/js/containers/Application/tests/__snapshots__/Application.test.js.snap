@@ -694,7 +694,6 @@ exports[`Application should render opened navigation 1`] = `
             onNavigationButtonClick={[Function]}
           >
             <Toolbar
-              hasWhitespace={false}
               skin="light"
             >
               <nav
@@ -1050,11 +1049,10 @@ exports[`Application should render pinned navigation 1`] = `
             navigationOpen={true}
           >
             <Toolbar
-              hasWhitespace={true}
               skin="light"
             >
               <nav
-                className="toolbar light whitespace"
+                className="toolbar light"
               >
                 <Snackbar
                   key=".0"
@@ -1376,11 +1374,10 @@ exports[`Application should render pinned navigation from beginning 1`] = `
             navigationOpen={true}
           >
             <Toolbar
-              hasWhitespace={true}
               skin="light"
             >
               <nav
-                className="toolbar light whitespace"
+                className="toolbar light"
               >
                 <Snackbar
                   key=".0"
