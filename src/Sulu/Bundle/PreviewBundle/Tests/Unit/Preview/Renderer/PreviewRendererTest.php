@@ -537,6 +537,7 @@ class PreviewRendererTest extends TestCase
             'X-Forwarded-Host' => 'forwarded.sulu.io',
             'X-Forwarded-Proto' => 'https',
             'X-Forwarded-Port' => 8081,
+            'HTTP_X_REQUESTED_WITH' => 'XmlHttpRequest',
             'HTTP_USER_AGENT' => 'Sulu/Preview',
             'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
         ];
@@ -546,6 +547,11 @@ class PreviewRendererTest extends TestCase
                 function (Request $request) use ($server) {
                     foreach ($server as $key => $expectedValue) {
                         $value = $request->server->get($key);
+
+                        if ('HTTP_X_REQUESTED_WITH' === $key) {
+                            $expectedValue = null;
+                        }
+
                         $this->assertEquals(
                             $expectedValue,
                             $value,
@@ -557,6 +563,9 @@ class PreviewRendererTest extends TestCase
                             )
                         );
                     }
+
+                    $this->assertTrue($request->attributes->get('preview'));
+                    $this->assertTrue($request->attributes->get('partial'));
 
                     // Assert equals will throw exception so also true can be returned.
                     return true;

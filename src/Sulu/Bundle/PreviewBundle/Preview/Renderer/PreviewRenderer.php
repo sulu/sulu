@@ -261,6 +261,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $server['SERVER_PORT'] = $port;
         $server['HTTP_HOST'] = $httpHost;
         $server['REQUEST_URI'] = $prefixPath . '/_sulu_preview';
+        unset($server['HTTP_X_REQUESTED_WITH']); // subrequest should not be detected as ajax
 
         return $server;
     }

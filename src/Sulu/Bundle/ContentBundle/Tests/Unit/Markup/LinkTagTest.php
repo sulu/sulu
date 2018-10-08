@@ -298,6 +298,49 @@ class LinkTagTest extends TestCase
         );
     }
 
+    public function testParseAllValidationState()
+    {
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn(
+                [
+                    new LinkItem('123-123-123', 'Page-Title 1', '/de/test-1', true),
+                ]
+            );
+
+        $tag1 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="unpublished">Test-Content</sulu:link>';
+        $tag2 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="removed">Test-Content</sulu:link>';
+
+        $result = $this->linkTag->parseAll(
+            [
+                $tag1 => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'validation-state' => 'unpublished',
+                ],
+                $tag2 => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'validation-state' => 'removed',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals(
+            [
+                $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag2 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+            ],
+            $result
+        );
+    }
+
     public function testValidate()
     {
         $this->providers['article']->preload(['123-123-123'], 'de', false)
