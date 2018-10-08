@@ -5,7 +5,7 @@ import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
 
-type Props<T> = {|
+type Props<T: string | number> = {|
     apiOptions: Object,
     allSelectedText?: string,
     displayProperty: string,
@@ -67,7 +67,7 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
             <MultiSelectComponent
                 allSelectedText={allSelectedText}
                 noneSelectedText={noneSelectedText}
-                onChange={this.props.onChange}
+                onChange={this.handleChange}
                 values={values}
             >
                 {this.resourceListStore.data.map((object, index) => (
