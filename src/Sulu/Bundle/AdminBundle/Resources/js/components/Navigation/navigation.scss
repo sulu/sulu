@@ -131,12 +131,12 @@ $pinBorderColor: $shakespeare;
         background-color: $pinActiveBackgroundColor;
         color: $pinActiveColor;
     }
-}
 
-.pin-icon {
-    line-height: 23px !important;
-    font-size: 14px;
-    margin-left: auto !important;
+    .pin-icon {
+        line-height: 23px;
+        font-size: 14px;
+        margin-left: auto;
+    }
 }
 
 .versions {
