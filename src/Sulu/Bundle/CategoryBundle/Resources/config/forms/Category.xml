@@ -3,17 +3,29 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
      <properties>
-         <property name="name" type="text_line" mandatory="true" colspan="12">
+         <property name="name" type="text_line" mandatory="true">
              <meta>
                  <title lang="en">Name</title>
                  <title lang="de">Name</title>
              </meta>
          </property>
      
-         <property name="key" type="text_line" colspan="12">
+         <property name="key" type="text_line">
              <meta>
                  <title lang="en">Key</title>
                  <title lang="de">Schlüssel</title>
+             </meta>
+         </property>
+         <property name="description" type="text_editor">
+             <meta>
+                 <title lang="en">Description</title>
+                 <title lang="de">Beschreibung</title>
+             </meta>
+         </property>
+         <property name="medias" type="media_selection">
+             <meta>
+                 <title lang="en">Media</title>
+                 <title lang="de">Medien</title>
              </meta>
          </property>
      </properties>
