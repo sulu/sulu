@@ -9,6 +9,7 @@ import {localizationStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
+import Grid from "sulu-admin-bundle/components/Grid/Grid";
 
 type Props = {
     onChange: (value: Array<Object>) => void,
@@ -83,20 +84,17 @@ export default class RoleAssignments extends React.Component<Props> {
         }
 
         return (
-            <Fragment>
-                <div className={roleAssignmentsStyle.selectContainer}>
+            <Grid>
+                <Grid.Item size={6}>
                     <MultiSelect
                         displayProperty={'name'}
                         onChange={this.handleRoleChange}
                         resourceKey={'roles'}
                         values={this.selectedRoles}
                     />
-                </div>
+                </Grid.Item>
                 {this.selectedRoles.length > 0 &&
-                    <Fragment>
-                        <div className={roleAssignmentsStyle.roleAssignmentsTitle}>
-                            {translate('sulu_security.role_locales_selection')}
-                        </div>
+                    <Grid.Item size={12}>
                         <div className={roleAssignmentsStyle.roleAssignmentsContainer}>
                             {value.map((userRole, key) => {
                                 return (
@@ -109,9 +107,9 @@ export default class RoleAssignments extends React.Component<Props> {
                                 );
                             })}
                         </div>
-                    </Fragment>
+                    </Grid.Item>
                 }
-            </Fragment>
+            </Grid>
         );
     }
 }

@@ -3,23 +3,9 @@
 $roleAssignmentBorderColor: $silver;
 $roleAssignmentBackgroundColor: $white;
 
-
-.select-container {
-    margin-bottom: 20px;
-    width: 50%;
-}
-
-.role-assignments-title {
-    display: block;
-    color: #585858;
-    font-size: 14px;
-    line-height: 19px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
 .role-assignments-container {
     border-radius: 3px;
+    margin-top: 20px;
     overflow: hidden;
 }
 
