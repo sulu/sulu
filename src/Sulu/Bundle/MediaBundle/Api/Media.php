@@ -1010,14 +1010,9 @@ class Media extends ApiWrapper
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 
-        // return Category API item
-        if (count($categories)) {
-            foreach ($categories as $category) {
-                $apiCategories[] = new Category($category, $this->locale);
-            }
-        }
-
-        return $apiCategories;
+        return array_map(function(CategoryEntity $category) {
+            return $category->getId();
+        }, $categories->toArray());
     }
 
     /**

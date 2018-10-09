@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### MediaController
+
+The returned JSON of the `MediaController` does not return the entire `categories` anymore, but only its IDs instead.
+
 ### DateTime Serialization
 
 DateTimes in a REST response do not contain the timezone anymore.
