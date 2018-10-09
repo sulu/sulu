@@ -791,7 +791,7 @@ test('Pass correct apiOptions to MultiSelect', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={[]}
         />
     );
@@ -824,7 +824,7 @@ test('Pass correct locale to MultiSelect', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={[]}
         />
     );
