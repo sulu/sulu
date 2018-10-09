@@ -15,7 +15,8 @@ jest.mock('../../../containers/DatagridOverlay', () => jest.fn(function Datagrid
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
-    function(resourceKey, observableOptions, options) {
+    function(resourceKey, userSettingsKey, observableOptions, options) {
+        this.userSettingsKey = userSettingsKey;
         this.options = options;
         this.observableOptions = observableOptions;
         this.select = jest.fn();
@@ -202,7 +203,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
         />
     );
 
-    expect(DatagridStore).toBeCalledWith('snippets', expect.anything(), undefined, [1, 2, 3]);
+    expect(DatagridStore).toBeCalledWith('snippets', 'multi_datagrid_overlay', expect.anything(), undefined, [1, 2, 3]);
 });
 
 test('Should not fail when preSelectedItems is undefined', () => {

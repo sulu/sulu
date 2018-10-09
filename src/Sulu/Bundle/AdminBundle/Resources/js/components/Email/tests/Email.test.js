@@ -92,7 +92,7 @@ test('Email should set onIconClick when value is valid and window should be open
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const email = mount(<Email onBlur={onBlur} onChange={onChange} value={'abc@abc.abc'} />);
+    const email = mount(<Email onBlur={onBlur} onChange={onChange} value="abc@abc.abc" />);
 
     const onIconClickFunction = email.find('Input').prop('onIconClick');
     expect(onIconClickFunction).toBeInstanceOf(Function);

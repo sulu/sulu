@@ -31,7 +31,7 @@ exports[`The component should render in selected state 1`] = `
   >
     <span
       aria-label="su-check"
-      class="icon su-check"
+      class="su-check icon"
     />
     My option
   </button>

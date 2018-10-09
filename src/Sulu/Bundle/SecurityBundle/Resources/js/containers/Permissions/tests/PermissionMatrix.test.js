@@ -82,7 +82,7 @@ test('Render with title', () => {
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
-            title={'Contact'}
+            title="Contact"
         />
     )).toMatchSnapshot();
 });
@@ -121,7 +121,7 @@ test('Render with subTitle', () => {
             contextPermissions={contextPermissions}
             onChange={jest.fn()}
             securityContexts={securityContexts}
-            subTitle={'Contact'}
+            subTitle="Contact"
         />
     )).toMatchSnapshot();
 });

@@ -1,8 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when closed 1`] = `<div />`;
+exports[`The component should not render in body when closed 1`] = `null`;
 
-exports[`The component should render in body when open 1`] = `<div />`;
+exports[`The component should render in body when open 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body when open 2`] = `
 "<div>
@@ -13,7 +17,7 @@ exports[`The component should render in body when open 2`] = `
     <div class=\\"overlay small\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
@@ -25,7 +29,11 @@ exports[`The component should render in body when open 2`] = `
 </div>"
 `;
 
-exports[`The component should render in body with actions when open 1`] = `<div />`;
+exports[`The component should render in body with actions when open 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body with actions when open 2`] = `
 "<div>
@@ -36,7 +44,7 @@ exports[`The component should render in body with actions when open 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
@@ -50,7 +58,11 @@ exports[`The component should render in body with actions when open 2`] = `
 </div>"
 `;
 
-exports[`The component should render in body with loader instead of confirm button 1`] = `<div />`;
+exports[`The component should render in body with loader instead of confirm button 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render in body with loader instead of confirm button 2`] = `
 "<div>
@@ -61,7 +73,7 @@ exports[`The component should render in body with loader instead of confirm butt
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>
@@ -79,7 +91,11 @@ exports[`The component should render in body with loader instead of confirm butt
 </div>"
 `;
 
-exports[`The component should render with a disabled confirm button 1`] = `<div />`;
+exports[`The component should render with a disabled confirm button 1`] = `
+<div
+  class="backdrop visible fixed"
+/>
+`;
 
 exports[`The component should render with a disabled confirm button 2`] = `
 "<div>
@@ -90,7 +106,7 @@ exports[`The component should render with a disabled confirm button 2`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"icon su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <p>My overlay content</p>

@@ -32,7 +32,7 @@ exports[`The component should render 1`] = `
   </div>
   <span
     aria-label="su-angle-down"
-    class="toggle su-angle-down"
+    class="su-angle-down toggle"
   />
 </button>
 `;
@@ -44,7 +44,7 @@ exports[`The component should render with an icon 1`] = `
 >
   <span
     aria-label="su-plus"
-    class="frontIcon su-plus"
+    class="su-plus frontIcon"
   />
   <div
     aria-label="My value"
@@ -73,7 +73,7 @@ exports[`The component should render with an icon 1`] = `
   </div>
   <span
     aria-label="su-angle-down"
-    class="toggle su-angle-down"
+    class="su-angle-down toggle"
   />
 </button>
 `;
@@ -110,7 +110,7 @@ exports[`The component should render with the dark skin 1`] = `
   </div>
   <span
     aria-label="su-angle-down"
-    class="toggle su-angle-down"
+    class="su-angle-down toggle"
   />
 </button>
 `;
@@ -147,7 +147,7 @@ exports[`The component should render with the flat skin 1`] = `
   </div>
   <span
     aria-label="su-angle-down"
-    class="toggle su-angle-down"
+    class="su-angle-down toggle"
   />
 </button>
 `;

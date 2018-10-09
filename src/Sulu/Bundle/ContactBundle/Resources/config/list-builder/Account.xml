@@ -222,12 +222,12 @@
             <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
-        <property name="id" filter-type="integer" list:translation="sulu_admin.id" list:type="integer">
+        <property name="id" filter-type="integer" list:translation="sulu_admin.id" list:type="string">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>
 
-        <property name="uid" filter-type="string" list:translation="sulu_contact.uid" list:type="integer">
+        <property name="uid" filter-type="string" list:translation="sulu_contact.uid" list:type="string">
             <orm:field-name>uid</orm:field-name>
             <orm:entity-name>%sulu.model.account.class%</orm:entity-name>
         </property>

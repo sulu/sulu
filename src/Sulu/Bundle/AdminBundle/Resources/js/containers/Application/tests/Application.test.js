@@ -29,6 +29,8 @@ jest.mock('../../../services/Initializer', () => {
 const mockUserStoreLoggedIn = jest.fn();
 const mockUserStoreContact = jest.fn();
 const mockUserStoreUser = jest.fn();
+const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
+const mockUserStoreSetPersistentSetting = jest.fn();
 
 jest.mock('../../../stores/UserStore', () => {
     return new class {
@@ -42,6 +44,14 @@ jest.mock('../../../stores/UserStore', () => {
 
         get contact() {
             return mockUserStoreContact();
+        }
+
+        getPersistentSetting(value) {
+            return mockUserStoreGetPersistentSetting(value);
+        }
+
+        setPersistentSetting(value) {
+            return mockUserStoreSetPersistentSetting(value);
         }
     };
 });
@@ -137,6 +147,51 @@ test('Application should render opened navigation', () => {
 
     const view = mount(<Application router={router} />);
     view.find('Button[icon="su-bars"]').simulate('click');
+
+    expect(view).toMatchSnapshot();
+});
+
+test('Application should render pinned navigation', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
+    };
+
+    const view = mount(<Application router={router} />);
+    view.find('Button[icon="su-bars"]').simulate('click');
+    view.find('button.pin').simulate('click');
+
+    expect(view).toMatchSnapshot();
+});
+
+test('Application should render pinned navigation from beginning', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
+    };
+
+    mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
+
+    const view = mount(<Application router={router} />);
+    expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
+    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
+    expect(view.find('button.pin')).toHaveLength(1);
+
+    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
 
     expect(view).toMatchSnapshot();
 });

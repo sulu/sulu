@@ -21,7 +21,7 @@ exports[`Render ArrowMenu open 2`] = `
 <div>
   <div class=\\"container\\">
     <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; position: fixed; pointer-events: auto; left: 10px;\\">
-      <div class=\\"arrow top left\\"></div>
+      <div class=\\"arrow top right\\"></div>
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">
           <div class=\\"title\\">Search Section</div>
@@ -30,7 +30,7 @@ exports[`Render ArrowMenu open 2`] = `
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
           <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"icon su-webspace\\"></span></span><span>Sulu</span></div>
+            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
           </div>
@@ -41,6 +41,9 @@ exports[`Render ArrowMenu open 2`] = `
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Title</span></div>
             <div class=\\"item\\"><span class=\\"icon\\"></span><span>Description</span></div>
           </div>
+        </div>
+        <div class=\\"section\\">
+          <div class=\\"children\\"><button class=\\"action\\">Test Action 1</button><button class=\\"action\\">Test Action 2</button><button class=\\"action\\">Test Action 3</button></div>
         </div>
       </div>
     </div>

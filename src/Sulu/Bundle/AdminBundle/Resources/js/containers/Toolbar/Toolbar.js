@@ -96,21 +96,40 @@ export default class Toolbar extends React.Component<*> {
         return itemsConfig;
     }
 
+    @computed get snackbarClickZoneAvailable(): boolean {
+        const {onNavigationButtonClick} = this.props;
+        return !!onNavigationButtonClick || !!this.backButtonConfig;
+    }
+
+    handleSnackbarClick = () => {
+        const {onNavigationButtonClick} = this.props;
+
+        if (onNavigationButtonClick) {
+            onNavigationButtonClick();
+            return;
+        }
+
+        if (this.backButtonConfig) {
+            this.backButtonConfig.onClick();
+        }
+    };
+
     render() {
+        const {snackbarClickZoneAvailable, handleSnackbarClick, handleSnackbarCloseClick} = this;
         const {onNavigationButtonClick, navigationOpen} = this.props;
 
         return (
             <ToolbarComponent>
                 {!!Initializer.initializedTranslationsLocale &&
                     <ToolbarComponent.Snackbar
-                        onCloseClick={this.handleSnackbarCloseClick}
+                        onCloseClick={handleSnackbarCloseClick}
                         type="error"
                         visible={this.toolbarStore.errors.length > 0}
                     />
                 }
                 {!!Initializer.initializedTranslationsLocale &&
                     <ToolbarComponent.Snackbar
-                        onClick={onNavigationButtonClick}
+                        onClick={snackbarClickZoneAvailable ? handleSnackbarClick : undefined}
                         type="success"
                         visible={this.toolbarStore.showSuccess}
                     />
@@ -118,6 +137,7 @@ export default class Toolbar extends React.Component<*> {
                 <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
                     <ToolbarComponent.Button
+                        disabled={!onNavigationButtonClick}
                         icon={navigationOpen ? 'su-times' : 'su-bars'}
                         onClick={onNavigationButtonClick}
                         primary={true}

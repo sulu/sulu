@@ -160,10 +160,10 @@ export default class Permissions extends React.Component<Props> {
                 <div className={permissionsStyle.selectContainer}>
                     <MultiSelect
                         apiOptions={{checkForPermissions: 0}}
-                        displayProperty={'name'}
-                        idProperty={'key'}
+                        displayProperty="name"
+                        idProperty="key"
                         onChange={this.handleWebspaceChange}
-                        resourceKey={'webspaces'}
+                        resourceKey="webspaces"
                         values={this.selectedWebspaces}
                     />
                 </div>

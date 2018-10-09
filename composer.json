@@ -118,6 +118,7 @@
         "jackalope/jackalope": "1.2.8 || 1.3.0 || 1.3.1",
         "jackalope/jackalope-jackrabbit": "1.2.0 - 1.2.1",
         "phpcr/phpcr-utils": "1.2.0 - 1.2.10 || 1.3.0 - 1.3.2",
+        "symfony/symfony": "3.4.12 || 3.4.16 || 3.4.17",
         "symfony/web-profiler-bundle": "3.4.7"
     },
     "replace": {

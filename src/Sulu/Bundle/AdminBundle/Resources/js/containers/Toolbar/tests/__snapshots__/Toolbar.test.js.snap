@@ -9,7 +9,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
   >
     <span
       aria-label="su-exclamation-triangle"
-      class="icon su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
     />
     <div
       class="text"
@@ -23,7 +23,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
         sulu_admin.close
         <span
           aria-label="su-times"
-          class="closeButtonIcon su-times"
+          class="su-times closeButtonIcon"
         />
       </button>
     </div>
@@ -33,7 +33,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
   >
     <span
       aria-label="su-check"
-      class="icon su-check"
+      class="su-check icon"
     />
   </div>
   <div
@@ -52,7 +52,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
           >
             <span
               aria-label="fa-trash-o"
-              class="icon fa fa-trash-o"
+              class="fa fa-trash-o icon"
             />
           </button>
         </li>
@@ -66,7 +66,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
             >
               <span
                 aria-label="fa-floppy-more"
-                class="icon fa fa-floppy-more"
+                class="fa fa-floppy-more icon"
               />
               <span
                 class="label"
@@ -75,7 +75,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
               </span>
               <span
                 aria-label="su-angle-down"
-                class="dropdownIcon su-angle-down"
+                class="su-angle-down dropdownIcon"
               />
             </button>
           </div>

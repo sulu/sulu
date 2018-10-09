@@ -305,7 +305,7 @@ const FormWithToolbar = withToolbar(Form, function() {
         icons.push(
             <PublishIndicator
                 draft={publishedState === undefined ? false : !publishedState}
-                key={'publish'}
+                key="publish"
                 published={published === undefined ? false : !!published}
             />
         );

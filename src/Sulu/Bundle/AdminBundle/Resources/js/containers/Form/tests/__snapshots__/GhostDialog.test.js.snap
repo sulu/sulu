@@ -18,12 +18,12 @@ exports[`Should render a Dialog 1`] = `
                     <div aria-hidden=\\"true\\" class=\\"front\\">e</div>
                     <div aria-hidden=\\"true\\" class=\\"back\\"><span>n</span></div>
                     <div class=\\"whole\\">en</div>
-                  </div><span aria-label=\\"su-angle-down\\" class=\\"toggle su-angle-down\\"></span>
+                  </div><span aria-label=\\"su-angle-down\\" class=\\"su-angle-down toggle\\"></span>
                 </button></div>
             </div>
           </div>
         </article>
-        <footer><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\"></span></button><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\"></span></button></footer>
+        <footer><button class=\\"button secondary\\" type=\\"button\\"></button><button class=\\"button primary\\" type=\\"button\\"></button></footer>
       </section>
     </div>
   </div>

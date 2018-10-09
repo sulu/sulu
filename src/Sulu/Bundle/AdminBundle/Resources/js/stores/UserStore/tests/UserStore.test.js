@@ -29,16 +29,19 @@ test('Should clear the user store', () => {
     expect(userStore.resetSuccess).toBe(true);
     expect(userStore.user).toEqual(user);
     expect(userStore.contact).toEqual(contact);
-    expect(Object.keys(userStore.persistentSettings)).toHaveLength(1);
+    expect(userStore.persistentSettings.size).toBe(1);
 
     userStore.clear();
 
-    expect(Object.keys(userStore.persistentSettings)).toHaveLength(0);
+    expect(userStore.persistentSettings.size).toBe(0);
 });
 
 test('Should set persistent setting', () => {
     userStore.setPersistentSetting('categories.sortColumn', 'name');
     expect(userStore.getPersistentSetting('categories.sortColumn')).toEqual('name');
+
+    userStore.setPersistentSetting('test.object', {abc: 'DEF', abc2: 'DEF2'});
+    expect(userStore.getPersistentSetting('test.object')).toEqual({abc: 'DEF', abc2: 'DEF2'});
 });
 
 test('Should login', () => {

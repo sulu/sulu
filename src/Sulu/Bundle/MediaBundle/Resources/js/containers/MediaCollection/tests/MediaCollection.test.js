@@ -8,6 +8,7 @@ import MediaCardOverviewAdapter from '../../Datagrid/adapters/MediaCardOverviewA
 
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
+const SETTINGS_KEY = 'media_collection_test';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
@@ -33,7 +34,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         }),
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
-        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
+        DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -75,6 +76,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 },
             ];
 
+            this.userSettingsKey = userSettingsKey;
             this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
@@ -238,14 +240,22 @@ test('Render the MediaCollection', () => {
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
-        page,
-        locale,
-    });
-    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
-        page,
-        locale,
-    });
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
 
@@ -271,14 +281,22 @@ test('Should send a request to add a new collection via the overlay', () => {
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
-        page,
-        locale,
-    });
-    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
-        page,
-        locale,
-    });
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.data = {
@@ -329,14 +347,22 @@ test('Should send a request to update the collection via the overlay', () => {
     const collectionNavigateSpy = jest.fn();
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
-        page,
-        locale,
-    });
-    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
-        page,
-        locale,
-    });
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.data = {
@@ -382,14 +408,22 @@ test('Confirming the delete dialog should delete the item', () => {
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
-        page,
-        locale,
-    });
-    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
-        page,
-        locale,
-    });
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.delete = jest.fn().mockReturnValue(promise);
@@ -433,14 +467,22 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(MEDIA_RESOURCE_KEY, {
-        page,
-        locale,
-    });
-    const collectionDatagridStore = new DatagridStore(COLLECTIONS_RESOURCE_KEY, {
-        page,
-        locale,
-    });
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.delete = jest.fn().mockReturnValue(promise);

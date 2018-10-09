@@ -55,7 +55,7 @@ test('Phone should not set onIconClick when value is not set', () => {
 test('Phone should set onIconClick when value is set', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const phone = mount(<Phone onBlur={onBlur} onChange={onChange} value={'+123'} />);
+    const phone = mount(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     expect(phone.find('Input').prop('onIconClick')).toBeInstanceOf(Function);
 });
@@ -65,7 +65,7 @@ test('Phone should set onIconClick when value is valid and window should be open
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const email = mount(<Phone onBlur={onBlur} onChange={onChange} value={'+123'} />);
+    const email = mount(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     const onIconClickFunction = email.find('Input').prop('onIconClick');
     expect(onIconClickFunction).toBeInstanceOf(Function);

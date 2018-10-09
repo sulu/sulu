@@ -34,18 +34,21 @@ test('The component should render and handle clicks correctly', () => {
 test('The component should render with all available props and handle clicks correctly', () => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
+    const handlePinClick = jest.fn();
     const handleProfileClick = jest.fn();
 
     const navigation = mount(
         <Navigation
             appVersion="1.0.0"
             appVersionLink="http://link.com"
+            isPinned={false}
             onLogoutClick={handleLogoutClick}
+            onPinToggle={handlePinClick}
             onProfileClick={handleProfileClick}
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
             title="sulu.io"
-            userImage={'http://lorempixel.com/200/200'}
+            userImage="http://lorempixel.com/200/200"
             username="John Travolta"
         >
             <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />
@@ -75,6 +78,9 @@ test('The component should render with all available props and handle clicks cor
     navigation.find('.userProfile button').simulate('click');
     expect(handleLogoutClick).toBeCalled();
 
+    navigation.find('button.pin').simulate('click');
+    expect(handlePinClick).toBeCalled();
+
     navigation.find('.userContent img').simulate('click');
     navigation.find('.userProfile span').at(0).simulate('click');
     expect(handleProfileClick).toHaveBeenCalledTimes(2);
@@ -94,7 +100,7 @@ test('The expanded prop should be set correct automatically', () => {
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
             title="sulu.io"
-            userImage={'http://lorempixel.com/200/200'}
+            userImage="http://lorempixel.com/200/200"
             username="John Travolta"
         >
             <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />

@@ -1,12 +1,13 @@
 @import './variables.scss';
+@import '../../components/Navigation/variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
 .root {
-    width: calc(100vw + 260px);
+    width: calc(100vw + $navigationWidth);
     display: none;
-    left: -260px;
+    left: -$navigationWidth;
     position: absolute;
-    transition: left .5s;
+    transition: left $navigationMoveAnimationDuration;
     will-change: left;
 
     &.visible {
@@ -22,6 +23,12 @@
     width: 100vw;
     min-height: 500px;
     overflow: auto;
+    will-change: width;
+    transition: width $navigationMoveAnimationDuration;
+
+    &.with-pinned-navigation {
+        width: calc(100vw - $navigationWidth);
+    }
 
     &.with-sidebar {
         display: flex;

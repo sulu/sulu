@@ -1,40 +1,47 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import Router from 'sulu-admin-bundle/services/Router';
+import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceStore from '../../../stores/WebspaceStore';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
     Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-    DatagridStore: jest.fn(function(resourceKey, observableOptions) {
-        this.activeItems = [];
-        this.active = {
+    DatagridStore: class {
+        static getActiveSetting = jest.fn();
+
+        constructor(resourceKey, userSettingsKey, observableOptions) {
+            this.resourceKey = resourceKey;
+            this.observableOptions = observableOptions;
+        }
+
+        resourceKey;
+        observableOptions;
+        activeItems = [];
+        active = {
             get: jest.fn(),
             set: jest.fn(),
         };
-        this.sortColumn = {
+        sortColumn = {
             get: jest.fn(),
         };
-        this.sortOrder = {
+        sortOrder = {
             get: jest.fn(),
         };
-        this.limit = {
+        limit = {
             get: jest.fn().mockReturnValue(10),
         };
-        this.setLimit = jest.fn();
-        this.selections = [];
-        this.selectionIds = [];
-        this.getPage = jest.fn().mockReturnValue(1);
-        this.destroy = jest.fn();
-        this.sendRequest = jest.fn();
-        this.updateLoadingStrategy = jest.fn();
-        this.updateStructureStrategy = jest.fn();
-        this.resourceKey = resourceKey;
-        this.observableOptions = observableOptions;
-        this.clear = jest.fn();
-    }),
+        setLimit = jest.fn();
+        selections = [];
+        selectionIds = [];
+        getPage = jest.fn().mockReturnValue(1);
+        destroy = jest.fn();
+        sendRequest = jest.fn();
+        updateLoadingStrategy = jest.fn();
+        updateStructureStrategy = jest.fn();
+        clear = jest.fn();
+    },
     FlatStructureStrategy: require(
         'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
     ).default,
@@ -223,24 +230,23 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     });
 });
 
-test('Should load webspace and active route attribute from userStore', () => {
+test('Should load webspace and active route attribute from datagridStore and userStore', () => {
     const WebspaceOverview = require('../WebspaceOverview').default;
+    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
     const userStore = require('sulu-admin-bundle/stores').userStore;
 
     userStore.getPersistentSetting.mockImplementation((key) => {
         if (key === 'sulu_content.webspace_overview.webspace') {
             return 'sulu';
         }
-
-        if (key === 'sulu_content.webspace_overview.webspace.sulu.active') {
-            return 'some-uuid';
-        }
     });
 
+    DatagridStore.getActiveSetting.mockReturnValueOnce('some-uuid');
+
     // $FlowFixMe
-    expect(WebspaceOverview.getDerivedRouteAttributes()).toEqual({
+    expect(WebspaceOverview.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({
         active: 'some-uuid',
-        webspace: 'sulu',
+        webspace: 'abc',
     });
 });
 
@@ -270,16 +276,13 @@ test('Should call disposers on unmount', () => {
 
     const datagridStore = webspaceOverview.instance().datagridStore;
 
-    const activeDisposerSpy = jest.fn();
     const excludeGhostsAndShadowsDisposerSpy = jest.fn();
     const webspaceDisposerSpy = jest.fn();
-    webspaceOverview.instance().activeDisposer = activeDisposerSpy;
     webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
     webspaceOverview.instance().webspaceDisposer = webspaceDisposerSpy;
     webspaceOverview.unmount();
 
     expect(datagridStore.destroy).toBeCalledWith();
-    expect(activeDisposerSpy).toBeCalledWith();
     expect(excludeGhostsAndShadowsDisposerSpy).toBeCalledWith();
     expect(webspaceDisposerSpy).toBeCalledWith();
 });

@@ -27,7 +27,7 @@ exports[`Render a simple MediaOverview 1`] = `
               </button>
               <span
                 aria-label="su-angle-right"
-                class="arrow su-angle-right"
+                class="su-angle-right arrow"
               />
             </li>
             <li>
@@ -42,13 +42,13 @@ exports[`Render a simple MediaOverview 1`] = `
           >
             <span
               aria-label="su-pen"
-              class="icon su-pen clickable"
+              class="su-pen clickable icon"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="su-trash-alt"
-              class="icon su-trash-alt clickable"
+              class="su-trash-alt clickable icon"
               role="button"
               tabindex="0"
             />
@@ -185,7 +185,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   </div>
                   <span
                     aria-label="su-angle-down"
-                    class="toggle su-angle-down"
+                    class="su-angle-down toggle"
                   />
                 </button>
               </div>
@@ -233,10 +233,6 @@ exports[`Render a simple MediaOverview 1`] = `
           </nav>
         </section>
       </div>
-      <div />
-      <div />
-      <div />
-      <div />
     </div>
     <div
       class="divider"
@@ -256,7 +252,7 @@ exports[`Render a simple MediaOverview 1`] = `
             >
               <span
                 aria-label="su-search"
-                class="icon dark iconClickable collapsed su-search clickable"
+                class="su-search clickable icon dark iconClickable collapsed"
                 role="button"
                 tabindex="0"
               />
@@ -417,7 +413,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     >
                       <span
                         aria-label="su-pen"
-                        class="mediaIcon su-pen"
+                        class="su-pen mediaIcon"
                       />
                     </div>
                   </div>
@@ -536,7 +532,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     >
                       <span
                         aria-label="su-pen"
-                        class="mediaIcon su-pen"
+                        class="su-pen mediaIcon"
                       />
                     </div>
                   </div>
@@ -549,8 +545,6 @@ exports[`Render a simple MediaOverview 1`] = `
           />
         </section>
       </div>
-      <div />
-      <div />
     </div>
     <input
       autocomplete="off"

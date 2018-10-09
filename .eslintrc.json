@@ -104,6 +104,10 @@
             "error",
             "never"
         ],
+        "jsx-quotes": [
+            "error",
+            "prefer-double"
+        ],
         "import/order": "error",
         "import/no-dynamic-require": "error",
         "import/no-webpack-loader-syntax": "error",
@@ -116,6 +120,10 @@
         "import/named": "error",
         "import/default": "error",
         "react/no-deprecated": "warn",
+        "react/jsx-curly-brace-presence": [
+            "error",
+            "never"
+        ],
         "react/jsx-curly-spacing": [
             "error",
             "never"

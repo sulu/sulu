@@ -75,12 +75,14 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
                 $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
             }
 
-            $dataList[] = $areaData;
+            $dataList[$key] = $areaData;
         }
+
+        ksort($dataList);
 
         $data = [
             '_embedded' => [
-                'areas' => $dataList,
+                'areas' => array_values($dataList),
             ],
             'total' => count($dataList),
         ];

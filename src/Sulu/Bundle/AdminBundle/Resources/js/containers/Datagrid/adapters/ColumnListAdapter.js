@@ -90,14 +90,14 @@ export default class ColumnListAdapter extends AbstractAdapter {
 
     getIndicators = (item: Object) => {
         if (item.type && item.type.name === 'ghost') {
-            return [<GhostIndicator key={'ghost'} locale={item.type.value} />];
+            return [<GhostIndicator key="ghost" locale={item.type.value} />];
         }
 
         const draft = item.publishedState === undefined ? false : !item.publishedState;
         const published = item.published === undefined ? false : !!item.published;
 
         if (draft || !published) {
-            return [<PublishIndicator draft={draft} key={'publish'} published={published} />];
+            return [<PublishIndicator draft={draft} key="publish" published={published} />];
         }
 
         return [];

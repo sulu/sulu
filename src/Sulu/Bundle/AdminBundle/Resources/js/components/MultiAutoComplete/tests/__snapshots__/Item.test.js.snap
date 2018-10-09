@@ -7,7 +7,7 @@ exports[`Should render item with children 1`] = `
   Name
   <span
     aria-label="su-times"
-    class="icon su-times clickable"
+    class="su-times clickable icon"
     role="button"
     tabindex="0"
   />

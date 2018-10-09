@@ -10,12 +10,15 @@ const LOADER_SIZE = 25;
 
 type Props = {|
     active: boolean,
-    children: Node,
+    activeClassName?: string,
+    children?: Node,
     className?: string,
     disabled: boolean,
     icon?: string,
+    iconClassName?: string,
     loading: boolean,
     onClick?: (value: *) => void,
+    showDropdownIcon: boolean,
     size: 'small' | 'large',
     skin: 'primary' | 'secondary' | 'link' | 'icon',
     type: 'button' | 'submit' | 'reset',
@@ -27,6 +30,7 @@ export default class Button extends React.PureComponent<Props> {
         active: false,
         disabled: false,
         loading: false,
+        showDropdownIcon: false,
         size: 'large',
         skin: 'secondary',
         type: 'button',
@@ -44,23 +48,32 @@ export default class Button extends React.PureComponent<Props> {
     render() {
         const {
             active,
+            activeClassName,
             children,
             className,
             disabled,
             icon,
+            iconClassName,
             loading,
             onClick,
+            showDropdownIcon,
             skin,
             type,
         } = this.props;
+
         const buttonClass = classNames(
             buttonStyles.button,
             buttonStyles[skin],
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
+                [activeClassName || '']: active && activeClassName,
             },
             className
+        );
+        const iconClass = classNames(
+            buttonStyles.buttonIcon,
+            iconClassName
         );
 
         return (
@@ -70,8 +83,15 @@ export default class Button extends React.PureComponent<Props> {
                 onClick={onClick ? this.handleClick : undefined}
                 type={type}
             >
-                {icon && <Icon className={buttonStyles.buttonIcon} name={icon} />}
-                <span className={buttonStyles.text}>{children}</span>
+                {icon &&
+                    <Icon className={iconClass} name={icon} />
+                }
+                {children &&
+                    <span className={buttonStyles.text}>{children}</span>
+                }
+                {showDropdownIcon &&
+                    <Icon className={buttonStyles.dropdownIcon} name="su-angle-down" />
+                }
                 {loading &&
                     <div className={buttonStyles.loader}>
                         <Loader size={LOADER_SIZE} />

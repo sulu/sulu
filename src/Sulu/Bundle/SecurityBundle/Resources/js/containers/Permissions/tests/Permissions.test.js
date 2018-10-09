@@ -59,7 +59,7 @@ test('Render with minimal', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -108,7 +108,7 @@ test('Should trigger onChange correctly', () => {
     const permissions = mount(
         <Permissions
             onChange={onChange}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -202,7 +202,7 @@ test('Render with empty webspace section', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -293,7 +293,7 @@ test('Render with webspace section', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -385,7 +385,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
     const permissions = mount(
         <Permissions
             onChange={onChange}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -504,7 +504,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
     const permissions = mount(
         <Permissions
             onChange={onChange}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -669,7 +669,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
     const permissions = mount(
         <Permissions
             onChange={onChange}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -753,7 +753,7 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );
@@ -806,7 +806,7 @@ test('Dispose autorun on unmount', () => {
     const permissions = mount(
         <Permissions
             onChange={jest.fn()}
-            system={'Sulu'}
+            system="Sulu"
             value={value}
         />
     );

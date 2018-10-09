@@ -20,7 +20,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -45,7 +45,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -59,7 +59,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -68,7 +68,6 @@ Array [
       </span>
     </button>
   </div>,
-  <div />,
 ]
 `;
 
@@ -92,7 +91,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -117,7 +116,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -131,7 +130,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -140,52 +139,48 @@ Array [
       </span>
     </button>
   </div>,
-  <div />,
 ]
 `;
 
 exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`] = `
-Array [
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+  style="position:relative"
+>
   <div
-    aria-disabled="false"
-    class="mediaContainer default"
-    style="position:relative"
+    class="emptyIndicator"
+  >
+    <span
+      aria-label="su-image"
+      class="su-image"
+    />
+  </div>
+  <div
+    class="uploadIndicatorContainer"
   >
     <div
-      class="emptyIndicator"
+      class="uploadIndicator"
     >
-      <span
-        aria-label="su-image"
-        class="su-image"
-      />
-    </div>
-    <div
-      class="uploadIndicatorContainer"
-    >
-      <div
-        class="uploadIndicator"
-      >
-        <div>
-          <span
-            aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
-          />
-          <div
-            class="uploadInfoText"
-          >
-            Upload media
-          </div>
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
+        />
+        <div
+          class="uploadInfoText"
+        >
+          Upload media
         </div>
       </div>
     </div>
-    <input
-      autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
-      type="file"
-    />
-  </div>,
-  <div />,
-]
+  </div>
+  <input
+    autocomplete="off"
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
 `;
 
 exports[`Render a SingleMediaUpload with the round skin 1`] = `
@@ -208,7 +203,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -233,7 +228,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -247,7 +242,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -256,7 +251,6 @@ Array [
       </span>
     </button>
   </div>,
-  <div />,
 ]
 `;
 
@@ -280,7 +274,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -299,6 +293,5 @@ Array [
   <div
     class="buttons"
   />,
-  <div />,
 ]
 `;

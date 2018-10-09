@@ -2,7 +2,6 @@
 
 .button {
     border-radius: 0;
-    border-right: 0;
     width: 34px;
 
     &:first-child {
@@ -13,6 +12,9 @@
     &:last-child {
         border-top-right-radius: $iconBorderRadius;
         border-bottom-right-radius: $iconBorderRadius;
-        border-right: 1px solid $iconBorderColor;
+    }
+
+    &:not(:last-child) {
+        border-right: 0;
     }
 }

@@ -30,7 +30,7 @@ exports[`Render button with a prepended icon 1`] = `
 >
   <span
     aria-label="fa-trash-o"
-    class="icon fa fa-trash-o"
+    class="fa fa-trash-o icon"
   />
 </button>
 `;
@@ -41,7 +41,7 @@ exports[`Render button with dropdown indicator 1`] = `
 >
   <span
     aria-label="su-angle-down"
-    class="dropdownIcon su-angle-down"
+    class="su-angle-down dropdownIcon"
   />
 </button>
 `;

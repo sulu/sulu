@@ -8,4 +8,6 @@ export default class AbstractAdapter extends React.Component<DatagridAdapterProp
     static StructureStrategy: Class<StructureStrategyInterface>;
 
     static icon: string;
+
+    static hasColumnOptions: boolean = false;
 }

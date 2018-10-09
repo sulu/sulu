@@ -50,8 +50,8 @@ export default class Toolbar extends React.PureComponent<Props> {
 
     render() {
         const {
-            skin,
             children,
+            skin,
         } = this.props;
 
         const toolbarClass = classNames(

@@ -129,7 +129,7 @@ test('Do not build URL from defaults if value is already given', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             schemaOptions={schemaOptions}
-            value={'http://www.sulu.io'}
+            value="http://www.sulu.io"
         />
     );
 

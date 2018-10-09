@@ -75,7 +75,7 @@ exports[`Render with Snackbar 1`] = `
   >
     <span
       aria-label="su-exclamation-triangle"
-      class="icon su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
     />
     <div
       class="text"
@@ -89,7 +89,7 @@ exports[`Render with Snackbar 1`] = `
         sulu_admin.close
         <span
           aria-label="su-times"
-          class="closeButtonIcon su-times"
+          class="su-times closeButtonIcon"
         />
       </button>
     </div>

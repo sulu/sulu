@@ -51,7 +51,7 @@ test('Show error when invalid URL was passed via updated prop', () => {
 });
 
 test('Should not reset value of protocol select when undefined value is passed', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://', 'ftp://']} value={'https://'} />);
+    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://', 'ftp://']} value="https://" />);
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('');
 

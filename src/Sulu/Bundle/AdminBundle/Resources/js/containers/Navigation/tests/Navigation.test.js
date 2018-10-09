@@ -66,13 +66,21 @@ test('Should render navigation', () => {
         path: '/form',
         rerenderAttributes: [],
     };
-    const handleNavigate = jest.fn();
 
-    const navigation = render(<Navigation onLogout={jest.fn()} onNavigate={handleNavigate} router={router} />);
+    const navigation = render(
+        <Navigation
+            onLogout={jest.fn()}
+            onNavigate={jest.fn()}
+            onPinToggle={jest.fn()}
+            pinned={false}
+            router={router}
+        />
+    );
+
     expect(navigation).toMatchSnapshot();
 });
 
-test('Should call the navigation callback and router navigate', () => {
+test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
     router.route = {
         name: 'sulu_admin.form_tab',
@@ -85,9 +93,22 @@ test('Should call the navigation callback and router navigate', () => {
         rerenderAttributes: [],
     };
     const handleNavigate = jest.fn();
+    const handlePin = jest.fn();
 
-    const navigation = mount(<Navigation onLogout={jest.fn()} onNavigate={handleNavigate} router={router} />);
+    const navigation = mount(
+        <Navigation
+            onLogout={jest.fn()}
+            onNavigate={handleNavigate}
+            onPinToggle={handlePin}
+            pinned={false}
+            router={router}
+        />
+    );
+
     navigation.find('Item').at(4).find('.title').simulate('click');
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
+
+    navigation.find('Button.pin').simulate('click');
+    expect(handlePin).toBeCalled();
 });
