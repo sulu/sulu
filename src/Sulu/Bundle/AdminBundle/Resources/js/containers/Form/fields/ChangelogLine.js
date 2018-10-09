@@ -4,7 +4,6 @@ import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Loader from '../../../components/Loader';
 import ResourceRequester from '../../../services/ResourceRequester';
-import userStore from '../../../stores/UserStore';
 import {translate} from '../../../utils/Translator';
 import type {FieldTypeProps} from '../../../types';
 
@@ -76,7 +75,7 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
             return;
         }
 
-        return (new Date(changed)).toLocaleString(userStore.locale);
+        return (new Date(changed)).toLocaleString();
     }
 
     @computed get creatorFullName() {
@@ -90,7 +89,7 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
             return;
         }
 
-        return (new Date(created)).toLocaleString(userStore.locale);
+        return (new Date(created)).toLocaleString();
     }
 
     render() {
