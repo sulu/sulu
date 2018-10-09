@@ -125,7 +125,7 @@ exports[`Should render navigation 1`] = `
     >
       <span
         aria-label="fa-thumb-tack"
-        class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+        class="fa fa-thumb-tack buttonIcon pinIcon"
       />
     </button>
     <div

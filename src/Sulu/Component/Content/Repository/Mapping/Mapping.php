@@ -169,6 +169,10 @@ class Mapping implements MappingInterface
     public function addProperties($properties)
     {
         foreach ($properties as $property) {
+            if ('id' === $property) {
+                continue;
+            }
+
             if (!$this->properties->contains($property)) {
                 $this->properties[] = $property;
             }

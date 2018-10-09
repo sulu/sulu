@@ -19,6 +19,7 @@ type Props = {
         setPopoverElementRef: (ref: ElementRef<*>) => void,
         style: Object,
         verticalPosition: string,
+        horizontalPosition: string,
     ) => Node,
     horizontalOffset: number,
     onClose?: () => void,
@@ -160,6 +161,7 @@ export default class Popover extends React.Component<Props> {
         };
 
         const verticalPosition = (dimensions.top > anchorElement.getBoundingClientRect().top) ? 'bottom' : 'top';
+        const horizontalPosition = (dimensions.left === anchorElement.getBoundingClientRect().left) ? 'left' : 'right';
 
         return (
             <Fragment>
@@ -169,7 +171,7 @@ export default class Popover extends React.Component<Props> {
                 <Portal>
                     <div className={popoverStyles.container}>
                         {children &&
-                            children(this.setPopoverChildRef, styles, verticalPosition)
+                            children(this.setPopoverChildRef, styles, verticalPosition, horizontalPosition)
                         }
                     </div>
                 </Portal>

@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -8,31 +8,10 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
-import userStore from '../../stores/UserStore';
 import {translate} from '../../utils/Translator';
 import datagridStyles from './datagrid.scss';
 
-const USER_SETTING_PREFIX = 'sulu_admin.datagrid';
-const USER_SETTING_ACTIVE = 'active';
-const USER_SETTING_SORT_COLUMN = 'sort_column';
-const USER_SETTING_SORT_ORDER = 'sort_order';
-const USER_SETTING_LIMIT = 'limit';
-
-function getActiveSettingKey(resourceKey): string {
-    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_ACTIVE].join('.');
-}
-
-function getSortColumnSettingKey(resourceKey): string {
-    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_COLUMN].join('.');
-}
-
-function getSortOrderSettingKey(resourceKey): string {
-    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_SORT_ORDER].join('.');
-}
-
-function getLimitSettingKey(resourceKey): string {
-    return [USER_SETTING_PREFIX, resourceKey, USER_SETTING_LIMIT].join('.');
-}
+const USER_SETTINGS_KEY = 'datagrid';
 
 @observer
 class Datagrid extends React.Component<ViewProps> {
@@ -40,10 +19,6 @@ class Datagrid extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     @observable deleting = false;
-    activeDisposer: () => void;
-    sortColumnDisposer: () => void;
-    sortOrderDisposer: () => void;
-    limitDisposer: () => void;
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -53,10 +28,10 @@ class Datagrid extends React.Component<ViewProps> {
         } = route;
 
         return {
-            active: userStore.getPersistentSetting(getActiveSettingKey(resourceKey)),
-            sortColumn: userStore.getPersistentSetting(getSortColumnSettingKey(resourceKey)),
-            sortOrder: userStore.getPersistentSetting(getSortOrderSettingKey(resourceKey)),
-            limit: userStore.getPersistentSetting(getLimitSettingKey(resourceKey)),
+            active: DatagridStore.getActiveSetting(resourceKey, USER_SETTINGS_KEY),
+            sortColumn: DatagridStore.getSortColumnSetting(resourceKey, USER_SETTINGS_KEY),
+            sortOrder: DatagridStore.getSortOrderSetting(resourceKey, USER_SETTINGS_KEY),
+            limit: DatagridStore.getLimitSetting(resourceKey, USER_SETTINGS_KEY),
         };
     }
 
@@ -93,46 +68,17 @@ class Datagrid extends React.Component<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, apiOptions);
-        router.bind('active', this.datagridStore.active);
+        this.datagridStore = new DatagridStore(resourceKey, USER_SETTINGS_KEY, observableOptions, apiOptions);
 
+        router.bind('active', this.datagridStore.active);
         router.bind('sortColumn', this.datagridStore.sortColumn);
         router.bind('sortOrder', this.datagridStore.sortOrder);
         router.bind('search', this.datagridStore.searchTerm);
         router.bind('limit', this.datagridStore.limit, 10);
-
-        const {
-            active,
-            sortColumn,
-            sortOrder,
-            limit,
-        } = this.datagridStore;
-
-        this.sortColumnDisposer = autorun(
-            () => userStore.setPersistentSetting(getSortColumnSettingKey(resourceKey), sortColumn.get())
-        );
-        this.sortOrderDisposer = autorun(
-            () => userStore.setPersistentSetting(getSortOrderSettingKey(resourceKey), sortOrder.get())
-        );
-        this.limitDisposer = autorun(
-            () => userStore.setPersistentSetting(getLimitSettingKey(resourceKey), limit.get())
-        );
-        this.activeDisposer = autorun(
-            () => {
-                const activeValue = active.get();
-                if (activeValue) {
-                    userStore.setPersistentSetting(getActiveSettingKey(resourceKey), activeValue);
-                }
-            }
-        );
     }
 
     componentWillUnmount() {
         this.datagridStore.destroy();
-        this.activeDisposer();
-        this.sortColumnDisposer();
-        this.sortOrderDisposer();
-        this.limitDisposer();
     }
 
     handleItemAdd = (rowId) => {

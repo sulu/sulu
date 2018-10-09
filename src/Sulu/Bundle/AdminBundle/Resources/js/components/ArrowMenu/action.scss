@@ -1,0 +1,24 @@
+@import '../../containers/Application/colors.scss';
+
+$hoverColor: $shakespeare;
+$fontColor: $black;
+
+.action {
+    border: none;
+    background: transparent;
+    line-height: 14px;
+    color: $fontColor;
+    cursor: pointer;
+    font-size: 12px;
+    margin-bottom: 10px;
+    text-align: left;
+    width: 100%;
+
+    &:hover {
+        color: $hoverColor;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}

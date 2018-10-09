@@ -41,13 +41,22 @@ $iconColorActive: $white;
     min-width: 140px;
     padding: 0 40px;
 
-    .button-icon {
+    .button-icon,
+    .dropdown-icon {
         display: inline-flex;
         align-items: center;
         position: absolute;
         top: 0;
         bottom: 0;
+    }
+
+    .button-icon {
         left: 10px;
+    }
+
+    .dropdown-icon {
+        left: auto;
+        right: 10px;
     }
 }
 
@@ -88,11 +97,15 @@ $iconColorActive: $white;
     .button-icon {
         margin-right: 10px;
     }
+
+    .dropdown-icon {
+        margin-left: 10px;
+    }
 }
 
 .icon {
     background: none;
-    width: 30px;
+    min-width: 30px;
     height: 30px;
     border-radius: $iconBorderRadius;
     border: 1px solid $iconBorderColor;
@@ -108,10 +121,16 @@ $iconColorActive: $white;
         background-color: $iconBorderColor;
         color: $iconColorActive;
     }
-}
 
-.icon-span {
-    line-height: 28px;
+    .button-icon,
+    .dropdown-icon {
+        line-height: 28px;
+        margin-left: 5px;
+    }
+
+    .dropdown-icon {
+        margin-right: 5px;
+    }
 }
 
 .loader {

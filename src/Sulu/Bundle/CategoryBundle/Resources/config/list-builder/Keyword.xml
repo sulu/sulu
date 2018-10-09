@@ -2,7 +2,7 @@
        xmlns:list="http://schemas.sulu.io/class/list"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
-        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="integer">
+        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="string">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.keyword.class%</orm:entity-name>
         </property>

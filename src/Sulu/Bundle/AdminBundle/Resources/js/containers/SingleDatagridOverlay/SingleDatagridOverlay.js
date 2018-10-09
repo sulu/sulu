@@ -6,6 +6,8 @@ import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../DatagridOverlay';
 import type {OverlayType} from '../DatagridOverlay';
 
+const USER_SETTINGS_KEY = 'single_datagrid_overlay';
+
 type Props = {|
     adapter: string,
     allowActivateForDisabledItems?: boolean,
@@ -48,7 +50,13 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
         if (preSelectedItem) {
             initialSelectionIds.push(preSelectedItem.id);
         }
-        this.datagridStore = new DatagridStore(resourceKey, observableOptions, options, initialSelectionIds);
+        this.datagridStore = new DatagridStore(
+            resourceKey,
+            USER_SETTINGS_KEY,
+            observableOptions,
+            options,
+            initialSelectionIds
+        );
 
         this.selectionDisposer = autorun(() => {
             const {selections} = this.datagridStore;

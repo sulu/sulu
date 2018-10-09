@@ -22,7 +22,7 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
         parent: undefined,
         rerenderAttributes: [],
         view: 'test',
-    })).toEqual({});
+    }, {})).toEqual({});
 });
 
 test('Return the attributes returned from the getDerivedRouterAttributes function', () => {
@@ -46,7 +46,7 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
         parent: undefined,
         rerenderAttributes: [],
         view: 'test',
-    })).toEqual({value1: 'test1', value2: 'test2'});
+    }, {})).toEqual({value1: 'test1', value2: 'test2'});
 });
 
 test('Throw an error if attributes returned from the getDerivedRouterAttributes function are not an object', () => {
@@ -67,5 +67,5 @@ test('Throw an error if attributes returned from the getDerivedRouterAttributes 
         parent: undefined,
         rerenderAttributes: [],
         view: 'test',
-    })).toThrow(/"getDerivedRouteAttributes".*"test" view/);
+    }, {})).toThrow(/"getDerivedRouteAttributes".*"test" view/);
 });

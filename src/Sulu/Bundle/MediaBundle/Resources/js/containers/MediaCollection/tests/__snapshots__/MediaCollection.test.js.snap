@@ -221,10 +221,6 @@ exports[`Render the MediaCollection 1`] = `
         </nav>
       </section>
     </div>
-    <div />
-    <div />
-    <div />
-    <div />
   </div>
   <div
     class="divider"
@@ -509,8 +505,6 @@ exports[`Render the MediaCollection 1`] = `
         />
       </section>
     </div>
-    <div />
-    <div />
   </div>
   <input
     autocomplete="off"

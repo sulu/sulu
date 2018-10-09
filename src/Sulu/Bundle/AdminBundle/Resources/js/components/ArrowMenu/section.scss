@@ -5,19 +5,19 @@ $titleColor: $black;
 .section {
     padding-left: 30px;
     padding-right: 30px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 
     &:first-child {
-        padding-top: 20px;
+        padding-top: 10px;
     }
 
     &:last-child {
-        padding-bottom: 20px;
+        padding-bottom: 10px;
     }
 
     &:not(:first-child) {
         border-top: 1px solid #ccc;
-        padding-top: 20px;
+        padding-top: 10px;
     }
 }
 

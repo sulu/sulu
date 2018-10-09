@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import Button from '../Button';
@@ -29,6 +29,22 @@ test('Should render with skin icon', () => {
 
 test('Should render with skin icon and active', () => {
     expect(render(<Button active={true} skin="icon" />)).toMatchSnapshot();
+});
+
+test('Should render with skin icon and dropdown icon', () => {
+    expect(render(<Button showDropdownIcon={true} skin="icon" />)).toMatchSnapshot();
+});
+
+test('Should render with skin primary and dropdown icon', () => {
+    expect(render(<Button showDropdownIcon={true} skin="primary" />)).toMatchSnapshot();
+});
+
+test('Should render with skin secondary and dropdown icon', () => {
+    expect(render(<Button showDropdownIcon={true} skin="secondary" />)).toMatchSnapshot();
+});
+
+test('Should render with skin link and dropdown icon', () => {
+    expect(render(<Button showDropdownIcon={true} skin="link" />)).toMatchSnapshot();
 });
 
 test('Should call the callback on click', () => {

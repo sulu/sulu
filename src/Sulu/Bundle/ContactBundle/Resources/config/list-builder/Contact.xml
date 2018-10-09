@@ -201,7 +201,7 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="id" filter-type="integer" list:translation="sulu_admin.id" list:type="integer">
+        <property name="id" filter-type="integer" list:translation="sulu_admin.id" list:type="string">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>

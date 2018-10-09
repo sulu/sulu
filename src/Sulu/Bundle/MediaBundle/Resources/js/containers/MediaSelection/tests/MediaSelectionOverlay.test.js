@@ -14,7 +14,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         FormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
+        DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
             const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -60,6 +60,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                 selections: [],
                 selectionIds: [],
             });
+            this.userSettingsKey = userSettingsKey;
             this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
@@ -202,9 +203,10 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     expect(mediaSelectionOverlayInstance.collectionPage.get()).toBe(1);
 
     expect(DatagridStore.mock.calls[1][0]).toBe(mediaResourceKey);
-    expect(DatagridStore.mock.calls[1][1].locale).toBe(locale);
-    expect(DatagridStore.mock.calls[1][1].page.get()).toBe(1);
-    expect(DatagridStore.mock.calls[1][2].fields).toEqual([
+    expect(DatagridStore.mock.calls[1][1]).toBe('media_selection_overlay');
+    expect(DatagridStore.mock.calls[1][2].locale).toBe(locale);
+    expect(DatagridStore.mock.calls[1][2].page.get()).toBe(1);
+    expect(DatagridStore.mock.calls[1][3].fields).toEqual([
         'id',
         'type',
         'name',
@@ -216,8 +218,9 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     ].join(','));
 
     expect(DatagridStore.mock.calls[0][0]).toBe(collectionResourceKey);
-    expect(DatagridStore.mock.calls[0][1].locale).toBe(locale);
-    expect(DatagridStore.mock.calls[0][1].page.get()).toBe(1);
+    expect(DatagridStore.mock.calls[1][1]).toBe('media_selection_overlay');
+    expect(DatagridStore.mock.calls[0][2].locale).toBe(locale);
+    expect(DatagridStore.mock.calls[0][2].page.get()).toBe(1);
 });
 
 test('Should call onConfirm callback with selections from datagrid', () => {

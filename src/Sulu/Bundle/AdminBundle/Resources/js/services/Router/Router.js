@@ -126,7 +126,7 @@ export default class Router {
 
         const updatedAttributes = {
             ...this.updateAttributesHooks.reduce((hookAttributes, updateAttributeHook) => ({
-                ...updateAttributeHook(route),
+                ...updateAttributeHook(route, attributes),
                 ...hookAttributes,
             }), {}),
             ...attributes,

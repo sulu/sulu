@@ -118,7 +118,7 @@ $pinBorderColor: $shakespeare;
 .pin {
     flex: 0 0 auto;
     align-self: flex-end;
-    width: 25px;
+    min-width: 25px;
     height: 25px;
     border-radius: 5px;
     border-color: $pinBorderColor;
@@ -131,11 +131,12 @@ $pinBorderColor: $shakespeare;
         background-color: $pinActiveBackgroundColor;
         color: $pinActiveColor;
     }
-}
 
-.pin-icon {
-    line-height: 23px;
-    font-size: 14px;
+    .pin-icon {
+        line-height: 23px;
+        font-size: 14px;
+        margin-left: auto;
+    }
 }
 
 .versions {

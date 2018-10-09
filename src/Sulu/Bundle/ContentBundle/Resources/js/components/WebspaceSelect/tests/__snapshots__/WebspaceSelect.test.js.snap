@@ -57,7 +57,7 @@ exports[`Render WebspaceSelect opened 2`] = `
 <div>
   <div class=\\"container\\">
     <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; position: fixed; pointer-events: auto; left: 10px;\\">
-      <div class=\\"arrow top left\\"></div>
+      <div class=\\"arrow top right\\"></div>
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>

@@ -48,7 +48,7 @@ test('The component should render with all available props and handle clicks cor
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
             title="sulu.io"
-            userImage={'http://lorempixel.com/200/200'}
+            userImage="http://lorempixel.com/200/200"
             username="John Travolta"
         >
             <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />
@@ -100,7 +100,7 @@ test('The expanded prop should be set correct automatically', () => {
             suluVersion="2.0.0-RC1"
             suluVersionLink="http://link.com"
             title="sulu.io"
-            userImage={'http://lorempixel.com/200/200'}
+            userImage="http://lorempixel.com/200/200"
             username="John Travolta"
         >
             <Navigation.Item icon="su-search" onClick={handleNavigationClick} title="Search" value="search" />

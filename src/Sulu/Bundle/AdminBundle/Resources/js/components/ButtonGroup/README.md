@@ -28,7 +28,7 @@ const onClick = () => {
 
 <ButtonGroup>
     <Button active={true} onClick={onClick}>
-        <Icon name="xxx" />
+        <Icon name="su-plus" />
     </Button>
     <Button onClick={onClick}>
         <Icon name="su-align-justify" />

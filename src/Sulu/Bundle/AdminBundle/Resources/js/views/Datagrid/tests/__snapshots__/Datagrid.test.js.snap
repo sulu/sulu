@@ -33,6 +33,21 @@ exports[`Should render the datagrid with a title 1`] = `
           value=""
         />
       </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -239,10 +254,6 @@ exports[`Should render the datagrid with a title 1`] = `
       </nav>
     </section>
   </div>
-  <div />
-  <div />
-  <div />
-  <div />
 </div>
 `;
 
@@ -274,6 +285,21 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
           value=""
         />
       </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -480,9 +506,5 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
       </nav>
     </section>
   </div>
-  <div />
-  <div />
-  <div />
-  <div />
 </div>
 `;

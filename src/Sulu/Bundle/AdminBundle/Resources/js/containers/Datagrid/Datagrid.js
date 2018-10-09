@@ -4,16 +4,19 @@ import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
+import ArrowMenu from '../../components/ArrowMenu';
+import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
 import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
-import type {SortOrder} from './types';
+import type {Schema, SortOrder} from './types';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
 import Search from './Search';
 import datagridStyles from './datagrid.scss';
+import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 
 type Props = {|
     adapters: Array<string>,
@@ -53,6 +56,8 @@ export default class Datagrid extends React.Component<Props> {
     @observable showMoveOverlay: boolean = false;
     @observable showOrderDialog: boolean = false;
     @observable ordering: boolean = false;
+    @observable adapterOptionsOpen: boolean = false;
+    @observable columnOptionsOpen: boolean = false;
     resolveCopy: ?({copied: boolean, parent?: ?Object}) => void;
     resolveDelete: ?({deleted: boolean}) => void;
     resolveMove: ?({moved: boolean, parent?: ?Object}) => void;
@@ -325,6 +330,69 @@ export default class Datagrid extends React.Component<Props> {
         this.props.store.deactivate(id);
     };
 
+    @action handleAdapterOptionsButtonClick = () => {
+        this.adapterOptionsOpen = !this.adapterOptionsOpen;
+    };
+
+    @action handleAdapterOptionsClose = () => {
+        this.adapterOptionsOpen = false;
+    };
+
+    @action handleColumnOptionsOpen = () => {
+        this.adapterOptionsOpen = false;
+        this.columnOptionsOpen = true;
+    };
+
+    @action handleColumnOptionsClose = () => {
+        this.columnOptionsOpen = false;
+    };
+
+    @action handleColumnOptionsChange = (schema: Schema) => {
+        this.columnOptionsOpen = false;
+        this.props.store.changeUserSchema(schema);
+    };
+
+    renderAdapterOptionsButton() {
+        return (
+            <div>
+                <Button
+                    icon="su-sort"
+                    onClick={this.handleAdapterOptionsButtonClick}
+                    showDropdownIcon={true}
+                    skin="icon"
+                />
+            </div>
+        );
+    }
+
+    renderAdapterOptions() {
+        if (!this.currentAdapter.hasColumnOptions) {
+            return null;
+        }
+
+        return (
+            <Fragment>
+                <ArrowMenu
+                    anchorElement={this.renderAdapterOptionsButton()}
+                    onClose={this.handleAdapterOptionsClose}
+                    open={this.adapterOptionsOpen}
+                >
+                    <ArrowMenu.Section>
+                        <ArrowMenu.Action onClick={this.handleColumnOptionsOpen}>
+                            {translate('sulu_admin.column_options')}
+                        </ArrowMenu.Action>
+                    </ArrowMenu.Section>
+                </ArrowMenu>
+                <ColumnOptionsOverlay
+                    onClose={this.handleColumnOptionsClose}
+                    onConfirm={this.handleColumnOptionsChange}
+                    open={this.columnOptionsOpen}
+                    schema={this.props.store.userSchema}
+                />
+            </Fragment>
+        );
+    }
+
     render() {
         const {
             adapters,
@@ -351,6 +419,7 @@ export default class Datagrid extends React.Component<Props> {
                             {searchable &&
                                 <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                             }
+                            {this.renderAdapterOptions()}
                             <AdapterSwitch
                                 adapters={adapters}
                                 currentAdapter={this.currentAdapterKey}
@@ -383,7 +452,7 @@ export default class Datagrid extends React.Component<Props> {
                         options={this.currentAdapterOptions}
                         page={store.getPage()}
                         pageCount={store.pageCount}
-                        schema={store.schema}
+                        schema={store.userSchema}
                         selections={store.selectionIds}
                         sortColumn={store.sortColumn.get()}
                         sortOrder={store.sortOrder.get()}

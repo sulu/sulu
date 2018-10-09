@@ -307,7 +307,7 @@ exports[`The component should render with all available props and handle clicks 
     >
       <span
         aria-label="fa-thumb-tack"
-        class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+        class="fa fa-thumb-tack buttonIcon pinIcon"
       />
     </button>
     <div

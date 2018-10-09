@@ -46,8 +46,8 @@ jest.mock('../../../stores/UserStore', () => {
             return mockUserStoreContact();
         }
 
-        getPersistentSetting() {
-            return mockUserStoreGetPersistentSetting();
+        getPersistentSetting(value) {
+            return mockUserStoreGetPersistentSetting(value);
         }
 
         setPersistentSetting(value) {
@@ -184,12 +184,14 @@ test('Application should render pinned navigation from beginning', () => {
         parent: null,
     };
 
-    mockUserStoreGetPersistentSetting.mockReturnValueOnce(1);
+    mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
 
     const view = mount(<Application router={router} />);
     expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
     expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
     expect(view.find('button.pin')).toHaveLength(1);
+
+    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
 
     expect(view).toMatchSnapshot();
 });

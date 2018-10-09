@@ -82,5 +82,6 @@
     "sulu_admin.activate_all": "Activate all",
     "sulu_admin.deactivate_all": "Deactivate all",
     "sulu_admin.all_selected": "All selected",
-    "sulu_admin.none_selected": "None selected"
+    "sulu_admin.none_selected": "None selected",
+    "sulu_admin.column_options": "Column options"
 }

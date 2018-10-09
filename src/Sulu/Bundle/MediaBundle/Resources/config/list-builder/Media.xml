@@ -41,7 +41,7 @@
     </orm:joins>
 
     <properties>
-        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="integer">
+        <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="string">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
@@ -56,7 +56,7 @@
             <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
-        <property name="collection" display="never">
+        <property name="collection" visibility="never">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.collection.class%</orm:entity-name>
 

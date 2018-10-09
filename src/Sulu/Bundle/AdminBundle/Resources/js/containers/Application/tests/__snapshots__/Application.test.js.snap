@@ -69,7 +69,7 @@ exports[`Application should not fail if current route does not exist 1`] = `
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+            class="fa fa-thumb-tack buttonIcon pinIcon"
           />
         </button>
         <div
@@ -228,7 +228,7 @@ exports[`Application should render based on current route 1`] = `
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+            class="fa fa-thumb-tack buttonIcon pinIcon"
           />
         </button>
         <div
@@ -627,6 +627,7 @@ exports[`Application should render opened navigation 1`] = `
                 iconClassName="pinIcon"
                 loading={false}
                 onClick={[Function]}
+                showDropdownIcon={false}
                 size="large"
                 skin="icon"
                 type="button"
@@ -638,12 +639,12 @@ exports[`Application should render opened navigation 1`] = `
                   type="button"
                 >
                   <Icon
-                    className="buttonIcon iconSpan pinIcon"
+                    className="buttonIcon pinIcon"
                     name="fa-thumb-tack"
                   >
                     <span
                       aria-label="fa-thumb-tack"
-                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                      className="fa fa-thumb-tack buttonIcon pinIcon"
                     />
                   </Icon>
                 </button>
@@ -988,6 +989,7 @@ exports[`Application should render pinned navigation 1`] = `
                 iconClassName="pinIcon"
                 loading={false}
                 onClick={[Function]}
+                showDropdownIcon={false}
                 size="large"
                 skin="icon"
                 type="button"
@@ -999,12 +1001,12 @@ exports[`Application should render pinned navigation 1`] = `
                   type="button"
                 >
                   <Icon
-                    className="buttonIcon iconSpan pinIcon"
+                    className="buttonIcon pinIcon"
                     name="fa-thumb-tack"
                   >
                     <span
                       aria-label="fa-thumb-tack"
-                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                      className="fa fa-thumb-tack buttonIcon pinIcon"
                     />
                   </Icon>
                 </button>
@@ -1313,6 +1315,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                 iconClassName="pinIcon"
                 loading={false}
                 onClick={[Function]}
+                showDropdownIcon={false}
                 size="large"
                 skin="icon"
                 type="button"
@@ -1324,12 +1327,12 @@ exports[`Application should render pinned navigation from beginning 1`] = `
                   type="button"
                 >
                   <Icon
-                    className="buttonIcon iconSpan pinIcon"
+                    className="buttonIcon pinIcon"
                     name="fa-thumb-tack"
                   >
                     <span
                       aria-label="fa-thumb-tack"
-                      className="fa fa-thumb-tack buttonIcon iconSpan pinIcon"
+                      className="fa fa-thumb-tack buttonIcon pinIcon"
                     />
                   </Icon>
                 </button>

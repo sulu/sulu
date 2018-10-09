@@ -2,7 +2,7 @@
 import classNames from 'classnames';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../services/DOM';
@@ -100,7 +100,7 @@ export default class Dialog extends React.Component<Props> {
         );
 
         return (
-            <div>
+            <Fragment>
                 <Backdrop open={showPortal} />
                 {showPortal &&
                     <Portal>
@@ -134,7 +134,7 @@ export default class Dialog extends React.Component<Props> {
                         </div>
                     </Portal>
                 }
-            </div>
+            </Fragment>
         );
     }
 }

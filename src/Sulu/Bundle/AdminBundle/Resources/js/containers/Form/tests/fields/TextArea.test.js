@@ -21,7 +21,7 @@ test('Pass error correctly to TextArea component', () => {
             {...fieldTypeDefaultProps}
             error={error}
             formInspector={formInspector}
-            value={'xyz'}
+            value="xyz"
         />
     );
 

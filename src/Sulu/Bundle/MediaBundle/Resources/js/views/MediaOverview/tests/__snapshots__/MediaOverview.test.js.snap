@@ -233,10 +233,6 @@ exports[`Render a simple MediaOverview 1`] = `
           </nav>
         </section>
       </div>
-      <div />
-      <div />
-      <div />
-      <div />
     </div>
     <div
       class="divider"
@@ -549,8 +545,6 @@ exports[`Render a simple MediaOverview 1`] = `
           />
         </section>
       </div>
-      <div />
-      <div />
     </div>
     <input
       autocomplete="off"
