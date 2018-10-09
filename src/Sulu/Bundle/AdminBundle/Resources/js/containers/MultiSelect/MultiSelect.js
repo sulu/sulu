@@ -24,6 +24,8 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
         values: [],
     };
 
+    handleChange: (Array<T>) => void;
+
     resourceListStore: ResourceListStore;
 
     constructor(props: Props<T>) {
@@ -35,20 +37,22 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
         } = this.props;
 
         this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
+
+        // TODO: Can be moved to the correct place when flow bug is fixed
+        // https://github.com/facebook/flow/issues/6978
+        this.handleChange = (values: Array<T>) => {
+            const {
+                onChange,
+                idProperty,
+            } = this.props;
+
+            const valueObjects = this.resourceListStore.data.filter((dataValue) => {
+                return values.includes(dataValue[idProperty]);
+            });
+
+            onChange(values, valueObjects);
+        };
     }
-
-    handleChange = (values: Array<T>) => {
-        const {
-            onChange,
-            idProperty,
-        } = this.props;
-
-        const valueObjects = this.resourceListStore.data.filter((dataValue) => {
-            return values.includes(dataValue[idProperty]);
-        });
-
-        onChange(values, valueObjects);
-    };
 
     render() {
         const {
