@@ -58,10 +58,10 @@ export default class Application extends React.Component<Props> {
     constructor() {
         super();
 
-        this.navigationPinned = !!userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY);
+        this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY);
 
         this.navigationPinnedDisposer = autorun(
-            () => userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned ? 1 : 0)
+            () => userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned)
         );
     }
 
