@@ -1,15 +1,13 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
-import {Loader} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/utils';
+import {Loader, Grid} from 'sulu-admin-bundle/components';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
-import Grid from "sulu-admin-bundle/components/Grid/Grid";
 
 type Props = {
     onChange: (value: Array<Object>) => void,
@@ -87,9 +85,9 @@ export default class RoleAssignments extends React.Component<Props> {
             <Grid>
                 <Grid.Item size={6}>
                     <MultiSelect
-                        displayProperty={'name'}
+                        displayProperty="name"
                         onChange={this.handleRoleChange}
-                        resourceKey={'roles'}
+                        resourceKey="roles"
                         values={this.selectedRoles}
                     />
                 </Grid.Item>
