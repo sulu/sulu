@@ -400,12 +400,40 @@ test('Calling setLocale on a non-localizable ResourceStore should throw an excep
 test('Calling the clone method should return a new instance of the ResourceStore with same data', () => {
     const resourceStore = new ResourceStore('snippets', '1', {});
     resourceStore.data = {title: 'Title'};
+    resourceStore.loading = false;
     const clonedResourceStore = resourceStore.clone();
 
     expect(toJS(clonedResourceStore.data)).toEqual({title: 'Title'});
     expect(clonedResourceStore.data).not.toBe(resourceStore.data);
     expect(toJS(clonedResourceStore)).not.toBe(resourceStore);
     expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
+});
+
+test('Calling the clone method during loading should return a new instance of the ResourceStore with same data', () => {
+    const snippet = {
+        title: 'Snippet',
+    };
+    let snippetResolve;
+    const snippetPromise = new Promise((resolve) => snippetResolve = resolve);
+    ResourceRequester.get.mockReturnValue(snippetPromise);
+    const resourceStore = new ResourceStore('snippets', '1', {});
+    const clonedResourceStore = resourceStore.clone();
+
+    expect(resourceStore.loading).toEqual(true);
+    expect(clonedResourceStore.loading).toEqual(true);
+
+    if (!snippetResolve) {
+        throw new Error('The resolve function for snippets must be set!');
+    }
+    snippetResolve(snippet);
+
+    return snippetPromise.then(() => {
+        expect(toJS(resourceStore.data)).toEqual({title: 'Snippet'});
+        expect(toJS(clonedResourceStore.data)).toEqual({title: 'Snippet'});
+        expect(clonedResourceStore.data).not.toBe(resourceStore.data);
+        expect(toJS(clonedResourceStore)).not.toBe(resourceStore);
+        expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
+    });
 });
 
 test('Should set the internal id if id is set using set', () => {

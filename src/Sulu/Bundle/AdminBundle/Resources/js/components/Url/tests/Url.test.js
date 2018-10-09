@@ -15,14 +15,14 @@ test('Render the component with an error', () => {
 });
 
 test('Set the correct values for protocol and path when initializing', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
 
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
 });
 
 test('Set the correct values for protocol and path when updating', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
 
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
@@ -42,7 +42,7 @@ test('Should log a warning if a not available protocol has been given', () => {
 });
 
 test('Show error when invalid URL was passed via updated prop', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value={undefined} />);
+    const url = shallow(<Url onChange={jest.fn()} value={undefined} />);
     expect(url.find('.error')).toHaveLength(0);
 
     url.setProps({value: 'http://su lu.at'});
@@ -51,7 +51,7 @@ test('Show error when invalid URL was passed via updated prop', () => {
 });
 
 test('Should not reset value of protocol select when undefined value is passed', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://', 'ftp://']} value="https://" />);
+    const url = shallow(<Url onChange={jest.fn()} value="https://" />);
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('');
 
@@ -61,7 +61,7 @@ test('Should not reset value of protocol select when undefined value is passed',
 });
 
 test('Remove error when valid URL was passed via updated prop', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="http://su lu.at" />);
+    const url = shallow(<Url onChange={jest.fn()} value="http://su lu.at" />);
     expect(url.find('.error')).toHaveLength(1);
 
     url.setProps({value: 'http://sulu.at'});
@@ -70,7 +70,7 @@ test('Remove error when valid URL was passed via updated prop', () => {
 });
 
 test('Remove error when valid URL was changed using the text field', () => {
-    const url = shallow(<Url onChange={jest.fn()} protocols={['http://', 'https://']} value="http://su lu.at" />);
+    const url = shallow(<Url onChange={jest.fn()} value="http://su lu.at" />);
     expect(url.find('.error')).toHaveLength(1);
 
     url.find('input').prop('onChange')({
@@ -85,7 +85,7 @@ test('Remove error when valid URL was changed using the text field', () => {
 
 test('Call onChange callback with the first protocol if none was selected', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value={undefined} />);
+    const url = shallow(<Url onChange={changeSpy} value={undefined} />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'sulu.at',
@@ -98,7 +98,7 @@ test('Call onChange callback with the first protocol if none was selected', () =
 
 test('Call onChange callback when protocol was changed', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('SingleSelect').prop('onChange')('http://');
 
     expect(changeSpy).toBeCalledWith('http://www.sulu.io');
@@ -106,7 +106,7 @@ test('Call onChange callback when protocol was changed', () => {
 
 test('Call onChange callback when path was changed', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'sulu.at',
@@ -119,7 +119,7 @@ test('Call onChange callback when path was changed', () => {
 
 test('Do not call onChange callback when path was changed but not blurred', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'sulu.at',
@@ -131,7 +131,7 @@ test('Do not call onChange callback when path was changed but not blurred', () =
 
 test('Call onChange callback with undefined if URL is not valid but leave the current value', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="https://www.sulu.io" />);
+    const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'su lu.at',
@@ -147,7 +147,7 @@ test('Call onChange callback with undefined if URL is not valid but leave the cu
 
 test('Should remove the protocol from path and set it on the protocol select', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value={undefined} />);
+    const url = shallow(<Url onChange={changeSpy} value={undefined} />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'http://www.sulu.at',
@@ -160,7 +160,7 @@ test('Should remove the protocol from path and set it on the protocol select', (
 
 test('Should remove the protocol from path and set it on the protocol select if protocol is already selected', () => {
     const changeSpy = jest.fn();
-    const url = shallow(<Url onChange={changeSpy} protocols={['http://', 'https://']} value="http://www.sulu.at" />);
+    const url = shallow(<Url onChange={changeSpy} value="http://www.sulu.at" />);
     url.find('input').prop('onChange')({
         currentTarget: {
             value: 'https://www.sulu.io',
@@ -177,7 +177,6 @@ test('Call onBlur callback when protocol was changed', () => {
         <Url
             onBlur={blurSpy}
             onChange={jest.fn()}
-            protocols={['http://', 'https://']}
             value="https://www.sulu.io"
         />
     );
@@ -192,7 +191,6 @@ test('Call onBlur callback when path was changed', () => {
         <Url
             onBlur={blurSpy}
             onChange={jest.fn()}
-            protocols={['http://', 'https://']}
             value="https://www.sulu.io"
         />
     );

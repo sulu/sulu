@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Loader;
 
-use Exception;
+use Sulu\Component\Content\Metadata\XmlParserTrait;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -22,6 +22,8 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 abstract class AbstractLoader implements LoaderInterface
 {
+    use XmlParserTrait;
+
     /**
      * @var string
      */
@@ -171,36 +173,6 @@ abstract class AbstractLoader implements LoaderInterface
         }
 
         return $result;
-    }
-
-    /**
-     * returns value of path.
-     */
-    protected function getValueFromXPath($path, \DOMXPath $xpath, \DomNode $context = null, $default = null)
-    {
-        try {
-            $result = $xpath->query($path, $context);
-            if (0 === $result->length) {
-                return $default;
-            }
-
-            $item = $result->item(0);
-            if (null === $item) {
-                return $default;
-            }
-
-            if ('true' === $item->nodeValue) {
-                return true;
-            }
-
-            if ('false' === $item->nodeValue) {
-                return false;
-            }
-
-            return $item->nodeValue;
-        } catch (Exception $ex) {
-            return $default;
-        }
     }
 
     /**

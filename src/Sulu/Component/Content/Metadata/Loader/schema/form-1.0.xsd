@@ -11,12 +11,14 @@
     <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
 
     <xs:include schemaLocation="properties-1.0.xsd"/>
+    <xs:include schemaLocation="schema-1.0.xsd"/>
 
     <xs:element name="form" type="formType"/>
 
     <xs:complexType name="formType">
         <xs:choice maxOccurs="unbounded">
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="schemaType" name="schema" minOccurs="1" maxOccurs="1"/>
         </xs:choice>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>

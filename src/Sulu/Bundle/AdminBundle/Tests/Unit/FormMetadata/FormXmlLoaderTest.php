@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class FormXmlLoaderTest extends TestCase
@@ -33,7 +34,8 @@ class FormXmlLoaderTest extends TestCase
     {
         $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
-        $this->loader = new FormXmlLoader($propertiesXmlParser);
+        $schemaXmlParser = new SchemaXmlParser();
+        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser);
     }
 
     public function testLoadForm()
@@ -46,14 +48,64 @@ class FormXmlLoaderTest extends TestCase
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
         $this->assertCount(4, $formMetadata->getProperties());
+
         $this->assertEquals('formOfAddress', $formMetadata->getProperties()['formOfAddress']->getName());
+        $this->assertEquals(
+            'default_value',
+            $formMetadata->getProperties()['formOfAddress']->getParameter(0)['name']
+        );
+        $this->assertSame(0, $formMetadata->getProperties()['formOfAddress']->getParameter(0)['value']);
         $this->assertTrue($formMetadata->getProperties()['formOfAddress']->getLabel());
+
         $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
         $this->assertTrue($formMetadata->getProperties()['firstName']->getLabel());
+
         $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
         $this->assertTrue($formMetadata->getProperties()['lastName']->getLabel());
+
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
         $this->assertTrue($formMetadata->getProperties()['salutation']->getLabel());
+
+        $this->assertNull($formMetadata->getSchema());
+    }
+
+    public function testLoadFormWithSchema()
+    {
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_schema.xml'
+        );
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+
+        $this->assertCount(2, $formMetadata->getProperties());
+
+        $this->assertEquals('first', $formMetadata->getProperties()['first']->getName());
+        $this->assertEquals('second', $formMetadata->getProperties()['second']->getName());
+
+        $this->assertEquals(
+            [
+                'anyOf' => [
+                    [
+                        'properties' => [
+                            'first' => [
+                                'name' => 'first',
+                                'const' => 1,
+                            ],
+                        ],
+                    ],
+                    [
+                        'properties' => [
+                            'second' => [
+                                'name' => 'second',
+                                'const' => 2,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $formMetadata->getSchema()->toJsonSchema()
+        );
     }
 
     public function testLoadFormWithoutLabel()

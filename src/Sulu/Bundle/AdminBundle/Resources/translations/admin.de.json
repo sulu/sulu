@@ -83,5 +83,7 @@
     "sulu_admin.deactivate_all": "Alle deaktivieren",
     "sulu_admin.all_selected": "Alle ausgewählt",
     "sulu_admin.none_selected": "Keine ausgewählt",
-    "sulu_admin.column_options": "Spalten Optionen"
+    "sulu_admin.column_options": "Spalten Optionen",
+    "sulu_admin.changelog_line_changer": "Letzte Änderung {changer, select, undefined{} other{von {changer}}} am {changed}",
+    "sulu_admin.changelog_line_creator": "Erstellt {creator, select, undefined{} other{von {creator}}} am {created}"
 }

@@ -29,6 +29,7 @@ const URL_REGEX = new RegExp(
 @observer
 export default class Url extends React.Component<Props> {
     static defaultProps = {
+        protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
         valid: true,
     };
 

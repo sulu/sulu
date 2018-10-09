@@ -20,6 +20,7 @@ use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundExcep
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Filesystem\Filesystem;
@@ -187,10 +188,12 @@ class StructureMetadataFactoryTest extends TestCase
             ->willReturn(true);
 
         $propertiesXmlLoader = new PropertiesXmlParser($this->expressionLanguage->reveal());
+        $schemaXmlLoader = new SchemaXmlParser($this->expressionLanguage->reveal());
 
         $xmlLoader = new StructureXmlLoader(
             $cacheLifeTimeResolver->reveal(),
             $propertiesXmlLoader,
+            $schemaXmlLoader,
             $contentTypeManager->reveal()
         );
 

@@ -22,6 +22,10 @@ class ResourceMetadataStore {
         return this.endpoints[key];
     }
 
+    isSameEndpoint(key1: string, key2: string) {
+        return this.endpoints[key1] === this.endpoints[key2];
+    }
+
     loadConfiguration(key: string): Promise<Object> {
         if (!(key in this.configurationPromises)) {
             this.configurationPromises[key] = Requester.get(Config.endpoints.resources.replace(':resource', key));

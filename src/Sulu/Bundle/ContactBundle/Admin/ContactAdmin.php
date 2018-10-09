@@ -34,7 +34,7 @@ class ContactAdmin extends Admin
     {
         $contacts = new NavigationItem('sulu_contact.contacts');
         $contacts->setPosition(40);
-        $contacts->setIcon('fa-user');
+        $contacts->setIcon('su-user');
 
         return $contacts;
     }

@@ -746,6 +746,31 @@ test('Binding should be set to initial passed value from URL', () => {
     expect(history.location.search).toBe('?page=2');
 });
 
+test('Binding should not be set to initial passed value from URL if values already match', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            view: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const value = {
+        get: jest.fn().mockReturnValue(2),
+        intercept: jest.fn(),
+        observe: jest.fn(),
+        set: jest.fn(),
+    };
+
+    const history = createHistory();
+    history.push('/list?page=2');
+    const router = new Router(history);
+    router.bind('page', value, 1);
+
+    expect(value.set).not.toBeCalled();
+});
+
 test('Binding should not be updated if only data type changes', () => {
     routeRegistry.getAll.mockReturnValue({
         list: {

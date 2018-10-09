@@ -106,8 +106,7 @@ class ResourceMetadataMapperTest extends TestCase
 
         $this->assertInstanceOf(Schema::class, $schema);
 
-        $this->assertCount(2, $schema->getRequired());
-        $this->assertSame(['test2', 'test3'], $schema->getRequired());
+        $this->assertEquals(['required' => ['test2', 'test3']], $schema->toJsonSchema());
     }
 
     public function testMapFormProperties()

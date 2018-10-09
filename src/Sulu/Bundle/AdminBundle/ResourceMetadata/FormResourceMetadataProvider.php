@@ -140,6 +140,7 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
 
         $children = [];
         $properties = [];
+        $fileSchema = null;
 
         // load and merge all given forms
         foreach ($forms as $form) {
@@ -148,12 +149,20 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $formStructure = $this->formXmlLoader->load($formFile, $resourceKey);
             $newChildren = $formStructure->getChildren();
             $newProperties = $formStructure->getProperties();
+            $newSchema = $formStructure->getSchema();
 
             if ($newChildren) {
                 $children = array_merge($children, $newChildren);
             }
             if ($newProperties) {
                 $properties = array_merge($properties, $newProperties);
+            }
+            if ($newSchema) {
+                if ($fileSchema) {
+                    $fileSchema = $fileSchema->merge($newSchema);
+                } else {
+                    $fileSchema = $newSchema;
+                }
             }
 
             // create a new file resource for the cache
@@ -168,7 +177,14 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $resourceMetadata->setKey($resourceKey);
             $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
             $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
-            $resourceMetadata->setSchema($this->resourceMetadataMapper->mapSchema($properties));
+            $formSchema = $this->resourceMetadataMapper->mapSchema($properties);
+            $schema = null;
+            if ($fileSchema) {
+                $schema = $fileSchema->merge($formSchema);
+            } else {
+                $schema = $formSchema;
+            }
+            $resourceMetadata->setSchema($schema);
             $resourceMetadata->setEndpoint($endpoint);
 
             $cache->write(

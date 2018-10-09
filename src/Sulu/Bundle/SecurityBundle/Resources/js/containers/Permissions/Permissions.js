@@ -4,6 +4,7 @@ import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {userStore} from 'sulu-admin-bundle/stores';
 import securityContextStore from '../../stores/SecurityContextStore';
 import type {SecurityContextGroups, SecurityContexts} from '../../stores/SecurityContextStore/types';
 import type {ContextPermission} from './types';
@@ -154,12 +155,16 @@ export default class Permissions extends React.Component<Props> {
             return null;
         }
 
+        if (!userStore.user) {
+            throw new Error('This component needs a logged in user to determine the locale!');
+        }
+
         return (
             <Fragment>
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
                 <div className={permissionsStyle.selectContainer}>
                     <MultiSelect
-                        apiOptions={{checkForPermissions: 0}}
+                        apiOptions={{checkForPermissions: 0, locale: userStore.user.locale}}
                         displayProperty="name"
                         idProperty="key"
                         onChange={this.handleWebspaceChange}

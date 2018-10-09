@@ -32,5 +32,7 @@
     "sulu_contact.main_contact": "Hauptansprechpartner",
     "sulu_contact.uid": "UID",
     "sulu_contact.register_number": "Firmenbuchnummer",
-    "sulu_contact.jurisdiction": "Gerichtsstand"
+    "sulu_contact.jurisdiction": "Gerichtsstand",
+    "sulu_contact.no_contact_selected": "Kein Kontakt ausgewählt",
+    "sulu_contact.single_selection_overlay_title": "Kontakt auswählen"
 }

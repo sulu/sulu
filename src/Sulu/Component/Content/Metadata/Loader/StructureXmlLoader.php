@@ -18,15 +18,19 @@ use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoun
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
+use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Metadata\XmlParserTrait;
 
 /**
  * Reads a template xml and returns a StructureMetadata.
  */
 class StructureXmlLoader extends AbstractLoader
 {
+    use XmlParserTrait;
+
     const SCHEME_PATH = '/schema/template-1.0.xsd';
 
     const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
@@ -87,6 +91,11 @@ class StructureXmlLoader extends AbstractLoader
     private $propertiesXmlParser;
 
     /**
+     * @var SchemaXmlParser
+     */
+    private $schemaXmlParser;
+
+    /**
      * @var ContentTypeManagerInterface
      */
     private $contentTypeManager;
@@ -94,10 +103,12 @@ class StructureXmlLoader extends AbstractLoader
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         PropertiesXmlParser $propertiesXmlParser,
+        SchemaXmlParser $schemaXmlParser,
         ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->propertiesXmlParser = $propertiesXmlParser;
+        $this->schemaXmlParser = $schemaXmlParser;
         $this->contentTypeManager = $contentTypeManager;
 
         parent::__construct(
@@ -131,6 +142,10 @@ class StructureXmlLoader extends AbstractLoader
         $structure->setTags($data['tags']);
         $structure->setParameters($data['params']);
 
+        if (isset($data['schema'])) {
+            $structure->setSchema($data['schema']);
+        }
+
         foreach ($data['properties'] as $property) {
             $structure->addChild($property);
         }
@@ -156,6 +171,11 @@ class StructureXmlLoader extends AbstractLoader
             $tags,
             $xpath
         );
+
+        $schemaNode = $xpath->query('/x:template/x:schema')->item(0);
+        if ($schemaNode) {
+            $result['schema'] = $this->schemaXmlParser->load($xpath, $schemaNode);
+        }
 
         $missingProperty = $this->findMissingRequiredProperties($result['properties']);
         if ($missingProperty) {

@@ -103,7 +103,14 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
                 $type = new Type($structureMetadata->getName());
                 $type->setTitle($structureMetadata->getTitle($locale));
                 $type->setForm($this->resourceMetadataMapper->mapForm($structureMetadata->getChildren(), $locale));
-                $type->setSchema($this->resourceMetadataMapper->mapSchema($structureMetadata->getProperties()));
+
+                $schema = $this->resourceMetadataMapper->mapSchema($structureMetadata->getProperties());
+                $templateSchema = $structureMetadata->getSchema();
+                if ($templateSchema) {
+                    $schema = $schema->merge($templateSchema);
+                }
+
+                $type->setSchema($schema);
 
                 $resourceMetadata->addType($type);
             }

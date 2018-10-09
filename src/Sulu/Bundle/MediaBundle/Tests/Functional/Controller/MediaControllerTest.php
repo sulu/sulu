@@ -471,29 +471,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response['url']);
         $this->assertNotEmpty($response['thumbnails']);
 
-        $categories = [
-            [
-                'id' => $response['categories'][0]['id'],
-                'key' => $response['categories'][0]['key'],
-                'name' => $response['categories'][0]['name'],
-            ],
-            [
-                'id' => $response['categories'][1]['id'],
-                'key' => $response['categories'][1]['key'],
-                'name' => $response['categories'][1]['name'],
-            ],
-        ];
-
-        $this->assertContains([
-            'id' => $this->category->getId(),
-            'key' => $this->category->getKey(),
-            'name' => 'First Category',
-        ], $categories);
-        $this->assertContains([
-            'id' => $this->category2->getId(),
-            'key' => $this->category2->getKey(),
-            'name' => 'Second Category',
-        ], $categories);
+        $this->assertContains($this->category->getId(), $response['categories']);
+        $this->assertContains($this->category2->getId(), $response['categories']);
     }
 
     /**
@@ -943,29 +922,8 @@ class MediaControllerTest extends SuluTestCase
             $response->publishLanguages
         );
 
-        $categories = [
-            [
-                'id' => $response->categories[0]->id,
-                'key' => $response->categories[0]->key,
-                'name' => $response->categories[0]->name,
-            ],
-            [
-                'id' => $response->categories[1]->id,
-                'key' => $response->categories[1]->key,
-                'name' => $response->categories[1]->name,
-            ],
-        ];
-
-        $this->assertContains([
-            'id' => $this->category->getId(),
-            'key' => $this->category->getKey(),
-            'name' => 'First Category',
-        ], $categories);
-        $this->assertContains([
-            'id' => $this->category2->getId(),
-            'key' => $this->category2->getKey(),
-            'name' => 'Second Category',
-        ], $categories);
+        $this->assertContains($this->category->getId(), $response->categories);
+        $this->assertContains($this->category2->getId(), $response->categories);
 
         $targetGroups = [
             [

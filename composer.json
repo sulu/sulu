@@ -37,6 +37,7 @@
         "imagine/imagine": "~0.6.1 || ~0.7.0",
         "incenteev/composer-parameter-handler": "^2.1",
         "jms/serializer-bundle": "^2.2",
+        "jms/serializer": "^1.13",
         "layershifter/tld-extract": "^1.1",
         "massive/build-bundle": "^0.3 || ^0.4",
         "massive/search-bundle": "^0.16 || ^0.17",
