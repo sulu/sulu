@@ -62,18 +62,37 @@ class FormResourceMetadataProviderTest extends TestCase
     private $contactXml;
 
     /**
+     * @var Schema
+     */
+    private $contactSchema;
+
+    /**
      * @var string
      */
     private $contactXml2;
+
+    /**
+     * @var Schema
+     */
+    private $contactSchema2;
 
     /**
      * @var string
      */
     private $accountXml;
 
+    /**
+     * @var Schema
+     */
+    private $accountSchema;
+
     public function setUp()
     {
         $this->cacheDir = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'cache';
+
+        $this->contactSchema = new Schema();
+        $this->contactSchema2 = new Schema();
+        $this->accountSchema = new Schema();
 
         $this->contactXml = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'contact.xml']);
         $this->contactXml2 = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'contact2.xml']);
@@ -102,14 +121,17 @@ class FormResourceMetadataProviderTest extends TestCase
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getProperties()->willReturn(['property_array']);
         $formMetadata->getChildren()->willReturn(['children_array']);
+        $formMetadata->getSchema()->willReturn($this->contactSchema);
 
         $formMetadata2 = $this->prophesize(FormMetadata::class);
         $formMetadata2->getProperties()->willReturn(['property_array2']);
         $formMetadata2->getChildren()->willReturn(['children_array2']);
+        $formMetadata2->getSchema()->willReturn($this->contactSchema2);
 
         $formMetadataAccount = $this->prophesize(FormMetadata::class);
         $formMetadataAccount->getProperties()->willReturn(['property_array_account']);
         $formMetadataAccount->getChildren()->willReturn(['children_array_account']);
+        $formMetadataAccount->getSchema()->willReturn($this->accountSchema);
 
         $this->formXmlLoader->load($this->contactXml, Argument::any())->willReturn($formMetadata->reveal());
         $this->formXmlLoader->load($this->contactXml2, Argument::any())->willReturn($formMetadata2->reveal());
@@ -216,13 +238,39 @@ class FormResourceMetadataProviderTest extends TestCase
         );
         $this->assertEquals($resourceMetadata->getForm(), new Form());
         $this->assertEquals($resourceMetadata->getDatagrid(), new Datagrid());
-        $this->assertEquals($resourceMetadata->getSchema(), new Schema());
+        $this->assertEquals(
+            $resourceMetadata->getSchema()->toJsonSchema(),
+            [
+                'allOf' => [
+                    [
+                        'allOf' => [
+                            [],
+                            [],
+                        ],
+                    ],
+                    [],
+                ],
+            ]
+        );
 
         // also the second one the data should be the same
         $resourceMetadata = $this->formResourceMetadataProvider->getResourceMetadata('contacts', 'de');
         $this->assertEquals($resourceMetadata->getForm(), new Form());
         $this->assertEquals($resourceMetadata->getDatagrid(), new Datagrid());
-        $this->assertEquals($resourceMetadata->getSchema(), new Schema());
+        $this->assertEquals(
+            $resourceMetadata->getSchema()->toJsonSchema(),
+            [
+                'allOf' => [
+                    [
+                        'allOf' => [
+                            [],
+                            [],
+                        ],
+                    ],
+                    [],
+                ],
+            ]
+        );
     }
 
     public function testGetUnknownResource()
@@ -241,14 +289,32 @@ class FormResourceMetadataProviderTest extends TestCase
         $resourceMetadata1 = $this->formResourceMetadataProvider->getResourceMetadata('contacts', 'de');
         $this->assertEquals($resourceMetadata1->getForm(), new Form());
         $this->assertEquals($resourceMetadata1->getDatagrid(), new Datagrid());
-        $this->assertEquals($resourceMetadata1->getSchema(), new Schema());
+        $this->assertEquals(
+            $resourceMetadata1->getSchema()->toJsonSchema(),
+            [
+                'allOf' => [
+                    [
+                        'allOf' => [
+                            [],
+                            [],
+                        ],
+                    ],
+                    [],
+                ],
+            ]
+        );
         $this->assertEquals($resourceMetadata1->getKey(), 'contacts');
 
         /** @var ResourceMetadata $resourceMetadata */
         $resourceMetadata2 = $this->formResourceMetadataProvider->getResourceMetadata('accounts', 'de');
         $this->assertEquals($resourceMetadata2->getForm(), new Form());
         $this->assertEquals($resourceMetadata2->getDatagrid(), new Datagrid());
-        $this->assertEquals($resourceMetadata2->getSchema(), new Schema());
+        $this->assertEquals($resourceMetadata2->getSchema()->toJsonSchema(), [
+            'allOf' => [
+                [],
+                [],
+            ],
+        ]);
         $this->assertEquals($resourceMetadata2->getKey(), 'accounts');
 
         $this->assertCount(

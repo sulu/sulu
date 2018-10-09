@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\PropertiesMetadata;
 
 /**
@@ -18,4 +19,18 @@ use Sulu\Component\Content\Metadata\PropertiesMetadata;
  */
 class FormMetadata extends PropertiesMetadata
 {
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    public function setSchema(Schema $schema)
+    {
+        $this->schema = $schema;
+    }
+
+    public function getSchema(): ?Schema
+    {
+        return $this->schema;
+    }
 }

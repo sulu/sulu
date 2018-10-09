@@ -57,6 +57,7 @@
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
             <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
+            <argument type="service" id="sulu_content.structure.schema_xml_parser"/>
         </service>
 
         <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\RouteRegistry">

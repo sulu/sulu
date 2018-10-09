@@ -14,28 +14,77 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Schema;
 class Schema
 {
     /**
-     * @var string[]
+     * @var Property[]
      */
-    protected $required;
+    private $properties;
 
     /**
-     * @return string[]
+     * @var Schema[]
      */
-    public function getRequired(): array
-    {
-        return $this->required;
-    }
+    private $anyOfs;
 
     /**
-     * @param string[] $required
+     * @var Schema[]
      */
-    public function setRequired(array $required): void
+    private $allOfs;
+
+    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [])
     {
-        $this->required = $required;
+        $this->properties = $properties;
+        $this->anyOfs = $anyOfs;
+        $this->allOfs = $allOfs;
     }
 
-    public function addRequired(string $required): void
+    public function merge(self $schema)
     {
-        $this->required[] = $required;
+        return new self([], [], [$this, $schema]);
+    }
+
+    public function toJsonSchema()
+    {
+        $jsonSchema = [];
+
+        $required = array_values(
+            array_filter(
+                array_map(function(Property $property) {
+                    if ($property->isMandatory()) {
+                        return $property->getName();
+                    }
+                }, $this->properties)
+            )
+        );
+
+        if (count($required) > 0) {
+            $jsonSchema['required'] = $required;
+        }
+
+        $properties = [];
+
+        foreach ($this->properties as $property) {
+            $jsonSchemaProperty = $property->toJsonSchema();
+            if (!$jsonSchemaProperty) {
+                continue;
+            }
+
+            $properties[$property->getName()] = $jsonSchemaProperty;
+        }
+
+        if (count($properties) > 0) {
+            $jsonSchema['properties'] = $properties;
+        }
+
+        if (count($this->anyOfs) > 0) {
+            $jsonSchema['anyOf'] = array_map(function(Schema $schema) {
+                return $schema->toJsonSchema();
+            }, $this->anyOfs);
+        }
+
+        if (count($this->allOfs) > 0) {
+            $jsonSchema['allOf'] = array_map(function(Schema $schema) {
+                return $schema->toJsonSchema();
+            }, $this->allOfs);
+        }
+
+        return $jsonSchema;
     }
 }

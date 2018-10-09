@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -26,6 +28,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class WebspaceController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * Returns webspaces.
      *
@@ -34,6 +38,7 @@ class WebspaceController extends RestController implements ClassResourceInterfac
     public function cgetAction(Request $request)
     {
         $checkForPermissions = $request->get('checkForPermissions', true);
+        $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaces = [];
 
         $securityChecker = $this->get('sulu_security.security_checker');
@@ -48,7 +53,12 @@ class WebspaceController extends RestController implements ClassResourceInterfac
             $webspaces[] = $webspace;
         }
 
-        return $this->handleView($this->view(new CollectionRepresentation($webspaces, 'webspaces')));
+        $context = new Context();
+        $context->setAttribute('locale', $locale);
+        $view = $this->view(new CollectionRepresentation($webspaces, 'webspaces'));
+        $view->setContext($context);
+
+        return $this->handleView($view);
     }
 
     /**

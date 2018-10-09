@@ -42,7 +42,7 @@ export default class Router {
     }
 
     @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number | boolean = undefined) {
-        if (key in this.attributes) {
+        if (key in this.attributes && value.get() !== this.attributes[key]) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
             value.set(this.attributes[key]);

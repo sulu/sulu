@@ -75,6 +75,28 @@ exports[`Render a field with an error 1`] = `
 </div>
 `;
 
+exports[`Render a field without a const error 1`] = `
+<div
+  class="item gridItem size size-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <label
+      class="label"
+    >
+      label1
+    </label>
+    <input
+      type="text"
+    />
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
 exports[`Render a field without a label 1`] = `
 <div
   class="item gridItem size size-12 space-before-0 space-after-0"

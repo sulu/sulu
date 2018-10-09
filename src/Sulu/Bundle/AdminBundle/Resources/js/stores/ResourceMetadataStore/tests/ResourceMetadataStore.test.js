@@ -13,6 +13,17 @@ test('Set and get endpoint for given key', () => {
     expect(resourceMetadataStore.getEndpoint('snippets')).toEqual('/admin/api/snippets');
 });
 
+test('Test if two endpoints are the same', () => {
+    resourceMetadataStore.setEndpoints({
+        pages: '/admin/api/pages',
+        pages_settings: '/admin/api/pages',
+        pages_excerpt: '/admin/api/pages_excerpt',
+    });
+    expect(resourceMetadataStore.isSameEndpoint('pages', 'pages')).toEqual(true);
+    expect(resourceMetadataStore.isSameEndpoint('pages', 'pages_settings')).toEqual(true);
+    expect(resourceMetadataStore.isSameEndpoint('pages', 'pages_excerpt')).toEqual(false);
+});
+
 test('Throw exception when getting endpoint for not existing key', () => {
     expect(() => resourceMetadataStore.getEndpoint('not-existing')).toThrow(/"not-existing"/);
 });

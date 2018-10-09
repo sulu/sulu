@@ -32,5 +32,7 @@
     "sulu_contact.main_contact": "Main Contact",
     "sulu_contact.uid": "UID",
     "sulu_contact.register_number": "Register Number",
-    "sulu_contact.jurisdiction": "Jurisdiction"
+    "sulu_contact.jurisdiction": "Jurisdiction",
+    "sulu_contact.no_contact_selected": "No contact selected",
+    "sulu_contact.single_selection_overlay_title": "Choose contact"
 }

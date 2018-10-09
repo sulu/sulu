@@ -330,6 +330,10 @@ export default class FormStore {
             const {modifiedFields} = this;
             modifiedFields.splice(0, modifiedFields.length);
             return response;
+        }).catch((errorResponse) => {
+            return errorResponse.json().then(action((error) => {
+                return Promise.reject(error);
+            }));
         });
     }
 

@@ -88,7 +88,7 @@
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(sulu-(.*)-bundle|@ckeditor)/)"
+            "node_modules/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)/)"
         ],
         "testURL": "http://localhost"
     }

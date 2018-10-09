@@ -7,5 +7,9 @@
     "sulu_content.title": "Titel",
     "sulu_content.show_ghost_and_shadow": "Ghost- und Shadow- Seiten anzeigen",
     "sulu_content.no_page_selected": "Keine Seite ausgewählt",
-    "sulu_content.single_selection_overlay_title": "Seite auswählen"
+    "sulu_content.single_selection_overlay_title": "Seite auswählen",
+    "sulu_content.page_form_settings": "Einstellungen",
+    "sulu_content.show_ghost_and_shadow": "Ghost- und Shadow- Seiten anzeigen",
+    "sulu_content.no_navigation": "keiner Navigation",
+    "sulu_content.all_navigations": "allen Navigationen"
 }

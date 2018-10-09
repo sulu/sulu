@@ -1,6 +1,6 @@
 // @flow
 import 'core-js/library/fn/promise';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/Initializer';
 import type {Contact, User} from './types';
@@ -24,6 +24,10 @@ class UserStore {
         this.contact = undefined;
         this.loginError = false;
         this.resetSuccess = false;
+    }
+
+    @computed get locale() {
+        return this.user ? this.user.locale : Config.fallbackLocale;
     }
 
     @action setLoggedIn(loggedIn: boolean) {

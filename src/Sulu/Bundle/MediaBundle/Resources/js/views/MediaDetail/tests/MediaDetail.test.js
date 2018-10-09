@@ -162,6 +162,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
     resourceStore.set('id', testId);
+    resourceStore.loading = false;
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);

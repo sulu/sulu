@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render loader if changer and creator are not loaded yet 1`] = `
+<div
+  class="spinner"
+  style="width:40px;height:40px"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;

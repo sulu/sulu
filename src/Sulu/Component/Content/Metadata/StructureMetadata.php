@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Metadata;
 
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+
 /**
  * Represents metadata for a structure.
  */
@@ -40,6 +42,11 @@ class StructureMetadata extends PropertiesMetadata
      * @var array
      */
     protected $areas;
+
+    /**
+     * @var Schema
+     */
+    protected $schema;
 
     public function getCacheLifetime(): array
     {
@@ -97,6 +104,18 @@ class StructureMetadata extends PropertiesMetadata
     public function setAreas(array $areas): self
     {
         $this->areas = $areas;
+
+        return $this;
+    }
+
+    public function getSchema(): ?Schema
+    {
+        return $this->schema;
+    }
+
+    public function setSchema(Schema $schema)
+    {
+        $this->schema = $schema;
 
         return $this;
     }

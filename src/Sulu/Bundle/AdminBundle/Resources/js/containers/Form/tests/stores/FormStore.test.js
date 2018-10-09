@@ -561,6 +561,45 @@ test('Save the store should call the resourceStore save function with the passed
     formStore.destroy();
 });
 
+test('Save the store should reject if request has failed', (done) => {
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const error = {
+        text: 'Something failed',
+    };
+    const errorResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve(error)),
+    };
+    resourceStore.save.mockReturnValue(Promise.reject(errorResponse));
+    const formStore = new FormStore(resourceStore);
+
+    resourceStore.data = {
+        blocks: [
+            {
+                text: 'Test',
+            },
+            {
+                text: 'T',
+            },
+        ],
+    };
+
+    when(
+        () => !formStore.schemaLoading,
+        (): void => {
+            const savePromise = formStore.save();
+            savePromise.catch(() => {
+                expect(toJS(formStore.errors)).toEqual({});
+            });
+
+            // $FlowFixMe
+            expect(savePromise).rejects.toEqual(error).then(() => done());
+        }
+    );
+});
+
 test('Save the store should validate the current data', (done) => {
     const jsonSchemaPromise = Promise.resolve({
         required: ['title', 'blocks'],
@@ -602,7 +641,8 @@ test('Save the store should validate the current data', (done) => {
     when(
         () => !formStore.schemaLoading,
         (): void => {
-            formStore.save().catch(() => {
+            const savePromise = formStore.save();
+            savePromise.catch(() => {
                 expect(toJS(formStore.errors)).toEqual({
                     title: {
                         keyword: 'required',
@@ -622,8 +662,10 @@ test('Save the store should validate the current data', (done) => {
                         },
                     ],
                 });
-                done();
             });
+
+            // $FlowFixMe
+            expect(savePromise).rejects.toEqual(expect.any(String)).then(() => done());
         }
     );
 });

@@ -79,6 +79,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendPortalInformation($webspace, $context, $visitor);
         $this->appendUrls($webspace, $context, $visitor);
         $this->appendCustomUrls($webspace, $context, $visitor);
+        $this->appendNavigations($webspace, $context, $visitor);
 
         $visitor->addData('allLocalizations', $webspace->getAllLocalizations());
     }
@@ -155,5 +156,19 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         return $customUrls;
+    }
+
+    private function appendNavigations(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    {
+        $navigations = [];
+        foreach ($webspace->getNavigation()->getContexts() as $navigationContext) {
+            $navigations[] = [
+                'key' => $navigationContext->getKey(),
+                'title' => $navigationContext->getTitle($context->getAttribute('locale')),
+            ];
+        }
+
+        $navigations = $context->accept($navigations);
+        $visitor->addData('navigations', $navigations);
     }
 }

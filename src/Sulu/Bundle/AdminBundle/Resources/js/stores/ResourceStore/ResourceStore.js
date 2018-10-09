@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions} from './types';
@@ -50,6 +50,8 @@ export default class ResourceStore {
             return;
         }
 
+        this.setLoading(true);
+
         const {locale} = this.observableOptions;
 
         if (locale) {
@@ -58,8 +60,6 @@ export default class ResourceStore {
             }
             options.locale = locale.get();
         }
-
-        this.setLoading(true);
 
         const promise = this.idQueryParameter
             ? ResourceRequester.get(
@@ -242,7 +242,15 @@ export default class ResourceStore {
             true
         );
 
-        clonedResourceStore.data = toJS(this.data);
+        clonedResourceStore.loading = this.loading;
+
+        when(
+            () => !this.loading,
+            (): void => {
+                clonedResourceStore.data = toJS(this.data);
+                clonedResourceStore.loading = false;
+            }
+        );
 
         return clonedResourceStore;
     }

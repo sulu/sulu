@@ -284,11 +284,12 @@ class AdminController
 
         if ($resourceMetadata instanceof TypesInterface) {
             foreach ($resourceMetadata->getTypes() as $typeName => $type) {
+                $typeSchema = $type->getSchema()->toJsonSchema();
                 $resourceMetadataArray['types'][$typeName] = [
                     'name' => $type->getName(),
                     'title' => $type->getTitle(),
                     'form' => $type->getForm(),
-                    'schema' => $type->getSchema(),
+                    'schema' => !empty($typeSchema) ? $typeSchema : new \stdClass(),
                 ];
             }
         }
@@ -296,7 +297,8 @@ class AdminController
             $resourceMetadataArray['form'] = $resourceMetadata->getForm();
         }
         if ($resourceMetadata instanceof SchemaInterface) {
-            $resourceMetadataArray['schema'] = $resourceMetadata->getSchema();
+            $resourceSchema = $resourceMetadata->getSchema()->toJsonSchema();
+            $resourceMetadataArray['schema'] = !empty($resourceSchema) ? $resourceSchema : new \stdClass();
         }
         if ($resourceMetadata instanceof DatagridInterface) {
             $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();

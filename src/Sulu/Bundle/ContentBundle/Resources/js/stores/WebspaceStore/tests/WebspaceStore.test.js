@@ -1,6 +1,11 @@
 // @flow
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import userStore from 'sulu-admin-bundle/stores/UserStore';
 import webspaceStore from '../WebspaceStore';
+
+jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+    user: undefined,
+}));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue({
@@ -8,7 +13,22 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     }),
 }));
 
+beforeEach(() => {
+    webspaceStore.clear();
+});
+
+test('Should fail if no user is logged in', () => {
+    expect(() => webspaceStore.loadWebspaces()).toThrow(/user must be logged in /);
+});
+
 test('Load webspaces', () => {
+    userStore.user = {
+        id: 1,
+        locale: 'de',
+        settings: [],
+        username: 'test',
+    };
+
     const response = {
         _embedded: {
             webspaces: [
@@ -27,8 +47,9 @@ test('Load webspaces', () => {
     const promise = Promise.resolve(response);
 
     ResourceRequester.getList.mockReturnValue(promise);
-
     const webspacePromise = webspaceStore.loadWebspaces();
+
+    expect(ResourceRequester.getList).toBeCalledWith('webspaces', {locale: 'de'});
 
     return webspacePromise.then((webspaces) => {
         // check if promise have been cached
@@ -38,6 +59,13 @@ test('Load webspaces', () => {
 });
 
 test('Load webspace with given key', () => {
+    userStore.user = {
+        id: 1,
+        locale: 'en',
+        settings: [],
+        username: 'test',
+    };
+
     const response = {
         _embedded: {
             webspaces: [
@@ -56,8 +84,9 @@ test('Load webspace with given key', () => {
     const promise = Promise.resolve(response);
 
     ResourceRequester.getList.mockReturnValue(promise);
-
     const webspacePromise = webspaceStore.loadWebspace('sulu');
+
+    expect(ResourceRequester.getList).toBeCalledWith('webspaces', {locale: 'en'});
 
     return webspacePromise.then((webspace) => {
         // check if promise have been cached

@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContentBundle\ResourceMetadata\StructureResourceMetadataProvider;
@@ -82,7 +83,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         );
     }
 
-    public function testGeResourceMetadata()
+    public function testGetResourceMetadata()
     {
         $this->resourceMetadataMapper->mapDatagrid('PageDocumentClass', 'de')->willReturn(new Datagrid());
 
@@ -102,6 +103,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $structure1->isInternal()->willReturn(false);
         $structure1->getProperties()->willReturn(['properties_test1']);
         $structure1->getChildren()->willReturn(['children_test1']);
+        $structure1->getSchema()->willReturn(null);
 
         $structure2 = $this->prophesize(StructureMetadata::class);
         $structure2->getName()->willReturn('test2');
@@ -109,6 +111,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $structure2->isInternal()->willReturn(false);
         $structure2->getProperties()->willReturn(['properties_test2']);
         $structure2->getChildren()->willReturn(['children_test2']);
+        $structure2->getSchema()->willReturn(null);
 
         $structures = [
             $structure1,
@@ -170,6 +173,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $structure1->isInternal()->willReturn(false);
         $structure1->getProperties()->willReturn(['properties_test1']);
         $structure1->getChildren()->willReturn(['children_test1']);
+        $structure1->getSchema()->willReturn(new Schema([new Property('title', true), new Property('url', true)]));
 
         $structure2 = $this->prophesize(StructureMetadata::class);
         $structure2->getName()->willReturn('test2');
@@ -177,6 +181,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $structure2->isInternal()->willReturn(false);
         $structure2->getProperties()->willReturn(['properties_test2']);
         $structure2->getChildren()->willReturn(['children_test2']);
+        $structure2->getSchema()->willReturn(null);
 
         $snippetStructure = $this->prophesize(StructureMetadata::class);
         $snippetStructure->getName()->willReturn('test2');
@@ -184,6 +189,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $snippetStructure->isInternal()->willReturn(false);
         $snippetStructure->getProperties()->willReturn(['properties_snippets']);
         $snippetStructure->getChildren()->willReturn(['children_snippets']);
+        $snippetStructure->getSchema()->willReturn(new Schema([new Property('title', true)]));
 
         $structures = [
             $structure1,
@@ -195,6 +201,32 @@ class StructureResourceMetadataProviderTest extends TestCase
 
         $structureResourceMetadata = $this->structureResourceMetadataProvider->getAllResourceMetadata('de');
         $this->assertCount(2, $structureResourceMetadata);
+        $this->assertEquals(
+            [
+                'allOf' => [
+                    [],
+                    [
+                        'required' => ['title', 'url'],
+                    ],
+                ],
+            ],
+            $structureResourceMetadata[0]->getTypes()['test1']->getSchema()->toJsonSchema()
+        );
+        $this->assertEquals(
+            [],
+            $structureResourceMetadata[0]->getTypes()['test2']->getSchema()->toJsonSchema()
+        );
+        $this->assertEquals(
+            [
+                'allOf' => [
+                    [],
+                    [
+                        'required' => ['title'],
+                    ],
+                ],
+            ],
+            $structureResourceMetadata[1]->getTypes()['test2']->getSchema()->toJsonSchema()
+        );
     }
 
     public function testGetUnknownResource()
