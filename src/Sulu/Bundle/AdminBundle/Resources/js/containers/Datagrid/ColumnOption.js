@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {SortableHandle} from 'react-sortable-hoc';
-import {Icon} from '../../components';
+import Icon from '../../components/Icon';
 import columnOptionsStyles from './columnOptions.scss';
 
 const DRAG_ICON = 'su-more';
