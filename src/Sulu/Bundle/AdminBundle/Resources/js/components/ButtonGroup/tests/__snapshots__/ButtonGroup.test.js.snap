@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render a button with a custom className 1`] = `
+<div>
+  <button
+    class="button icon button test"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-th-large"
+        class="su-th-large"
+      />
+    </span>
+  </button>
+</div>
+`;
+
 exports[`Should render more than two buttons 1`] = `
 <div>
   <button
@@ -69,6 +87,37 @@ exports[`Should render one button 1`] = `
       <span
         aria-label="su-th-large"
         class="su-th-large"
+      />
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Should render one button with a custom className and another one without 1`] = `
+<div>
+  <button
+    class="button icon button test"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-th-large"
+        class="su-th-large"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-align-justify"
+        class="su-align-justify"
       />
     </span>
   </button>

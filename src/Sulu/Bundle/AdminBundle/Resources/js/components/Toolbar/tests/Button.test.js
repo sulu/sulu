@@ -15,6 +15,10 @@ test('Render button with value', () => {
     expect(render(<Button value="Click" />)).toMatchSnapshot();
 });
 
+test('Render button without text', () => {
+    expect(render(<Button showText={false} />)).toMatchSnapshot();
+});
+
 test('Render disabled button', () => {
     expect(render(<Button disabled={true} />)).toMatchSnapshot();
 });

@@ -10,10 +10,12 @@ const LOADER_SIZE = 25;
 
 type Props = {|
     active: boolean,
+    activeClassName?: string,
     children?: Node,
     className?: string,
     disabled: boolean,
     icon?: string,
+    iconClassName?: string,
     loading: boolean,
     onClick?: (value: *) => void,
     showDropdownIcon: boolean,
@@ -46,24 +48,32 @@ export default class Button extends React.PureComponent<Props> {
     render() {
         const {
             active,
+            activeClassName,
             children,
             className,
             disabled,
             icon,
+            iconClassName,
             loading,
             onClick,
             showDropdownIcon,
             skin,
             type,
         } = this.props;
+
         const buttonClass = classNames(
             buttonStyles.button,
             buttonStyles[skin],
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
+                [activeClassName || '']: active && activeClassName,
             },
             className
+        );
+        const iconClass = classNames(
+            buttonStyles.buttonIcon,
+            iconClassName
         );
 
         return (
@@ -74,16 +84,13 @@ export default class Button extends React.PureComponent<Props> {
                 type={type}
             >
                 {icon &&
-                    <Icon className={buttonStyles.buttonIcon} name={icon} />
+                    <Icon className={iconClass} name={icon} />
                 }
                 {children &&
                     <span className={buttonStyles.text}>{children}</span>
                 }
                 {showDropdownIcon &&
-                    <Icon
-                        className={classNames(buttonStyles.buttonIcon, buttonStyles.dropdownIcon)}
-                        name={'su-angle-down'}
-                    />
+                    <Icon className={buttonStyles.dropdownIcon} name="su-angle-down" />
                 }
                 {loading &&
                     <div className={buttonStyles.loader}>

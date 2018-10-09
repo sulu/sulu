@@ -14,14 +14,14 @@ exports[`Icon should render 1`] = `
 exports[`Icon should render with class names 1`] = `
 <span
   aria-label="su-pen"
-  class="test su-pen"
+  class="su-pen test"
 />
 `;
 
 exports[`Icon should render with onClick handler, role and tabindex 1`] = `
 <span
   aria-label="su-save"
-  class="test su-save clickable"
+  class="su-save clickable test"
   role="button"
   tabindex="0"
 />

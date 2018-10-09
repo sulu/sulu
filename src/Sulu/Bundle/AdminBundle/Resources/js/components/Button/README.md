@@ -59,7 +59,7 @@ The buttons can also be used in combination with an icon.
 </Button>
 ```
 
-The prob `showDropdownIcon` displays a drop down icon on the right side.
+The prop `showDropdownIcon` displays a drop down icon on the right side.
 
 ```javascript
 <Button skin="icon" icon="su-plus" showDropdownIcon={true} />

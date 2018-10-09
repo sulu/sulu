@@ -39,6 +39,15 @@ test('Render dropdown with a prepended icon', () => {
     )).toMatchSnapshot();
 });
 
+test('Render dropdown without text', () => {
+    expect(render(
+        <Dropdown
+            {...dropdownPropsMock}
+            showText={false}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render dropdown with a different size', () => {
     expect(render(
         <Dropdown

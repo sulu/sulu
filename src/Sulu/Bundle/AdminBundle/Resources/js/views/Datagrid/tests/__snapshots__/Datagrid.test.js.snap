@@ -23,7 +23,7 @@ exports[`Should render the datagrid with a title 1`] = `
         >
           <span
             aria-label="su-search"
-            class="icon dark iconClickable collapsed su-search clickable"
+            class="su-search clickable icon dark iconClickable collapsed"
             role="button"
             tabindex="0"
           />
@@ -40,11 +40,11 @@ exports[`Should render the datagrid with a title 1`] = `
         >
           <span
             aria-label="su-sort"
-            class="buttonIcon su-sort"
+            class="su-sort buttonIcon"
           />
           <span
             aria-label="su-angle-down"
-            class="buttonIcon dropdownIcon su-angle-down"
+            class="su-angle-down dropdownIcon"
           />
         </button>
       </div>
@@ -206,7 +206,7 @@ exports[`Should render the datagrid with a title 1`] = `
               </div>
               <span
                 aria-label="su-angle-down"
-                class="toggle su-angle-down"
+                class="su-angle-down toggle"
               />
             </button>
           </div>
@@ -275,7 +275,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         >
           <span
             aria-label="su-search"
-            class="icon dark iconClickable collapsed su-search clickable"
+            class="su-search clickable icon dark iconClickable collapsed"
             role="button"
             tabindex="0"
           />
@@ -292,11 +292,11 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
         >
           <span
             aria-label="su-sort"
-            class="buttonIcon su-sort"
+            class="su-sort buttonIcon"
           />
           <span
             aria-label="su-angle-down"
-            class="buttonIcon dropdownIcon su-angle-down"
+            class="su-angle-down dropdownIcon"
           />
         </button>
       </div>
@@ -458,7 +458,7 @@ exports[`Should render the datagrid with the correct resourceKey 1`] = `
               </div>
               <span
                 aria-label="su-angle-down"
-                class="toggle su-angle-down"
+                class="su-angle-down toggle"
               />
             </button>
           </div>

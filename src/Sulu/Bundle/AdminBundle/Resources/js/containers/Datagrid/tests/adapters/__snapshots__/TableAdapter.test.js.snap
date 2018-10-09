@@ -19,7 +19,7 @@ exports[`Render column with ascending sort icon 1`] = `
               Title
               <span
                 aria-label="su-angle-up"
-                class="headerCellSortIcon su-angle-up"
+                class="su-angle-up headerCellSortIcon"
               />
             </button>
           </th>
@@ -101,7 +101,7 @@ exports[`Render column with ascending sort icon 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -177,7 +177,7 @@ exports[`Render column with descending sort icon 1`] = `
               Description
               <span
                 aria-label="su-angle-down"
-                class="headerCellSortIcon su-angle-down"
+                class="su-angle-down headerCellSortIcon"
               />
             </button>
           </th>
@@ -252,7 +252,7 @@ exports[`Render column with descending sort icon 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -417,7 +417,7 @@ exports[`Render data with all different visibility types schema 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -598,7 +598,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -742,7 +742,7 @@ exports[`Render data with schema 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -991,7 +991,7 @@ exports[`Render data with schema and selections 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -1135,7 +1135,7 @@ exports[`Render data with schema in different order 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>
@@ -1250,7 +1250,7 @@ exports[`Render data with schema not containing all fields 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>

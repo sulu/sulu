@@ -13,3 +13,7 @@ test('Render controls', () => {
 test('Render controls with children', () => {
     expect(render(<Controls><Button onClick={clickSpy}>Test</Button></Controls>)).toMatchSnapshot();
 });
+
+test('Render growing controls', () => {
+    expect(render(<Controls grow={true}></Controls>)).toMatchSnapshot();
+});

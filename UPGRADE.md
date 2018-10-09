@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### DateTime Serialization
+
+DateTimes in a REST response do not contain the timezone anymore.
+
 ### Websocket
 
 The websocket-bundle and component was removed without replacement.

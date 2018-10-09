@@ -49,7 +49,7 @@ exports[`Render with data 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>
@@ -90,7 +90,7 @@ exports[`Render with data and apiOptions 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>
@@ -131,7 +131,7 @@ exports[`Render with values 1`] = `
     </div>
     <span
       aria-label="su-angle-down"
-      class="toggle su-angle-down"
+      class="su-angle-down toggle"
     />
   </button>
 </div>

@@ -55,13 +55,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />
@@ -108,13 +108,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />
@@ -210,13 +210,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />
@@ -263,13 +263,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />
@@ -325,13 +325,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />
@@ -378,13 +378,13 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           >
             <span
               aria-label="fa-heart"
-              class="button fa fa-heart clickable"
+              class="fa fa-heart clickable button"
               role="button"
               tabindex="0"
             />
             <span
               aria-label="fa-pencil"
-              class="button fa fa-pencil clickable"
+              class="fa fa-pencil clickable button"
               role="button"
               tabindex="0"
             />

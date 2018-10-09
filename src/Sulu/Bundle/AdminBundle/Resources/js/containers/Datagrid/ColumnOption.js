@@ -11,7 +11,7 @@ type Props = {
     schemaKey: string,
     label: string,
     visibility: 'always' | 'yes' | 'no',
-    onChange: (schemaKey: string, visibility: 'yes' | 'no') => void,
+    onChange: (visibility: 'yes' | 'no', schemaKey: string) => void,
 };
 
 const DragHandle = SortableHandle(() => {
@@ -22,7 +22,7 @@ const DragHandle = SortableHandle(() => {
     );
 });
 
-export default class ColumnOptionComponent extends React.Component<Props> {
+export default class ColumnOption extends React.Component<Props> {
     handleIconClick = () => {
         const {
             onChange,
@@ -30,7 +30,7 @@ export default class ColumnOptionComponent extends React.Component<Props> {
             visibility,
         } = this.props;
 
-        onChange(schemaKey, visibility === 'yes' ? 'no' : 'yes');
+        onChange(visibility === 'yes' ? 'no' : 'yes', schemaKey);
     };
 
     render() {
@@ -51,7 +51,7 @@ export default class ColumnOptionComponent extends React.Component<Props> {
                 <DragHandle />
                 <span className={columnOptionsStyles.label}>{label}</span>
                 {visibility !== 'always' &&
-                    <Icon className={columnOptionsStyles.icon} name={'su-eye'} onClick={this.handleIconClick} />
+                    <Icon className={columnOptionsStyles.icon} name="su-eye" onClick={this.handleIconClick} />
                 }
             </div>
         );

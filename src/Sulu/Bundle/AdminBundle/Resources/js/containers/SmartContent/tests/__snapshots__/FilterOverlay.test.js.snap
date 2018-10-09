@@ -16,7 +16,7 @@ exports[`Render with all fields 1`] = `
         </h2>
         <span
           aria-label="su-times"
-          class="icon su-times clickable"
+          class="su-times clickable icon"
           role="button"
           tabindex="0"
         />
@@ -123,7 +123,7 @@ exports[`Render with all fields 1`] = `
                     </div>
                     <span
                       aria-label="su-angle-down"
-                      class="toggle su-angle-down"
+                      class="su-angle-down toggle"
                     />
                   </button>
                 </div>
@@ -184,7 +184,7 @@ exports[`Render with all fields 1`] = `
                     </div>
                     <span
                       aria-label="su-angle-down"
-                      class="toggle su-angle-down"
+                      class="su-angle-down toggle"
                     />
                   </button>
                 </div>
@@ -235,7 +235,7 @@ exports[`Render with all fields 1`] = `
                   >
                     <span
                       aria-label="su-angle-down"
-                      class="toggle su-angle-down"
+                      class="su-angle-down toggle"
                     />
                   </button>
                 </div>
@@ -277,7 +277,7 @@ exports[`Render with all fields 1`] = `
                     </div>
                     <span
                       aria-label="su-angle-down"
-                      class="toggle su-angle-down"
+                      class="su-angle-down toggle"
                     />
                   </button>
                 </div>
@@ -302,7 +302,7 @@ exports[`Render with all fields 1`] = `
                 >
                   <span
                     aria-label="su-angle-down"
-                    class="toggle su-angle-down"
+                    class="su-angle-down toggle"
                   />
                 </button>
               </div>
@@ -376,7 +376,7 @@ exports[`Render with no fields 1`] = `
         </h2>
         <span
           aria-label="su-times"
-          class="icon su-times clickable"
+          class="su-times clickable icon"
           role="button"
           tabindex="0"
         />

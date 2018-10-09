@@ -354,10 +354,10 @@ export default class Datagrid extends React.Component<Props> {
         return (
             <div>
                 <Button
-                    icon={'su-sort'}
+                    icon="su-sort"
                     onClick={this.handleAdapterOptionsButtonClick}
                     showDropdownIcon={true}
-                    skin={'icon'}
+                    skin="icon"
                 />
             </div>
         );

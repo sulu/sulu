@@ -60,7 +60,7 @@ test('Render expanded sortable block with types', () => {
 
     expect(render(
         <SortableBlock
-            activeType={'type2'}
+            activeType="type2"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}

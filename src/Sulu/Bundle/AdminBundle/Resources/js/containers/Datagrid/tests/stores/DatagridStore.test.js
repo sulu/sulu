@@ -407,7 +407,7 @@ test('The loading strategy should be called with a different page when a request
     datagridStore.destroy();
 });
 
-test('The user store should be called ', () => {
+test('The loading strategy should be called with a different page when a request is sent ', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     const page = observable.box(1);
@@ -2264,36 +2264,6 @@ test('Should activate the current item if structure strategy is changed to trigg
     metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
     const page = observable.box();
     const datagridStore = new DatagridStore('snippets', 'datagrid_test', {page});
-    datagridStore.schema = {
-        id: {
-            label: 'ID',
-            name: 'id',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        changed: {
-            label: 'Changed at',
-            name: 'changed',
-            sortable: true,
-            type: 'datetime',
-            visibility: 'no',
-        },
-        title: {
-            label: 'Title',
-            name: 'title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-        name: {
-            label: 'Name',
-            name: 'name',
-            sortable: true,
-            type: 'string',
-            visibility: 'always',
-        },
-    };
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();

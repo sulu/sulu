@@ -35,7 +35,7 @@ exports[`Input should render append container with icon when onClearClick callba
   >
     <span
       aria-label="su-times"
-      class="icon default su-times clickable"
+      class="su-times clickable icon default"
       role="button"
       tabindex="0"
     />
@@ -136,7 +136,7 @@ exports[`Input should render with dark skin 1`] = `
   >
     <span
       aria-label="su-pen"
-      class="icon dark su-pen"
+      class="su-pen icon dark"
     />
   </div>
   <input
@@ -155,7 +155,7 @@ exports[`Input should render with icon 1`] = `
   >
     <span
       aria-label="su-pen"
-      class="icon default su-pen"
+      class="su-pen icon default"
     />
   </div>
   <input

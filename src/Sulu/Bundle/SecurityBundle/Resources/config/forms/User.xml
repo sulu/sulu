@@ -1,49 +1,51 @@
 <?xml version="1.0" ?>
-<properties xmlns="http://schemas.sulu.io/template/template"
+<form xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="username" type="text_line" mandatory="true" colspan="6">
-        <meta>
-            <title lang="en">Username</title>
-            <title lang="de">Username</title>
-        </meta>
-    </property>
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <properties>
+        <property name="username" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title lang="en">Username</title>
+                <title lang="de">Username</title>
+            </meta>
+        </property>
 
-    <property name="email" type="email" colspan="6">
-        <meta>
-            <title lang="en">Email</title>
-            <title lang="de">Email</title>
-        </meta>
-    </property>
+        <property name="email" type="email" colspan="6">
+            <meta>
+                <title lang="en">Email</title>
+                <title lang="de">Email</title>
+            </meta>
+        </property>
 
-    <property name="password" type="password_confirmation">
-        <meta>
-            <title lang="en">Password</title>
-            <title lang="de">Passwort</title>
-        </meta>
-    </property>
+        <property name="password" type="password_confirmation">
+            <meta>
+                <title lang="en">Password</title>
+                <title lang="de">Passwort</title>
+            </meta>
+        </property>
 
-    <property name="locale" type="single_select" mandatory="true" colspan="6">
-        <meta>
-            <title lang="en">System language</title>
-            <title lang="de">Systemsprache</title>
-        </meta>
-        <params>
-            <param name="default_value" value="de"/>
-            <param name="values" type="collection">
-                <param name="de" value="de">
-                    <meta>
-                        <title lang="en">German</title>
-                        <title lang="de">Deutsch</title>
-                    </meta>
+        <property name="locale" type="single_select" mandatory="true" colspan="6">
+            <meta>
+                <title lang="en">System language</title>
+                <title lang="de">Systemsprache</title>
+            </meta>
+            <params>
+                <param name="default_value" value="de"/>
+                <param name="values" type="collection">
+                    <param name="de" value="de">
+                        <meta>
+                            <title lang="en">German</title>
+                            <title lang="de">Deutsch</title>
+                        </meta>
+                    </param>
+                    <param name="en" value="en">
+                        <meta>
+                            <title lang="en">English</title>
+                            <title lang="de">Englisch</title>
+                        </meta>
+                    </param>
                 </param>
-                <param name="en" value="en">
-                    <meta>
-                        <title lang="en">English</title>
-                        <title lang="de">Englisch</title>
-                    </meta>
-                </param>
-            </param>
-        </params>
-    </property>
-</properties>
+            </params>
+        </property>
+    </properties>
+</form>

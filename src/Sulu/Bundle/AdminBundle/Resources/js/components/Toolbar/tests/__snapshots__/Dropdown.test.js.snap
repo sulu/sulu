@@ -16,7 +16,7 @@ exports[`Render disabled dropdown 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="dropdownIcon su-angle-down"
+      class="su-angle-down dropdownIcon"
     />
   </button>
 </div>
@@ -37,7 +37,7 @@ exports[`Render dropdown 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="dropdownIcon su-angle-down"
+      class="su-angle-down dropdownIcon"
     />
   </button>
 </div>
@@ -58,7 +58,7 @@ exports[`Render dropdown with a different size 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="dropdownIcon su-angle-down"
+      class="su-angle-down dropdownIcon"
     />
   </button>
 </div>
@@ -74,7 +74,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
   >
     <span
       aria-label="fa-floppy-o"
-      class="icon fa fa-floppy-o"
+      class="fa fa-floppy-o icon"
     />
     <span
       class="label"
@@ -83,7 +83,22 @@ exports[`Render dropdown with a prepended icon 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="dropdownIcon su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render dropdown without text 1`] = `
+<div
+  class="dropdown"
+>
+  <button
+    class="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
     />
   </button>
 </div>
@@ -115,7 +130,7 @@ exports[`Render loading dropdown 1`] = `
     </span>
     <span
       aria-label="su-angle-down"
-      class="dropdownIcon su-angle-down"
+      class="su-angle-down dropdownIcon"
     />
   </button>
 </div>

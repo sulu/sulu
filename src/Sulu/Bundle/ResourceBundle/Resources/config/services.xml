@@ -64,6 +64,7 @@
             </argument>
 
             <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Event listener -->

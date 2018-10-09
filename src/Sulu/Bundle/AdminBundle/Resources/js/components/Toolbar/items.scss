@@ -20,14 +20,22 @@ $itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;
     border-right: $itemsContainerBorderDark;
 }
 
+.items-container {
+    position: relative;
+    flex-grow: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .items {
-    display: inline-block;
+    position: absolute;
+    display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
     vertical-align: top;
 
     & > li {
-        display: inline-block;
+        display: block;
     }
 }

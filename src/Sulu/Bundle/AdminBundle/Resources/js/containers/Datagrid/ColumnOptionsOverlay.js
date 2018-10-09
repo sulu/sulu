@@ -46,7 +46,7 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
         this.props.onConfirm(newSchema);
     };
 
-    @action handleColumnOptionChange = (schemaKey: string, visibility: 'yes' | 'no') => {
+    @action handleColumnOptionChange = (visibility: 'yes' | 'no', schemaKey: string) => {
         for (const columnOption of this.columnOptions) {
             if (columnOption.schemaKey === schemaKey) {
                 columnOption.schemaEntry.visibility = visibility;
@@ -61,8 +61,8 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
         Object.keys(schema).map((schemaKey) => {
             const schemaEntry = {...schema[schemaKey]};
             columnOptions.push({
-                schemaKey: schemaKey,
-                schemaEntry: schemaEntry,
+                schemaKey,
+                schemaEntry,
             });
         });
 
@@ -110,7 +110,7 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
-                size={'small'}
+                size="small"
                 title={translate('sulu_admin.column_options')}
             >
                 <SortableList

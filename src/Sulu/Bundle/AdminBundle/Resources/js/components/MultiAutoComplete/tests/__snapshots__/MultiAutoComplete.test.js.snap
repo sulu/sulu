@@ -21,7 +21,7 @@ exports[`MultiAutoComplete should render 1`] = `
       Test
       <span
         aria-label="su-times"
-        class="icon su-times clickable"
+        class="su-times clickable icon"
         role="button"
         tabindex="0"
       />
@@ -32,7 +32,7 @@ exports[`MultiAutoComplete should render 1`] = `
       Test 2
       <span
         aria-label="su-times"
-        class="icon su-times clickable"
+        class="su-times clickable icon"
         role="button"
         tabindex="0"
       />
@@ -66,7 +66,7 @@ exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
       Test
       <span
         aria-label="su-times"
-        class="icon su-times clickable"
+        class="su-times clickable icon"
         role="button"
         tabindex="0"
       />

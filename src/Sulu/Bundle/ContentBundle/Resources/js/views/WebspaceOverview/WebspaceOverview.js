@@ -36,8 +36,9 @@ class WebspaceOverview extends React.Component<ViewProps> {
     webspaceDisposer: () => void;
 
     static getDerivedRouteAttributes(route, attributes) {
-        const webspace = attributes.webspace ? attributes.webspace :
-            userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
+        const webspace = attributes.webspace
+            ? attributes.webspace
+            : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
 
         return {
             active: DatagridStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
@@ -114,7 +115,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
         apiOptions.webspace = this.webspace;
 
         this.datagridStore = new DatagridStore(
-            'pages',
+            PAGES_RESOURCE_KEY,
             getUserSettingsKeyForWebspace(this.webspace.get()),
             observableOptions,
             apiOptions

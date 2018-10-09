@@ -1,8 +1,10 @@
 // @flow
+import React from 'react';
+import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import React from 'react';
+import Popover from '../Popover';
 import type {DropdownOption, Dropdown as DropdownProps} from './types';
 import Button from './Button';
 import OptionList from './OptionList';
@@ -10,7 +12,19 @@ import dropdownStyles from './dropdown.scss';
 
 @observer
 export default class Dropdown extends React.Component<DropdownProps> {
-    @observable open = false;
+    @observable open: boolean = false;
+
+    static defaultProps = {
+        showText: true,
+    };
+
+    @observable buttonRef: ?ElementRef<'button'>;
+
+    @action setButtonRef = (ref: ?ElementRef<'button'>) => {
+        if (ref) {
+            this.buttonRef = ref;
+        }
+    };
 
     @action close = () => {
         this.open = false;
@@ -51,6 +65,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
             options,
             disabled,
             loading,
+            showText,
         } = this.props;
         const dropdownClass = classNames(
             dropdownStyles.dropdown,
@@ -65,6 +80,7 @@ export default class Dropdown extends React.Component<DropdownProps> {
             <div className={dropdownClass}>
                 <Button
                     active={this.open}
+                    buttonRef={this.setButtonRef}
                     disabled={disabled || allChildrenDisabled}
                     hasOptions={true}
                     icon={icon}
@@ -72,16 +88,26 @@ export default class Dropdown extends React.Component<DropdownProps> {
                     onClick={this.handleButtonClick}
                     size={size}
                     skin={skin}
-                    value={label}
+                    value={showText ? label : undefined}
                 />
-                {this.open &&
-                    <OptionList
-                        onClose={this.handleOptionListClose}
-                        onOptionClick={this.handleOptionListClick}
-                        options={options}
-                        skin={skin}
-                    />
-                }
+                <Popover
+                    anchorElement={this.buttonRef}
+                    onClose={this.handleOptionListClose}
+                    open={this.open}
+                >
+                    {
+                        (setPopoverElementRef, popoverStyle) => (
+                            <OptionList
+                                onClose={this.handleOptionListClose}
+                                onOptionClick={this.handleOptionListClick}
+                                optionListRef={setPopoverElementRef}
+                                options={options}
+                                skin={skin}
+                                style={popoverStyle}
+                            />
+                        )
+                    }
+                </Popover>
             </div>
         );
     }

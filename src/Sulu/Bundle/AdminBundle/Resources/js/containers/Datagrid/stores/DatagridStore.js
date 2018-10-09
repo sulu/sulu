@@ -191,10 +191,10 @@ export default class DatagridStore {
                 continue;
             }
 
-            const newUserSchemaEntry = {...schema[schemaSettingsEntry.schemaKey]};
-            newUserSchemaEntry.visibility = schemaSettingsEntry.visibility;
-
-            userSchema[schemaSettingsEntry.schemaKey] = newUserSchemaEntry;
+            userSchema[schemaSettingsEntry.schemaKey] = {
+                ...schema[schemaSettingsEntry.schemaKey],
+                visibility: schemaSettingsEntry.visibility,
+            };
         }
 
         return userSchema;
@@ -206,13 +206,12 @@ export default class DatagridStore {
             const schemaEntry = schema[schemaKey];
             schemaSettings.push(
                 {
-                    schemaKey: schemaKey,
+                    schemaKey,
                     visibility: schemaEntry.visibility,
                 }
             );
         });
         DatagridStore.setSchemaSetting(this.resourceKey, this.userSettingsKey, schemaSettings);
-        this.reload();
     };
 
     @computed get fields(): Array<string> {

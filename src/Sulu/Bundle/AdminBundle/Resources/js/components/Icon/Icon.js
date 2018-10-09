@@ -53,12 +53,12 @@ export default class Icon extends React.PureComponent<Props> {
         }
 
         const iconClass = classNames(
-            className,
             fontClass ? fontClass : undefined,
             name,
             {
                 [iconStyles.clickable]: onClick,
-            }
+            },
+            className
         );
 
         const onClickProperties = onClick

@@ -20,7 +20,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -45,7 +45,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -59,7 +59,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -91,7 +91,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -116,7 +116,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -130,7 +130,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -165,7 +165,7 @@ exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`]
       <div>
         <span
           aria-label="fa-cloud-upload"
-          class="uploadIcon fa fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
         />
         <div
           class="uploadInfoText"
@@ -203,7 +203,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -228,7 +228,7 @@ Array [
     >
       <span
         aria-label="su-download"
-        class="buttonIcon su-download"
+        class="su-download buttonIcon"
       />
       <span
         class="text"
@@ -242,7 +242,7 @@ Array [
     >
       <span
         aria-label="su-trash-alt"
-        class="buttonIcon su-trash-alt"
+        class="su-trash-alt buttonIcon"
       />
       <span
         class="text"
@@ -274,7 +274,7 @@ Array [
         <div>
           <span
             aria-label="fa-cloud-upload"
-            class="uploadIcon fa fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
           />
           <div
             class="uploadInfoText"

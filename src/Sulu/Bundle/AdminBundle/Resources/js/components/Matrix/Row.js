@@ -65,19 +65,19 @@ export default class Row extends React.Component<Props> {
 
     handleAllButtonClick = () => {
         const {
+            children,
             name,
             onChange,
-            values,
         } = this.props;
 
         if (!onChange) {
             return;
         }
 
-        const newValues = {...values};
-        for (const value in newValues) {
-            newValues[value] = this.allItemsDeactivated;
-        }
+        const newValues = {};
+        React.Children.map(children, (child) => {
+            newValues[child.props.name] = this.allItemsDeactivated;
+        });
 
         onChange(name, newValues);
     };

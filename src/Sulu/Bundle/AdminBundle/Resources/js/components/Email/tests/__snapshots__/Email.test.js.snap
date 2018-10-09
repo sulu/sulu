@@ -9,7 +9,7 @@ exports[`Email should render 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -28,7 +28,7 @@ exports[`Email should render error 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -47,7 +47,7 @@ exports[`Email should render error when invalid value is set 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -66,7 +66,7 @@ exports[`Email should render error when invalid value is set 2`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -85,7 +85,7 @@ exports[`Email should render null value as empty string 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -104,7 +104,7 @@ exports[`Email should render with placeholder 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default su-envelope"
+      class="su-envelope icon default"
     />
   </div>
   <input
@@ -124,7 +124,7 @@ exports[`Email should render with value 1`] = `
   >
     <span
       aria-label="su-envelope"
-      class="icon default iconClickable su-envelope clickable"
+      class="su-envelope clickable icon default iconClickable"
       role="button"
       tabindex="0"
     />

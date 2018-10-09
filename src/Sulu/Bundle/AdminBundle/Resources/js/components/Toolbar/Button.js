@@ -1,6 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
+import type {ElementRef} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import type {Button as ButtonProps} from './types';
@@ -15,10 +16,18 @@ export default class Button extends React.PureComponent<ButtonProps> {
         disabled: false,
         hasOptions: false,
         primary: false,
+        showText: true,
     };
 
     handleOnClick = () => {
         this.props.onClick();
+    };
+
+    setButtonRef = (ref: ?ElementRef<'button'>) => {
+        const {buttonRef} = this.props;
+        if (buttonRef && ref) {
+            buttonRef(ref);
+        }
     };
 
     render() {
@@ -32,6 +41,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
             loading,
             disabled,
             hasOptions,
+            showText,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
@@ -49,6 +59,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 className={buttonClass}
                 disabled={disabled}
                 onClick={this.handleOnClick}
+                ref={this.setButtonRef}
                 value={value}
             >
                 {loading &&
@@ -57,7 +68,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 {icon &&
                     <Icon className={buttonStyles.icon} name={icon} />
                 }
-                {buttonContent &&
+                {(buttonContent && showText) &&
                     <span className={buttonStyles.label}>{buttonContent}</span>
                 }
                 {hasOptions &&

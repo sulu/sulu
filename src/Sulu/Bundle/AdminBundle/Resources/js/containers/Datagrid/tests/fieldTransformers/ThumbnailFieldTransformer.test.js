@@ -30,12 +30,12 @@ test('Test invalid object', () => {
 
 test('Test valid object', () => {
     expect(thumbnailTransformer.transform({'sulu-40x40': '/path/to/image.png'})).toEqual(
-        <img alt={undefined} src={'/path/to/image.png'} />
+        <img alt={undefined} src="/path/to/image.png" />
     );
 });
 
 test('Test valid full object', () => {
     expect(thumbnailTransformer.transform({'sulu-40x40': '/path/to/image.png', alt: 'Alternative'})).toEqual(
-        <img alt={'Alternative'} src={'/path/to/image.png'} />
+        <img alt="Alternative" src="/path/to/image.png" />
     );
 });

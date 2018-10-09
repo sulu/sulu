@@ -12,7 +12,7 @@ exports[`Should render navigation 1`] = `
     >
       <span
         aria-label="su-sulu"
-        class="headerIcon su-sulu"
+        class="su-sulu headerIcon"
       />
       <span
         class="headerTitle"
@@ -110,25 +110,38 @@ exports[`Should render navigation 1`] = `
       </div>
       <span
         aria-label="su-angle-down"
-        class="childrenIndicator su-angle-down clickable"
+        class="su-angle-down clickable childrenIndicator"
         role="button"
         tabindex="0"
       />
     </div>
   </div>
   <div
-    class="versions"
+    class="footer"
   >
-    <div>
-      Sulu (
-      <a
-        href="https://github.com/sulu/sulu/releases"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        2.0.0-RC1
-      </a>
-      )
+    <button
+      class="button icon pin"
+      type="button"
+    >
+      <span
+        aria-label="fa-thumb-tack"
+        class="fa fa-thumb-tack buttonIcon pinIcon"
+      />
+    </button>
+    <div
+      class="versions"
+    >
+      <div>
+        Sulu (
+        <a
+          href="https://github.com/sulu/sulu/releases"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          2.0.0-RC1
+        </a>
+        )
+      </div>
     </div>
   </div>
 </div>

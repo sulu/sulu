@@ -7,11 +7,13 @@ import controlsStyles from './controls.scss';
 
 type Props = {
     children: ChildrenArray<Item | Group | false>,
+    grow?: boolean,
     skin?: Skin,
 };
 
 export default class Controls extends React.PureComponent<Props> {
     static defaultProps = {
+        grow: false,
         skin: 'light',
     };
 
@@ -34,13 +36,17 @@ export default class Controls extends React.PureComponent<Props> {
 
     render() {
         const {
-            skin,
             children,
+            grow,
+            skin,
         } = this.props;
 
         const controlsClass = classNames(
             controlsStyles.controls,
-            controlsStyles[skin]
+            controlsStyles[skin],
+            {
+                [controlsStyles.grow]: grow,
+            }
         );
 
         return (

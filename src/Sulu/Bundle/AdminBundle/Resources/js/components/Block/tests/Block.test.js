@@ -22,7 +22,7 @@ test('Render an expanded block with a single type', () => {
 test('Render an expanded block with a multiple types', () => {
     expect(render(
         <Block
-            activeType={'type1'}
+            activeType="type1"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}

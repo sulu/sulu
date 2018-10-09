@@ -9,7 +9,7 @@ exports[`The component should expand the input when clicking on icon 1`] = `
   >
     <span
       aria-label="su-search"
-      class="icon dark iconClickable su-search clickable"
+      class="su-search clickable icon dark iconClickable"
       role="button"
       tabindex="0"
     />
@@ -31,7 +31,7 @@ exports[`The component should render collapsed 1`] = `
   >
     <span
       aria-label="su-search"
-      class="icon dark iconClickable collapsed su-search clickable"
+      class="su-search clickable icon dark iconClickable collapsed"
       role="button"
       tabindex="0"
     />
@@ -53,7 +53,7 @@ exports[`The component should render not collapsed when value is given 1`] = `
   >
     <span
       aria-label="su-search"
-      class="icon dark iconClickable su-search clickable"
+      class="su-search clickable icon dark iconClickable"
       role="button"
       tabindex="0"
     />
@@ -68,7 +68,7 @@ exports[`The component should render not collapsed when value is given 1`] = `
   >
     <span
       aria-label="su-times"
-      class="icon dark iconClickable su-times clickable"
+      class="su-times clickable icon dark iconClickable"
       role="button"
       tabindex="0"
     />

@@ -7,7 +7,7 @@ exports[`Should render the button with icon 1`] = `
 >
   <span
     aria-label="su-plus"
-    class="buttonIcon su-plus"
+    class="su-plus buttonIcon"
   />
   <span
     class="text"
@@ -38,7 +38,7 @@ exports[`Should render with skin icon and dropdown icon 1`] = `
 >
   <span
     aria-label="su-angle-down"
-    class="buttonIcon dropdownIcon su-angle-down"
+    class="su-angle-down dropdownIcon"
   />
 </button>
 `;
@@ -57,7 +57,7 @@ exports[`Should render with skin link and dropdown icon 1`] = `
 >
   <span
     aria-label="su-angle-down"
-    class="buttonIcon dropdownIcon su-angle-down"
+    class="su-angle-down dropdownIcon"
   />
 </button>
 `;
@@ -76,7 +76,7 @@ exports[`Should render with skin primary and dropdown icon 1`] = `
 >
   <span
     aria-label="su-angle-down"
-    class="buttonIcon dropdownIcon su-angle-down"
+    class="su-angle-down dropdownIcon"
   />
 </button>
 `;
@@ -95,7 +95,7 @@ exports[`Should render with skin secondary and dropdown icon 1`] = `
 >
   <span
     aria-label="su-angle-down"
-    class="buttonIcon dropdownIcon su-angle-down"
+    class="su-angle-down dropdownIcon"
   />
 </button>
 `;

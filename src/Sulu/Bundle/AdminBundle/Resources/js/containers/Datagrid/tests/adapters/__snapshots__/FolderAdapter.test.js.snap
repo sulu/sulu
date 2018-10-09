@@ -109,7 +109,7 @@ exports[`Render a basic Folder list with data 1`] = `
           </div>
           <span
             aria-label="su-angle-down"
-            class="toggle su-angle-down"
+            class="su-angle-down toggle"
           />
         </button>
       </div>

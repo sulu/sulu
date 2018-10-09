@@ -1,18 +1,20 @@
 <?xml version="1.0" ?>
-<properties xmlns="http://schemas.sulu.io/template/template"
+<form xmlns="http://schemas.sulu.io/template/template"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <property name="title" type="text_line">
-        <meta>
-            <title lang="en">Title</title>
-            <title lang="de">Titel</title>
-        </meta>
-    </property>
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <properties>
+        <property name="title" type="text_line">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+        </property>
 
-    <property name="description" type="text_area">
-        <meta>
-            <title lang="en">Description</title>
-            <title lang="de">Beschreibung</title>
-        </meta>
-    </property>
-</properties>
+        <property name="description" type="text_area">
+            <meta>
+                <title lang="en">Description</title>
+                <title lang="de">Beschreibung</title>
+            </meta>
+        </property>
+    </properties>
+</form>

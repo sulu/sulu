@@ -9,7 +9,7 @@ exports[`ColorPicker should render 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -30,7 +30,7 @@ exports[`ColorPicker should render error 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -51,7 +51,7 @@ exports[`ColorPicker should render error when invalid value is set 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -72,7 +72,7 @@ exports[`ColorPicker should render error when invalid value is set 2`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -93,7 +93,7 @@ exports[`ColorPicker should render null value as empty string 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -211,7 +211,7 @@ exports[`ColorPicker should render with placeholder 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />
@@ -233,7 +233,7 @@ exports[`ColorPicker should render with value 1`] = `
   >
     <span
       aria-label="su-square"
-      class="icon default icon iconClickable su-square clickable"
+      class="su-square clickable icon default icon iconClickable"
       role="button"
       tabindex="0"
     />

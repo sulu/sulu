@@ -41,12 +41,15 @@ $iconColorActive: $white;
     min-width: 140px;
     padding: 0 40px;
 
-    .button-icon {
+    .button-icon, .dropdown-icon {
         display: inline-flex;
         align-items: center;
         position: absolute;
         top: 0;
         bottom: 0;
+    }
+
+    .button-icon {
         left: 10px;
     }
 
@@ -101,6 +104,7 @@ $iconColorActive: $white;
 
 .icon {
     background: none;
+    min-width: 30px;
     height: 30px;
     border-radius: $iconBorderRadius;
     border: 1px solid $iconBorderColor;
@@ -117,11 +121,8 @@ $iconColorActive: $white;
         color: $iconColorActive;
     }
 
-    > span {
+    .button-icon, .dropdown-icon {
         line-height: 28px;
-    }
-
-    .button-icon {
         margin-left: 5px;
     }
 

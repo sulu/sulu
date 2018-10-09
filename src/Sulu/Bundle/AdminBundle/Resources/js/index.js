@@ -4,6 +4,7 @@ import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
 import {configure} from 'mobx';
+import ResizeObserver from 'resize-observer-polyfill';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
@@ -48,7 +49,6 @@ import {
     SmartContent,
     TextArea,
     TextEditor,
-    Time,
     Url,
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
@@ -65,6 +65,10 @@ import {smartContentConfigStore} from './containers/SmartContent';
 
 // $FlowFixMe
 configure({enforceActions: 'observed'});
+
+if (!window.ResizeObserver) {
+    window.ResizeObserver = ResizeObserver;
+}
 
 window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
@@ -119,7 +123,8 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('checkbox', Checkbox);
     fieldRegistry.add('color', ColorPicker);
-    fieldRegistry.add('date', DatePicker);
+    fieldRegistry.add('date', DatePicker, {dateFormat: true, timeFormat: false});
+    fieldRegistry.add('datetime', DatePicker, {dateFormat: true, timeFormat: true});
     fieldRegistry.add('email', Email);
     fieldRegistry.add('number', Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
@@ -130,7 +135,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('text_line', Input);
     fieldRegistry.add('text_area', TextArea);
     fieldRegistry.add('text_editor', TextEditor);
-    fieldRegistry.add('time', Time);
+    fieldRegistry.add('time', DatePicker, {dateFormat: false, timeFormat: true});
     fieldRegistry.add('url', Url);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
