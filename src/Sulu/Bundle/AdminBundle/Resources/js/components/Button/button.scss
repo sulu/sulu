@@ -41,7 +41,8 @@ $iconColorActive: $white;
     min-width: 140px;
     padding: 0 40px;
 
-    .button-icon, .dropdown-icon {
+    .button-icon,
+    .dropdown-icon {
         display: inline-flex;
         align-items: center;
         position: absolute;
@@ -121,7 +122,8 @@ $iconColorActive: $white;
         color: $iconColorActive;
     }
 
-    .button-icon, .dropdown-icon {
+    .button-icon,
+    .dropdown-icon {
         line-height: 28px;
         margin-left: 5px;
     }
