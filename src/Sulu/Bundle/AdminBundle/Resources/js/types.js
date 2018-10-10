@@ -17,7 +17,7 @@ export type SchemaOption = {
     name?: string,
     infoText?: string,
     title?: string,
-    value?: string | number | Array<SchemaOption>,
+    value?: ?string | number | Array<SchemaOption>,
 };
 
 export type SchemaOptions = {[key: string]: SchemaOption};

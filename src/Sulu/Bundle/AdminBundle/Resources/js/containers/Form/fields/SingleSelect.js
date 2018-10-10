@@ -21,7 +21,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
             } = {},
         } = schemaOptions;
 
-        if (!defaultValue) {
+        if (defaultValue === undefined || defaultValue === null) {
             return;
         }
 
