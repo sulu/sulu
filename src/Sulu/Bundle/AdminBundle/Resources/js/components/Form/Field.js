@@ -42,7 +42,14 @@ export default class Field extends React.Component<Props> {
                 spaceAfter={spaceAfter}
             >
                 <div className={fieldClass}>
-                    {label && <label className={fieldStyles.label} htmlFor={inputId || undefined}>{label}{required && ' *'}</label>}
+                    {label &&
+                    <label
+                        className={fieldStyles.label}
+                        htmlFor={inputId || undefined}
+                    >
+                        {label}{required && ' *'}
+                    </label>
+                    }
                     {children}
                     {description &&
                     <label className={fieldStyles.descriptionLabel}>

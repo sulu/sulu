@@ -30,6 +30,7 @@ exports[`Should not render fields when the schema contains a visible flag of fal
     >
       <label
         class="label"
+        for="/text"
       >
         Text
       </label>
@@ -56,6 +57,7 @@ exports[`Should render field types based on schema 1`] = `
     >
       <label
         class="label"
+        for="/text"
       >
         Text
       </label>
@@ -75,6 +77,7 @@ exports[`Should render field types based on schema 1`] = `
     >
       <label
         class="label"
+        for="/datetime"
       >
         Datetime
       </label>
@@ -113,6 +116,7 @@ exports[`Should render nested sections 1`] = `
       >
         <label
           class="label"
+          for="/item11"
         >
           Item 1.1
         </label>
@@ -158,6 +162,7 @@ exports[`Should render nested sections 1`] = `
       >
         <label
           class="label"
+          for="/item21"
         >
           Item 2.1
         </label>
@@ -197,6 +202,7 @@ exports[`Should render sections with size 1`] = `
       >
         <label
           class="label"
+          for="/item11"
         >
           Item 1.1
         </label>
@@ -229,6 +235,7 @@ exports[`Should render sections with size 1`] = `
       >
         <label
           class="label"
+          for="/item21"
         >
           Item 2.1
         </label>
@@ -259,6 +266,7 @@ exports[`Should render sections without label 1`] = `
       >
         <label
           class="label"
+          for="/item11"
         >
           Item 1.1
         </label>
@@ -291,6 +299,7 @@ exports[`Should render sections without label 1`] = `
       >
         <label
           class="label"
+          for="/item21"
         >
           Item 2.1
         </label>
