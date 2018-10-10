@@ -134,6 +134,38 @@ test('Should call onFinish callback on every onChange', () => {
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Set default value of null should not call onChange', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        default_value: {
+            value: null,
+        },
+        values: {
+            value: [
+                {
+                    value: 'mr',
+                    title: 'Mister',
+                },
+                {
+                    value: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+    shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
 test('Set default value if no value is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
