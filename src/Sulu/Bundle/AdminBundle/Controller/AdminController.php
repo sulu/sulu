@@ -113,6 +113,11 @@ class AdminController
     private $environment;
 
     /**
+     * @var string
+     */
+    private $suluVersion;
+
+    /**
      * @var array
      */
     private $locales;
@@ -151,12 +156,13 @@ class AdminController
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
-        $environment,
+        string $environment,
+        string $suluVersion,
         array $locales,
-        $translations,
-        $fallbackLocale,
-        $previewDelay,
-        $previewMode
+        array $translations,
+        string $fallbackLocale,
+        int $previewDelay,
+        string $previewMode
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -172,6 +178,7 @@ class AdminController
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
         $this->environment = $environment;
+        $this->suluVersion = $suluVersion;
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
@@ -199,6 +206,7 @@ class AdminController
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,
                 'endpoints' => $endpoints,
+                'sulu_version' => $this->suluVersion,
             ]
         );
     }

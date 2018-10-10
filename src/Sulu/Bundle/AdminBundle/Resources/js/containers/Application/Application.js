@@ -20,6 +20,7 @@ const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned'
 
 type Props = {
     router: Router,
+    suluVersion: string,
 };
 
 type NavigationState = 'pinned' | 'hidden' | 'visible';
@@ -104,7 +105,7 @@ export default class Application extends React.Component<Props> {
     };
 
     render() {
-        const {router} = this.props;
+        const {router, suluVersion} = this.props;
         const {loggedIn} = userStore;
 
         const rootClass = classNames(
@@ -149,6 +150,7 @@ export default class Application extends React.Component<Props> {
                                 onPinToggle={this.handlePinToggle}
                                 pinned={this.navigationPinned}
                                 router={router}
+                                suluVersion={suluVersion}
                             />
                         </nav>
                         <div className={contentClass}>

@@ -507,6 +507,7 @@ exports[`Application should render opened navigation 1`] = `
       },
     }
   }
+  suluVersion="2.0.0-RC1"
 >
   <div
     className="root visible navigationVisible"
@@ -533,6 +534,7 @@ exports[`Application should render opened navigation 1`] = `
             },
           }
         }
+        suluVersion="2.0.0-RC1"
       >
         <Navigation
           onLogoutClick={[Function]}
@@ -869,6 +871,7 @@ exports[`Application should render pinned navigation 1`] = `
       },
     }
   }
+  suluVersion="2.0.0-RC1"
 >
   <div
     className="root visible navigationVisible navigationPinned"
@@ -895,6 +898,7 @@ exports[`Application should render pinned navigation 1`] = `
             },
           }
         }
+        suluVersion="2.0.0-RC1"
       >
         <Navigation
           onLogoutClick={[Function]}
@@ -1195,6 +1199,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
       },
     }
   }
+  suluVersion="2.0.0-RC1"
 >
   <div
     className="root visible navigationVisible navigationPinned"
@@ -1221,6 +1226,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
             },
           }
         }
+        suluVersion="2.0.0-RC1"
       >
         <Navigation
           onLogoutClick={[Function]}
