@@ -12,7 +12,7 @@ type Props = {
 };
 
 @observer
-export default class RoleAssignments extends React.Component<Props> {
+export default class RoleAssignment extends React.Component<Props> {
     handleChange = (newLocalizations: Array<string>) => {
         const newValue = {...this.props.value};
         newValue.locales = newLocalizations;

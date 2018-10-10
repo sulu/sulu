@@ -13,12 +13,22 @@ test('Load localizations', () => {
         _embedded: {
             localizations: [
                 {
-                    name: 'sulu',
-                    key: 'sulu',
+                    country: '',
+                    default: '1',
+                    language: 'en',
+                    locale: 'en',
+                    localization: 'en',
+                    shadow: '',
+                    xDefault: '',
                 },
                 {
-                    name: 'Sulu Blog',
-                    key: 'sulu_blog',
+                    country: '',
+                    default: '0',
+                    language: 'de',
+                    locale: 'de',
+                    localization: 'de',
+                    shadow: '',
+                    xDefault: '',
                 },
             ],
         },
