@@ -29,7 +29,7 @@ exports[`Should render with active 2`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <div style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <div class=\\"listContainer\\">
         <ul class=\\"list primary\\">
           <li><button class=\\"option\\">Option1</button></li>

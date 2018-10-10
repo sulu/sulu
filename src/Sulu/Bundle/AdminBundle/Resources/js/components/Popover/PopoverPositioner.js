@@ -136,7 +136,6 @@ export default class PopoverPositioner {
             newDimensions.left = anchorLeft + anchorWidth - popoverWidth;
         }
 
-        newDimensions.left = Math.min(windowWidth - popoverWidth - PADDING_TO_WINDOW, newDimensions.left);
         return newDimensions;
     }
 }

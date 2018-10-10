@@ -47,7 +47,7 @@ exports[`The component should open the popover when the display value is clicked
 </div>
 <div>
   <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 1</button></li>
       <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 2</button></li>
       <li class=\\"divider\\"></li>
