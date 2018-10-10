@@ -4,7 +4,7 @@ export type Localization = {
     language: string,
     country: string,
     shadow: string,
-    default: boolean,
-    xDefault: boolean,
-    children: Array<Localization>,
+    default: string,
+    xDefault: string,
+    children?: Array<Localization>,
 };

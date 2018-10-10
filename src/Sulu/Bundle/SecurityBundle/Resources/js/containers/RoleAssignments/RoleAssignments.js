@@ -9,10 +9,10 @@ import type {Localization} from 'sulu-admin-bundle/stores';
 import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
 
-type Props = {
+type Props = {|
     onChange: (value: Array<Object>) => void,
     value: Array<Object>,
-};
+|};
 
 @observer
 export default class RoleAssignments extends React.Component<Props> {
@@ -25,7 +25,7 @@ export default class RoleAssignments extends React.Component<Props> {
             }));
     }
 
-    @computed get selectedRoles(): Array<string> {
+    @computed get selectedRoles(): Array<number> {
         const selectedRoles = [];
         for (const currentUserRole of this.props.value) {
             selectedRoles.push(currentUserRole.role.id);
@@ -34,7 +34,7 @@ export default class RoleAssignments extends React.Component<Props> {
         return selectedRoles.sort();
     }
 
-    handleRoleChange = (newRoleIds: Array<string>, newRoles?: Array<Object> = []) => {
+    handleRoleChange = (newRoleIds: Array<number>, newRoles?: Array<Object> = []) => {
         const newValue = [];
 
         for (const currentUserRole of this.props.value) {

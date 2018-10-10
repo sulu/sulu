@@ -172,6 +172,19 @@ test('The component should trigger the change callback', () => {
         />
     );
 
+    const expectedValues = [
+        {
+            'id': 5,
+            'name': 'Test DEF',
+            'someOtherProperty': 'YES YES',
+        },
+        {
+            'id': 99,
+            'name': 'Test XYZ',
+            'someOtherProperty': 'maybe maybe',
+        },
+    ];
+
     multiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
-    expect(onChangeSpy).toHaveBeenCalledWith([5, 99]);
+    expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });

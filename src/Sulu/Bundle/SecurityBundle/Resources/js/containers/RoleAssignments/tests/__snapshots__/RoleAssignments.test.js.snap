@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render component 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="item size size-6 space-before-0 space-after-0"
+  >
+    <div
+      class="select"
+    >
+      <button
+        class="displayValue default"
+        type="button"
+      >
+        <div
+          aria-label="Role Name 5, Role Name 23"
+          class="croppedText"
+          title="Role Name 5, Role Name 23"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            Role Name 5, 
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              Role Name 23
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            Role Name 5, Role Name 23
+          </div>
+        </div>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="item size size-12 space-before-0 space-after-0"
+  >
+    <div
+      class="roleAssignmentsContainer"
+    >
+      <div
+        class="roleAssignmentContainer"
+      >
+        <div>
+          Role Name 5
+        </div>
+        <div>
+          Sulu
+        </div>
+        <div>
+          <div
+            class="select"
+          >
+            <button
+              class="displayValue default"
+              type="button"
+            >
+              <div
+                aria-label="sulu_admin.all_selected"
+                class="croppedText"
+                title="sulu_admin.all_selected"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  sulu_admin.a
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    ll_selected
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  sulu_admin.all_selected
+                </div>
+              </div>
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down toggle"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="roleAssignmentContainer"
+      >
+        <div>
+          Role Name 23
+        </div>
+        <div>
+          Sulu
+        </div>
+        <div>
+          <div
+            class="select"
+          >
+            <button
+              class="displayValue default"
+              type="button"
+            >
+              <div
+                aria-label="de"
+                class="croppedText"
+                title="de"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  d
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  de
+                </div>
+              </div>
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down toggle"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render component with min 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="item size size-6 space-before-0 space-after-0"
+  >
+    <div
+      class="select"
+    >
+      <button
+        class="displayValue default"
+        type="button"
+      >
+        <div
+          aria-label="sulu_admin.none_selected"
+          class="croppedText"
+          title="sulu_admin.none_selected"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_admin.n
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              one_selected
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_admin.none_selected
+          </div>
+        </div>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

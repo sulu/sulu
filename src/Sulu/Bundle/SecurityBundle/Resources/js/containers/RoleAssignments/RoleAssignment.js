@@ -13,7 +13,7 @@ type Props = {
 
 @observer
 export default class RoleAssignments extends React.Component<Props> {
-    handleLocalizationChange = (newLocalizations: Array<string>) => {
+    handleChange = (newLocalizations: Array<string>) => {
         const newValue = {...this.props.value};
         newValue.locales = newLocalizations;
 
@@ -29,7 +29,7 @@ export default class RoleAssignments extends React.Component<Props> {
                 <div>{value.role.system}</div>
                 <div>
                     <MultiSelect
-                        onChange={this.handleLocalizationChange}
+                        onChange={this.handleChange}
                         values={value.locales}
                     >
                         {localizations.map((localization, index) => (
