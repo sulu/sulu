@@ -6,6 +6,7 @@ export type InputProps<T: ?string | ?number> = {|
     collapsed?: boolean,
     name?: string,
     icon?: string,
+    id?: string,
     inputClass?: string,
     type: string,
     loading?: boolean,

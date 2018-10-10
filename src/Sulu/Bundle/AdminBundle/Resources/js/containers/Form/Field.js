@@ -116,6 +116,7 @@ export default class Field extends React.Component<Props> {
             <FieldComponent
                 description={description}
                 error={errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined}
+                inputId={dataPath}
                 label={label}
                 required={required}
                 size={schema.size}

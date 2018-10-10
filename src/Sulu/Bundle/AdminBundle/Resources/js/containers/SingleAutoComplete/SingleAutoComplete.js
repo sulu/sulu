@@ -6,6 +6,7 @@ import SearchStore from '../../stores/SearchStore';
 
 type Props = {|
     displayProperty: string,
+    id?: string,
     searchProperties: Array<string>,
     onChange: (value: ?Object) => void,
     resourceKey: string,
@@ -37,6 +38,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
         const {
             props: {
                 displayProperty,
+                id,
                 searchProperties,
                 value,
             },
@@ -45,6 +47,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
         return (
             <SingleAutoCompleteComponent
                 displayProperty={displayProperty}
+                id={id}
                 loading={this.searchStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}

@@ -8,6 +8,7 @@ import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
 type Props = {|
+    id?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     protocols: Array<string>,
@@ -152,7 +153,7 @@ export default class Url extends React.Component<Props> {
     };
 
     render() {
-        const {protocols, valid} = this.props;
+        const {id, protocols, valid} = this.props;
 
         const urlClass = classNames(
             urlStyles.url,
@@ -171,6 +172,7 @@ export default class Url extends React.Component<Props> {
                     </SingleSelect>
                 </div>
                 <input
+                    id={id || undefined}
                     onBlur={this.handlePathBlur}
                     onChange={this.handlePathChange}
                     type="text"

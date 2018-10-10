@@ -10,6 +10,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
     render() {
         const {
+            dataPath,
             error,
             onChange,
             schemaOptions: {
@@ -40,6 +41,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <InputComponent
+                id={dataPath}
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 maxSegments={maxSegments ? parseInt(maxSegments) : undefined}
                 onBlur={this.handleBlur}

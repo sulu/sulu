@@ -5,10 +5,11 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class ColorPicker extends React.Component<FieldTypeProps<?string>> {
     render() {
-        const {error, onChange, onFinish, value} = this.props;
+        const {dataPath, error, onChange, onFinish, value} = this.props;
 
         return (
             <ColorPickerComponent
+                id={dataPath}
                 onBlur={onFinish}
                 onChange={onChange}
                 valid={!error}

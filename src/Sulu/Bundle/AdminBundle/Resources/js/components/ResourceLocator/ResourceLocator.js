@@ -5,6 +5,7 @@ import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 type Props = {|
+    id?: string,
     value: ?string,
     onChange: (value: ?string) => void,
     onBlur?: () => void,
@@ -42,12 +43,12 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     };
 
     render() {
-        const {onBlur} = this.props;
+        const {id, onBlur} = this.props;
 
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input onBlur={onBlur} onChange={this.handleChange} value={this.changeableValue} />
+                <Input id={id} onBlur={onBlur} onChange={this.handleChange} value={this.changeableValue} />
             </div>
         );
     }

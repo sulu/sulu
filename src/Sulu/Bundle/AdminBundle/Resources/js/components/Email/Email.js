@@ -6,6 +6,7 @@ import {action, computed, observable} from 'mobx';
 import Input from '../Input';
 
 type Props = {|
+    id?: string,
     name?: string,
     placeholder?: string,
     valid: boolean,
@@ -90,6 +91,7 @@ export default class Email extends React.Component<Props> {
 
     render() {
         const {
+            id,
             valid,
             name,
             placeholder,
@@ -99,6 +101,7 @@ export default class Email extends React.Component<Props> {
         return (
             <Input
                 icon="su-envelope"
+                id={id}
                 name={name}
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}

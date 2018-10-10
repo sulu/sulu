@@ -3,6 +3,7 @@ import React from 'react';
 import Input from '../Input';
 
 type Props = {|
+    id?: string,
     name?: string,
     placeholder?: string,
     valid: boolean,
@@ -27,6 +28,7 @@ export default class Phone extends React.PureComponent<Props> {
 
     render() {
         const {
+            id,
             valid,
             name,
             placeholder,
@@ -38,6 +40,7 @@ export default class Phone extends React.PureComponent<Props> {
         return (
             <Input
                 icon="su-phone"
+                id={id}
                 name={name}
                 onBlur={onBlur}
                 onChange={onChange}
