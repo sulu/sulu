@@ -21,6 +21,12 @@ class SchemaXmlParser
 
     public function load(\DOMXPath $xpath, \DOMNode $contextNode)
     {
+        $allOfNode = $xpath->query('x:allOf', $contextNode)->item(0);
+        $allOfs = [];
+        if ($allOfNode) {
+            $allOfs = $this->loadAllOfs($xpath, $allOfNode, $contextNode);
+        }
+
         $anyOfNode = $xpath->query('x:anyOf', $contextNode)->item(0);
         $anyOfs = [];
         if ($anyOfNode) {
@@ -33,7 +39,17 @@ class SchemaXmlParser
             $properties = $this->loadProperties($xpath, $propertiesNode);
         }
 
-        return new Schema($properties, $anyOfs);
+        return new Schema($properties, $anyOfs, $allOfs);
+    }
+
+    private function loadAllOfs(\DOMXPath $xpath, \DOMNode $contextNode)
+    {
+        $allOfs = [];
+        foreach ($xpath->query('x:schema', $contextNode) as $node) {
+            $allOfs[] = $this->load($xpath, $node);
+        }
+
+        return $allOfs;
     }
 
     private function loadAnyOfs(\DOMXPath $xpath, \DOMNode $contextNode)

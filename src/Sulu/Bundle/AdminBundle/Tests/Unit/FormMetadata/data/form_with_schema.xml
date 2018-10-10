@@ -3,6 +3,13 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
     <schema>
+        <allOf>
+            <schema>
+                <properties>
+                    <property name="first" value="1"/>
+                </properties>
+            </schema>
+        </allOf>
         <anyOf>
             <schema>
                 <properties>
