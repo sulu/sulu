@@ -3,9 +3,9 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
+import {MultiSelect} from 'sulu-admin-bundle/containers';
 import RoleAssignments from '../RoleAssignments';
 import RoleAssignment from '../RoleAssignment';
-import MultiSelect from "sulu-admin-bundle/containers/MultiSelect/MultiSelect";
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImplementation(
     function() {
