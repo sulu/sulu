@@ -30,22 +30,23 @@
                 <title lang="de">Systemsprache</title>
             </meta>
             <params>
-                <param name="default_value" value="de"/>
-                <param name="values" type="collection">
-                    <param name="de" value="de">
-                        <meta>
-                            <title lang="en">German</title>
-                            <title lang="de">Deutsch</title>
-                        </meta>
-                    </param>
-                    <param name="en" value="en">
-                        <meta>
-                            <title lang="en">English</title>
-                            <title lang="de">Englisch</title>
-                        </meta>
-                    </param>
-                </param>
+                <param name="values" expression="service('sulu_security.system_language_select_helper').getValues()"/>
             </params>
         </property>
+
+        <section name="permission">
+            <meta>
+                <title lang="en">Permissions</title>
+                <title lang="de">Berechtigungen</title>
+            </meta>
+            <properties>
+                <property name="userRoles" type="role_assignments">
+                    <meta>
+                        <title lang="en">Role</title>
+                        <title lang="de">Rollen</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
     </properties>
 </form>

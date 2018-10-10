@@ -19,7 +19,6 @@ use Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType;
 use Sulu\Bundle\ContentBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
-use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

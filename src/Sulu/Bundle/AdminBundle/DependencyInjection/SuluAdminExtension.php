@@ -67,6 +67,18 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
+
+        $container->prependExtensionConfig(
+            'sulu_admin',
+            [
+                'resources' => [
+                    'localizations' => [
+                        'form' => [],
+                        'endpoint' => 'get_localizations',
+                    ],
+                ],
+            ]
+        );
     }
 
     /**
