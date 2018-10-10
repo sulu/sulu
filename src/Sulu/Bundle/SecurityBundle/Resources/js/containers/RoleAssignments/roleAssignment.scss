@@ -1,0 +1,21 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$roleAssignmentBorderColor: $silver;
+$roleAssignmentBackgroundColor: $white;
+
+.role-assignment-container {
+    border-bottom: 1px solid $roleAssignmentBorderColor;
+    background: $roleAssignmentBackgroundColor;
+    font-size: 12px;
+    padding: 10px;
+    display: flex;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    > div {
+        align-self: center;
+        width: 33.33%;
+    }
+}

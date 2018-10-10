@@ -16,7 +16,7 @@ type Props = {|
 
 @observer
 export default class RoleAssignments extends React.Component<Props> {
-    @observable localizations: Array<Localization>;
+    @observable localizations: ?Array<Localization>;
 
     componentDidMount() {
         localizationStore.loadLocalizations()
@@ -76,8 +76,9 @@ export default class RoleAssignments extends React.Component<Props> {
 
     render() {
         const {value} = this.props;
+        const localizations = this.localizations;
 
-        if (!this.localizations) {
+        if (!localizations) {
             return <Loader />;
         }
 
@@ -98,7 +99,7 @@ export default class RoleAssignments extends React.Component<Props> {
                                 return (
                                     <RoleAssignment
                                         key={key}
-                                        localizations={this.localizations}
+                                        localizations={localizations}
                                         onChange={this.handleRoleAssignmentChange}
                                         value={userRole}
                                     />

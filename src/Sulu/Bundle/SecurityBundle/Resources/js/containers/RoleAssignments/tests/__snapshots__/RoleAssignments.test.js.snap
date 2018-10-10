@@ -157,7 +157,7 @@ exports[`Render component 1`] = `
 </div>
 `;
 
-exports[`Render component with min 1`] = `
+exports[`Render component without data 1`] = `
 <div
   class="grid"
 >

@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import type {Localization} from 'sulu-admin-bundle/stores';
-import roleAssignmentsStyle from './roleAssignments.scss';
+import roleAssignmentStyle from './roleAssignment.scss';
 
 type Props = {
     localizations: Array<Localization>,
@@ -24,7 +24,7 @@ export default class RoleAssignment extends React.Component<Props> {
         const {localizations, value} = this.props;
 
         return (
-            <div className={roleAssignmentsStyle.roleAssignmentContainer}>
+            <div className={roleAssignmentStyle.roleAssignmentContainer}>
                 <div>{value.role.name}</div>
                 <div>{value.role.system}</div>
                 <div>

@@ -44,7 +44,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render component with min', () => {
+test('Render component without data', () => {
     const localizations: Array<Localization> = [
         {
             country: '',
