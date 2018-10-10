@@ -101,7 +101,7 @@ test('The positioner should return the correct dimensions when the popover overf
             anchorLeft: 2000,
             centerChildOffsetTop: 100,
         }))
-    )).toEqual({top: 302, left: 1310, height: 500, scrollTop: 0});
+    )).toEqual({top: 302, left: 1900, height: 500, scrollTop: 0});
 });
 
 test('The positioner should return the correct dimensions when the popover undercuts the min height at the bottom 2',

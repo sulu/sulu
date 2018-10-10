@@ -196,7 +196,7 @@ exports[`Render a MediaCard with download list 1`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <li class=\\"item\\"><button><span class=\\"content\\">Direct download<span class=\\"copyText\\"></span></span></button></li>
       <li class=\\"divider\\"></li>
       <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"content\\">300/200<span class=\\"copyText\\">Copy URL</span></span></button></li>

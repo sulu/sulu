@@ -111,7 +111,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <div style=\\"top: 10px; position: fixed; pointer-events: auto; left: 35px;\\">
+    <div style=\\"top: 10px; left: 35px; position: fixed; pointer-events: auto;\\">
       <div style=\\"width: 200px; padding: 10px 10px 0px; box-sizing: initial; background: rgb(255, 255, 255); border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);\\" class=\\"sketch-picker \\">
         <div style=\\"width: 100%; padding-bottom: 75%; position: relative; overflow: hidden;\\">
           <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\">

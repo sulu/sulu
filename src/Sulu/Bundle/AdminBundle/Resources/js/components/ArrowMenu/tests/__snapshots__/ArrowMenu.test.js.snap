@@ -20,7 +20,7 @@ exports[`Render ArrowMenu open 2`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
       <div class=\\"arrow top right\\"></div>
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">

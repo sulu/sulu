@@ -85,7 +85,7 @@ exports[`Render the MultiAutoComplete with open suggestions list 2`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; position: fixed; pointer-events: auto; left: 10px;\\">
+    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button></li>
       <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button></li>
       <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button></li>
