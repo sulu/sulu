@@ -504,13 +504,13 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function checkArguments(Request $request)
     {
-        if (null == $request->get('firstName')) {
+        if (null === $request->get('firstName')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'username');
         }
         if (null === $request->get('lastName')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'password');
         }
-        if (null == $request->get('formOfAddress')) {
+        if (null === $request->get('formOfAddress')) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'formOfAddress');
         }
     }
