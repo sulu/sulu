@@ -166,6 +166,38 @@ test('Set default value if no value is passed', () => {
     expect(changeSpy).toBeCalledWith('mr');
 });
 
+test('Set default value to a number of 0 should work', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        default_value: {
+            value: 0,
+        },
+        values: {
+            value: [
+                {
+                    value: 0,
+                    title: 'Mister',
+                },
+                {
+                    value: 1,
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+    shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith(0);
+});
+
 test('Throw error if no schemaOptions are passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     expect(() => shallow(
