@@ -24,6 +24,7 @@ export type SchemaOptions = {[key: string]: SchemaOption};
 
 export type FieldTypeProps<T> = {|
     dataPath: string,
+    disabled: ?boolean,
     error: ?Error | ErrorCollection,
     fieldTypeOptions: Object,
     formInspector: FormInspector,
