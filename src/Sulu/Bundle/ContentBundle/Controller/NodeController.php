@@ -282,7 +282,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $context = new Context();
         $context->setGroups($groups);
-        $context->setSerializeNull(true);
 
         // preview needs also null value to work correctly
         $view->setContext($context);
@@ -561,7 +560,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $context = new Context();
         $context->setGroups(['defaultPage']);
-        $context->setSerializeNull(true);
 
         return $this->handleView($this->view($document)->setContext($context));
     }
@@ -593,7 +591,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $context = new Context();
         $context->setGroups(['defaultPage']);
-        $context->setSerializeNull(true);
 
         return $this->handleView($this->view($document)->setContext($context));
     }

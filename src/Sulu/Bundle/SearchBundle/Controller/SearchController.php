@@ -144,7 +144,6 @@ class SearchController
         $view = View::create($representation);
         $context = new Context();
         $context->enableMaxDepth();
-        $context->setSerializeNull(true);
         $view->setContext($context);
 
         return $this->viewHandler->handle($view);

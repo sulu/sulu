@@ -463,7 +463,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response['type']['id']);
         $this->assertEquals('image', $response['type']['name']);
         $this->assertEquals('en-gb', $response['locale']);
-        $this->assertArrayNotHasKey('fallbackLocale', $response);
+        $this->assertNull($response['fallbackLocale']);
         $this->assertEquals('photo.jpeg', $response['name']);
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
         $this->assertEquals('2', $response['downloadCounter']);

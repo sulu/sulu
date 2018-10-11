@@ -1134,7 +1134,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
-        $this->assertObjectNotHasAttribute('key', $response);
+        $this->assertNull($response->key);
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals(2, count($response->meta));
 
@@ -1157,7 +1157,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
-        $this->assertObjectNotHasAttribute('key', $response);
+        $this->assertNull($response->key);
         $this->assertEquals(2, count($response->meta));
 
         usort(

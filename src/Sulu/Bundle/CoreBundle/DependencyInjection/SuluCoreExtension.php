@@ -100,6 +100,15 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             ObjectNotSupportedException::class => 406,
                         ],
                     ],
+                    'serializer' => [
+                        'serialize_null' => true,
+                    ],
+                    'view' => [
+                        'formats' => [
+                            'json' => true,
+                            'csv' => true,
+                        ],
+                    ],
                 ]
             );
         }
@@ -168,10 +177,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     ],
                 ]
             );
-        }
-
-        if ($container->hasExtension('fos_rest')) {
-            $container->prependExtensionConfig('fos_rest', ['view' => ['formats' => ['json' => true, 'csv' => true]]]);
         }
 
         if ($container->hasExtension('massive_build')) {
