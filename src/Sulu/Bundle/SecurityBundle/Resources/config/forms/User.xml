@@ -2,6 +2,20 @@
 <form xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <schema>
+        <anyOf>
+            <schema>
+                <properties>
+                    <property name="id" mandatory="true" />
+                </properties>
+            </schema>
+            <schema>
+                <properties>
+                    <property name="password" mandatory="true" />
+                </properties>
+            </schema>
+        </anyOf>
+    </schema>
     <properties>
         <property name="username" type="text_line" mandatory="true" colspan="6">
             <meta>
@@ -40,7 +54,7 @@
                 <title lang="de">Berechtigungen</title>
             </meta>
             <properties>
-                <property name="userRoles" type="role_assignments">
+                <property name="userRoles" mandatory="true" type="role_assignments">
                     <meta>
                         <title lang="en">Role</title>
                         <title lang="de">Rollen</title>
