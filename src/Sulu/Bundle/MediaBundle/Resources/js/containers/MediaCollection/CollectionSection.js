@@ -110,19 +110,16 @@ export default class CollectionSection extends React.Component<Props> {
 
     handleRemoveCollectionConfirm = () => {
         const {resourceStore} = this.props;
+        const {data} = resourceStore;
+
+        const parentCollectionId = data._embedded && data._embedded.parent && data._embedded.parent.id
+            ? data._embedded.parent.id
+            : null;
 
         resourceStore.delete()
             .then(() => {
-                const {
-                    data,
-                } = resourceStore;
-
                 this.closeCollectionOperationOverlay();
-                this.props.onCollectionNavigate(
-                    data._embedded && data._embedded.parent && data._embedded.parent.id
-                        ? data._embedded.parent.id
-                        : null
-                );
+                this.props.onCollectionNavigate(parentCollectionId);
             });
     };
 

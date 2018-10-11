@@ -485,7 +485,11 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
-    collectionStore.resourceStore.delete = jest.fn().mockReturnValue(promise);
+    collectionStore.resourceStore.delete = jest.fn().mockImplementationOnce(() => {
+        collectionStore.resourceStore.data = {};
+        return promise;
+    });
+
     collectionStore.resourceStore.data = {
         id: 1,
         _embedded: {
