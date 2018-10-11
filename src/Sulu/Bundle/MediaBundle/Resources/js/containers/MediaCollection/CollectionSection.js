@@ -114,7 +114,7 @@ export default class CollectionSection extends React.Component<Props> {
 
         const parentCollectionId = data._embedded && data._embedded.parent && data._embedded.parent.id
             ? data._embedded.parent.id
-            : null;
+            : undefined;
 
         resourceStore.delete()
             .then(() => {
