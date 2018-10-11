@@ -1909,7 +1909,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany 222', $response->name);
-        $this->assertObjectNotHasAttribute('parent', $response);
+        $this->assertNull($response->parent);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('Musterstraße', $response->addresses[0]->street);

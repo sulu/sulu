@@ -838,7 +838,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('Home', $response['addresses'][0]['title']);
         $this->assertEquals(47.4049309, $response['addresses'][0]['latitude']);
-        $this->assertArrayNotHasKey('longitude', $response['addresses'][0]);
+        $this->assertNull($response['addresses'][0]['longitude']);
     }
 
     public function testPostWithoutAdditionalData()
@@ -1850,7 +1850,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
-        $this->assertObjectNotHasAttribute('account', $response);
+        $this->assertNull($response->account);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
@@ -1863,7 +1863,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertFalse(property_exists($response, 'salutation'));
+        $this->assertNull($response->salutation);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1871,7 +1871,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
-        $this->assertObjectNotHasAttribute('account', $response);
+        $this->assertNull($response->account);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
@@ -1883,7 +1883,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->notes));
 
         $this->assertEquals(0, $response->formOfAddress);
-        $this->assertFalse(property_exists($response, 'salutation'));
+        $this->assertNull($response->salutation);
     }
 
     public function testPatchNotExisting()
@@ -2197,7 +2197,7 @@ class ContactControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/contacts/' . $this->contact->getId());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('birthday', $response);
+        $this->assertNotNull($response['birthday']);
 
         $data = [
             'firstName' => 'John',
@@ -2208,7 +2208,7 @@ class ContactControllerTest extends SuluTestCase
 
         $client->request('PUT', '/api/contacts/' . $this->contact->getId(), $data);
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayNotHasKey('birthday', $response);
+        $this->assertNull($response['birthday']);
     }
 
     public function sortAddressesPrimaryLast()

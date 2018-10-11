@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
-use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -484,10 +483,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
     private function handleView($document)
     {
-        $context = new Context();
-        $context->setSerializeNull(true);
-
-        $view = View::create($document)->setContext($context);
+        $view = View::create($document);
 
         return $this->viewHandler->handle($view);
     }
