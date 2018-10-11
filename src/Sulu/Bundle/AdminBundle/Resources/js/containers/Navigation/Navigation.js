@@ -14,6 +14,7 @@ type Props = {
     onNavigate: (route: string) => void,
     onLogout: () => void,
     onPinToggle: () => void,
+    suluVersion: string,
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
@@ -63,6 +64,7 @@ export default class Navigation extends React.Component<Props> {
     };
 
     render() {
+        const {suluVersion} = this.props;
         const navigationItems = navigationRegistry.getAll();
 
         return (
@@ -71,7 +73,7 @@ export default class Navigation extends React.Component<Props> {
                 onPinToggle={this.handlePinToggle}
                 onProfileClick={this.handleProfileEditClick}
                 pinned={this.props.pinned}
-                suluVersion="2.0.0-RC1" // TODO: Get this dynamically from server
+                suluVersion={suluVersion}
                 suluVersionLink={SULU_CHANGELOG_URL}
                 title="Sulu" // TODO: Get this dynamically from server
                 userImage={this.userImage}

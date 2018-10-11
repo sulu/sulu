@@ -91,7 +91,7 @@ test('Application should render login with loader', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
-    const application = mount(<Application router={router} />);
+    const application = mount(<Application router={router} suluVersion="2.0.0-RC1" />);
     expect(application.render()).toMatchSnapshot();
 });
 
@@ -102,14 +102,14 @@ test('Application should render login when user is not logged in', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
-    const application = mount(<Application router={router} />);
+    const application = mount(<Application router={router} suluVersion="2.0.0-RC1" />);
 
     expect(application.render()).toMatchSnapshot();
 });
 
 test('Application should not fail if current route does not exist', () => {
     const router = new Router({});
-    const view = render(<Application router={router} />);
+    const view = render(<Application router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view).toMatchSnapshot();
 });
@@ -127,7 +127,7 @@ test('Application should render based on current route', () => {
         parent: null,
     };
 
-    const view = render(<Application router={router} />);
+    const view = render(<Application router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view).toMatchSnapshot();
 });
@@ -145,7 +145,7 @@ test('Application should render opened navigation', () => {
         parent: null,
     };
 
-    const view = mount(<Application router={router} />);
+    const view = mount(<Application router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
 
     expect(view).toMatchSnapshot();
@@ -164,7 +164,7 @@ test('Application should render pinned navigation', () => {
         parent: null,
     };
 
-    const view = mount(<Application router={router} />);
+    const view = mount(<Application router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
     view.find('button.pin').simulate('click');
 
@@ -186,7 +186,7 @@ test('Application should render pinned navigation from beginning', () => {
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
 
-    const view = mount(<Application router={router} />);
+    const view = mount(<Application router={router} suluVersion="2.0.0-RC1" />);
     expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
     expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
     expect(view.find('button.pin')).toHaveLength(1);

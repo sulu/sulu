@@ -14,7 +14,8 @@
             const SULU_CONFIG = Object.freeze({
                 translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}',
-                endpoints: {{ endpoints|json_encode }}
+                endpoints: {{ endpoints|json_encode }},
+                suluVersion: '{{ sulu_version }}'
             });
             {% endautoescape %}
         </script>

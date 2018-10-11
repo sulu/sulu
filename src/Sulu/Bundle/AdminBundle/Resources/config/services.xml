@@ -23,6 +23,7 @@
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_content.smart_content.data_provider_pool" />
             <argument>%kernel.environment%</argument>
+            <argument>%sulu.version%</argument>
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>

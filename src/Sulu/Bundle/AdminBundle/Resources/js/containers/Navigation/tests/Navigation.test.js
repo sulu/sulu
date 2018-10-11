@@ -74,6 +74,7 @@ test('Should render navigation', () => {
             onPinToggle={jest.fn()}
             pinned={false}
             router={router}
+            suluVersion="2.0.0-RC1"
         />
     );
 
@@ -102,6 +103,7 @@ test('Should call the navigation callback, pin callback and router navigate', ()
             onPinToggle={handlePin}
             pinned={false}
             router={router}
+            suluVersion="2.0.0-RC1"
         />
     );
 
