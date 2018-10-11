@@ -89,6 +89,7 @@ class PropertiesXmlParser
                 'size',
                 'spaceAfter',
                 'label',
+                'disabledCondition',
                 'visibleCondition',
             ]
         );
@@ -145,7 +146,16 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'visibleCondition']
+            [
+                'name',
+                'default-type',
+                'minOccurs',
+                'maxOccurs',
+                'colspan',
+                'cssClass',
+                'disabledCondition',
+                'visibleCondition',
+            ]
         );
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
@@ -166,7 +176,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'colspan', 'cssClass', 'visibleCondition']
+            ['name', 'colspan', 'cssClass', 'disabledCondition', 'visibleCondition']
         );
 
         $result['type'] = 'section';
@@ -349,6 +359,10 @@ class PropertiesXmlParser
             $section->setDescriptions($data['meta']['info_text']);
         }
 
+        if (isset($data['disabledCondition'])) {
+            $section->setDisabledCondition($data['disabledCondition']);
+        }
+
         if (isset($data['visibleCondition'])) {
             $section->setVisibleCondition($data['visibleCondition']);
         }
@@ -365,6 +379,10 @@ class PropertiesXmlParser
         $blockProperty = new BlockMetadata();
         $blockProperty->setName($propertyName);
         $blockProperty->defaultComponentName = $data['default-type'];
+
+        if (isset($data['disabledCondition'])) {
+            $blockProperty->setDisabledCondition($data['disabledCondition']);
+        }
 
         if (isset($data['visibleCondition'])) {
             $blockProperty->setVisibleCondition($data['visibleCondition']);
@@ -417,7 +435,12 @@ class PropertiesXmlParser
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
         $property->setLabel(array_key_exists('label', $data) ? $data['label'] : null);
-        $property->setVisibleCondition(array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null);
+        $property->setDisabledCondition(
+            array_key_exists('disabledCondition', $data) ? $data['disabledCondition'] : null
+        );
+        $property->setVisibleCondition(
+            array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null
+        );
         $property->setParameters($data['params']);
         $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);

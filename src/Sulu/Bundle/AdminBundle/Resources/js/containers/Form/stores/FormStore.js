@@ -101,24 +101,39 @@ function collectTagPaths(
         .map((pathWithPriority) => pathWithPriority.path);
 }
 
-function transformRawSchema(rawSchema: RawSchema, hiddenFieldPaths: Array<string>, basePath: string = ''): Schema {
+function transformRawSchema(
+    rawSchema: RawSchema,
+    disabledFieldPaths: Array<string>,
+    hiddenFieldPaths: Array<string>,
+    basePath: string = ''
+): Schema {
     return Object.keys(rawSchema).reduce((schema, schemaKey) => {
-        schema[schemaKey] = transformRawSchemaEntry(rawSchema[schemaKey], hiddenFieldPaths, basePath + '/' + schemaKey);
+        schema[schemaKey] = transformRawSchemaEntry(
+            rawSchema[schemaKey],
+            disabledFieldPaths,
+            hiddenFieldPaths,
+            basePath + '/' + schemaKey
+        );
+
         return schema;
     }, {});
 }
 
 function transformRawSchemaEntry(
     rawSchemaEntry: RawSchemaEntry,
+    disabledFieldPaths: Array<string>,
     hiddenFieldPaths: Array<string>,
     path: string
 ): SchemaEntry {
     return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
-        if (schemaEntryKey === 'visibleCondition') {
+        if (schemaEntryKey === 'disabledCondition') {
+            // jexl could be directly used here, if it would support synchrounous execution
+            schemaEntry.disabled = disabledFieldPaths.includes(path);
+        } else if (schemaEntryKey === 'visibleCondition') {
             // jexl could be directly used here, if it would support synchrounous execution
             schemaEntry.visible = !hiddenFieldPaths.includes(path);
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
-            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, hiddenFieldPaths, path);
+            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, disabledFieldPaths, hiddenFieldPaths, path);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
             const rawSchemaEntryTypes = rawSchemaEntry.types;
 
@@ -127,6 +142,7 @@ function transformRawSchemaEntry(
                     title: rawSchemaEntryTypes[schemaEntryTypeKey].title,
                     form: transformRawSchema(
                         rawSchemaEntryTypes[schemaEntryTypeKey].form,
+                        disabledFieldPaths,
                         hiddenFieldPaths,
                         path + '/types/' + schemaEntryTypeKey + '/form'
                     ),
@@ -143,12 +159,21 @@ function transformRawSchemaEntry(
     }, {});
 }
 
-function evaluateVisibleConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
+function evaluateFieldConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
     const visibleConditionPromises = [];
+    const disabledConditionPromises = [];
 
     Object.keys(rawSchema).forEach((schemaKey) => {
-        const {items, types, visibleCondition} = rawSchema[schemaKey];
+        const {disabledCondition, items, types, visibleCondition} = rawSchema[schemaKey];
         const schemaPath = basePath + '/' + schemaKey;
+
+        if (disabledCondition) {
+            disabledConditionPromises.push(jexl.eval(disabledCondition, data).then((result) => {
+                if (result) {
+                    return Promise.resolve(schemaPath);
+                }
+            }));
+        }
 
         if (visibleCondition) {
             visibleConditionPromises.push(jexl.eval(visibleCondition, data).then((result) => {
@@ -159,23 +184,32 @@ function evaluateVisibleConditions(rawSchema: RawSchema, data: Object, basePath:
         }
 
         if (items) {
-            visibleConditionPromises.push(...evaluateVisibleConditions(items, data, schemaPath));
+            const {
+                disabledConditionPromises: itemDisabledConditionPromises,
+                visibleConditionPromises: itemVisibleConditionPromises,
+            } = evaluateFieldConditions(items, data, schemaPath);
+
+            disabledConditionPromises.push(...itemDisabledConditionPromises);
+            visibleConditionPromises.push(...itemVisibleConditionPromises);
         }
 
         if (types) {
             Object.keys(types).forEach((type) => {
-                visibleConditionPromises.push(
-                    ...evaluateVisibleConditions(
-                        types[type].form,
-                        data,
-                        schemaPath + '/types/' + type + '/form'
-                    )
-                );
+                const {
+                    disabledConditionPromises: typeDisabledConditionPromises,
+                    visibleConditionPromises: typeVisibleConditionPromises,
+                } = evaluateFieldConditions(types[type].form, data, schemaPath + '/types/' + type + '/form');
+
+                disabledConditionPromises.push(...typeDisabledConditionPromises);
+                visibleConditionPromises.push(...typeVisibleConditionPromises);
             });
         }
     });
 
-    return visibleConditionPromises;
+    return {
+        disabledConditionPromises,
+        visibleConditionPromises,
+    };
 }
 
 export default class FormStore {
@@ -192,6 +226,7 @@ export default class FormStore {
     typeDisposer: ?() => void;
     pathsByTag: {[tagName: string]: Array<string>} = {};
     @observable modifiedFields: Array<string> = [];
+    @observable disabledFieldPaths: Array<string> = [];
     @observable hiddenFieldPaths: Array<string> = [];
 
     constructor(resourceStore: ResourceStore, options: Object = {}) {
@@ -255,13 +290,13 @@ export default class FormStore {
         when(
             () => !this.resourceStore.loading,
             (): void => {
-                this.updateHiddenFieldPaths();
+                this.updateFieldPathEvaluations();
             }
         );
     };
 
     @computed get schema(): Schema {
-        return transformRawSchema(this.rawSchema, this.hiddenFieldPaths);
+        return transformRawSchema(this.rawSchema, this.disabledFieldPaths, this.hiddenFieldPaths);
     }
 
     @computed get hasTypes(): boolean {
@@ -363,19 +398,30 @@ export default class FormStore {
             this.modifiedFields.push(dataPath);
         }
 
-        return this.updateHiddenFieldPaths();
+        return this.updateFieldPathEvaluations();
     }
 
     isFieldModified(dataPath: string): boolean {
         return this.modifiedFields.includes(dataPath);
     }
 
-    updateHiddenFieldPaths(): Promise<*> {
-        const visibleConditionPromises = evaluateVisibleConditions(this.rawSchema, this.data);
+    updateFieldPathEvaluations(): Promise<*> {
+        const {
+            disabledConditionPromises,
+            visibleConditionPromises,
+        } = evaluateFieldConditions(this.rawSchema, this.data);
 
-        return Promise.all(visibleConditionPromises).then(action((visibleConditionResults) => {
-            this.hiddenFieldPaths = visibleConditionResults;
-        }));
+        const disabledConditionsPromise = Promise.all(disabledConditionPromises)
+            .then(action((disabledConditionResults) => {
+                this.disabledFieldPaths = disabledConditionResults;
+            }));
+
+        const visibleConditionsPromise = Promise.all(visibleConditionPromises)
+            .then(action((visibleConditionResults) => {
+                this.hiddenFieldPaths = visibleConditionResults;
+            }));
+
+        return Promise.all([disabledConditionsPromise, visibleConditionsPromise]);
     }
 
     @computed get locale(): ?IObservableValue<string> {

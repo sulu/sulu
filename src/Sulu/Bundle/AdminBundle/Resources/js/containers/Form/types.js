@@ -43,12 +43,14 @@ type BaseSchemaEntry = {
 };
 
 export type RawSchemaEntry = BaseSchemaEntry & {
+    disabledCondition?: string,
     items?: RawSchema,
     types?: RawTypes,
     visibleCondition?: string,
 };
 
 export type SchemaEntry = BaseSchemaEntry & {
+    disabled?: boolean,
     items?: Schema,
     types?: Types,
     visible?: boolean,

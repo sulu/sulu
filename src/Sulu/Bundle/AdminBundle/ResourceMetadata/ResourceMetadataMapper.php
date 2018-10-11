@@ -105,6 +105,7 @@ class ResourceMetadataMapper
         }
 
         $section->setSize($property->getSize());
+        $section->setDisabledCondition($property->getDisabledCondition());
         $section->setVisibleCondition($property->getVisibleCondition());
 
         foreach ($property->getChildren() as $component) {
@@ -133,6 +134,7 @@ class ResourceMetadataMapper
         }
 
         $field->setLabel($property->getTitle($locale));
+        $field->setDisabledCondition($property->getDisabledCondition());
         $field->setVisibleCondition($property->getVisibleCondition());
         $field->setDescription($property->getDescription($locale));
         $field->setType($property->getType());

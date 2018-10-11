@@ -78,6 +78,11 @@ abstract class ItemMetadata
     /**
      * @var string
      */
+    protected $disabledCondition = null;
+
+    /**
+     * @var string
+     */
     protected $visibleCondition = null;
 
     /**
@@ -350,6 +355,18 @@ abstract class ItemMetadata
         }
 
         return '';
+    }
+
+    public function getDisabledCondition(): ?string
+    {
+        return $this->disabledCondition;
+    }
+
+    public function setDisabledCondition(?string $disabledCondition): self
+    {
+        $this->disabledCondition = $disabledCondition;
+
+        return $this;
     }
 
     public function getVisibleCondition(): ?string

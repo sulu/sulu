@@ -30,6 +30,11 @@ abstract class Item
     /**
      * @var string
      */
+    protected $disabledCondition;
+
+    /**
+     * @var string
+     */
     protected $visibleCondition;
 
     /**
@@ -65,6 +70,16 @@ abstract class Item
     public function setLabel(?string $label): void
     {
         $this->label = $label;
+    }
+
+    public function getDisabledCondition(): ?string
+    {
+        return $this->disabledCondition;
+    }
+
+    public function setDisabledCondition(?string $disabledCondition): void
+    {
+        $this->disabledCondition = $disabledCondition;
     }
 
     public function getVisibleCondition(): ?string
