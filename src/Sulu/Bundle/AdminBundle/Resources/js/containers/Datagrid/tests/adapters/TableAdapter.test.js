@@ -784,3 +784,38 @@ test('Pagination should be passed correct props', () => {
         children: expect.anything(),
     });
 });
+
+test('Pagination should not be rendered if no data is available', () => {
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+    const tableAdapter = shallow(
+        <TableAdapter
+            active={undefined}
+            activeItems={[]}
+            disabledIds={[]}
+            limit={10}
+            loading={false}
+            onAllSelectionChange={undefined}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={undefined}
+            onItemDeactivate={jest.fn()}
+            onItemSelectionChange={undefined}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
+            onSort={jest.fn()}
+            options={{}}
+            page={1}
+            pageCount={7}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+});

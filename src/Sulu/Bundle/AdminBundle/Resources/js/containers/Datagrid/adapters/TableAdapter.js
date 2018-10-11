@@ -29,6 +29,7 @@ export default class TableAdapter extends AbstractTableAdapter {
 
     render() {
         const {
+            data,
             limit,
             loading,
             onAllSelectionChange,
@@ -48,6 +49,26 @@ export default class TableAdapter extends AbstractTableAdapter {
             });
         }
 
+        const table = (
+            <Table
+                buttons={buttons}
+                onAllSelectionChange={onAllSelectionChange}
+                onRowSelectionChange={onItemSelectionChange}
+                selectMode={onItemSelectionChange ? 'multiple' : undefined}
+            >
+                <Table.Header>
+                    {this.renderHeaderCells()}
+                </Table.Header>
+                <Table.Body>
+                    {this.renderRows()}
+                </Table.Body>
+            </Table>
+        );
+
+        if (page === 1 && data.length === 0) {
+            return table;
+        }
+
         return (
             <Pagination
                 currentLimit={limit}
@@ -57,19 +78,7 @@ export default class TableAdapter extends AbstractTableAdapter {
                 onPageChange={onPageChange}
                 totalPages={pageCount}
             >
-                <Table
-                    buttons={buttons}
-                    onAllSelectionChange={onAllSelectionChange}
-                    onRowSelectionChange={onItemSelectionChange}
-                    selectMode={onItemSelectionChange ? 'multiple' : undefined}
-                >
-                    <Table.Header>
-                        {this.renderHeaderCells()}
-                    </Table.Header>
-                    <Table.Body>
-                        {this.renderRows()}
-                    </Table.Body>
-                </Table>
+                {table}
             </Pagination>
         );
     }
