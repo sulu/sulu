@@ -40,6 +40,24 @@ export default class FolderAdapter extends AbstractAdapter {
             pageCount,
         } = this.props;
 
+        const folderList = (
+            <FolderList onFolderClick={onItemClick}>
+                {data.map((item: Object) => (
+                    // TODO: Don't access properties like "title" directly.
+                    <FolderList.Folder
+                        id={item.id}
+                        info={FolderAdapter.getInfoText(item)}
+                        key={item.id}
+                        title={item.title}
+                    />
+                ))}
+            </FolderList>
+        );
+
+        if (page === 1 && data.length === 0) {
+            return folderList;
+        }
+
         return (
             <Pagination
                 currentLimit={limit}
@@ -49,17 +67,7 @@ export default class FolderAdapter extends AbstractAdapter {
                 onPageChange={onPageChange}
                 totalPages={pageCount}
             >
-                <FolderList onFolderClick={onItemClick}>
-                    {data.map((item: Object) => (
-                        // TODO: Don't access properties like "title" directly.
-                        <FolderList.Folder
-                            id={item.id}
-                            info={FolderAdapter.getInfoText(item)}
-                            key={item.id}
-                            title={item.title}
-                        />
-                    ))}
-                </FolderList>
+                {folderList}
             </Pagination>
         );
     }

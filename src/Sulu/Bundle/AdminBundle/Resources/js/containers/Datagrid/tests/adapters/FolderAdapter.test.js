@@ -119,6 +119,40 @@ test('Click on a Folder should call the onItemEdit callback', () => {
     expect(folderAdapter.find('FolderList').get(0).props.onFolderClick).toBe(itemClickSpy);
 });
 
+test('Pagination should not be rendered if no data is available', () => {
+    const folderAdapter = shallow(
+        <FolderAdapter
+            active={undefined}
+            activeItems={[]}
+            disabledIds={[]}
+            limit={10}
+            loading={false}
+            onAllSelectionChange={undefined}
+            onItemActivate={jest.fn()}
+            onItemAdd={undefined}
+            onItemClick={undefined}
+            onItemDeactivate={jest.fn()}
+            onItemSelectionChange={undefined}
+            onLimitChange={jest.fn()}
+            onPageChange={jest.fn()}
+            onRequestItemCopy={undefined}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={undefined}
+            onRequestItemOrder={undefined}
+            onSort={jest.fn()}
+            options={{}}
+            page={1}
+            pageCount={7}
+            schema={{}}
+            selections={[]}
+            sortColumn={undefined}
+            sortOrder={undefined}
+        />
+    );
+
+    expect(folderAdapter.find('Pagination')).toHaveLength(0);
+});
+
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
