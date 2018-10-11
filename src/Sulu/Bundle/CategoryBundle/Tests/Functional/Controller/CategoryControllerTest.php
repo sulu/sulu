@@ -1004,6 +1004,25 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('myValue', $response->meta[0]->value);
     }
 
+    public function testPostWithoutMedia()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/categories?locale=en',
+            [
+                'name' => 'New Category',
+                'medias' => null,
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('New Category', $response->name);
+        $this->assertEquals(['ids' => []], (array) $response->medias);
+    }
+
     public function testPostWithNoLocale()
     {
         $client = $this->createAuthenticatedClient();
