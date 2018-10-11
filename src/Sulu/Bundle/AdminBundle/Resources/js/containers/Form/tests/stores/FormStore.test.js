@@ -65,14 +65,14 @@ test('Create data object for schema', () => {
     }, 0);
 });
 
-test('Evaluate all visibilityConditions for schema', (done) => {
+test('Evaluate all visibleConditions for schema', (done) => {
     const metadata = {
         item1: {
             type: 'text_line',
         },
         item2: {
             type: 'text_line',
-            visibilityCondition: 'item1 == "item2"',
+            visibleCondition: 'item1 == "item2"',
         },
         section: {
             items: {
@@ -81,11 +81,11 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                 },
                 item32: {
                     type: 'text_line',
-                    visibilityCondition: 'item1 == "item32"',
+                    visibleCondition: 'item1 == "item32"',
                 },
             },
             type: 'section',
-            visibilityCondition: 'item1 == "section"',
+            visibleCondition: 'item1 == "section"',
         },
         block: {
             types: {
@@ -93,7 +93,7 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                     form: {
                         item41: {
                             type: 'text_line',
-                            visibilityCondition: 'item1 == "item41"',
+                            visibleCondition: 'item1 == "item41"',
                         },
                         item42: {
                             type: 'text_line',

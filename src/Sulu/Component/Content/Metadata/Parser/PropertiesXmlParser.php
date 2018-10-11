@@ -89,7 +89,7 @@ class PropertiesXmlParser
                 'size',
                 'spaceAfter',
                 'label',
-                'visibilityCondition',
+                'visibleCondition',
             ]
         );
 
@@ -145,7 +145,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'visibilityCondition']
+            ['name', 'default-type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass', 'visibleCondition']
         );
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
@@ -166,7 +166,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'colspan', 'cssClass', 'visibilityCondition']
+            ['name', 'colspan', 'cssClass', 'visibleCondition']
         );
 
         $result['type'] = 'section';
@@ -349,8 +349,8 @@ class PropertiesXmlParser
             $section->setDescriptions($data['meta']['info_text']);
         }
 
-        if (isset($data['visibilityCondition'])) {
-            $section->setVisibilityCondition($data['visibilityCondition']);
+        if (isset($data['visibleCondition'])) {
+            $section->setVisibleCondition($data['visibleCondition']);
         }
 
         foreach ($data['properties'] as $name => $property) {
@@ -366,8 +366,8 @@ class PropertiesXmlParser
         $blockProperty->setName($propertyName);
         $blockProperty->defaultComponentName = $data['default-type'];
 
-        if (isset($data['visibilityCondition'])) {
-            $blockProperty->setVisibilityCondition($data['visibilityCondition']);
+        if (isset($data['visibleCondition'])) {
+            $blockProperty->setVisibleCondition($data['visibleCondition']);
         }
 
         if (isset($data['meta']['title'])) {
@@ -417,7 +417,7 @@ class PropertiesXmlParser
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
         $property->setLabel(array_key_exists('label', $data) ? $data['label'] : null);
-        $property->setVisibilityCondition(array_key_exists('visibilityCondition', $data) ? $data['visibilityCondition'] : null);
+        $property->setVisibleCondition(array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null);
         $property->setParameters($data['params']);
         $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);

@@ -1,5 +1,13 @@
 # Upgrade
 
+## dev-develop
+
+### Form visibilityCondition
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `visibilityCondition` on the Form XML has been renamed to `visibleCondition`.
+
 ## 2.0.0-alpha4
 
 ### MediaController

@@ -78,7 +78,7 @@ abstract class ItemMetadata
     /**
      * @var string
      */
-    protected $visibilityCondition = null;
+    protected $visibleCondition = null;
 
     /**
      * @param mixed $name
@@ -352,14 +352,14 @@ abstract class ItemMetadata
         return '';
     }
 
-    public function getVisibilityCondition(): ?string
+    public function getVisibleCondition(): ?string
     {
-        return $this->visibilityCondition;
+        return $this->visibleCondition;
     }
 
-    public function setVisibilityCondition(?string $visibilityCondition): self
+    public function setVisibleCondition(?string $visibleCondition): self
     {
-        $this->visibilityCondition = $visibilityCondition;
+        $this->visibleCondition = $visibleCondition;
 
         return $this;
     }

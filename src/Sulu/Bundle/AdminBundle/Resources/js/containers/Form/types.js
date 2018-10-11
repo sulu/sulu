@@ -45,7 +45,7 @@ type BaseSchemaEntry = {
 export type RawSchemaEntry = BaseSchemaEntry & {
     items?: RawSchema,
     types?: RawTypes,
-    visibilityCondition?: string,
+    visibleCondition?: string,
 };
 
 export type SchemaEntry = BaseSchemaEntry & {

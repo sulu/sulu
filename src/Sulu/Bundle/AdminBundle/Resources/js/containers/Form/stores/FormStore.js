@@ -114,7 +114,7 @@ function transformRawSchemaEntry(
     path: string
 ): SchemaEntry {
     return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
-        if (schemaEntryKey === 'visibilityCondition') {
+        if (schemaEntryKey === 'visibleCondition') {
             // jexl could be directly used here, if it would support synchrounous execution
             schemaEntry.visible = !hiddenFieldPaths.includes(path);
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
@@ -143,15 +143,15 @@ function transformRawSchemaEntry(
     }, {});
 }
 
-function evaluateVisibilityConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
-    const visibilityConditionPromises = [];
+function evaluateVisibleConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
+    const visibleConditionPromises = [];
 
     Object.keys(rawSchema).forEach((schemaKey) => {
-        const {items, types, visibilityCondition} = rawSchema[schemaKey];
+        const {items, types, visibleCondition} = rawSchema[schemaKey];
         const schemaPath = basePath + '/' + schemaKey;
 
-        if (visibilityCondition) {
-            visibilityConditionPromises.push(jexl.eval(visibilityCondition, data).then((result) => {
+        if (visibleCondition) {
+            visibleConditionPromises.push(jexl.eval(visibleCondition, data).then((result) => {
                 if (!result) {
                     return Promise.resolve(schemaPath);
                 }
@@ -159,13 +159,13 @@ function evaluateVisibilityConditions(rawSchema: RawSchema, data: Object, basePa
         }
 
         if (items) {
-            visibilityConditionPromises.push(...evaluateVisibilityConditions(items, data, schemaPath));
+            visibleConditionPromises.push(...evaluateVisibleConditions(items, data, schemaPath));
         }
 
         if (types) {
             Object.keys(types).forEach((type) => {
-                visibilityConditionPromises.push(
-                    ...evaluateVisibilityConditions(
+                visibleConditionPromises.push(
+                    ...evaluateVisibleConditions(
                         types[type].form,
                         data,
                         schemaPath + '/types/' + type + '/form'
@@ -175,7 +175,7 @@ function evaluateVisibilityConditions(rawSchema: RawSchema, data: Object, basePa
         }
     });
 
-    return visibilityConditionPromises;
+    return visibleConditionPromises;
 }
 
 export default class FormStore {
@@ -371,10 +371,10 @@ export default class FormStore {
     }
 
     updateHiddenFieldPaths(): Promise<*> {
-        const visibilityConditionPromises = evaluateVisibilityConditions(this.rawSchema, this.data);
+        const visibleConditionPromises = evaluateVisibleConditions(this.rawSchema, this.data);
 
-        return Promise.all(visibilityConditionPromises).then(action((visibilityConditionResults) => {
-            this.hiddenFieldPaths = visibilityConditionResults;
+        return Promise.all(visibleConditionPromises).then(action((visibleConditionResults) => {
+            this.hiddenFieldPaths = visibleConditionResults;
         }));
     }
 
