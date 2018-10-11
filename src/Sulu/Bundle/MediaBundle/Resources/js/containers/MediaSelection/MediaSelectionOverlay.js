@@ -107,7 +107,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             {
                 page: this.collectionPage,
                 locale: this.locale,
-                parent: this.collectionId,
+                parentId: this.collectionId,
             }
         );
     }

@@ -218,9 +218,10 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     ].join(','));
 
     expect(DatagridStore.mock.calls[0][0]).toBe(collectionResourceKey);
-    expect(DatagridStore.mock.calls[1][1]).toBe('media_selection_overlay');
+    expect(DatagridStore.mock.calls[0][1]).toBe('media_selection_overlay');
     expect(DatagridStore.mock.calls[0][2].locale).toBe(locale);
     expect(DatagridStore.mock.calls[0][2].page.get()).toBe(1);
+    expect(DatagridStore.mock.calls[0][2].parentId.get()).toBe(undefined);
 });
 
 test('Should call onConfirm callback with selections from datagrid', () => {
