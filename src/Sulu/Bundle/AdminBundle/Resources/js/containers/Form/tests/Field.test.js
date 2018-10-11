@@ -318,6 +318,31 @@ test('Call onChange callback when value of Field changes', () => {
     expect(changeSpy).toBeCalledWith('test', 'test value');
 });
 
+test('Do not call onChange callback when value of disabled Field changes', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const changeSpy = jest.fn();
+    const field = shallow(
+        <Field
+            dataPath=""
+            formInspector={formInspector}
+            name="test"
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schema={{label: 'label', type: 'text', disabled: true}}
+            schemaPath=""
+        />
+    );
+
+    field.find('Text').simulate('change', 'test value');
+
+    expect(changeSpy).not.toBeCalled();
+});
+
 test('Call onFinish callback after editing the field has finished', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
 

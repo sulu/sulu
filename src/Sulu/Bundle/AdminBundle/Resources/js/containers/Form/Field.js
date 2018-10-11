@@ -28,7 +28,11 @@ export default class Field extends React.Component<Props> {
     };
 
     handleChange = (value: *) => {
-        const {name, onChange} = this.props;
+        const {name, onChange, schema} = this.props;
+
+        if (schema.disabled) {
+            return;
+        }
 
         onChange(name, value);
     };
