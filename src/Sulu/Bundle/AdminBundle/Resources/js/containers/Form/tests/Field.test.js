@@ -232,6 +232,51 @@ test('Pass correct props to FieldType', () => {
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
         dataPath: '/block/0/text',
+        disabled: undefined,
+        formInspector,
+        label: 'Text',
+        maxOccurs: 4,
+        minOccurs: 2,
+        schemaPath: '/text',
+        showAllErrors: true,
+        types: {},
+        value: 'test',
+    }));
+});
+
+test('Pass disabled flag to disabled FieldType', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="date" />;
+    });
+
+    const schema = {
+        disabled: true,
+        label: 'Text',
+        maxOccurs: 4,
+        minOccurs: 2,
+        type: 'text_line',
+        types: {},
+        visible: true,
+    };
+    const field = shallow(
+        <Field
+            dataPath="/block/0/text"
+            formInspector={formInspector}
+            name="text"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            schema={schema}
+            schemaPath="/text"
+            showAllErrors={true}
+            value="test"
+        />
+    );
+
+    expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        dataPath: '/block/0/text',
+        disabled: true,
         formInspector,
         label: 'Text',
         maxOccurs: 4,
@@ -316,6 +361,31 @@ test('Call onChange callback when value of Field changes', () => {
     field.find('Text').simulate('change', 'test value');
 
     expect(changeSpy).toBeCalledWith('test', 'test value');
+});
+
+test('Do not call onChange callback when value of disabled Field changes', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const changeSpy = jest.fn();
+    const field = shallow(
+        <Field
+            dataPath=""
+            formInspector={formInspector}
+            name="test"
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            schema={{label: 'label', type: 'text', disabled: true}}
+            schemaPath=""
+        />
+    );
+
+    field.find('Text').simulate('change', 'test value');
+
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Call onFinish callback after editing the field has finished', () => {

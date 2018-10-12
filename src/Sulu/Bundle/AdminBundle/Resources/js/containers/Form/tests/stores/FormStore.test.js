@@ -65,14 +65,15 @@ test('Create data object for schema', () => {
     }, 0);
 });
 
-test('Evaluate all visibilityConditions for schema', (done) => {
+test('Evaluate all disabledConditions and visibleConditions for schema', (done) => {
     const metadata = {
         item1: {
             type: 'text_line',
         },
         item2: {
             type: 'text_line',
-            visibilityCondition: 'item1 == "item2"',
+            disabledCondition: 'item1 != "item2"',
+            visibleCondition: 'item1 == "item2"',
         },
         section: {
             items: {
@@ -81,11 +82,13 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                 },
                 item32: {
                     type: 'text_line',
-                    visibilityCondition: 'item1 == "item32"',
+                    disabledCondition: 'item1 != "item32"',
+                    visibleCondition: 'item1 == "item32"',
                 },
             },
             type: 'section',
-            visibilityCondition: 'item1 == "section"',
+            disabledCondition: 'item1 != "section"',
+            visibleCondition: 'item1 == "section"',
         },
         block: {
             types: {
@@ -93,7 +96,8 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                     form: {
                         item41: {
                             type: 'text_line',
-                            visibilityCondition: 'item1 == "item41"',
+                            disabledCondition: 'item1 != "item41"',
+                            visibleCondition: 'item1 == "item41"',
                         },
                         item42: {
                             type: 'text_line',
@@ -123,12 +127,17 @@ test('Evaluate all visibilityConditions for schema', (done) => {
             throw new Error('Block types should be defined!');
         }
 
+        expect(formStore.schema.item2.disabled).toEqual(true);
         expect(formStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems.item32.disabled).toEqual(true);
         expect(sectionItems.item32.visible).toEqual(false);
+        expect(formStore.schema.section.disabled).toEqual(true);
         expect(formStore.schema.section.visible).toEqual(false);
+        expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
         expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
         resourceStore.data = {item1: 'item2'};
+        expect(formStore.schema.item2.disabled).toEqual(true);
         expect(formStore.schema.item2.visible).toEqual(false);
 
         formStore.finishField('/item1').then(() => {
@@ -141,9 +150,13 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                 throw new Error('Block types should be defined!');
             }
 
+            expect(formStore.schema.item2.disabled).toEqual(false);
             expect(formStore.schema.item2.visible).toEqual(true);
+            expect(sectionItems.item32.disabled).toEqual(true);
             expect(sectionItems.item32.visible).toEqual(false);
+            expect(formStore.schema.section.disabled).toEqual(true);
             expect(formStore.schema.section.visible).toEqual(false);
+            expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
             expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
             resourceStore.data = {item1: 'item32'};
@@ -157,9 +170,13 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                     throw new Error('Block types should be defined!');
                 }
 
+                expect(formStore.schema.item2.disabled).toEqual(true);
                 expect(formStore.schema.item2.visible).toEqual(false);
+                expect(sectionItems.item32.disabled).toEqual(false);
                 expect(sectionItems.item32.visible).toEqual(true);
+                expect(formStore.schema.section.disabled).toEqual(true);
                 expect(formStore.schema.section.visible).toEqual(false);
+                expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
                 expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
                 resourceStore.data = {item1: 'section'};
@@ -173,9 +190,13 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                         throw new Error('Block types should be defined!');
                     }
 
+                    expect(formStore.schema.item2.disabled).toEqual(true);
                     expect(formStore.schema.item2.visible).toEqual(false);
+                    expect(sectionItems.item32.disabled).toEqual(true);
                     expect(sectionItems.item32.visible).toEqual(false);
+                    expect(formStore.schema.section.disabled).toEqual(false);
                     expect(formStore.schema.section.visible).toEqual(true);
+                    expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
                     expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
                     resourceStore.data = {item1: 'item41'};
@@ -189,9 +210,13 @@ test('Evaluate all visibilityConditions for schema', (done) => {
                             throw new Error('Block types should be defined!');
                         }
 
+                        expect(formStore.schema.item2.disabled).toEqual(true);
                         expect(formStore.schema.item2.visible).toEqual(false);
+                        expect(sectionItems.item32.disabled).toEqual(true);
                         expect(sectionItems.item32.visible).toEqual(false);
+                        expect(formStore.schema.section.disabled).toEqual(true);
                         expect(formStore.schema.section.visible).toEqual(false);
+                        expect(blockTypes.text_line.form.item41.disabled).toEqual(false);
                         expect(blockTypes.text_line.form.item41.visible).toEqual(true);
 
                         formStore.destroy();

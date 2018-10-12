@@ -28,7 +28,11 @@ export default class Field extends React.Component<Props> {
     };
 
     handleChange = (value: *) => {
-        const {name, onChange} = this.props;
+        const {name, onChange, schema} = this.props;
+
+        if (schema.disabled) {
+            return;
+        }
 
         onChange(name, value);
     };
@@ -70,7 +74,18 @@ export default class Field extends React.Component<Props> {
 
     render() {
         const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
-        const {description, label, maxOccurs, minOccurs, options: schemaOptions, required, type, types} = schema;
+        const {
+            description,
+            disabled,
+            label,
+            maxOccurs,
+            minOccurs,
+            options: schemaOptions,
+            required,
+            type,
+            types,
+        } = schema;
+
         let FieldType;
 
         try {
@@ -108,6 +123,7 @@ export default class Field extends React.Component<Props> {
             >
                 <FieldType
                     dataPath={dataPath}
+                    disabled={disabled}
                     error={error}
                     fieldTypeOptions={fieldTypeOptions}
                     formInspector={formInspector}

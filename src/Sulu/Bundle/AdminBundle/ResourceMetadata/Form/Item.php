@@ -30,7 +30,12 @@ abstract class Item
     /**
      * @var string
      */
-    protected $visibilityCondition;
+    protected $disabledCondition;
+
+    /**
+     * @var string
+     */
+    protected $visibleCondition;
 
     /**
      * @var string
@@ -67,14 +72,24 @@ abstract class Item
         $this->label = $label;
     }
 
-    public function getVisibilityCondition(): ?string
+    public function getDisabledCondition(): ?string
     {
-        return $this->visibilityCondition;
+        return $this->disabledCondition;
     }
 
-    public function setVisibilityCondition(?string $visibilityCondition): void
+    public function setDisabledCondition(?string $disabledCondition): void
     {
-        $this->visibilityCondition = $visibilityCondition;
+        $this->disabledCondition = $disabledCondition;
+    }
+
+    public function getVisibleCondition(): ?string
+    {
+        return $this->visibleCondition;
+    }
+
+    public function setVisibleCondition(?string $visibleCondition): void
+    {
+        $this->visibleCondition = $visibleCondition;
     }
 
     public function getDescription(): ?string

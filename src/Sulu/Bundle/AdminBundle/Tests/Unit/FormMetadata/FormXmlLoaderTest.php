@@ -69,6 +69,54 @@ class FormXmlLoaderTest extends TestCase
         $this->assertNull($formMetadata->getSchema());
     }
 
+    public function testLoadFormWithEvaluations()
+    {
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_evaluations.xml'
+        );
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+
+        $this->assertCount(5, $formMetadata->getProperties());
+
+        $this->assertEquals(
+            'lastName == \'section_property\'',
+            $formMetadata->getProperties()['formOfAddress']->getDisabledCondition()
+        );
+        $this->assertEquals(
+            'firstName == \'section_property\'',
+            $formMetadata->getProperties()['formOfAddress']->getVisibleCondition()
+        );
+
+        $this->assertEquals(
+            'lastName == \'block\'',
+            $formMetadata->getProperties()['block']->getDisabledCondition()
+        );
+        $this->assertEquals(
+            'firstName == \'block\'',
+            $formMetadata->getProperties()['block']->getVisibleCondition()
+        );
+
+        $this->assertEquals(
+            'lastName == \'block_property\'',
+            $formMetadata->getProperties()['block']->getComponents()[0]->getChild('name')->getDisabledCondition()
+        );
+        $this->assertEquals(
+            'firstName == \'block_property\'',
+            $formMetadata->getProperties()['block']->getComponents()[0]->getChild('name')->getVisibleCondition()
+        );
+
+        $this->assertEquals(
+            'lastName == \'property\'',
+            $formMetadata->getProperties()['salutation']->getDisabledCondition()
+        );
+        $this->assertEquals(
+            'firstName == \'property\'',
+            $formMetadata->getProperties()['salutation']->getVisibleCondition()
+        );
+    }
+
     public function testLoadFormWithSchema()
     {
         /** @var FormMetadata $formMetadata */
