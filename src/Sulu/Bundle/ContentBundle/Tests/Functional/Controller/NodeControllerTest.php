@@ -414,6 +414,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('Test English', $response['article']);
         $this->assertEquals('shadow', $response['type']['name']);
         $this->assertEquals('en', $response['type']['value']);
+        $this->assertEquals(['en', 'de'], $response['availableLocales']);
+        $this->assertEquals(['en'], $response['contentLocales']);
         $this->assertEquals(['en' => 'de'], $response['enabledShadowLanguages']);
         $this->assertEquals(true, $response['shadowOn']);
     }

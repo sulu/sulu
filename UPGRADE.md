@@ -10,7 +10,10 @@ The `visibilityCondition` on the Form XML has been renamed to `visibleCondition`
 
 ### PageController
 
-The `concreteLanguages` flag has been renamed to `contentLocales`.
+The `concreteLanguages` property has been renamed to `contentLocales`.
+
+The `availableLocales` property was introduced, and shows for which locale some kind of content exists, no matter if
+it is actual content or uses shadow content. This flag only excludes ghost locales.
 
 ## 2.0.0-alpha4
 
