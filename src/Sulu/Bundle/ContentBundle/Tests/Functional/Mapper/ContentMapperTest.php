@@ -1090,7 +1090,7 @@ class ContentMapperTest extends SuluTestCase
 
         // this is a shadow, so it should be "German" not "Austrian"
         $this->assertEquals('German', $structure->getProperty('article')->getValue());
-        $this->assertEquals(['de' => 'de_at'], $structure->getEnabledShadowLanguages());
+        $this->assertEquals(['de_at' => 'de'], $structure->getShadowLocales());
 
         // the node has only one concrete language
         $this->assertEquals(['de'], $structure->getContentLocales());

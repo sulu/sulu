@@ -206,7 +206,7 @@ abstract class Structure implements StructureInterface
      * @var array
      * @Type("array")
      */
-    private $enabledShadowLanguages = [];
+    private $shadowLocales = [];
 
     /**
      * @var array
@@ -864,7 +864,7 @@ abstract class Structure implements StructureInterface
                 'id' => $this->uuid,
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
-                'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
+                'shadowLocales' => $this->getShadowLocales(),
                 'contentLocales' => $this->getContentLocales(),
                 'shadowOn' => $this->getIsShadow(),
                 'shadowBaseLanguage' => $this->getShadowBaseLanguage() ?: false,
@@ -946,9 +946,9 @@ abstract class Structure implements StructureInterface
      *
      * @return array
      */
-    public function getEnabledShadowLanguages()
+    public function getShadowLocales()
     {
-        return $this->enabledShadowLanguages;
+        return $this->shadowLocales;
     }
 
     /**
@@ -956,9 +956,9 @@ abstract class Structure implements StructureInterface
      *
      * @param array
      */
-    public function setEnabledShadowLanguages($enabledShadowLanguages)
+    public function setShadowLocales($shadowLocales)
     {
-        $this->enabledShadowLanguages = $enabledShadowLanguages;
+        $this->shadowLocales = $shadowLocales;
     }
 
     /**

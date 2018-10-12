@@ -416,7 +416,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('en', $response['type']['value']);
         $this->assertEquals(['en', 'de'], $response['availableLocales']);
         $this->assertEquals(['en'], $response['contentLocales']);
-        $this->assertEquals(['en' => 'de'], $response['enabledShadowLanguages']);
+        $this->assertEquals(['de' => 'en'], $response['shadowLocales']);
         $this->assertEquals(true, $response['shadowOn']);
     }
 
@@ -1302,7 +1302,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('article', $response);
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
-        $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
+        $this->assertArrayHasKey('shadowLocales', $response);
         $this->assertArrayHasKey('contentLocales', $response);
         $this->assertArrayNotHasKey('shadowOn', $response);
         $this->assertArrayNotHasKey('shadowBaseLanguage', $response);

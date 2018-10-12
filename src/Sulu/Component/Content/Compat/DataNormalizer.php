@@ -45,7 +45,7 @@ class DataNormalizer
             $data['contentLocales'],
             $data['hasSub'],
             $data['published'],
-            $data['enabledShadowLanguages'],
+            $data['shadowLocales'],
             $data['shadowEnabled'],
             $data['publishedState'],
             $data['created'],

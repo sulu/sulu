@@ -235,7 +235,7 @@ class DocumentInspector extends BaseDocumentInspector
         $locales = $this->getLocales($document);
 
         if ($document instanceof ShadowLocaleBehavior) {
-            $locales = array_diff($locales, $this->getShadowLocales($document));
+            $locales = array_diff($locales, array_keys($this->getShadowLocales($document)));
         }
 
         return array_values($locales);
@@ -264,7 +264,7 @@ class DocumentInspector extends BaseDocumentInspector
             );
 
             if ($node->getPropertyValueWithDefault($shadowEnabledName, false)) {
-                $shadowLocales[$node->getPropertyValue($shadowLocaleName)] = $locale;
+                $shadowLocales[$locale] = $node->getPropertyValue($shadowLocaleName);
             }
         }
 

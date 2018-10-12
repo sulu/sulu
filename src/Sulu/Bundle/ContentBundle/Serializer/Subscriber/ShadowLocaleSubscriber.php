@@ -68,6 +68,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
         $visitor = $event->getVisitor();
 
-        $visitor->addData('enabledShadowLanguages', $this->documentInspector->getShadowLocales($document));
+        $visitor->addData('shadowLocales', $this->documentInspector->getShadowLocales($document));
     }
 }
