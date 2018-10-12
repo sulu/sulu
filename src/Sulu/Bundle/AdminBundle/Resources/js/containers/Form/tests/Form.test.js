@@ -261,7 +261,7 @@ test('Should change data on store without sections', () => {
 
 test('Should show a GhostDialog if the current locale is not translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -270,7 +270,7 @@ test('Should show a GhostDialog if the current locale is not translated', () => 
 
 test('Should not show a GhostDialog if the current locale is translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -279,7 +279,7 @@ test('Should not show a GhostDialog if the current locale is translated', () => 
 
 test('Should show a GhostDialog after the locale has been switched to a non-translated one', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -293,7 +293,7 @@ test('Should show a GhostDialog after the locale has been switched to a non-tran
 
 test('Should not show a GhostDialog if the entity does not exist yet', () => {
     const resourceStore = new ResourceStore('snippet', undefined, {locale: observable.box('en')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -310,7 +310,7 @@ test('Should not show a GhostDialog if the entity is not translatable', () => {
 
 test('Should show a GhostDialog and copy the content if the confirm button is clicked', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -323,7 +323,7 @@ test('Should show a GhostDialog and copy the content if the confirm button is cl
 
 test('Should show a GhostDialog and do nothing if the cancel button is clicked', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
@@ -336,7 +336,7 @@ test('Should show a GhostDialog and do nothing if the cancel button is clicked',
 
 test('Should not show a GhostDialog if the resourceStore is currently loading', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
-    resourceStore.data.concreteLanguages = ['en'];
+    resourceStore.data.contentLocales = ['en'];
     resourceStore.loading = true;
     const formStore = new FormStore(resourceStore);
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);

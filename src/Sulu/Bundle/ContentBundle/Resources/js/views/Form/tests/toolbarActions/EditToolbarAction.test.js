@@ -136,7 +136,7 @@ test('Throw error if no webspace is given', () => {
 test('Pass correct props to CopyLocaleDialog', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
     editToolbarAction.formStore.resourceStore.id = 3;
-    editToolbarAction.formStore.resourceStore.data.concreteLanguages = ['en'];
+    editToolbarAction.formStore.resourceStore.data.contentLocales = ['en'];
     // $FlowFixMe
     editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
     editToolbarAction.formStore.options.webspace = 'sulu_io';
@@ -149,7 +149,7 @@ test('Pass correct props to CopyLocaleDialog', () => {
 
     const element = shallow(editToolbarAction.getNode());
     expect(element.instance().props).toEqual(expect.objectContaining({
-        concreteLocales: ['en'],
+        contentLocales: ['en'],
         id: 3,
         locale: 'en',
         locales: ['en', 'de'],

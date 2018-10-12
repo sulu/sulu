@@ -74,7 +74,7 @@ class SuluCollector extends DataCollector
                     'publishedState' => $structureObject->getPublishedState(),
                     'navContexts' => $structureObject->getNavContexts(),
                     'enabledShadowLanguages' => $structureObject->getEnabledShadowLanguages(),
-                    'concreteLanguages' => $structureObject->getConcreteLanguages(),
+                    'contentLocales' => $structureObject->getContentLocales(),
                     'shadowOn' => $structureObject->getIsShadow(),
                     'shadowBaseLanguage' => $structureObject->getShadowBaseLanguage(),
                     'template' => $structureObject->getKey(),

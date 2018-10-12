@@ -8,7 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import copyLocaleDialogStyles from './copyLocaleDialog.scss';
 
 type Props = {
-    concreteLocales: Array<string>,
+    contentLocales: Array<string>,
     id: string | number,
     locale: string,
     locales: Array<string>,
@@ -66,7 +66,7 @@ export default class CopyLocaleDialog extends React.Component<Props> {
     };
 
     render() {
-        const {concreteLocales, locales, open} = this.props;
+        const {contentLocales, locales, open} = this.props;
 
         return (
             <Dialog
@@ -88,7 +88,7 @@ export default class CopyLocaleDialog extends React.Component<Props> {
                             onChange={this.handleCheckboxChange}
                             value={locale}
                         >
-                            {locale}{concreteLocales && !concreteLocales.includes(locale) && '*'}
+                            {locale}{contentLocales && !contentLocales.includes(locale) && '*'}
                         </Checkbox>
                     )}
                     <p>{translate('sulu_admin.copy_locale_dialog_description')}</p>

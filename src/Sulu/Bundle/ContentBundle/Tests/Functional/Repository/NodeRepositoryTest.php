@@ -479,8 +479,8 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($document->getUuid(), $result['id']);
         $this->assertEquals('Example', $result['title']);
         $this->assertEquals('/example', $result['url']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
     }
 
     public function testCopyMultipleLocales()
@@ -506,15 +506,15 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($document->getUuid(), $result['id']);
         $this->assertEquals('Example', $result['title']);
         $this->assertEquals('/example', $result['url']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
 
         $result = $this->mapper->load($document->getUuid(), 'sulu_io', 'de_at')->toArray();
         $this->assertEquals($document->getUuid(), $result['id']);
         $this->assertEquals('Example', $result['title']);
         $this->assertEquals('/example', $result['url']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
     }
 
     private function save(

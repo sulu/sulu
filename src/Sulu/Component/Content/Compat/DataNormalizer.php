@@ -42,7 +42,7 @@ class DataNormalizer
             $data['path'],
             $data['nodeState'],
             $data['internal'],
-            $data['concreteLanguages'],
+            $data['contentLocales'],
             $data['hasSub'],
             $data['published'],
             $data['enabledShadowLanguages'],

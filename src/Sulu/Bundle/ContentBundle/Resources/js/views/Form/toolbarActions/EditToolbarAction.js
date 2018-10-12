@@ -13,7 +13,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
             formStore: {
                 id,
                 data: {
-                    concreteLanguages,
+                    contentLocales,
                 },
                 locale,
                 options: {
@@ -37,7 +37,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
 
         return (
             <CopyLocaleDialog
-                concreteLocales={concreteLanguages}
+                contentLocales={contentLocales}
                 id={id}
                 key="sulu_admin.edit"
                 locale={locale.get()}

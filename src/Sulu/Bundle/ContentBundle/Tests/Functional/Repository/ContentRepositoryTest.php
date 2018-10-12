@@ -1002,7 +1002,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-1', $result[0]->getPath());
     }
 
-    public function testFindConcreteLanguages()
+    public function testFindContentLocales()
     {
         $page = $this->createShadowPage('test', 'de', 'en');
 
@@ -1013,7 +1013,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->setResolveConcreteLocales(true)->getMapping()
         );
 
-        $this->assertEquals(['de'], $result->getConcreteLanguages());
+        $this->assertEquals(['de'], $result->getContentLocales());
     }
 
     public function testFindNonExistingProperty()

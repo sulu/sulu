@@ -8,6 +8,10 @@
 
 The `visibilityCondition` on the Form XML has been renamed to `visibleCondition`.
 
+### PageController
+
+The `concreteLanguages` flag has been renamed to `contentLocales`.
+
 ## 2.0.0-alpha4
 
 ### MediaController

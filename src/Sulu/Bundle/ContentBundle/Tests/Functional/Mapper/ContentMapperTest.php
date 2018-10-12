@@ -1093,7 +1093,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(['de' => 'de_at'], $structure->getEnabledShadowLanguages());
 
         // the node has only one concrete language
-        $this->assertEquals(['de'], $structure->getConcreteLanguages());
+        $this->assertEquals(['de'], $structure->getContentLocales());
     }
 
     public function testTranslatedResourceLocator()

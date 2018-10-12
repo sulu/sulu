@@ -1290,7 +1290,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayHasKey('nodeType', $response);
         $this->assertArrayHasKey('nodeState', $response);
         $this->assertArrayHasKey('internal', $response);
-        $this->assertArrayHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('contentLocales', $response);
         $this->assertArrayHasKey('hasSub', $response);
         $this->assertArrayHasKey('order', $response);
         $this->assertArrayHasKey('linked', $response);
@@ -1301,7 +1301,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
         $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
-        $this->assertArrayHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('contentLocales', $response);
         $this->assertArrayNotHasKey('shadowOn', $response);
         $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
     }
@@ -1906,8 +1906,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
         $this->assertEquals($data['article'], $result['article']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
     }
 
     public function testCopyMultipleLocales()
@@ -1936,8 +1936,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
 
         $client->request(
             'GET',
@@ -1947,8 +1947,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
-        $this->assertContains('de', $result['concreteLanguages']);
-        $this->assertContains('en', $result['concreteLanguages']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
     }
 
     public function testGetWithPermissions()
