@@ -17,7 +17,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
 test('Render the dialog with given props', () => {
     const copyLocaleDialog = mount(
         <CopyLocaleDialog
-            contentLocales={['de']}
+            availableLocales={['de']}
             id={3}
             locale="de"
             locales={['en', 'de']}
@@ -35,7 +35,7 @@ test('Call onClose callback if cancel is clicked', () => {
 
     const copyLocaleDialog = mount(
         <CopyLocaleDialog
-            contentLocales={['de']}
+            availableLocales={['de']}
             id={3}
             locale="de"
             locales={['en', 'de']}
@@ -57,7 +57,7 @@ test('Copy locales and call onClose callback if confirm is clicked', () => {
 
     const copyLocaleDialog = mount(
         <CopyLocaleDialog
-            contentLocales={['de']}
+            availableLocales={['de']}
             id={3}
             locale="en"
             locales={['en', 'de', 'jp', 'cn']}
@@ -91,7 +91,7 @@ test('Reset selectedLocales if dialog is closed', () => {
 
     const copyLocaleDialog = mount(
         <CopyLocaleDialog
-            contentLocales={['de']}
+            availableLocales={['de']}
             id={3}
             locale="en"
             locales={['en', 'de', 'jp', 'cn']}

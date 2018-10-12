@@ -27,7 +27,7 @@ export default class Form extends React.Component<Props> {
             const {store} = this.props;
             const {
                 data: {
-                    contentLocales,
+                    availableLocales,
                 },
                 loading,
                 locale,
@@ -38,7 +38,7 @@ export default class Form extends React.Component<Props> {
                 return;
             }
 
-            if (contentLocales && locale && !contentLocales.includes(locale.get())) {
+            if (availableLocales && locale && !availableLocales.includes(locale.get())) {
                 this.showGhostDialog();
             }
         });
@@ -94,7 +94,7 @@ export default class Form extends React.Component<Props> {
         const {store} = this.props;
         const {
             data: {
-                contentLocales,
+                availableLocales,
             },
         } = store;
 
@@ -102,9 +102,9 @@ export default class Form extends React.Component<Props> {
             ? <Loader />
             : (
                 <Fragment>
-                    {store.id && contentLocales &&
+                    {store.id && availableLocales &&
                         <GhostDialog
-                            locales={contentLocales}
+                            locales={availableLocales}
                             onCancel={this.handleGhostDialogCancel}
                             onConfirm={this.handleGhostDialogConfirm}
                             open={this.displayGhostDialog}
