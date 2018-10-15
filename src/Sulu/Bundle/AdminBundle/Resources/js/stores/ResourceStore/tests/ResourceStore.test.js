@@ -397,7 +397,7 @@ test('Calling setLocale on a non-localizable ResourceStore should throw an excep
     expect(() => resourceStore.setLocale('de')).toThrow();
 });
 
-test('Calling the clone method should return a new instance of the ResourceStore with same data', () => {
+test('Cloning should return a new instance of the ResourceStore with same data', () => {
     const resourceStore = new ResourceStore('snippets', '1', {});
     resourceStore.data = {title: 'Title'};
     resourceStore.loading = false;
@@ -409,7 +409,25 @@ test('Calling the clone method should return a new instance of the ResourceStore
     expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
 });
 
-test('Calling the clone method during loading should return a new instance of the ResourceStore with same data', () => {
+test('Cloning should return a new instance of the ResourceStore which updates after changing locale', () => {
+    const locale = observable.box('en');
+    const resourceStore = new ResourceStore('snippets', '1', {locale});
+    resourceStore.data = {title: 'Title'};
+    resourceStore.loading = false;
+    const clonedResourceStore = resourceStore.clone();
+
+    expect(toJS(clonedResourceStore.data)).toEqual({title: 'Title'});
+    expect(clonedResourceStore.data).not.toBe(resourceStore.data);
+    expect(toJS(clonedResourceStore)).not.toBe(resourceStore);
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
+
+    resourceStore.destroy();
+
+    locale.set('de');
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
+});
+
+test('Cloning during loading should return a new instance of the ResourceStore with same data', () => {
     const snippet = {
         title: 'Snippet',
     };
