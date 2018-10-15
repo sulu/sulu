@@ -159,7 +159,7 @@ function transformRawSchemaEntry(
     }, {});
 }
 
-function evaluateFieldConditions(rawSchema: RawSchema, data: Object, basePath: string = '') {
+function evaluateFieldConditions(rawSchema: RawSchema, locale: ?string, data: Object, basePath: string = '') {
     const visibleConditionPromises = [];
     const disabledConditionPromises = [];
 
@@ -168,7 +168,7 @@ function evaluateFieldConditions(rawSchema: RawSchema, data: Object, basePath: s
         const schemaPath = basePath + '/' + schemaKey;
 
         if (disabledCondition) {
-            disabledConditionPromises.push(jexl.eval(disabledCondition, data).then((result) => {
+            disabledConditionPromises.push(jexl.eval(disabledCondition, {...data, __locale: locale}).then((result) => {
                 if (result) {
                     return Promise.resolve(schemaPath);
                 }
@@ -187,7 +187,7 @@ function evaluateFieldConditions(rawSchema: RawSchema, data: Object, basePath: s
             const {
                 disabledConditionPromises: itemDisabledConditionPromises,
                 visibleConditionPromises: itemVisibleConditionPromises,
-            } = evaluateFieldConditions(items, data, schemaPath);
+            } = evaluateFieldConditions(items, locale, data, schemaPath);
 
             disabledConditionPromises.push(...itemDisabledConditionPromises);
             visibleConditionPromises.push(...itemVisibleConditionPromises);
@@ -198,7 +198,7 @@ function evaluateFieldConditions(rawSchema: RawSchema, data: Object, basePath: s
                 const {
                     disabledConditionPromises: typeDisabledConditionPromises,
                     visibleConditionPromises: typeVisibleConditionPromises,
-                } = evaluateFieldConditions(types[type].form, data, schemaPath + '/types/' + type + '/form');
+                } = evaluateFieldConditions(types[type].form, locale, data, schemaPath + '/types/' + type + '/form');
 
                 disabledConditionPromises.push(...typeDisabledConditionPromises);
                 visibleConditionPromises.push(...typeVisibleConditionPromises);
@@ -409,7 +409,7 @@ export default class FormStore {
         const {
             disabledConditionPromises,
             visibleConditionPromises,
-        } = evaluateFieldConditions(this.rawSchema, this.data);
+        } = evaluateFieldConditions(this.rawSchema, this.locale ? this.locale.get() : undefined, this.data);
 
         const disabledConditionsPromise = Promise.all(disabledConditionPromises)
             .then(action((disabledConditionResults) => {

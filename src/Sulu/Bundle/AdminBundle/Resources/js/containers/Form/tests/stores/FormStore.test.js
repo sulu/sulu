@@ -228,6 +228,31 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
     }, 0);
 });
 
+test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__locale == "en"',
+            visibleCondition: '__locale == "de"',
+        },
+    };
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const formStore = new FormStore(resourceStore);
+
+    setTimeout(() => {
+        expect(formStore.schema.item.disabled).toEqual(true);
+        expect(formStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
+});
+
 test('Read resourceKey from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets');
     const formStore = new FormStore(resourceStore);

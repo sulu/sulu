@@ -1,6 +1,7 @@
 // @flow
 import {arrayMove} from 'react-sortable-hoc';
 import ArrowMenu from './ArrowMenu';
+import Backdrop from './Backdrop';
 import Breadcrumb from './Breadcrumb';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
@@ -15,16 +16,16 @@ import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
 import Loader from './Loader';
+import Masonry from './Masonry';
 import Matrix from './Matrix';
 import Menu from './Menu';
-import Masonry from './Masonry';
 import MultiItemSelection from './MultiItemSelection';
 import MultiSelect from './MultiSelect';
+import Navigation from './Navigation';
 import Overlay from './Overlay';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
-import Navigation from './Navigation';
-import Backdrop from './Backdrop';
+import SingleSelect from './SingleSelect';
 import Toolbar from './Toolbar';
 import withContainerSize from './withContainerSize';
 
@@ -55,6 +56,7 @@ export {
     Overlay,
     Popover,
     PublishIndicator,
+    SingleSelect,
     Toolbar,
     withContainerSize,
 };
