@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Audit\LocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
@@ -32,6 +33,11 @@ class TimestampSubscriberTest extends TestCase
     private $propertyEncoder;
 
     /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
      * @var TimestampSubscriber
      */
     private $subscriber;
@@ -39,7 +45,11 @@ class TimestampSubscriberTest extends TestCase
     public function setUp()
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
-        $this->subscriber = new TimestampSubscriber($this->propertyEncoder->reveal());
+        $this->documentInspector = $this->prophesize(DocumentInspector::class);
+        $this->subscriber = new TimestampSubscriber(
+            $this->propertyEncoder->reveal(),
+            $this->documentInspector->reveal()
+        );
     }
 
     public function testSetTimestampsOnNodeForPersistNotImplementing()
@@ -59,7 +69,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $this->propertyEncoder->encode('system_localized', 'created', 'de')->willReturn('i18n:de-created');
         $this->propertyEncoder->encode('system_localized', 'changed', 'de')->willReturn('i18n:de-changed');
@@ -84,7 +94,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $this->propertyEncoder->encode('system_localized', 'created', 'de')->willReturn('i18n:de-created');
         $this->propertyEncoder->encode('system_localized', 'changed', 'de')->willReturn('i18n:de-changed');
@@ -111,7 +121,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $this->propertyEncoder->encode('system_localized', 'created', 'de')->willReturn('i18n:de-created');
         $node->hasProperty('i18n:de-created')->willReturn(true);
@@ -135,7 +145,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $this->propertyEncoder->encode('system', 'created', 'de')->willReturn('created');
         $this->propertyEncoder->encode('system', 'changed', 'de')->willReturn('changed');
@@ -160,7 +170,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getNode()->willReturn($node->reveal());
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
-        $event->getLocale()->willReturn(null);
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn(null);
 
         $this->propertyEncoder->encode(Argument::cetera())->shouldNotBeCalled();
         $node->setProperty(Argument::cetera())->shouldNotBeCalled();
@@ -185,7 +195,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $createdDate = new \DateTime('2017-01-25');
         $changedDate = new \DateTime('2017-01-18');
@@ -216,7 +226,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $createdDate = new \DateTime('2017-01-25');
         $changedDate = new \DateTime('2017-01-18');
@@ -246,7 +256,7 @@ class TimestampSubscriberTest extends TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getAccessor()->willReturn($accessor->reveal());
         $event->getNode()->willReturn($node->reveal());
-        $event->getLocale()->willReturn('de');
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $createdDate = new \DateTime('2017-01-25');
         $changedDate = new \DateTime('2017-01-18');
@@ -270,12 +280,12 @@ class TimestampSubscriberTest extends TestCase
     public function testHydrate()
     {
         $event = $this->prophesize(HydrateEvent::class);
-        $event->getLocale()->willReturn('de');
+        $document = $this->prophesize(LocalizedTimestampBehavior::class);
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $accessor = $this->prophesize(DocumentAccessor::class);
         $event->getAccessor()->willReturn($accessor->reveal());
 
-        $document = $this->prophesize(LocalizedTimestampBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $this->propertyEncoder->encode('system_localized', 'created', 'de')->willReturn('i18n:de-created');
@@ -295,12 +305,12 @@ class TimestampSubscriberTest extends TestCase
     public function testHydrateWithoutLocalization()
     {
         $event = $this->prophesize(HydrateEvent::class);
-        $event->getLocale()->willReturn('de');
+        $document = $this->prophesize(TimestampBehavior::class);
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $accessor = $this->prophesize(DocumentAccessor::class);
         $event->getAccessor()->willReturn($accessor->reveal());
 
-        $document = $this->prophesize(TimestampBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $this->propertyEncoder->encode('system', 'created', 'de')->willReturn('created');
@@ -332,12 +342,12 @@ class TimestampSubscriberTest extends TestCase
     public function testSetChangedForRestore()
     {
         $event = $this->prophesize(RestoreEvent::class);
-        $event->getLocale()->willReturn('de');
+        $document = $this->prophesize(LocalizedTimestampBehavior::class);
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $node = $this->prophesize(NodeInterface::class);
         $event->getNode()->willReturn($node->reveal());
 
-        $document = $this->prophesize(LocalizedTimestampBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $this->propertyEncoder->encode('system_localized', 'changed', 'de')->willReturn('i18n:de-changed');
@@ -350,12 +360,12 @@ class TimestampSubscriberTest extends TestCase
     public function testSetChangedForRestoreNonLocalized()
     {
         $event = $this->prophesize(RestoreEvent::class);
-        $event->getLocale()->willReturn('de');
+        $document = $this->prophesize(TimestampBehavior::class);
+        $this->documentInspector->getOriginalLocale($document->reveal())->willReturn('de');
 
         $node = $this->prophesize(NodeInterface::class);
         $event->getNode()->willReturn($node->reveal());
 
-        $document = $this->prophesize(TimestampBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $this->propertyEncoder->encode('system', 'changed', 'de')->willReturn('changed');
