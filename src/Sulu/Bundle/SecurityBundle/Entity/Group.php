@@ -18,6 +18,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Group.
@@ -76,6 +77,20 @@ class Group extends ApiEntity implements AuditableInterface
      * @var Collection|RoleInterface[]
      */
     private $roles;
+
+    /**
+     * @var UserInterface
+     *
+     * @Exclude
+     */
+    protected $changer;
+
+    /**
+     * @var UserInterface
+     *
+     * @Exclude
+     */
+    protected $creator;
 
     public function __construct()
     {
