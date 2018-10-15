@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable, toJS, when} from 'mobx';
+import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'jsonpointer';
@@ -167,8 +167,10 @@ function evaluateFieldConditions(rawSchema: RawSchema, locale: ?string, data: Ob
         const {disabledCondition, items, types, visibleCondition} = rawSchema[schemaKey];
         const schemaPath = basePath + '/' + schemaKey;
 
+        const evaluationData = {...data, __locale: locale};
+
         if (disabledCondition) {
-            disabledConditionPromises.push(jexl.eval(disabledCondition, {...data, __locale: locale}).then((result) => {
+            disabledConditionPromises.push(jexl.eval(disabledCondition, evaluationData).then((result) => {
                 if (result) {
                     return Promise.resolve(schemaPath);
                 }
@@ -176,7 +178,7 @@ function evaluateFieldConditions(rawSchema: RawSchema, locale: ?string, data: Ob
         }
 
         if (visibleCondition) {
-            visibleConditionPromises.push(jexl.eval(visibleCondition, data).then((result) => {
+            visibleConditionPromises.push(jexl.eval(visibleCondition, evaluationData).then((result) => {
                 if (!result) {
                     return Promise.resolve(schemaPath);
                 }
@@ -224,6 +226,7 @@ export default class FormStore {
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
+    updateFieldPathEvaluationsDisposer: ?() => void;
     pathsByTag: {[tagName: string]: Array<string>} = {};
     @observable modifiedFields: Array<string> = [];
     @observable disabledFieldPaths: Array<string> = [];
@@ -244,6 +247,10 @@ export default class FormStore {
 
         if (this.typeDisposer) {
             this.typeDisposer();
+        }
+
+        if (this.updateFieldPathEvaluationsDisposer) {
+            this.updateFieldPathEvaluationsDisposer();
         }
     }
 
@@ -287,12 +294,7 @@ export default class FormStore {
         this.resourceStore.data = {...schemaFields, ...this.resourceStore.data};
         this.schemaLoading = false;
 
-        when(
-            () => !this.resourceStore.loading,
-            (): void => {
-                this.updateFieldPathEvaluations();
-            }
-        );
+        this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     };
 
     @computed get schema(): Schema {
@@ -405,11 +407,19 @@ export default class FormStore {
         return this.modifiedFields.includes(dataPath);
     }
 
-    updateFieldPathEvaluations(): Promise<*> {
+    updateFieldPathEvaluations = (): Promise<*> => {
+        if (this.loading) {
+            return Promise.resolve();
+        }
+
         const {
             disabledConditionPromises,
             visibleConditionPromises,
-        } = evaluateFieldConditions(this.rawSchema, this.locale ? this.locale.get() : undefined, this.data);
+        } = evaluateFieldConditions(
+            this.rawSchema,
+            this.locale ? this.locale.get() : undefined,
+            untracked(() => toJS(this.data))
+        );
 
         const disabledConditionsPromise = Promise.all(disabledConditionPromises)
             .then(action((disabledConditionResults) => {
@@ -422,7 +432,7 @@ export default class FormStore {
             }));
 
         return Promise.all([disabledConditionsPromise, visibleConditionsPromise]);
-    }
+    };
 
     @computed get locale(): ?IObservableValue<string> {
         return this.resourceStore.locale;
