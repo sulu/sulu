@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * HOTFIX      #4112 [SecurityBundle]        Added exception messages to user provider for enabled and locked
+
 * 1.5.18 (2018-10-05)
     * HOTFIX      #4092 [TestBundle]            Fixed firewall in test website kernel for community bundle
 
