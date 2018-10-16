@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
-use Doctrine\ORM\EntityManager;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
@@ -37,17 +36,11 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     private $factory;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * @param Factory $factory
      */
-    public function __construct(Factory $factory, EntityManager $entityManager)
+    public function __construct(Factory $factory)
     {
         $this->factory = $factory;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -102,7 +95,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         $document->setCreatorId($this->getFieldValue($document, 'creator_id'));
         $document->setChangerId($this->getFieldValue($document, 'changer_id'));
         $document->setCreated($this->getFieldValue($document, 'created'));
-        $document->setAuthored($this->getFieldValue($document, 'authored'));
         $document->setChanged($this->getFieldValue($document, 'changed'));
     }
 
