@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?isyheo');
-  src:  url('fonts/sulu.eot?isyheo#iefix') format('embedded-opentype'),
-  url('fonts/sulu.ttf?isyheo') format('truetype'),
-  url('fonts/sulu.woff?isyheo') format('woff'),
-  url('fonts/sulu.svg?isyheo#sulu') format('svg');
+  src:  url('fonts/sulu.eot?pin9hf');
+  src:  url('fonts/sulu.eot?pin9hf#iefix') format('embedded-opentype'),
+    url('fonts/sulu.ttf?pin9hf') format('truetype'),
+    url('fonts/sulu.woff?pin9hf') format('woff'),
+    url('fonts/sulu.svg?pin9hf#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-shadow-page:before {
+  content: "\e95b";
+}
 .su-tree-list:before {
   content: "\e947";
 }

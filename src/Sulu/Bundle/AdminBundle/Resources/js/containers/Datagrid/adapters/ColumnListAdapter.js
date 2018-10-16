@@ -4,6 +4,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import GhostIndicator from '../../../components/GhostIndicator';
+import Icon from '../../../components/Icon';
 import PublishIndicator from '../../../components/PublishIndicator';
 import {translate} from '../../../utils/Translator';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
@@ -93,14 +94,24 @@ export default class ColumnListAdapter extends AbstractAdapter {
             return [<GhostIndicator key="ghost" locale={item.type.value} />];
         }
 
+        const indicators = [];
+
+        if (item.linked === 'internal') {
+            indicators.push(<Icon key="internal" name="su-link2" />);
+        } else if (item.linked === 'external') {
+            indicators.push(<Icon key="external" name="su-link" />);
+        } else if (item.type && item.type.name === 'shadow') {
+            indicators.push(<Icon key="shadow" name="su-shadow-page" />);
+        }
+
         const draft = item.publishedState === undefined ? false : !item.publishedState;
         const published = item.published === undefined ? false : !!item.published;
 
         if (draft || !published) {
-            return [<PublishIndicator draft={draft} key="publish" published={published} />];
+            indicators.push(<PublishIndicator draft={draft} key="publish" published={published} />);
         }
 
-        return [];
+        return indicators;
     };
 
     getButtons = (item: Object) => {
