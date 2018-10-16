@@ -13,9 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 /**
@@ -145,7 +143,7 @@ interface ContactInterface
     /**
      * Get locales.
      *
-     * @return Collection
+     * @return Collection|ContactLocale[]
      */
     public function getLocales();
 
@@ -168,7 +166,7 @@ interface ContactInterface
     /**
      * Get notes.
      *
-     * @return Collection
+     * @return Collection|Note[]
      */
     public function getNotes();
 
@@ -191,7 +189,7 @@ interface ContactInterface
     /**
      * Get emails.
      *
-     * @return Collection
+     * @return Collection|Email[]
      */
     public function getEmails();
 
@@ -214,7 +212,7 @@ interface ContactInterface
     /**
      * Get phones.
      *
-     * @return Collection
+     * @return Collection|Phone[]
      */
     public function getPhones();
 
@@ -237,7 +235,7 @@ interface ContactInterface
     /**
      * Get faxes.
      *
-     * @return Collection
+     * @return Collection|Fax[]
      */
     public function getFaxes();
 
@@ -260,7 +258,7 @@ interface ContactInterface
     /**
      * Get social media profiles.
      *
-     * @return Collection
+     * @return Collection|SocialMediaProfile[]
      */
     public function getSocialMediaProfiles();
 
@@ -283,7 +281,7 @@ interface ContactInterface
     /**
      * Get urls.
      *
-     * @return Collection
+     * @return Collection|Url[]
      */
     public function getUrls();
 
@@ -322,7 +320,7 @@ interface ContactInterface
     /**
      * Get tags.
      *
-     * @return Collection
+     * @return Collection|TagInterface[]
      */
     public function getTags();
 
@@ -368,7 +366,7 @@ interface ContactInterface
     /**
      * Get account contacts.
      *
-     * @return Collection
+     * @return Collection|AccountContact[]
      */
     public function getAccountContacts();
 
@@ -494,7 +492,7 @@ interface ContactInterface
     /**
      * Get contact addresses.
      *
-     * @return Collection
+     * @return Collection|ContactAddress[]
      */
     public function getContactAddresses();
 
@@ -529,21 +527,21 @@ interface ContactInterface
     /**
      * Get medias.
      *
-     * @return Collection
+     * @return Collection|MediaInterface[]
      */
     public function getMedias();
 
     /**
      * Get the contacts avatar.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getAvatar();
 
     /**
      * Sets the avatar for the contact.
      *
-     * @param Media $avatar
+     * @param MediaInterface $avatar
      */
     public function setAvatar($avatar);
 
@@ -566,7 +564,7 @@ interface ContactInterface
     /**
      * Get categories.
      *
-     * @return Collection
+     * @return Collection|CategoryInterface[]
      */
     public function getCategories();
 
@@ -589,7 +587,7 @@ interface ContactInterface
     /**
      * Get bankAccounts.
      *
-     * @return Collection
+     * @return Collection|BankAccount[]
      */
     public function getBankAccounts();
 }

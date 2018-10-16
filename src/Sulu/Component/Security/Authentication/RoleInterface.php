@@ -55,20 +55,6 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     public function getSystem();
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated();
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged();
-
-    /**
      * Get id.
      *
      * @return int
@@ -82,14 +68,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
      *
      * @return RoleInterface
      */
-    public function setCreator(UserInterface $creator = null);
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator();
+    public function setCreator($creator);
 
     /**
      * Set changer.
@@ -98,14 +77,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
      *
      * @return RoleInterface
      */
-    public function setChanger(UserInterface $changer = null);
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger();
+    public function setChanger($changer);
 
     /**
      * Add permissions.

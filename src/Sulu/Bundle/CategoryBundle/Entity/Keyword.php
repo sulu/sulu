@@ -56,7 +56,7 @@ class Keyword implements KeywordInterface
     protected $changed;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryTranslationInterface[]
      */
     protected $categoryTranslations;
 

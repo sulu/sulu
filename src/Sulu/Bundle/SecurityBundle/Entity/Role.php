@@ -22,26 +22,26 @@ use Sulu\Component\Security\Authentication\RoleSettingInterface;
 class Role extends BaseRole
 {
     /**
-     * @var Collection
+     * @var Collection|Permission[]
      */
     private $permissions;
 
     /**
-     * @var Collection
+     * @var Collection|UserRole[]
      *
      * @Exclude
      */
     private $userRoles;
 
     /**
-     * @var Collection
+     * @var Collection|Group[]
      *
      * @Exclude
      */
     private $groups;
 
     /**
-     * @var Collection
+     * @var Collection|RoleSettingInterface[]
      */
     private $settings;
 
@@ -83,7 +83,7 @@ class Role extends BaseRole
     /**
      * Get permissions.
      *
-     * @return Collection
+     * @return Collection|Permission[]
      */
     public function getPermissions()
     {
@@ -117,7 +117,7 @@ class Role extends BaseRole
     /**
      * Get userRoles.
      *
-     * @return Collection
+     * @return Collection|UserRole[]
      */
     public function getUserRoles()
     {
@@ -151,7 +151,7 @@ class Role extends BaseRole
     /**
      * Get groups.
      *
-     * @return Collection
+     * @return Collection|Group[]
      */
     public function getGroups()
     {
@@ -185,7 +185,7 @@ class Role extends BaseRole
     /**
      * Get settings.
      *
-     * @return Collection
+     * @return Collection|RoleSettingInterface[]
      */
     public function getSettings()
     {

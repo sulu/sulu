@@ -135,7 +135,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get meta.
      *
-     * @return Collection
+     * @return Collection|CategoryMetaInterface[]
      */
     public function getMeta();
 
@@ -158,7 +158,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get translations.
      *
-     * @return Collection
+     * @return Collection|CategoryTranslationInterface[]
      */
     public function getTranslations();
 
@@ -204,7 +204,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get children.
      *
-     * @return Collection
+     * @return Collection|self[]
      */
     public function getChildren();
 

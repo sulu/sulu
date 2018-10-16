@@ -72,7 +72,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $changed;
 
     /**
-     * @var Collection
+     * @var Collection|KeywordInterface[]
      */
     protected $keywords;
 

@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 abstract class BaseRole extends Role implements RoleInterface
 {
+    use AuditableTrait;
+
     /**
      * @var string
      */
@@ -31,29 +33,9 @@ abstract class BaseRole extends Role implements RoleInterface
     private $system;
 
     /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
      * @var int
      */
     private $id;
-
-    /**
-     * @var UserInterface
-     */
-    private $changer;
-
-    /**
-     * @var UserInterface
-     */
-    private $creator;
 
     /**
      * @var SecurityType
@@ -121,26 +103,6 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
      * Get id.
      *
      * @return int
@@ -148,54 +110,6 @@ abstract class BaseRole extends Role implements RoleInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return BaseRole
-     */
-    public function setChanger(UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return BaseRole
-     */
-    public function setCreator(UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
     }
 
     /**

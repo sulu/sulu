@@ -71,7 +71,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $changed;
 
     /**
-     * @var Collection
+     * @var Collection|ContactLocale[]
      */
     protected $locales;
 
@@ -93,7 +93,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $note;
 
     /**
-     * @var Collection
+     * @var Collection|Note[]
      * @Groups({"fullContact"})
      *
      * @deprecated
@@ -101,25 +101,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $notes;
 
     /**
-     * @var Collection
+     * @var Collection|Email[]
      * @Groups({"fullContact", "partialContact"})
      */
     protected $emails;
 
     /**
-     * @var Collection
+     * @var Collection|Phone[]
      * @Groups({"fullContact"})
      */
     protected $phones;
 
     /**
-     * @var Collection
+     * @var Collection|Fax[]
      * @Groups({"fullContact"})
      */
     protected $faxes;
 
     /**
-     * @var Collection
+     * @var Collection|SocialMediaProfile[]
      * @Groups({"fullContact"})
      */
     protected $socialMediaProfiles;
@@ -135,7 +135,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $salutation;
 
     /**
-     * @var Collection
+     * @var Collection|TagInterface[]
      * @Accessor(getter="getTagNameArray")
      * @Groups({"fullContact"})
      */
@@ -160,7 +160,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $addresses;
 
     /**
-     * @var Collection
+     * @var Collection|AccountContact[]
      * @Exclude
      */
     protected $accountContacts;
@@ -196,31 +196,31 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $mainUrl;
 
     /**
-     * @var Collection
+     * @var Collection|ContactAddress[]
      * @Exclude
      */
     protected $contactAddresses;
 
     /**
-     * @var Collection
+     * @var Collection|MediaInterface[]
      * @Groups({"fullContact"})
      */
     protected $medias;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryInterface[]
      * @Groups({"fullContact"})
      */
     protected $categories;
 
     /**
-     * @var Collection
+     * @var Collection|Url[]
      * @Groups({"fullContact"})
      */
     protected $urls;
 
     /**
-     * @var Collection
+     * @var Collection|BankAccount[]
      * @Groups({"fullContact"})
      */
     protected $bankAccounts;

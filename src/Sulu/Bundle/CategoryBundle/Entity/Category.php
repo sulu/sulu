@@ -76,17 +76,17 @@ class Category implements CategoryInterface
     protected $changer;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryMetaInterface[]
      */
     protected $meta;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryTranslationInterface[]
      */
     protected $translations;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryInterface[]
      */
     protected $children;
 

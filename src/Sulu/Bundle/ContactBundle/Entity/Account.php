@@ -130,7 +130,7 @@ class Account implements AccountInterface
     protected $logo;
 
     /**
-     * @var Collection
+     * @var Collection|AccountInterface[]
      * @Exclude
      */
     protected $children;
@@ -147,27 +147,27 @@ class Account implements AccountInterface
     protected $addresses;
 
     /**
-     * @var Collection
+     * @var Collection|Url[]
      */
     protected $urls;
 
     /**
-     * @var Collection
+     * @var Collection|Phone[]
      */
     protected $phones;
 
     /**
-     * @var Collection
+     * @var Collection|SocialMediaProfile[]
      */
     protected $socialMediaProfiles;
 
     /**
-     * @var Collection
+     * @var Collection|Email[]
      */
     protected $emails;
 
     /**
-     * @var Collection
+     * @var Collection|Note[]
      *
      * @deprecated
      */
@@ -179,39 +179,39 @@ class Account implements AccountInterface
     protected $note;
 
     /**
-     * @var Collection
+     * @var Collection|Fax[]
      */
     protected $faxes;
 
     /**
-     * @var Collection
+     * @var Collection|BankAccount[]
      */
     protected $bankAccounts;
 
     /**
-     * @var Collection
+     * @var Collection|TagInterface[]
      * @Accessor(getter="getTagNameArray")
      */
     protected $tags;
 
     /**
-     * @var Collection
+     * @var Collection|AccountContact[]
      */
     protected $accountContacts;
 
     /**
-     * @var Collection
+     * @var Collection|AccountAddress[]
      * @Exclude
      */
     protected $accountAddresses;
 
     /**
-     * @var Collection
+     * @var Collection|MediaInterface[]
      */
     protected $medias;
 
     /**
-     * @var Collection
+     * @var Collection|CategoryInterface[]
      */
     protected $categories;
 
