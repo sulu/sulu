@@ -1,0 +1,47 @@
+sulu_document_manager:
+    mapping:
+        full:
+            alias: full
+            phpcr_type: 'mix:test'
+            class: 'Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model\FullDocument'
+            mapping:
+                title:
+                    encoding: 'content_localized'
+                body:
+                    encoding: 'content_localized'
+                status:
+                    encoding: 'system'
+                    property: 'my_status'
+                reference:
+                    encoding: 'content'
+                    type: 'reference'
+        mapping_5:
+            alias: mapping_5
+            phpcr_type: 'mix:mapping5'
+            class: 'Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model\Mapping5Document'
+            mapping:
+                one: []
+                two: []
+                three: []
+                four: []
+                five: []
+        mapping_10:
+            alias: mapping_10
+            phpcr_type: 'mix:mapping10'
+            class: 'Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model\Mapping10Document'
+            mapping:
+                one: []
+                two: []
+                three: []
+                four: []
+                five: []
+                six: []
+                seven: []
+                eight: []
+                nine: []
+                ten: []
+    namespace:
+        system: 'nsys'
+        system_localized: 'lsys'
+        content: 'ncon'
+        content_localized: 'lcon'

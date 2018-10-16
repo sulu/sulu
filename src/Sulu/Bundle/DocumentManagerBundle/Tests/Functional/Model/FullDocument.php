@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\Tests\Functional\Model;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model;
 
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;

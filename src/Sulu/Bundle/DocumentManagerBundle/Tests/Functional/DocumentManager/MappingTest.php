@@ -9,20 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Functional\DocumentManager;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\DocumentManager;
 
-use Sulu\Component\DocumentManager\Tests\Functional\BaseTestCase;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Functional\BaseTestCase;
 
 class MappingTest extends BaseTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $this->initPhpcr();
     }
 
-    /**
-     * It should map mapped fields.
-     */
     public function testMapping()
     {
         $document = $this->getDocumentManager()->create('full');
@@ -47,9 +45,6 @@ class MappingTest extends BaseTestCase
         }
     }
 
-    /**
-     * It should map reference fields.
-     */
     public function testMappingReference()
     {
         $manager = $this->getDocumentManager();

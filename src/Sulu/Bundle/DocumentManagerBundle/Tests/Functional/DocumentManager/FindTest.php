@@ -9,14 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Functional\DocumentManager;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\DocumentManager;
 
-use Sulu\Component\DocumentManager\Tests\Functional\BaseTestCase;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Functional\BaseTestCase;
 
 class FindTest extends BaseTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $this->initPhpcr();
     }
 

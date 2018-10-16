@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\Tests\Functional\Model;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model;
 
-class Mapping10Document extends Mapping5Document
+class Mapping5Document
 {
-    public $six;
+    public $one;
 
-    public $seven;
+    public $two;
 
-    public $eight;
+    public $three;
 
-    public $nine;
+    public $four;
 
-    public $ten;
+    public $five;
 }
