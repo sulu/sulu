@@ -121,7 +121,12 @@
                     <meta>
                         <title lang="en">Enable Shadow Page</title>
                         <title lang="de">Shadow Seite aktivieren</title>
+                        <info_text lang="de">Diese Funktion ist deaktiviert, wenn die aktuelle Sprache bereits als Shadow Sprache verwendet wird.</info_text>
+                        <info_text lang="en">This function is disabled if the current locale is already used as shadow locale.</info_text>
                     </meta>
+                    <params>
+                        <param name="type" value="toggler" />
+                    </params>
                 </property>
                 <property
                     name="shadowBaseLanguage"
