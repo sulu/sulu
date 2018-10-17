@@ -69,7 +69,8 @@ class LocaleSubscriber implements EventSubscriberInterface
 
         $visitor = $event->getVisitor();
 
-        $visitor->addData('concreteLanguages', $this->documentInspector->getConcreteLocales($document));
+        $visitor->addData('availableLocales', $this->documentInspector->getLocales($document));
+        $visitor->addData('contentLocales', $this->documentInspector->getConcreteLocales($document));
 
         $localizationState = $this->documentInspector->getLocalizationState($document);
 

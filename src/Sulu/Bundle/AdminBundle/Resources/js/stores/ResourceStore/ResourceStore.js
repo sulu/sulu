@@ -36,10 +36,18 @@ export default class ResourceStore {
     }
 
     load = () => {
+        this.setLoading(true);
+
         const {
             id,
+            observableOptions: {
+                locale,
+            },
         } = this;
-        const options = {};
+
+        if (locale && !locale.get()) {
+            return;
+        }
 
         if (this.preventLoadingOnce) {
             this.preventLoadingOnce = false;
@@ -47,17 +55,12 @@ export default class ResourceStore {
         }
 
         if (!id) {
+            this.setLoading(false);
             return;
         }
 
-        this.setLoading(true);
-
-        const {locale} = this.observableOptions;
-
+        const options = {};
         if (locale) {
-            if (!locale.get()) {
-                return;
-            }
             options.locale = locale.get();
         }
 

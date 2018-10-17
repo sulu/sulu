@@ -676,7 +676,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         if ($mapping->resolveConcreteLocales()) {
             $locales = $this->resolveAvailableLocales($row);
-            $content->setConcreteLanguages($locales);
+            $content->setContentLocales($locales);
         }
 
         return $content;

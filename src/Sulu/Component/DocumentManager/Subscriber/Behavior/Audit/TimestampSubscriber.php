@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Subscriber\Behavior\Audit;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Audit\LocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
@@ -37,9 +38,15 @@ class TimestampSubscriber implements EventSubscriberInterface
      */
     private $propertyEncoder;
 
-    public function __construct(PropertyEncoder $propertyEncoder)
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    public function __construct(PropertyEncoder $propertyEncoder, DocumentInspector $documentInspector)
     {
         $this->propertyEncoder = $propertyEncoder;
+        $this->documentInspector = $documentInspector;
     }
 
     /**
@@ -69,7 +76,7 @@ class TimestampSubscriber implements EventSubscriberInterface
 
         $accessor = $event->getAccessor();
         $node = $event->getNode();
-        $locale = $event->getLocale();
+        $locale = $this->documentInspector->getOriginalLocale($document);
 
         $encoding = $this->getPropertyEncoding($document);
 
@@ -106,7 +113,7 @@ class TimestampSubscriber implements EventSubscriberInterface
             $document,
             $event->getNode(),
             $event->getAccessor(),
-            $event->getLocale(),
+            $this->documentInspector->getOriginalLocale($document),
             new \DateTime()
         );
     }
@@ -123,7 +130,7 @@ class TimestampSubscriber implements EventSubscriberInterface
             $document,
             $event->getNode(),
             $event->getAccessor(),
-            $event->getLocale()
+            $this->documentInspector->getOriginalLocale($document)
         );
     }
 
@@ -176,7 +183,11 @@ class TimestampSubscriber implements EventSubscriberInterface
         $encoding = $this->getPropertyEncoding($document);
 
         $event->getNode()->setProperty(
-            $this->propertyEncoder->encode($encoding, static::CHANGED, $event->getLocale()),
+            $this->propertyEncoder->encode(
+                $encoding,
+                static::CHANGED,
+                $this->documentInspector->getOriginalLocale($document)
+            ),
             new \DateTime()
         );
     }

@@ -9,18 +9,37 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\DocumentManager\tests\Functional;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional;
 
-use PHPUnit\Framework\TestCase;
-use Sulu\Component\DocumentManager\Tests\Bootstrap;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-abstract class BaseTestCase extends TestCase
+abstract class BaseTestCase extends SuluTestCase
 {
     const BASE_NAME = 'test';
 
     const BASE_PATH = '/test';
 
     private $container;
+
+    public function setUp()
+    {
+        $workspace = $this->getPhpcrDefaultSession()->getWorkspace();
+        $nodeTypeManager = $workspace->getNodeTypeManager();
+        if (!$nodeTypeManager->hasNodeType('mix:test')) {
+            $nodeTypeManager->registerNodeTypesCnd(<<<'EOT'
+[mix:test] > mix:referenceable mix
+[mix:mapping5] > mix:referenceable mix
+[mix:mapping10] > mix:referenceable mix
+EOT
+            , true);
+        }
+
+        $namespaceRegistry = $workspace->getNamespaceRegistry();
+        $namespaceRegistry->registerNamespace('lsys', 'http://example.com/lsys');
+        $namespaceRegistry->registerNamespace('nsys', 'http://example.com/nsys');
+        $namespaceRegistry->registerNamespace('lcon', 'http://example.com/lcon');
+        $namespaceRegistry->registerNamespace('ncon', 'http://example.com/ncon');
+    }
 
     protected function initPhpcr()
     {
@@ -35,17 +54,6 @@ abstract class BaseTestCase extends TestCase
     protected function getSession()
     {
         return $this->getContainer()->get('doctrine_phpcr.session');
-    }
-
-    protected function getContainer()
-    {
-        if ($this->container) {
-            return $this->container;
-        }
-
-        $this->container = Bootstrap::createContainer();
-
-        return $this->container;
     }
 
     protected function getDocumentManager()

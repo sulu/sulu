@@ -4,12 +4,12 @@ import type {Element} from 'react';
 import type {SelectProps} from '../Select';
 import Select from '../Select';
 
-type Props = SelectProps & {
-    onChange?: (value: string | number) => void,
-    value: ?string | number,
+type Props<T: string | number> = SelectProps & {
+    onChange?: (value: T) => void,
+    value: ?T,
 };
 
-export default class SingleSelect extends React.PureComponent<Props> {
+export default class SingleSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         skin: 'default',
     };
@@ -44,7 +44,7 @@ export default class SingleSelect extends React.PureComponent<Props> {
         return option.props.value.toString() === value.toString() && !option.props.disabled;
     };
 
-    handleSelect = (value: string | number) => {
+    handleSelect = (value: T) => {
         if (this.props.onChange) {
             this.props.onChange(value);
         }

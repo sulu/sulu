@@ -14,9 +14,16 @@
 
     <xs:complexType name="schemaType">
         <xs:all>
+            <xs:element name="allOf" type="schemaAllOfType" minOccurs="0"/>
             <xs:element name="anyOf" type="schemaAnyOfType" minOccurs="0"/>
             <xs:element name="properties" type="schemaPropertiesType" minOccurs="0"/>
         </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="schemaAllOfType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="schema" type="schemaType"/>
+        </xs:choice>
     </xs:complexType>
 
     <xs:complexType name="schemaAnyOfType">

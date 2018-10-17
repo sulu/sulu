@@ -280,7 +280,7 @@ class SnippetControllerTest extends SuluTestCase
         ], $result);
 
         $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['locale'], reset($result['concreteLanguages']));
+        $this->assertEquals($params['locale'], reset($result['contentLocales']));
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
         $this->assertEquals('My car is red.', $result['description']);
 
@@ -313,7 +313,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['locale'], reset($result['concreteLanguages']));
+        $this->assertEquals($params['locale'], reset($result['contentLocales']));
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
@@ -340,7 +340,7 @@ class SnippetControllerTest extends SuluTestCase
             $this->assertEquals($data[$key], $value);
         }
 
-        $this->assertContains($params['locale'], $result['concreteLanguages']);
+        $this->assertContains($params['locale'], $result['contentLocales']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
 
         $document = $this->documentManager->find($result['id'], 'de');
@@ -371,7 +371,7 @@ class SnippetControllerTest extends SuluTestCase
             $this->assertEquals($value, $result[$key]);
         }
 
-        $this->assertContains($params['locale'], $result['concreteLanguages']);
+        $this->assertContains($params['locale'], $result['contentLocales']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 

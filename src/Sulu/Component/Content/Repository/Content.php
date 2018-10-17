@@ -128,7 +128,7 @@ class Content implements \ArrayAccess
      *
      * @Expose
      */
-    private $concreteLanguages;
+    private $contentLocales;
 
     /**
      * @var Row
@@ -392,17 +392,17 @@ class Content implements \ArrayAccess
     /**
      * @return \string[]
      */
-    public function getConcreteLanguages()
+    public function getContentLocales()
     {
-        return $this->concreteLanguages;
+        return $this->contentLocales;
     }
 
     /**
-     * @param \string[] $concreteLanguages
+     * @param \string[] $contentLocales
      */
-    public function setConcreteLanguages($concreteLanguages)
+    public function setContentLocales($contentLocales)
     {
-        $this->concreteLanguages = $concreteLanguages;
+        $this->contentLocales = $contentLocales;
     }
 
     /**

@@ -3,36 +3,60 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
     <schema>
-        <anyOf>
+        <allOf>
             <schema>
-                <properties>
-                    <property name="nodeType" value="1" />
-                </properties>
+                <anyOf>
+                    <schema>
+                        <properties>
+                            <property name="nodeType" value="1" />
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="nodeType" value="2" />
+                            <property name="title" mandatory="true" />
+                            <property name="internal_link" mandatory="true" />
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="nodeType" value="4" />
+                            <property name="title" mandatory="true" />
+                            <property name="external" mandatory="true" />
+                        </properties>
+                    </schema>
+                </anyOf>
             </schema>
             <schema>
-                <properties>
-                    <property name="nodeType" value="2" />
-                    <property name="title" mandatory="true" />
-                    <property name="internal_link" mandatory="true" />
-                </properties>
+                <anyOf>
+                    <schema>
+                        <properties>
+                            <property name="shadowOn" value="true" />
+                            <property name="shadowBaseLanguage" mandatory="true" />
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="shadowOn" value="false" />
+                        </properties>
+                    </schema>
+                </anyOf>
             </schema>
-            <schema>
-                <properties>
-                    <property name="nodeType" value="4" />
-                    <property name="title" mandatory="true" />
-                    <property name="external" mandatory="true" />
-                </properties>
-            </schema>
-        </anyOf>
+        </allOf>
     </schema>
     <properties>
-        <property name="navContexts" type="page_settings_navigation_select" colspan="6">
+        <property
+            name="navContexts"
+            type="page_settings_navigation_select"
+            colspan="6"
+            visibleCondition="shadowOn == false"
+        >
             <meta>
                 <title lang="en">Show page in</title>
                 <title lang="de">Zeige Seite in</title>
             </meta>
         </property>
-        <section name="pageType">
+        <section name="pageType" visibleCondition="shadowOn == false">
             <meta>
                 <title lang="en">Page Type</title>
                 <title lang="de">Inhaltstyp</title>
@@ -83,6 +107,36 @@
                     <meta>
                         <title lang="en">URL</title>
                         <title lang="de">URL</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+        <section name="shadowPage">
+            <meta>
+                <title lang="en">Shadow Page</title>
+                <title lang="de">Shadow Seite</title>
+            </meta>
+            <properties>
+                <property name="shadowOn" type="checkbox" disabledCondition="__locale in shadowLocales|values">
+                    <meta>
+                        <title lang="en">Enable Shadow Page</title>
+                        <title lang="de">Shadow Seite aktivieren</title>
+                        <info_text lang="de">Diese Funktion ist deaktiviert, wenn die aktuelle Sprache bereits als Shadow Sprache verwendet wird.</info_text>
+                        <info_text lang="en">This function is disabled if the current locale is already used as shadow locale.</info_text>
+                    </meta>
+                    <params>
+                        <param name="type" value="toggler" />
+                    </params>
+                </property>
+                <property
+                    name="shadowBaseLanguage"
+                    type="page_settings_shadow_locale_select"
+                    visibleCondition="shadowOn == true"
+                    colspan="6"
+                >
+                    <meta>
+                        <title lang="en">Shadow Locale</title>
+                        <title lang="de">Shadow Sprache</title>
                     </meta>
                 </property>
             </properties>

@@ -4,7 +4,6 @@
     bootstrap="../TestBundle/Resources/app/bootstrap.php"
     processIsolation="false"
 >
-
     <testsuites>
         <testsuite name="Sulu DocumentManager Bundle">
             <directory>./Tests</directory>
@@ -24,7 +23,7 @@
 
     <php>
         <server name="KERNEL_DIR" value="Tests/app" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
-
 </phpunit>
 

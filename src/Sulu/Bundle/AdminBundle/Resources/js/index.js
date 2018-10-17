@@ -4,6 +4,7 @@ import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
 import {configure} from 'mobx';
+import jexl from 'jexl';
 import ResizeObserver from 'resize-observer-polyfill';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
@@ -75,6 +76,9 @@ window.log = log;
 log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
 
 Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
+
+jexl.addTransform('values', (value: Array<*>) => Object.values(value));
+
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
         registerViews();

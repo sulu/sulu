@@ -151,6 +151,16 @@ class FormXmlLoaderTest extends TestCase
                         ],
                     ],
                 ],
+                'allOf' => [
+                    [
+                        'properties' => [
+                            'first' => [
+                                'name' => 'first',
+                                'const' => 1,
+                            ],
+                        ],
+                    ],
+                ],
             ],
             $formMetadata->getSchema()->toJsonSchema()
         );

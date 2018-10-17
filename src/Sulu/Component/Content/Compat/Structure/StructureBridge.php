@@ -423,7 +423,7 @@ class StructureBridge implements StructureInterface
             'nodeType' => $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
-            'concreteLanguages' => $this->inspector->getLocales($document),
+            'contentLocales' => $this->inspector->getLocales($document),
             'hasSub' => $this->getHasChildren(),
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
         ];
@@ -463,7 +463,7 @@ class StructureBridge implements StructureInterface
                 $result = array_merge(
                     $result,
                     [
-                        'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
+                        'shadowLocales' => $this->inspector->getShadowLocales($document),
                         'shadowOn' => $document->isShadowLocaleEnabled(),
                         'shadowBaseLanguage' => $document->getShadowLocale(),
                     ]
@@ -627,12 +627,12 @@ class StructureBridge implements StructureInterface
         return $this->getProperty($name)->getValue();
     }
 
-    public function getEnabledShadowLanguages()
+    public function getShadowLocales()
     {
         return $this->inspector->getShadowLocales($this->getDocument());
     }
 
-    public function getConcreteLanguages()
+    public function getContentLocales()
     {
         return $this->inspector->getConcreteLocales($this->getDocument());
     }

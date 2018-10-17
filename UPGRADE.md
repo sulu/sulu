@@ -8,6 +8,15 @@
 
 The `visibilityCondition` on the Form XML has been renamed to `visibleCondition`.
 
+### PageController
+
+The `concreteLanguages` property has been renamed to `contentLocales`.
+The `enabledShadowLanguages` property has been renamed to `shadowLocales`, and swapped key and value in the map, so
+that the key is the locale of the page, and the value is the locale it uses to load the data.
+
+The `availableLocales` property was introduced, and shows for which locale some kind of content exists, no matter if
+it is actual content or uses shadow content. This flag only excludes ghost locales.
+
 ## 2.0.0-alpha4
 
 ### MediaController
