@@ -149,7 +149,7 @@ abstract class SuluKernel extends Kernel
     {
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
             . 'var' . DIRECTORY_SEPARATOR
-            . 'logs' . DIRECTORY_SEPARATOR
+            . 'log' . DIRECTORY_SEPARATOR
             . $this->context;
     }
 
