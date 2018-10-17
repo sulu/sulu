@@ -642,6 +642,126 @@ exports[`Render different kind of data with edit button 1`] = `
               class="children"
             />
           </div>
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 3"
+                class="croppedText"
+                title="Page 3"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 3
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 3
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-link2"
+                class="su-link2"
+              />
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                class="published"
+              />
+              <span
+                class="draft"
+              />
+            </span>
+            <span
+              class="children"
+            />
+          </div>
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 4"
+                class="croppedText"
+                title="Page 4"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Pag
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 4
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 4
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-link2"
+                class="su-link2"
+              />
+            </span>
+            <span
+              class="children"
+            />
+          </div>
         </div>
         <div
           class="column"
@@ -767,6 +887,247 @@ exports[`Render different kind of data with edit button 1`] = `
                 class="su-angle-right"
               />
             </span>
+          </div>
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2.3"
+                class="croppedText"
+                title="Page 2.3"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                     2.3
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.3
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link"
+              />
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                class="published"
+              />
+              <span
+                class="draft"
+              />
+            </span>
+            <span
+              class="children"
+            />
+          </div>
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2.4"
+                class="croppedText"
+                title="Page 2.4"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                     2.4
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.4
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link"
+              />
+            </span>
+            <span
+              class="children"
+            />
+          </div>
+        </div>
+        <div
+          class="column"
+        >
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2.1.1"
+                class="croppedText"
+                title="Page 2.1.1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page 
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    2.1.1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.1.1
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-shadow-page"
+                class="su-shadow-page"
+              />
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                class="draft"
+              />
+            </span>
+            <span
+              class="children"
+            />
+          </div>
+          <div
+            class="item"
+            role="button"
+          >
+            <span
+              class="buttons"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen clickable button"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="text"
+            >
+              <div
+                aria-label="Page 2.1.2"
+                class="croppedText"
+                title="Page 2.1.2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Page 
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    2.1.2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Page 2.1.2
+                </div>
+              </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-shadow-page"
+                class="su-shadow-page"
+              />
+            </span>
+            <span
+              class="children"
+            />
           </div>
         </div>
         <div

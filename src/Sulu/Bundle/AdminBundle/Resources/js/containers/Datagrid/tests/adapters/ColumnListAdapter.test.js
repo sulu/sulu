@@ -23,6 +23,22 @@ test('Render different kind of data with edit button', () => {
                 publishedState: false,
                 published: '2017-08-23',
             },
+            {
+                id: 6,
+                title: 'Page 3',
+                hasChildren: false,
+                publishedState: false,
+                published: '2017-08-23',
+                linked: 'internal',
+            },
+            {
+                id: 7,
+                title: 'Page 4',
+                hasChildren: false,
+                publishedState: true,
+                published: '2017-08-23',
+                linked: 'internal',
+            },
         ],
         [
             {
@@ -43,6 +59,44 @@ test('Render different kind of data with edit button', () => {
                 type: {
                     name: 'ghost',
                     value: 'nl',
+                },
+            },
+            {
+                id: 8,
+                title: 'Page 2.3',
+                hasChildren: false,
+                publishedState: false,
+                published: '2017-08-23',
+                linked: 'external',
+            },
+            {
+                id: 9,
+                title: 'Page 2.4',
+                hasChildren: false,
+                publishedState: true,
+                published: '2017-08-23',
+                linked: 'external',
+            },
+        ],
+        [
+            {
+                id: 10,
+                title: 'Page 2.1.1',
+                hasChildren: false,
+                publishedState: false,
+                published: null,
+                type: {
+                    name: 'shadow',
+                },
+            },
+            {
+                id: 11,
+                title: 'Page 2.1.2',
+                hasChildren: false,
+                publishedState: true,
+                published: '2018-10-16',
+                type: {
+                    name: 'shadow',
                 },
             },
         ],
