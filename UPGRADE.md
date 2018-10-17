@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Log Folder changes
+
+To match the symfony 4 folder structure the logs are now written into **`var/log`** instead of var/logs.
+
 ### Form visibilityCondition
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
