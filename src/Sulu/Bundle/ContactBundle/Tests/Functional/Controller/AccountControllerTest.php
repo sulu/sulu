@@ -42,315 +42,22 @@ class AccountControllerTest extends SuluTestCase
     private $accountCount = 1;
 
     /**
-     * @var Account
-     */
-    private $account;
-
-    /**
-     * @var Account
-     */
-    private $childAccount;
-
-    /**
-     * @var Media
-     */
-    private $logo;
-
-    /**
-     * @var Media
-     */
-    private $media1 = null;
-
-    /**
-     * @var Media
-     */
-    private $media2 = null;
-
-    /**
      * @var EntityManagerInterface
      */
     private $em;
-
-    /**
-     * @var Account
-     */
-    private $parentAccount;
-
-    /**
-     * @var UrlType
-     */
-    private $urlType;
-
-    /**
-     * @var Url
-     */
-    private $url;
-
-    /**
-     * @var EmailType
-     */
-    private $emailType;
-
-    /**
-     * @var Email
-     */
-    private $email;
-
-    /**
-     * @var PhoneType
-     */
-    private $phoneType;
-
-    /**
-     * @var FaxType
-     */
-    private $faxType;
-
-    /**
-     * @var Country
-     */
-    private $country;
-
-    /**
-     * @var AddressType
-     */
-    private $addressType;
-
-    /**
-     * @var Address
-     */
-    private $address;
 
     public function setUp()
     {
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
-        $this->initOrm();
-    }
-
-    private function initOrm()
-    {
-        $account = new Account();
-        $account->setName('Company');
-        $account->setPlaceOfJurisdiction('Feldkirch');
-
-        $parentAccount = new Account();
-        $parentAccount->setName('Parent');
-        $parentAccount->setPlaceOfJurisdiction('Feldkirch');
-
-        $childAccount = new Account();
-        $childAccount->setName('Child');
-        $childAccount->setPlaceOfJurisdiction('Feldkirch');
-        $childAccount->setParent($parentAccount);
-
-        $this->account = $account;
-        $this->childAccount = $childAccount;
-        $this->parentAccount = $parentAccount;
-
-        $urlType = new UrlType();
-        $urlType->setName('Private');
-
-        $this->urlType = $urlType;
-
-        $url = new Url();
-        $url->setUrl('http://www.company.example');
-
-        $this->url = $url;
-        $url->setUrlType($urlType);
-        $account->addUrl($url);
-
-        $this->emailType = new EmailType();
-        $this->emailType->setName('Private');
-
-        $this->email = new Email();
-        $this->email->setEmail('office@company.example');
-        $this->email->setEmailType($this->emailType);
-        $account->addEmail($this->email);
-
-        $phoneType = new PhoneType();
-        $phoneType->setName('Private');
-
-        $this->phoneType = $phoneType;
-
-        $phone = new Phone();
-        $phone->setPhone('123456789');
-        $phone->setPhoneType($phoneType);
-        $account->addPhone($phone);
-
-        $faxType = new FaxType();
-        $faxType->setName('Private');
-
-        $this->faxType = $faxType;
-
-        $fax = new Fax();
-        $fax->setFax('123654789');
-        $fax->setFaxType($faxType);
-        $account->addFax($fax);
-
-        $country = new Country();
-        $country->setName('Musterland');
-        $country->setCode('ML');
-
-        $this->country = $country;
-
-        $addressType = new AddressType();
-        $addressType->setName('Private');
-
-        $this->addressType = $addressType;
-
-        $address = new Address();
-        $address->setStreet('Musterstraße');
-        $address->setNumber('1');
-        $address->setZip('0000');
-        $address->setCity('Musterstadt');
-        $address->setState('Musterland');
-        $address->setCountry($country);
-        $address->setAddition('');
-        $address->setAddressType($addressType);
-        $address->setBillingAddress(true);
-        $address->setPrimaryAddress(true);
-        $address->setDeliveryAddress(false);
-        $address->setPostboxCity('Dornbirn');
-        $address->setPostboxPostcode('6850');
-        $address->setPostboxNumber('4711');
-        $address->setNote('note');
-        $address->setLatitude(47.4048346);
-        $address->setLongitude(9.7602198);
-
-        $this->address = $address;
-
-        $accountAddress = new AccountAddress();
-        $accountAddress->setAddress($address);
-        $accountAddress->setAccount($account);
-        $accountAddress->setMain(true);
-        $account->addAccountAddress($accountAddress);
-        $address->addAccountAddress($accountAddress);
-
-        $contact = new Contact();
-        $contact->setFirstName('Vorname');
-        $contact->setLastName('Nachname');
-        $contact->setMiddleName('Mittelname');
-        $contact->setFormOfAddress(0);
-
-        $accountContact = new AccountContact();
-        $accountContact->setContact($contact);
-        $accountContact->setAccount($account);
-        $accountContact->setMain(true);
-        $account->addAccountContact($accountContact);
-
-        $note = new Note();
-        $note->setValue('Note');
-        $account->addNote($note);
-
-        $this->initMedias();
-        $account->setLogo($this->logo);
-
-        $this->em->persist($account);
-        $this->em->persist($childAccount);
-        $this->em->persist($parentAccount);
-        $this->em->persist($urlType);
-        $this->em->persist($url);
-        $this->em->persist($this->emailType);
-        $this->em->persist($accountContact);
-        $this->em->persist($this->email);
-        $this->em->persist($phoneType);
-        $this->em->persist($phone);
-        $this->em->persist($country);
-        $this->em->persist($addressType);
-        $this->em->persist($address);
-        $this->em->persist($accountAddress);
-        $this->em->persist($note);
-        $this->em->persist($faxType);
-        $this->em->persist($fax);
-        $this->em->persist($contact);
-
-        $this->em->flush();
-    }
-
-    public function initMedias()
-    {
-        $collectionType = new CollectionType();
-        $collectionType->setName('My collection type');
-        $this->em->persist($collectionType);
-
-        $collection = new Collection();
-        $collection->setType($collectionType);
-        $this->em->persist($collection);
-
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $imageType->setDescription('This is an image');
-        $this->em->persist($imageType);
-
-        $file = new File();
-        $file->setVersion(1);
-
-        $fileVersion = new FileVersion();
-        $fileVersion->setVersion(1);
-        $fileVersion->setName('logo.jpeg');
-        $fileVersion->setMimeType('image/jpg');
-        $fileVersion->setFile($file);
-        $fileVersion->setSize(1124214);
-        $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1937-04-20'));
-        $fileVersion->setCreated(new \DateTime('1937-04-20'));
-        $file->addFileVersion($fileVersion);
-        $this->em->persist($fileVersion);
-
-        $this->logo = new Media();
-        $this->logo->setType($imageType);
-        $this->logo->setCollection($collection);
-        $this->logo->addFile($file);
-        $file->setMedia($this->logo);
-        $this->em->persist($this->logo);
-        $this->em->persist($file);
-
-        $file = new File();
-        $file->setVersion(1);
-
-        $fileVersion = new FileVersion();
-        $fileVersion->setVersion(1);
-        $fileVersion->setName('media1.jpeg');
-        $fileVersion->setMimeType('image/jpg');
-        $fileVersion->setFile($file);
-        $fileVersion->setSize(111111);
-        $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1950-04-20'));
-        $fileVersion->setCreated(new \DateTime('1950-04-20'));
-        $file->addFileVersion($fileVersion);
-        $this->em->persist($fileVersion);
-
-        $this->media1 = new Media();
-        $this->media1->setType($imageType);
-        $this->media1->setCollection($collection);
-        $this->media1->addFile($file);
-        $file->setMedia($this->media1);
-        $this->em->persist($this->media1);
-        $this->em->persist($file);
-
-        $fileVersion = new FileVersion();
-        $fileVersion->setVersion(1);
-        $fileVersion->setName('media2.jpeg');
-        $fileVersion->setMimeType('image/jpg');
-        $fileVersion->setFile($file);
-        $fileVersion->setSize(111111);
-        $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1970-04-20'));
-        $fileVersion->setCreated(new \DateTime('1970-04-20'));
-        $file->addFileVersion($fileVersion);
-        $this->em->persist($fileVersion);
-
-        $this->media2 = new Media();
-        $this->media2->setType($imageType);
-        $this->media2->setCollection($collection);
-        $this->media2->addFile($file);
-        $file->setMedia($this->media2);
-        $this->em->persist($this->media2);
-        $this->em->persist($file);
     }
 
     public function testCgetSerializationExclusions()
     {
+        $account = $this->createAccount('Company');
+        $contact = $this->createContact($account, 'Vorname', 'Nachname');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -367,11 +74,61 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetById()
     {
+        $mediaType = $this->createMediaType('image');
+        $collectionType = $this->createCollectionType('My collection type');
+        $collection = $this->createCollection($collectionType);
+
+        $this->em->flush();
+
+        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $email = $this->createEmail('office@company.example', $emailType);
+        $phoneType = $this->createPhoneType('Private');
+        $phone = $this->createPhone('123456789', $phoneType);
+        $faxType = $this->createFaxType('Private');
+        $fax = $this->createFax('123456789', $faxType);
+        $note = $this->createNote('Note');
+        $country = $this->createCountry('Musterland', 'ML');
+        $addressType = $this->createAddressType('Private');
+        $address = $this->createAddress(
+            $addressType,
+            'Musterstraße',
+            '1',
+            '0000',
+            'Musterstadt',
+            'Musterland',
+            $country,
+            true,
+            true,
+            false,
+            'Dornbirn',
+            '6850',
+            '4711',
+            'note',
+            47.4048346,
+            9.7602198
+        );
+        $account = $this->createAccount(
+            'Company',
+            null,
+            $url,
+            $address,
+            $email,
+            $phone,
+            $fax,
+            $note,
+            'Feldkirch',
+            $logo
+        );
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/accounts/' . $this->account->getId()
+            '/api/accounts/' . $account->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -409,7 +166,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
         $this->assertObjectHasAttribute('logo', $response);
-        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertEquals($logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
@@ -560,6 +317,22 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPost()
     {
+        $mediaType = $this->createMediaType('image');
+        $collectionType = $this->createCollectionType('My collection type');
+        $collection = $this->createCollection($collectionType);
+
+        $this->em->flush();
+
+        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $account = $this->createAccount('parent');
+        $emailType = $this->createEmailType('Private');
+        $phoneType = $this->createPhoneType('Private');
+        $urlType = $this->createUrlType('Private');
+        $faxType = $this->createFaxType('Private');
+        $addressType = $this->createAddressType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -568,13 +341,13 @@ class AccountControllerTest extends SuluTestCase
             [
                 'name' => 'ExampleCompany',
                 'note' => 'A small notice',
-                'parent' => ['id' => $this->account->getId()],
-                'logo' => ['id' => $this->logo->getId()],
+                'parent' => ['id' => $account->getId()],
+                'logo' => ['id' => $logo->getId()],
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -583,14 +356,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -599,14 +372,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'phone' => '123456789',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'phone' => '987654321',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -615,14 +388,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'fax' => '123456789-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'fax' => '987654321-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -635,12 +408,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -667,7 +440,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals($this->account->getId(), $response->parent->id);
+        $this->assertEquals($account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -693,114 +466,20 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(9.7593077, $response->addresses[0]->longitude);
 
         $this->assertObjectHasAttribute('logo', $response);
-        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertEquals($logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
-    public function testPostWithCategory()
-    {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'POST',
-            '/api/accounts',
-            [
-                'name' => 'ExampleCompany',
-                'parent' => ['id' => $this->account->getId()],
-                'urls' => [
-                    [
-                        'url' => 'http://example.company.com',
-                        'urlType' => [
-                            'id' => $this->urlType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                ],
-                'emails' => [
-                    [
-                        'email' => 'erika.mustermann@muster.at',
-                        'emailType' => [
-                            'id' => $this->emailType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                ],
-                'phones' => [
-                    [
-                        'phone' => '123456789',
-                        'phoneType' => [
-                            'id' => $this->phoneType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                ],
-                'faxes' => [
-                    [
-                        'fax' => '123456789-1',
-                        'faxType' => [
-                            'id' => $this->faxType->getId(),
-                            'name' => 'Private',
-                        ],
-                    ],
-                ],
-                'addresses' => [
-                    [
-                        'street' => 'Musterstraße',
-                        'number' => '1',
-                        'zip' => '0000',
-                        'city' => 'Musterstadt',
-                        'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $this->country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $this->addressType->getId(),
-                            'name' => 'Private',
-                        ],
-                        'billingAddress' => true,
-                        'primaryAddress' => true,
-                        'deliveryAddress' => false,
-                        'postboxCity' => 'Dornbirn',
-                        'postboxPostcode' => '6850',
-                        'postboxNumber' => '4711',
-                        'note' => 'note',
-                    ],
-                ],
-                'notes' => [
-                    ['value' => 'Note 1'],
-                ],
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(1, $response->depth);
-        $this->assertEquals($this->account->getId(), $response->parent->id);
-        $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
-        $this->assertEquals('123456789', $response->phones[0]->phone);
-        $this->assertEquals('123456789-1', $response->faxes[0]->fax);
-        $this->assertEquals('Musterstraße', $response->addresses[0]->street);
-        $this->assertEquals('1', $response->addresses[0]->number);
-        $this->assertEquals('0000', $response->addresses[0]->zip);
-        $this->assertEquals('Musterstadt', $response->addresses[0]->city);
-        $this->assertEquals('Musterstate', $response->addresses[0]->state);
-        $this->assertEquals('Note 1', $response->notes[0]->value);
-
-        $this->assertEquals(true, $response->addresses[0]->billingAddress);
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-        $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-    }
-
     public function testPostWithIds()
     {
+        $phoneType = $this->createPhoneType('Private');
+        $urlType = $this->createUrlType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
@@ -812,7 +491,7 @@ class AccountControllerTest extends SuluTestCase
                         'id' => 1512312312313,
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -863,14 +542,14 @@ class AccountControllerTest extends SuluTestCase
                         'id' => 17,
                         'phone' => '123456789',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'phone' => '987654321',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -896,7 +575,7 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
@@ -991,6 +670,9 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingPhoneType()
     {
+        $phoneType = $this->createPhoneType('Private');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
@@ -1001,7 +683,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'phone' => '123456789',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1116,6 +798,12 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetList()
     {
+        $this->createAccount('Company');
+        $parent = $this->createAccount('Parent');
+        $this->createAccount('Child', $parent);
+
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
@@ -1123,13 +811,14 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
 
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
-        $this->assertObjectHasAttribute('logo', $response->_embedded->accounts[0]);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->accounts[0]->logo);
-        $this->assertTrue(is_string($response->_embedded->accounts[0]->logo->{'sulu-100x100'}));
     }
 
     public function testGetListSearch()
     {
+        $this->createAccount('Company');
+        $this->createAccount('Something');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
@@ -1147,27 +836,45 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPut()
     {
+        $mediaType = $this->createMediaType('image');
+        $collectionType = $this->createCollectionType('My collection type');
+        $collection = $this->createCollection($collectionType);
+
+        $this->em->flush();
+
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $phoneType = $this->createPhoneType('Private');
+        $faxType = $this->createFaxType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+        $addressType = $this->createAddressType('Private');
+        $account = $this->createAccount('Company', null, $url);
+        $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'name' => 'ExampleCompany',
                 'note' => 'A small notice',
-                'logo' => ['id' => $this->logo->getId()],
+                'logo' => ['id' => $logo->getId()],
                 'urls' => [
                     [
-                        'id' => $this->url->getId(),
+                        'id' => $url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'url' => 'http://test.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1176,14 +883,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'email' => 'office@company.com',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'email' => 'erika.mustermann@company.com',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1192,14 +899,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'phone' => '4567890',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'phone' => '789456123',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1208,14 +915,14 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'fax' => '4567890-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                     [
                         'fax' => '789456123-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1228,12 +935,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -1253,12 +960,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'note' => 'note1',
@@ -1306,7 +1013,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Note2', $response->notes[1]->value);
 
         $this->assertObjectHasAttribute('logo', $response);
-        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertEquals($logo->getId(), $response->logo->id);
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
@@ -1375,10 +1082,43 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPutNoDetails()
     {
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $email = $this->createEmail('info@muster.at', $emailType);
+        $phoneType = $this->createPhoneType('Private');
+        $phone = $this->createPhone('123456789', $phoneType);
+        $faxType = $this->createFaxType('Private');
+        $fax = $this->createFax('123456789', $faxType);
+        $country = $this->createCountry('Musterland', 'ML');
+        $addressType = $this->createAddressType('Private');
+        $address = $this->createAddress(
+            $addressType,
+            'Musterstraße',
+            '1',
+            '0000',
+            'Musterstadt',
+            'Musterland',
+            $country,
+            true,
+            true,
+            false,
+            'Dornbirn',
+            '6850',
+            '4711',
+            'note',
+            47.4048346,
+            9.7602198
+        );
+        $note = $this->createNote('Note');
+        $account = $this->createAccount('Company', null, $url, $address, $email, $phone, $fax, $note);
+
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'name' => 'ExampleCompany',
                 'urls' => [],
@@ -1434,23 +1174,33 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPatchAssignedMedias()
     {
+        $account = $this->createAccount('Company');
+        $mediaType = $this->createMediaType('image');
+        $collectionType = $this->createCollectionType('My collection type');
+        $collection = $this->createCollection($collectionType);
+        $this->em->flush();
+
+        $media1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        $media2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId());
+        $client->request('GET', '/api/accounts/' . $account->getId());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
 
         // add two medias
         $client->request(
             'PATCH',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'medias' => [
                     [
-                        'id' => $this->media1->getId(),
+                        'id' => $media1->getId(),
                     ],
                     [
-                        'id' => $this->media2->getId(),
+                        'id' => $media2->getId(),
                     ],
                 ],
             ]
@@ -1462,7 +1212,7 @@ class AccountControllerTest extends SuluTestCase
         // remove medias
         $client->request(
             'PATCH',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'medias' => [],
             ]
@@ -1474,11 +1224,11 @@ class AccountControllerTest extends SuluTestCase
         // missing media
         $client->request(
             'PATCH',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'medias' => [
                     [
-                        'id' => $this->media1->getId(),
+                        'id' => $media1->getId(),
                     ],
                     [
                         'id' => 101,
@@ -1489,24 +1239,34 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId());
+        $client->request('GET', '/api/accounts/' . $account->getId());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
     }
 
     public function testDeleteById()
     {
+        $account = $this->createAccount('Company');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/accounts/' . $this->account->getId());
+        $client->request('DELETE', '/api/accounts/' . $account->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
     }
 
     public function testAccountAddresses()
     {
+        $addressType = $this->createAddressType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+
+        $address = $this->createAddress($addressType, 'Musterstraße', '1', '0000', 'Musterstadt', 'Musterland', $country, true, true, false, 'Dornbirn', '6850', '4711', 47.4048346, 9.7602198);
+        $account = $this->createAccount('Company', null, null, $address);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses');
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/addresses');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1514,7 +1274,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstraße', $address->street);
         $this->assertEquals('1', $address->number);
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses?flat=true');
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/addresses?flat=true');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1527,11 +1287,15 @@ class AccountControllerTest extends SuluTestCase
 
     public function testDeleteByIdAndNotDeleteContacts()
     {
+        $account = $this->createAccount('Company');
+        $contact = $this->createContact($account, 'Vorname', 'Nachname');
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'removeContacts' => 'false',
             ]
@@ -1546,6 +1310,8 @@ class AccountControllerTest extends SuluTestCase
 
     public function testDeleteByIdAndDeleteContacts()
     {
+        $account = $this->createAccount('Company');
+
         $contact = new Contact();
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
@@ -1554,9 +1320,9 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($contact);
         $accountContact = new AccountContact();
         $accountContact->setContact($contact);
-        $accountContact->setAccount($this->account);
+        $accountContact->setAccount($account);
         $accountContact->setMain(true);
-        $this->account->addAccountContact($accountContact);
+        $account->addAccountContact($accountContact);
         $this->em->persist($accountContact);
 
         $this->em->flush();
@@ -1565,7 +1331,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'removeContacts' => 'true',
             ]
@@ -1591,6 +1357,8 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testMultipleDeleteInfo()
     {
+        $account = $this->createAccount('Company');
+
         // modify test data
         $acc = new Account();
         $acc->setName('Test Account');
@@ -1607,30 +1375,30 @@ class AccountControllerTest extends SuluTestCase
 
             $accountContact = new AccountContact();
             $accountContact->setContact($contact);
-            $accountContact->setAccount($this->account);
+            $accountContact->setAccount($account);
             $accountContact->setMain(true);
             $this->em->persist($accountContact);
-            $this->account->addAccountContact($accountContact);
+            $account->addAccountContact($accountContact);
         }
 
         // add subaccount to $this->account
         $subacc = new Account();
         $subacc->setName('Subaccount');
-        $subacc->setParent($this->account);
+        $subacc->setParent($account);
 
         $this->em->persist($subacc);
 
         $this->em->flush();
 
         // get number of contacts from both accounts
-        $numContacts = $this->account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
+        $numContacts = $account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/accounts/multipledeleteinfo',
             [
-                'ids' => [$this->account->getId(), $acc->getId()],
+                'ids' => [$account->getId(), $acc->getId()],
             ]
         );
 
@@ -1651,7 +1419,7 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testGetDeleteInfoById()
     {
-        // modify test data
+        $account = $this->createAccount('Company');
 
         for ($i = 0; $i < 5; ++$i) {
             $contact = new Contact();
@@ -1663,19 +1431,19 @@ class AccountControllerTest extends SuluTestCase
 
             $accountContact = new AccountContact();
             $accountContact->setContact($contact);
-            $accountContact->setAccount($this->account);
+            $accountContact->setAccount($account);
             $accountContact->setMain(true);
             $this->em->persist($accountContact);
-            $this->account->addAccountContact($accountContact);
+            $account->addAccountContact($accountContact);
         }
 
         $this->em->flush();
 
-        $numContacts = $this->account->getAccountContacts()->count();
+        $numContacts = $account->getAccountContacts()->count();
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1695,11 +1463,13 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testGetDeleteInfoByIdWithSuperAccount()
     {
+        $account = $this->createAccount('Parent');
+
         // changing test data: adding child accounts
         for ($i = 0; $i < 5; ++$i) {
             $childAccount = new Account();
             $childAccount->setName('child num#' . $i);
-            $childAccount->setParent($this->account);
+            $childAccount->setParent($account);
 
             $this->em->persist($childAccount);
         }
@@ -1707,7 +1477,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1723,13 +1493,19 @@ class AccountControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts/4711/deleteinfo');
         $this->assertHttpStatusCode(404, $client->getResponse());
-
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/deleteinfo');
-        $this->assertHttpStatusCode(200, $client->getResponse());
     }
 
     public function testPutRemovedParentAccount()
     {
+        $urlType = $this->createUrlType('Private');
+        $emailType = $this->createEmailType('Private');
+        $phoneType = $this->createPhoneType('Private');
+        $faxType = $this->createFaxType('Private');
+        $addressType = $this->createAddressType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+        $account = $this->createAccount('Company', null);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -1737,12 +1513,12 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
-                'parent' => ['id' => $this->account->getId()],
+                'parent' => ['id' => $account->getId()],
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1751,7 +1527,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1760,7 +1536,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'phone' => '123456789',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1769,7 +1545,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'fax' => '123456789-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1782,12 +1558,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -1808,7 +1584,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals($this->account->getId(), $response->parent->id);
+        $this->assertEquals($account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
         $this->assertEquals('123456789-1', $response->faxes[0]->fax);
@@ -1839,7 +1615,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1849,7 +1625,7 @@ class AccountControllerTest extends SuluTestCase
                         'id' => $response->emails[0]->id,
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1859,7 +1635,7 @@ class AccountControllerTest extends SuluTestCase
                         'id' => $response->phones[0]->id,
                         'phone' => '123456789',
                         'phoneType' => [
-                            'id' => $this->phoneType->getId(),
+                            'id' => $phoneType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1869,7 +1645,7 @@ class AccountControllerTest extends SuluTestCase
                         'id' => $response->faxes[0]->id,
                         'fax' => '123456789-1',
                         'faxType' => [
-                            'id' => $this->faxType->getId(),
+                            'id' => $faxType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1883,12 +1659,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -1929,6 +1705,13 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPrimaryAddressHandlingPost()
     {
+        $urlType = $this->createUrlType('Private');
+        $emailType = $this->createEmailType('Private');
+        $addressType = $this->createAddressType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+        $account = $this->createAccount('Company', null);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -1936,12 +1719,12 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             [
                 'name' => 'ExampleCompany',
-                'parent' => ['id' => $this->account->getId()],
+                'parent' => ['id' => $account->getId()],
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1950,7 +1733,7 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -1963,12 +1746,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -1985,12 +1768,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -2024,18 +1807,27 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPrimaryAddressHandlingPut()
     {
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $addressType = $this->createAddressType('Private');
+        $country = $this->createCountry('Musterland', 'ML');
+        $address = $this->createAddress($addressType);
+        $account = $this->createAccount('Company', null, $url, $address);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/' . $this->account->getId(),
+            '/api/accounts/' . $account->getId(),
             [
                 'name' => 'ExampleCompany',
                 'urls' => [
                     [
-                        'id' => $this->url->getId(),
+                        'id' => $url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => [
-                            'id' => $this->urlType->getId(),
+                            'id' => $urlType->getId(),
                             'name' => 'Private',
                         ],
                     ],
@@ -2044,26 +1836,26 @@ class AccountControllerTest extends SuluTestCase
                     [
                         'email' => 'office@company.com',
                         'emailType' => [
-                            'id' => $this->emailType->getId(),
+                            'id' => $emailType->getId(),
                             'name' => 'Private',
                         ],
                     ],
                 ],
                 'addresses' => [
                     [
-                        'id' => $this->address->getId(),
+                        'id' => $address->getId(),
                         'street' => 'Bahnhofstraße',
                         'number' => '2',
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -2080,12 +1872,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -2102,12 +1894,12 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => [
-                            'id' => $this->country->getId(),
+                            'id' => $country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML',
                         ],
                         'addressType' => [
-                            'id' => $this->addressType->getId(),
+                            'id' => $addressType->getId(),
                             'name' => 'Private',
                         ],
                         'billingAddress' => true,
@@ -2131,7 +1923,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/accounts/' . $this->account->getId()
+            '/api/accounts/' . $account->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -2156,6 +1948,11 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetAccountsWithNoParent()
     {
+        $this->createAccount('Account 1');
+        $account2 = $this->createAccount('Account 2');
+        $this->createAccount('Account 2.1', $account2);
+        $this->em->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -2173,9 +1970,8 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testCGetByIdsOnFlatApi()
     {
-        $amount = 30;
+        $amount = 11;
 
-        // Create 30 new accounts.
         $accounts = $this->createMultipleMinimalAccounts($amount);
         $this->em->flush();
 
@@ -2207,10 +2003,7 @@ class AccountControllerTest extends SuluTestCase
      */
     public function testCGetByIdsOnFlatApiWithLimit()
     {
-        $amount = 30;
-
-        // Create 30 new accounts.
-        $accounts = $this->createMultipleMinimalAccounts($amount);
+        $accounts = $this->createMultipleMinimalAccounts(11);
         $this->em->flush();
 
         // Get ids of new accounts.
@@ -2235,7 +2028,7 @@ class AccountControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertCount(10, $response->_embedded->accounts);
+        $this->assertCount(1, $response->_embedded->accounts);
     }
 
     /**
@@ -2243,14 +2036,300 @@ class AccountControllerTest extends SuluTestCase
      *
      * @return AccountInterface
      */
-    private function createMinimalAccount()
-    {
+    private function createAccount(
+        string $name,
+        ?Account $parent = null,
+        ?Url $url = null,
+        ?Address $address = null,
+        ?Email $email = null,
+        ?Phone $phone = null,
+        ?Fax $fax = null,
+        ?Note $note = null,
+        ?string $placeOfJurisdiction = null,
+        ?Media $logo = null
+    ) {
         $account = new Account();
-        $account->setName('Minimal Account ' . $this->accountCount++);
+        $account->setName($name);
+        $account->setParent($parent);
+
+        if ($placeOfJurisdiction) {
+            $account->setPlaceOfJurisdiction($placeOfJurisdiction);
+        }
+
+        if ($url) {
+            $account->addUrl($url);
+        }
+
+        if ($logo) {
+            $account->setLogo($logo);
+        }
+
+        if ($address) {
+            $accountAddress = new AccountAddress();
+            $accountAddress->setAddress($address);
+            $accountAddress->setAccount($account);
+            $accountAddress->setMain(true);
+            $account->addAccountAddress($accountAddress);
+            $this->em->persist($accountAddress);
+        }
+
+        if ($email) {
+            $account->addEmail($email);
+        }
+
+        if ($phone) {
+            $account->addPhone($phone);
+        }
+
+        if ($fax) {
+            $account->addFax($fax);
+        }
+
+        if ($note) {
+            $account->addNote($note);
+        }
 
         $this->em->persist($account);
 
         return $account;
+    }
+
+    private function createUrlType(string $name)
+    {
+        $urlType = new UrlType();
+        $urlType->setName($name);
+
+        $this->em->persist($urlType);
+
+        return $urlType;
+    }
+
+    private function createUrl(string $urlValue, UrlType $urlType)
+    {
+        $url = new Url();
+        $url->setUrl($urlValue);
+        $url->setUrlType($urlType);
+
+        $this->em->persist($url);
+
+        return $url;
+    }
+
+    private function createEmail(string $emailAddress, EmailType $emailType)
+    {
+        $email = new Email();
+        $email->setEmail($emailAddress);
+        $email->setEmailType($emailType);
+
+        $this->em->persist($email);
+
+        return $email;
+    }
+
+    private function createEmailType(string $type)
+    {
+        $emailType = new EmailType();
+        $emailType->setName($type);
+
+        $this->em->persist($emailType);
+
+        return $emailType;
+    }
+
+    private function createCountry(string $name, string $code)
+    {
+        $country = new Country();
+        $country->setName($name);
+        $country->setCode($code);
+
+        $this->em->persist($country);
+
+        return $country;
+    }
+
+    private function createAddressType(string $type)
+    {
+        $addressType = new AddressType();
+        $addressType->setName($type);
+
+        $this->em->persist($addressType);
+
+        return $addressType;
+    }
+
+    private function createFaxType(string $type)
+    {
+        $faxType = new FaxType();
+        $faxType->setName('Private');
+
+        $this->em->persist($faxType);
+
+        return $faxType;
+    }
+
+    private function createFax(string $number, FaxType $faxType)
+    {
+        $fax = new Fax();
+        $fax->setFax('123654789');
+        $fax->setFaxType($faxType);
+
+        $this->em->persist($fax);
+
+        return $fax;
+    }
+
+    private function createPhoneType(string $type)
+    {
+        $phoneType = new PhoneType();
+        $phoneType->setName($type);
+
+        $this->em->persist($phoneType);
+
+        return $phoneType;
+    }
+
+    private function createPhone(string $phoneNumber, PhoneType $phoneType)
+    {
+        $phone = new Phone();
+        $phone->setPhone($phoneNumber);
+        $phone->setPhoneType($phoneType);
+
+        $this->em->persist($phone);
+
+        return $phone;
+    }
+
+    private function createAddress(
+        ?AddressType $addressType = null,
+        ?string $street = null,
+        ?string $number = null,
+        ?string $zip = null,
+        ?string $city = null,
+        ?string $state = null,
+        ?Country $country = null,
+        ?bool $billingAddress = null,
+        ?bool $primaryAddress = null,
+        ?bool $deliveryAddress = null,
+        ?string $postboxCity = null,
+        ?string $postboxCode = null,
+        ?string $postboxNumber = null,
+        ?string $note = null,
+        ?float $latitude = null,
+        ?float $longitude = null
+    ) {
+        $address = new Address();
+        $address->setStreet($street);
+        $address->setNumber($number);
+        $address->setZip($zip);
+        $address->setCity($city);
+        $address->setState($state);
+        $address->setCountry($country);
+        $address->setAddition('');
+        $address->setAddressType($addressType);
+        $address->setBillingAddress($billingAddress);
+        $address->setPrimaryAddress($primaryAddress);
+        $address->setDeliveryAddress($deliveryAddress);
+        $address->setPostboxCity($postboxCity);
+        $address->setPostboxPostcode($postboxCode);
+        $address->setPostboxNumber($postboxNumber);
+        $address->setNote($note);
+        $address->setLatitude($latitude);
+        $address->setLongitude($longitude);
+
+        $this->em->persist($address);
+
+        return $address;
+    }
+
+    private function createContact(
+        Account $account,
+        string $firstName,
+        string $lastName,
+        ?string $middleName = null,
+        ?int $formOfAddress = null
+    ) {
+        $contact = new Contact();
+        $contact->setFirstName($firstName);
+        $contact->setLastName($lastName);
+        $contact->setMiddleName($middleName);
+        $contact->setFormOfAddress($formOfAddress);
+
+        $accountContact = new AccountContact();
+        $accountContact->setContact($contact);
+        $accountContact->setAccount($account);
+        $accountContact->setMain(true);
+        $account->addAccountContact($accountContact);
+
+        $this->em->persist($contact);
+        $this->em->persist($accountContact);
+
+        return $contact;
+    }
+
+    private function createCollection(CollectionType $collectionType)
+    {
+        $collection = new Collection();
+        $collection->setType($collectionType);
+        $this->em->persist($collection);
+
+        return $collection;
+    }
+
+    private function createCollectionType(string $name)
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setName($name);
+        $this->em->persist($collectionType);
+
+        return $collectionType;
+    }
+
+    private function createMediaType(string $name, ?string $description = null)
+    {
+        $mediaType = new MediaType();
+        $mediaType->setName($name);
+        $mediaType->setDescription($description);
+        $this->em->persist($mediaType);
+
+        return $mediaType;
+    }
+
+    private function createMedia(string $name, string $mimeType, MediaType $mediaType, Collection $collection)
+    {
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('media1.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $media = new Media();
+        $media->setType($mediaType);
+        $media->setCollection($collection);
+        $media->addFile($file);
+        $file->setMedia($media);
+        $this->em->persist($media);
+        $this->em->persist($file);
+
+        return $media;
+    }
+
+    private function createNote(string $value)
+    {
+        $note = new Note();
+        $note->setValue($value);
+
+        $this->em->persist($note);
+
+        return $note;
     }
 
     /**
@@ -2265,7 +2344,7 @@ class AccountControllerTest extends SuluTestCase
         $accounts = [];
 
         for ($i = 0; $i < $number; ++$i) {
-            $accounts[] = $this->createMinimalAccount();
+            $accounts[] = $this->createAccount('Minimal Account ' . $this->accountCount++);
         }
 
         return $accounts;
