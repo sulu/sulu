@@ -31,21 +31,6 @@ test('Render pagination with loader', () => {
     )).toMatchSnapshot();
 });
 
-test('Render only loader if total is not passed initially', () => {
-    expect(render(
-        <Pagination
-            currentLimit={10}
-            currentPage={0}
-            loading={true}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            totalPages={undefined}
-        >
-            <p></p>
-        </Pagination>
-    )).toMatchSnapshot();
-});
-
 test('Render pagination with page numbers', () => {
     expect(render(
         <Pagination

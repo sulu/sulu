@@ -7,6 +7,7 @@ import equal from 'fast-deep-equal';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
+import Loader from '../../components/Loader';
 import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
 import type {Schema, SortOrder} from './types';
@@ -429,34 +430,37 @@ export default class Datagrid extends React.Component<Props> {
                     </div>
                 }
                 <div className={datagridStyles.datagrid}>
-                    <Adapter
-                        active={store.active.get()}
-                        activeItems={store.activeItems}
-                        data={store.data}
-                        disabledIds={disabledIds}
-                        limit={store.limit.get()}
-                        loading={store.loading}
-                        onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
-                        onItemActivate={this.handleItemActivate}
-                        onItemAdd={onItemAdd}
-                        onItemClick={onItemClick}
-                        onItemDeactivate={this.handleItemDeactivate}
-                        onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
-                        onLimitChange={this.handleLimitChange}
-                        onPageChange={this.handlePageChange}
-                        onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
-                        onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
-                        onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
-                        onRequestItemOrder={orderable ? this.handleRequestItemOrder : undefined}
-                        onSort={this.handleSort}
-                        options={this.currentAdapterOptions}
-                        page={store.getPage()}
-                        pageCount={store.pageCount}
-                        schema={store.userSchema}
-                        selections={store.selectionIds}
-                        sortColumn={store.sortColumn.get()}
-                        sortOrder={store.sortOrder.get()}
-                    />
+                    {store.loading && !store.pageCount
+                        ? <Loader />
+                        : <Adapter
+                            active={store.active.get()}
+                            activeItems={store.activeItems}
+                            data={store.data}
+                            disabledIds={disabledIds}
+                            limit={store.limit.get()}
+                            loading={store.loading}
+                            onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
+                            onItemActivate={this.handleItemActivate}
+                            onItemAdd={onItemAdd}
+                            onItemClick={onItemClick}
+                            onItemDeactivate={this.handleItemDeactivate}
+                            onItemSelectionChange={selectable ? this.handleItemSelectionChange : undefined}
+                            onLimitChange={this.handleLimitChange}
+                            onPageChange={this.handlePageChange}
+                            onRequestItemCopy={copyable ? this.handleRequestItemCopy : undefined}
+                            onRequestItemDelete={deletable ? this.handleRequestItemDelete : undefined}
+                            onRequestItemMove={movable ? this.handleRequestItemMove : undefined}
+                            onRequestItemOrder={orderable ? this.handleRequestItemOrder : undefined}
+                            onSort={this.handleSort}
+                            options={this.currentAdapterOptions}
+                            page={store.getPage()}
+                            pageCount={store.pageCount}
+                            schema={store.userSchema}
+                            selections={store.selectionIds}
+                            sortColumn={store.sortColumn.get()}
+                            sortOrder={store.sortOrder.get()}
+                        />
+                    }
                 </div>
                 {deletable &&
                     <Dialog

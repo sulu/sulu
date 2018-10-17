@@ -131,10 +131,6 @@ export default class Pagination extends React.Component<Props> {
         const {currentInputValue} = this;
         const {children, loading, totalPages, currentLimit} = this.props;
 
-        if (loading && !totalPages) {
-            return <Loader />;
-        }
-
         return (
             <section>
                 {children}
