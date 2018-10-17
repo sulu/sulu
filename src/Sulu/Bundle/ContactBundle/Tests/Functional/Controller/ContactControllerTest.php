@@ -64,13 +64,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -738,13 +738,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -987,13 +987,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -1139,13 +1139,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -1267,13 +1267,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -1380,13 +1380,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -1652,13 +1652,13 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -2099,13 +2099,13 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $country = $this->createCountry('Musterland', 'ML');
         $address = $this->createAddress(
+            $addressType,
             'Musterstraße',
             '1',
             '0000',
             'Musterstadt',
             'Musterland',
             $country,
-            $addressType,
             true,
             true,
             false,
@@ -2433,13 +2433,13 @@ class ContactControllerTest extends SuluTestCase
     }
 
     private function createAddress(
+        ?AddressType $addressType,
         ?string $street,
         ?string $number,
         ?string $zip,
         ?string $city,
         ?string $state,
         ?Country $country,
-        ?AddressType $addressType,
         ?bool $billingAddress,
         ?bool $primaryAddress,
         ?bool $deliveryAddress,
@@ -2498,11 +2498,11 @@ class ContactControllerTest extends SuluTestCase
         return $collectionType;
     }
 
-    private function createMediaType(string $name, ?string $description)
+    private function createMediaType(string $name, ?string $description = null)
     {
         $mediaType = new MediaType();
-        $mediaType->setName('image');
-        $mediaType->setDescription('This is an image');
+        $mediaType->setName($name);
+        $mediaType->setDescription($description);
         $this->em->persist($mediaType);
 
         return $mediaType;
