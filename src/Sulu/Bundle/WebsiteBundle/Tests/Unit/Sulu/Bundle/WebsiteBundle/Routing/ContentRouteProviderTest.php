@@ -724,7 +724,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('de/qwertz', $route->getDefaults()['url']);
     }
-    
+
     public function testGetCollectionTrailingSlashWithQueryParams()
     {
         $attributes = $this->prophesize('Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes');
@@ -734,14 +734,14 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $webspace->setKey('webspace');
         $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
-    
+
         $localization = new Localization('de');
         $this->requestAnalyzer->getPortal()->willReturn($portal);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $this->requestAnalyzer->getResourceLocator()->willReturn('/foo/');
         $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
-        
+
         $this->resourceLocatorStrategy->loadByResourceLocator('/foo', 'webspace', 'de')->willReturn('some-uuid');
         $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/foo');
