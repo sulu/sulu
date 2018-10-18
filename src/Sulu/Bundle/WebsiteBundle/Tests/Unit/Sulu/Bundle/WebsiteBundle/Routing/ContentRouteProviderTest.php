@@ -30,6 +30,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -727,7 +728,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCollectionTrailingSlashWithQueryParams()
     {
-        $attributes = $this->prophesize('Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes');
+        $attributes = $this->prophesize(RequestAttributes::class);
         $portal = new Portal();
         $portal->setKey('portal');
         $webspace = new Webspace();
