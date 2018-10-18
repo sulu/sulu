@@ -139,6 +139,15 @@ beforeEach(() => {
     datagridFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
 
+test('Render Loader instead of Adapter if nothing was loaded yet', () => {
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.loading = true;
+    datagridStore.pageCount = 0;
+
+    expect(render(<Datagrid adapters={['table']} store={datagridStore} />)).toMatchSnapshot();
+});
+
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     mockStructureStrategyData = [

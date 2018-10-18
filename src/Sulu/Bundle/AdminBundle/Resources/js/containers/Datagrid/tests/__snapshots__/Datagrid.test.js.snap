@@ -1,5 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
+Array [
+  <div
+    class="headerContainer"
+  >
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
+      >
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+    </div>
+  </div>,
+  <div
+    class="datagrid"
+  >
+    <div
+      class="spinner"
+      style="width:40px;height:40px"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>,
+]
+`;
+
 exports[`Render the adapter in non-searchable mode 1`] = `
 Array [
   <div
