@@ -5,7 +5,7 @@
     <properties>
         <section name="avatar" colspan="4">
             <properties>
-                <property name="avatar" type="single_media_upload" label="false">
+                <property name="avatar" type="single_media_upload">
                     <params>
                         <param name="upload_text">
                             <meta>

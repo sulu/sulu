@@ -176,7 +176,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
         $localizedAreas = [];
 
         foreach ($areas as $type) {
-            $title = $type['key'];
+            $title = ucfirst($type['key']);
 
             if (isset($type['title'][$locale])) {
                 $title = $type['title'][$locale];

@@ -5,7 +5,7 @@
     <properties>
         <section name="logo" colspan="4">
             <properties>
-                <property name="logo" type="single_media_upload" label="false">
+                <property name="logo" type="single_media_upload">
                     <params>
                         <param name="upload_text">
                             <meta>
