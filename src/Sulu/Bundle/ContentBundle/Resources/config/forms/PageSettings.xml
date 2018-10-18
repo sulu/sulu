@@ -126,6 +126,12 @@
                     </meta>
                     <params>
                         <param name="type" value="toggler" />
+                        <param name="label">
+                            <meta>
+                                <title lang="en">Enable Shadow Page</title>
+                                <title lang="de">Shadow Seite aktivieren</title>
+                            </meta>
+                        </param>
                     </params>
                 </property>
                 <property
