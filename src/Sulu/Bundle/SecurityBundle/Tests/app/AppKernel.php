@@ -21,7 +21,6 @@ class AppKernel extends SuluTestKernel
             [
                 new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
                 new Symfony\Bundle\DebugBundle\DebugBundle(),
-                new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             ]
         );
     }

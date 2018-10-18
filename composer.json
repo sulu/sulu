@@ -46,7 +46,6 @@
         "pagerfanta/pagerfanta": "^1.0.4",
         "piwik/device-detector": "^3.7",
         "ramsey/uuid": "^3.1",
-        "sensio/framework-extra-bundle": "^5.0",
         "stof/doctrine-extensions-bundle": "^1.2.2",
         "symfony-cmf/routing-bundle": "^2.0",
         "symfony-cmf/slugifier-api": "^1.0 || ^2.0",
