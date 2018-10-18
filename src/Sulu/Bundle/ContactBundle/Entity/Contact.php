@@ -482,7 +482,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this->creator;
     }
 
-    public function setNote(?string $note): self
+    public function setNote(?string $note): ContactInterface
     {
         $this->note = $note;
 
