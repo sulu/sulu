@@ -49,7 +49,7 @@
     <xs:complexType name="langType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="lang" use="required" type="xs:string"/>
+                <xs:attribute name="lang" type="xs:string"/>
                 <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>

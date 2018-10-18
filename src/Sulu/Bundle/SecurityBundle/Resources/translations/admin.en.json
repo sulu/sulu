@@ -1,8 +1,11 @@
 {
     "sulu_security.roles": "User roles",
+    "sulu_security.user_name": "Username",
     "sulu_security.permissions": "Permissions",
-    "sulu_security.name": "Name",
+    "sulu_security.password": "Password",
+    "sulu_security.email": "Email",
     "sulu_security.system": "System",
+    "sulu_security.system_language": "System language",
     "sulu_security.reset_mail_subject": "Reset your Sulu password",
     "sulu_security.view": "View",
     "sulu_security.add": "Add",

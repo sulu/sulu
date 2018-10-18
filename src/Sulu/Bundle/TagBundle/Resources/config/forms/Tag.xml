@@ -5,8 +5,7 @@
     <properties>
         <property name="name" type="text_line">
             <meta>
-                <title lang="en">Name</title>
-                <title lang="de">Name</title>
+                <title>sulu_admin.name</title>
             </meta>
         </property>
     </properties>

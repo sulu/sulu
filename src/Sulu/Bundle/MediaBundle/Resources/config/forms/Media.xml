@@ -5,49 +5,42 @@
     <properties>
         <property name="title" type="text_line">
             <meta>
-                <title lang="en">Title</title>
-                <title lang="de">Titel</title>
+                <title>sulu_admin.title</title>
             </meta>
         </property>
 
         <property name="description" type="text_area">
             <meta>
-                <title lang="en">Description</title>
-                <title lang="de">Beschreibung</title>
+                <title>sulu_admin.description</title>
             </meta>
         </property>
 
         <section name="license">
             <meta>
-                <title lang="en">License</title>
-                <title lang="de">Lizenz</title>
+                <title>sulu_media.license</title>
             </meta>
 
             <properties>
                 <property name="copyright" type="text_area">
                     <meta>
-                        <title lang="en">Copyright information</title>
-                        <title lang="de">Copyright Informationen</title>
+                        <title>sulu_media.copyright</title>
                     </meta>
                 </property>
             </properties>
         </section>
         <section name="taxonomies">
             <meta>
-                <title lang="en">Taxonomies</title>
-                <title lang="de">Taxonomien</title>
+                <title>sulu_media.taxonomies</title>
             </meta>
             <properties>
                 <property name="categories" type="category_list">
                     <meta>
-                        <title lang="en">Categories</title>
-                        <title lang="de">Kategorien</title>
+                        <title>sulu_category.categories</title>
                     </meta>
                 </property>
                 <property name="tags" type="tag_list">
                     <meta>
-                        <title lang="en">Tags</title>
-                        <title lang="de">Tags</title>
+                        <title>sulu_tag.tags</title>
                     </meta>
                 </property>
             </properties>

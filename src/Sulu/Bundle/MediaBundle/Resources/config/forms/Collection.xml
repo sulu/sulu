@@ -5,15 +5,13 @@
     <properties>
         <property name="title" type="text_line">
             <meta>
-                <title lang="en">Title</title>
-                <title lang="de">Titel</title>
+                <title>sulu_admin.title</title>
             </meta>
         </property>
 
         <property name="description" type="text_area">
             <meta>
-                <title lang="en">Description</title>
-                <title lang="de">Beschreibung</title>
+                <title>sulu_admin.description</title>
             </meta>
         </property>
     </properties>

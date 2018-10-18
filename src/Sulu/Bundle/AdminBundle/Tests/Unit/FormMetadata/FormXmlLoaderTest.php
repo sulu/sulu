@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormXmlLoaderTest extends TestCase
 {
@@ -30,10 +31,20 @@ class FormXmlLoaderTest extends TestCase
      */
     private $expressionLanguage;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function setUp()
     {
         $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
-        $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $propertiesXmlParser = new PropertiesXmlParser(
+            $this->expressionLanguage->reveal(),
+            $this->translator->reveal(),
+            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
+        );
         $schemaXmlParser = new SchemaXmlParser();
         $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser);
     }
@@ -58,6 +69,85 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
         $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
+
+        $this->assertNull($formMetadata->getSchema());
+    }
+
+    public function testLoadFormWithLocalization()
+    {
+        $this->translator->trans('mr', [], 'admin', 'en')->willReturn('en_mr');
+        $this->translator->trans('mr', [], 'admin', 'de')->willReturn('de_mr');
+        $this->translator->trans('mr', [], 'admin', 'fr')->willReturn('fr_mr');
+        $this->translator->trans('mr', [], 'admin', 'nl')->willReturn('nl_mr');
+
+        $this->translator->trans('ms', [], 'admin', 'en')->willReturn('en_ms');
+        $this->translator->trans('ms', [], 'admin', 'de')->willReturn('de_ms');
+        $this->translator->trans('ms', [], 'admin', 'fr')->willReturn('fr_ms');
+        $this->translator->trans('ms', [], 'admin', 'nl')->willReturn('nl_ms');
+
+        $this->translator->trans('form_of_address', [], 'admin', 'en')->willReturn('en_form_of_address');
+        $this->translator->trans('form_of_address', [], 'admin', 'de')->willReturn('de_form_of_address');
+        $this->translator->trans('form_of_address', [], 'admin', 'fr')->willReturn('fr_form_of_address');
+        $this->translator->trans('form_of_address', [], 'admin', 'nl')->willReturn('nl_form_of_address');
+
+        $this->translator->trans('first_name', [], 'admin', 'en')->willReturn('en_first_name');
+        $this->translator->trans('first_name', [], 'admin', 'de')->willReturn('de_first_name');
+        $this->translator->trans('first_name', [], 'admin', 'fr')->willReturn('fr_first_name');
+        $this->translator->trans('first_name', [], 'admin', 'nl')->willReturn('nl_first_name');
+
+        $this->translator->trans('last_name', [], 'admin', 'en')->willReturn('en_last_name');
+        $this->translator->trans('last_name', [], 'admin', 'de')->willReturn('de_last_name');
+        $this->translator->trans('last_name', [], 'admin', 'fr')->willReturn('fr_last_name');
+        $this->translator->trans('last_name', [], 'admin', 'nl')->willReturn('nl_last_name');
+
+        $this->translator->trans('salutation', [], 'admin', 'en')->willReturn('en_salutation');
+        $this->translator->trans('salutation', [], 'admin', 'de')->willReturn('de_salutation');
+        $this->translator->trans('salutation', [], 'admin', 'fr')->willReturn('fr_salutation');
+        $this->translator->trans('salutation', [], 'admin', 'nl')->willReturn('nl_salutation');
+
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $this->loader->load(
+            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_localizations.xml'
+        );
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+        $this->assertCount(4, $formMetadata->getProperties());
+
+        $this->assertEquals('en_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('en'));
+        $this->assertEquals('de_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('de'));
+        $this->assertEquals('fr_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('fr'));
+        $this->assertEquals('nl_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('nl'));
+        $this->assertEquals('en_first_name', $formMetadata->getProperties()['firstName']->getTitle('en'));
+        $this->assertEquals('de_first_name', $formMetadata->getProperties()['firstName']->getTitle('de'));
+        $this->assertEquals('fr_first_name', $formMetadata->getProperties()['firstName']->getTitle('fr'));
+        $this->assertEquals('nl_first_name', $formMetadata->getProperties()['firstName']->getTitle('nl'));
+        $this->assertEquals('en_last_name', $formMetadata->getProperties()['lastName']->getTitle('en'));
+        $this->assertEquals('Deutscher Nachname', $formMetadata->getProperties()['lastName']->getTitle('de'));
+        $this->assertEquals('fr_last_name', $formMetadata->getProperties()['lastName']->getTitle('fr'));
+        $this->assertEquals('nl_last_name', $formMetadata->getProperties()['lastName']->getTitle('nl'));
+        $this->assertEquals('en_salutation', $formMetadata->getProperties()['salutation']->getTitle('en'));
+        $this->assertEquals('de_salutation', $formMetadata->getProperties()['salutation']->getTitle('de'));
+        $this->assertEquals('fr_salutation', $formMetadata->getProperties()['salutation']->getTitle('fr'));
+        $this->assertEquals('nl_salutation', $formMetadata->getProperties()['salutation']->getTitle('nl'));
+
+        $this->assertEquals(
+            [
+                'en' => 'en_mr',
+                'de' => 'de_mr',
+                'fr' => 'fr_mr',
+                'nl' => 'nl_mr',
+            ],
+            $formMetadata->getProperties()['formOfAddress']->getParameters()[1]['value'][0]['meta']['title']
+        );
+        $this->assertEquals(
+            [
+                'en' => 'en_ms',
+                'de' => 'de_ms',
+                'fr' => 'fr_ms',
+                'nl' => 'nl_ms',
+            ],
+            $formMetadata->getProperties()['formOfAddress']->getParameters()[1]['value'][1]['meta']['title']
+        );
 
         $this->assertNull($formMetadata->getSchema());
     }

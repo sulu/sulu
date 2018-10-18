@@ -5,27 +5,23 @@
      <properties>
          <property name="name" type="text_line" mandatory="true">
              <meta>
-                 <title lang="en">Name</title>
-                 <title lang="de">Name</title>
+                 <title>sulu_admin.name</title>
              </meta>
          </property>
      
          <property name="key" type="text_line">
              <meta>
-                 <title lang="en">Key</title>
-                 <title lang="de">Schlüssel</title>
+                 <title>sulu_admin.key</title>
              </meta>
          </property>
          <property name="description" type="text_editor">
              <meta>
-                 <title lang="en">Description</title>
-                 <title lang="de">Beschreibung</title>
+                 <title>sulu_admin.description</title>
              </meta>
          </property>
          <property name="medias" type="media_selection">
              <meta>
-                 <title lang="en">Media</title>
-                 <title lang="de">Medien</title>
+                 <title>sulu_media.media</title>
              </meta>
          </property>
      </properties>

@@ -18,7 +18,7 @@
             name="name"
             visibility="always"
             searchability="yes"
-            list:translation="sulu_security.name"
+            list:translation="sulu_admin.name"
         >
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu.model.role.class%</orm:entity-name>

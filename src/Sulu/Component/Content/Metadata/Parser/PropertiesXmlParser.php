@@ -17,6 +17,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Parse properties structure from an XML file.
@@ -30,9 +31,21 @@ class PropertiesXmlParser
      */
     private $expressionLanguage;
 
-    public function __construct(ExpressionLanguage $expressionLanguage)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string[]
+     */
+    private $locales;
+
+    public function __construct(ExpressionLanguage $expressionLanguage, TranslatorInterface $translator, array $locales)
     {
         $this->expressionLanguage = $expressionLanguage;
+        $this->translator = $translator;
+        $this->locales = array_keys($locales);
     }
 
     public function loadAndCreateProperties(
@@ -98,7 +111,7 @@ class PropertiesXmlParser
         $result['onInvalid'] = $this->getValueFromXPath('@onInvalid', $xpath, $node);
         $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
 
         return $result;
     }
@@ -161,7 +174,7 @@ class PropertiesXmlParser
         $result['type'] = 'block';
         $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
         $result['types'] = $this->loadTypes($templateKey, 'x:types/x:type', $tags, $xpath, $node);
 
         return $result;
@@ -180,7 +193,7 @@ class PropertiesXmlParser
 
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
         $result['properties'] = $this->loadProperties($templateKey, 'x:properties/x:*', $tags, $xpath, $node);
 
         return $result;
@@ -227,7 +240,7 @@ class PropertiesXmlParser
     {
         $result = $this->loadValues($xpath, $node, ['name']);
 
-        $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
         $result['properties'] = $this->loadProperties($templateKey, 'x:properties/x:*', $tags, $xpath, $node);
 
         return $result;
@@ -250,16 +263,45 @@ class PropertiesXmlParser
     private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
+        $metaNode = $xpath->query($path, $context)->item(0);
+
+        if (!$metaNode) {
+            return $result;
+        }
+
+        $result['title'] = $this->loadMetaTag('x:title', $xpath, $metaNode);
+        $result['info_text'] = $this->loadMetaTag('x:info_text', $xpath, $metaNode);
+        $result['placeholder'] = $this->loadMetaTag('x:placeholder', $xpath, $metaNode);
+
+        return $result;
+    }
+
+    private function loadMetaTag($path, \DOMXPath $xpath, \DOMNode $context = null)
+    {
+        $result = [];
+
+        $translationKey = null;
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
-            $attribute = $node->tagName;
             $lang = $this->getValueFromXPath('@lang', $xpath, $node);
 
-            if (!isset($result[$node->tagName])) {
-                $result[$attribute] = [];
+            if (!$lang) {
+                $translationKey = $node->textContent;
+
+                continue;
             }
-            $result[$attribute][$lang] = $node->textContent;
+
+            $result[$lang] = $node->textContent;
+        }
+
+        if (!$translationKey) {
+            return $result;
+        }
+
+        $missingLocales = array_diff($this->locales, array_keys($result));
+        foreach ($missingLocales as $missingLocale) {
+            $result[$missingLocale] = $this->translator->trans($translationKey, [], 'admin', $missingLocale);
         }
 
         return $result;
@@ -288,7 +330,7 @@ class PropertiesXmlParser
         $result = [
             'name' => $this->getValueFromXPath('@name', $xpath, $node),
             'type' => $this->getValueFromXPath('@type', $xpath, $node, 'string'),
-            'meta' => $this->loadMeta('x:meta/x:*', $xpath, $node),
+            'meta' => $this->loadMeta('x:meta', $xpath, $node),
         ];
 
         $expression = $this->getValueFromXPath('@expression', $xpath, $node);

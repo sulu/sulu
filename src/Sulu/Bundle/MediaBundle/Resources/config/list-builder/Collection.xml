@@ -7,7 +7,7 @@
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>
 
-        <property name="title" list:translation="sulu_media.title" visibility="yes" list:type="string">
+        <property name="title" list:translation="sulu_admin.title" visibility="yes" list:type="string">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>
