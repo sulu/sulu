@@ -248,8 +248,6 @@ abstract class ItemMetadata
         if (isset($this->titles[$locale])) {
             return $this->titles[$locale];
         }
-
-        return ucfirst($this->name);
     }
 
     /**
