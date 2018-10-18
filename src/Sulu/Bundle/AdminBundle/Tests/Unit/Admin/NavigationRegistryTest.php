@@ -126,10 +126,10 @@ class NavigationRegistryTest extends TestCase
         $this->routeRegistry->findRouteByName('route2_child2')->shouldBeCalled()
             ->willReturn($route2Child2->reveal());
 
-        $this->translator->trans('navigation_1', [], 'admin_backend')->willReturn('Navigation 1');
-        $this->translator->trans('navigation_2', [], 'admin_backend')->willReturn('Navigation 2');
-        $this->translator->trans('navigation_2_child_1', [], 'admin_backend')->willReturn('Navigation 2 - Child 1');
-        $this->translator->trans('navigation_2_child_2', [], 'admin_backend')->willReturn('Navigation 2 - Child 2');
+        $this->translator->trans('navigation_1', [], 'admin')->willReturn('Navigation 1');
+        $this->translator->trans('navigation_2', [], 'admin')->willReturn('Navigation 2');
+        $this->translator->trans('navigation_2_child_1', [], 'admin')->willReturn('Navigation 2 - Child 1');
+        $this->translator->trans('navigation_2_child_2', [], 'admin')->willReturn('Navigation 2 - Child 2');
 
         $navigation = $this->navigationRegistry->getNavigation();
         $this->assertCount(2, $navigation->getRoot()->getChildren());

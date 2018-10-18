@@ -1,4 +1,5 @@
 {
+    "sulu_content.webspaces": "Webspaces",
     "sulu_content.selection_label": "{count} {count, plural, =1 {page} other {pages}} selected",
     "sulu_content.selection_overlay_title": "Choose pages",
     "sulu_content.page_form_detail": "Details",
