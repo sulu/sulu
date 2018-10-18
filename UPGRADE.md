@@ -2,6 +2,27 @@
 
 ## dev-develop
 
+### Form Labels
+
+We do not generate the label for form fields from its name anymore. So you if you don't pass an explicit title to the
+property in the XML like below, there will be no label rendered at all.
+
+```xml
+<property name="title" type="text_line" />
+```
+
+In order to get the same title as before this change, you have to set it explicitly now:
+
+
+```xml
+<property name="title" type="text_line">
+    <meta>
+        <title lang="en">Title</title>
+        <title lang="de">Title</title>
+    </meta>
+</property>
+```
+
 ### Log Folder changes
 
 To match the symfony 4 folder structure the logs are now written into **`var/log`** instead of var/logs.
