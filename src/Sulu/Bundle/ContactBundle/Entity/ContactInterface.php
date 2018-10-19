@@ -590,4 +590,8 @@ interface ContactInterface
      * @return Collection|BankAccount[]
      */
     public function getBankAccounts();
+
+    public function setNote(?string $note): self;
+
+    public function getNote(): ?string;
 }
