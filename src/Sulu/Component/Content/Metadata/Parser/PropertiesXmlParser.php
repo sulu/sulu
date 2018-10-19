@@ -88,7 +88,6 @@ class PropertiesXmlParser
                 'cssClass',
                 'size',
                 'spaceAfter',
-                'label',
                 'disabledCondition',
                 'visibleCondition',
             ]
@@ -434,7 +433,6 @@ class PropertiesXmlParser
         $property->setTags($data['tags']);
         $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
-        $property->setLabel(array_key_exists('label', $data) ? $data['label'] : null);
         $property->setDisabledCondition(
             array_key_exists('disabledCondition', $data) ? $data['disabledCondition'] : null
         );

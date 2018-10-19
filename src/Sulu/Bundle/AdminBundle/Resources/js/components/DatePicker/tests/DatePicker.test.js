@@ -89,15 +89,15 @@ test('DatePicker should set class correctly when overlay was opened/closed', () 
     const input = mount(<DatePicker onChange={onChange} value={null} />);
 
     // overlay should be closed
-    expect(input.find('.rdt').hasClass('rdtOpen')).toBe(false);
+    expect(input.find('div.rdt').hasClass('rdtOpen')).toBe(false);
 
     // open dialog and check if class is set
     input.find('Input Icon span').simulate('click');
-    expect(input.find('.rdt').hasClass('rdtOpen')).toBe(true);
+    expect(input.find('div.rdt').hasClass('rdtOpen')).toBe(true);
 
     // choose a date and check if class was removed again
     input.find('.rdtPicker tbody tr td').first().simulate('click');
-    expect(input.find('.rdt').hasClass('rdtOpen')).toBe(false);
+    expect(input.find('div.rdt').hasClass('rdtOpen')).toBe(false);
 
     // check if value is in input
     expect(input.find('Input').prop('value')).toBe('03/26/2017');

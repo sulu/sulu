@@ -71,11 +71,6 @@ abstract class ItemMetadata
     protected $children = [];
 
     /**
-     * @var bool
-     */
-    protected $label = true;
-
-    /**
      * @var string
      */
     protected $disabledCondition = null;
@@ -217,23 +212,8 @@ abstract class ItemMetadata
         return $this->children;
     }
 
-    public function setLabel(?bool $label = null): self
-    {
-        if (null !== $label) {
-            $this->label = $label;
-        }
-
-        return $this;
-    }
-
-    public function getLabel(): ?bool
-    {
-        return $this->label;
-    }
-
     /**
-     * Return the localized name of this ItemMetadata or
-     * default to the name.
+     * Return the localized name of this ItemMetadata.
      *
      * @param string $locale Localization
      *
@@ -241,15 +221,9 @@ abstract class ItemMetadata
      */
     public function getTitle($locale)
     {
-        if (!$this->label) {
-            return;
-        }
-
         if (isset($this->titles[$locale])) {
             return $this->titles[$locale];
         }
-
-        return ucfirst($this->name);
     }
 
     /**

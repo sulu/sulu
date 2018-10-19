@@ -55,16 +55,9 @@ class FormXmlLoaderTest extends TestCase
             $formMetadata->getProperties()['formOfAddress']->getParameter(0)['name']
         );
         $this->assertSame(0, $formMetadata->getProperties()['formOfAddress']->getParameter(0)['value']);
-        $this->assertTrue($formMetadata->getProperties()['formOfAddress']->getLabel());
-
         $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
-        $this->assertTrue($formMetadata->getProperties()['firstName']->getLabel());
-
         $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
-        $this->assertTrue($formMetadata->getProperties()['lastName']->getLabel());
-
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
-        $this->assertTrue($formMetadata->getProperties()['salutation']->getLabel());
 
         $this->assertNull($formMetadata->getSchema());
     }
@@ -174,7 +167,6 @@ class FormXmlLoaderTest extends TestCase
         );
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
-        $this->assertFalse($formMetadata->getProperties()['name']->getLabel());
     }
 
     public function testLoadFormWithExpressionParam()

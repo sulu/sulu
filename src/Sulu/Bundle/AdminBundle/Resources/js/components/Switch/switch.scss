@@ -1,4 +1,3 @@
-$fontSize: 12px;
 $marginBottom: 10px;
 
 .label {
@@ -7,10 +6,10 @@ $marginBottom: 10px;
     cursor: pointer;
 
     & > div {
-        font-size: $fontSize;
+        font-size: 14px;
         margin-left: 10px;
         overflow: hidden;
-        line-height: normal;
+        line-height: 20px;
     }
 
     & + .label {

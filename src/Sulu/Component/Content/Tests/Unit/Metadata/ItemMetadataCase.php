@@ -15,9 +15,6 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
 {
     abstract public function getMetadata();
 
-    /**
-     * It should throw an exception if the named tag does not exist.
-     */
     public function testGetTagNotExist()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -25,9 +22,6 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
         $metadata->getTag('foo');
     }
 
-    /**
-     * It should get a named tag.
-     */
     public function testGetTag()
     {
         $metadata = $this->getMetadata();
@@ -36,9 +30,6 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals($tag, $metadata->getTag('foo'));
     }
 
-    /**
-     * It should return a localized title.
-     */
     public function testGetTitle()
     {
         $metadata = $this->getMetadata();
@@ -46,19 +37,13 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Foobar', $metadata->getTitle('fr'));
     }
 
-    /**
-     * It should return the name if the localized title does not exist.
-     */
-    public function testGetTitleNoLocalization()
+    public function testGetNotExistingTitle()
     {
         $metadata = $this->getMetadata();
         $metadata->setName('foobar');
-        $this->assertEquals('Foobar', $metadata->getTitle('es'));
+        $this->assertNull($metadata->getTitle('es'));
     }
 
-    /**
-     * It get a parameter.
-     */
     public function testGetParameters()
     {
         $metadata = $this->getMetadata();
@@ -68,9 +53,6 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals('param', $metadata->getParameter('param1'));
     }
 
-    /**
-     * It throws an exception if the parameter does not exist.
-     */
     public function testGetParametersInvalid()
     {
         $this->expectExceptionMessage('Unknown parameter "param5", known parameters: "param1"');

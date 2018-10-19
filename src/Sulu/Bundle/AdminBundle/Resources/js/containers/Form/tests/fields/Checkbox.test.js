@@ -13,6 +13,19 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
+test('Pass the label correctly to Checkbox component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const checkbox = shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            label="Test"
+            schemaOptions={{label: {title: 'Checkbox Title'}}}
+        />
+    );
+    expect(checkbox.find(CheckboxComponent).prop('children')).toEqual('Checkbox Title');
+});
+
 test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
@@ -54,6 +67,19 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 
     expect(changeSpy).toBeCalledWith(true);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Pass the label correctly to Toggler component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const checkbox = shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            label="Test"
+            schemaOptions={{label: {title: 'Toggler Title'}, type: {value: 'toggler'}}}
+        />
+    );
+    expect(checkbox.find(Toggler).prop('children')).toEqual('Toggler Title');
 });
 
 test('Pass the value of true correctly to Toggler component', () => {

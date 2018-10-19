@@ -195,7 +195,7 @@ class ResourceMetadataMapperTest extends TestCase
 
         $fieldType2 = $block->getTypes()['type2'];
         $this->assertSame($fieldType2->getName(), 'type2');
-        $this->assertSame($fieldType2->getTitle(), 'Type 2');
+        $this->assertSame($fieldType2->getTitle(), 'Type2');
         $this->assertCount(1, $fieldType2->getForm()->getItems());
     }
 
@@ -324,9 +324,6 @@ class ResourceMetadataMapperTest extends TestCase
         $component1->addChild($property2);
 
         $component2 = new ComponentMetadata('type2');
-        $component2->setTitles([
-            'de' => 'Type 2',
-        ]);
         $component2->addChild($property2);
 
         $block->addComponent($component1);
