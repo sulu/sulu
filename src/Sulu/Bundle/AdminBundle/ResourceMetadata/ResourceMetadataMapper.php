@@ -203,7 +203,7 @@ class ResourceMetadataMapper
 
         foreach ($property->getComponents() as $component) {
             $fieldType = new FieldType($component->getName());
-            $fieldType->setTitle($component->getTitle($locale));
+            $fieldType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
 
             $componentForm = new Form();
 
