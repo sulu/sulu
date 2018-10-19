@@ -175,13 +175,11 @@ class ContentRouteProvider implements RouteProviderInterface
                     && $this->requestAnalyzer->getResourceLocatorPrefix()
                 ) {
                     // redirect page to page without slash at the end
-                    $collection->add(
-                        'redirect_' . uniqid(),
-                        $this->getRedirectRoute(
-                            $request,
-                            $this->requestAnalyzer->getResourceLocatorPrefix() . rtrim($resourceLocator, '/')
-                        )
-                    );
+                    $url = $this->requestAnalyzer->getResourceLocatorPrefix() . rtrim($resourceLocator, '/');
+                    if ($request->getQueryString()) {
+                        $url .= '?' . $request->getQueryString();
+                    }
+                    $collection->add('redirect_' . uniqid(), $this->getRedirectRoute($request, $url));
                 } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
                     // redirect internal link
                     $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix()

@@ -30,6 +30,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -723,6 +724,50 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $route = $routes->getIterator()->current();
         $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('de/qwertz', $route->getDefaults()['url']);
+    }
+
+    public function testGetCollectionTrailingSlashWithQueryParams()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+
+        $localization = new Localization('de');
+        $this->requestAnalyzer->getPortal()->willReturn($portal);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $this->requestAnalyzer->getResourceLocator()->willReturn('/foo/');
+        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('/foo', 'webspace', 'de')->willReturn('some-uuid');
+        $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
+        $redirectTargetDocument->getResourceSegment()->willReturn('/foo');
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::INTERNAL);
+        $document->getRedirectTarget()->willReturn($redirectTargetDocument->reveal());
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+        $request = new Request(
+            [],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [], ['REQUEST_URI' => rawurlencode('/de/foo/'), 'QUERY_STRING' => 'bar=baz']
+        );
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/de/foo?bar=baz', $route->getDefaults()['url']);
     }
 
     public function testGetCollectionTrailingSlashForHomepage()
