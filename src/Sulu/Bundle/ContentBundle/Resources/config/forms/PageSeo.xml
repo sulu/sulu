@@ -42,26 +42,32 @@
             </meta>
         </property>
         <property name="noIndex" type="checkbox">
-            <meta>
-                <title>sulu_content.no_index</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_index</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>
         <property name="noFollow" type="checkbox">
-            <meta>
-                <title>sulu_content.no_follow</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_follow</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>
         <property name="hideInSitemap" type="checkbox">
-            <meta>
-                <title>sulu_content.hide_in_sitemap</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.hide_in_sitemap</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>
