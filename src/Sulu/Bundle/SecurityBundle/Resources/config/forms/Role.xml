@@ -5,15 +5,13 @@
     <properties>
         <property name="name" type="text_line" mandatory="true">
             <meta>
-                <title lang="en">Role title</title>
-                <title lang="de">Rollen Titel</title>
+                <title>sulu_admin.name</title>
             </meta>
         </property>
 
         <property name="system" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
             <meta>
-                <title lang="en">System</title>
-                <title lang="de">System</title>
+                <title>sulu_security.system</title>
             </meta>
             <params>
                 <param name="values" expression="service('sulu_security.security_systems_select_helper').getValues()"/>
@@ -23,16 +21,10 @@
 
         <section name="permissions_section">
             <meta>
-                <title lang="en">Berechtigungen</title>
-                <title lang="de">Permissions</title>
+                <title>sulu_security.system</title>
             </meta>
             <properties>
-                <property name="permissions" type="permissions">
-                    <meta>
-                        <title lang="en" />
-                        <title lang="de" />
-                    </meta>
-                </property>
+                <property name="permissions" type="permissions"/>
             </properties>
         </section>
     </properties>

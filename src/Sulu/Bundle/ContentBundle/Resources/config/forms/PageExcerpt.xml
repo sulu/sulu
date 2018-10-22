@@ -5,44 +5,37 @@
     <properties>
         <property name="title" type="text_line">
             <meta>
-                <title lang="en">Title</title>
-                <title lang="de">Titel</title>
+                <title>sulu_admin.title</title>
             </meta>
         </property>
         <property name="more" type="text_line">
             <meta>
-                <title lang="en">Text for more link</title>
-                <title lang="de">Text für weiterführenden Link</title>
+                <title>sulu_content.text_for_more_link</title>
             </meta>
         </property>
         <property name="description" type="text_editor">
             <meta>
-                <title lang="en">Description</title>
-                <title lang="de">Beschreibung</title>
+                <title>sulu_admin.description</title>
             </meta>
         </property>
         <property name="categories" type="category_list">
             <meta>
-                <title lang="de">Kategorien</title>
-                <title lang="en">Categories</title>
+                <title>sulu_category.categories</title>
             </meta>
         </property>
         <property name="tags" type="tag_list">
             <meta>
-                <title lang="de">Tags</title>
-                <title lang="en">Tags</title>
+                <title>sulu_tag.tags</title>
             </meta>
         </property>
         <property name="icon" type="media_selection">
             <meta>
-                <title lang="en">Icons</title>
-                <title lang="de">Icons</title>
+                <title>sulu_content.icons</title>
             </meta>
         </property>
         <property name="images" type="media_selection">
             <meta>
-                <title lang="en">Images</title>
-                <title lang="de">Bilder</title>
+                <title>sulu_content.images</title>
             </meta>
         </property>
     </properties>

@@ -40,7 +40,10 @@
     "sulu_admin.error": "Error",
     "sulu_admin.close": "Close",
     "sulu_admin.id": "ID",
+    "sulu_admin.key": "Key",
     "sulu_admin.title": "Title",
+    "sulu_admin.name": "Name",
+    "sulu_admin.description": "Description",
     "sulu_admin.creator": "Creator",
     "sulu_admin.created": "Created on",
     "sulu_admin.changer": "Author",
@@ -85,5 +88,6 @@
     "sulu_admin.none_selected": "None selected",
     "sulu_admin.column_options": "Column options",
     "sulu_admin.changelog_line_changer": "Last change {changer, select, undefined{} other{from {changer}}} at {changed}",
-    "sulu_admin.changelog_line_creator": "Created {creator, select, undefined{} other{by {creator}}} at {created}"
+    "sulu_admin.changelog_line_creator": "Created {creator, select, undefined{} other{by {creator}}} at {created}",
+    "sulu_admin.settings": "Settings"
 }

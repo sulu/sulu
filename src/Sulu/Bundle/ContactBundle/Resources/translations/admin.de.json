@@ -1,4 +1,5 @@
 {
+    "sulu_contact.contacts": "Kontakte",
     "sulu_contact.organizations": "Organisationen",
     "sulu_contact.organization": "Organisation",
     "sulu_contact.persons": "Personen",
@@ -27,12 +28,20 @@
     "sulu_contact.title": "Titel",
     "sulu_contact.salutation": "Grußformel",
     "sulu_contact.form_of_address": "Anrede",
+    "sulu_contact.male_form_of_address": "Herr",
+    "sulu_contact.female_form_of_address": "Frau",
     "sulu_contact.position": "Position",
     "sulu_contact.corporation": "Gesellschaft",
     "sulu_contact.main_contact": "Hauptansprechpartner",
     "sulu_contact.uid": "UID",
     "sulu_contact.register_number": "Firmenbuchnummer",
     "sulu_contact.jurisdiction": "Gerichtsstand",
+    "sulu_contact.note": "Notiz",
+    "sulu_contact.corporation": "Gesellschaft",
+    "sulu_contact.parent_company": "Dachgesellschaft",
+    "sulu_contact.uid": "UID",
+    "sulu_contact.upload_avatar_info_text": "Bild ablegen oder klicken um den Avatar zu ändern",
+    "sulu_contact.upload_logo_info_text": "Bild ablegen oder klicken um das Logo zu ändern",
     "sulu_contact.no_contact_selected": "Kein Kontakt ausgewählt",
     "sulu_contact.single_selection_overlay_title": "Kontakt auswählen"
 }

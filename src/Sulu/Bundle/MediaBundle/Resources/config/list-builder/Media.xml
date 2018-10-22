@@ -81,7 +81,7 @@
             <orm:joins ref="file"/>
         </property>
 
-        <property name="name" list:translation="sulu_media.name" visibility="always" searchability="yes">
+        <property name="name" list:translation="sulu_admin.name" visibility="always" searchability="yes">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
@@ -131,7 +131,7 @@
             </orm:field>
         </case-property>
 
-        <case-property name="title" list:translation="sulu_media.title" visibility="always" list:type="title" searchability="yes">
+        <case-property name="title" list:translation="sulu_admin.title" visibility="always" list:type="title" searchability="yes">
             <orm:field>
                 <orm:field-name>title</orm:field-name>
                 <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
@@ -146,7 +146,7 @@
             </orm:field>
         </case-property>
 
-        <property name="description" list:translation="sulu_media.description" searchability="yes">
+        <property name="description" list:translation="sulu_admin.description" searchability="yes">
             <orm:field-name>description</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersionMeta</orm:entity-name>
 

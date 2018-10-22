@@ -9,8 +9,7 @@
                     <params>
                         <param name="upload_text">
                             <meta>
-                                <info_text lang="en">Drop image or click to change logo</info_text>
-                                <info_text lang="de">Bild ablegen oder klicken um das Logo zu ändern</info_text>
+                                <info_text>sulu_contact.upload_logo_info_text</info_text>
                             </meta>
                         </param>
                         <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"/>
@@ -24,36 +23,31 @@
             <properties>
                 <property name="name" type="text_line" mandatory="true">
                     <meta>
-                        <title lang="en">Name</title>
-                        <title lang="de">Name</title>
+                        <title>sulu_admin.name</title>
                     </meta>
                 </property>
 
                 <property name="corporation" type="text_line">
                     <meta>
-                        <title lang="en">Corporation</title>
-                        <title lang="de">Gesellschaft</title>
+                        <title>sulu_contact.corporation</title>
                     </meta>
                 </property>
 
                 <property name="parent" type="single_account_selection" colspan="6">
                     <meta>
-                        <title lang="en">Parent company</title>
-                        <title lang="de">Dachgesellschaft</title>
+                        <title>sulu_contact.parent_company</title>
                     </meta>
                 </property>
 
                 <property name="uid" type="text_line" colspan="6">
                     <meta>
-                        <title lang="en">UID</title>
-                        <title lang="de">UID</title>
+                        <title>sulu_contact.uid</title>
                     </meta>
                 </property>
 
                 <property name="note" type="text_area">
                     <meta>
-                        <title lang="en">Note</title>
-                        <title lang="de">Notiz</title>
+                        <title>sulu_contact.note</title>
                     </meta>
                 </property>
             </properties>

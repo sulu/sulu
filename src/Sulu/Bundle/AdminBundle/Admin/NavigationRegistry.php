@@ -88,7 +88,7 @@ class NavigationRegistry
     {
         // create label from name when no label is set
         if (!$navigationItem->getLabel()) {
-            $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin_backend'));
+            $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin'));
         }
 
         // add child routes

@@ -21,6 +21,8 @@
                  class="Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser"
                  public="false">
             <argument type="service" id="sulu_core.expression_language" />
+            <argument type="service" id="translator" />
+            <argument>%sulu_core.translated_locales%</argument>
         </service>
 
         <service id="sulu_content.structure.schema_xml_parser"

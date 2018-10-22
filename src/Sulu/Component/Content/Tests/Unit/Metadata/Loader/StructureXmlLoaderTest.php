@@ -19,18 +19,24 @@ use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class StructureXmlLoaderTest extends TestCase
 {
     /**
-     * @var StructureXmlLoader
-     */
-    private $loader;
-
-    /**
      * @var ExpressionLanguage
      */
     private $expressionLanguage;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var StructureXmlLoader
+     */
+    private $loader;
 
     /**
      * @var ContentTypeManagerInterface
@@ -45,10 +51,15 @@ class StructureXmlLoaderTest extends TestCase
     public function setUp()
     {
         $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $propertiesXmlParser = new PropertiesXmlParser(
+            $this->expressionLanguage->reveal(),
+            $this->translator->reveal(),
+            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
+        );
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
 
-        $propertiesXmlParser = new PropertiesXmlParser($this->expressionLanguage->reveal());
         $schemaXmlParser = new SchemaXmlParser();
 
         $this->loader = new StructureXmlLoader(

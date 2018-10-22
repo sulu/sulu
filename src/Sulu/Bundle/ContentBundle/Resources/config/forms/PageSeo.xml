@@ -5,16 +5,13 @@
     <properties>
         <property name="search_result" type="search_result" colspan="9">
             <meta>
-                <title lang="en">Search Engine Results Pages Preview (SERP)</title>
-                <title lang="de">Suchergebnis Vorschau (SERP)</title>
+                <title>sulu_content.search_result</title>
             </meta>
         </property>
         <property name="title" type="text_line">
             <meta>
-                <title lang="en">Title (Meta title)</title>
-                <title lang="de">Titel (Meta title)</title>
-                <info_text lang="en">The meta title is limited to 55 characters.</info_text>
-                <info_text lang="de">Der Meta-Titel ist auf 55 Zeichen limitiert.</info_text>
+                <title>sulu_content.meta_title</title>
+                <info_text>sulu_content.meta_title_info_text</info_text>
             </meta>
             <params>
                 <param name="max_characters" value="55" />
@@ -22,10 +19,8 @@
         </property>
         <property name="description" type="text_area">
             <meta>
-                <title lang="en">Description (Meta Description)</title>
-                <title lang="de">Beschreibung (Meta Description)</title>
-                <info_text lang="en">The meta description is limited to 320 characters.</info_text>
-                <info_text lang="de">Die Meta-Beschreibung ist auf 320 Zeichen limitiert.</info_text>
+                <title>sulu_content.meta_description</title>
+                <info_text>sulu_content.meta_description_info_text</info_text>
             </meta>
             <params>
                 <param name="max_characters" value="320" />
@@ -33,10 +28,8 @@
         </property>
         <property name="keywords" type="text_line">
             <meta>
-                <title lang="en">Keywords (Meta Keywords)</title>
-                <title lang="de">Keywords (Meta Keywords)</title>
-                <info_text lang="en">Please use a maximum of 5 keywords, dependant from the content of the page, separated by commas.</info_text>
-                <info_text lang="de">Bitte benutze maximal 5 Keywords, abhängig vom Inhalt der Seite, getrennt durch Kommas.</info_text>
+                <title>sulu_content.meta_keywords</title>
+                <info_text>sulu_content.meta_keywords_info_text</info_text>
             </meta>
             <params>
                 <param name="segment_delimiter" value="," />
@@ -45,34 +38,36 @@
         </property>
         <property name="canonicalUrl" type="text_line">
             <meta>
-                <title lang="en">Canonical URL (Canonical Tag)</title>
-                <title lang="de">Canonical URL (Canonical Tag)</title>
+                <title>sulu_content.canonical_url</title>
             </meta>
         </property>
         <property name="noIndex" type="checkbox">
-            <meta>
-                <title lang="en">no-index (page will not be indexed by search engines)</title>
-                <title lang="de">no-index (Seite wird nicht von Suchmaschinen indiziert)</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_index</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>
         <property name="noFollow" type="checkbox">
-            <meta>
-                <title lang="en">no-follow (links on this page will not be followed by the search engine)</title>
-                <title lang="de">no-follow (Links auf der Seite wird von Suchmaschinen nicht gefolgt)</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.no_follow</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>
         <property name="hideInSitemap" type="checkbox">
-            <meta>
-                <title lang="en">Hide in sitemap</title>
-                <title lang="de">In Sitemap ausblenden</title>
-            </meta>
             <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_content.hide_in_sitemap</title>
+                    </meta>
+                </param>
                 <param name="type" value="toggler" />
             </params>
         </property>

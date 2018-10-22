@@ -25,6 +25,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class StructureMetadataFactoryTest extends TestCase
 {
@@ -69,6 +70,11 @@ class StructureMetadataFactoryTest extends TestCase
     private $expressionLanguage;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var StructureMetadata
      */
     private $apostropheStructure;
@@ -92,6 +98,7 @@ class StructureMetadataFactoryTest extends TestCase
         $this->defaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'other', 'default.xml']);
         $this->overriddenDefaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
 
+        $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->apostropheStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
         $this->somethingStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
@@ -187,7 +194,11 @@ class StructureMetadataFactoryTest extends TestCase
         $cacheLifeTimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
-        $propertiesXmlLoader = new PropertiesXmlParser($this->expressionLanguage->reveal());
+        $propertiesXmlLoader = new PropertiesXmlParser(
+            $this->expressionLanguage->reveal(),
+            $this->translator->reveal(),
+            []
+        );
         $schemaXmlLoader = new SchemaXmlParser($this->expressionLanguage->reveal());
 
         $xmlLoader = new StructureXmlLoader(
