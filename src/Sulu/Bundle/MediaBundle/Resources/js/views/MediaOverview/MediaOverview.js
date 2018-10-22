@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import {withToolbar, DatagridStore} from 'sulu-admin-bundle/containers';
+import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
@@ -26,6 +28,7 @@ class MediaOverview extends React.Component<ViewProps> {
     @observable mediaDatagridStore: DatagridStore;
     @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;
+    mediaDatagrid: ?ElementRef<typeof Datagrid>;
     disposer: () => void;
 
     static getDerivedRouteAttributes() {
@@ -139,6 +142,10 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     };
 
+    setMediaDatagridRef = (mediaDatagrid) => {
+        this.mediaDatagrid = mediaDatagrid;
+    };
+
     render() {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
@@ -147,6 +154,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     collectionStore={this.collectionStore}
                     locale={this.locale}
                     mediaDatagridAdapters={['media_card_overview', 'table']}
+                    mediaDatagridRef={this.setMediaDatagridRef}
                     mediaDatagridStore={this.mediaDatagridStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
@@ -199,6 +207,15 @@ export default withToolbar(MediaOverview, function() {
                 },
             }
             : undefined,
-        items: [],
+        items: [
+            {
+                type: 'button',
+                value: translate('sulu_admin.delete'),
+                icon: 'su-trash-alt',
+                disabled: this.mediaDatagridStore.selectionIds.length === 0,
+                loading: this.mediaDatagridStore.selectionDeleting,
+                onClick: this.mediaDatagrid.requestSelectionDelete,
+            },
+        ],
     };
 });

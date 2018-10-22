@@ -576,46 +576,11 @@ test('Should delete selected items when delete button is clicked', () => {
     const datagrid = mount(<Datagrid router={router} />);
     const datagridStore = datagrid.instance().datagridStore;
     datagridStore.selectionIds.push(1, 4, 6);
-    datagridStore.deleteSelection.mockReturnValue(Promise.resolve());
 
-    expect(getDeleteItem().loading).toBe(false);
-    const clickPromise = getDeleteItem().onClick();
-    expect(getDeleteItem().loading).toBe(true);
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
 
-    return clickPromise.then(() => {
-        expect(datagridStore.deleteSelection).toBeCalledWith();
-        expect(getDeleteItem().loading).toBe(false);
-    });
-});
-
-test('Should crash when deleting selected items returns a rejected promise', () => {
-    function getDeleteItem() {
-        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const Datagrid = require('../Datagrid').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                resourceKey: 'test',
-                adapters: ['table'],
-            },
-        },
-    };
-
-    const datagrid = mount(<Datagrid router={router} />);
-    const datagridStore = datagrid.instance().datagridStore;
-    datagridStore.selectionIds.push(1, 4, 6);
-    datagridStore.deleteSelection.mockReturnValue(Promise.reject());
-
-    expect(getDeleteItem().loading).toBe(false);
-    const clickPromise = getDeleteItem().onClick();
-    expect(getDeleteItem().loading).toBe(true);
-
-    return clickPromise.catch(() => {
-        expect(getDeleteItem().loading).toBe(false);
-    });
+    getDeleteItem().onClick();
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
 });

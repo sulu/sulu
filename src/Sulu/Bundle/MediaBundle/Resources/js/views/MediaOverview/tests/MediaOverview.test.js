@@ -129,8 +129,8 @@ jest.mock('sulu-admin-bundle/utils', () => ({
                 return 'of';
             case 'sulu_admin.object':
                 return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
+            case 'sulu_admin.delete':
+                return 'Delete';
         }
     },
 }));
@@ -309,4 +309,33 @@ test('The collectionId should be update along with the content when a collection
     expect(mediaOverview.instance().mediaDatagridStore.clearData).toBeCalled();
     expect(mediaOverview.instance().collectionDatagridStore.clearSelection).toBeCalled();
     expect(mediaOverview.instance().collectionDatagridStore.clearData).toBeCalled();
+});
+
+test('Should delete selected items when delete button is clicked', () => {
+    function getDeleteItem() {
+        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.value === 'Delete');
+    }
+
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+
+            },
+        },
+    };
+
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    const mediaDatagridStore = mediaOverview.instance().mediaDatagridStore;
+    mediaDatagridStore.selectionIds.push(1, 4, 6);
+
+    mediaOverview.update();
+    expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(false);
+
+    getDeleteItem().onClick();
+    mediaOverview.update();
+    expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(true);
 });

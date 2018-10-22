@@ -349,17 +349,17 @@ export default class DatagridStore {
     @action deleteSelection = () => {
         const deletePromises = [];
         this.selectionIds.forEach((id) => {
-            deletePromises.push(this.delete(id).catch((error) => {
+            deletePromises.push(ResourceRequester.delete(this.resourceKey, id, this.queryOptions).catch((error) => {
                 if (error.status !== 404) {
                     return Promise.reject(error);
                 }
             }));
         });
 
-        return Promise.all(deletePromises).then(() => {
+        return Promise.all(deletePromises).then(action(() => {
             this.selectionIds.forEach(this.remove);
             this.clearSelection();
-        });
+        }));
     };
 
     remove = (identifier: string | number): void => {
