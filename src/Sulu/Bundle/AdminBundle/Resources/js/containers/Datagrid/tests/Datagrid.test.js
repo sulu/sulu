@@ -148,6 +148,15 @@ test('Render Loader instead of Adapter if nothing was loaded yet', () => {
     expect(render(<Datagrid adapters={['table']} store={datagridStore} />)).toMatchSnapshot();
 });
 
+test('Do not render Loader instead of Adapter if no page count is given', () => {
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.loading = true;
+    datagridStore.pageCount = undefined;
+
+    expect(render(<Datagrid adapters={['table']} store={datagridStore} />)).toMatchSnapshot();
+});
+
 test('Render TableAdapter with correct values', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     mockStructureStrategyData = [

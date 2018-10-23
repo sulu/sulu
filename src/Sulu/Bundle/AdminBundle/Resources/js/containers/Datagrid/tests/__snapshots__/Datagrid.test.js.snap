@@ -1,5 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Do not render Loader instead of Adapter if no page count is given 1`] = `
+Array [
+  <div
+    class="headerContainer"
+  >
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
+      >
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+    </div>
+  </div>,
+  <div
+    class="datagrid"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>,
+]
+`;
+
 exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
 Array [
   <div
