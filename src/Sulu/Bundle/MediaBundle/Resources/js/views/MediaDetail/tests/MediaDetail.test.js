@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import React from 'react';
 import {observable} from 'mobx';
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -73,9 +73,9 @@ test('Render a loading MediaDetail view', () => {
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = true;
 
-    expect(mount(
+    expect(render(
         <MediaDetail resourceStore={resourceStore} router={router} />
-    ).render()).toMatchSnapshot();
+    )).toMatchSnapshot();
 });
 
 test('Should change locale via locale chooser', () => {

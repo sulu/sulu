@@ -5,10 +5,12 @@ import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/
 import {SingleMediaUpload} from './containers/Form';
 import MediaOverview from './views/MediaOverview';
 import MediaDetail from './views/MediaDetail';
+import MediaHistory from './views/MediaHistory';
 import MediaSelection from './containers/MediaSelection';
 
 viewRegistry.add('sulu_media.overview', MediaOverview);
 viewRegistry.add('sulu_media.detail', MediaDetail);
+viewRegistry.add('sulu_media.history', MediaHistory);
 
 datagridAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
 datagridAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);

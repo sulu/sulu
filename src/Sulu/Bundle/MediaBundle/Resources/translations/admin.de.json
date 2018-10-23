@@ -27,5 +27,6 @@
     "sulu_media.mime_type": "MIME-Typ",
     "sulu_media.license": "Lizenz",
     "sulu_media.copyright": "Copyright Informationen",
-    "sulu_media.taxonomies": "Taxonomien"
+    "sulu_media.taxonomies": "Taxonomien",
+    "sulu_media.history": "Verlauf"
 }

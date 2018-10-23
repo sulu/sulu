@@ -1,6 +1,7 @@
 // @flow
 import {action, autorun, observable, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import log from 'loglevel';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions} from './types';
 
@@ -63,6 +64,8 @@ export default class ResourceStore {
         if (locale) {
             options.locale = locale.get();
         }
+
+        log.info('ResourceStore loads "' + this.resourceKey + '" data with the ID "' + id + '"');
 
         const promise = this.idQueryParameter
             ? ResourceRequester.get(

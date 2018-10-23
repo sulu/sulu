@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a MediaHistory view 1`] = `
+<div
+  class="mediaHistory"
+>
+  <div
+    class="tableContainer"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-eye"
+                class="su-eye"
+              />
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_media.version
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_admin.created
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-eye"
+                  class="su-eye"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              sulu_media.version 2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              10/23/2018, 10:25:00 AM
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-eye"
+                  class="su-eye"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              sulu_media.version 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              10/23/2018, 10:18:00 AM
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`Render a loading MediaHistory view 1`] = `
+<div
+  class="mediaHistory"
+>
+  <div
+    class="spinner"
+    style="width:40px;height:40px"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
+</div>
+`;
