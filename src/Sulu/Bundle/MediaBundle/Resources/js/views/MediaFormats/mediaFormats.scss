@@ -1,0 +1,7 @@
+@import 'sulu-admin-bundle/containers/Application/variables.scss';
+
+.media-formats {
+    padding: $viewPadding;
+    max-width: $viewMaxWidth;
+    min-width: $viewMinWidth;
+}

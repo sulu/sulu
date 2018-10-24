@@ -85,6 +85,9 @@ class MediaAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_media.information_taxonomy')
                 ->addOption('locales', $mediaLocales)
                 ->setParent('sulu_media.form'),
+            (new Route('sulu_media.form.formats', '/formats', 'sulu_media.formats'))
+                ->addOption('tabTitle', 'sulu_media.formats')
+                ->setParent('sulu_media.form'),
             (new Route('sulu_media.form.history', '/history', 'sulu_media.history'))
                 ->addOption('tabTitle', 'sulu_media.history')
                 ->setParent('sulu_media.form'),
