@@ -122,31 +122,13 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'big-squared'});
-        $this->assertEquals('big-squared', $response->{'big-squared'}->key);
-        $this->assertEquals('My big squared format', $response->{'big-squared'}->title);
-        $this->assertEquals(400, $response->{'big-squared'}->scale->x);
-        $this->assertEquals(400, $response->{'big-squared'}->scale->y);
-        $this->assertEquals('outbound', $response->{'big-squared'}->scale->mode);
-        $this->assertEquals(30, $response->{'big-squared'}->options->cropX);
-        $this->assertEquals(31, $response->{'big-squared'}->options->cropY);
-        $this->assertEquals(32, $response->{'big-squared'}->options->cropHeight);
-        $this->assertEquals(33, $response->{'big-squared'}->options->cropWidth);
+        $this->assertEquals(30, $response->{'big-squared'}->cropX);
+        $this->assertEquals(31, $response->{'big-squared'}->cropY);
+        $this->assertEquals(32, $response->{'big-squared'}->cropHeight);
+        $this->assertEquals(33, $response->{'big-squared'}->cropWidth);
 
-        $this->assertNotNull($response->{'small-inset'});
-        $this->assertEquals('small-inset', $response->{'small-inset'}->key);
-        $this->assertEquals('My small inset format', $response->{'small-inset'}->title);
-        $this->assertEquals(50, $response->{'small-inset'}->scale->x);
-        $this->assertEquals(50, $response->{'small-inset'}->scale->y);
-        $this->assertEquals('inset', $response->{'small-inset'}->scale->mode);
-        $this->assertNull($response->{'small-inset'}->options);
-
-        $this->assertNotNull($response->{'one-side'});
-        $this->assertEquals('one-side', $response->{'one-side'}->key);
-        $this->assertEquals('My one sided format', $response->{'one-side'}->title);
-        $this->assertEquals(200, $response->{'one-side'}->scale->x);
-        $this->assertNull($response->{'one-side'}->scale->y);
-        $this->assertEquals('outbound', $response->{'one-side'}->scale->mode);
-        $this->assertNull($response->{'one-side'}->options);
+        $this->assertObjectNotHasAttribute('small-inset', $response);
+        $this->assertObjectNotHasAttribute('one-side', $response);
     }
 
     public function testCGetWithoutLocale()
@@ -182,15 +164,10 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertEquals('small-inset', $response->key);
-        $this->assertEquals('Mein kleines inset Format', $response->title);
-        $this->assertEquals(50, $response->scale->x);
-        $this->assertEquals(50, $response->scale->y);
-        $this->assertEquals('inset', $response->scale->mode);
-        $this->assertEquals(10, $response->options->cropX);
-        $this->assertEquals(15, $response->options->cropY);
-        $this->assertEquals(100, $response->options->cropWidth);
-        $this->assertEquals(100, $response->options->cropHeight);
+        $this->assertEquals(10, $response->cropX);
+        $this->assertEquals(15, $response->cropY);
+        $this->assertEquals(100, $response->cropWidth);
+        $this->assertEquals(100, $response->cropHeight);
 
         // Test if the options have really been persisted
 
@@ -208,10 +185,10 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'small-inset'});
-        $this->assertEquals(10, $response->{'small-inset'}->options->cropX);
-        $this->assertEquals(15, $response->{'small-inset'}->options->cropY);
-        $this->assertEquals(100, $response->{'small-inset'}->options->cropWidth);
-        $this->assertEquals(100, $response->{'small-inset'}->options->cropHeight);
+        $this->assertEquals(10, $response->{'small-inset'}->cropX);
+        $this->assertEquals(15, $response->{'small-inset'}->cropY);
+        $this->assertEquals(100, $response->{'small-inset'}->cropWidth);
+        $this->assertEquals(100, $response->{'small-inset'}->cropHeight);
     }
 
     public function testPutWithEmptyFormatOptions()
@@ -230,12 +207,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertEquals('big-squared', $response->key);
-        $this->assertEquals('My big squared format', $response->title);
-        $this->assertEquals(400, $response->scale->x);
-        $this->assertEquals(400, $response->scale->y);
-        $this->assertEquals('outbound', $response->scale->mode);
-        $this->assertNull($response->options);
+        $this->assertEquals([], $response);
 
         // Test if the options have really been persisted
         $client = $this->createAuthenticatedClient();
@@ -251,8 +223,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertNotNull($response->{'big-squared'});
-        $this->assertNull($response->{'big-squared'}->options);
+        $this->assertObjectNotHasAttribute('big-squared', $response);
     }
 
     public function testPutNotExistingFormat()

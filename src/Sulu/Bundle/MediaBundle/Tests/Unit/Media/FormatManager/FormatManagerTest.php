@@ -227,7 +227,6 @@ class FormatManagerTest extends TestCase
         $this->assertEquals(false, $format['internal']);
         $this->assertEquals('My image format for testing', $format['title']);
         $this->assertEquals(['x' => 640, 'y' => 480, 'mode' => 'outbound'], $format['scale']);
-        $this->assertEquals(['my-option' => 'my-value'], $format['options']);
     }
 
     public function testGetFormatDefinitionNotExistingTitle()
@@ -256,7 +255,6 @@ class FormatManagerTest extends TestCase
                     'y' => 480,
                     'mode' => 'outbound',
                 ],
-                'options' => null,
             ],
             $formats['640x480']
         );
@@ -271,7 +269,6 @@ class FormatManagerTest extends TestCase
                     'y' => 480,
                     'mode' => 'outbound',
                 ],
-                'options' => null,
             ],
             $formats['50x50']
         );

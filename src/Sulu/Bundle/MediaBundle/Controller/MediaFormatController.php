@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -39,10 +39,8 @@ class MediaFormatController extends RestController implements ClassResourceInter
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $formatOptions = $this->getFormatOptionsManager()->getAll($id);
-        $formats = $this->getFormatManager()->getFormatDefinitions($locale, $formatOptions);
 
-        // TODO only return $formatOptions instead
-        return $this->handleView($this->view($formats));
+        return $this->handleView($this->view($formatOptions));
     }
 
     /**
@@ -67,10 +65,8 @@ class MediaFormatController extends RestController implements ClassResourceInter
         $this->get('doctrine.orm.entity_manager')->flush();
 
         $formatOptions = $this->getFormatOptionsManager()->get($id, $key);
-        $format = $this->getFormatManager()->getFormatDefinition($key, $locale, $formatOptions);
 
-        // TODO only return $formatOptions instead
-        return $this->handleView($this->view($format));
+        return $this->handleView($this->view($formatOptions));
     }
 
     /**

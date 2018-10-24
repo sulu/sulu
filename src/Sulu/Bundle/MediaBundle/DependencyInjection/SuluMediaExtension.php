@@ -98,7 +98,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         'formats' => [
                             'form' => [],
                             'endpoint' => 'get_formats',
-                        ]
+                        ],
                     ],
                 ]
             );
