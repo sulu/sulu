@@ -5,7 +5,7 @@
 
     <key>article</key>
 
-    <view>::default</view>
+    <view>default</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

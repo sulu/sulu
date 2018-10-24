@@ -5,7 +5,7 @@
 
     <key>invalidhtml</key>
 
-    <view>::invalidhtml</view>
+    <view>invalidhtml</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

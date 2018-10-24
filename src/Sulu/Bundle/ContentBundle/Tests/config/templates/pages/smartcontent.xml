@@ -5,7 +5,7 @@
 
     <key>smartcontent</key>
 
-    <view>::smartcontent</view>
+    <view>smartcontent</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

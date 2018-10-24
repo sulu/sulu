@@ -5,7 +5,7 @@
 
     <key>html5</key>
 
-    <view>::html5</view>
+    <view>html5</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

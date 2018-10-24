@@ -9,7 +9,7 @@
         <title lang="en">Standard page</title>
     </meta>
 
-    <view>::default</view>
+    <view>default</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
