@@ -45,6 +45,7 @@ class CachingTest extends SuluTestCase
         // first request should be cache miss
         $client->request('GET', '/');
         $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
         $this->assertContains('X-Sulu-Target-Group', $response->getVary());
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
@@ -69,6 +70,8 @@ class CachingTest extends SuluTestCase
 
         $client->request('GET', '/');
         $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
         $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
         $this->assertCount(0, $response->headers->getCookies());
 

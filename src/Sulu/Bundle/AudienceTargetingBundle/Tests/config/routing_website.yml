@@ -3,7 +3,7 @@ sulu_category_api:
     defaults:
         _controller: FrameworkBundle:Template:template
         _requestAnalyzer: false
-        template: "::empty.html.twig"
+        template: "empty.html.twig"
         maxAge: 60
         sharedAge: 60
 
