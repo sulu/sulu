@@ -11,7 +11,7 @@ sulu_media.media_preview:
     parent: sulu_media.media
     resource: Sulu\Bundle\MediaBundle\Controller\MediaPreviewController
 
-sulu_media.format:
+sulu_media.media_format:
     type: rest
     parent: sulu_media.media
-    resource: Sulu\Bundle\MediaBundle\Controller\FormatController
+    resource: Sulu\Bundle\MediaBundle\Controller\MediaFormatController

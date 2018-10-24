@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -20,9 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Makes the image formats, with the format options available through the REST API.
+ * @RouteResource("Format")
  */
-class FormatController extends RestController implements ClassResourceInterface
+class MediaFormatController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -40,6 +41,7 @@ class FormatController extends RestController implements ClassResourceInterface
         $formatOptions = $this->getFormatOptionsManager()->getAll($id);
         $formats = $this->getFormatManager()->getFormatDefinitions($locale, $formatOptions);
 
+        // TODO only return $formatOptions instead
         return $this->handleView($this->view($formats));
     }
 
@@ -67,6 +69,7 @@ class FormatController extends RestController implements ClassResourceInterface
         $formatOptions = $this->getFormatOptionsManager()->get($id, $key);
         $format = $this->getFormatManager()->getFormatDefinition($key, $locale, $formatOptions);
 
+        // TODO only return $formatOptions instead
         return $this->handleView($this->view($format));
     }
 

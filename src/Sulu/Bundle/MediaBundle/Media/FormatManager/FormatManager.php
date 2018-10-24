@@ -208,6 +208,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     /**
      * {@inheritdoc}
      */
+    // TODO remove $formatOptions
     public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
     {
         if (!isset($this->formats[$formatKey])) {
@@ -236,6 +237,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     /**
      * {@inheritdoc}
      */
+    // TODO remove $formatOptions
     public function getFormatDefinitions($locale = null, array $formatOptions = [])
     {
         $definitionsArray = [];

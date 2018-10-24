@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class FormatControllerTest extends SuluTestCase
+class MediaFormatControllerTest extends SuluTestCase
 {
     /**
      * @var EntityManager
