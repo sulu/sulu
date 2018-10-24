@@ -8,15 +8,15 @@ type Props = {
     /** A ButtonCell is always associated with a row */
     rowId: string | number,
     icon: string,
-    onClick?: (rowId: string | number) => void,
+    onClick: ?(rowId: string | number) => void,
 };
 
 export default class ButtonCell extends React.PureComponent<Props> {
     handleClick = () => {
-        const {rowId} = this.props;
+        const {rowId, onClick} = this.props;
 
-        if (this.props.onClick) {
-            this.props.onClick(rowId);
+        if (onClick) {
+            onClick(rowId);
         }
     };
 
