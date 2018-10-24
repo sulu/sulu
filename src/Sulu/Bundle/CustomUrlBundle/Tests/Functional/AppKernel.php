@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional;
+
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 class AppKernel extends SuluTestKernel

@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional;
+
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Symfony\Component\HttpKernel\KernelInterface;

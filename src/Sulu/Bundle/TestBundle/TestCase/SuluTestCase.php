@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Functional;
+namespace Sulu\Bundle\TestBundle\TestCase;
 
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Component\HttpKernel\SuluKernel;

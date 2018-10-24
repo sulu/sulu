@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Tests;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
@@ -23,14 +23,12 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpFoundation\Cookie;
 
-require_once __DIR__ . '/../app/AppCache.php';
-
 class CachingTest extends SuluTestCase
 {
     public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
-        $cacheKernel = new \AppCache($this->getKernel(['sulu_context' => 'website']), true);
+        $cacheKernel = new AppCache($this->getKernel(['sulu_context' => 'website']), true);
         $cookieJar = new CookieJar();
         $client = new Client($cacheKernel, [], null, $cookieJar);
 

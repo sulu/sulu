@@ -9,7 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+
+namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
 use Ferrandini\Urlizer;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;

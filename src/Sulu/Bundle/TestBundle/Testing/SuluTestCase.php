@@ -26,7 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
- * Base test case for functional tests in Sulu.
+ * @deprecated use Sulu\Bundle\TestBundle\TestCase\SuluTestCase instead
  */
 abstract class SuluTestCase extends KernelTestCase
 {
