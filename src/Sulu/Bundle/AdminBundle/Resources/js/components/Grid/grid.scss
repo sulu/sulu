@@ -2,7 +2,7 @@ $itemMarginRight: 20px;
 
 .grid {
     margin-right: -$itemMarginRight;
-    overflow: hidden;
+    overflow: visible;
 
     &::after {
         content: '';
