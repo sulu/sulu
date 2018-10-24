@@ -225,6 +225,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         }
 
         $formatArray = [
+            'internal' => $format['internal'],
             'key' => $format['key'],
             'title' => $title,
             'scale' => $format['scale'],

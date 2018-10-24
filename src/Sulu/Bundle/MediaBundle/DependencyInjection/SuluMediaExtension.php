@@ -95,6 +95,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             'datagrid' => Collection::class,
                             'endpoint' => 'get_collections',
                         ],
+                        'formats' => [
+                            'form' => [],
+                            'endpoint' => 'get_formats',
+                        ]
                     ],
                 ]
             );

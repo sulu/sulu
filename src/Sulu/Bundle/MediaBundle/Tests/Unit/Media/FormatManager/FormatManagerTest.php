@@ -59,6 +59,7 @@ class FormatManagerTest extends TestCase
         $this->supportedMimeTypes = ['image/*', 'video/*'];
         $this->formats = [
             '640x480' => [
+                'internal' => false,
                 'key' => '640x480',
                 'meta' => [
                     'title' => [
@@ -78,6 +79,7 @@ class FormatManagerTest extends TestCase
                 ],
             ],
             '50x50' => [
+                'internal' => true,
                 'key' => '50x50',
                 'meta' => [
                     'title' => [],
@@ -222,6 +224,7 @@ class FormatManagerTest extends TestCase
         $format = $this->formatManager->getFormatDefinition('640x480', 'en', ['my-option' => 'my-value']);
 
         $this->assertEquals('640x480', $format['key']);
+        $this->assertEquals(false, $format['internal']);
         $this->assertEquals('My image format for testing', $format['title']);
         $this->assertEquals(['x' => 640, 'y' => 480, 'mode' => 'outbound'], $format['scale']);
         $this->assertEquals(['my-option' => 'my-value'], $format['options']);
@@ -245,6 +248,7 @@ class FormatManagerTest extends TestCase
 
         $this->assertEquals(
             [
+                'internal' => false,
                 'key' => '640x480',
                 'title' => 'Mein Bildformat zum Testen',
                 'scale' => [
@@ -259,6 +263,7 @@ class FormatManagerTest extends TestCase
 
         $this->assertEquals(
             [
+                'internal' => true,
                 'key' => '50x50',
                 'title' => '50x50',
                 'scale' => [

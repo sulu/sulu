@@ -8,6 +8,7 @@ import {withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
+import formatStore from '../../stores/FormatStore';
 import mediaFormatsStyles from './mediaFormats.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -19,6 +20,7 @@ type Props = ViewProps & {
 @observer
 class MediaFormats extends React.Component<Props> {
     @observable copySuccessThumbnailKey: ?string | number;
+    @observable formats: ?Array<Object>;
 
     constructor(props: Props) {
         super(props);
@@ -37,6 +39,12 @@ class MediaFormats extends React.Component<Props> {
         router.bind('locale', locale);
     }
 
+    componentDidMount() {
+        formatStore.loadFormats().then(action((formats) => {
+            this.formats = formats;
+        }));
+    }
+
     @computed get thumbnails() {
         return this.props.resourceStore.data.thumbnails;
     }
@@ -52,6 +60,7 @@ class MediaFormats extends React.Component<Props> {
     };
 
     render() {
+        const {formats} = this;
         const {resourceStore} = this.props;
 
         const buttons = [
@@ -67,26 +76,31 @@ class MediaFormats extends React.Component<Props> {
 
         return (
             <div className={mediaFormatsStyles.mediaFormats}>
-                {resourceStore.loading
+                {resourceStore.loading || !formats
                     ? <Loader />
                     : <Table buttons={buttons}>
                         <Table.Header>
-                            <Table.HeaderCell>{translate('sulu_media.format')}</Table.HeaderCell>
+                            <Table.HeaderCell>{translate('sulu_admin.title')}</Table.HeaderCell>
+                            <Table.HeaderCell>{translate('sulu_admin.key')}</Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
-                            {Object.keys(this.thumbnails).map((thumbnailKey: string) => (
-                                <Table.Row
-                                    buttons={
-                                        this.copySuccessThumbnailKey === thumbnailKey
-                                            ? [buttons[0], {icon: 'su-check', onClick: undefined}]
-                                            : buttons
-                                    }
-                                    id={thumbnailKey}
-                                    key={thumbnailKey}
-                                >
-                                    <Table.Cell>{thumbnailKey}</Table.Cell>
-                                </Table.Row>
-                            ))}
+                            {formats
+                                .filter((format) => !format.internal)
+                                .map((format: Object) => (
+                                    <Table.Row
+                                        buttons={
+                                            this.copySuccessThumbnailKey === format.key
+                                                ? [buttons[0], {icon: 'su-check', onClick: undefined}]
+                                                : buttons
+                                        }
+                                        id={format.key}
+                                        key={format.key}
+                                    >
+                                        <Table.Cell>{format.title}</Table.Cell>
+                                        <Table.Cell>{format.key}</Table.Cell>
+                                    </Table.Row>
+                                ))
+                            }
                         </Table.Body>
                     </Table>
                 }
