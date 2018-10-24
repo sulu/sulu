@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Analytics;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
 use Functional\BaseFunctional;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;

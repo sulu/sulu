@@ -1,5 +1,7 @@
 <?php
 
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Entity;
+
 /*
  * This file is part of Sulu.
  *

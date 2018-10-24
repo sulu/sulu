@@ -18,8 +18,7 @@
     </filter>
 
     <php>
-        <server name="KERNEL_DIR" value="Tests/app"/>
-        <var name="APP_DB" value="mysql"/>
+        <env name="KERNEL_CLASS" value="Sulu\Bundle\RouteBundle\Tests\Functional\AppKernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>

@@ -9,9 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Command;
+namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Command;
 
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
+use Sulu\Bundle\SecurityBundle\Command\CreateUserCommand;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

@@ -76,7 +76,9 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
             'sulu_context' => 'admin',
         ], $this->getKernelConfiguration(), $options);
 
-        $kernel = new \AppKernel(
+        $kernelClass = getenv('KERNEL_CLASS') ?: '\AppKernel';
+
+        $kernel = new $kernelClass(
             $options['environment'],
             $options['debug'],
             $options['sulu_context']
@@ -150,6 +152,19 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
      */
     private function requireKernel()
     {
+        $kernelClass = getenv('KERNEL_CLASS');
+
+        if ($kernelClass) {
+            if (!class_exists($kernelClass)) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Could not find test kernel class "%s"',
+                    implode('", "', $kernelClass)
+                ));
+            }
+
+            return;
+        }
+
         if ($kernelPath = getenv('KERNEL_DIR')) {
             $kernelPaths = [$kernelPath . '/AppKernel.php'];
         } else {
@@ -219,6 +234,9 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
                     $debugLength,
                     $message
                 );
+            } else {
+                $message = explode(PHP_EOL, $message);
+                $message = implode(PHP_EOL, array_slice($message, 0, $debugLength));
             }
         }
 

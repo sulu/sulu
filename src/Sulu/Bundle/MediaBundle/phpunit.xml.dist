@@ -18,7 +18,7 @@
     </filter>
 
     <php>
-        <server name="KERNEL_DIR" value="Tests/app"/>
+        <env name="KERNEL_CLASS" value="Sulu\Bundle\MediaBundle\Tests\Functional\AppKernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>

@@ -145,11 +145,7 @@
     "autoload": {
         "psr-0": {
             "Sulu\\": "src/"
-        },
-        "exclude-from-classmap": [
-            "src/Sulu/Component/*/Tests/",
-            "src/Sulu/Bundle/*/Tests/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

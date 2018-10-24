@@ -9,8 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Command;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Command;
 
+use Sulu\Bundle\SnippetBundle\Command\SnippetLocaleCopyCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;

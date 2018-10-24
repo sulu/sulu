@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;

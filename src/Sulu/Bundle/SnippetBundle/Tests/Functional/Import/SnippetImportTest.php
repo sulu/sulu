@@ -55,8 +55,8 @@ class SnippetImportTest extends SuluTestCase
      */
     protected function setUp()
     {
-        $this->distPath = __DIR__ . '/../../app/Resources/import/export.xliff.dist';
-        $this->path = __DIR__ . '/../../app/Resources/import/export.xliff';
+        $this->distPath = __DIR__ . '/../../config/import/export.xliff.dist';
+        $this->path = __DIR__ . '/../../config/import/export.xliff';
 
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');

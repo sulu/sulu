@@ -1,6 +1,6 @@
 framework:
     secret: secret
-    router: { resource: '%kernel.root_dir%/config/routing.yml' }
+    router: { resource: '%kernel.project_dir%/config/routing.yml' }
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -12,25 +12,6 @@ monolog:
     handlers:
         main:
             type:  'null'
-
-sulu_core:
-    cache_dir: '%kernel.root_dir%/cache/sulu'
-    webspace:
-        config_dir: "%kernel.root_dir%/Resources/webspaces"
-    content:
-        structure:
-             default_type:
-                snippet: 'default'
-             paths:
-                 pages:
-                     path: '%kernel.root_dir%/Resources/pages'
-                     type: page
-                 homepage:
-                     path: '%kernel.root_dir%/Resources/pages'
-                     type: home
-                 templates:
-                     path: '%kernel.root_dir%/Resources/snippets'
-                     type: snippet
 
 doctrine:
     orm:
