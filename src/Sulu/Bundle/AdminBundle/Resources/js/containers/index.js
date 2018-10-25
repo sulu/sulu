@@ -18,6 +18,7 @@ import MultiSelect from './MultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
+import SingleDatagridOverlay from './SingleDatagridOverlay';
 
 export type {
     DatagridAdapterProps,
@@ -42,6 +43,7 @@ export {
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     SingleAutoComplete,
+    SingleDatagridOverlay,
     Sidebar,
     sidebarStore,
     sidebarRegistry,

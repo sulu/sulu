@@ -40,6 +40,12 @@ exports[`Render the MediaCollection 1`] = `
             role="button"
             tabindex="0"
           />
+          <span
+            aria-label="su-arrows-alt"
+            class="su-arrows-alt clickable icon"
+            role="button"
+            tabindex="0"
+          />
         </div>
       </div>
       <div

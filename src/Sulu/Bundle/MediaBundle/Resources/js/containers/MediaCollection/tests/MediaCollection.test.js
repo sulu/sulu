@@ -12,28 +12,8 @@ const SETTINGS_KEY = 'media_collection_test';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
-        Form: require('sulu-admin-bundle/containers/Form').default,
-        FormStore: jest.fn(function(resourceStore) {
-            switch (resourceStore.resourceKey) {
-                case 'collections':
-                    this.schema = {
-                        title: {
-                            type: 'text_line',
-                        },
-                        description: {
-                            type: 'text_line',
-                        },
-                    };
-                    break;
-                default:
-                    this.schema = {};
-            }
-
-            this.data = resourceStore.data;
-            this.isFieldModified = jest.fn();
-        }),
-        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
+        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -115,9 +95,30 @@ jest.mock('sulu-admin-bundle/containers', () => {
         FlatStructureStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
         ).default,
+        Form: require('sulu-admin-bundle/containers/Form').default,
+        FormStore: jest.fn(function(resourceStore) {
+            switch (resourceStore.resourceKey) {
+                case 'collections':
+                    this.schema = {
+                        title: {
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    };
+                    break;
+                default:
+                    this.schema = {};
+            }
+
+            this.data = resourceStore.data;
+            this.isFieldModified = jest.fn();
+        }),
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
+        SingleDatagridOverlay: jest.fn(() => null),
     };
 });
 
@@ -147,6 +148,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.resourceKey = resourceKey;
         this.destroy = jest.fn();
         this.delete = jest.fn();
+        this.move = jest.fn();
         this.clone = jest.fn(() => {
             const resourceStore = new ResourceStoreMock(resourceKey);
             resourceStore.data = this.data;
@@ -155,6 +157,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.save = jest.fn();
         this.setMultiple = jest.fn();
         this.changeSchema = jest.fn();
+        this.load = jest.fn();
         this.loading = false;
         this.id = 1;
         this.data = {
@@ -163,6 +166,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
 
         mockExtendObservable(this, {
             deleting: false,
+            moving: false,
         });
     });
 
@@ -517,5 +521,65 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 
     return promise.then(() => {
         expect(collectionNavigateSpy).toBeCalledWith(3);
+    });
+});
+
+test('Confirming the move dialog should move the item', () => {
+    const promise = Promise.resolve();
+    const page = observable.box();
+    const locale = observable.box();
+    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
+    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.move = jest.fn().mockReturnValue(promise);
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaDatagridAdapters={['media_card_overview']}
+            mediaDatagridStore={mediaDatagridStore}
+            onCollectionNavigate={jest.fn()}
+        />
+    );
+
+    mediaCollection.find('Icon[name="su-arrows-alt"]').simulate('click');
+
+    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
+
+    mediaCollection.find(SingleDatagridOverlay).prop('onConfirm')({id: 7});
+    collectionStore.resourceStore.moving = true;
+    mediaCollection.update();
+
+    expect(collectionStore.resourceStore.move).toBeCalledWith(7);
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(true);
+
+    return promise.then(() => {
+        collectionStore.resourceStore.moving = false;
+        mediaCollection.update();
+        expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
+        expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(false);
+        expect(collectionStore.resourceStore.load).toBeCalledWith();
     });
 });

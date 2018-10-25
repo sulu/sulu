@@ -105,6 +105,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
+        SingleDatagridOverlay: jest.fn(() => null),
     };
 });
 

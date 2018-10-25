@@ -13,6 +13,7 @@ export default class ResourceStore {
     @observable loading: boolean = false;
     @observable saving: boolean = false;
     @observable deleting: boolean = false;
+    @observable moving: boolean = false;
     @observable data: Object = {};
     @observable dirty: boolean = false;
     loadOptions: Object = {};
@@ -190,6 +191,30 @@ export default class ResourceStore {
                 this.deleting = false;
             }));
     }
+
+    @action move = (parentId: string | number) => {
+        if (!this.id) {
+            throw new Error('Moving does not work for new objects!');
+        }
+
+        this.moving = true;
+
+        const {locale} = this.observableOptions;
+
+        const queryOptions = {
+            action: 'move',
+            destination: parentId,
+            locale: locale ? locale.get() : undefined,
+        };
+
+        return ResourceRequester.postWithId(this.resourceKey, this.id, queryOptions)
+            .then(action(() => {
+                this.moving = false;
+            }))
+            .catch(action(() => {
+                this.moving = false;
+            }));
+    };
 
     copyFromLocale(locale: string, options: Object = {}) {
         if (!this.id) {
