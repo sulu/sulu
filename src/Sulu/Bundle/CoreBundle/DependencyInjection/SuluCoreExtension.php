@@ -389,7 +389,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $loader->load('list_builder.xml');
 
-        $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'), 'list-builder');
+        $metadataPaths = $this->getMappingPaths($container, 'list-builder');
+
         $fileLocator = $container->getDefinition('sulu_core.list_builder.metadata.file_locator');
         $fileLocator->replaceArgument(0, $metadataPaths);
 
@@ -434,10 +435,10 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      *
      * @return array
      */
-    private function getBundleMappingPaths($bundles, $dir)
+    private function getMappingPaths(ContainerBuilder $container, $dir)
     {
         $metadataPaths = [];
-        foreach ($bundles as $bundle) {
+        foreach ($container->getParameter('kernel.bundles') as $bundle) {
             $refl = new \ReflectionClass($bundle);
             $path = dirname($refl->getFilename());
 
@@ -453,6 +454,22 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 }
 
                 $metadataPaths[$namespace] = $finalPath;
+            }
+        }
+
+        $projectFolder = $container->getParameter('kernel.project_dir') . '/config/' . $dir;
+
+        if (file_exists($projectFolder)) {
+            $path = $container->getParameter('kernel.project_dir') . '/src';
+
+            foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
+                if (!file_exists($path . '/' . $entityNamespace)) {
+                    continue;
+                }
+
+                $namespace = 'App\\' . $entityNamespace;
+
+                $metadataPaths[$namespace] = $projectFolder;
             }
         }
 
