@@ -146,20 +146,16 @@ export default class CollectionSection extends React.Component<Props> {
                                 resourceStore={resourceStore}
                             />
                             <div className={collectionSectionStyles.icons}>
-                                {!!resourceStore.id &&
-                                    <Icon
-                                        className={collectionSectionStyles.icon}
-                                        name="su-pen"
-                                        onClick={this.handleEditCollectionClick}
-                                    />
-                                }
-                                {!!resourceStore.id &&
-                                    <Icon
-                                        className={collectionSectionStyles.icon}
-                                        name="su-trash-alt"
-                                        onClick={this.handleRemoveCollectionClick}
-                                    />
-                                }
+                                <Icon
+                                    className={collectionSectionStyles.icon}
+                                    name="su-pen"
+                                    onClick={this.handleEditCollectionClick}
+                                />
+                                <Icon
+                                    className={collectionSectionStyles.icon}
+                                    name="su-trash-alt"
+                                    onClick={this.handleRemoveCollectionClick}
+                                />
                             </div>
                         </div>
 
