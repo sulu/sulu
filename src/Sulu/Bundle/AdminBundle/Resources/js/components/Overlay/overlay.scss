@@ -4,7 +4,7 @@
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
 $borderRadius: 3px;
-$footerBorderColor: $silver;
+$overlayBorderColor: $silver;
 
 $iconFontSize: 14px;
 
@@ -69,6 +69,7 @@ $transitionDuration: 300ms;
 
     header {
         background: $primaryBackground;
+        border-bottom: 1px solid $overlayBorderColor;
         height: $overlayHeaderHeight;
         text-align: center;
         line-height: $overlayHeaderHeight;
@@ -87,7 +88,7 @@ $transitionDuration: 300ms;
 
     footer {
         background: $secondaryBackground;
-        border-top: 1px solid $footerBorderColor;
+        border-top: 1px solid $overlayBorderColor;
         height: $overlayFooterHeight;
         padding: 0 60px;
         display: flex;

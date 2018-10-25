@@ -7,6 +7,7 @@
 
 .overlay {
     &.adapter-container.column_list {
+        margin-top: -$columnBorderWidth;
         height: calc(100vh - $overlayHeaderHeight - $overlayFooterHeight - $overlayMarginBottom);
         overflow: hidden;
     }
