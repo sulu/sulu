@@ -10,6 +10,8 @@
             <argument type="string">%sulu.cache_dir%/field_descriptor</argument>
             <argument>%kernel.debug%</argument>
         </service>
+        <service id="Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface"
+                 alias="sulu_core.list_builder.field_descriptor_factory"/>
 
         <service id="sulu_core.list_builder.metadata.provider.chain"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider">
@@ -37,7 +39,7 @@
             <argument>Metadata\ClassHierarchyMetadata</argument>
             <argument>%kernel.debug%</argument>
             <call method="setCache">
-                <argument type="service" id="sulu_core.list_builder.metadata.provider.general.cache" />
+                <argument type="service" id="sulu_core.list_builder.metadata.provider.general.cache"/>
             </call>
         </service>
 
@@ -68,7 +70,7 @@
             <argument>Metadata\ClassHierarchyMetadata</argument>
             <argument>%kernel.debug%</argument>
             <call method="setCache">
-                <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine.cache" />
+                <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine.cache"/>
             </call>
         </service>
 
