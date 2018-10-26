@@ -692,6 +692,9 @@ class CollectionControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
+        $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+        $client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+
         $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
@@ -946,6 +949,8 @@ class CollectionControllerTest extends SuluTestCase
     public function testPut()
     {
         $client = $this->createAuthenticatedClient();
+        $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+        $client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
 
         $client->request(
             'PUT',
@@ -972,6 +977,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $style = new \stdClass();
@@ -988,8 +994,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en-gb', $response->locale);
-
-        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -1203,8 +1207,6 @@ class CollectionControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/collections/' . $this->collection1->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
 
-        $client = $this->createAuthenticatedClient();
-
         $client->request(
             'GET',
             '/api/collections/' . $this->collection1->getId() . '?locale=en'
@@ -1320,7 +1322,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[0], 'parent' => null, 'collections' => []], $items);
         $this->assertContains(['title' => $titles[3], 'parent' => null, 'collections' => []], $items);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections?flat=true&depth=1',
@@ -1344,7 +1345,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[4], 'parent' => $titles[3], 'collections' => []], $items);
         $this->assertContains(['title' => $titles[5], 'parent' => $titles[3], 'collections' => []], $items);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections?flat=true&depth=2',
@@ -1393,7 +1393,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[0], 'parent' => null, 'collections' => []], $items);
         $this->assertContains(['title' => $titles[3], 'parent' => null, 'collections' => []], $items);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections?depth=1',
@@ -1432,7 +1431,6 @@ class CollectionControllerTest extends SuluTestCase
             $items
         );
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections?depth=2',
@@ -1526,7 +1524,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNull($response->_embedded->parent);
         $this->assertEmpty($response->_embedded->collections);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&children=true',
@@ -1547,7 +1544,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[4], 'parent' => $titles[3], 'collections' => []], $items);
         $this->assertContains(['title' => $titles[5], 'parent' => $titles[3], 'collections' => []], $items);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections/' . $ids[3] . '?depth=2&children=true',
@@ -1600,7 +1596,6 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals($ids[0], $response->_embedded->parent->id);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/collections?depth=3',
