@@ -1632,10 +1632,12 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPostParentIsSystemCollection()
     {
-        $collection = $this->createCollection($this->collectionType2, ['en' => 'Test'], null, 'system_collections');
-        $this->em->flush();
-
         $client = $this->createAuthenticatedClient();
+
+        $collectionId = $client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
+            'sulu_media'
+        );
+
         $client->request(
             'POST',
             '/api/collections',
@@ -1646,7 +1648,7 @@ class CollectionControllerTest extends SuluTestCase
                 ],
                 'title' => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
-                'parent' => $collection->getId(),
+                'parent' => $collectionId,
             ]
         );
 
@@ -1655,13 +1657,15 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPutSystemCollection()
     {
-        $collection = $this->createCollection($this->collectionType2, ['en' => 'Test'], null, 'system_collections');
-        $this->em->flush();
-
         $client = $this->createAuthenticatedClient();
+
+        $collectionId = $client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
+            'sulu_media'
+        );
+
         $client->request(
             'PUT',
-            '/api/collections/' . $collection->getId(),
+            '/api/collections/' . $collectionId,
             [
                 'locale' => 'en-gb',
                 'type' => [

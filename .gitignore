@@ -3,6 +3,8 @@
 !/var/.gitkeep
 /vendor/
 /.web-server-pid
+phpunit.stderr
+phpunit.stdout
 
 # test cache folders
 /src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache/
