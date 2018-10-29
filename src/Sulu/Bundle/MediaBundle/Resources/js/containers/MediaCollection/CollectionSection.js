@@ -162,23 +162,25 @@ export default class CollectionSection extends React.Component<Props> {
                                 onNavigate={this.handleBreadcrumbNavigate}
                                 resourceStore={resourceStore}
                             />
-                            <div className={collectionSectionStyles.icons}>
-                                <Icon
-                                    className={collectionSectionStyles.icon}
-                                    name="su-pen"
-                                    onClick={this.handleEditCollectionClick}
-                                />
-                                <Icon
-                                    className={collectionSectionStyles.icon}
-                                    name="su-trash-alt"
-                                    onClick={this.handleRemoveCollectionClick}
-                                />
-                                <Icon
-                                    className={collectionSectionStyles.icon}
-                                    name="su-arrows-alt"
-                                    onClick={this.handleMoveCollectionClick}
-                                />
-                            </div>
+                            {resourceStore.id &&
+                                <div className={collectionSectionStyles.icons}>
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-pen"
+                                        onClick={this.handleEditCollectionClick}
+                                    />
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-trash-alt"
+                                        onClick={this.handleRemoveCollectionClick}
+                                    />
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-arrows-alt"
+                                        onClick={this.handleMoveCollectionClick}
+                                    />
+                                </div>
+                            }
                         </div>
 
                         <div className={collectionSectionStyles.right}>
