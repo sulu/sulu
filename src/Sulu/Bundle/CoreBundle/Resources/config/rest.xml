@@ -11,7 +11,6 @@
         <service id="sulu_core.doctrine_rest_helper" class="Sulu\Component\Rest\DoctrineRestHelper" public="true">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
-        <service id="Sulu\Component\Rest\DoctrineRestHelper" alias="sulu_core.doctrine_rest_helper" />
 
         <service id="sulu_core.list_rest_helper" class="Sulu\Component\Rest\ListBuilder\ListRestHelper" public="true">
             <argument type="service" id="request_stack"/>
