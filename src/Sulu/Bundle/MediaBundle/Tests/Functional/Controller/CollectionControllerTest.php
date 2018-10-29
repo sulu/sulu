@@ -420,6 +420,56 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
     }
 
+    public function testcGetPaginatedWithRoot()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(1, $response->pages);
+        $this->assertEquals(1, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(1, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(1, $response->_embedded->collections);
+        $this->assertEquals('All collections', $response->_embedded->collections[0]->title);
+        $this->assertCount(1, $response->_embedded->collections[0]->_embedded->collections);
+        $this->assertEquals('Test Collection', $response->_embedded->collections[0]->_embedded->collections[0]->title);
+    }
+
+    public function testcGetPaginatedWithParentAndIgnoredRoot()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true&parentId=' . $this->collection1->getId(),
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(1, $response->pages);
+        $this->assertEquals(1, $response->page);
+        $this->assertEquals(2, $response->limit);
+        $this->assertEquals(1, $response->total);
+        $this->assertNotEmpty($response->_embedded->collections);
+        $this->assertCount(1, $response->_embedded->collections);
+        $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
+    }
+
     /**
      * @description Tests the cGET action with a pagination. Only the collections of the desired
      * level should be returned and in the right amount, although they have children.

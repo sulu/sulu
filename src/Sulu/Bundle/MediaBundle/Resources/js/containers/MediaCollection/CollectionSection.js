@@ -226,6 +226,7 @@ export default class CollectionSection extends React.Component<Props> {
                     onClose={this.handleMoveCollectionClose}
                     onConfirm={this.handleMoveCollectionConfirm}
                     open={operationType === 'move'}
+                    options={{includeRoot: true}}
                     resourceKey={COLLECTIONS_RESOURCE_KEY}
                     title={translate('sulu_media.move_collection')}
                 />

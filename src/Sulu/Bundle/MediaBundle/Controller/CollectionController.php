@@ -68,12 +68,6 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $this->getRequestParameter($request, 'locale', true)
             );
 
-            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
-                $collections = [
-                    new RootCollection($collections),
-                ];
-            }
-
             return $this->handleView(
                 $this->view(
                     new CollectionRepresentation($collections, 'collections')
@@ -181,9 +175,12 @@ class CollectionController extends RestController implements ClassResourceInterf
                 );
             }
 
-            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
+            if ($this->getBooleanRequestParameter($request, 'includeRoot', false, false) && !$parentId) {
                 $collections = [
-                    new RootCollection($collections),
+                    new RootCollection(
+                        $this->get('translator')->trans('sulu_media.all_collections', [], 'admin'),
+                        $collections
+                    ),
                 ];
             }
 

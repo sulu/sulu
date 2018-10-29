@@ -611,6 +611,7 @@ test('Confirming the move dialog should move the item', () => {
 
     expect(collectionStore.resourceStore.move).toBeCalledWith(7);
     expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('options')).toEqual({includeRoot: true});
     expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {

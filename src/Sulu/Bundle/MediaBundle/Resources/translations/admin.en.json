@@ -30,5 +30,6 @@
     "sulu_media.copyright": "Copyright Information",
     "sulu_media.taxonomies": "Taxonomies",
     "sulu_media.history": "History",
-    "sulu_media.formats": "Formats"
+    "sulu_media.formats": "Formats",
+    "sulu_media.all_collections": "All collections"
 }

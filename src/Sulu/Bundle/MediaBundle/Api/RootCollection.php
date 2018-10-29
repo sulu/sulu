@@ -50,7 +50,7 @@ class RootCollection
      *
      * @Expose
      */
-    private $title = 'smart-content.media.all-collections';
+    private $title;
 
     /**
      * @var bool
@@ -64,8 +64,9 @@ class RootCollection
      */
     private $collections;
 
-    public function __construct(array $collections)
+    public function __construct(string $title, array $collections)
     {
+        $this->title = $title;
         $this->collections = $collections;
     }
 

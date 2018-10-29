@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Collection Controller
+
+The `include-root` option of this Controller was renamed to `includeRoot` to be more consistent. The `RootCollection`
+was removed from the `getAction`, because it does not make sense there.
+
 ### Form Labels
 
 We do not generate the label for form fields from its name anymore. So you if you don't pass an explicit title to the
