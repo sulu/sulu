@@ -915,7 +915,7 @@ test('Clear the data', () => {
     datagridStore.updateLoadingStrategy(new LoadingStrategy());
     datagridStore.updateStructureStrategy(structureStrategy);
 
-    datagridStore.clearData();
+    datagridStore.clear();
     expect(structureStrategy.clear).toBeCalled();
 });
 

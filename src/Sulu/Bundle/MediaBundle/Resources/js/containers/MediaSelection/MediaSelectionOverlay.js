@@ -157,8 +157,8 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     }
 
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
-        this.mediaDatagridStore.clearData();
-        this.collectionDatagridStore.clearData();
+        this.mediaDatagridStore.clear();
+        this.collectionDatagridStore.clear();
         this.setMediaPage(1);
         this.setCollectionPage(1);
         this.collectionId.set(collectionId);

@@ -85,7 +85,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
-            this.clearData = jest.fn();
+            this.clear = jest.fn();
             this.updateLoadingStrategy = jest.fn();
             this.updateStructureStrategy = jest.fn();
         }),
@@ -242,9 +242,9 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview);
     toolbarConfig.backButton.onClick();
-    expect(mediaOverview.mediaDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.mediaDatagridStore.clear).toBeCalled();
     expect(mediaOverview.mediaDatagridStore.clearSelection).toBeCalled();
-    expect(mediaOverview.collectionDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.collectionDatagridStore.clear).toBeCalled();
     expect(mediaOverview.collectionDatagridStore.clearSelection).toBeCalled();
     expect(router.restore).toBeCalledWith('sulu_media.overview', {
         'collectionPage': '1',
@@ -307,9 +307,9 @@ test('The collectionId should be update along with the content when a collection
     expect(mediaOverview.instance().collectionPage.get()).toEqual(1);
     expect(mediaOverview.instance().mediaPage.get()).toEqual(1);
     expect(mediaOverview.instance().mediaDatagridStore.clearSelection).toBeCalled();
-    expect(mediaOverview.instance().mediaDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.instance().mediaDatagridStore.clear).toBeCalled();
     expect(mediaOverview.instance().collectionDatagridStore.clearSelection).toBeCalled();
-    expect(mediaOverview.instance().collectionDatagridStore.clearData).toBeCalled();
+    expect(mediaOverview.instance().collectionDatagridStore.clear).toBeCalled();
 });
 
 test('Should delete selected items when delete button is clicked', () => {
