@@ -205,7 +205,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
 
-        return $this->queryBuilder->getQuery()->getArrayResult();
+        return $this->queryBuilder->getQuery()->getScalarResult();
     }
 
     /**
