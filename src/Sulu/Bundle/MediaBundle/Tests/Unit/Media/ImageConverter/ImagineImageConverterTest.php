@@ -114,6 +114,9 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $imagineImage->layers()->willReturn(['']);
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
+        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 2]);
+        $imagineImage->flipHorizontally()->shouldBeCalled();
+
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
 
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
@@ -135,6 +138,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
@@ -161,6 +165,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
@@ -186,6 +191,7 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
