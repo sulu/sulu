@@ -90,8 +90,7 @@ class ImagineImageConverter implements ImageConverterInterface
         ScalerInterface $scaler,
         CropperInterface $cropper,
         array $formats
-    )
-    {
+    ) {
         $this->imagine = $imagine;
         $this->storage = $storage;
         $this->mediaImageExtractor = $mediaImageExtractor;
@@ -164,6 +163,110 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Applies an array of transformations on a passed image.
+     *
+     * @param ImageInterface $image
+     * @param $tansformations
+     *
+     * @throws ImageProxyInvalidFormatOptionsException
+     *
+     * @return ImageInterface The modified image
+     */
+    private function applyTransformations(ImageInterface $image, $tansformations)
+    {
+        foreach ($tansformations as $transformation) {
+            if (!isset($transformation['effect'])) {
+                throw new ImageProxyInvalidFormatOptionsException('Effect not found');
+            }
+            $image = $this->modifyAllLayers(
+                $image,
+                function (ImageInterface $layer) use ($transformation) {
+                    return $this->transformationPool->get($transformation['effect'])->execute(
+                        $layer,
+                        $transformation['parameters']
+                    );
+                }
+            );
+        }
+
+        return $image;
+    }
+
+    /**
+     * Crops a given image according to given parameters.
+     *
+     * @param ImageInterface $image The image to crop
+     * @param array $cropParameters The parameters which define the area to crop
+     *
+     * @return ImageInterface The cropped image
+     */
+    private function applyFormatCrop(ImageInterface $image, array $cropParameters)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function (ImageInterface $layer) use ($cropParameters) {
+                return $this->cropper->crop(
+                    $layer,
+                    $cropParameters['x'],
+                    $cropParameters['y'],
+                    $cropParameters['width'],
+                    $cropParameters['height']
+                );
+            }
+        );
+    }
+
+    /**
+     * Crops the given image according to the focus point defined in the file version.
+     *
+     * @param ImageInterface $image
+     * @param FileVersion $fileVersion
+     * @param array $scale
+     *
+     * @return ImageInterface
+     */
+    private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function(ImageInterface $layer) use ($fileVersion, $scale) {
+                return $this->focus->focus(
+                    $layer,
+                    $fileVersion->getFocusPointX(),
+                    $fileVersion->getFocusPointY(),
+                    $scale['x'],
+                    $scale['y']
+                );
+            }
+        );
+    }
+
+    /**
+     * Scales a given image according to the information passed as the second argument.
+     *
+     * @param ImageInterface $image
+     * @param $scale
+     *
+     * @return ImageInterface
+     */
+    private function applyScale(ImageInterface $image, $scale)
+    {
+        return $this->modifyAllLayers(
+            $image,
+            function (ImageInterface $layer) use ($scale) {
+                return $this->scaler->scale(
+                    $layer,
+                    $scale['x'],
+                    $scale['y'],
+                    $scale['mode'],
+                    $scale['forceRatio'],
+                    $scale['retina']
+                );
+            }
+        );
+    }
+
+    /**
      * Ensures that the color mode of the passed image is RGB.
      *
      * @param ImageInterface $image
@@ -188,24 +291,6 @@ class ImagineImageConverter implements ImageConverterInterface
         $autorotateFilter = new Autorotate();
 
         return $autorotateFilter->apply($image);
-    }
-
-    /**
-     * Return the options for the given format.
-     *
-     * @param $formatKey
-     *
-     * @return array
-     *
-     * @throws ImageProxyInvalidImageFormat
-     */
-    private function getFormat($formatKey)
-    {
-        if (!isset($this->formats[$formatKey])) {
-            throw new ImageProxyInvalidImageFormat('Format was not found');
-        }
-
-        return $this->formats[$formatKey];
     }
 
     /**
@@ -245,30 +330,6 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Crops a given image according to given parameters.
-     *
-     * @param ImageInterface $image The image to crop
-     * @param array $cropParameters The parameters which define the area to crop
-     *
-     * @return ImageInterface The cropped image
-     */
-    private function applyFormatCrop(ImageInterface $image, array $cropParameters)
-    {
-        return $this->modifyAllLayers(
-            $image,
-            function (ImageInterface $layer) use ($cropParameters) {
-                return $this->cropper->crop(
-                    $layer,
-                    $cropParameters['x'],
-                    $cropParameters['y'],
-                    $cropParameters['width'],
-                    $cropParameters['height']
-                );
-            }
-        );
-    }
-
-    /**
      * Applies a callback to every layer of an image and returns the resulting image.
      *
      * @param ImageInterface $image
@@ -302,83 +363,38 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Crops the given image according to the focus point defined in the file version.
+     * Return the options for the given format.
      *
-     * @param ImageInterface $image
-     * @param FileVersion $fileVersion
-     * @param array $scale
+     * @param $formatKey
      *
-     * @return ImageInterface
+     * @return array
+     *
+     * @throws ImageProxyInvalidImageFormat
      */
-    private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
+    private function getFormat($formatKey)
     {
-        return $this->modifyAllLayers(
-            $image,
-            function (ImageInterface $layer) use ($fileVersion, $scale) {
-                return $this->focus->focus(
-                    $layer,
-                    $fileVersion->getFocusPointX(),
-                    $fileVersion->getFocusPointY(),
-                    $scale['x'],
-                    $scale['y']
-                );
-            }
-        );
-    }
-
-    /**
-     * Scales a given image according to the information passed as the second argument.
-     *
-     * @param ImageInterface $image
-     * @param $scale
-     *
-     * @return ImageInterface
-     */
-    private function applyScale(ImageInterface $image, $scale)
-    {
-        return $this->modifyAllLayers(
-            $image,
-            function (ImageInterface $layer) use ($scale) {
-                return $this->scaler->scale(
-                    $layer,
-                    $scale['x'],
-                    $scale['y'],
-                    $scale['mode'],
-                    $scale['forceRatio'],
-                    $scale['retina']
-                );
-            }
-        );
-    }
-
-    /**
-     * Applies an array of transformations on a passed image.
-     *
-     * @param ImageInterface $image
-     * @param $tansformations
-     *
-     * @throws ImageProxyInvalidFormatOptionsException
-     *
-     * @return ImageInterface The modified image
-     */
-    private function applyTransformations(ImageInterface $image, $tansformations)
-    {
-        foreach ($tansformations as $transformation) {
-            if (!isset($transformation['effect'])) {
-                throw new ImageProxyInvalidFormatOptionsException('Effect not found');
-            }
-            $image = $this->modifyAllLayers(
-                $image,
-                function (ImageInterface $layer) use ($transformation) {
-                    return $this->transformationPool->get($transformation['effect'])->execute(
-                        $layer,
-                        $transformation['parameters']
-                    );
-                }
-            );
+        if (!isset($this->formats[$formatKey])) {
+            throw new ImageProxyInvalidImageFormat('Format was not found');
         }
 
-        return $image;
+        return $this->formats[$formatKey];
+    }
+
+    /**
+     * @param ImageInterface $image
+     * @param string $imageExtension
+     * @param array $imagineOptions
+     *
+     * @return array
+     */
+    private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
+    {
+        $options = [];
+        if (count($image->layers()) > 1 && 'gif' == $imageExtension) {
+            $options['animated'] = true;
+        }
+
+        return array_merge($options, $imagineOptions);
     }
 
     /**
@@ -411,22 +427,5 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         return $extension;
-    }
-
-    /**
-     * @param ImageInterface $image
-     * @param string $imageExtension
-     * @param array $imagineOptions
-     *
-     * @return array
-     */
-    private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
-    {
-        $options = [];
-        if (count($image->layers()) > 1 && 'gif' == $imageExtension) {
-            $options['animated'] = true;
-        }
-
-        return array_merge($options, $imagineOptions);
     }
 }
