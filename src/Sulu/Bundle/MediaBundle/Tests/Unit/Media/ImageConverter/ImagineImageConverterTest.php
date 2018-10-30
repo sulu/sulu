@@ -233,9 +233,9 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
-        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 2]);
+        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 3]);
 
-        $imagineImage->flipHorizontally()->shouldBeCalled();
+        $imagineImage->rotate(180, Argument::any())->shouldBeCalled();
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
