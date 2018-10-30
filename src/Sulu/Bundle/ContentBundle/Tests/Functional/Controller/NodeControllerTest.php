@@ -943,7 +943,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGet()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -983,7 +983,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGetTillId()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'GET',
@@ -1019,7 +1019,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGetTillSelectedId()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'GET',
@@ -1055,7 +1055,7 @@ class NodeControllerTest extends SuluTestCase
     public function testGetFlat()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1129,7 +1129,7 @@ class NodeControllerTest extends SuluTestCase
     public function testGetTree()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&flat=false&webspace=sulu_io&language=en');
@@ -1221,7 +1221,7 @@ class NodeControllerTest extends SuluTestCase
     public function testBreadcrumb()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 
@@ -1311,7 +1311,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCgetAction()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1397,7 +1397,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMove()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1453,7 +1453,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMoveNonExistingSource()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1465,7 +1465,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMoveNonExistingDestination()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1477,7 +1477,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopy()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1517,7 +1517,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyNonExistingSource()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1529,7 +1529,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyNonExistingDestination()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1693,7 +1693,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrder()
     {
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/order.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1749,7 +1749,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderWithGhosts()
     {
-        $data = $this->importer->import(__DIR__ . '/../../files/exports/order.xml');
+        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -2089,7 +2089,7 @@ class NodeControllerTest extends SuluTestCase
     public function testRenamePageWithLinkedChild()
     {
         $client = $this->createAuthenticatedClient();
-        $this->importer->import(__DIR__ . '/../../files/exports/tree.xml');
+        $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $document = $this->documentManager->find('585ccd35-a98e-4e41-a62c-e502ca905496', 'en');
         $document->setStructureType('internallinks');

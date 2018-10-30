@@ -25,9 +25,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
-/**
- * @deprecated use Sulu\Bundle\TestBundle\TestCase\SuluTestCase instead
- */
 abstract class SuluTestCase extends KernelTestCase
 {
     private static $workspaceInitialized = false;
