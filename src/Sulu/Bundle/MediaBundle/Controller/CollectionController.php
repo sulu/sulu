@@ -150,7 +150,13 @@ class CollectionController extends RestController implements ClassResourceInterf
             $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
+            $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
             $collectionManager = $this->getCollectionManager();
+
+            if ('root' === $parentId) {
+                $includeRoot = false;
+                $parentId = null;
+            }
 
             if ($flat) {
                 $collections = $collectionManager->get(
@@ -175,7 +181,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 );
             }
 
-            if ($this->getBooleanRequestParameter($request, 'includeRoot', false, false) && !$parentId) {
+            if ($includeRoot && !$parentId) {
                 $collections = [
                     new RootCollection(
                         $this->get('translator')->trans('sulu_media.all_collections', [], 'admin'),

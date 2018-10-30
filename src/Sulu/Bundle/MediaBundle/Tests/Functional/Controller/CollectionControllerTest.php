@@ -344,6 +344,55 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(16, $response->_embedded->collections);
     }
 
+    public function testCGetFlatWithRootParent()
+    {
+        $collection = $this->createCollection($this->collectionType1);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections',
+            [
+                'locale' => 'en-gb',
+                'parentId' => 'root',
+                'flat' => true,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $this->assertCount(2, $response->_embedded->collections);
+    }
+
+    public function testCGetFlatWithRootParentAndIncludeRoot()
+    {
+        $collection = $this->createCollection($this->collectionType1);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections',
+            [
+                'locale' => 'en-gb',
+                'parentId' => 'root',
+                'flat' => true,
+                'includeRoot' => true,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $this->assertCount(2, $response->_embedded->collections);
+    }
+
     /**
      * @description Test GET Collections filtered by parent
      */
