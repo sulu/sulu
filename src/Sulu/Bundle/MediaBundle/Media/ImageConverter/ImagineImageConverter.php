@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Exception\RuntimeException;
+use Imagine\Filter\Basic\Autorotate;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
-use Imagine\Filter\Basic\Autorotate;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
@@ -283,7 +283,7 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Autorotate based on metadata of an image
+     * Autorotate based on metadata of an image.
      *
      * @param ImageInterface $image
      *
