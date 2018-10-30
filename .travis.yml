@@ -18,7 +18,7 @@ matrix:
   include:
     - php: 5.5
       env:
-        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
+        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction -vvv"
     - php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
