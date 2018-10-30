@@ -60,6 +60,10 @@ class MediaDetail extends React.Component<Props> {
         this.props.resourceStore.save();
     };
 
+    handleUploadComplete = (media: Object) => {
+        this.props.resourceStore.setMultiple(media);
+    };
+
     render() {
         return (
             <div className={mediaDetailStyles.mediaDetail}>
@@ -73,6 +77,7 @@ class MediaDetail extends React.Component<Props> {
                                     downloadable={false}
                                     imageSize="sulu-400x400-inset"
                                     mediaUploadStore={this.mediaUploadStore}
+                                    onUploadComplete={this.handleUploadComplete}
                                     uploadText={translate('sulu_media.upload_or_replace')}
                                 />
                             </Grid.Item>

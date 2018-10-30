@@ -45,6 +45,19 @@ test('Render a SingleMediaDropzone while uploading', () => {
     )).toMatchSnapshot();
 });
 
+test('Render img tag with key to avoid keeping old image on new upload', () => {
+    const singleMediaDropzone = shallow(
+        <SingleMediaDropzone
+            image="http://lorempixel.com/400/400"
+            onDrop={jest.fn()}
+            progress={0}
+            uploading={false}
+        />
+    );
+
+    expect(singleMediaDropzone.find('img').key()).not.toBe(null);
+});
+
 test('Dragging a file over the area will show the upload indicator', () => {
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone

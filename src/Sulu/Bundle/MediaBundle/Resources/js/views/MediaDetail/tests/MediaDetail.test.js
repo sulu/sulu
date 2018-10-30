@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import React from 'react';
 import {observable} from 'mobx';
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -73,9 +73,9 @@ test('Render a loading MediaDetail view', () => {
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
     resourceStore.loading = true;
 
-    expect(mount(
+    expect(render(
         <MediaDetail resourceStore={resourceStore} router={router} />
-    ).render()).toMatchSnapshot();
+    )).toMatchSnapshot();
 });
 
 test('Should change locale via locale chooser', () => {
@@ -195,6 +195,49 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
             mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
             mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
             expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
+            done();
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
+test('Should update resourceStore after SingleMediaUpload has completed upload', (done) => {
+    const testFile = {name: 'test.jpg'};
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('test', 1, {locale: observable.box()});
+    resourceStore.loading = false;
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {},
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            mediaDetail.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
+            expect(resourceStore.data).toEqual(testFile);
             done();
         });
     });

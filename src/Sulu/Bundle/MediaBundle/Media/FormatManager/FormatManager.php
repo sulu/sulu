@@ -208,7 +208,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
+    public function getFormatDefinition($formatKey, $locale = null)
     {
         if (!isset($this->formats[$formatKey])) {
             throw new FormatNotFoundException($formatKey);
@@ -224,10 +224,10 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         }
 
         $formatArray = [
+            'internal' => $format['internal'],
             'key' => $format['key'],
             'title' => $title,
             'scale' => $format['scale'],
-            'options' => (!empty($formatOptions)) ? $formatOptions : null,
         ];
 
         return $formatArray;
@@ -236,15 +236,12 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormatDefinitions($locale = null, array $formatOptions = [])
+    public function getFormatDefinitions($locale = null)
     {
         $definitionsArray = [];
 
         foreach ($this->formats as $format) {
             $options = [];
-            if (array_key_exists($format['key'], $formatOptions)) {
-                $options = $formatOptions[$format['key']];
-            }
             $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
         }
 

@@ -106,6 +106,35 @@ test('Render a table with buttons', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a table with different buttons for each row', () => {
+    const buttons = [{
+        icon: 'fa-pencil',
+        onClick: jest.fn(),
+    }];
+
+    expect(render(
+        <Table buttons={buttons}>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row buttons={[{icon: 'fa-plus', onClick: jest.fn()}]}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Table buttons should implement an onClick handler', () => {
     const clickSpy = jest.fn();
     const buttons = [{

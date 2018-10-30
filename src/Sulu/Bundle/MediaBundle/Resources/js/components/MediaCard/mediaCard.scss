@@ -14,6 +14,7 @@ $downloadButtonBorderColorActive: $shakespeare;
 
 .media-card {
     width: 240px;
+    border: 1px solid $mediaCardBorderColor;
 
     &:hover,
     &.selected {

@@ -26,6 +26,7 @@ import Overlay from './Overlay';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
 import SingleSelect from './SingleSelect';
+import Table from './Table';
 import Toolbar from './Toolbar';
 import withContainerSize from './withContainerSize';
 
@@ -57,6 +58,7 @@ export {
     Popover,
     PublishIndicator,
     SingleSelect,
+    Table,
     Toolbar,
     withContainerSize,
 };

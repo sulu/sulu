@@ -6,7 +6,7 @@ exports[`Render a loading MediaDetail view 1`] = `
 >
   <div
     class="spinner"
-    style="width: 40px; height: 40px;"
+    style="width:40px;height:40px"
   >
     <div
       class="doubleBounce1"
