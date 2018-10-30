@@ -54,7 +54,7 @@ class MediaFormats extends React.Component<Props> {
     };
 
     @action handleCopyClick = (id: string | number) => {
-        copyToClipboard(this.thumbnails[id]);
+        copyToClipboard(window.location.origin + this.thumbnails[id]);
         this.copySuccessThumbnailKey = id;
         setTimeout(action(() => this.copySuccessThumbnailKey = undefined), 500);
     };

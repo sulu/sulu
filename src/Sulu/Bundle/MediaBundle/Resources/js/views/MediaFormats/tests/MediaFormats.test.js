@@ -186,7 +186,7 @@ test('Copy the image URL for the given format when icon is clicked and show a su
         mediaFormats.update();
 
         mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('onClick')('400x400');
-        expect(copyToClipboard).toHaveBeenLastCalledWith('/media/400x400/image.jpg?v=1');
+        expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/400x400/image.jpg?v=1');
         mediaFormats.update();
         expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
         jest.runAllTimers();
@@ -194,7 +194,7 @@ test('Copy the image URL for the given format when icon is clicked and show a su
         expect(mediaFormats.find('Row').at(0).find('ButtonCell').at(1).prop('icon')).toEqual('su-copy');
 
         mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('onClick')('800x800');
-        expect(copyToClipboard).toHaveBeenLastCalledWith('/media/800x800/image.jpg?v=1');
+        expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/media/800x800/image.jpg?v=1');
         mediaFormats.update();
         expect(mediaFormats.find('Row').at(1).find('ButtonCell').at(1).prop('icon')).toEqual('su-check');
         jest.runAllTimers();
