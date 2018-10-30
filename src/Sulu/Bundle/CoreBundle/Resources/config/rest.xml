@@ -2,37 +2,31 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-    <parameters>
-        <parameter key="sulu_core.rest_helper.class">Sulu\Component\Rest\RestHelper</parameter>
-        <parameter key="sulu_core.doctrine_rest_helper.class">Sulu\Component\Rest\DoctrineRestHelper</parameter>
-        <parameter key="sulu_core.list_rest_helper.class">Sulu\Component\Rest\ListBuilder\ListRestHelper</parameter>
-        <parameter key="sulu_core.doctrine_list_builder_factory.class">Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory</parameter>
-        <parameter key="sulu_core.rest.datetime_handler.class">Sulu\Component\Rest\Handler\DateHandler</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu_core.rest_helper" class="%sulu_core.rest_helper.class%">
+        <service id="sulu_core.rest_helper" class="Sulu\Component\Rest\RestHelper">
+            <argument type="service" id="sulu_core.list_rest_helper"/>
+        </service>
+        <service id="Sulu\Component\Rest\RestHelperInterface" alias="sulu_core.rest_helper" />
+
+        <service id="sulu_core.doctrine_rest_helper" class="Sulu\Component\Rest\DoctrineRestHelper" public="true">
             <argument type="service" id="sulu_core.list_rest_helper"/>
         </service>
 
-        <service id="sulu_core.doctrine_rest_helper" class="%sulu_core.doctrine_rest_helper.class%" public="true">
-            <argument type="service" id="sulu_core.list_rest_helper"/>
-        </service>
-
-        <service id="sulu_core.list_rest_helper" class="%sulu_core.list_rest_helper.class%" public="true">
+        <service id="sulu_core.list_rest_helper" class="Sulu\Component\Rest\ListBuilder\ListRestHelper" public="true">
             <argument type="service" id="request_stack"/>
         </service>
+        <service id="Sulu\Component\Rest\ListBuilder\ListRestHelperInterface" alias="sulu_core.list_rest_helper"/>
 
         <service id="sulu_core.doctrine_list_builder_factory"
-                 class="%sulu_core.doctrine_list_builder_factory.class%"
+                 class="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory"
                  public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%sulu_security.permissions%</argument>
         </service>
+        <service id="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface" alias="sulu_core.doctrine_list_builder_factory"/>
 
-        <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">
+        <service id="sulu_core.rest.datetime_handler" class="Sulu\Component\Rest\Handler\DateHandler">
             <tag name="jms_serializer.subscribing_handler" />
         </service>
 
