@@ -112,10 +112,9 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
-        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+        $imagineImage->metadata()->willReturn(['']);
 
-        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 2]);
-        $imagineImage->flipHorizontally()->shouldBeCalled();
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
 
@@ -215,5 +214,32 @@ class ImagineImageConverterTest extends \PHPUnit_Framework_TestCase
         $this->storage->loadAsString('test.jpg', 1, '{}')->willThrow(ImageProxyMediaNotFoundException::class);
 
         $this->imagineImageConverter->convert($fileVersion, '640x480');
+    }
+
+    public function testConvertAutorotate()
+    {
+        $imagineImage = $this->prophesize(ImageInterface::class);
+        $palette = $this->prophesize(PaletteInterface::class);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions('{}');
+
+        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
+        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+
+        $imagineImage->palette()->willReturn($palette->reveal());
+        $imagineImage->strip()->shouldBeCalled();
+        $imagineImage->layers()->willReturn(['']);
+        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 2]);
+
+        $imagineImage->flipHorizontally()->shouldBeCalled();
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+
+        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+
+        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
     }
 }
