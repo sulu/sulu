@@ -26,7 +26,7 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
                 return;
             }
 
-            if (!displayValue || this.props.value == child.props.value) {
+            if (this.props.value == child.props.value) {
                 displayValue = child.props.children;
             }
         });
