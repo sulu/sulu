@@ -202,6 +202,49 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
     jsonSchemaResolve({});
 });
 
+test('Should update resourceStore after SingleMediaUpload has completed upload', (done) => {
+    const testFile = {name: 'test.jpg'};
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('test', 1, {locale: observable.box()});
+    resourceStore.loading = false;
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {},
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            mediaDetail.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
+            expect(resourceStore.data).toEqual(testFile);
+            done();
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
 test('Should initialize the ResourceStore with a schema', () => {
     const MediaDetail = require('../MediaDetail').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;

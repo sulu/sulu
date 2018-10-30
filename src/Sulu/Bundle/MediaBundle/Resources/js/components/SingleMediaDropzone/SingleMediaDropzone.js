@@ -81,7 +81,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                 onDrop={this.handleDrop}
             >
                 {image &&
-                    <img className={singleMediaDropzoneStyles.thumbnail} src={image} />
+                    <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
                 }
                 {!image && mimeType &&
                     <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
