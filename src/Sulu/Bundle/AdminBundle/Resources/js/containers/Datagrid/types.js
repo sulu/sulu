@@ -45,7 +45,7 @@ export type DatagridAdapterProps = {
     onSort: (column: string, order: SortOrder) => void,
     options: Object,
     page: ?number,
-    pageCount: number,
+    pageCount: ?number,
     schema: Schema,
     selections: Array<number | string>,
     sortColumn: ?string,

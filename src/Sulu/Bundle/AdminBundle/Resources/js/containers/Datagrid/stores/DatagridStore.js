@@ -22,7 +22,7 @@ const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
 
 export default class DatagridStore {
-    @observable pageCount: number = 0;
+    @observable pageCount: ?number = 0;
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
     @observable schemaLoading: boolean = true;

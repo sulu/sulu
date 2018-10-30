@@ -430,7 +430,7 @@ export default class Datagrid extends React.Component<Props> {
                     </div>
                 }
                 <div className={datagridStyles.datagrid}>
-                    {store.loading && !store.pageCount
+                    {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
                             active={store.active.get()}
