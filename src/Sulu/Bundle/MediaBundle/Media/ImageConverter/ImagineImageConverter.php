@@ -283,7 +283,10 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Autorotate based on metadata of an image
+     *
      * @param ImageInterface $image
+     *
      * @return ImageInterface
      */
     private function autorotate(ImageInterface $image)
