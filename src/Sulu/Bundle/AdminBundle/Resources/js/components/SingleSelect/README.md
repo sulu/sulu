@@ -3,7 +3,8 @@ The component follows the
 [recommendation of React for form components](https://facebook.github.io/react/docs/forms.html):
 The `SingleSelect` itself holds no internal state and is solely dependent on the passed properties. Moreover, it
 provides a possibility to pass a callback which gets called when the user selects an option.
-```
+
+```javascript
 const Action = SingleSelect.Action;
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
@@ -23,12 +24,12 @@ const onChange = (selectValue) => setState({selectValue});
 
 Also a lot of options are possible and correctly handled as well as neatly styled.
 
-```
+```javascript
 const Action = SingleSelect.Action;
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-initialState = {selectValue: null};
+initialState = {selectValue: undefined};
 const onChange = (value) => setState({selectValue: value});
 
 <SingleSelect value={state.selectValue} onChange={onChange}>

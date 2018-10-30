@@ -41,7 +41,7 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
             return false;
         }
 
-        return option.props.value.toString() === value.toString() && !option.props.disabled;
+        return option.props.value === value && !option.props.disabled;
     };
 
     handleSelect = (value: T) => {
