@@ -52,11 +52,13 @@ export default class Datagrid extends React.Component<Props> {
     @observable copying: boolean = false;
     @observable deleting: boolean = false;
     @observable moving: boolean = false;
+    @observable ordering: boolean = false;
+    @observable selectionDeleting: boolean = false;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
+    @observable showDeleteSelectionDialog: boolean = false;
     @observable showOrderDialog: boolean = false;
-    @observable ordering: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
     resolveCopy: ?({copied: boolean, parent?: ?Object}) => void;
@@ -118,6 +120,23 @@ export default class Datagrid extends React.Component<Props> {
         if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
             this.props.store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
+    };
+
+    /** @public */
+    @action requestSelectionDelete = () => {
+        this.showDeleteSelectionDialog = true;
+    };
+
+    @action handleSelectionDeleteDialogConfirmClick = () => {
+        this.selectionDeleting = true;
+        this.props.store.deleteSelection().then(action(() => {
+            this.showDeleteSelectionDialog = false;
+            this.selectionDeleting = false;
+        }));
+    };
+
+    @action handleSelectionDeleteDialogCancelClick = () => {
+        this.showDeleteSelectionDialog = false;
     };
 
     @action handleRequestItemDelete = (id: string | number) => {
@@ -229,7 +248,7 @@ export default class Datagrid extends React.Component<Props> {
 
     @action handleCopyOverlayConfirmClick = (parent: Object) => {
         if (!this.resolveCopy) {
-            throw new Error('The resolveCopy deletion is not set. This should not happen, and is likely a bug.');
+            throw new Error('The resolveCopy function is not set. This should not happen, and is likely a bug.');
         }
 
         this.resolveCopy({copied: true, parent});
@@ -237,7 +256,7 @@ export default class Datagrid extends React.Component<Props> {
 
     @action handleCopyOverlayClose = () => {
         if (!this.resolveCopy) {
-            throw new Error('The resolveCopy deletion is not set. This should not happen, and is likely a bug.');
+            throw new Error('The resolveCopy function is not set. This should not happen, and is likely a bug.');
         }
 
         this.resolveCopy({copied: false});
@@ -462,6 +481,17 @@ export default class Datagrid extends React.Component<Props> {
                         />
                     }
                 </div>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.selectionDeleting}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleSelectionDeleteDialogCancelClick}
+                    onConfirm={this.handleSelectionDeleteDialogConfirmClick}
+                    open={this.showDeleteSelectionDialog}
+                    title={translate('sulu_admin.delete_warning_title')}
+                >
+                    {translate('sulu_admin.delete_selection_warning_text', {count: store.selections.length})}
+                </Dialog>
                 {deletable &&
                     <Dialog
                         cancelText={translate('sulu_admin.cancel')}

@@ -2,6 +2,7 @@
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {observable} from 'mobx';
+import {translate} from '../../../utils/Translator';
 import SingleDatagridOverlay from '../../SingleDatagridOverlay';
 import Datagrid from '../Datagrid';
 import DatagridStore from '../stores/DatagridStore';
@@ -25,6 +26,7 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observa
     };
     this.deactivate = jest.fn();
     this.delete = jest.fn();
+    this.deleteSelection = jest.fn();
     this.order = jest.fn();
     this.sort = jest.fn();
     this.sortColumn = {
@@ -84,14 +86,14 @@ jest.mock('../registries/DatagridFieldTransformerRegistry', () => ({
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate: jest.fn(function(key) {
         switch (key) {
             case 'sulu_admin.page':
                 return 'Page';
             case 'sulu_admin.of':
                 return 'of';
         }
-    },
+    }),
 }));
 
 jest.mock('../../SingleDatagridOverlay', () => function() {
@@ -571,6 +573,56 @@ test('DatagridStore should move item when onRequestItemMove callback is called a
     });
 });
 
+test('Delete warning should disappear when deleting selection was requested and overlay is cancelled', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    datagridStore.selections.push({}, {});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.instance().requestSelectionDelete();
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_selection_warning_text', {count: 2});
+
+    datagrid.find('Dialog').at(0).prop('onCancel')();
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+});
+
+test('DatagridStore should delete selections when deleting selection was requested and overlay is confirmed', () => {
+    datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    datagridStore.selections.push({}, {}, {});
+    const deleteSelectionPromise = Promise.resolve();
+    // $FlowFixMe
+    datagridStore.deleteSelection.mockReturnValue(deleteSelectionPromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const datagrid = shallow(<Datagrid adapters={['table']} store={datagridStore} />);
+
+    datagrid.instance().requestSelectionDelete();
+    datagrid.update();
+    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_selection_warning_text', {count: 3});
+
+    datagrid.find('Dialog').at(0).prop('onConfirm')();
+
+    expect(datagridStore.deleteSelection).toBeCalledWith();
+
+    return deleteSelectionPromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+    });
+});
+
 test('Delete warning should disappear when onRequestItemDelete callback is called and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
@@ -583,12 +635,12 @@ test('Delete warning should disappear when onRequestItemDelete callback is calle
 
     const requestDeletePromise = datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
-    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
 
-    datagrid.find('Dialog').at(0).prop('onCancel')();
+    datagrid.find('Dialog').at(1).prop('onCancel')();
     return requestDeletePromise.then(() => {
         datagrid.update();
-        expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+        expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
 
         expect(datagridStore.delete).not.toBeCalled();
     });
@@ -610,9 +662,9 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
 
     const requestDeletePromise = datagrid.find('TableAdapter').prop('onRequestItemDelete')(5);
     datagrid.update();
-    expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
 
-    datagrid.find('Dialog').at(0).prop('onConfirm')();
+    datagrid.find('Dialog').at(1).prop('onConfirm')();
     return requestDeletePromise.then(() => {
         expect(datagrid.instance().deleting).toEqual(true);
         expect(datagridStore.delete).toBeCalledWith(5);
@@ -620,7 +672,7 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
         return deletePromise.then(() => {
             datagrid.update();
             expect(datagrid.instance().deleting).toEqual(false);
-            expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(false);
+            expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
         });
     });
 });
@@ -637,13 +689,13 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
 
     const requestOrderPromise = datagrid.find('TableAdapter').prop('onRequestItemOrder')(5);
     datagrid.update();
-    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
+    expect(datagrid.find('Dialog').at(2).prop('open')).toEqual(true);
 
-    datagrid.find('Dialog').at(1).prop('onCancel')();
+    datagrid.find('Dialog').at(2).prop('onCancel')();
 
     return requestOrderPromise.then(() => {
         datagrid.update();
-        expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+        expect(datagrid.find('Dialog').at(2).prop('open')).toEqual(false);
 
         expect(datagridStore.order).not.toBeCalled();
     });
@@ -665,8 +717,8 @@ test('DatagridStore should order item when onRequestItemOrder callback is called
 
     const requestOrderPromise = datagrid.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
     datagrid.update();
-    expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(true);
-    datagrid.find('Dialog').at(1).prop('onConfirm')();
+    expect(datagrid.find('Dialog').at(2).prop('open')).toEqual(true);
+    datagrid.find('Dialog').at(2).prop('onConfirm')();
 
     return requestOrderPromise.then(() => {
         expect(datagrid.instance().ordering).toEqual(true);
@@ -675,7 +727,7 @@ test('DatagridStore should order item when onRequestItemOrder callback is called
         return orderPromise.then(() => {
             datagrid.update();
             expect(datagrid.instance().ordering).toEqual(false);
-            expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(datagrid.find('Dialog').at(2).prop('open')).toEqual(false);
         });
     });
 });

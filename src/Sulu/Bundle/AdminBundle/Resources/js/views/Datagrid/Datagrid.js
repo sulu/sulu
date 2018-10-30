@@ -3,6 +3,7 @@ import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import React from 'react';
+import type {ElementRef} from 'react';
 import {default as DatagridContainer} from '../../containers/Datagrid';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {withToolbar} from '../../containers/Toolbar';
@@ -18,7 +19,7 @@ class Datagrid extends React.Component<ViewProps> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
-    @observable deleting = false;
+    datagrid: ?ElementRef<typeof DatagridContainer>;
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -99,6 +100,10 @@ class Datagrid extends React.Component<ViewProps> {
         router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
     };
 
+    setDatagridRef = (datagrid) => {
+        this.datagrid = datagrid;
+    };
+
     render() {
         const {
             route: {
@@ -119,6 +124,7 @@ class Datagrid extends React.Component<ViewProps> {
                     header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
                     onItemAdd={addRoute && this.handleItemAdd}
                     onItemClick={editRoute && this.handleEditClick}
+                    ref={this.setDatagridRef}
                     searchable={searchable}
                     store={this.datagridStore}
                 />
@@ -168,19 +174,8 @@ export default withToolbar(Datagrid, function() {
         value: translate('sulu_admin.delete'),
         icon: 'su-trash-alt',
         disabled: this.datagridStore.selectionIds.length === 0,
-        loading: this.deleting,
-        onClick: action(() => {
-            this.deleting = true;
-
-            return this.datagridStore.deleteSelection()
-                .then(action(() => {
-                    this.deleting = false;
-                }))
-                .catch(action((error) => {
-                    this.deleting = false;
-                    return Promise.reject(error);
-                }));
-        }),
+        loading: this.datagridStore.selectionDeleting,
+        onClick: this.datagrid.requestSelectionDelete,
     });
 
     return {
