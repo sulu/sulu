@@ -23,38 +23,16 @@ class TargetGroupControllerTest extends SuluTestCase
     const BASE_URL = 'api/target-groups';
 
     /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup;
-
-    /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup2;
-
-    /**
-     * Data used for setup initial target groups.
-     *
-     * @var array
-     */
-    private $setupData;
-
-    /**
      * {@inheritdoc}
      */
     public function setUp()
     {
-        $this->initOrm();
+        $this->purgeDatabase();
     }
 
-    /**
-     * Initialize test data.
-     */
-    public function initOrm()
+    public function testGetById()
     {
-        $this->purgeDatabase();
-
-        $this->setupData = [
+        $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
             'description' => 'Target group description number 1',
             'priority' => 3,
@@ -67,36 +45,41 @@ class TargetGroupControllerTest extends SuluTestCase
                     'webspaceKey' => 'my-webspace-2',
                 ],
             ],
-        ];
+        ]);
 
-        // Create first target group.
-        $this->targetGroup = $this->createTargetGroup($this->setupData);
-        $this->targetGroup2 = $this->createTargetGroup($this->setupData);
-
-        // Flush.
         $this->getEntityManager()->flush();
-    }
 
-    public function testGetById()
-    {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', self::BASE_URL . '/' . $this->targetGroup->getId());
+        $client->request('GET', self::BASE_URL . '/' . $targetGroup->getId());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $sampleData = $this->setupData;
-
-        $this->assertEquals($sampleData['title'], $response['title']);
-        $this->assertEquals($sampleData['description'], $response['description']);
-        $this->assertEquals($sampleData['priority'], $response['priority']);
-        $this->assertEquals($sampleData['active'], $response['active']);
-        $this->assertCount(count($sampleData['webspaces']), $response['webspaces']);
+        $this->assertEquals('Target Group Title', $response['title']);
+        $this->assertEquals('Target group description number 1', $response['description']);
+        $this->assertEquals(3, $response['priority']);
+        $this->assertEquals(true, $response['active']);
+        $this->assertCount(2, $response['webspaces']);
     }
 
     public function testGetAll()
     {
+        $targetGroup1 = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+        ]);
+        $targetGroup2 = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+            'description' => 'Target group description number 1',
+            'priority' => 3,
+            'active' => true,
+        ]);
+
+        $this->getEntityManager()->flush();
+
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', self::BASE_URL);
@@ -167,6 +150,12 @@ class TargetGroupControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
+        $targetGroup = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+        ]);
+
+        $this->getEntityManager()->flush();
+
         $data = [
             'title' => 'Target Group Title 2',
             'description' => 'Target group description number 2',
@@ -193,7 +182,7 @@ class TargetGroupControllerTest extends SuluTestCase
             ],
         ];
 
-        $client->request('PUT', self::BASE_URL . '/' . $this->targetGroup->getId(), [], [], [], json_encode($data));
+        $client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], json_encode($data));
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -324,25 +313,40 @@ class TargetGroupControllerTest extends SuluTestCase
 
     public function testSingleDelete()
     {
+        $targetGroup = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+        ]);
+
+        $this->getEntityManager()->flush();
+
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', self::BASE_URL . '/' . $this->targetGroup->getId());
+        $client->request('DELETE', self::BASE_URL . '/' . $targetGroup->getId());
 
         $response = $client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
         $this->getEntityManager()->clear();
 
-        $targetGroup = $this->getTargetGroupRepository()->find($this->targetGroup->getId());
+        $targetGroup = $this->getTargetGroupRepository()->find($targetGroup->getId());
 
         $this->assertNull($targetGroup);
     }
 
     public function testMultipleDelete()
     {
+        $targetGroup1 = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+        ]);
+        $targetGroup2 = $this->createTargetGroup([
+            'title' => 'Target Group Title',
+        ]);
+
+        $this->getEntityManager()->flush();
+
         $client = $this->createAuthenticatedClient();
         $client->request(
             'DELETE',
-            self::BASE_URL . '?ids=' . implode(',', [$this->targetGroup->getId(), $this->targetGroup2->getId()])
+            self::BASE_URL . '?ids=' . implode(',', [$targetGroup1->getId(), $targetGroup2->getId()])
         );
 
         $response = $client->getResponse();
@@ -350,8 +354,8 @@ class TargetGroupControllerTest extends SuluTestCase
 
         $this->getEntityManager()->clear();
 
-        $targetGroup = $this->getTargetGroupRepository()->find($this->targetGroup->getId());
-        $targetGroup2 = $this->getTargetGroupRepository()->find($this->targetGroup2->getId());
+        $targetGroup = $this->getTargetGroupRepository()->find($targetGroup1->getId());
+        $targetGroup2 = $this->getTargetGroupRepository()->find($targetGroup2->getId());
 
         $this->assertNull($targetGroup);
         $this->assertNull($targetGroup2);
