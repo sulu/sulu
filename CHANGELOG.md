@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * HOTFIX      #4241 [SecurityBundle]        Set default locale for admin user to "en"
     * HOTFIX      #4112 [SecurityBundle]        Added exception messages to user provider for enabled and locked
 
 * 1.5.18 (2018-10-05)
