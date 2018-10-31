@@ -4,7 +4,7 @@ import type {ElementRef} from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
+import {Datagrid, DatagridStore, SingleDatagridOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../../containers/MediaCollection';
@@ -29,6 +29,8 @@ class MediaOverview extends React.Component<ViewProps> {
     @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;
     mediaDatagrid: ?ElementRef<typeof Datagrid>;
+    @observable showMediaMoveOverlay: boolean = false;
+    @observable mediaMoving: boolean = false;
     disposer: () => void;
 
     static getDerivedRouteAttributes() {
@@ -146,6 +148,20 @@ class MediaOverview extends React.Component<ViewProps> {
         this.mediaDatagrid = mediaDatagrid;
     };
 
+    @action handleMoveMediaOverlayClose = () => {
+        this.showMediaMoveOverlay = false;
+    };
+
+    @action handleMoveMediaOverlayConfirm = (collection: Object) => {
+        this.mediaMoving = true;
+
+        this.mediaDatagridStore.moveSelection(collection.id).then(action(() => {
+            this.collectionDatagridStore.reload();
+            this.showMediaMoveOverlay = false;
+            this.mediaMoving = false;
+        }));
+    };
+
     render() {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
@@ -158,6 +174,18 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaDatagridStore={this.mediaDatagridStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
+                />
+                <SingleDatagridOverlay
+                    adapter="column_list"
+                    clearSelectionOnClose={true}
+                    confirmLoading={this.mediaMoving}
+                    disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
+                    locale={this.locale}
+                    onClose={this.handleMoveMediaOverlayClose}
+                    onConfirm={this.handleMoveMediaOverlayConfirm}
+                    open={this.showMediaMoveOverlay}
+                    resourceKey={COLLECTIONS_RESOURCE_KEY}
+                    title={translate('sulu_media.move_media')}
                 />
             </div>
         );
@@ -209,12 +237,21 @@ export default withToolbar(MediaOverview, function() {
             : undefined,
         items: [
             {
-                type: 'button',
-                value: translate('sulu_admin.delete'),
-                icon: 'su-trash-alt',
                 disabled: this.mediaDatagridStore.selectionIds.length === 0,
+                icon: 'su-trash-alt',
                 loading: this.mediaDatagridStore.selectionDeleting,
                 onClick: this.mediaDatagrid.requestSelectionDelete,
+                type: 'button',
+                value: translate('sulu_admin.delete'),
+            },
+            {
+                disabled: this.mediaDatagridStore.selectionIds.length === 0,
+                icon: 'su-arrows-alt',
+                onClick: action(() => {
+                    this.showMediaMoveOverlay = true;
+                }),
+                type: 'button',
+                value: translate('sulu_admin.move_selected'),
             },
         ],
     };

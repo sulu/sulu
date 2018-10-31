@@ -307,7 +307,7 @@ export default class DatagridStore {
             }));
     };
 
-    move = (id: string | number, parentId: string | number) => {
+    requestMove(id: string | number, parentId: string | number) {
         const queryOptions = {
             ...this.options,
             action: 'move',
@@ -319,10 +319,24 @@ export default class DatagridStore {
             queryOptions.locale = locale.get();
         }
 
-        return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
+        return ResourceRequester.postWithId(this.resourceKey, id, {}, queryOptions);
+    }
+
+    move = (id: string | number, parentId: string | number) => {
+        return this.requestMove(id, parentId)
             .then(action(() => {
                 this.activate(id);
                 this.clear();
+            }));
+    };
+
+    @action moveSelection = (parentId: string | number) => {
+        const {selectionIds} = this;
+
+        return Promise.all(selectionIds.map((selectionId: string | number) => this.requestMove(selectionId, parentId)))
+            .then(action(() => {
+                this.clear();
+                this.activate(parentId);
             }));
     };
 
