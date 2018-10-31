@@ -1533,7 +1533,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
-            '/api/categories/' . $category4->getId() . '?locale=en&action=move&parentId=' . $category3->getId()
+            '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=' . $category3->getId()
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -1566,7 +1566,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
-            '/api/categories/' . $category4->getId() . '?locale=en&action=move&parentId=null'
+            '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=null'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

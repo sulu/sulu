@@ -171,13 +171,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     private function move($id, Request $request)
     {
-        $parentId = $this->getRequestParameter($request, 'parentId', true);
-        if ('null' === $parentId) {
-            $parentId = null;
+        $destination = $this->getRequestParameter($request, 'destination', true);
+        if ('null' === $destination) {
+            $destination = null;
         }
 
         $categoryManager = $this->getCategoryManager();
-        $category = $categoryManager->move($id, $parentId);
+        $category = $categoryManager->move($id, $destination);
 
         return $this->handleView($this->view($categoryManager->getApiObject($category, $request->get('locale'))));
     }
