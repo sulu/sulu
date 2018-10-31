@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import type {ElementRef} from 'react';
 import {default as DatagridContainer} from '../../containers/Datagrid';
+import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -20,6 +21,9 @@ class Datagrid extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     datagrid: ?ElementRef<typeof DatagridContainer>;
+    @observable deleting: boolean = false;
+    @observable moving: boolean = false;
+    @observable showMoveOverlay: boolean = false;
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -104,6 +108,19 @@ class Datagrid extends React.Component<ViewProps> {
         this.datagrid = datagrid;
     };
 
+    @action handleMoveOverlayClose = () => {
+        this.showMoveOverlay = false;
+    };
+
+    @action handleMoveOverlayConfirm = (item: Object) => {
+        this.moving = true;
+
+        this.datagridStore.moveSelection(item.id).then(action(() => {
+            this.moving = false;
+            this.showMoveOverlay = false;
+        }));
+    };
+
     render() {
         const {
             route: {
@@ -128,6 +145,19 @@ class Datagrid extends React.Component<ViewProps> {
                     searchable={searchable}
                     store={this.datagridStore}
                 />
+                <SingleDatagridOverlay
+                    adapter="column_list"
+                    allowActivateForDisabledItems={false}
+                    clearSelectionOnClose={true}
+                    confirmLoading={this.moving}
+                    disabledIds={this.datagridStore.selectionIds}
+                    locale={this.locale}
+                    onClose={this.handleMoveOverlayClose}
+                    onConfirm={this.handleMoveOverlayConfirm}
+                    open={this.showMoveOverlay}
+                    resourceKey={this.datagridStore.resourceKey}
+                    title={translate('sulu_admin.move_items')}
+                />
             </div>
         );
     }
@@ -141,6 +171,7 @@ export default withToolbar(Datagrid, function() {
             options: {
                 addRoute,
                 locales,
+                movable,
             },
         },
     } = router;
@@ -177,6 +208,18 @@ export default withToolbar(Datagrid, function() {
         loading: this.datagridStore.selectionDeleting,
         onClick: this.datagrid.requestSelectionDelete,
     });
+
+    if (movable) {
+        items.push({
+            type: 'button',
+            value: translate('sulu_admin.move_selected'),
+            icon: 'su-arrows-alt',
+            disabled: this.datagridStore.selectionIds.length === 0,
+            onClick: action(() => {
+                this.showMoveOverlay = true;
+            }),
+        });
+    }
 
     return {
         locale,

@@ -31,5 +31,6 @@
     "sulu_media.taxonomies": "Taxonomien",
     "sulu_media.history": "Verlauf",
     "sulu_media.formats": "Formate",
-    "sulu_media.all_collections": "Alle Kollektionen"
+    "sulu_media.all_collections": "Alle Kollektionen",
+    "sulu_media.move_media": "Medien verschieben"
 }
