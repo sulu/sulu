@@ -5,7 +5,7 @@ import Select from '../../Select';
 import SingleSelect from '../../SingleSelect';
 
 const Option = SingleSelect.Option;
-const Divider = SingleSelect.Option;
+const Divider = SingleSelect.Divider;
 
 jest.mock('../../Select');
 
@@ -33,7 +33,7 @@ test('The component should render a select with dark skin', () => {
     expect(select.render()).toMatchSnapshot();
 });
 
-test('The component should return the first option as default display value', () => {
+test('The component should return an empty string as default displayValue if no valueless option is present', () => {
     const select = shallow(
         <SingleSelect>
             <Option value="option-1">Option 1</Option>
@@ -43,7 +43,36 @@ test('The component should return the first option as default display value', ()
         </SingleSelect>
     );
     const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('Option 1');
+    expect(displayValue).toBe('');
+});
+
+test('The component should return the content of the last valueless option as default displayValue', () => {
+    const select = shallow(
+        <SingleSelect>
+            <Option value="option-1">Option 1</Option>
+            <Option>Option without value 1</Option>
+            <Option>Option without value 2</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </SingleSelect>
+    );
+    const displayValue = select.find(Select).props().displayValue;
+    expect(displayValue).toBe('Option without value 2');
+});
+
+test('The component should return undefined as value if a valueless option is selected', () => {
+    const select = shallow(
+        <SingleSelect>
+            <Option value="option-1">Option 1</Option>
+            <Option>Option without value 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </SingleSelect>
+    );
+    const value = select.find(Select).props().value;
+    expect(value).toBe(undefined);
 });
 
 test('The component should return the correct displayValue', () => {
