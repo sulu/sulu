@@ -15,12 +15,9 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
-use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
-use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
-use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -28,7 +25,6 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes categories available through a REST API.
@@ -58,6 +54,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $locale = $this->getRequestParameter($request, 'locale', true);
         $rootKey = $request->get('rootKey');
         $parentId = $request->get('parentId');
+        $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
+
+        if ('root' === $parentId) {
+            $includeRoot = false;
+            $parentId = null;
+        }
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
@@ -67,7 +69,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 $locale,
                 $parentId ?? $rootId,
                 $expandedIds,
-                $request->query->has('expandedIds')
+                $request->query->has('expandedIds'),
+                $includeRoot
             );
         } elseif ($request->query->has('ids')) {
             $entities = $this->getCategoryManager()->findByIds(explode(',', $request->query->get('ids')));
@@ -82,6 +85,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($this->view($list, 200));
     }
 
+    /**
+     * @Post("categories/{id}")
+     */
     public function postTriggerAction($id, Request $request)
     {
         $action = $this->getRequestParameter($request, 'action', true);
@@ -104,7 +110,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     private function move($id, Request $request)
     {
         $destination = $this->getRequestParameter($request, 'destination', true);
-        if ('null' === $destination) {
+        if ('root' === $destination) {
             $destination = null;
         }
 
@@ -169,7 +175,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $locale,
         $parentId = null,
         $expandedIds = [],
-        $expandSelf = false
+        $expandSelf = false,
+        $includeRoot = false
     ) {
         $listBuilder = $this->initializeListBuilder($locale);
 
@@ -239,6 +246,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
             }
 
             $categories = $categoriesByParentId[$parentId];
+        }
+
+        if ($includeRoot && !$parentId) {
+            $categories = [
+                new RootCategory(
+                    $this->get('translator')->trans('sulu_category.all_categories', [], 'admin'),
+                    $categories
+                ),
+            ];
         }
 
         return new CategoryListRepresentation(

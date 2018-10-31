@@ -4,5 +4,6 @@
     "sulu_category.key": "Key",
     "sulu_category.name": "Name",
     "sulu_category.key_word": "Keywords",
-    "sulu_category.multiple_usage": "Multiple Usage"
+    "sulu_category.multiple_usage": "Multiple Usage",
+    "sulu_category.all_categories": "All categories"
 }

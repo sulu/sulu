@@ -155,6 +155,7 @@ class Datagrid extends React.Component<ViewProps> {
                     onClose={this.handleMoveOverlayClose}
                     onConfirm={this.handleMoveOverlayConfirm}
                     open={this.showMoveOverlay}
+                    options={{includeRoot: true}}
                     resourceKey={this.datagridStore.resourceKey}
                     title={translate('sulu_admin.move_items')}
                 />

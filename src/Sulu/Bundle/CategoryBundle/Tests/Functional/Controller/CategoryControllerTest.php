@@ -1471,7 +1471,7 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
-            '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=null'
+            '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=root'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
