@@ -1,6 +1,7 @@
 // @flow
 import {shallow, render} from 'enzyme';
 import React from 'react';
+import {datagridAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -39,33 +40,12 @@ test('Render a basic Masonry view with MediaCards', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
             icon="su-pen"
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={7}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -98,33 +78,13 @@ test('MediaCard should call the the appropriate handler', () => {
     ];
     const mediaCardAdapter = shallow(
         <MediaCardAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
             icon="su-pen"
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
             onItemClick={mediaCardSelectionChangeSpy}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={mediaCardSelectionChangeSpy}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={3}
             pageCount={9}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -136,33 +96,12 @@ test('InfiniteScroller should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <MediaCardAdapter
-            active={undefined}
-            activeItems={[]}
-            data={[]}
-            disabledIds={[]}
+            {...datagridAdapterDefaultProps}
             icon="su-pen"
-            limit={10}
             loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
             onPageChange={pageChangeSpy}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={7}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({

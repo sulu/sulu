@@ -1,6 +1,7 @@
 // @flow
 import {render} from 'enzyme';
 import React from 'react';
+import {datagridAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
 jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
@@ -41,32 +42,11 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
     ];
     const mediaCardAdapter = render(
         <MediaCardOverviewAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={5}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 

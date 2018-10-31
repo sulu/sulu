@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import datagridAdapterDefaultProps from '../../../../utils/TestHelper/datagridAdapterDefaultProps';
 import TreeTableAdapter from '../../adapters/TreeTableAdapter';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -67,32 +68,9 @@ test('Render data with schema', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={2}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -140,32 +118,12 @@ test('Render data without header', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
             options={{showHeader: false}}
             page={1}
             pageCount={2}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -192,32 +150,9 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
 
     const treeTableAdapter = shallow(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
-            data={[]}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
+            {...datagridAdapterDefaultProps}
             onSort={sortSpy}
-            options={{}}
-            page={2}
-            pageCount={5}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -275,32 +210,9 @@ test('Render data with two columns', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={2}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -348,32 +260,10 @@ test('Render data with schema and selections', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={2}
             schema={schema}
             selections={[1, 3]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -444,32 +334,11 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
 
     const treeListAdapter = mount(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
             onItemActivate={onItemActivateSpy}
-            onItemAdd={undefined}
-            onItemClick={undefined}
             onItemDeactivate={onItemDeactivateSpy}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={1}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -511,32 +380,10 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
             onItemClick={rowEditClickSpy}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={1}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -572,32 +419,10 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     };
     const treeListAdapter = render(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
             onItemAdd={rowAddClickSpy}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={1}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -633,32 +458,10 @@ test('Click on pencil should execute onItemClick callback', () => {
     };
     const treeListAdapter = shallow(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
             onItemClick={rowEditClickSpy}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={1}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     const buttons = treeListAdapter.find('Table').prop('buttons');
@@ -698,32 +501,10 @@ test('Click on add should execute onItemAdd callback', () => {
     const rowAddClickSpy = jest.fn();
     const treeListAdapter = shallow(
         <TreeTableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
             onItemAdd={rowAddClickSpy}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={1}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     const buttons = treeListAdapter.find('Table').prop('buttons');

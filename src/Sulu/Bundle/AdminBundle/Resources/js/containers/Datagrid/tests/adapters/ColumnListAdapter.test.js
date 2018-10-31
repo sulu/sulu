@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
+import datagridAdapterDefaultProps from '../../../../utils/TestHelper/datagridAdapterDefaultProps';
 import ColumnListAdapter from '../../adapters/ColumnListAdapter';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -105,32 +106,12 @@ test('Render different kind of data with edit button', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={4}
+            {...datagridAdapterDefaultProps}
             activeItems={[2, 4]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
             onItemAdd={jest.fn()}
             onItemClick={jest.fn()}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -150,32 +131,10 @@ test('Render data without edit button', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={4}
+            {...datagridAdapterDefaultProps}
             activeItems={[]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -195,32 +154,12 @@ test('Render data with selection', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={4}
+            {...datagridAdapterDefaultProps}
             activeItems={[]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
             selections={[1]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -248,32 +187,13 @@ test('Render data with disabled items', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
             disabledIds={[3]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
             selections={[1]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -287,32 +207,11 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={4}
+            {...datagridAdapterDefaultProps}
             activeItems={[]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
             onItemAdd={jest.fn()}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -338,32 +237,11 @@ test('Render data with loading column', () => {
 
     const columnListAdapter = render(
         <ColumnListAdapter
-            active={1}
+            {...datagridAdapterDefaultProps}
             activeItems={[1]}
             data={data}
-            disabledIds={[]}
-            limit={10}
             loading={true}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -397,32 +275,10 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
             onItemActivate={itemActivateSpy}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -445,32 +301,11 @@ test('Do not show order button if onRequestItemOrder callback is undefined', () 
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
             onRequestItemMove={jest.fn()}
             onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -499,32 +334,10 @@ test('Call onRequestItemOrder callback when an item ordering has been changed', 
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={1}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
             onRequestItemOrder={requestItemOrderSpy}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -565,32 +378,11 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={1}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
             onItemActivate={itemActivateSpy}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
             onRequestItemOrder={jest.fn()}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -622,32 +414,11 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={itemSelectionChangeSpy}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
             selections={[2]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -685,32 +456,10 @@ test('Execute onRequestItemCopy callback when an item is moved with the correct 
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
             onRequestItemCopy={copyClickSpy}
-            onRequestItemDelete={undefined}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -747,32 +496,10 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={undefined}
             onRequestItemMove={moveClickSpy}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -809,32 +536,10 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={deleteClickSpy}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -870,32 +575,11 @@ test('Enable delete and move button if an item in this column has been activated
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1, 3]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={jest.fn()}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -930,32 +614,11 @@ test('Disable delete and move button if no item in this column has been activate
 
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1]}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
             onRequestItemDelete={jest.fn()}
             onRequestItemMove={jest.fn()}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -967,32 +630,8 @@ test('Disable delete and move button if no item in this column has been activate
 test('Do not show settings if no options are available', () => {
     const columnListAdapter = mount(
         <ColumnListAdapter
-            active={3}
+            {...datagridAdapterDefaultProps}
             activeItems={[1]}
-            data={[]}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={undefined}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={undefined}
-            pageCount={0}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
