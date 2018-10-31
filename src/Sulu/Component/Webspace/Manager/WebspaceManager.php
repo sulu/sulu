@@ -319,9 +319,7 @@ class WebspaceManager implements WebspaceManagerInterface
                 );
             }
 
-            if (!class_exists($class)) {
-                require_once $cache->getPath();
-            }
+            require_once $cache->getPath();
 
             $this->webspaceCollection = new $class();
         }

@@ -60,6 +60,12 @@
                         <url language="es">destination.es</url>
                     </urls>
                 </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="de">destination.de</url>
+                        <url language="es">destination.es</url>
+                    </urls>
+                </environment>
                 <environment type="phpcr">
                     <urls>
                         <url language="de">destination.de</url>

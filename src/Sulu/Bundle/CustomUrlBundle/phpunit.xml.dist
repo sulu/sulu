@@ -18,6 +18,7 @@
     </filter>
 
     <php>
+        <env name="APP_ENV" value="test"/>
         <env name="KERNEL_CLASS" value="Sulu\Bundle\CustomUrlBundle\Tests\Functional\AppKernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>

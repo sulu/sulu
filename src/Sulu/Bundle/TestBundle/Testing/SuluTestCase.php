@@ -113,7 +113,7 @@ abstract class SuluTestCase extends KernelTestCase
     {
         return $this->createClient(
             [
-                'environment' => 'dev',
+                'environment' => 'test',
             ],
             [
                 'PHP_AUTH_USER' => 'test',
@@ -132,7 +132,7 @@ abstract class SuluTestCase extends KernelTestCase
         return $this->createClient(
             [
                 'sulu_context' => 'website',
-                'environment' => 'dev',
+                'environment' => 'test',
             ]
         );
     }
