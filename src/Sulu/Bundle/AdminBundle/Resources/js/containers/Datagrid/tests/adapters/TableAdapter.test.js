@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
+import datagridAdapterDefaultProps from '../../../../utils/TestHelper/datagridAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
 import datagridFieldTransformerRegistry from '../../registries/DatagridFieldTransformerRegistry';
@@ -55,32 +56,11 @@ test('Render data with schema', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={5}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -107,32 +87,9 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
 
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
-            data={[]}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
+            {...datagridAdapterDefaultProps}
             onSort={sortSpy}
-            options={{}}
-            page={2}
-            pageCount={5}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -181,32 +138,11 @@ test('Render data with all different visibility types schema', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={5}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -247,32 +183,13 @@ test('Render data with schema and selections', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={jest.fn()}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
             selections={[1, 3]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -308,32 +225,11 @@ test('Render data with schema in different order', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -363,32 +259,11 @@ test('Render data with schema not containing all fields', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -425,32 +300,12 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
             onItemClick={rowEditClickSpy}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -481,30 +336,11 @@ test('Render column with ascending sort icon', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
             sortColumn="title"
             sortOrder="asc"
         />
@@ -537,30 +373,11 @@ test('Render column with descending sort icon', () => {
     };
     const tableAdapter = render(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
             sortColumn="description"
             sortOrder="desc"
         />
@@ -599,32 +416,12 @@ test('Click on pencil should execute onItemClick callback', () => {
     };
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
             onItemClick={rowEditClickSpy}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     const buttons = tableAdapter.find('Table').prop('buttons');
@@ -665,32 +462,12 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     };
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
             onItemSelectionChange={rowSelectionChangeSpy}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
             pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -710,32 +487,10 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     };
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
+            {...datagridAdapterDefaultProps}
             data={data}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
             onAllSelectionChange={allSelectionChangeSpy}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
-            onLimitChange={jest.fn()}
-            onPageChange={jest.fn()}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
-            page={1}
-            pageCount={3}
             schema={schema}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
 
@@ -747,31 +502,12 @@ test('Pagination should be passed correct props', () => {
     const limitChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
-            disabledIds={[]}
+            {...datagridAdapterDefaultProps}
             limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
             onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={2}
             pageCount={7}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     expect(tableAdapter.find('Pagination').get(0).props).toEqual({
@@ -790,31 +526,10 @@ test('Pagination should not be rendered if no data is available', () => {
     const limitChangeSpy = jest.fn();
     const tableAdapter = shallow(
         <TableAdapter
-            active={undefined}
-            activeItems={[]}
-            disabledIds={[]}
-            limit={10}
-            loading={false}
-            onAllSelectionChange={undefined}
-            onItemActivate={jest.fn()}
-            onItemAdd={undefined}
-            onItemClick={undefined}
-            onItemDeactivate={jest.fn()}
-            onItemSelectionChange={undefined}
+            {...datagridAdapterDefaultProps}
             onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
-            onRequestItemCopy={undefined}
-            onRequestItemDelete={jest.fn()}
-            onRequestItemMove={undefined}
-            onRequestItemOrder={undefined}
-            onSort={jest.fn()}
-            options={{}}
             page={1}
-            pageCount={7}
-            schema={{}}
-            selections={[]}
-            sortColumn={undefined}
-            sortOrder={undefined}
         />
     );
     expect(tableAdapter.find('Pagination')).toHaveLength(0);
