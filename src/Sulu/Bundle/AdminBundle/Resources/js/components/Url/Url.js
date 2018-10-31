@@ -164,7 +164,11 @@ export default class Url extends React.Component<Props> {
         return (
             <div className={urlClass}>
                 <div className={urlStyles.protocols}>
-                    <SingleSelect onChange={this.handleProtocolChange} skin="flat" value={this.protocol}>
+                    <SingleSelect
+                        onChange={this.handleProtocolChange}
+                        skin="flat"
+                        value={this.protocol || protocols[0]}
+                    >
                         {protocols.map((protocol) => (
                             <SingleSelect.Option key={protocol} value={protocol}>{protocol}</SingleSelect.Option>
                         ))}

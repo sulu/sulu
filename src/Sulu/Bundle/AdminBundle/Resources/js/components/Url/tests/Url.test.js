@@ -36,7 +36,6 @@ test('Set the correct values for protocol and path when updating', () => {
 test('Should log a warning if a not available protocol has been given', () => {
     const url = shallow(<Url onChange={jest.fn()} protocols={['http://']} value="https://www.sulu.io" />);
 
-    expect(url.find('SingleSelect').prop('value')).toEqual(undefined);
     expect(url.find('input').prop('value')).toEqual('https://www.sulu.io');
     expect(log.warn).toBeCalled();
 });
