@@ -37,19 +37,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
 {
     use RequestParametersTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'categories';
 
-    /**
-     * Returns the category which is assigned to the given id.
-     *
-     * @param $id
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
@@ -64,45 +53,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($view);
     }
 
-    /**
-     * Returns the sub-graph below the category which is assigned to the given parentId.
-     * This method is used by the husky datagrid to load children of a category.
-     * If request.flat is set, only the first level of the respective graph is returned in a flat format.
-     *
-     * @param Request $request
-     * @param mixed $parentId
-     *
-     * @return Response
-     *
-     * @deprecated Will be removed in 2.0. Use the "parent" option on the cgetAction instead.
-     */
-    public function getChildrenAction($parentId, Request $request)
-    {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-
-        if ('true' == $request->get('flat')) {
-            // check if parent exists
-            $this->getCategoryManager()->findById($parentId);
-            $list = $this->getListRepresentation($request, $locale, $parentId);
-        } else {
-            $entities = $this->getCategoryManager()->findChildrenByParentId($parentId);
-            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, self::$entityKey);
-        }
-
-        return $this->handleView($this->view($list, 200));
-    }
-
-    /**
-     * Returns the whole category graph.
-     * If request.rootKey is set, only the sub-graph below the category which is assigned to the given key is returned.
-     * If request.flat is set, only the first level of the respective graph is returned in a flat format.
-     * If request.expand is set, the paths to the respective categories are expanded.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function cgetAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
@@ -132,16 +82,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($this->view($list, 200));
     }
 
-    /**
-     * Trigger an action for given category. Action is specified over get-action parameter.
-     *
-     * @Post("categories/{id}")
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function postTriggerAction($id, Request $request)
     {
         $action = $this->getRequestParameter($request, 'action', true);
@@ -161,14 +101,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         }
     }
 
-    /**
-     * Moves category - identified by id.
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     */
     private function move($id, Request $request)
     {
         $destination = $this->getRequestParameter($request, 'destination', true);
@@ -182,53 +114,21 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($this->view($categoryManager->getApiObject($category, $request->get('locale'))));
     }
 
-    /**
-     * Adds a new category.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function postAction(Request $request)
     {
         return $this->saveCategory($request);
     }
 
-    /**
-     * Updates the category which is assigned to the given id.
-     * Properties which are not set in the request will be removed from the category.
-     *
-     * @param $id
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function putAction($id, Request $request)
     {
         return $this->saveCategory($request, $id);
     }
 
-    /**
-     * Partly updates the category which is assigned to the given id.
-     * Properties which are not set in the request will not be changed.
-     *
-     * @param $id
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function patchAction(Request $request, $id)
     {
         return $this->saveCategory($request, $id, true);
     }
 
-    /**
-     * Deletes the category which is assigned to the given id.
-     *
-     * @param $id
-     *
-     * @return Response
-     */
     public function deleteAction($id)
     {
         $deleteCallback = function ($id) {
@@ -240,21 +140,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($view);
     }
 
-    /**
-     * Creates or updates a category based on the request.
-     * If id is set, the category which is assigned to the given id is overwritten.
-     * If patch is set, the category which is assigned to the given id is updated partially.
-     *
-     * @param Request $request
-     * @param null $id
-     * @param bool $patch
-     *
-     * @return Response
-     *
-     * @throws CategoryIdNotFoundException
-     * @throws CategoryKeyNotUniqueException
-     * @throws MissingArgumentException
-     */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
         $mediasData = $request->get('medias');
@@ -279,20 +164,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($this->view($category, 200));
     }
 
-    /**
-     * Returns a category-list-representation for the category graph respective to the request.
-     * The category-list-representation contains only the root level of the category graph.
-     *
-     * If parentId is set, the root level of the sub-graph below the category with the given parentId is returned.
-     * If expandedIds is set, the paths to the categories which are assigned to the ids are expanded.
-     *
-     * @param Request $request
-     * @param $locale
-     * @param null $parentId
-     * @param array $expandedIds
-     *
-     * @return CategoryListRepresentation
-     */
     protected function getListRepresentation(
         Request $request,
         $locale,
@@ -381,15 +252,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         );
     }
 
-    /**
-     * Initializes and returns a ListBuilder instance which is used when returning a CategoryListRepresentation
-     * for the given locale. The returned ListBuilder is initialized with the request-parameters and respective
-     * select fields.
-     *
-     * @param $locale
-     *
-     * @return DoctrineListBuilder
-     */
     private function initializeListBuilder($locale)
     {
         /** @var RestHelperInterface $restHelper */
@@ -415,19 +277,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $listBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.settings.categories';
     }
 
-    /**
-     * Returns the CategoryManager.
-     *
-     * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface
-     */
     private function getCategoryManager()
     {
         return $this->get('sulu_category.category_manager');
