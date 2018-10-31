@@ -8,6 +8,9 @@ const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
 jest.mock('../../Select');
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
 
 test('The component should render a generic select', () => {
     const select = shallow(
@@ -33,7 +36,7 @@ test('The component should render a select with dark skin', () => {
     expect(select.render()).toMatchSnapshot();
 });
 
-test('The component should return an empty string as default displayValue if no valueless option is present', () => {
+test('The component should return the default displayValue if no valueless option is present', () => {
     const select = shallow(
         <SingleSelect>
             <Option value="option-1">Option 1</Option>
@@ -43,7 +46,7 @@ test('The component should return an empty string as default displayValue if no 
         </SingleSelect>
     );
     const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('');
+    expect(displayValue).toBe('sulu_admin.please_choose');
 });
 
 test('The component should return the content of the last valueless option as default displayValue', () => {

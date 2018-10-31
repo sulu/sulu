@@ -87,6 +87,7 @@
     "sulu_admin.deactivate_all": "Deactivate all",
     "sulu_admin.all_selected": "All selected",
     "sulu_admin.none_selected": "None selected",
+    "sulu_admin.please_choose": "Please choose",
     "sulu_admin.column_options": "Column options",
     "sulu_admin.changelog_line_changer": "Last change {changer, select, undefined{} other{from {changer}}} at {changed}",
     "sulu_admin.changelog_line_creator": "Created {creator, select, undefined{} other{by {creator}}} at {created}",
