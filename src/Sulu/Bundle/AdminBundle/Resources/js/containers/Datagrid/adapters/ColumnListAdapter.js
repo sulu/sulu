@@ -271,7 +271,7 @@ export default class ColumnListAdapter extends AbstractAdapter {
                                     selected={selections.includes(item.id)}
                                     showOrderField={this.orderColumn === index}
                                 >
-                                    {item.title}
+                                    {item.title || item.name}
                                 </ColumnList.Item>
                             ))}
                         </ColumnList.Column>
