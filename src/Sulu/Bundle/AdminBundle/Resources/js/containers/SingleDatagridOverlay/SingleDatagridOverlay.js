@@ -22,6 +22,7 @@ type Props = {|
     overlayType: OverlayType,
     resourceKey: string,
     preSelectedItem?: ?Object,
+    reloadOnOpen?: boolean,
     title: string,
 |};
 
@@ -103,6 +104,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
             open,
             overlayType,
             preSelectedItem,
+            reloadOnOpen,
             title,
         } = this.props;
 
@@ -119,6 +121,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
                 open={open}
                 overlayType={overlayType}
                 preSelectedItems={preSelectedItem ? [preSelectedItem] : undefined}
+                reloadOnOpen={reloadOnOpen}
                 title={title}
             />
         );

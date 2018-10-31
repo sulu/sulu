@@ -314,6 +314,45 @@ test('Render the MediaCollection for all media', () => {
     expect(mediaCollection).toMatchSnapshot();
 });
 
+test('Pass correct options to SingleDatagridOverlay', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
+    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
+    const mediaDatagridStore = new DatagridStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionDatagridStore = new DatagridStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionDatagridStore={collectionDatagridStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaDatagridAdapters={['media_card_overview']}
+            mediaDatagridStore={mediaDatagridStore}
+            onCollectionNavigate={collectionNavigateSpy}
+        />
+    );
+
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('reloadOnOpen')).toEqual(true);
+});
+
 test('Should send a request to add a new collection via the overlay', () => {
     const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
     const promise = Promise.resolve();

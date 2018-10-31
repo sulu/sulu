@@ -24,6 +24,7 @@ type Props = {|
     open: boolean,
     overlayType: OverlayType,
     preSelectedItems: Array<Object>,
+    reloadOnOpen: boolean,
     title: string,
 |};
 
@@ -35,6 +36,7 @@ export default class DatagridOverlay extends React.Component<Props> {
         disabledIds: [],
         overlayType: 'overlay',
         preSelectedItems: [],
+        reloadOnOpen: false,
     };
 
     updateSelectionDisposer: () => void;
@@ -54,7 +56,12 @@ export default class DatagridOverlay extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        const {clearSelectionOnClose, open} = this.props;
+        const {clearSelectionOnClose, open, reloadOnOpen} = this.props;
+
+        if (!this.datagridStore.loading && reloadOnOpen && prevProps.open === false && open === true) {
+            this.datagridStore.reload();
+        }
+
         if (clearSelectionOnClose && prevProps.open === true && open === false) {
             this.datagridStore.clearSelection();
         }

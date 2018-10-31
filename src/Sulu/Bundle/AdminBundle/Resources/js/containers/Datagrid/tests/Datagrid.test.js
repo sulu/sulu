@@ -303,6 +303,15 @@ test('Pass options to adapter', () => {
     }));
 });
 
+test('Pass correct options to SingleDatagridOverlays', () => {
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+
+    const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
+
+    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('reloadOnOpen')).toEqual(true);
+    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('reloadOnOpen')).toEqual(true);
+});
+
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
     const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});

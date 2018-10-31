@@ -24,6 +24,8 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
         this.select = jest.fn();
         this.setActive = jest.fn();
         this.selections = [];
+        this.reload = jest.fn();
+        this.loading = false;
     }
 ));
 
@@ -220,6 +222,87 @@ test('Should instantiate the datagrid with the passed adapter', () => {
         />
     );
     expect(datagridOverlay2.find(Datagrid).prop('adapters')).toEqual(['column_list']);
+});
+
+test('Should reload on open if reloadOnOpen is set to true', () => {
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
+
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            datagridStore={datagridStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            preSelectedItems={[{id: 1}]}
+            reloadOnOpen={true}
+            title="test"
+        />
+    );
+
+    datagridStore.reload.mockReset();
+
+    expect(datagridStore.reload).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        open: true,
+    });
+
+    expect(datagridStore.reload).toBeCalledWith();
+});
+
+test('Should not reload on open if reloadOnOpen is set to true but datagridStore is still loading', () => {
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
+    // $FlowFixMe
+    datagridStore.loading = true;
+
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            datagridStore={datagridStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
+
+    datagridStore.reload.mockReset();
+
+    expect(datagridStore.reload).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        open: true,
+    });
+
+    expect(datagridStore.reload).not.toBeCalled();
+});
+
+test('Should not reload on open if reloadOnOpen is not set', () => {
+    const datagridStore = new DatagridStore('snippets', 'datagrid_overlay_test', {page: observable.box(1)});
+
+    const datagridOverlay = mount(
+        <DatagridOverlay
+            adapter="table"
+            datagridStore={datagridStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
+
+    datagridStore.reload.mockReset();
+
+    expect(datagridStore.reload).not.toBeCalled();
+
+    datagridOverlay.setProps({
+        open: true,
+    });
+
+    expect(datagridStore.reload).not.toBeCalled();
 });
 
 test('Should not clear selection on close if clearSelectionOnClose prop is not set', () => {
