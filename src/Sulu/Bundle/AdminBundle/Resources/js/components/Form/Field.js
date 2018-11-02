@@ -11,7 +11,7 @@ type Props = {|
     children: Node,
     description?: string,
     error?: string,
-    inputId?: string,
+    id?: string,
     label?: string,
     required: boolean,
     size: Size,
@@ -26,7 +26,7 @@ export default class Field extends React.Component<Props> {
     };
 
     render() {
-        const {children, inputId, description, error, label, required, size, spaceAfter} = this.props;
+        const {children, id, description, error, label, required, size, spaceAfter} = this.props;
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -45,7 +45,7 @@ export default class Field extends React.Component<Props> {
                     {label &&
                     <label
                         className={fieldStyles.label}
-                        htmlFor={inputId || undefined}
+                        htmlFor={id}
                     >
                         {label}{required && ' *'}
                     </label>

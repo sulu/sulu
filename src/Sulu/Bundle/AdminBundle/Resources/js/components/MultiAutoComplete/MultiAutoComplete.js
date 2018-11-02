@@ -182,7 +182,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         ))}
                         <input
                             className={inputClass}
-                            id={id || undefined}
+                            id={id}
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
                             onFocus={this.handleInputFocus}

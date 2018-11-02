@@ -172,7 +172,7 @@ export default class Url extends React.Component<Props> {
                     </SingleSelect>
                 </div>
                 <input
-                    id={id || undefined}
+                    id={id}
                     onBlur={this.handlePathBlur}
                     onChange={this.handlePathChange}
                     type="text"

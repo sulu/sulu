@@ -53,7 +53,7 @@ export default class TextArea extends React.PureComponent<Props> {
             <Fragment>
                 <textarea
                     className={textareaClass}
-                    id={id || undefined}
+                    id={id}
                     name={name}
                     onBlur={this.handleBlur}
                     onChange={this.handleChange}
