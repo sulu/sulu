@@ -36,7 +36,6 @@ export default class Overlay extends React.Component<Props> {
         actions: [],
         confirmDisabled: false,
         confirmLoading: false,
-        open: false,
     };
 
     @observable visible: boolean = false;
