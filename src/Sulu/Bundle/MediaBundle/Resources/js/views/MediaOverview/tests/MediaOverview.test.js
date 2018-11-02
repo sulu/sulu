@@ -370,12 +370,12 @@ test('Move overlay should disappear when overlay is closed', () => {
     expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[1].onClick();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('resourceKey')).toEqual('collections');
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
 
-    mediaOverview.find(SingleDatagridOverlay).at(0).prop('onClose')();
+    mediaOverview.find(SingleDatagridOverlay).at(1).prop('onClose')();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
 });
 
 test('Media should be moved when overlay is confirmed', () => {
@@ -407,20 +407,20 @@ test('Media should be moved when overlay is confirmed', () => {
     expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[1].onClick();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('resourceKey')).toEqual('collections');
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('confirmLoading')).toEqual(false);
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(false);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
 
-    mediaOverview.find(SingleDatagridOverlay).at(0).prop('onConfirm')({id: 8});
+    mediaOverview.find(SingleDatagridOverlay).at(1).prop('onConfirm')({id: 8});
     mediaOverview.update();
-    expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('confirmLoading')).toEqual(true);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(true);
 
     expect(mediaOverview.instance().mediaDatagridStore.moveSelection).toBeCalledWith(8);
 
     return movePromise.then(() => {
         mediaOverview.update();
         expect(mediaOverview.instance().collectionDatagridStore.reload).toHaveBeenCalledTimes(1);
-        expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
-        expect(mediaOverview.find(SingleDatagridOverlay).at(0).prop('confirmLoading')).toEqual(false);
+        expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+        expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(false);
     });
 });

@@ -164,6 +164,29 @@ test('Should render the datagrid with a title', () => {
     expect(datagrid).toMatchSnapshot();
 });
 
+test('Should pass correct props to move datagrid overlay', () => {
+    const Datagrid = require('../Datagrid').default;
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
+                movable: true,
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+
+    expect(datagrid.find('SingleDatagridOverlay').props()).toEqual(expect.objectContaining({
+        options: {includeRoot: true},
+        reloadOnOpen: true,
+    }));
+});
+
 test('Should pass the onItemClick callback when an editRoute has been passed', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {

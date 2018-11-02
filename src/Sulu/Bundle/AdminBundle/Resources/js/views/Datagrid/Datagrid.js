@@ -128,6 +128,7 @@ class Datagrid extends React.Component<ViewProps> {
                     adapters,
                     addRoute,
                     editRoute,
+                    movable,
                     searchable,
                     title,
                 },
@@ -145,20 +146,23 @@ class Datagrid extends React.Component<ViewProps> {
                     searchable={searchable}
                     store={this.datagridStore}
                 />
-                <SingleDatagridOverlay
-                    adapter="column_list"
-                    allowActivateForDisabledItems={false}
-                    clearSelectionOnClose={true}
-                    confirmLoading={this.moving}
-                    disabledIds={this.datagridStore.selectionIds}
-                    locale={this.locale}
-                    onClose={this.handleMoveOverlayClose}
-                    onConfirm={this.handleMoveOverlayConfirm}
-                    open={this.showMoveOverlay}
-                    options={{includeRoot: true}}
-                    resourceKey={this.datagridStore.resourceKey}
-                    title={translate('sulu_admin.move_items')}
-                />
+                {movable &&
+                    <SingleDatagridOverlay
+                        adapter="column_list"
+                        allowActivateForDisabledItems={false}
+                        clearSelectionOnClose={true}
+                        confirmLoading={this.moving}
+                        disabledIds={this.datagridStore.selectionIds}
+                        locale={this.locale}
+                        onClose={this.handleMoveOverlayClose}
+                        onConfirm={this.handleMoveOverlayConfirm}
+                        open={this.showMoveOverlay}
+                        options={{includeRoot: true}}
+                        reloadOnOpen={true}
+                        resourceKey={this.datagridStore.resourceKey}
+                        title={translate('sulu_admin.move_items')}
+                    />
+                }
             </div>
         );
     }
