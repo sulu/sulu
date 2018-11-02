@@ -10,6 +10,7 @@ import colorPickerStyles from './colorPicker.scss';
 import './colorPickerGlobal.scss';
 
 type Props = {|
+    id?: string,
     name?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -110,6 +111,7 @@ export default class ColorPicker extends React.Component<Props> {
 
     render() {
         const {
+            id,
             name,
             placeholder,
             valid,
@@ -125,6 +127,7 @@ export default class ColorPicker extends React.Component<Props> {
                     icon="su-square"
                     iconClassName={colorPickerStyles.icon}
                     iconStyle={iconStyle}
+                    id={id}
                     labelRef={this.setRef}
                     name={name}
                     onBlur={this.handleBlur}

@@ -55,6 +55,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     render() {
         const {
             alignment,
+            id,
             inputClass,
             valid,
             icon,
@@ -136,6 +137,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
                     <input
                         className={inputClass}
+                        id={id}
                         inputMode={inputMode}
                         max={max}
                         min={min}

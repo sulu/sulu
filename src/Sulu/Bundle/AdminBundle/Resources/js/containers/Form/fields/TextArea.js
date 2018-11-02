@@ -6,6 +6,7 @@ import type {FieldTypeProps} from '../../../types';
 export default class TextArea extends React.Component<FieldTypeProps<?string>> {
     render() {
         const {
+            dataPath,
             error,
             onChange,
             onFinish,
@@ -23,6 +24,7 @@ export default class TextArea extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <TextAreaComponent
+                id={dataPath}
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 onBlur={onFinish}
                 onChange={onChange}

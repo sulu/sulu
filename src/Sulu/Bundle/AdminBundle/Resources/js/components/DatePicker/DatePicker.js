@@ -13,6 +13,7 @@ import Popover from '../Popover';
 import './datePicker.scss';
 
 type Props = {
+    id?: string,
     /** Placeholder can be overwritten */
     placeholder?: string,
     /** Listen for changes of this component */
@@ -141,6 +142,7 @@ export default class DatePicker extends React.Component<Props> {
         return ReactDOM.createPortal(
             <Input
                 {...props}
+                id={this.props.id}
                 onBlur={this.handleInputBlur}
                 onChange={handleInputChange}
                 onIconClick={this.handleOpenOverlay}

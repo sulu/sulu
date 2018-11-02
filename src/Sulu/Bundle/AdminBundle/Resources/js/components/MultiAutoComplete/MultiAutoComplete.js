@@ -15,6 +15,7 @@ import multiAutoCompleteStyles from './multiAutoComplete.scss';
 type Props = {
     allowAdd: boolean,
     displayProperty: string,
+    id?: string,
     idProperty: string,
     loading: boolean,
     onChange: (value: Array<Object>) => void,
@@ -145,6 +146,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
     render() {
         const {
             displayProperty,
+            id,
             idProperty,
             loading,
             searchProperties,
@@ -180,6 +182,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         ))}
                         <input
                             className={inputClass}
+                            id={id}
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
                             onFocus={this.handleInputFocus}

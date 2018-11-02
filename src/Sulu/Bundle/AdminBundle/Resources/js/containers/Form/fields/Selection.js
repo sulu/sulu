@@ -127,6 +127,7 @@ export default class Selection extends React.Component<Props> {
 
     renderAutoComplete() {
         const {
+            dataPath,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
@@ -156,6 +157,7 @@ export default class Selection extends React.Component<Props> {
                 allowAdd={allowAdd}
                 displayProperty={displayProperty}
                 filterParameter={filterParameter}
+                id={dataPath}
                 idProperty={idProperty}
                 locale={formInspector.locale}
                 onChange={this.handleAutoCompleteChange}

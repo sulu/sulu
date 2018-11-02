@@ -12,6 +12,7 @@ type Props = {|
     allowAdd: boolean,
     displayProperty: string,
     filterParameter: string,
+    id?: string,
     idProperty: string,
     locale?: ?IObservableValue<string>,
     onChange: (value: Array<string | number>) => void,
@@ -91,6 +92,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
             props: {
                 allowAdd,
                 displayProperty,
+                id,
                 idProperty,
                 searchProperties,
             },
@@ -100,6 +102,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
             <MultiAutoCompleteComponent
                 allowAdd={allowAdd}
                 displayProperty={displayProperty}
+                id={id}
                 idProperty={idProperty}
                 loading={this.searchStore.loading || this.selectionStore.loading}
                 onChange={this.handleChange}

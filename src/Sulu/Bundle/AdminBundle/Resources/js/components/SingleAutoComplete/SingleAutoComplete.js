@@ -13,6 +13,7 @@ const DEBOUNCE_TIME = 300;
 
 type Props = {|
     displayProperty: string,
+    id?: string,
     loading?: boolean,
     onChange: (value: ?Object) => void,
     onFinish?: () => void,
@@ -81,6 +82,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
 
     render() {
         const {
+            id,
             loading,
             onFinish,
             placeholder,
@@ -95,6 +97,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
             <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
                     icon={LENS_ICON}
+                    id={id}
                     inputClass="mousetrap"
                     labelRef={this.setLabelRef}
                     loading={loading}

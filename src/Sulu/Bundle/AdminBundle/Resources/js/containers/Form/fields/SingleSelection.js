@@ -88,6 +88,7 @@ export default class SingleSelection extends React.Component<Props>
 
     renderAutoComplete() {
         const {
+            dataPath,
             fieldTypeOptions,
             value,
         } = this.props;
@@ -118,6 +119,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleAutoComplete
                 displayProperty={displayProperty}
+                id={dataPath}
                 onChange={this.handleChange}
                 resourceKey={resourceKey}
                 searchProperties={searchProperties}

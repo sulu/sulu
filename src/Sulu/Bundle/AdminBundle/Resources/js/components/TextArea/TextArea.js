@@ -5,6 +5,7 @@ import CharacterCounter from '../CharacterCounter';
 import textAreaStyles from './textArea.scss';
 
 type Props = {|
+    id?: string,
     maxCharacters?: number,
     name?: string,
     onBlur?: () => void,
@@ -33,6 +34,7 @@ export default class TextArea extends React.PureComponent<Props> {
 
     render() {
         const {
+            id,
             maxCharacters,
             name,
             placeholder,
@@ -51,6 +53,7 @@ export default class TextArea extends React.PureComponent<Props> {
             <Fragment>
                 <textarea
                     className={textareaClass}
+                    id={id}
                     name={name}
                     onBlur={this.handleBlur}
                     onChange={this.handleChange}

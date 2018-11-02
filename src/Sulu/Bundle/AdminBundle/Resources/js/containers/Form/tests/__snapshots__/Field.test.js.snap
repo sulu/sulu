@@ -9,6 +9,7 @@ exports[`Render a field with a description 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
@@ -36,6 +37,7 @@ exports[`Render a field with a error collection 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
@@ -60,6 +62,7 @@ exports[`Render a field with an error 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
@@ -84,6 +87,7 @@ exports[`Render a field without a const error 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
@@ -123,6 +127,7 @@ exports[`Render a required field with correct field type 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1 *
     </label>
@@ -145,6 +150,7 @@ exports[`Render correct label with correct field type 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
@@ -167,6 +173,7 @@ exports[`Render correct label with correct field type 2`] = `
   >
     <label
       class="label"
+      for=""
     >
       label2
     </label>
@@ -189,6 +196,7 @@ exports[`Render field with correct values for grid 1`] = `
   >
     <label
       class="label"
+      for=""
     >
       label1
     </label>
