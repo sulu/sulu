@@ -22,6 +22,7 @@ type Props = {|
     overlayType: OverlayType,
     resourceKey: string,
     preSelectedItems: Array<Object>,
+    reloadOnOpen?: boolean,
     title: string,
 |};
 
@@ -74,6 +75,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
             open,
             overlayType,
             preSelectedItems,
+            reloadOnOpen,
             title,
         } = this.props;
 
@@ -90,6 +92,7 @@ export default class MultiDatagridOverlay extends React.Component<Props> {
                 open={open}
                 overlayType={overlayType}
                 preSelectedItems={preSelectedItems}
+                reloadOnOpen={reloadOnOpen}
                 title={title}
             />
         );

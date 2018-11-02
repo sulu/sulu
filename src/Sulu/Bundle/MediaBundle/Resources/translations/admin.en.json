@@ -15,6 +15,7 @@
     "sulu_media.add_collection": "Add collection",
     "sulu_media.remove_collection": "Delete collection",
     "sulu_media.remove_collection_warning": "This operation deletes a collection and cannot be undone. Do you really wish to proceed?",
+    "sulu_media.move_collection": "Move collection",
     "sulu_media.edit_collection": "Edit collection",
     "sulu_media.download_media": "Download media",
     "sulu_media.delete_media": "Delete media",
@@ -29,5 +30,6 @@
     "sulu_media.copyright": "Copyright Information",
     "sulu_media.taxonomies": "Taxonomies",
     "sulu_media.history": "History",
-    "sulu_media.formats": "Formats"
+    "sulu_media.formats": "Formats",
+    "sulu_media.all_collections": "All collections"
 }

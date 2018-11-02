@@ -3,7 +3,7 @@ import React from 'react';
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
+import {Datagrid, DatagridStore, SingleDatagridOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Dialog, Icon, Button, ButtonGroup} from 'sulu-admin-bundle/components';
@@ -81,6 +81,10 @@ export default class CollectionSection extends React.Component<Props> {
         this.openCollectionOperationOverlay('remove');
     };
 
+    handleMoveCollectionClick = () => {
+        this.openCollectionOperationOverlay('move');
+    };
+
     handleCollectionOverlayConfirm = (resourceStore: ResourceStore) => {
         const options = {};
         options.breadcrumb = true;
@@ -127,10 +131,23 @@ export default class CollectionSection extends React.Component<Props> {
         this.closeCollectionOperationOverlay();
     };
 
+    handleMoveCollectionConfirm = (collection: Object) => {
+        const {resourceStore} = this.props;
+        resourceStore.move(collection.id).then(() => {
+            resourceStore.load();
+            this.closeCollectionOperationOverlay();
+        });
+    };
+
+    handleMoveCollectionClose = () => {
+        this.closeCollectionOperationOverlay();
+    };
+
     render() {
         const {
-            overlayType,
             datagridStore,
+            locale,
+            overlayType,
             resourceStore,
         } = this.props;
 
@@ -145,22 +162,25 @@ export default class CollectionSection extends React.Component<Props> {
                                 onNavigate={this.handleBreadcrumbNavigate}
                                 resourceStore={resourceStore}
                             />
-                            <div className={collectionSectionStyles.icons}>
-                                {!!resourceStore.id &&
+                            {resourceStore.id &&
+                                <div className={collectionSectionStyles.icons}>
                                     <Icon
                                         className={collectionSectionStyles.icon}
                                         name="su-pen"
                                         onClick={this.handleEditCollectionClick}
                                     />
-                                }
-                                {!!resourceStore.id &&
                                     <Icon
                                         className={collectionSectionStyles.icon}
                                         name="su-trash-alt"
                                         onClick={this.handleRemoveCollectionClick}
                                     />
-                                }
-                            </div>
+                                    <Icon
+                                        className={collectionSectionStyles.icon}
+                                        name="su-arrows-alt"
+                                        onClick={this.handleMoveCollectionClick}
+                                    />
+                                </div>
+                            }
                         </div>
 
                         <div className={collectionSectionStyles.right}>
@@ -196,6 +216,21 @@ export default class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
+                <SingleDatagridOverlay
+                    adapter="column_list"
+                    allowActivateForDisabledItems={false}
+                    clearSelectionOnClose={true}
+                    confirmLoading={resourceStore.moving}
+                    disabledIds={resourceStore.id ? [resourceStore.id] : []}
+                    locale={locale}
+                    onClose={this.handleMoveCollectionClose}
+                    onConfirm={this.handleMoveCollectionConfirm}
+                    open={operationType === 'move'}
+                    options={{includeRoot: true}}
+                    reloadOnOpen={true}
+                    resourceKey={COLLECTIONS_RESOURCE_KEY}
+                    title={translate('sulu_media.move_collection')}
+                />
             </div>
         );
     }

@@ -543,10 +543,6 @@ export default class DatagridStore {
         this.selections = [];
     }
 
-    clearData() {
-        this.structureStrategy.clear();
-    }
-
     destroy() {
         this.sendRequestDisposer();
         this.searchDisposer();

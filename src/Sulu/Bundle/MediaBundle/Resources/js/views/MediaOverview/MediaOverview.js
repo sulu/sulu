@@ -118,9 +118,9 @@ class MediaOverview extends React.Component<ViewProps> {
     }
 
     clearDatagrids() {
-        this.mediaDatagridStore.clearData();
+        this.mediaDatagridStore.clear();
         this.mediaDatagridStore.clearSelection();
-        this.collectionDatagridStore.clearData();
+        this.collectionDatagridStore.clear();
         this.collectionDatagridStore.clearSelection();
     }
 

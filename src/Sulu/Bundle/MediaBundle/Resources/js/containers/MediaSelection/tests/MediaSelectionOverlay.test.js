@@ -93,7 +93,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.destroy = jest.fn();
             this.sendRequest = jest.fn();
             this.clearSelection = jest.fn();
-            this.clearData = jest.fn();
+            this.clear = jest.fn();
             this.setAppendRequestData = jest.fn();
             this.deselectEntirePage = jest.fn();
             this.select = jest.fn();
@@ -105,6 +105,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
+        SingleDatagridOverlay: jest.fn(() => null),
     };
 });
 

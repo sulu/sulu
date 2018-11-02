@@ -20,7 +20,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                     <ul class=\\"breadcrumb\\">
                       <li><button class=\\"item\\" disabled=\\"\\"></button></li>
                     </ul>
-                    <div class=\\"icons\\"><span aria-label=\\"su-pen\\" class=\\"su-pen clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+                    <div class=\\"icons\\"><span aria-label=\\"su-pen\\" class=\\"su-pen clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-arrows-alt\\" class=\\"su-arrows-alt clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
                   </div>
                   <div class=\\"right\\">
                     <div><button class=\\"button icon button\\" type=\\"button\\"><span class=\\"text\\"><span aria-label=\\"su-plus\\" class=\\"su-plus\\"></span></span></button></div>

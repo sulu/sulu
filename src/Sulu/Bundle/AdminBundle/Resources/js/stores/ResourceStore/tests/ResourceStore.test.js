@@ -265,6 +265,62 @@ test('Calling the delete method with options should send a DELETE request', () =
     expect(ResourceRequester.delete).toBeCalledWith('snippets', 3, {test: 'value'});
 });
 
+test('Moving flag should be set to true when moving', () => {
+    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
+    resourceStore.moving = false;
+    resourceStore.setLocale('en');
+
+    resourceStore.move(1);
+    expect(resourceStore.saving).toBe(false);
+    expect(resourceStore.moving).toBe(true);
+});
+
+test('Moving flag and id should be reset to false when moving has finished', () => {
+    const promise = Promise.resolve({});
+    ResourceRequester.postWithId.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
+    resourceStore.setLocale('en');
+    resourceStore.moving = false;
+
+    resourceStore.move(5);
+    expect(resourceStore.moving).toBe(true);
+
+    return promise.then(() => {
+        expect(resourceStore.moving).toBe(false);
+        expect(ResourceRequester.get).toBeCalledWith('snippets', '1', {locale: 'en'});
+    });
+});
+
+test('Calling the move method should send a POST request', () => {
+    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', 3, {});
+    resourceStore.data = {id: 3, title: 'Title'};
+
+    resourceStore.move(9);
+    expect(ResourceRequester.postWithId).toBeCalledWith(
+        'snippets',
+        3,
+        {action: 'move', destination: 9, locale: undefined}
+    );
+});
+
+test('Calling the move method should send a POST request with locale', () => {
+    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', 3, {locale: observable.box()});
+    resourceStore.setLocale('de');
+    resourceStore.data = {id: 3, title: 'Title'};
+
+    resourceStore.move(9);
+    expect(ResourceRequester.postWithId).toBeCalledWith(
+        'snippets',
+        3,
+        {action: 'move', destination: 9, locale: 'de'}
+    );
+});
+
 test('Saving flag should be set to true when saving', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});

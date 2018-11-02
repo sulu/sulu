@@ -517,6 +517,7 @@ export default class Datagrid extends React.Component<Props> {
                         onConfirm={this.handleMoveOverlayConfirmClick}
                         open={this.showMoveOverlay}
                         options={store.options}
+                        reloadOnOpen={true}
                         resourceKey={store.resourceKey}
                         title={translate('sulu_admin.move_copy_overlay_title')}
                     />
@@ -531,6 +532,7 @@ export default class Datagrid extends React.Component<Props> {
                         onConfirm={this.handleCopyOverlayConfirmClick}
                         open={this.showCopyOverlay}
                         options={store.options}
+                        reloadOnOpen={true}
                         resourceKey={store.resourceKey}
                         title={translate('sulu_admin.move_copy_overlay_title')}
                     />

@@ -1,5 +1,5 @@
 // @flow
-export type OperationType = null | 'create' | 'update' | 'remove';
+export type OperationType = null | 'create' | 'update' | 'remove' | 'move';
 
 export type OverlayType = 'overlay' | 'dialog';
 

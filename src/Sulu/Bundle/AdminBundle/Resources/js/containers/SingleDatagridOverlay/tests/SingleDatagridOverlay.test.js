@@ -119,7 +119,24 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
     expect(singleDatagridOverlay.find(DatagridOverlay).prop('allowActivateForDisabledItems')).toEqual(true);
 });
 
-test('Should pass clearSelectionOnClose to the Datagrid', () => {
+test('Should pass reloadOnOpen to the DatagridOverlay', () => {
+    const singleDatagridOverlay = shallow(
+        <SingleDatagridOverlay
+            adapter="table"
+            allowActivateForDisabledItems={false}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            reloadOnOpen={true}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleDatagridOverlay.find(DatagridOverlay).prop('reloadOnOpen')).toEqual(true);
+});
+
+test('Should pass clearSelectionOnClose to the DatagridOverlay', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
