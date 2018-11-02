@@ -67,6 +67,7 @@
         "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
+        "style-loader": "^0.23.1",
         "url-search-params-polyfill": "^2.0.0",
         "webpack": "^4.20.2",
         "webpack-clean-obsolete-chunks": "^0.4.0",
