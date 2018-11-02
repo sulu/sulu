@@ -56,6 +56,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.observableOptions = observableOptions;
             this.loading = false;
             this.pageCount = 3;
+            this.moveSelection = jest.fn();
+            this.reload = jest.fn();
             this.active = {
                 get: jest.fn(),
             };
@@ -116,39 +118,11 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.all_media':
-                return 'All Media';
-            case 'sulu_media.copy_url':
-                return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Downoad master file';
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.delete':
-                return 'Delete';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
@@ -314,7 +288,7 @@ test('The collectionId should be update along with the content when a collection
 
 test('Should delete selected items when delete button is clicked', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.value === 'Delete');
+        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.value === 'sulu_admin.delete');
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
@@ -339,4 +313,114 @@ test('Should delete selected items when delete button is clicked', () => {
     getDeleteItem().onClick();
     mediaOverview.update();
     expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(true);
+});
+
+test('Move overlay button should be disabled if nothing is selected', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.collectionId.set(4);
+    mediaOverview.locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(true);
+    expect(toolbarFunction.call(mediaOverview).items[1].value).toEqual('sulu_admin.move_selected');
+
+    mediaOverview.mediaDatagridStore.selectionIds.push(8);
+    expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(false);
+});
+
+test('Move overlay should disappear when overlay is closed', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId.set(4);
+    mediaOverview.instance().locale.set('de');
+
+    const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
+
+    expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
+    toolbarConfig.items[1].onClick();
+    mediaOverview.update();
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
+
+    mediaOverview.find(SingleDatagridOverlay).at(1).prop('onClose')();
+    mediaOverview.update();
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+});
+
+test('Media should be moved when overlay is confirmed', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId.set(4);
+    mediaOverview.instance().locale.set('de');
+    const movePromise = Promise.resolve();
+    mediaOverview.instance().mediaDatagridStore.moveSelection.mockReturnValue(movePromise);
+
+    const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
+
+    expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
+    toolbarConfig.items[1].onClick();
+    mediaOverview.update();
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(false);
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
+
+    mediaOverview.find(SingleDatagridOverlay).at(1).prop('onConfirm')({id: 8});
+    mediaOverview.update();
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(true);
+
+    expect(mediaOverview.instance().mediaDatagridStore.moveSelection).toBeCalledWith(8);
+
+    return movePromise.then(() => {
+        mediaOverview.update();
+        expect(mediaOverview.instance().collectionDatagridStore.reload).toHaveBeenCalledTimes(1);
+        expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
+        expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('confirmLoading')).toEqual(false);
+    });
 });

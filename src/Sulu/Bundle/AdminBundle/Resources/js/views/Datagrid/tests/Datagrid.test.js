@@ -78,6 +78,7 @@ jest.mock(
         this.reload = jest.fn();
         this.clearSelection = jest.fn();
         this.remove = jest.fn();
+        this.moveSelection = jest.fn();
     })
 );
 
@@ -105,6 +106,10 @@ jest.mock('../../../utils/Translator', () => ({
                 return 'Delete';
             case 'sulu_admin.add':
                 return 'Add';
+            case 'sulu_admin.move_items':
+                return 'Move items';
+            case 'sulu_admin.move_selected':
+                return 'Move selected';
             case 'sulu_snippet.snippets':
                 return 'Snippets';
         }
@@ -157,6 +162,29 @@ test('Should render the datagrid with a title', () => {
 
     const datagrid = render(<Datagrid router={router} />);
     expect(datagrid).toMatchSnapshot();
+});
+
+test('Should pass correct props to move datagrid overlay', () => {
+    const Datagrid = require('../Datagrid').default;
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
+                movable: true,
+            },
+        },
+    };
+
+    const datagrid = shallow(<Datagrid router={router} />);
+
+    expect(datagrid.find('SingleDatagridOverlay').props()).toEqual(expect.objectContaining({
+        options: {includeRoot: true},
+        reloadOnOpen: true,
+    }));
 });
 
 test('Should pass the onItemClick callback when an editRoute has been passed', () => {
@@ -583,4 +611,85 @@ test('Should delete selected items when delete button is clicked', () => {
     getDeleteItem().onClick();
     datagrid.update();
     expect(datagrid.find('Dialog').at(0).prop('open')).toEqual(true);
+});
+
+test('Should make move overlay disappear if cancel is clicked', () => {
+    function getMoveItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Move selected');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                resourceKey: 'test',
+                movable: true,
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
+
+    getMoveItem().onClick();
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(true);
+    datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('onClose')();
+
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
+});
+
+test('Should move items after move overlay was confirmed', () => {
+    function getMoveItem() {
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Move selected');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                resourceKey: 'test',
+                movable: true,
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+    datagridStore.selectionIds.push(1, 4, 6);
+
+    const moveSelectionPromise = Promise.resolve();
+    datagridStore.moveSelection.mockReturnValue(moveSelectionPromise);
+
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
+
+    getMoveItem().onClick();
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(true);
+    datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('onConfirm')({id: 5});
+
+    datagrid.update();
+    expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('confirmLoading')).toEqual(true);
+
+    expect(datagridStore.moveSelection).toBeCalledWith(5);
+
+    return moveSelectionPromise.then(() => {
+        datagrid.update();
+        expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
+        expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
+    });
 });

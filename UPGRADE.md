@@ -7,6 +7,11 @@
 The `include-root` option of this Controller was renamed to `includeRoot` to be more consistent. The `RootCollection`
 was removed from the `getAction`, because it does not make sense there.
 
+### CategoryController
+
+The `parentId` parameter for moving a category has been renamed to `destination` in order to be consistent. In
+addition to that you have to use `root` as destination instead of `null`.
+
 ### Form Labels
 
 We do not generate the label for form fields from its name anymore. So you if you don't pass an explicit title to the

@@ -141,6 +141,27 @@ test('Render data without edit button', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render data with name as fallback for title', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                name: 'Page 1',
+            },
+        ],
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            {...datagridAdapterDefaultProps}
+            activeItems={[]}
+            data={data}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Render data with selection', () => {
     const data = [
         [

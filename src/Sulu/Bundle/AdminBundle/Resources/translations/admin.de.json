@@ -3,6 +3,7 @@
     "sulu_admin.add_block": "Block hinzufügen",
     "sulu_admin.delete": "Löschen",
     "sulu_admin.move": "Verschieben",
+    "sulu_admin.move_items": "Datensätze verschieben",
     "sulu_admin.copy": "Kopieren",
     "sulu_admin.order": "Sortieren",
     "sulu_admin.of": "von",
@@ -90,5 +91,6 @@
     "sulu_admin.column_options": "Spalten Optionen",
     "sulu_admin.changelog_line_changer": "Letzte Änderung {changer, select, undefined{} other{von {changer}}} am {changed}",
     "sulu_admin.changelog_line_creator": "Erstellt {creator, select, undefined{} other{von {creator}}} am {created}",
-    "sulu_admin.settings": "Einstellungen"
+    "sulu_admin.settings": "Einstellungen",
+    "sulu_admin.move_selected": "Ausgewählte verschieben"
 }

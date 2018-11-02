@@ -1396,9 +1396,81 @@ test('Should move the item with the given ID to the new given parent and reload 
         datagridStore.move(3, 8);
 
         expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 3, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
+            .toBeCalledWith('snippets', 3, {}, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
 
         return postWithIdPromise.then(() => {
+            expect(structureStrategy.clear).toBeCalledWith();
+            expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+                'snippets',
+                {
+                    fields: [
+                        'title',
+                        'id',
+                    ],
+                    expandedIds: 3,
+                    limit: 10,
+                    locale: 'de',
+                    page: undefined,
+                    sortBy: undefined,
+                    sortOrder: undefined,
+                    webspace: 'sulu',
+                },
+                undefined
+            );
+        });
+    });
+});
+
+test('Should move all selected items to the new given parent and reload the datagrid', () => {
+    const schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const schemaPromise = Promise.resolve(schema);
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+    const locale = observable.box('de');
+
+    const datagridStore = new DatagridStore(
+        'snippets',
+        'datagrid_test',
+        {page: observable.box(), locale},
+        {webspace: 'sulu'}
+    );
+
+    return schemaPromise.then(() => {
+        const loadingStrategy = new LoadingStrategy();
+        const structureStrategy = new StructureStrategy();
+        datagridStore.updateLoadingStrategy(loadingStrategy);
+        datagridStore.updateStructureStrategy(structureStrategy);
+
+        const postWithIdPromise = Promise.resolve();
+        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+
+        datagridStore.select({id: 1});
+        datagridStore.select({id: 2});
+        datagridStore.select({id: 4});
+        const moveSelectionPromise = datagridStore.moveSelection(3);
+
+        expect(ResourceRequester.postWithId)
+            .toBeCalledWith('snippets', 1, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
+        expect(ResourceRequester.postWithId)
+            .toBeCalledWith('snippets', 2, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
+        expect(ResourceRequester.postWithId)
+            .toBeCalledWith('snippets', 4, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
+
+        return moveSelectionPromise.then(() => {
             expect(structureStrategy.clear).toBeCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',

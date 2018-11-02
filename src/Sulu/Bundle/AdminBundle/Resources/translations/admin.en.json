@@ -3,6 +3,7 @@
     "sulu_admin.add_block": "Add block",
     "sulu_admin.delete": "Delete",
     "sulu_admin.move": "Move",
+    "sulu_admin.move_items": "Move items",
     "sulu_admin.copy": "Copy",
     "sulu_admin.order": "Order",
     "sulu_admin.of": "of",
@@ -90,5 +91,6 @@
     "sulu_admin.column_options": "Column options",
     "sulu_admin.changelog_line_changer": "Last change {changer, select, undefined{} other{from {changer}}} at {changed}",
     "sulu_admin.changelog_line_creator": "Created {creator, select, undefined{} other{by {creator}}} at {created}",
-    "sulu_admin.settings": "Settings"
+    "sulu_admin.settings": "Settings",
+    "sulu_admin.move_selected": "Move selected"
 }

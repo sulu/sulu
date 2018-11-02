@@ -31,5 +31,6 @@
     "sulu_media.taxonomies": "Taxonomies",
     "sulu_media.history": "History",
     "sulu_media.formats": "Formats",
-    "sulu_media.all_collections": "All collections"
+    "sulu_media.all_collections": "All collections",
+    "sulu_media.move_media": "Move media"
 }

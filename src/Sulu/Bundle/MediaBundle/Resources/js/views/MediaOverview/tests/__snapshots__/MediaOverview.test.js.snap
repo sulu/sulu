@@ -23,7 +23,7 @@ exports[`Render a simple MediaOverview 1`] = `
               <button
                 class="item"
               >
-                All Media
+                sulu_media.all_media
               </button>
               <span
                 aria-label="su-angle-right"
@@ -112,7 +112,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   <div
                     class="info"
                   >
-                    1 Object
+                    1 sulu_admin.object
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   <div
                     class="info"
                   >
-                    0 Objects
+                    0 sulu_admin.objects
                   </div>
                 </div>
               </div>
@@ -154,7 +154,7 @@ exports[`Render a simple MediaOverview 1`] = `
             <span
               class="display"
             >
-              :
+              sulu_admin.per_page:
             </span>
             <span>
               <div
@@ -200,7 +200,7 @@ exports[`Render a simple MediaOverview 1`] = `
               class="loader"
             />
             <span>
-              Page:
+              sulu_admin.page:
             </span>
             <span
               class="inputContainer"
@@ -218,7 +218,7 @@ exports[`Render a simple MediaOverview 1`] = `
             <span
               class="display"
             >
-              of 3
+              sulu_admin.of 3
             </span>
             <button
               class="previous"
@@ -264,6 +264,7 @@ exports[`Render a simple MediaOverview 1`] = `
               />
             </div>
             <input
+              placeholder="sulu_admin.datagrid_search_placeholder"
               type="text"
               value=""
             />
