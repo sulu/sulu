@@ -6,11 +6,11 @@ import imageFocusPointStyles from './imageFocusPoint.scss';
 
 const FOCUS_POINT_MATRIX_SIZE = 3;
 
-type Props = {
+type Props = {|
     image: string,
-    value: Point,
     onChange: (value: Point) => void,
-};
+    value: Point,
+|};
 
 export default class ImageFocusPoint extends React.PureComponent<Props> {
     createFocusPoints(selectedPoint: Point) {

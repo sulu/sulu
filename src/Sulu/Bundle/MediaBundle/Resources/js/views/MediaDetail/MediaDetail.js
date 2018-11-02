@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import {when} from 'mobx';
+import {action, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
-import {Grid, Loader} from 'sulu-admin-bundle/components';
+import {Button, Grid, Loader} from 'sulu-admin-bundle/components';
 import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -10,6 +10,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
 import mediaDetailStyles from './mediaDetail.scss';
+import FocusPointOverlay from './FocusPointOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 
@@ -22,6 +23,7 @@ class MediaDetail extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
     formStore: FormStore;
+    @observable showFocusPointOverlay: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -64,7 +66,17 @@ class MediaDetail extends React.Component<Props> {
         this.props.resourceStore.setMultiple(media);
     };
 
+    @action handleFocusPointButtonClick = () => {
+        this.showFocusPointOverlay = true;
+    };
+
+    @action handleFocusPointOverlayClose = () => {
+        this.showFocusPointOverlay = false;
+    };
+
     render() {
+        const {resourceStore} = this.props;
+
         return (
             <div className={mediaDetailStyles.mediaDetail}>
                 {this.formStore.loading
@@ -80,6 +92,15 @@ class MediaDetail extends React.Component<Props> {
                                     onUploadComplete={this.handleUploadComplete}
                                     uploadText={translate('sulu_media.upload_or_replace')}
                                 />
+                                <div className={mediaDetailStyles.buttons}>
+                                    <Button
+                                        icon="su-focus"
+                                        onClick={this.handleFocusPointButtonClick}
+                                        skin="link"
+                                    >
+                                        {translate('sulu_media.set_focus_point')}
+                                    </Button>
+                                </div>
                             </Grid.Item>
                         </Grid.Section>
                         <Grid.Section size={8}>
@@ -93,6 +114,11 @@ class MediaDetail extends React.Component<Props> {
                         </Grid.Section>
                     </Grid>
                 }
+                <FocusPointOverlay
+                    onClose={this.handleFocusPointOverlayClose}
+                    open={this.showFocusPointOverlay}
+                    resourceStore={resourceStore}
+                />
             </div>
         );
     }

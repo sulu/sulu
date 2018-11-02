@@ -382,3 +382,119 @@ test('Should destroy the store on unmount', () => {
     mediaDetail.unmount();
     expect(formStore.destroy).toBeCalled();
 });
+
+test('Should open and close focus point overlay', (done) => {
+    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    resourceStore.loading = false;
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+
+            mediaDetail.find('Button[icon="su-focus"]').prop('onClick')();
+            mediaDetail.update();
+            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(true);
+
+            mediaDetail.find('FocusPointOverlay').prop('onClose')();
+            mediaDetail.update();
+            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+            done();
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
+test('Should save focus point overlay', (done) => {
+    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    resourceStore.loading = false;
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            mediaDetail.find('Button[icon="su-focus"]').prop('onClick')();
+
+            mediaDetail.update();
+            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(true);
+
+            mediaDetail.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
+            mediaDetail.find('Overlay').prop('onConfirm')();
+
+            expect(ResourceRequester.put).toBeCalledWith(
+                'media',
+                4,
+                {focusPointX: 0, focusPointY: 2},
+                {locale: undefined}
+            );
+
+            setTimeout(() => {
+                mediaDetail.update();
+                expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+                done();
+            });
+        });
+    });
+
+    jsonSchemaResolve({});
+});
