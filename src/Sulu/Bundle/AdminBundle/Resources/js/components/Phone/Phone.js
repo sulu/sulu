@@ -7,6 +7,7 @@ type Props = {|
     name?: string,
     placeholder?: string,
     valid: boolean,
+    disabled?: boolean,
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
@@ -30,6 +31,7 @@ export default class Phone extends React.PureComponent<Props> {
         const {
             id,
             valid,
+            disabled,
             name,
             placeholder,
             onBlur,
@@ -39,6 +41,7 @@ export default class Phone extends React.PureComponent<Props> {
 
         return (
             <Input
+                disabled={disabled}
                 icon="su-phone"
                 id={id}
                 name={name}

@@ -57,6 +57,28 @@ exports[`Phone should render null value as empty string 1`] = `
 </label>
 `;
 
+exports[`Phone should render when disabled 1`] = `
+<label
+  class="input default left error disabled"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-phone"
+      class="su-phone clickable icon default iconClickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    disabled=""
+    type="tel"
+    value="‚+43245"
+  />
+</label>
+`;
+
 exports[`Phone should render with placeholder 1`] = `
 <label
   class="input default left"
