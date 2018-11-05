@@ -6,8 +6,10 @@ import FocusPointOverlay from '../FocusPointOverlay';
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function() {
+        this.clone = jest.fn().mockReturnValue(this);
         this.change = jest.fn();
         this.save = jest.fn();
+        this.set = jest.fn();
     }),
 }));
 
@@ -90,6 +92,7 @@ test('Should save the focus point when confirm button is clicked', () => {
     const closeSpy = jest.fn();
 
     const resourceStore = new ResourceStore('media');
+
     resourceStore.data = {
         focusPointX: 2,
         focusPointY: 1,
@@ -109,11 +112,15 @@ test('Should save the focus point when confirm button is clicked', () => {
     focusPointOverlay.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
     focusPointOverlay.find('Overlay').prop('onConfirm')();
 
-    expect(resourceStore.change).toBeCalledWith('focusPointX', 0);
-    expect(resourceStore.change).toBeCalledWith('focusPointY', 2);
-    expect(resourceStore.save).toBeCalledWith();
+    const clonedResourceStore = focusPointOverlay.instance().resourceStore;
+
+    expect(clonedResourceStore.change).toBeCalledWith('focusPointX', 0);
+    expect(clonedResourceStore.change).toBeCalledWith('focusPointY', 2);
+    expect(clonedResourceStore.save).toBeCalledWith();
 
     return savePromise.then(() => {
+        expect(resourceStore.set).toBeCalledWith('focusPointX', 0);
+        expect(resourceStore.set).toBeCalledWith('focusPointY', 2);
         expect(closeSpy).toBeCalled();
     });
 });

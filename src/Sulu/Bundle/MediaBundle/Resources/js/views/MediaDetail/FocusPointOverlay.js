@@ -18,16 +18,23 @@ type Props = {|
 export default class FocusPointOverlay extends React.Component<Props> {
     @observable focusPointX: number;
     @observable focusPointY: number;
+    resourceStore: ResourceStore;
 
     constructor(props: Props) {
         super(props);
 
+        this.resourceStore = this.props.resourceStore.clone();
         this.updateFocusPoint();
     }
 
     componentDidUpdate(prevProps: Props) {
         if (!prevProps.open && this.props.open) {
+            this.resourceStore = this.props.resourceStore.clone();
             this.updateFocusPoint();
+        }
+
+        if (prevProps.open && !this.props.open) {
+            this.resourceStore.destroy();
         }
     }
 
@@ -44,12 +51,12 @@ export default class FocusPointOverlay extends React.Component<Props> {
     };
 
     handleConfirm = () => {
-        const {resourceStore} = this.props;
+        this.resourceStore.change('focusPointX', this.focusPointX);
+        this.resourceStore.change('focusPointY', this.focusPointY);
 
-        resourceStore.change('focusPointX', this.focusPointX);
-        resourceStore.change('focusPointY', this.focusPointY);
-
-        this.props.resourceStore.save().then(() => {
+        this.resourceStore.save().then(() => {
+            this.props.resourceStore.set('focusPointX', this.focusPointX);
+            this.props.resourceStore.set('focusPointY', this.focusPointY);
             this.props.onClose();
         });
     };
@@ -60,11 +67,11 @@ export default class FocusPointOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {open, resourceStore} = this.props;
+        const {open} = this.props;
 
         return (
             <Overlay
-                confirmLoading={resourceStore.saving}
+                confirmLoading={this.resourceStore.saving}
                 confirmText={translate('sulu_admin.save')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
@@ -72,7 +79,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
                 title={translate('sulu_media.set_focus_point')}
             >
                 <ImageFocusPoint
-                    image={resourceStore.data.url}
+                    image={this.resourceStore.data.url}
                     onChange={this.handleFocusPointChange}
                     value={{x: this.focusPointX, y: this.focusPointY}}
                 />
