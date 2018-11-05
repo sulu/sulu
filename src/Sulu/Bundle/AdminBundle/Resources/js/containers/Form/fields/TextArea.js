@@ -10,6 +10,7 @@ export default class TextArea extends React.Component<FieldTypeProps<?string>> {
             error,
             onChange,
             onFinish,
+            disabled,
             schemaOptions: {
                 max_characters: {
                     value: maxCharacters,
@@ -24,6 +25,7 @@ export default class TextArea extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <TextAreaComponent
+                disabled={!!disabled}
                 id={dataPath}
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 onBlur={onFinish}

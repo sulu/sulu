@@ -1,5 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
+$textareaDisabledColor: $gray;
+$textareaDisabledBackgroundColor: $wildSand;
 $textareaBorderColor: $silver;
 $textareaErrorBorderColor: $persianRed;
 $textareaBackgroundColor: $white;
@@ -19,5 +21,10 @@ $textareaColor: $black;
 
     &.error {
         border-color: $textareaErrorBorderColor;
+    }
+
+    &.disabled {
+        color: $textareaDisabledColor;
+        background-color: $textareaDisabledBackgroundColor;
     }
 }

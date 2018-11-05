@@ -12,6 +12,7 @@ type Props = {|
     onChange: (string) => void,
     placeholder?: string,
     valid: boolean,
+    disabled?: boolean,
     value: ?string,
 |};
 
@@ -35,6 +36,7 @@ export default class TextArea extends React.PureComponent<Props> {
     render() {
         const {
             id,
+            disabled,
             maxCharacters,
             name,
             placeholder,
@@ -46,6 +48,7 @@ export default class TextArea extends React.PureComponent<Props> {
             textAreaStyles.textArea,
             {
                 [textAreaStyles.error]: !valid,
+                [textAreaStyles.disabled]: disabled,
             }
         );
 
@@ -53,6 +56,7 @@ export default class TextArea extends React.PureComponent<Props> {
             <Fragment>
                 <textarea
                     className={textareaClass}
+                    disabled={disabled}
                     id={id}
                     name={name}
                     onBlur={this.handleBlur}
