@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ResourceLocator should render when disabled 1`] = `
+<div
+  class="resourceLocator"
+>
+  <span
+    class="fixed"
+  >
+    /
+  </span>
+  <label
+    class="input default left disabled"
+  >
+    <input
+      disabled=""
+      type="text"
+      value="parent"
+    />
+  </label>
+</div>
+`;
+
 exports[`ResourceLocator should render with type full 1`] = `
 <div
   class="resourceLocator"

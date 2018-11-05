@@ -59,6 +59,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
     render() {
         const {
             dataPath,
+            disabled,
             onChange,
             schemaOptions: {
                 mode: {
@@ -74,6 +75,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
 
         return (
             <ResourceLocatorComponent
+                disabled={!!disabled}
                 id={dataPath}
                 mode={mode}
                 onBlur={this.handleBlur}
