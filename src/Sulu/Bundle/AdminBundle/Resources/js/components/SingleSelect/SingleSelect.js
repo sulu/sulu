@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import type {SelectProps} from '../Select';
 import Select from '../Select';
+import {translate} from '../../utils/Translator';
 
 type Props<T: string | number> = SelectProps & {
     onChange?: (value: T) => void,
@@ -19,14 +20,14 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
     static Divider = Select.Divider;
 
     get displayValue(): string {
-        let displayValue = '';
+        let displayValue = translate('sulu_admin.please_choose');
 
         React.Children.forEach(this.props.children, (child: any) => {
             if (child.type !== SingleSelect.Option) {
                 return;
             }
 
-            if (!displayValue || this.props.value == child.props.value) {
+            if (this.props.value == child.props.value) {
                 displayValue = child.props.children;
             }
         });
@@ -41,7 +42,7 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
             return false;
         }
 
-        return option.props.value.toString() === value.toString() && !option.props.disabled;
+        return option.props.value === value && !option.props.disabled;
     };
 
     handleSelect = (value: T) => {

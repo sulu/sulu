@@ -89,7 +89,7 @@ export default class DatagridStore {
     }
 
     static setLimitSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SORT_ORDER].join('.');
+        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_LIMIT].join('.');
 
         userStore.setPersistentSetting(key, value);
     }

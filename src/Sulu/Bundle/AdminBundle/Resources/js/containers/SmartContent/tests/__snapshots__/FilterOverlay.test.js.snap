@@ -97,28 +97,28 @@ exports[`Render with all fields 1`] = `
                     type="button"
                   >
                     <div
-                      aria-label="sulu_admin.any_category_description"
+                      aria-label="sulu_admin.please_choose"
                       class="croppedText"
-                      title="sulu_admin.any_category_description"
+                      title="sulu_admin.please_choose"
                     >
                       <div
                         aria-hidden="true"
                         class="front"
                       >
-                        sulu_admin.any_cat
+                        sulu_admin.p
                       </div>
                       <div
                         aria-hidden="true"
                         class="back"
                       >
                         <span>
-                          egory_description
+                          lease_choose
                         </span>
                       </div>
                       <div
                         class="whole"
                       >
-                        sulu_admin.any_category_description
+                        sulu_admin.please_choose
                       </div>
                     </div>
                     <span
@@ -158,28 +158,28 @@ exports[`Render with all fields 1`] = `
                     type="button"
                   >
                     <div
-                      aria-label="sulu_admin.any_tag_description"
+                      aria-label="sulu_admin.please_choose"
                       class="croppedText"
-                      title="sulu_admin.any_tag_description"
+                      title="sulu_admin.please_choose"
                     >
                       <div
                         aria-hidden="true"
                         class="front"
                       >
-                        sulu_admin.any_
+                        sulu_admin.p
                       </div>
                       <div
                         aria-hidden="true"
                         class="back"
                       >
                         <span>
-                          tag_description
+                          lease_choose
                         </span>
                       </div>
                       <div
                         class="whole"
                       >
-                        sulu_admin.any_tag_description
+                        sulu_admin.please_choose
                       </div>
                     </div>
                     <span
@@ -233,6 +233,31 @@ exports[`Render with all fields 1`] = `
                     class="displayValue default"
                     type="button"
                   >
+                    <div
+                      aria-label="sulu_admin.please_choose"
+                      class="croppedText"
+                      title="sulu_admin.please_choose"
+                    >
+                      <div
+                        aria-hidden="true"
+                        class="front"
+                      >
+                        sulu_admin.p
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        class="back"
+                      >
+                        <span>
+                          lease_choose
+                        </span>
+                      </div>
+                      <div
+                        class="whole"
+                      >
+                        sulu_admin.please_choose
+                      </div>
+                    </div>
                     <span
                       aria-label="su-angle-down"
                       class="su-angle-down toggle"
@@ -251,28 +276,28 @@ exports[`Render with all fields 1`] = `
                     type="button"
                   >
                     <div
-                      aria-label="sulu_admin.ascending"
+                      aria-label="sulu_admin.please_choose"
                       class="croppedText"
-                      title="sulu_admin.ascending"
+                      title="sulu_admin.please_choose"
                     >
                       <div
                         aria-hidden="true"
                         class="front"
                       >
-                        sulu_admin
+                        sulu_admin.p
                       </div>
                       <div
                         aria-hidden="true"
                         class="back"
                       >
                         <span>
-                          .ascending
+                          lease_choose
                         </span>
                       </div>
                       <div
                         class="whole"
                       >
-                        sulu_admin.ascending
+                        sulu_admin.please_choose
                       </div>
                     </div>
                     <span
@@ -300,6 +325,31 @@ exports[`Render with all fields 1`] = `
                   class="displayValue default"
                   type="button"
                 >
+                  <div
+                    aria-label="sulu_admin.please_choose"
+                    class="croppedText"
+                    title="sulu_admin.please_choose"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="front"
+                    >
+                      sulu_admin.p
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      class="back"
+                    >
+                      <span>
+                        lease_choose
+                      </span>
+                    </div>
+                    <div
+                      class="whole"
+                    >
+                      sulu_admin.please_choose
+                    </div>
+                  </div>
                   <span
                     aria-label="su-angle-down"
                     class="su-angle-down toggle"

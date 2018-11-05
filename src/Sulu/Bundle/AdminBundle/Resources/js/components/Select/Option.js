@@ -13,9 +13,9 @@ type Props = {
     selected: boolean,
     disabled: boolean,
     focus: boolean,
-    value: string | number,
+    value?: string | number,
     children: string,
-    onClick?: (value: string | number) => void,
+    onClick?: (value?: string | number) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selectedVisualization: OptionSelectedVisualization,
 };
@@ -29,7 +29,6 @@ export default class Option extends React.PureComponent<Props> {
         focus: false,
         selected: false,
         selectedVisualization: 'icon',
-        value: '',
     };
 
     item: ElementRef<'li'>;
