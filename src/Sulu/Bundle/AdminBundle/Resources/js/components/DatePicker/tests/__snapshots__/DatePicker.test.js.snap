@@ -420,6 +420,7 @@ exports[`DatePicker should render 1`] = `
                 input={true}
                 inputProps={
                   Object {
+                    "disabled": undefined,
                     "icon": "su-calendar",
                     "placeholder": "MM/DD/YYYY",
                     "valid": true,
@@ -503,6 +504,7 @@ exports[`DatePicker should render 1`] = `
                             alignment="left"
                             className="form-control"
                             collapsed={false}
+                            disabled={false}
                             icon="su-calendar"
                             onBlur={[Function]}
                             onChange={[Function]}
@@ -537,6 +539,7 @@ exports[`DatePicker should render 1`] = `
                                 </Icon>
                               </div>
                               <input
+                                disabled={false}
                                 onBlur={[Function]}
                                 onChange={[Function]}
                                 placeholder="MM/DD/YYYY"
@@ -1091,6 +1094,12 @@ exports[`DatePicker should render error when invalid value is set 1`] = `
 `;
 
 exports[`DatePicker should render null value as empty string 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`DatePicker should render when disabled 1`] = `
 <div>
   <div />
 </div>

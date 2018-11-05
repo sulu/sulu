@@ -21,6 +21,7 @@ type Props = {
     /** Configure the datepicker to your needs, for more information have a look in the README.md */
     options: Object,
     valid: boolean,
+    disabled?: boolean,
     value: ?Date,
 };
 
@@ -145,14 +146,14 @@ export default class DatePicker extends React.Component<Props> {
                 id={this.props.id}
                 onBlur={this.handleInputBlur}
                 onChange={handleInputChange}
-                onIconClick={this.handleOpenOverlay}
+                onIconClick={!props.disabled ? this.handleOpenOverlay : undefined}
             />,
             this.inputRef
         );
     };
 
     render() {
-        const {options, placeholder, valid} = this.props;
+        const {disabled, options, placeholder, valid} = this.props;
 
         const fieldOptions = {
             closeOnSelect: true,
@@ -164,6 +165,7 @@ export default class DatePicker extends React.Component<Props> {
         const inputProps = {
             placeholder: placeholder ? placeholder : this.getPlaceholder(fieldOptions),
             valid: valid && !this.showError,
+            disabled: disabled,
             icon: fieldOptions.dateFormat ? 'su-calendar' : 'su-clock',
         };
 

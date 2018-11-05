@@ -56,6 +56,12 @@ test('DatePicker should render date picker with time picker', () => {
     expect(render(<DatePicker onChange={onChange} options={options} value={null} />)).toMatchSnapshot();
 });
 
+test('DatePicker should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = new Date('2017-05-23');
+    expect(render(<DatePicker disabled={true} onChange={onChange} value={value} />)).toMatchSnapshot();
+});
+
 test('DatePicker should render error', () => {
     const onChange = jest.fn();
     expect(render(<DatePicker onChange={onChange} valid={false} value={null} />)).toMatchSnapshot();
