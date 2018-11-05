@@ -1,5 +1,8 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
+import {Loader} from 'sulu-admin-bundle/components';
 import type {Point} from './types';
 import ImageFocusPointCell from './ImageFocusPointCell';
 import imageFocusPointStyles from './imageFocusPoint.scss';
@@ -12,7 +15,10 @@ type Props = {|
     value: Point,
 |};
 
-export default class ImageFocusPoint extends React.PureComponent<Props> {
+@observer
+export default class ImageFocusPoint extends React.Component<Props> {
+    @observable imageDimension: ClientRect;
+
     createFocusPoints(selectedPoint: Point) {
         const points = [];
 
@@ -108,6 +114,10 @@ export default class ImageFocusPoint extends React.PureComponent<Props> {
         this.props.onChange(selectedPoint);
     };
 
+    @action handleImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
+        this.imageDimension = event.currentTarget.getBoundingClientRect();
+    };
+
     render() {
         const {
             image,
@@ -116,10 +126,16 @@ export default class ImageFocusPoint extends React.PureComponent<Props> {
 
         return (
             <div className={imageFocusPointStyles.imageFocusPoint}>
-                <div className={imageFocusPointStyles.focusPoints}>
-                    {this.createFocusPoints(value)}
-                </div>
-                <img className={imageFocusPointStyles.image} src={image} />
+                {this.imageDimension
+                    ? <div
+                        className={imageFocusPointStyles.focusPoints}
+                        style={{height: this.imageDimension.height, width: this.imageDimension.width}}
+                    >
+                        {this.createFocusPoints(value)}
+                    </div>
+                    : <Loader />
+                }
+                <img className={imageFocusPointStyles.image} onLoad={this.handleImageLoad} src={image} />
             </div>
         );
     }
