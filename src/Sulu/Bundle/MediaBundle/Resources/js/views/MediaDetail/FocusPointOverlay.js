@@ -16,8 +16,8 @@ type Props = {|
 
 @observer
 export default class FocusPointOverlay extends React.Component<Props> {
-    @observable focusPointX: number = 1;
-    @observable focusPointY: number = 1;
+    @observable focusPointX: number;
+    @observable focusPointY: number;
 
     constructor(props: Props) {
         super(props);
@@ -33,7 +33,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
 
     @action updateFocusPoint = () => {
         const {resourceStore} = this.props;
-        const {focusPointX, focusPointY} = resourceStore.data;
+        const {focusPointX = 1, focusPointY = 1} = resourceStore.data;
 
         this.focusPointX = focusPointX;
         this.focusPointY = focusPointY;

@@ -15,6 +15,25 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
+test('Should select the  middle by default', () => {
+    const resourceStore = new ResourceStore('media');
+    resourceStore.data = {
+        url: '/image.jpeg',
+        focusPointX: undefined,
+        focusPointY: undefined,
+    };
+
+    const focusPointOverlay = shallow(
+        <FocusPointOverlay
+            onClose={jest.fn()}
+            open={false}
+            resourceStore={resourceStore}
+        />
+    );
+
+    expect(focusPointOverlay.find('ImageFocusPoint').prop('value')).toEqual({x: 1, y: 1});
+});
+
 test('Initialize with data from resourceStore when overlay opens', () => {
     const resourceStore = new ResourceStore('media');
     resourceStore.data = {
