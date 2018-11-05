@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {default as ColorPickerComponent} from '../../../components/ColorPicker';
+import ColorPickerComponent from '../../../components/ColorPicker';
 import type {FieldTypeProps} from '../../../types';
 
 export default class ColorPicker extends React.Component<FieldTypeProps<?string>> {
