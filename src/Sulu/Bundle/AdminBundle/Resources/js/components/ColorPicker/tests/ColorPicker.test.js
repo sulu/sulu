@@ -26,6 +26,12 @@ test('ColorPicker should render with value', () => {
     expect(render(<ColorPicker onChange={onChange} value={value} />)).toMatchSnapshot();
 });
 
+test('ColorPicker should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = '#abc';
+    expect(render(<ColorPicker disabled={true} onChange={onChange} value={value} />)).toMatchSnapshot();
+});
+
 test('ColorPicker should render null value as empty string', () => {
     const onChange = jest.fn();
     expect(render(<ColorPicker onChange={onChange} value={null} />)).toMatchSnapshot();

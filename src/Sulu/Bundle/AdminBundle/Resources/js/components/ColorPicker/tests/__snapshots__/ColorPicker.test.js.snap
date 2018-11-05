@@ -105,6 +105,26 @@ exports[`ColorPicker should render null value as empty string 1`] = `
 </label>
 `;
 
+exports[`ColorPicker should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-square"
+      class="su-square icon default icon"
+    />
+  </div>
+  <input
+    disabled=""
+    type="text"
+    value=""
+  />
+</label>
+`;
+
 exports[`ColorPicker should render with open overlay 1`] = `
 "<div>
   <div class=\\"backdrop fixed\\"></div>
