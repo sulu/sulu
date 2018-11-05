@@ -2,6 +2,8 @@
 
 $inputBorderColor: $silver;
 $inputErrorBorderColor: $persianRed;
+$inputDisabledColor: $gray;
+$inputDisabledBackgroundColor: $wildSand;
 $inputBorderWidth: 1px;
 $inputBorderRadius: 3px;
 $inputHeight: 30px;
@@ -50,6 +52,11 @@ $darkIconColor: $doveGray;
         &:invalid {
             box-shadow: none;
         }
+
+        &:disabled {
+            color: $inputDisabledColor;
+            background-color: $inputDisabledBackgroundColor;
+        }
     }
 
     &.left {
@@ -71,6 +78,7 @@ $darkIconColor: $doveGray;
     &.right {
         input {
             text-align: right;
+            text-align: right;
             padding-left: 1px;
             padding-right: 10px;
         }
@@ -81,10 +89,6 @@ $darkIconColor: $doveGray;
             padding: 0;
             width: 0;
         }
-    }
-
-    &.error {
-        border-color: $inputErrorBorderColor;
     }
 
     &.has-append-icon {
@@ -111,6 +115,14 @@ $darkIconColor: $doveGray;
         &.collapsed {
             background-color: $darkBackgroundColorCollapsed;
         }
+    }
+
+    &.error {
+        border-color: $inputErrorBorderColor;
+    }
+
+    &.disabled {
+        background-color: $inputDisabledBackgroundColor;
     }
 }
 

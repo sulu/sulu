@@ -17,6 +17,11 @@ test('Input should render with invalid value', () => {
     expect(render(<Input onBlur={jest.fn()} onChange={onChange} valid={false} value="My value" />)).toMatchSnapshot();
 });
 
+test('Input should render when disabled', () => {
+    const onChange = jest.fn();
+    expect(render(<Input disabled={true} onChange={onChange} value="My value" />)).toMatchSnapshot();
+});
+
 test('Input should render with icon', () => {
     const onChange = jest.fn();
     expect(render(<Input icon="su-pen" onBlur={jest.fn()} onChange={onChange} value="My value" />)).toMatchSnapshot();

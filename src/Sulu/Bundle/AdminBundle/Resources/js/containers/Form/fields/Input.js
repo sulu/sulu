@@ -12,6 +12,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
         const {
             dataPath,
             error,
+            disabled,
             onChange,
             schemaOptions: {
                 max_characters: {
@@ -41,6 +42,7 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <InputComponent
+                disabled={!!disabled}
                 id={dataPath}
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 maxSegments={maxSegments ? parseInt(maxSegments) : undefined}

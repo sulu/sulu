@@ -15,6 +15,7 @@ export type InputProps<T: ?string | ?number> = {|
     inputRef?: (ref: ?ElementRef<'input'>) => void,
     inputMode?: string,
     valid: boolean,
+    disabled?: boolean,
     value: ?T,
     maxCharacters?: number,
     maxSegments?: number,
