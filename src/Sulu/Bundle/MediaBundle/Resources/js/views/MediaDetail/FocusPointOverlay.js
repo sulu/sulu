@@ -7,6 +7,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import ImageFocusPoint from '../../components/ImageFocusPoint';
 import type {Point} from '../../components/ImageFocusPoint';
+import focusPointOverlayStyles from './focusPointOverlay.scss';
 
 type Props = {|
     onClose: () => void,
@@ -76,13 +77,16 @@ export default class FocusPointOverlay extends React.Component<Props> {
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
                 open={open}
+                size="large"
                 title={translate('sulu_media.set_focus_point')}
             >
-                <ImageFocusPoint
-                    image={this.resourceStore.data.url}
-                    onChange={this.handleFocusPointChange}
-                    value={{x: this.focusPointX, y: this.focusPointY}}
-                />
+                <div className={focusPointOverlayStyles.focusPointContainer}>
+                    <ImageFocusPoint
+                        image={this.resourceStore.data.url}
+                        onChange={this.handleFocusPointChange}
+                        value={{x: this.focusPointX, y: this.focusPointY}}
+                    />
+                </div>
             </Overlay>
         );
     }

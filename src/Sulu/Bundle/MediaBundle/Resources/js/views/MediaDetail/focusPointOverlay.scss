@@ -1,0 +1,8 @@
+@import 'sulu-admin-bundle/containers/Application/variables.scss';
+
+.focus-point-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $viewPadding;
+}
