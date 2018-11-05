@@ -3,10 +3,8 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_core.webspace.webspace_manager.class">Sulu\Component\Webspace\Manager\WebspaceManager</parameter>
         <parameter key="sulu_core.webspace.cache_class">%sulu.context%WebspaceCollectionCache</parameter>
         <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
-        <parameter key="sulu_core.webspace.document_manager.webspace_initializer.class">Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer</parameter>
     </parameters>
 
     <services>
@@ -31,7 +29,7 @@
 
         <service id="sulu_core.webspace.webspace_manager.url_replacer" class="Sulu\Component\Webspace\Url\Replacer"/>
 
-        <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%" public="true">
+        <service id="sulu_core.webspace.webspace_manager" class="Sulu\Component\Webspace\Manager\WebspaceManager" public="true">
             <argument type="service" id="sulu_core.webspace.loader.delegator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="collection">
@@ -44,8 +42,9 @@
 
             <tag name="sulu.localization_provider"/>
         </service>
+        <service id="Sulu\Component\Webspace\Manager\WebspaceManagerInterface" alias="sulu_core.webspace.webspace_manager"/>
 
-        <service id="sulu_core.webspace.document_manager.webspace_initializer" class="%sulu_core.webspace.document_manager.webspace_initializer.class%">
+        <service id="sulu_core.webspace.document_manager.webspace_initializer" class="Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer">
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
