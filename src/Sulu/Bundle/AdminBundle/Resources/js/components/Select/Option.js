@@ -29,7 +29,6 @@ export default class Option extends React.PureComponent<Props> {
         focus: false,
         selected: false,
         selectedVisualization: 'icon',
-        value: undefined,
     };
 
     item: ElementRef<'li'>;
