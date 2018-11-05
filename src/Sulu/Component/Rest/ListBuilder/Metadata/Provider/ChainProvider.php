@@ -37,13 +37,13 @@ class ChainProvider implements ProviderInterface
         $classMetadata = new ClassMetadata($className);
 
         foreach ($this->chain as $provider) {
-            $metaData = $provider->getMetadataForClass($className);
+            $metadata = $provider->getMetadataForClass($className);
 
-            if (!$metaData) {
+            if (!$metadata) {
                 throw new \RuntimeException(sprintf('Could not find metadata for class "%s"', $className));
             }
 
-            $classMetadata->merge($metaData);
+            $classMetadata->merge($metadata);
         }
 
         return $classMetadata;
