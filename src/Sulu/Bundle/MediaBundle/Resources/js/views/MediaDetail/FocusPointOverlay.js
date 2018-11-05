@@ -65,7 +65,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
         return (
             <Overlay
                 confirmLoading={resourceStore.saving}
-                confirmText={translate('sulu_admin.confirm')}
+                confirmText={translate('sulu_admin.save')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
                 open={open}
