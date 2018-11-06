@@ -18,7 +18,7 @@ exports[`The component should render in checked state 1`] = `
 
 exports[`The component should render in inactive state 1`] = `
 <label
-  class="label"
+  class="label inactive"
 >
   <span
     class="switch inactive"

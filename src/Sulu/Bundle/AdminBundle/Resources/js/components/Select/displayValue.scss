@@ -55,7 +55,7 @@ $darkBackgroundColor: $white;
     }
 
     &.disabled {
-        cursor: initial;
+        cursor: default;
         color: $disabledColor;
         background-color: $disabledBackgroundColor;
 

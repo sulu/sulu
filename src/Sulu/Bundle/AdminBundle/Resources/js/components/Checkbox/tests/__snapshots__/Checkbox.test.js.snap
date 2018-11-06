@@ -32,7 +32,7 @@ exports[`The component should render in light skin 1`] = `
 
 exports[`The component should render inactive 1`] = `
 <label
-  class="label"
+  class="label inactive"
 >
   <span
     class="switch inactive checkbox dark"

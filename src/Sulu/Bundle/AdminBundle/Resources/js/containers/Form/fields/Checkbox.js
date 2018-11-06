@@ -13,6 +13,7 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
 
     render() {
         const {
+            disabled,
             schemaOptions: {
                 label: {
                     title: label,
@@ -28,6 +29,12 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
             return <Toggler checked={!!value} onChange={this.handleChange}>{label}</Toggler>;
         }
 
-        return <CheckboxComponent checked={!!value} onChange={this.handleChange}>{label}</CheckboxComponent>;
+        return (
+            <CheckboxComponent
+                active={!disabled}
+                checked={!!value}
+                onChange={this.handleChange}
+            >{label}</CheckboxComponent>
+        );
     }
 }
