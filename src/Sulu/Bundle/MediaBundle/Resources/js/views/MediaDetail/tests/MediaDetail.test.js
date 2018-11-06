@@ -318,6 +318,8 @@ test('Should save form when submitted', (done) => {
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const Form = require('sulu-admin-bundle/containers').Form;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
@@ -350,9 +352,14 @@ test('Should save form when submitted', (done) => {
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
             mediaDetail.update();
-            mediaDetail.find(Form).instance().submit();
-            expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
-            done();
+            expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(false);
+
+            mediaDetail.find(Form).instance().submit().then(() => {
+                mediaDetail.update();
+                expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+                expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(true);
+                done();
+            });
         });
     });
 

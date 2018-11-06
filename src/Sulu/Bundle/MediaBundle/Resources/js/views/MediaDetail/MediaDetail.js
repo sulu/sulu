@@ -24,6 +24,7 @@ class MediaDetail extends React.Component<Props> {
     form: ?Form;
     formStore: FormStore;
     @observable showFocusPointOverlay: boolean = false;
+    showSuccess = observable.box(false);
 
     constructor(props: Props) {
         super(props);
@@ -59,7 +60,9 @@ class MediaDetail extends React.Component<Props> {
     };
 
     handleSubmit = () => {
-        this.props.resourceStore.save();
+        return this.props.resourceStore.save().then(action(() => {
+            this.showSuccess.set(true);
+        }));
     };
 
     handleUploadComplete = (media: Object) => {
@@ -125,6 +128,7 @@ class MediaDetail extends React.Component<Props> {
 }
 
 export default withToolbar(MediaDetail, function() {
+    const {showSuccess} = this;
     const {
         router,
         resourceStore,
@@ -162,5 +166,6 @@ export default withToolbar(MediaDetail, function() {
                 },
             },
         ],
+        showSuccess,
     };
 });
