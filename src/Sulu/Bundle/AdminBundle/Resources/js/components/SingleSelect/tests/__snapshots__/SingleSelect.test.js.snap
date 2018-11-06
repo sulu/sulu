@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`The component should render a select that is disabled 1`] = `null`;
+
 exports[`The component should render a select with dark skin 1`] = `null`;

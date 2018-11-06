@@ -11,6 +11,9 @@ $borderRadius: 3px;
 $iconSize: 10px;
 $hoverColor: $shakespeare;
 
+$disabledColor: $gray;
+$disabledBackgroundColor: $wildSand;
+
 $darkBorderRadius: 4px;
 $darkBorderColor: $doveGray;
 $darkColor: $black;
@@ -49,6 +52,16 @@ $darkBackgroundColor: $white;
         color: $darkColor;
         border-color: $darkBorderColor;
         border-radius: $darkBorderRadius;
+    }
+
+    &.disabled {
+        cursor: initial;
+        color: $disabledColor;
+        background-color: $disabledBackgroundColor;
+
+        &:hover {
+            color: $disabledColor;
+        }
     }
 }
 

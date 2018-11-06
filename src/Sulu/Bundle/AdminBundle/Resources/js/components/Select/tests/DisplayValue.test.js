@@ -24,6 +24,11 @@ test('The component should render with an icon', () => {
     expect(displayValue).toMatchSnapshot();
 });
 
+test('The component should render when disabled', () => {
+    const displayValue = render(<DisplayValue disabled={true} onClick={jest.fn()}>My value</DisplayValue>);
+    expect(displayValue).toMatchSnapshot();
+});
+
 test('A click on the component should fire the callback and prevent the default', () => {
     const clickSpy = jest.fn();
     const preventDefaultSpy = jest.fn();

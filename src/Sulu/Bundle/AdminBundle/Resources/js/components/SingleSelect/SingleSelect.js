@@ -52,10 +52,11 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
     };
 
     render() {
-        const {children, icon, skin} = this.props;
+        const {children, disabled, icon, skin} = this.props;
 
         return (
             <Select
+                disabled={disabled}
                 displayValue={this.displayValue}
                 icon={icon}
                 isOptionSelected={this.isOptionSelected}

@@ -6,6 +6,7 @@ import Option from './Option';
 
 export type SelectProps = {
     children: SelectChildren,
+    disabled?: boolean,
     icon?: string,
     skin: Skin,
 }

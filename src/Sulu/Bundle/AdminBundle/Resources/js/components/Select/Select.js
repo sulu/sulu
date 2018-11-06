@@ -109,6 +109,7 @@ export default class Select<T> extends React.Component<Props<T>> {
     render() {
         const {
             icon,
+            disabled,
             displayValue,
             skin,
         } = this.props;
@@ -117,6 +118,7 @@ export default class Select<T> extends React.Component<Props<T>> {
         return (
             <div className={selectStyles.select}>
                 <DisplayValue
+                    disabled={disabled}
                     displayValueRef={this.setDisplayValueRef}
                     icon={icon}
                     onClick={this.handleDisplayValueClick}

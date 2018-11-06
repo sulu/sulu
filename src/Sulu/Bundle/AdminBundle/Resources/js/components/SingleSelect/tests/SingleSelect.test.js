@@ -36,6 +36,18 @@ test('The component should render a select with dark skin', () => {
     expect(select.render()).toMatchSnapshot();
 });
 
+test('The component should render a select that is disabled', () => {
+    const select = shallow(
+        <SingleSelect disabled={true} skin="dark">
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </SingleSelect>
+    );
+    expect(select.render()).toMatchSnapshot();
+});
+
 test('The component should return the default displayValue if no valueless option is present', () => {
     const select = shallow(
         <SingleSelect>
