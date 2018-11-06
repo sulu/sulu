@@ -8,6 +8,10 @@ jest.mock('react-sortable-hoc', () => ({
     SortableHandle: jest.fn().mockImplementation((component) => component),
 }));
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 test('Render collapsed sortable block', () => {
     expect(render(
         <SortableBlock

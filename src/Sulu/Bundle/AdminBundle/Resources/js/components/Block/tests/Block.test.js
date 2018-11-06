@@ -3,6 +3,10 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Block from '../Block';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 test('Render an expanded block', () => {
     expect(render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>
