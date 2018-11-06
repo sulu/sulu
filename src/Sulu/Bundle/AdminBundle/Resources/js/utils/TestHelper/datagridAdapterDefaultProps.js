@@ -5,7 +5,7 @@ const datagridAdapterDefaultProps = {
     activeItems: undefined,
     data: [],
     disabledIds: [],
-    limit: 0,
+    limit: 10,
     loading: false,
     onAllSelectionChange: undefined,
     // $FlowFixMe

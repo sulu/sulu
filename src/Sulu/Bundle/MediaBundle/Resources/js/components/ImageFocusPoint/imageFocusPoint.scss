@@ -1,6 +1,7 @@
 .image-focus-point {
     position: relative;
     display: inline-block;
+    height: 100%;
 }
 
 .focus-points {
@@ -11,4 +12,9 @@
     height: 100%;
     display: flex;
     flex-flow: wrap;
+}
+
+.image {
+    max-width: 100%;
+    max-height: 100%;
 }

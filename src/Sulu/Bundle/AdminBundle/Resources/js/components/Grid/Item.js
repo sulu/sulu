@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import type {BaseItemProps} from './types';
 import BaseItem from './BaseItem';
 import itemStyles from './item.scss';
 
 type Props = BaseItemProps & {
-    children?: Element<*>,
+    children?: Node,
     className?: string,
 };
 

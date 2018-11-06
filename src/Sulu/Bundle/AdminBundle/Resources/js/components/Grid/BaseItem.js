@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import type {BaseItemProps} from './types';
 import baseItemStyles from './baseItem.scss';
 
 type Props = BaseItemProps & {
     className: string,
-    children: ?Element<*>,
+    children: ?Node,
 };
 
 export default class BaseItem extends React.PureComponent<Props> {

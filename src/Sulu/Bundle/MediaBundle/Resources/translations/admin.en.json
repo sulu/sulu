@@ -32,5 +32,6 @@
     "sulu_media.history": "History",
     "sulu_media.formats": "Formats",
     "sulu_media.all_collections": "All collections",
-    "sulu_media.move_media": "Move media"
+    "sulu_media.move_media": "Move media",
+    "sulu_media.set_focus_point": "Set focus point"
 }

@@ -36,7 +36,6 @@ export default class Overlay extends React.Component<Props> {
         actions: [],
         confirmDisabled: false,
         confirmLoading: false,
-        open: false,
     };
 
     @observable visible: boolean = false;
@@ -62,7 +61,9 @@ export default class Overlay extends React.Component<Props> {
     }
 
     @action componentWillReceiveProps(nextProps: Props) {
-        this.openHasChanged = nextProps.open !== this.props.open;
+        if (nextProps.open !== this.props.open) {
+            this.openHasChanged = true;
+        }
     }
 
     @action componentDidUpdate(prevProps: Props) {
