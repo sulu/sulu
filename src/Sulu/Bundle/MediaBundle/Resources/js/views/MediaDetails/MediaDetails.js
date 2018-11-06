@@ -13,6 +13,7 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
 import mediaDetailsStyles from './mediaDetails.scss';
 import FocusPointOverlay from './FocusPointOverlay';
+import CropOverlay from './CropOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const FORM_KEY = 'media_details';
@@ -27,6 +28,7 @@ class MediaDetails extends React.Component<Props> {
     form: ?Form;
     formStore: ResourceFormStore;
     @observable showFocusPointOverlay: boolean = false;
+    @observable showCropOverlay: boolean = false;
     showSuccess: IObservableValue<boolean> = observable.box(false);
 
     constructor(props: Props) {
@@ -76,6 +78,19 @@ class MediaDetails extends React.Component<Props> {
         this.props.resourceStore.setMultiple(media);
     };
 
+    @action handleCropButtonClick = () => {
+        this.showCropOverlay = true;
+    };
+
+    @action handleCropOverlayClose = () => {
+        this.showCropOverlay = false;
+    };
+
+    @action handleCropOverlayConfirm = () => {
+        this.showCropOverlay = false;
+        this.showSuccessSnackbar();
+    };
+
     @action handleFocusPointButtonClick = () => {
         this.showFocusPointOverlay = true;
     };
@@ -115,6 +130,13 @@ class MediaDetails extends React.Component<Props> {
                                     >
                                         {translate('sulu_media.set_focus_point')}
                                     </Button>
+                                    <Button
+                                        icon="su-cut"
+                                        onClick={this.handleCropButtonClick}
+                                        skin="link"
+                                    >
+                                        {translate('sulu_media.crop')}
+                                    </Button>
                                 </div>
                             </Grid.Item>
                         </Grid.Section>
@@ -134,6 +156,11 @@ class MediaDetails extends React.Component<Props> {
                     onConfirm={this.handleFocusPointOverlayConfirm}
                     open={this.showFocusPointOverlay}
                     resourceStore={resourceStore}
+                />
+                <CropOverlay
+                    onClose={this.handleCropOverlayClose}
+                    onConfirm={this.handleCropOverlayConfirm}
+                    open={this.showCropOverlay}
                 />
             </div>
         );

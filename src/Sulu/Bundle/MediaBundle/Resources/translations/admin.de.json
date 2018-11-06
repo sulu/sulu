@@ -34,5 +34,6 @@
     "sulu_media.formats": "Formate",
     "sulu_media.all_collections": "Alle Kollektionen",
     "sulu_media.move_media": "Medien verschieben",
-    "sulu_media.set_focus_point": "Fokuspunkt setzen"
+    "sulu_media.set_focus_point": "Fokuspunkt setzen",
+    "sulu_media.crop": "Ausschnitte festlegen"
 }

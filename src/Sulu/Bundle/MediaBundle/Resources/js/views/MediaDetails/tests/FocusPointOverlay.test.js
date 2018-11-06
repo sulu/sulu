@@ -17,7 +17,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Should select the  middle by default', () => {
+test('Should select the middle by default', () => {
     const resourceStore = new ResourceStore('media');
     resourceStore.data = {
         url: '/image.jpeg',

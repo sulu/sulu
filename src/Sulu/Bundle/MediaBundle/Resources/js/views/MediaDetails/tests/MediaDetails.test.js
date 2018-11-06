@@ -488,7 +488,7 @@ test('Should save focus point overlay', (done) => {
             expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(true);
 
             mediaDetails.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
-            mediaDetails.find('Overlay').prop('onConfirm')();
+            mediaDetails.find('FocusPointOverlay Overlay').prop('onConfirm')();
 
             expect(ResourceRequester.put).toBeCalledWith(
                 'media',
@@ -502,6 +502,59 @@ test('Should save focus point overlay', (done) => {
                 expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(false);
                 done();
             });
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
+test('Should open and close crop overlay', (done) => {
+    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const MediaDetail = require('../MediaDetail').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    resourceStore.loading = false;
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
+
+            mediaDetail.find('Button[icon="su-cut"]').prop('onClick')();
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(true);
+
+            mediaDetail.find('CropOverlay').prop('onClose')();
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
+            done();
         });
     });
 
