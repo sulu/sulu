@@ -88,7 +88,7 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
                         loader: 'postcss-loader',
                         options: styles.getPostCssConfig({
                             themeImporter: {
-                                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' ),
+                                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
                             },
                             minify: true,
                         }),

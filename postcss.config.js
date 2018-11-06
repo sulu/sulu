@@ -7,6 +7,5 @@ module.exports = { //eslint-disable-line no-undef
         'postcss-calc': {},
         'postcss-hexrgba': {},
         'autoprefixer': {},
-        'postcss-mixins': {},
     },
 };

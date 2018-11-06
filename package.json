@@ -22,6 +22,7 @@
     },
     "devDependencies": {
         "@ckeditor/ckeditor5-dev-utils": "^11.0.1",
+        "@ckeditor/ckeditor5-theme-lark": "^11.1.0",
         "autoprefixer": "^7.2.5",
         "babel-core": "^6.25.0",
         "babel-eslint": "^8.1.2",
@@ -68,7 +69,6 @@
         "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",
         "stylelint-config-standard": "^16.0.0",
-        "style-loader": "^0.23.1",
         "url-search-params-polyfill": "^2.0.0",
         "webpack": "^4.20.2",
         "webpack-clean-obsolete-chunks": "^0.4.0",
