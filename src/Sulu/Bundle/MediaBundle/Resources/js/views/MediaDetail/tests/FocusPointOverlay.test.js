@@ -28,6 +28,7 @@ test('Should select the  middle by default', () => {
     const focusPointOverlay = shallow(
         <FocusPointOverlay
             onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={false}
             resourceStore={resourceStore}
         />
@@ -47,6 +48,7 @@ test('Initialize with data from resourceStore when overlay opens', () => {
     const focusPointOverlay = shallow(
         <FocusPointOverlay
             onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={false}
             resourceStore={resourceStore}
         />
@@ -78,6 +80,7 @@ test('Closing the overlay should call the onClose callback', () => {
     const focusPointOverlay = shallow(
         <FocusPointOverlay
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             open={true}
             resourceStore={resourceStore}
         />
@@ -89,7 +92,7 @@ test('Closing the overlay should call the onClose callback', () => {
 });
 
 test('Should save the focus point when confirm button is clicked', () => {
-    const closeSpy = jest.fn();
+    const confirmSpy = jest.fn();
 
     const resourceStore = new ResourceStore('media');
 
@@ -103,7 +106,8 @@ test('Should save the focus point when confirm button is clicked', () => {
 
     const focusPointOverlay = shallow(
         <FocusPointOverlay
-            onClose={closeSpy}
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
             open={true}
             resourceStore={resourceStore}
         />
@@ -123,6 +127,6 @@ test('Should save the focus point when confirm button is clicked', () => {
     return savePromise.then(() => {
         expect(resourceStore.set).toBeCalledWith('focusPointX', 0);
         expect(resourceStore.set).toBeCalledWith('focusPointY', 2);
-        expect(closeSpy).toBeCalled();
+        expect(confirmSpy).toBeCalled();
     });
 });

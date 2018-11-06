@@ -59,9 +59,13 @@ class MediaDetail extends React.Component<Props> {
         this.form = form;
     };
 
+    @action showSuccessSnackbar() {
+        this.showSuccess.set(true);
+    }
+
     handleSubmit = () => {
         return this.props.resourceStore.save().then(action(() => {
-            this.showSuccess.set(true);
+            this.showSuccessSnackbar();
         }));
     };
 
@@ -75,6 +79,11 @@ class MediaDetail extends React.Component<Props> {
 
     @action handleFocusPointOverlayClose = () => {
         this.showFocusPointOverlay = false;
+    };
+
+    @action handleFocusPointOverlayConfirm = () => {
+        this.showFocusPointOverlay = false;
+        this.showSuccessSnackbar();
     };
 
     render() {
@@ -119,6 +128,7 @@ class MediaDetail extends React.Component<Props> {
                 }
                 <FocusPointOverlay
                     onClose={this.handleFocusPointOverlayClose}
+                    onConfirm={this.handleFocusPointOverlayConfirm}
                     open={this.showFocusPointOverlay}
                     resourceStore={resourceStore}
                 />

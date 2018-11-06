@@ -11,6 +11,7 @@ import focusPointOverlayStyles from './focusPointOverlay.scss';
 
 type Props = {|
     onClose: () => void,
+    onConfirm: () => void,
     open: boolean,
     resourceStore: ResourceStore,
 |};
@@ -71,7 +72,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
         this.resourceStore.save().then(() => {
             this.props.resourceStore.set('focusPointX', this.focusPointX);
             this.props.resourceStore.set('focusPointY', this.focusPointY);
-            this.props.onClose();
+            this.props.onConfirm();
         });
     };
 

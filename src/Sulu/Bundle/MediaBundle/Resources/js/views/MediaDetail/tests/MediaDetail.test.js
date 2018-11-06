@@ -450,6 +450,8 @@ test('Should save focus point overlay', (done) => {
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
     resourceStore.loading = false;
 
     const schemaTypesPromise = Promise.resolve({});
@@ -497,6 +499,7 @@ test('Should save focus point overlay', (done) => {
 
             setTimeout(() => {
                 mediaDetail.update();
+                expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(true);
                 expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
                 done();
             });
