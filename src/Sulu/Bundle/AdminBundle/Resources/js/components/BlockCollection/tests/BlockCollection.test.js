@@ -32,6 +32,17 @@ test('Should render a block list', () => {
     )).toMatchSnapshot();
 });
 
+test('Should render a disabled block list', () => {
+    expect(render(
+        <BlockCollection
+            disabled={true}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Should render a fully filled block list without add button if maxOccurs is reached', () => {
     expect(render(
         <BlockCollection

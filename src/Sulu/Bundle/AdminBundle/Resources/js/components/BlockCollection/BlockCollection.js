@@ -10,6 +10,7 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {
+    disabled?: boolean,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
@@ -133,7 +134,7 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {renderBlockContent, types, value} = this.props;
+        const {disabled, renderBlockContent, types, value} = this.props;
 
         const identifiedValues = value.map((block) => {
             if (!block.__id) {
@@ -146,6 +147,7 @@ export default class BlockCollection extends React.Component<Props> {
         return (
             <section className={blockCollectionStyles.blockCollection}>
                 <SortableBlocks
+                    disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
                     onCollapse={this.handleCollapse}
@@ -159,7 +161,7 @@ export default class BlockCollection extends React.Component<Props> {
                     value={identifiedValues}
                 />
                 <Button
-                    disabled={this.hasMaximumReached()}
+                    disabled={disabled || this.hasMaximumReached()}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
                     skin="secondary"
