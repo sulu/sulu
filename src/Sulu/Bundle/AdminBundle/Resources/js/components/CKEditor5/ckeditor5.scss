@@ -1,0 +1,79 @@
+@import '../../containers/Application/colors.scss';
+
+:global {
+    :root {
+        /* font size */
+        --ck-font-size-base: 12px;
+        --ck-icon-size: 12px;
+
+        /* shadows */
+        --ck-color-shadow-inner: none;
+        --ck-color-shadow-drop: none;
+        --ck-color-button-default-active-shadow: none;
+        --ck-color-button-on-active-shadow: none;
+
+        /* toolbar */
+        --ck-ui-component-min-height: 20px;
+        --ck-color-toolbar-background: $silver;
+        --ck-color-toolbar-border: var(--ck-color-toolbar-background);
+
+        /* borders */
+        --ck-border-radius: 3px;
+        --ck-color-base-border: var(--ck-color-toolbar-background);
+        --ck-color-focus-border: $shakespeare;
+
+        /* buttons */
+        --ck-color-button-default-background: transparent;
+        --ck-color-button-default-hover-background: var(--ck-color-button-default-background);
+        --ck-color-button-default-active-background: var(--ck-color-button-default-background);
+        --ck-color-button-on-background: $dustyGray;
+        --ck-color-button-on-hover-background: var(--ck-color-button-on-background);
+        --ck-color-button-on-active-background: var(--ck-color-button-on-background);
+
+        /* panel */
+        --ck-color-panel-background: $white;
+        --ck-color-panel-border: $dustyGray;
+
+        /* list */
+        --ck-color-list-button-hover-background: $mercury;
+
+        /* toggle button */
+        --ck-color-switch-button-off-background: $silver;
+        --ck-color-switch-button-on-background: $shakespeare;
+
+        /* table insert box */
+        --ck-insert-table-dropdown-box-border-active-color: $shakespeare;
+        --ck-insert-table-dropdown-box-active-background: #e5f4f7;
+
+        /* table widget */
+        --ck-color-widget-hover-border: $silver;
+        --ck-color-widget-blurred-border: $silver;
+    }
+
+    .ck.ck-editor__top {
+        margin-bottom: 10px;
+
+        .ck.ck-toolbar {
+            border-radius: var(--ck-border-radius) !important;
+            padding: 5px 10px;
+        }
+    }
+
+    .ck.ck-toolbar__separator {
+        background: none;
+        width: 20px;
+    }
+
+    .ck.ck-content {
+        border-radius: var(--ck-border-radius) !important;
+        border-color: $silver !important;
+    }
+
+    .ck-widget.table {
+        width: 100%;
+
+        table {
+            width: 100%;
+        }
+    }
+}
