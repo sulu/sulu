@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -20,6 +20,19 @@ export default class FocusPointOverlay extends React.Component<Props> {
     @observable focusPointX: number;
     @observable focusPointY: number;
     resourceStore: ResourceStore;
+
+    @computed get confirmDisabled() {
+        const {
+            resourceStore: {
+                data: {
+                    focusPointX,
+                    focusPointY,
+                },
+            },
+        } = this.props;
+
+        return this.focusPointX === focusPointX && this.focusPointY === focusPointY;
+    }
 
     constructor(props: Props) {
         super(props);
@@ -72,6 +85,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                confirmDisabled={this.confirmDisabled}
                 confirmLoading={this.resourceStore.saving}
                 confirmText={translate('sulu_admin.save')}
                 onClose={this.handleClose}

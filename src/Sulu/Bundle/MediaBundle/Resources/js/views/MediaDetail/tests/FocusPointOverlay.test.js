@@ -109,7 +109,9 @@ test('Should save the focus point when confirm button is clicked', () => {
         />
     );
 
+    expect(focusPointOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
     focusPointOverlay.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
+    expect(focusPointOverlay.find('Overlay').prop('confirmDisabled')).toEqual(false);
     focusPointOverlay.find('Overlay').prop('onConfirm')();
 
     const clonedResourceStore = focusPointOverlay.instance().resourceStore;
