@@ -2,12 +2,14 @@
 import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import classNames from 'classnames';
 import type {Button} from './types';
 import Header from './Header';
 import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
-type Props<T> = {
+type Props<T> = {|
+    disabled?: boolean,
     children?: ChildrenArray<Element<typeof Item>>,
     label?: string,
     onItemRemove?: (itemid: T) => void,
@@ -16,7 +18,7 @@ type Props<T> = {
     rightButton?: Button,
     loading: boolean,
     sortable: boolean,
-};
+|};
 
 export default class MultiItemSelection<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
@@ -88,6 +90,7 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
 
     render() {
         const {
+            disabled,
             children,
             label,
             leftButton,
@@ -97,14 +100,21 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
         const emptyList = !React.Children.count(children);
         const List = this.createList();
 
+        const multiItemSelectionClass = classNames(
+            multiItemSelectionStyles.multiItemSelectionClass,
+            {
+                [multiItemSelectionStyles.disabled]: disabled,
+            }
+        );
+
         return (
-            <Fragment>
+            <div className={multiItemSelectionClass}>
                 <Header
                     emptyList={emptyList}
                     label={label}
-                    leftButton={leftButton}
+                    leftButton={leftButton ? {disabled, ...leftButton} : undefined}
                     loading={loading}
-                    rightButton={rightButton}
+                    rightButton={rightButton ? {disabled, ...rightButton} : undefined}
                 />
                 <List
                     axis="y"
@@ -115,7 +125,7 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
                 >
                     {children}
                 </List>
-            </Fragment>
+            </div>
         );
     }
 }

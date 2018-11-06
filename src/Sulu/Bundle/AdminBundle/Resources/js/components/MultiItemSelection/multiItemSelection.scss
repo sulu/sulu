@@ -4,6 +4,13 @@ $listElementBackgroundColor: $white;
 $listElementBorderBottomColor: $silver;
 $listElementDragBoxShadowColor: rgba($black, .1);
 
+.multiItemSelectionClass {
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
+}
+
 .list {
     margin: 0;
     padding: 0;

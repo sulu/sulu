@@ -28,7 +28,7 @@ test('Pass correct sections prop', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('FilterOverlay').prop('sections'))
         .toEqual(['tags', 'audienceTargeting', 'limit']);
@@ -45,7 +45,7 @@ test('Disable sorting on MultiItemSelection', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('MultiItemSelection').prop('sortable')).toEqual(false);
 });
@@ -68,7 +68,7 @@ test('Pass correct sections prop with other values', () => {
 
     const smartContentStore = new SmartContentStore('content');
     const smartContent = shallow(
-        <SmartContent fieldLabel="Test" presentations={presentations} provider="content" store={smartContentStore} />
+        <SmartContent fieldLabel="Test" presentations={presentations} store={smartContentStore} />
     );
 
     expect(smartContent.find('FilterOverlay').prop('sections'))
@@ -91,7 +91,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         presentAs: true,
         limit: false,
     });
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
 
@@ -112,7 +112,7 @@ test('Show items in a SmartContentItem', () => {
         {title: 'About us'},
     ];
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('SmartContentItem')).toHaveLength(2);
     expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
@@ -123,7 +123,7 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.itemsLoading = true;
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
 });
@@ -133,7 +133,7 @@ test('Pass the loading prop to the MultiItemSelection if datagrid or categories 
     // $FlowFixMe
     smartContentStore.loading = true;
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
 });
@@ -151,7 +151,7 @@ test('Set all defaults on the SmartContentStore', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContentStore.dataSource).toEqual(undefined);
     expect(smartContentStore.includeSubElements).toEqual(false);
@@ -179,7 +179,7 @@ test('Set no defaults on the SmartContentStore', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    shallow(<SmartContent fieldLabel="Test" provider="content" store={smartContentStore} />);
+    shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
 
     expect(smartContentStore.dataSource).toEqual(undefined);
     expect(smartContentStore.includeSubElements).toEqual(undefined);

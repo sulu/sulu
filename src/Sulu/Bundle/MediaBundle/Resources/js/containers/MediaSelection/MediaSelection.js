@@ -83,7 +83,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
     };
 
     render() {
-        const {formInspector} = this.props;
+        const {formInspector, disabled} = this.props;
 
         if (!formInspector || !formInspector.locale) {
             throw new Error('The media selection needs a locale to work properly');
@@ -101,6 +101,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         return (
             <Fragment>
                 <MultiItemSelection
+                    disabled={!!disabled}
                     label={label}
                     leftButton={{
                         icon: 'su-image',

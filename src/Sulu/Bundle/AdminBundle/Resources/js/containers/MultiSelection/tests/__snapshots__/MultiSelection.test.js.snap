@@ -26,7 +26,9 @@ exports[`Should open an overlay 1`] = `
 `;
 
 exports[`Show with default plus icon 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -42,15 +44,17 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed icon 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -66,15 +70,17 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed label 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -92,15 +98,17 @@ Array [
     >
       Select Snippets
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed values as items in right locale 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header"
   >
@@ -116,7 +124,7 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
   >
@@ -264,6 +272,6 @@ Array [
         </button>
       </div>
     </li>
-  </ul>,
-]
+  </ul>
+</div>
 `;

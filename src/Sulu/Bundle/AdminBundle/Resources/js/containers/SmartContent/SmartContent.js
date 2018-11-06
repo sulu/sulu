@@ -10,11 +10,12 @@ import FilterOverlay from './FilterOverlay';
 import SmartContentItem from './SmartContentItem';
 import type {Presentation, SmartContentConfig} from './types';
 
-type Props = {
+type Props = {|
+    disabled?: boolean,
     fieldLabel: string,
     presentations: Array<Presentation>,
     store: SmartContentStore,
-};
+|};
 
 @observer
 export default class SmartContent extends React.Component<Props> {
@@ -102,7 +103,7 @@ export default class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {fieldLabel, store} = this.props;
+        const {disabled, fieldLabel, store} = this.props;
 
         const presentations = this.props.presentations.reduce((presentations, presentation) => {
             presentations[presentation.name] = presentation.value;
@@ -112,6 +113,7 @@ export default class SmartContent extends React.Component<Props> {
         return (
             <Fragment>
                 <MultiItemSelection
+                    disabled={disabled}
                     label={translate('sulu_admin.smart_content_label', {count: store.items.length})}
                     leftButton={{
                         icon: 'fa-filter',

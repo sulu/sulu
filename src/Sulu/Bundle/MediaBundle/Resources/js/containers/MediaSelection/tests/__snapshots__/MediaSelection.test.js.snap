@@ -147,7 +147,9 @@ exports[`Clicking on the "add media" button should open up an overlay 1`] = `
 `;
 
 exports[`Render a MediaSelection field 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header"
   >
@@ -165,7 +167,7 @@ Array [
     >
       3 media elements selected
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
   >
@@ -310,6 +312,6 @@ Array [
         </button>
       </div>
     </li>
-  </ul>,
-]
+  </ul>
+</div>
 `;
