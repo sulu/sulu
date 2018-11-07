@@ -14,8 +14,6 @@
         "watch": "npm run clean && webpack -d -w"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-dev-utils": "^11.0.1",
-        "@ckeditor/ckeditor5-theme-lark": "^11.1.0",
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
         "sulu-content-bundle": "file:src/Sulu/Bundle/ContentBundle/Resources/js",
         "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js",

@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const glob = require('glob');
-const {styles} = require('@ckeditor/ckeditor5-dev-utils');
+const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
