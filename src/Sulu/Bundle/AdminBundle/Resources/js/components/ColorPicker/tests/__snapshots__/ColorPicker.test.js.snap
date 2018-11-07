@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ColorPicker should not open overlay on icon-click when disabled 1`] = `""`;
+
 exports[`ColorPicker should render 1`] = `
 <label
   class="input default left"

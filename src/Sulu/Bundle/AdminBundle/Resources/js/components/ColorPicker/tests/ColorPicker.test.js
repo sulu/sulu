@@ -101,6 +101,15 @@ test('ColorPicker should render with open overlay', () => {
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
+test('ColorPicker should not open overlay on icon-click when disabled', () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    const colorPicker = mount(<ColorPicker disabled={true} onBlur={onBlur} onChange={onChange} value={null} />);
+    
+    colorPicker.find('Icon').simulate('click');
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+});
+
 test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();

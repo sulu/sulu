@@ -16,7 +16,7 @@ type Props = {|
     onChange: (value: ?string) => void,
     placeholder?: string,
     valid: boolean,
-    disabled?: boolean;
+    disabled?: boolean,
     value: ?string,
 |};
 
