@@ -1,22 +1,22 @@
 @import '../../containers/Application/colors.scss';
 
-$fontSize: 12px;
-$buttonMinSize: 20px;
-$borderRadius: 3px;
-$backgroundColor: $silver;
-$darkBackgroundColor: $dustyGray;
-$borderColor: $backgroundColor;
-$darkBorderColor: $darkBackgroundColor;
-$accentColor: $shakespeare;
-$lightAccentColor: #e5f4f7;
-$whiteHover: $mercury;
-$panelBackground: $white;
+$textEditorfontSize: 12px;
+$textEditorButtonMinSize: 20px;
+$textEditorBorderRadius: 3px;
+$textEditorBackgroundColor: $silver;
+$textEditorDarkBackgroundColor: $dustyGray;
+$textEditorBorderColor: $textEditorBackgroundColor;
+$textEditorDarkBorderColor: $textEditorDarkBackgroundColor;
+$textEditorAccentColor: $shakespeare;
+$textEditorLightAccentColor: #e5f4f7;
+$textEditorWhiteHover: $mercury;
+$textEditorPanelBackground: $white;
 
 :global {
     :root {
         /* font size */
-        --ck-font-size-base: $fontSize;
-        --ck-icon-size: $fontSize;
+        --ck-font-size-base: $textEditorfontSize;
+        --ck-icon-size: $textEditorfontSize;
 
         /* shadows */
         --ck-color-shadow-inner: none;
@@ -25,60 +25,61 @@ $panelBackground: $white;
         --ck-color-button-on-active-shadow: none;
 
         /* toolbar */
-        --ck-ui-component-min-height: $buttonMinSize;
-        --ck-color-toolbar-background: $backgroundColor;
-        --ck-color-toolbar-border: $borderColor;
+        --ck-ui-component-min-height: $textEditorButtonMinSize;
+        --ck-color-toolbar-background: $textEditorBackgroundColor;
+        --ck-color-toolbar-border: $textEditorBorderColor;
 
         /* borders */
-        --ck-border-radius: $borderRadius;
-        --ck-color-base-border: $borderColor;
-        --ck-color-focus-border: $accentColor;
+        --ck-border-radius: $textEditorBorderRadius;
+        --ck-color-base-border: $textEditorBorderColor;
+        --ck-color-focus-border: $textEditorAccentColor;
 
         /* buttons */
         --ck-color-button-default-background: transparent;
         --ck-color-button-default-hover-background: var(--ck-color-button-default-background);
         --ck-color-button-default-active-background: var(--ck-color-button-default-background);
-        --ck-color-button-on-background: $darkBackgroundColor;
+        --ck-color-button-on-background: $textEditorDarkBackgroundColor;
         --ck-color-button-on-hover-background: var(--ck-color-button-on-background);
         --ck-color-button-on-active-background: var(--ck-color-button-on-background);
 
         /* panel */
-        --ck-color-panel-background: $panelBackground;
-        --ck-color-panel-border: $darkBorderColor;
+        --ck-color-panel-background: $textEditorPanelBackground;
+        --ck-color-panel-border: $textEditorDarkBorderColor;
+        --ck-color-base-foreground: $textEditorBackgroundColor;
 
         /* list */
-        --ck-color-list-button-hover-background: $whiteHover;
+        --ck-color-list-button-hover-background: $textEditorWhiteHover;
 
         /* toggle button */
-        --ck-color-switch-button-off-background: $backgroundColor;
-        --ck-color-switch-button-on-background: $accentColor;
+        --ck-color-switch-button-off-background: $textEditorBackgroundColor;
+        --ck-color-switch-button-on-background: $textEditorAccentColor;
 
         /* table insert box */
-        --ck-insert-table-dropdown-box-border-active-color: $accentColor;
-        --ck-insert-table-dropdown-box-active-background: $lightAccentColor;
+        --ck-insert-table-dropdown-box-border-active-color: $textEditorAccentColor;
+        --ck-insert-table-dropdown-box-active-background: $textEditorLightAccentColor;
 
         /* table widget */
-        --ck-color-widget-hover-border: $borderColor;
-        --ck-color-widget-blurred-border: $borderColor;
+        --ck-color-widget-hover-border: $textEditorBorderColor;
+        --ck-color-widget-blurred-border: $textEditorBorderColor;
     }
 
     .ck.ck-editor__top {
         margin-bottom: 10px;
 
         .ck.ck-toolbar {
-            border-radius: $borderRadius !important;
+            border-radius: $textEditorBorderRadius !important;
             padding: 5px 10px;
         }
     }
 
     .ck.ck-toolbar__separator {
         background: none;
-        width: $buttonMinSize;
+        width: $textEditorButtonMinSize;
     }
 
     .ck.ck-content {
-        border-radius: $borderRadius !important;
-        border-color: $backgroundColor !important;
+        border-radius: $textEditorBorderRadius !important;
+        border-color: $textEditorBackgroundColor !important;
     }
 
     .ck-widget.table {
