@@ -17,6 +17,7 @@ env:
     - DATABASE_URL=mysql://root:@127.0.0.1/sulu_test
     - DATABASE_CHARSET=utf8mb4
     - DATABASE_COLLATE=utf8mb4_unicode_ci
+    - PHPSTAN=
 
 matrix:
   include:
@@ -25,6 +26,7 @@ matrix:
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
         - SYMFONY_DEPRECATIONS_HELPER="weak"
+        - PHPSTAN=true
 
     - language: php
       php: 7.1
@@ -57,6 +59,11 @@ before_script:
   - composer update $COMPOSER_FLAGS
 
 script:
+  - |
+    if [[ $PHPSTAN = true ]]; then
+        bin/adminconsole cache:clear --env dev
+        time ./vendor/bin/phpstan analyze src/ -c phpstan.neon
+    fi
   - time ./bin/runtests -i -a $TEST_FLAGS
 
 notifications:

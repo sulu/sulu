@@ -76,9 +76,7 @@ class PropertyMetadata extends BasePropertyMetadata
 
     public function __construct($class, $name)
     {
-        $this->class = $class;
-        $this->name = $name;
-
+        parent::__construct($class, $name);
         // default for translation can be overwritten by setter
         $this->translation = ucfirst($name);
     }

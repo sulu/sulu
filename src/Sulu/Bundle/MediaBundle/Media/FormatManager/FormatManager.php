@@ -242,7 +242,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
 
         foreach ($this->formats as $format) {
             $options = [];
-            $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
+            $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale);
         }
 
         return $definitionsArray;

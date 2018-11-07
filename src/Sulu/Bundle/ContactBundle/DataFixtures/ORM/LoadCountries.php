@@ -34,7 +34,7 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
         $doc = new \DOMDocument();
         $doc->load($file);
 
-        $xpath = new \DOMXpath($doc);
+        $xpath = new \DOMXPath($doc);
         $elements = $xpath->query('/Countries/Country');
 
         if (!is_null($elements)) {

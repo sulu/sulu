@@ -385,10 +385,7 @@ class StructureXmlLoader extends AbstractLoader
             }
 
             if ($property instanceof SectionMetadata) {
-                $isPropertyMissing = $this->findMissingRequiredProperties(
-                    $property->getChildren(),
-                    $requiredPropertyName
-                );
+                $isPropertyMissing = $this->findMissingRequiredProperties($property->getChildren());
 
                 if (!$isPropertyMissing) {
                     return false;

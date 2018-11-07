@@ -15,7 +15,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -146,17 +145,6 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getUsername()
     {
         return $this->username;
-    }
-
-    /**
-     * @VirtualProperty
-     * @SerializedName("fullName")
-     *
-     * @return string
-     */
-    public function getFullName()
-    {
-        return $this->getContact()->getFullName();
     }
 
     /**

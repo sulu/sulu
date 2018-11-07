@@ -29,7 +29,7 @@ class MapManager
 
     public function registerGeolocator($name, $options)
     {
-        $this->geolocators[$name] = $options;
+        $this->geoLocators[$name] = $options;
     }
 
     public function getProvidersAsArray()

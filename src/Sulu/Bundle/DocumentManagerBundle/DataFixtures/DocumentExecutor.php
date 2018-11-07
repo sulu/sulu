@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Console\Output\NullOutput;

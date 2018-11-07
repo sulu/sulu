@@ -168,7 +168,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    protected function appendCategoriesRelation()
+    protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.categories';
     }

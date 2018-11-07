@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Command;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
@@ -85,12 +87,12 @@ class SnippetImportCommand extends ContainerAwareCommand
     /**
      * Print the completion message after import is done.
      *
-     * @param stdClass $import
+     * @param \stdClass $import
      * @param OutputInterface $output
      */
     protected function printExceptions($import, $output = null)
     {
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->getContainer()->get('logger');
 
         if (null === $output) {

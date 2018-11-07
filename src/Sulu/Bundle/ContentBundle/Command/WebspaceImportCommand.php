@@ -11,11 +11,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Import\WebspaceImportInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
@@ -102,7 +104,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
     /**
      * Print the completion message after import is done.
      *
-     * @param stdClass $import
+     * @param \stdClass $import
      * @param OutputInterface $output
      */
     protected function printExceptions($import, $output = null)

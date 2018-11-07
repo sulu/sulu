@@ -68,6 +68,11 @@ class GeolocatorLocation
      */
     protected $latitude;
 
+    /**
+     * @var string
+     */
+    private $displayName;
+
     public function getDisplayTitle()
     {
         return $this->displayTitle;

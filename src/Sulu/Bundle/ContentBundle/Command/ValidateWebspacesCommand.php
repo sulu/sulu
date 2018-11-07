@@ -248,7 +248,7 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
         if (!$metadata) {
             throw new \RuntimeException(
                 sprintf(
-                    'Structure meta data not found for "%s".',
+                    'Structure meta data not found for type "%s" and template "%s".',
                     $type,
                     $template
                 )

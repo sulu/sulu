@@ -277,7 +277,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             return $entity->getId();
         };
 
-        $delete = function ($permission) use ($role) {
+        $delete = function ($permission) {
             $this->getDoctrine()->getManager()->remove($permission);
         };
 

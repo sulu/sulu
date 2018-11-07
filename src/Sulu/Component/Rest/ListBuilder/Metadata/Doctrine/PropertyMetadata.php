@@ -25,8 +25,7 @@ class PropertyMetadata extends BasePropertyMetadata
 
     public function __construct($class, $name, $type)
     {
-        $this->class = $class;
-        $this->name = $name;
+        parent::__construct($class, $name);
         $this->type = $type;
     }
 

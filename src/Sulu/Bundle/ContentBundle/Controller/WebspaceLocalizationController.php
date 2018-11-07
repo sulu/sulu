@@ -47,6 +47,6 @@ class WebspaceLocalizationController extends RestController implements ClassReso
             $view = $this->view($error->toArray(), 400);
         }
 
-        return $this->handleView($view, 200);
+        return $this->handleView($view);
     }
 }

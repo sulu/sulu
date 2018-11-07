@@ -151,7 +151,7 @@ class ListRestHelper
     public function getTotalPages($totalNumber = null)
     {
         if (is_null($totalNumber)) {
-            $totalNumber = $this->$totalNumberOfElements;
+            $totalNumber = $this->totalNumberOfElements;
         }
 
         return $this->getLimit() ? (ceil($totalNumber / $this->getLimit())) : 1;

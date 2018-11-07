@@ -20,7 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
-use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;

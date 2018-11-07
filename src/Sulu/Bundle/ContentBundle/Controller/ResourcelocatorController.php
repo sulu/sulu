@@ -15,6 +15,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,7 +49,7 @@ class ResourcelocatorController implements ClassResourceInterface
                 return $this->generateUrlResponse($request);
         }
 
-        throw new RestExeption('Unrecognized action: ' . $action);
+        throw new RestException('Unrecognized action: ' . $action);
     }
 
     private function generateUrlResponse(Request $request)

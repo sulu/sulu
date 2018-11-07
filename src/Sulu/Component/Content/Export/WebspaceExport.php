@@ -108,9 +108,9 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $progress->start();
 
         foreach ($documents as $key => $document) {
-            $contentData = $this->getContentData($document, $this->exportLocale, $this->format);
-            $extensionData = $this->getExtensionData($document, $this->format);
-            $settingData = $this->getSettingData($document, $this->format);
+            $contentData = $this->getContentData($document, $this->exportLocale);
+            $extensionData = $this->getExtensionData($document);
+            $settingData = $this->getSettingData($document);
 
             $documentData[] = [
                 'uuid' => $document->getUuid(),

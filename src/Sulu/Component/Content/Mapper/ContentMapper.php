@@ -17,9 +17,11 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
@@ -45,8 +47,8 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
+use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Document\UnknownDocument;
 use Sulu\Component\DocumentManager\DocumentAccessor;
@@ -595,7 +597,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return the resource locator content type.
      *
-     * @return ResourceLocatorInterface
+     * @return ResourceLocator
      */
     public function getResourceLocator()
     {
@@ -607,7 +609,7 @@ class ContentMapper implements ContentMapperInterface
      *
      * @param $webspaceKey
      *
-     * @return Document
+     * @return BasePageDocument|SnippetDocument
      */
     private function getContentDocument($webspaceKey, $locale, array $options = [])
     {
@@ -959,9 +961,9 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return a structure bridge corresponding to the given document.
      *
-     * @param DocumentInterface $document
+     * @param StructureBehavior $document
      *
-     * @return StructureBridge
+     * @return StructureInterface
      */
     private function documentToStructure($document)
     {

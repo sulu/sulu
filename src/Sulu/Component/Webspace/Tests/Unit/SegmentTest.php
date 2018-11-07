@@ -16,6 +16,8 @@ use Sulu\Component\Webspace\Segment;
 
 class SegmentTest extends TestCase
 {
+    private $segment;
+
     public function setUp()
     {
         parent::setUp();

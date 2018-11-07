@@ -41,7 +41,7 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
         $doc = new \DOMDocument();
         $doc->load($file);
 
-        $xpath = new \DOMXpath($doc);
+        $xpath = new \DOMXPath($doc);
         $elements = $xpath->query('/security-types/security-type');
 
         if (!is_null($elements)) {

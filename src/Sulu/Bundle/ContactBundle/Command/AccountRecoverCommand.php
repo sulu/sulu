@@ -197,6 +197,6 @@ class AccountRecoverCommand extends ContainerAwareCommand
      */
     private function getEntityRepository()
     {
-        return $this->getContainer()->get('sulu.respository.account');
+        return $this->getContainer()->get('sulu.repository.account');
     }
 }

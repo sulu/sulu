@@ -16,10 +16,10 @@ use Sulu\Component\DocumentManager\Metadata;
 class MetadataLoadEvent extends AbstractEvent
 {
     /**
-     * @param NodeInterface $node
-     * @param string $locale
-     * @param array $options
+     * @var Metadata
      */
+    private $metadata;
+
     public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
