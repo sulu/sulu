@@ -22,6 +22,28 @@ test('DatePicker should render', () => {
     datePicker.unmount();
 });
 
+test('DatePicker should open overlay on icon-click', () => {
+    const onChange = jest.fn();
+    const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
+    datePicker.find('Icon').simulate('click');
+
+    expect(datePicker.render()).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+
+    datePicker.unmount();
+});
+
+test('DatePicker should not open overlay on icon-click when disabled', () => {
+    const onChange = jest.fn();
+    const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={null} />);
+    datePicker.find('Icon').simulate('click');
+
+    expect(datePicker.render()).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+
+    datePicker.unmount();
+});
+
 test('DatePicker should render with placeholder', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} placeholder="My placeholder" value={null} />);
