@@ -1,13 +1,13 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import React from 'react';
+import pretty from 'pretty';
 import Select from '../../Select';
 import SingleSelect from '../../SingleSelect';
 
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-jest.mock('../../Select');
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
@@ -25,7 +25,7 @@ test('The component should render a generic select', () => {
 });
 
 test('The component should render a select with dark skin', () => {
-    const select = shallow(
+    const select = mount(
         <SingleSelect skin="dark">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -33,7 +33,11 @@ test('The component should render a select with dark skin', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
+
     expect(select.render()).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+
+    select.unmount();
 });
 
 test('The component should render a select that is disabled', () => {
@@ -45,7 +49,11 @@ test('The component should render a select that is disabled', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
+
     expect(select.render()).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+
+    select.unmount();
 });
 
 test('The component should return the default displayValue if no valueless option is present', () => {

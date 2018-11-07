@@ -10,7 +10,6 @@ const Divider = Select.Divider;
 afterEach(() => document.body.innerHTML = '');
 
 test('The component should render with the popover closed', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -26,11 +25,10 @@ test('The component should render with the popover closed', () => {
         </Select>
     );
     expect(select.render()).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(document.body.innerHTML).toBe('');
 });
 
 test('The component should render with a dark skin', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -47,11 +45,10 @@ test('The component should render with a dark skin', () => {
         </Select>
     );
     expect(select.render()).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(document.body.innerHTML).toBe('');
 });
 
 test('The component should render with an icon', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -68,11 +65,10 @@ test('The component should render with an icon', () => {
         </Select>
     );
     expect(select.render()).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(document.body.innerHTML).toBe('');
 });
 
 test('The component should render when disabled', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -90,11 +86,10 @@ test('The component should render when disabled', () => {
         </Select>
     );
     expect(select.render()).toMatchSnapshot();
-    expect(body.innerHTML).toBe('');
+    expect(document.body.innerHTML).toBe('');
 });
 
 test('The component should open the popover when the display value is clicked', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -117,11 +112,10 @@ test('The component should open the popover when the display value is clicked', 
     select.find('.displayValue').simulate('click');
 
     expect(select.render()).toMatchSnapshot();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
 test('The component should not open the popover on display-value-click when disabled', () => {
-    const body = document.body;
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
 
@@ -141,11 +135,10 @@ test('The component should not open the popover on display-value-click when disa
     select.find('.displayValue').simulate('click');
 
     expect(select.render()).toMatchSnapshot();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
 });
 
 test('The component should trigger the select callback and close the popover when an option is clicked', () => {
-    const body = document.body;
     const onSelect = jest.fn();
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const select = mount(
@@ -161,9 +154,9 @@ test('The component should trigger the select callback and close the popover whe
         </Select>
     );
     select.instance().handleDisplayValueClick();
-    body.getElementsByTagName('button')[2].click();
+    document.body.getElementsByTagName('button')[2].click();
     expect(onSelect).toHaveBeenCalledWith('option-3');
-    expect(body.innerHTML).toBe('');
+    expect(document.body.innerHTML).toBe('');
 });
 
 test('The component should pass the centered child node to the popover', () => {
