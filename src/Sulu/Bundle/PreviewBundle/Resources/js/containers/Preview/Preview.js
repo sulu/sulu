@@ -26,8 +26,8 @@ export default class Preview extends React.Component<Props> {
 
     previewStore: PreviewStore;
 
-    typeDisposer: () => void;
-    dataDisposer: () => void;
+    typeDisposer: () => mixed;
+    dataDisposer: () => mixed;
 
     constructor(props: Props) {
         super(props);

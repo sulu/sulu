@@ -12,7 +12,6 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Persistence\RelationTrait;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -84,7 +83,7 @@ class RestHelper implements RestHelperInterface
     }
 
     /**
-     * @param FieldDescriptor[] $fieldDescriptors
+     * @param FieldDescriptorInterface[] $fieldDescriptors
      *
      * @return string[]
      */
