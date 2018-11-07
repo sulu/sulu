@@ -105,7 +105,7 @@ test('ColorPicker should not open overlay on icon-click when disabled', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
     const colorPicker = mount(<ColorPicker disabled={true} onBlur={onBlur} onChange={onChange} value={null} />);
-    
+
     colorPicker.find('Icon').simulate('click');
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
