@@ -3,7 +3,9 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_http_cache.cache_lifetime.enhancer" class="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer">
+        <service id="sulu_http_cache.cache_lifetime.enhancer"
+                 class="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer"
+                 public="true">
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.cache.max_age%</argument>
             <argument>%sulu_http_cache.cache.shared_max_age%</argument>
