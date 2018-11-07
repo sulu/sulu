@@ -4,6 +4,7 @@ import textEditorRegistry from './registries/TextEditorRegistry';
 
 type Props = {
     adapter: string,
+    disabled?: boolean,
     onBlur: () => void,
     onChange: (value: ?string) => void,
     value: ?string,

@@ -14,13 +14,16 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import './ckeditor5.scss';
+import type {TextEditorProps} from '../../containers/TextEditor/types';
 
-type Props = {|
-    onBlur: () => void,
-    onChange: (value: ?string) => void,
-    value: ?string,
-|};
+type Props = TextEditorProps;
 
+/**
+ * React component that renders a classic ck-editor.
+ *
+ * Implementation is based upon the official ck-editor component:
+ * https://github.com/ckeditor/ckeditor5-react/blob/089e28eafa64baf273c5e3690b08c1f8ee5ebbe5/src/ckeditor.jsx
+ */
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
@@ -39,14 +42,20 @@ export default class CKEditor5 extends React.Component<Props> {
         this.containerRef = containerRef;
     };
 
-    shouldComponentUpdate() {
-        return false;
-    }
-
     componentDidUpdate() {
-        const {value} = this.props;
-        if (this.editorInstance && value) {
-            this.editorInstance.setData(value);
+        if (this.editorInstance) {
+            const {value, disabled} = this.props;
+
+            this.editorInstance.isReadOnly = disabled;
+            if (disabled) {
+                this.editorInstance.element.classList.add('disabled');
+            } else {
+                this.editorInstance.element.classList.remove('disabled');
+            }
+
+            if (this.editorInstance.getData() !== value) {
+                this.editorInstance.setData(value);
+            }
         }
     }
 
@@ -94,7 +103,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
                 this.editorInstance.setData(this.props.value);
 
-                const {onBlur, onChange} = this.props;
+                const {disabled, onBlur, onChange} = this.props;
                 const {
                     model: {
                         document: modelDocument,
@@ -105,6 +114,11 @@ export default class CKEditor5 extends React.Component<Props> {
                         },
                     },
                 } = this.editorInstance;
+
+                this.editorInstance.isReadOnly = disabled;
+                if (disabled) {
+                    this.editorInstance.element.classList.add('disabled');
+                }
 
                 if (onBlur) {
                     viewDocument.on('blur', () => {
@@ -128,7 +142,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
     componentWillUnmount() {
         if (this.editorInstance) {
-            this.editorInstance.destroy();
+            this.editorInstance.destroy().then(() => this.editorInstance = null);
         }
     }
 

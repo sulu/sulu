@@ -31,6 +31,41 @@ test('Create a CKEditor5 instance', () => {
     expect(ClassicEditor.create).toBeCalled();
 });
 
+test('Set disabled class and isReadOnly property to CKEditor5', () => {
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        element: {
+            classList: {
+                add: jest.fn(),
+            },
+        },
+        isReadOnly: false,
+        setData: jest.fn(),
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    mount(<CKEditor5 disabled={true} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    return editorPromise.then(() => {
+        expect(ClassicEditor.create).toBeCalled();
+        expect(editor.element.classList.add).toBeCalledWith('disabled');
+        expect(editor.isReadOnly).toEqual(true);
+    });
+});
+
 test('Call onChange prop when something changed', () => {
     const changeSpy = jest.fn();
     const editor = {

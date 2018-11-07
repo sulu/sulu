@@ -1,5 +1,5 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import classNames from 'classnames';
