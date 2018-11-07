@@ -7,6 +7,7 @@ const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils');
+
 const entries = glob.sync(
     path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
 );

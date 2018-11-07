@@ -1,10 +1,22 @@
 @import '../../containers/Application/colors.scss';
 
+$fontSize: 12px;
+$buttonMinSize: 20px;
+$borderRadius: 3px;
+$backgroundColor: $silver;
+$darkBackgroundColor: $dustyGray;
+$borderColor: $backgroundColor;
+$darkBorderColor: $darkBackgroundColor;
+$accentColor: $shakespeare;
+$lightAccentColor: #e5f4f7;
+$whiteHover: $mercury;
+$panelBackground: $white;
+
 :global {
     :root {
         /* font size */
-        --ck-font-size-base: 12px;
-        --ck-icon-size: 12px;
+        --ck-font-size-base: $fontSize;
+        --ck-icon-size: $fontSize;
 
         /* shadows */
         --ck-color-shadow-inner: none;
@@ -13,60 +25,60 @@
         --ck-color-button-on-active-shadow: none;
 
         /* toolbar */
-        --ck-ui-component-min-height: 20px;
-        --ck-color-toolbar-background: $silver;
-        --ck-color-toolbar-border: var(--ck-color-toolbar-background);
+        --ck-ui-component-min-height: $buttonMinSize;
+        --ck-color-toolbar-background: $backgroundColor;
+        --ck-color-toolbar-border: $borderColor;
 
         /* borders */
-        --ck-border-radius: 3px;
-        --ck-color-base-border: var(--ck-color-toolbar-background);
-        --ck-color-focus-border: $shakespeare;
+        --ck-border-radius: $borderRadius;
+        --ck-color-base-border: $borderColor;
+        --ck-color-focus-border: $accentColor;
 
         /* buttons */
         --ck-color-button-default-background: transparent;
         --ck-color-button-default-hover-background: var(--ck-color-button-default-background);
         --ck-color-button-default-active-background: var(--ck-color-button-default-background);
-        --ck-color-button-on-background: $dustyGray;
+        --ck-color-button-on-background: $darkBackgroundColor;
         --ck-color-button-on-hover-background: var(--ck-color-button-on-background);
         --ck-color-button-on-active-background: var(--ck-color-button-on-background);
 
         /* panel */
-        --ck-color-panel-background: $white;
-        --ck-color-panel-border: $dustyGray;
+        --ck-color-panel-background: $panelBackground;
+        --ck-color-panel-border: $darkBorderColor;
 
         /* list */
-        --ck-color-list-button-hover-background: $mercury;
+        --ck-color-list-button-hover-background: $whiteHover;
 
         /* toggle button */
-        --ck-color-switch-button-off-background: $silver;
-        --ck-color-switch-button-on-background: $shakespeare;
+        --ck-color-switch-button-off-background: $backgroundColor;
+        --ck-color-switch-button-on-background: $accentColor;
 
         /* table insert box */
-        --ck-insert-table-dropdown-box-border-active-color: $shakespeare;
-        --ck-insert-table-dropdown-box-active-background: #e5f4f7;
+        --ck-insert-table-dropdown-box-border-active-color: $accentColor;
+        --ck-insert-table-dropdown-box-active-background: $lightAccentColor;
 
         /* table widget */
-        --ck-color-widget-hover-border: $silver;
-        --ck-color-widget-blurred-border: $silver;
+        --ck-color-widget-hover-border: $borderColor;
+        --ck-color-widget-blurred-border: $borderColor;
     }
 
     .ck.ck-editor__top {
         margin-bottom: 10px;
 
         .ck.ck-toolbar {
-            border-radius: var(--ck-border-radius) !important;
+            border-radius: $borderRadius !important;
             padding: 5px 10px;
         }
     }
 
     .ck.ck-toolbar__separator {
         background: none;
-        width: 20px;
+        width: $buttonMinSize;
     }
 
     .ck.ck-content {
-        border-radius: var(--ck-border-radius) !important;
-        border-color: $silver !important;
+        border-radius: $borderRadius !important;
+        border-color: $backgroundColor !important;
     }
 
     .ck-widget.table {
