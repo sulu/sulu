@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
 
 const entries = glob.sync(
     path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
@@ -51,6 +52,7 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
             },
             {
                 test: /\.css/,
+                exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
@@ -75,6 +77,24 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
             {
                 test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
                 use: 'raw-loader',
+            },
+            {
+                test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: styles.getPostCssConfig({
+                            themeImporter: {
+                                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
+                            },
+                            minify: true,
+                        }),
+                    },
+                ],
             },
             {
                 test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
