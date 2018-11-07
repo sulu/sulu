@@ -39,7 +39,7 @@ exports[`The component should render 1`] = `
 
 exports[`The component should render when disabled 1`] = `
 <button
-  class="displayValue default disabled"
+  class="displayValue default"
   disabled=""
   type="button"
 >

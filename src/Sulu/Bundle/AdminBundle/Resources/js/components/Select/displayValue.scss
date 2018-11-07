@@ -54,7 +54,7 @@ $darkBackgroundColor: $white;
         border-radius: $darkBorderRadius;
     }
 
-    &.disabled {
+    &:disabled {
         cursor: default;
         color: $disabledColor;
         background-color: $disabledBackgroundColor;

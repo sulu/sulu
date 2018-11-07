@@ -11,7 +11,7 @@ exports[`Render the component as disabled 1`] = `
       class="select"
     >
       <button
-        class="displayValue flat disabled"
+        class="displayValue flat"
         disabled=""
         type="button"
       >

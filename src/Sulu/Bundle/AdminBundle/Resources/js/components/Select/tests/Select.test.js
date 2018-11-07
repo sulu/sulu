@@ -114,7 +114,32 @@ test('The component should open the popover when the display value is clicked', 
             width: 200,
         }),
     };
-    select.instance().handleDisplayValueClick();
+    select.find('.displayValue').simulate('click');
+
+    expect(select.render()).toMatchSnapshot();
+    expect(pretty(body.innerHTML)).toMatchSnapshot();
+});
+
+test('The component should not open the popover on display-value-click when disabled', () => {
+    const body = document.body;
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
+
+    const select = mount(
+        <Select
+            disabled={true}
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+    select.find('.displayValue').simulate('click');
+
     expect(select.render()).toMatchSnapshot();
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
