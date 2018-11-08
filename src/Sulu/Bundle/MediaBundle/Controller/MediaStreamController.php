@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
@@ -125,9 +126,13 @@ class MediaStreamController extends Controller
         $version = $fileVersion->getVersion();
         $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
-        $path = $this->getStorage()->load($fileName, $version, $storageOptions);
+        $stream = $this->getStorage()->loadAsStream($fileName, $version, $storageOptions);
 
-        $response = new BinaryFileResponse($path);
+        $response = new StreamedResponse(
+            function () use ($stream) {
+                stream_copy_to_stream($stream, fopen('php://output', 'w'));
+            }
+        );
 
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
