@@ -11,13 +11,13 @@
             <params>
                 <param name="default_value" value="0"/>
                 <param name="values" type="collection">
-                    <param name="0" value="0">
+                    <param name="0">
                         <meta>
                             <title lang="en">Mr.</title>
                             <title lang="de">Herr</title>
                         </meta>
                     </param>
-                    <param name="1" value="1">
+                    <param name="1" value="custom">
                         <meta>
                             <title lang="en">Ms.</title>
                             <title lang="de">Frau</title>

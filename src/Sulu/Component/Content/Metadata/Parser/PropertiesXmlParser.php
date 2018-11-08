@@ -345,7 +345,12 @@ class PropertiesXmlParser
                 $result['value'] = $this->loadParams('x:param', $xpath, $node);
                 break;
             default:
-                $result['value'] = $this->getValueFromXPath('@value', $xpath, $node, 'string');
+                $result['value'] = $this->getValueFromXPath('@value', $xpath, $node);
+
+                if (null === $result['value']) {
+                    $result['value'] = $result['name'];
+                }
+
                 break;
         }
 
