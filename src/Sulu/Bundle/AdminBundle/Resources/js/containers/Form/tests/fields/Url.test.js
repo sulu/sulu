@@ -61,7 +61,7 @@ test('Pass props correctly to Url component', () => {
     expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
 });
 
-test('Pass correct default props to Url component', () => {
+test('Not call changed when only protocol is given', () => {
     const schemaOptions = {};
     const changeSpy = jest.fn();
 
@@ -76,7 +76,32 @@ test('Pass correct default props to Url component', () => {
     );
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
-    expect(changeSpy).toBeCalledWith('https://');
+    expect(changeSpy).not.toBeCalledWith('https://');
+});
+
+test('Pass correct default props to Url component', () => {
+    const schemaOptions = {
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'http://'},
+                {name: 'specific_part', value: 'github.com'},
+            ],
+        }
+    };
+    const changeSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const url = shallow(
+        <Url
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(changeSpy).toBeCalledWith('http://github.com');
 });
 
 test('Throw error if only specific_part default is set', () => {
