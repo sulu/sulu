@@ -5,11 +5,16 @@ import Icon from '../Icon';
 import buttonStyles from './button.scss';
 import type {Button as ButtonConfig} from './types';
 
-type Props = ButtonConfig & {
+type Props = {|
+    ...ButtonConfig,
     location: 'left' | 'right',
-};
+|};
 
 export default class Button extends React.PureComponent<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     handleClick = () => {
         this.props.onClick();
     };

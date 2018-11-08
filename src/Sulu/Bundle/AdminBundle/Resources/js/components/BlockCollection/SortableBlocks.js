@@ -7,8 +7,8 @@ import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props = {
-    disabled?: boolean,
+type Props = {|
+    disabled: boolean,
     blockTypes: Array<string>,
     expandedBlocks: Array<boolean>,
     onExpand: (index: number) => void,
@@ -18,10 +18,14 @@ type Props = {
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<BlockEntry>,
-};
+|};
 
 @observer
 class SortableBlocks extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     handleExpand = (index: number) => {
         const {onExpand} = this.props;
         onExpand(index);

@@ -1,6 +1,6 @@
 // @flow
-export type Button = {
+export type Button = {|
     disabled?: boolean,
     icon: string,
     onClick: () => void,
-};
+|};

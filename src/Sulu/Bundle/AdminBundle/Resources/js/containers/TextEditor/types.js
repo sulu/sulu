@@ -1,6 +1,6 @@
 // @flow
 export type TextEditorProps = {|
-    disabled?: boolean,
+    disabled: boolean,
     onBlur: () => void,
     onChange: (value: ?string) => void,
     value: ?string,

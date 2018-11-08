@@ -9,7 +9,7 @@ import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props<T> = {|
-    disabled?: boolean,
+    disabled: boolean,
     children?: ChildrenArray<Element<typeof Item>>,
     label?: string,
     onItemRemove?: (itemid: T) => void,
@@ -22,6 +22,7 @@ type Props<T> = {|
 
 export default class MultiItemSelection<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        disabled: false,
         loading: false,
         sortable: true,
     };

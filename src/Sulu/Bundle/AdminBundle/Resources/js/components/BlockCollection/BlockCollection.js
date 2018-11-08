@@ -9,8 +9,8 @@ import SortableBlocks from './SortableBlocks';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props = {
-    disabled?: boolean,
+type Props = {|
+    disabled: boolean,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
@@ -18,13 +18,14 @@ type Props = {
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<BlockEntry>,
-};
+|};
 
 @observer
 export default class BlockCollection extends React.Component<Props> {
     static idCounter = 0;
 
     static defaultProps = {
+        disabled: false,
         value: [],
     };
 

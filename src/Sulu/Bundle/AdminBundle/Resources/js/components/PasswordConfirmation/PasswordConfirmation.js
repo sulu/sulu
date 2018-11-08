@@ -8,7 +8,7 @@ import Grid from '../Grid';
 import passwordConfirmationStyles from './passwordConfirmation.scss';
 
 type Props = {|
-    disabled?: boolean,
+    disabled: boolean,
     onChange: (value: ?string) => void,
     valid: boolean,
 |};
@@ -19,6 +19,7 @@ const INPUT_TYPE = 'password';
 @observer
 export default class PasswordConfirmation extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 

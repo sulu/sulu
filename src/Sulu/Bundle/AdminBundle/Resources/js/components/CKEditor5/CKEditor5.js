@@ -29,6 +29,7 @@ export default class CKEditor5 extends React.Component<Props> {
     editorInstance: any;
 
     static defaultProps = {
+        disabled: false,
         value: '',
     };
 

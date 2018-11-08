@@ -11,7 +11,7 @@ import SmartContentItem from './SmartContentItem';
 import type {Presentation, SmartContentConfig} from './types';
 
 type Props = {|
-    disabled?: boolean,
+    disabled: boolean,
     fieldLabel: string,
     presentations: Array<Presentation>,
     store: SmartContentStore,
@@ -20,6 +20,7 @@ type Props = {|
 @observer
 export default class SmartContent extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         presentations: [],
     };
 
