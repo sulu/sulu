@@ -32,9 +32,11 @@ test('Pass props correctly to component', () => {
     const field = shallow(
         <Email
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
         />
     );
 
     expect(field.find(EmailComponent).prop('valid')).toBe(true);
+    expect(field.find(EmailComponent).prop('disabled')).toBe(true);
 });

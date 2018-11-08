@@ -33,12 +33,14 @@ test('Pass props correctly to TextArea component', () => {
     const inputValid = shallow(
         <TextArea
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
         />
     );
 
     expect(inputValid.find(TextAreaComponent).prop('maxCharacters')).toBe(undefined);
     expect(inputValid.find(TextAreaComponent).prop('valid')).toBe(true);
+    expect(inputValid.find(TextAreaComponent).prop('disabled')).toBe(true);
 });
 
 test('Pass props correctly including max_characters to TextArea component', () => {

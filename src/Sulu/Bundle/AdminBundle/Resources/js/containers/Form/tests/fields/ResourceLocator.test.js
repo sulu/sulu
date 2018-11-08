@@ -47,6 +47,7 @@ test('Pass props correctly to ResourceLocator', () => {
     const resourceLocator = shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
@@ -56,6 +57,7 @@ test('Pass props correctly to ResourceLocator', () => {
 
     expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/');
     expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
 });
 
 test('Throw an exception if a non-valid mode is passed', () => {

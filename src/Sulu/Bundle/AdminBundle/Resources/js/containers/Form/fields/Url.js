@@ -101,8 +101,8 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <UrlComponent
-                disabled={!!disabled}
                 defaultProtocol={defaultProtocol}
+                disabled={!!disabled}
                 id={dataPath}
                 onBlur={this.handleBlur}
                 onChange={onChange}
