@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $color: $blueZodiac;
+$disabledColor: $silver;
 $width: 37px;
 $height: 20px;
 $borderWidth: 1px;
@@ -45,6 +46,16 @@ $transitionDuration: 200ms;
         &::after {
             border-color: $color;
             left: calc($width - $height - $borderWidth);
+        }
+    }
+
+    input:disabled + span {
+        background: transparent;
+        border-color: $disabledColor;
+
+        &::after {
+            border-color: $disabledColor;
+            background-color: transparent;
         }
     }
 }

@@ -52,6 +52,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
     render() {
         const {
             dataPath,
+            disabled,
             error,
             onChange,
             schemaOptions: {
@@ -101,6 +102,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
         return (
             <UrlComponent
                 defaultProtocol={defaultProtocol}
+                disabled={!!disabled}
                 id={dataPath}
                 onBlur={this.handleBlur}
                 onChange={onChange}

@@ -29,6 +29,13 @@ test('ResourceLocator should render with type leaf and a value of undefined', ()
         .toMatchSnapshot();
 });
 
+test('ResourceLocator should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = '/parent';
+    expect(render(<ResourceLocator disabled={true} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />))
+        .toMatchSnapshot();
+});
+
 test('ResourceLocator should call the onChange callback when the input changes with type full', () => {
     const onChange = jest.fn();
     const value = '/parent';

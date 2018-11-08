@@ -7,16 +7,18 @@ import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
 import type {Skin} from './types';
 
-type Props = {
+type Props = {|
     children: string,
+    disabled: boolean,
     displayValueRef?: (button: ElementRef<'button'>) => void,
     icon?: string,
     onClick: () => void,
     skin: Skin,
-};
+|};
 
 export default class DisplayValue extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         skin: 'default',
     };
 
@@ -37,7 +39,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
     };
 
     render() {
-        const {children, icon, skin} = this.props;
+        const {children, disabled, icon, skin} = this.props;
 
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
@@ -50,7 +52,8 @@ export default class DisplayValue extends React.PureComponent<Props> {
         return (
             <button
                 className={displayValueClass}
-                onClick={this.handleClick}
+                disabled={disabled}
+                onClick={!disabled ? this.handleClick : undefined}
                 ref={this.setButtonRef}
                 type="button"
             >

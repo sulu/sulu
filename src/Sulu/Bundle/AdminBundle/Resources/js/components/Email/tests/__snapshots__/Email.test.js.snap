@@ -95,6 +95,28 @@ exports[`Email should render null value as empty string 1`] = `
 </label>
 `;
 
+exports[`Email should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-envelope"
+      class="su-envelope clickable icon default iconClickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  <input
+    disabled=""
+    type="email"
+    value=""
+  />
+</label>
+`;
+
 exports[`Email should render with placeholder 1`] = `
 <label
   class="input default left"

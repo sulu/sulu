@@ -110,6 +110,26 @@ test('Pass invalid value correctly to component', () => {
     expect(datePicker.find(DatePickerComponent).prop('value')).toBe(undefined);
 });
 
+test('Pass disabled correctly to component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const fieldTypeOptions = {
+        dateFormat: true,
+        timeFormat: false,
+    };
+
+    const datePicker = shallow(
+        <DatePicker
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value="test"
+        />
+    );
+
+    expect(datePicker.find(DatePickerComponent).prop('disabled')).toBe(true);
+});
+
 test('Convert value and pass it correctly to component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const fieldTypeOptions = {

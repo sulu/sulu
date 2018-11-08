@@ -24,15 +24,29 @@ test('The component should render with an icon', () => {
     expect(displayValue).toMatchSnapshot();
 });
 
+test('The component should render when disabled', () => {
+    const displayValue = render(<DisplayValue disabled={true} onClick={jest.fn()}>My value</DisplayValue>);
+    expect(displayValue).toMatchSnapshot();
+});
+
 test('A click on the component should fire the callback and prevent the default', () => {
     const clickSpy = jest.fn();
     const preventDefaultSpy = jest.fn();
 
     const displayValue = shallow(<DisplayValue onClick={clickSpy}>My value</DisplayValue>);
-
     displayValue.simulate('click', {preventDefault: preventDefaultSpy});
+
     expect(clickSpy).toBeCalled();
     expect(preventDefaultSpy).toBeCalled();
+});
+
+test('A click on the component should not fire the callback when disabled', () => {
+    const clickSpy = jest.fn();
+
+    const displayValue = shallow(<DisplayValue disabled={true} onClick={clickSpy}>My value</DisplayValue>);
+    displayValue.simulate('click', {preventDefault: jest.fn()});
+
+    expect(clickSpy).not.toBeCalled();
 });
 
 test('The component should use the CroppedText component to cut long texts', () => {

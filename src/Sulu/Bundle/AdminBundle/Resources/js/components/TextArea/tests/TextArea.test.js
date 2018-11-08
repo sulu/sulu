@@ -25,6 +25,10 @@ test('TextArea should render with value', () => {
     expect(render(<TextArea onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
 });
 
+test('TextArea should render when disabled', () => {
+    expect(render(<TextArea disabled={true} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+});
+
 test('TextArea should render null value as empty string', () => {
     expect(render(<TextArea onChange={jest.fn()} value={null} />)).toMatchSnapshot();
 });

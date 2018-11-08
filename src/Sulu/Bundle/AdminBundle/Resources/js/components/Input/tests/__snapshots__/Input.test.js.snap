@@ -65,6 +65,18 @@ exports[`Input should render undefined value as empty string 1`] = `
 </label>
 `;
 
+exports[`Input should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <input
+    disabled=""
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render with a character counter 1`] = `
 Array [
   <label

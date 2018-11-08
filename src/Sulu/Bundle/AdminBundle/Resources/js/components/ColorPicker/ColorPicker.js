@@ -16,12 +16,14 @@ type Props = {|
     onChange: (value: ?string) => void,
     placeholder?: string,
     valid: boolean,
+    disabled: boolean,
     value: ?string,
 |};
 
 @observer
 export default class ColorPicker extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 
@@ -111,6 +113,7 @@ export default class ColorPicker extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             id,
             name,
             placeholder,
@@ -124,6 +127,7 @@ export default class ColorPicker extends React.Component<Props> {
         return (
             <Fragment>
                 <Input
+                    disabled={disabled}
                     icon="su-square"
                     iconClassName={colorPickerStyles.icon}
                     iconStyle={iconStyle}
@@ -132,7 +136,7 @@ export default class ColorPicker extends React.Component<Props> {
                     name={name}
                     onBlur={this.handleBlur}
                     onChange={this.handleInputChange}
-                    onIconClick={this.handlePopoverOpen}
+                    onIconClick={!disabled ? this.handlePopoverOpen : undefined}
                     placeholder={placeholder}
                     valid={valid && !this.showError}
                     value={this.value}

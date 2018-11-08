@@ -51,6 +51,7 @@ test('Pass props correctly to Url component', () => {
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             value="http://www.sulu.io"
@@ -59,6 +60,7 @@ test('Pass props correctly to Url component', () => {
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://']);
     expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
+    expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
 });
 
 test('Not call changed when only protocol is given', () => {

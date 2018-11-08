@@ -34,10 +34,11 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
     };
 
     render() {
-        const {dataPath, error, onChange, value} = this.props;
+        const {dataPath, disabled, error, onChange, value} = this.props;
 
         return (
             <NumberComponent
+                disabled={!!disabled}
                 id={dataPath}
                 max={this.max}
                 min={this.min}

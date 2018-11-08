@@ -30,6 +30,7 @@ test('Pass props correctly to SingleSelect', () => {
     const singleSelect = shallow(
         <SingleSelect
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             value="test"
@@ -37,6 +38,7 @@ test('Pass props correctly to SingleSelect', () => {
     );
 
     expect(singleSelect.prop('value')).toBe('test');
+    expect(singleSelect.prop('disabled')).toBe(true);
     expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',

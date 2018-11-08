@@ -3,6 +3,7 @@
 $radius: 8px;
 $primaryColor: $blueZodiac;
 $secondaryColor: $white;
+$disabledColor: $silver;
 
 .radio {
     width: calc(2 * $radius);
@@ -41,5 +42,13 @@ $secondaryColor: $white;
     input:checked + span {
         border: 1px solid $secondaryColor;
         background: $primaryColor;
+    }
+}
+
+.radio.disabled {
+    border-color: $disabledColor;
+
+    input:disabled:checked + span {
+        border-color: $disabledColor;
     }
 }

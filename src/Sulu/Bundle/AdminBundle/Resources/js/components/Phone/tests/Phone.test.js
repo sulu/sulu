@@ -29,6 +29,11 @@ test('Phone should render error', () => {
     expect(render(<Phone onChange={onChange} valid={false} value={null} />)).toMatchSnapshot();
 });
 
+test('Phone should render when disabled', () => {
+    const onChange = jest.fn();
+    expect(render(<Phone disabled={true} onChange={onChange} valid={false} value="‚+43245" />)).toMatchSnapshot();
+});
+
 test('Phone should trigger callbacks correctly', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();

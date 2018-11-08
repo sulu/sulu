@@ -35,6 +35,7 @@ test('Pass props correctly to component', () => {
     const field = shallow(
         <ColorPicker
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             onChange={onChange}
             onFinish={onFinish}
@@ -46,4 +47,5 @@ test('Pass props correctly to component', () => {
     expect(component.prop('valid')).toBe(true);
     expect(component.prop('onChange')).toBe(onChange);
     expect(component.prop('onBlur')).toBe(onFinish);
+    expect(component.prop('disabled')).toBe(true);
 });

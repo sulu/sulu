@@ -32,12 +32,14 @@ test('Pass props correctly to Input component', () => {
     const inputValid = shallow(
         <Input
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
         />
     );
 
     expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(undefined);
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+    expect(inputValid.find(InputComponent).prop('disabled')).toBe(true);
 });
 
 test('Pass props correctly including maxCharacters to Input component', () => {
