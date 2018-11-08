@@ -86,7 +86,7 @@ test('Pass correct default props to Url component', () => {
                 {name: 'scheme', value: 'http://'},
                 {name: 'specific_part', value: 'github.com'},
             ],
-        }
+        },
     };
     const changeSpy = jest.fn();
 

@@ -10,7 +10,13 @@ jest.mock('loglevel', () => ({
 
 test('Render the component with an error', () => {
     expect(render(
-        <Url defaultProtocol={'http://'} onChange={jest.fn()} protocols={['http://', 'https://']} valid={false} value={undefined} />
+        <Url
+            defaultProtocol="http://"
+            onChange={jest.fn()}
+            protocols={['http://', 'https://']}
+            valid={false}
+            value={undefined}
+        />
     )).toMatchSnapshot();
 });
 

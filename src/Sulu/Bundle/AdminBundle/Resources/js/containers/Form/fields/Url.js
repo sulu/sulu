@@ -78,7 +78,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
 
         const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
 
-        if (!defaultScheme || typeof defaultScheme.value !== 'string') {
+        if (!defaultScheme || typeof defaultScheme.value !== 'string') {
             throw new Error('No valid default scheme found in configuration!');
         }
 
