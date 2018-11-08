@@ -76,7 +76,7 @@ test('Not call changed when only protocol is given', () => {
     );
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
-    expect(changeSpy).not.toBeCalledWith('https://');
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Pass correct default props to Url component', () => {
