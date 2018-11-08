@@ -9,7 +9,6 @@ type Props = {|
     ...SwitchProps,
     skin: 'dark' | 'light',
     className?: string,
-    disabled: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
 |};
 
@@ -17,6 +16,7 @@ const CHECKED_ICON = 'su-check';
 
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
+        checked: false,
         disabled: false,
         skin: 'dark',
     };

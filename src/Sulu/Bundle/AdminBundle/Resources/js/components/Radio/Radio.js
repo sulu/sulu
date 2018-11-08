@@ -14,6 +14,7 @@ type Props = {|
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {
         checked: false,
+        disabled: false,
         skin: 'dark',
     };
 
@@ -25,6 +26,7 @@ export default class Radio extends React.PureComponent<Props> {
 
     render() {
         const {
+            disabled,
             name,
             value,
             checked,
@@ -33,13 +35,17 @@ export default class Radio extends React.PureComponent<Props> {
 
         const radioClass = classNames(
             radioStyles.radio,
-            radioStyles[this.props.skin]
+            radioStyles[this.props.skin],
+            {
+                [radioStyles.disabled]: disabled,
+            }
         );
 
         return (
             <Switch
                 checked={checked}
                 className={radioClass}
+                disabled={disabled}
                 name={name}
                 onChange={this.handleChange}
                 type="radio"

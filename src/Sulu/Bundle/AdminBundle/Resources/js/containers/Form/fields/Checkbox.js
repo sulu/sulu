@@ -26,7 +26,13 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
         } = this.props;
 
         if (type === 'toggler') {
-            return <Toggler checked={!!value} onChange={this.handleChange}>{label}</Toggler>;
+            return (
+                <Toggler
+                    checked={!!value}
+                    disabled={!!disabled}
+                    onChange={this.handleChange}
+                >{label}</Toggler>
+            );
         }
 
         return (

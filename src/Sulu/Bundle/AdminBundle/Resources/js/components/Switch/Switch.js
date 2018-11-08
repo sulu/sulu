@@ -10,12 +10,12 @@ type Props = {|
     className?: string,
     icon?: string,
     type: string,
-    disabled: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
 |};
 
 export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
+        checked: false,
         disabled: false,
         type: 'checkbox',
     };

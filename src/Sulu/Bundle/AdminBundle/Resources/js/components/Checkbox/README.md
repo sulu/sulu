@@ -1,7 +1,7 @@
 The custom checkbox has no internal state and has to be managed, like shown in the following example.
 The change callback receives the value as an optional second parameter.
 
-```
+```javascript
 initialState = {checked1: false, checked2: true};
 onChange = (checked, value) => setState({['checked' + value]: checked});
 <div>
@@ -12,7 +12,7 @@ onChange = (checked, value) => setState({['checked' + value]: checked});
 
 The checkbox also comes with a light skin and active attribute.
 
-```
+```javascript
 initialState = {checked: false};
 onChange = (checked) => setState({checked});
 <div style={{background: 'black', padding: '10px'}}>
@@ -20,7 +20,7 @@ onChange = (checked) => setState({checked});
 </div>
 ```
 
-```
+```javascript
 initialState = {checked: false};
 onChange = (checked) => setState({checked});
 <div style={{background: 'black', padding: '10px'}}>
