@@ -8,6 +8,7 @@ import Grid from '../Grid';
 import passwordConfirmationStyles from './passwordConfirmation.scss';
 
 type Props = {|
+    disabled?: boolean,
     onChange: (value: ?string) => void,
     valid: boolean,
 |};
@@ -72,10 +73,13 @@ export default class PasswordConfirmation extends React.Component<Props> {
     }, 500);
 
     render() {
+        const {disabled} = this.props;
+
         return (
             <Grid className={passwordConfirmationStyles.grid}>
                 <Grid.Item size={6}>
                     <Input
+                        disabled={disabled}
                         icon={LOCK_ICON}
                         onChange={this.handleFirstChange}
                         type={INPUT_TYPE}
@@ -85,6 +89,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
                 </Grid.Item>
                 <Grid.Item className={passwordConfirmationStyles.item} size={6}>
                     <Input
+                        disabled={disabled}
                         icon={LOCK_ICON}
                         onChange={this.handleSecondChange}
                         type={INPUT_TYPE}
