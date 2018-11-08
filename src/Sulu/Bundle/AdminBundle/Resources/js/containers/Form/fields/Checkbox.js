@@ -31,7 +31,9 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
                     checked={!!value}
                     disabled={!!disabled}
                     onChange={this.handleChange}
-                >{label}</Toggler>
+                >
+                    {label}
+                </Toggler>
             );
         }
 
@@ -40,7 +42,9 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
                 checked={!!value}
                 disabled={!!disabled}
                 onChange={this.handleChange}
-            >{label}</CheckboxComponent>
+            >
+                {label}
+            </CheckboxComponent>
         );
     }
 }
