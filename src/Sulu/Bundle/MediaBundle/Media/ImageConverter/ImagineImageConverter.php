@@ -151,7 +151,7 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $imagineOptions = $format['options'];
 
-        $imageExtension = $this->getImageExtension($fileVersion->getName());
+        $imageExtension = $this->getImageExtension($fileVersion->getMimeType());
 
         return $image->get(
             $imageExtension,
@@ -384,34 +384,23 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * Maps the given file type to a new extension.
+     * Maps the image extension to a new extension.
      *
-     * @param string $fileName
+     * @param string $mimeType
      *
      * @return string
      */
-    private function getImageExtension($fileName)
+    private function getImageExtension($mimeType)
     {
-        $pathInfo = pathinfo($fileName);
-        $extension = null;
-        if (isset($pathInfo['extension'])) {
-            $extension = $pathInfo['extension'];
-        }
-
-        switch ($extension) {
-            case 'png':
-            case 'gif':
-            case 'jpeg':
-                // do nothing
-                break;
-            case 'svg':
-                $extension = 'png';
-                break;
+        switch ($mimeType) {
+            case 'image/gif':
+                return 'gif';
+            case 'image/png':
+                return 'png';
+            case 'image/svg+xml':
+                return 'png';
             default:
-                $extension = 'jpg';
-                break;
+                return 'jpg';
         }
-
-        return $extension;
     }
 }
