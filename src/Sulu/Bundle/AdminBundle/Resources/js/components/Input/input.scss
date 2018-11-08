@@ -7,9 +7,10 @@ $inputDisabledBackgroundColor: $wildSand;
 $inputBorderWidth: 1px;
 $inputBorderRadius: 3px;
 $inputHeight: 30px;
+$inputHeadlineHeight: 40px;
 $inputColor: $black;
-$inputFontSize: 12px;
 $inputPrependWidth: 32px;
+$inputHeadlinePrependWidth: 42px;
 $iconColor: $dustyGray;
 $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
@@ -27,6 +28,7 @@ $darkIconColor: $doveGray;
     border: $inputBorderWidth solid $inputBorderColor;
     border-radius: $inputBorderRadius;
     display: inline-flex;
+    font-size: 12px;
     align-items: center;
     height: $inputHeight;
     width: 100%;
@@ -39,14 +41,12 @@ $darkIconColor: $doveGray;
         border: none;
         border-radius: $inputBorderRadius;
         height: calc($inputHeight - 2 * $inputBorderWidth);
-        font-size: $inputFontSize;
         color: $inputColor;
         will-change: width, padding-left;
         transition: width .3s, padding-left .1s linear;
 
         &::placeholder {
             color: $placeholderColor;
-            font-size: $inputFontSize;
         }
 
         &:invalid {
@@ -123,17 +123,44 @@ $darkIconColor: $doveGray;
     &.disabled {
         background-color: $inputDisabledBackgroundColor;
     }
+
+    .prepended-container {
+        flex: 0 0 $inputPrependWidth;
+        height: calc($inputHeight - 2 * $iconBorderPadding);
+        width: $inputPrependWidth;
+    }
+
+    .icon {
+        font-size: 14px;
+    }
+
+    &.headline {
+        font-size: 18px;
+        line-height: 28px;
+        height: $inputHeadlineHeight;
+
+        input {
+            font-weight: bold;
+        }
+
+        .prepended-container {
+            flex: 0 0 $inputHeadlinePrependWidth;
+            height: calc($inputHeadlineHeight - 2 * $iconBorderPadding);
+            width: $inputHeadlinePrependWidth;
+        }
+
+        .icon {
+            font-size: 20px;
+        }
+    }
 }
 
 .prepended-container {
     position: relative;
-    flex: 0 0 $inputPrependWidth;
-    height: calc($inputHeight - 2 * $iconBorderPadding);
     box-shadow: $inputBorderWidth 0 0 $inputBorderColor;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: $inputPrependWidth;
 
     &.dark {
         box-shadow: $inputBorderWidth 0 0 $darkInputBorderColor;
@@ -156,7 +183,6 @@ $darkIconColor: $doveGray;
 
 .icon {
     display: block;
-    font-size: 14px;
     flex-grow: 0;
     color: $iconColor;
     line-height: calc($inputHeight - 2 * $iconBorderPadding);

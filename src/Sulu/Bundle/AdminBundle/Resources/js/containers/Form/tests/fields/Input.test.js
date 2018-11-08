@@ -40,6 +40,25 @@ test('Pass props correctly to Input component', () => {
     expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(undefined);
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
     expect(inputValid.find(InputComponent).prop('disabled')).toBe(true);
+    expect(inputValid.find(InputComponent).prop('headline')).toBe(undefined);
+});
+
+test('Pass headline prop correctly', () => {
+    const schemaOptions = {
+        headline: {
+            value: true,
+        },
+    };
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const inputValid = shallow(
+        <Input
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(inputValid.find(InputComponent).prop('headline')).toBe(true);
 });
 
 test('Pass props correctly including maxCharacters to Input component', () => {

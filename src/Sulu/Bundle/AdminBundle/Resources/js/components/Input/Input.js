@@ -56,6 +56,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     render() {
         const {
             alignment,
+            headline,
             id,
             inputClass,
             valid,
@@ -94,6 +95,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                 [inputStyles.disabled]: disabled,
                 [inputStyles.collapsed]: collapsed,
                 [inputStyles.hasAppendIcon]: onClearClick,
+                [inputStyles.headline]: headline,
             }
         );
 

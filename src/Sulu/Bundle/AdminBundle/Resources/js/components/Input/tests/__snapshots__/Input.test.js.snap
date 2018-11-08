@@ -43,6 +43,17 @@ exports[`Input should render append container with icon when onClearClick callba
 </label>
 `;
 
+exports[`Input should render as headline 1`] = `
+<label
+  class="input default left headline"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render collapsed 1`] = `
 <label
   class="input default left collapsed"
