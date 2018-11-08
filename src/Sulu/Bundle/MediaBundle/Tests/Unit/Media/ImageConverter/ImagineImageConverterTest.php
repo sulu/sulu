@@ -157,6 +157,7 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setName('test.svg');
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions('{}');
+        $fileVersion->setMimeType('image/svg+xml');
 
         $this->storage->loadAsString('test.svg', 1, '{}')->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
