@@ -17,31 +17,33 @@ test('DatePicker should render', () => {
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(pretty(datePicker.find('DateTime').html())).toMatchSnapshot();
+});
 
-    datePicker.unmount();
+test('DatePicker should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = new Date('2017-05-23');
+    const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={value} />);
+
+    expect(datePicker.render()).toMatchSnapshot();
 });
 
 test('DatePicker should open overlay on icon-click', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
+
+    expect(datePicker.find('DateTime').props().open).toBeFalsy();
     datePicker.find('Icon').simulate('click');
-
-    expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
+    expect(datePicker.find('DateTime').props().open).toBeTruthy();
 });
 
 test('DatePicker should not open overlay on icon-click when disabled', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={null} />);
+
+    expect(datePicker.find('DateTime').props().open).toBeFalsy();
     datePicker.find('Icon').simulate('click');
-
-    expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
+    expect(datePicker.find('DateTime').props().open).toBeFalsy();
 });
 
 test('DatePicker should render with placeholder', () => {
@@ -49,9 +51,6 @@ test('DatePicker should render with placeholder', () => {
     const datePicker = mount(<DatePicker onChange={onChange} placeholder="My placeholder" value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render with value', () => {
@@ -60,9 +59,6 @@ test('DatePicker should render with value', () => {
     const datePicker = mount(<DatePicker onChange={onChange} value={value} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render null value as empty string', () => {
@@ -70,9 +66,6 @@ test('DatePicker should render null value as empty string', () => {
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render date format only with month', () => {
@@ -83,9 +76,6 @@ test('DatePicker should render date format only with month', () => {
     const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render date format only with year', () => {
@@ -96,9 +86,6 @@ test('DatePicker should render date format only with year', () => {
     const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render date picker with time picker', () => {
@@ -109,20 +96,7 @@ test('DatePicker should render date picker with time picker', () => {
     const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
-});
-
-test('DatePicker should render when disabled', () => {
-    const onChange = jest.fn();
-    const value = new Date('2017-05-23');
-    const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={value} />);
-
-    expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
+    expect(pretty(datePicker.find('DateTime').html())).toMatchSnapshot();
 });
 
 test('DatePicker should render error', () => {
@@ -130,9 +104,6 @@ test('DatePicker should render error', () => {
     const datePicker = mount(<DatePicker onChange={onChange} valid={false} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    datePicker.unmount();
 });
 
 test('DatePicker should render error when invalid value is set', () => {
@@ -150,15 +121,12 @@ test('DatePicker should render error when invalid value is set', () => {
 
     // snapshot
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 
     // now add a valid value
     datePicker.find('Input').instance().props.onChange('2018', {target: {value: '2018'}});
     datePicker.find('Input').instance().props.onBlur();
     datePicker.update();
     expect(datePicker.instance().showError).toBe(false);
-
-    datePicker.unmount();
 });
 
 test('DatePicker should set class correctly when overlay was opened/closed', () => {
