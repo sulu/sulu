@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import pretty from 'pretty';
@@ -14,7 +14,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('The component should render a generic select', () => {
     const select = shallow(
-        <SingleSelect>
+        <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -26,7 +26,7 @@ test('The component should render a generic select', () => {
 
 test('The component should render a select with dark skin', () => {
     const select = mount(
-        <SingleSelect skin="dark">
+        <SingleSelect skin="dark" value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -42,7 +42,7 @@ test('The component should render a select with dark skin', () => {
 
 test('The component should render a select that is disabled', () => {
     const select = shallow(
-        <SingleSelect disabled={true} skin="dark">
+        <SingleSelect disabled={true} skin="dark" value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -58,7 +58,7 @@ test('The component should render a select that is disabled', () => {
 
 test('The component should return the default displayValue if no valueless option is present', () => {
     const select = shallow(
-        <SingleSelect>
+        <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
             <Divider />
@@ -71,7 +71,7 @@ test('The component should return the default displayValue if no valueless optio
 
 test('The component should return the content of the last valueless option as default displayValue', () => {
     const select = shallow(
-        <SingleSelect>
+        <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option>Option without value 1</Option>
             <Option>Option without value 2</Option>
@@ -86,7 +86,7 @@ test('The component should return the content of the last valueless option as de
 
 test('The component should return undefined as value if a valueless option is selected', () => {
     const select = shallow(
-        <SingleSelect>
+        <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option>Option without value 1</Option>
             <Option value="option-2">Option 2</Option>

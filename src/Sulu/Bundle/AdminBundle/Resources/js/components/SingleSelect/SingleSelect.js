@@ -12,6 +12,7 @@ type Props<T: string | number> = SelectProps & {
 
 export default class SingleSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        disabled: false,
         skin: 'default',
     };
 

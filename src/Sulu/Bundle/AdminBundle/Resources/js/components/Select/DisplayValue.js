@@ -7,17 +7,18 @@ import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
 import type {Skin} from './types';
 
-type Props = {
+type Props = {|
     children: string,
-    disabled?: boolean,
+    disabled: boolean,
     displayValueRef?: (button: ElementRef<'button'>) => void,
     icon?: string,
     onClick: () => void,
     skin: Skin,
-};
+|};
 
 export default class DisplayValue extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         skin: 'default',
     };
 

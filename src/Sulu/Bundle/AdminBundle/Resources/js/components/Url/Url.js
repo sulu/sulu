@@ -9,7 +9,7 @@ import urlStyles from './url.scss';
 
 type Props = {|
     defaultProtocol?: string,
-    disabled?: boolean,
+    disabled: boolean,
     id?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -32,6 +32,7 @@ const URL_REGEX = new RegExp(
 @observer
 export default class Url extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
         valid: true,
     };

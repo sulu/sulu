@@ -12,12 +12,13 @@ type Props = {|
     onChange: (string) => void,
     placeholder?: string,
     valid: boolean,
-    disabled?: boolean,
+    disabled: boolean,
     value: ?string,
 |};
 
 export default class TextArea extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 

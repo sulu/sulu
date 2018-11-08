@@ -14,6 +14,7 @@ type Props<T: string | number> = SelectProps & {
 
 export default class MultiSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        disabled: false,
         skin: 'default',
         values: [],
     };

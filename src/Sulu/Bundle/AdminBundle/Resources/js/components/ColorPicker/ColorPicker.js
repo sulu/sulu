@@ -16,13 +16,14 @@ type Props = {|
     onChange: (value: ?string) => void,
     placeholder?: string,
     valid: boolean,
-    disabled?: boolean,
+    disabled: boolean,
     value: ?string,
 |};
 
 @observer
 export default class ColorPicker extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 

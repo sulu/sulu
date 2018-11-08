@@ -12,7 +12,7 @@ import Input from '../Input';
 import Popover from '../Popover';
 import './datePicker.scss';
 
-type Props = {
+type Props = {|
     id?: string,
     /** Placeholder can be overwritten */
     placeholder?: string,
@@ -21,13 +21,14 @@ type Props = {
     /** Configure the datepicker to your needs, for more information have a look in the README.md */
     options: Object,
     valid: boolean,
-    disabled?: boolean,
+    disabled: boolean,
     value: ?Date,
-};
+|};
 
 @observer
 export default class DatePicker extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         options: {},
         valid: true,
     };

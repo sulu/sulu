@@ -7,7 +7,7 @@ type Props = {|
     name?: string,
     placeholder?: string,
     valid: boolean,
-    disabled?: boolean,
+    disabled: boolean,
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
@@ -15,6 +15,7 @@ type Props = {|
 
 export default class Phone extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 

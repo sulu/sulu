@@ -10,7 +10,7 @@ type Props = {|
     name?: string,
     placeholder?: string,
     valid: boolean,
-    disabled?: boolean,
+    disabled: boolean,
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -19,6 +19,7 @@ type Props = {|
 @observer
 export default class Email extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 
