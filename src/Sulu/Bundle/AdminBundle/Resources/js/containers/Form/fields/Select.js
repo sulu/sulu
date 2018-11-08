@@ -8,6 +8,38 @@ const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the Single
 type Props = FieldTypeProps<Array<string | number>>;
 
 export default class Select extends React.Component<Props> {
+    constructor(props: FieldTypeProps<Array<string | number>>) {
+        super(props);
+
+        const {onChange, schemaOptions, value} = this.props;
+
+        if (!schemaOptions) {
+            return;
+        }
+
+        let {
+            default_value: {
+                value: defaultValue,
+            } = {},
+        } = schemaOptions;
+
+        if (defaultValue === undefined || defaultValue === null) {
+            return;
+        }
+
+        if (typeof defaultValue === 'number' || typeof defaultValue === 'string') {
+            defaultValue = [defaultValue];
+        }
+
+        if (!Array.isArray(defaultValue)) {
+            throw new Error('The "default_value" schema option must be an array!');
+        }
+
+        if (value === undefined) {
+            onChange(defaultValue);
+        }
+    }
+
     handleChange = (value: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 
