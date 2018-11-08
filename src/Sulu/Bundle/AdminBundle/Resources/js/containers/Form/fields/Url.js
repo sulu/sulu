@@ -56,9 +56,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             onChange,
             schemaOptions: {
                 defaults: {
-                    value: defaults = [
-                        {name: 'scheme', value: 'https://'},
-                    ],
+                    value: defaults = [],
                 } = {},
                 schemes: {
                     value: schemes = [
@@ -72,18 +70,6 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             value,
         } = this.props;
 
-        if (!Array.isArray(defaults) || defaults.length === 0) {
-            throw new Error('The "defaults" option must contain scheme value!');
-        }
-
-        const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
-
-        if (!defaultScheme || typeof defaultScheme.value !== 'string') {
-            throw new Error('No valid default scheme found in configuration!');
-        }
-
-        const defaultProtocol = defaultScheme.value;
-
         if (!Array.isArray(schemes) || schemes.length === 0) {
             throw new Error('The "schemes" schema option must contain some values!');
         }
@@ -96,6 +82,21 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             }
             return scheme.name;
         });
+
+        if (!Array.isArray(defaults)) {
+            throw new Error('The "defaults" schema option must be an array!');
+        }
+
+        let defaultProtocol = protocols[0];
+        const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
+
+        if (defaultScheme && defaultScheme.value) {
+            if (typeof defaultScheme.value !== 'string') {
+                throw new Error('The "scheme" value of the "defaults" schema option must be a string!');
+            }
+
+            defaultProtocol = defaultScheme.value;
+        }
 
         return (
             <UrlComponent

@@ -62,7 +62,14 @@ test('Pass props correctly to Url component', () => {
 });
 
 test('Not call changed when only protocol is given', () => {
-    const schemaOptions = {};
+    const schemaOptions = {
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'http://'},
+            ],
+        },
+    };
+
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
@@ -76,6 +83,7 @@ test('Not call changed when only protocol is given', () => {
     );
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(url.find(UrlComponent).prop('defaultProtocol')).toEqual('http://');
     expect(changeSpy).not.toBeCalled();
 });
 

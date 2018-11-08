@@ -8,7 +8,7 @@ import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
 type Props = {|
-    defaultProtocol: string,
+    defaultProtocol?: string,
     id?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -31,7 +31,6 @@ const URL_REGEX = new RegExp(
 @observer
 export default class Url extends React.Component<Props> {
     static defaultProps = {
-        defaultProtocol: 'https://',
         protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
         valid: true,
     };
@@ -170,7 +169,7 @@ export default class Url extends React.Component<Props> {
                     <SingleSelect
                         onChange={this.handleProtocolChange}
                         skin="flat"
-                        value={this.protocol || defaultProtocol}
+                        value={this.protocol || defaultProtocol || this.protocols[0]}
                     >
                         {protocols.map((protocol) => (
                             <SingleSelect.Option key={protocol} value={protocol}>{protocol}</SingleSelect.Option>
