@@ -5,10 +5,11 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch';
 import radioStyles from './radio.scss';
 
-type Props = SwitchProps & {
+type Props = {|
+    ...SwitchProps,
     skin: 'dark' | 'light',
     onChange?: (value?: string | number) => void,
-};
+|};
 
 export default class Radio extends React.PureComponent<Props> {
     static defaultProps = {

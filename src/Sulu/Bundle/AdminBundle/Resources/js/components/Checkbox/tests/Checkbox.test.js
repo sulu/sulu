@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {shallow, render} from 'enzyme';
 import React from 'react';
 import Checkbox from '../Checkbox';
@@ -13,13 +13,13 @@ test('The component should render in dark skin', () => {
     expect(checkbox).toMatchSnapshot();
 });
 
-test('The component should render inactive', () => {
-    const checkbox = render(<Checkbox active={false} />);
+test('The component should render disabled', () => {
+    const checkbox = render(<Checkbox disabled={true} />);
     expect(checkbox).toMatchSnapshot();
 });
 
 test('The component pass the props correctly to the generic checkbox', () => {
-    const onChange = jest.fn().mockReturnValue('my-on-change');
+    const onChange = jest.fn();
     const checkbox = shallow(
         <Checkbox
             checked={true}
@@ -35,5 +35,4 @@ test('The component pass the props correctly to the generic checkbox', () => {
     expect(switchComponent.props().name).toBe('my-name');
     expect(switchComponent.props().checked).toBe(true);
     expect(switchComponent.props().children).toBe('My label');
-    expect(switchComponent.props().onChange()).toBe('my-on-change');
 });

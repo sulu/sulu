@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {shallow, render} from 'enzyme';
 import React from 'react';
 import Switch from '../Switch';
@@ -18,8 +18,8 @@ test('The component should render with class', () => {
     expect(component).toMatchSnapshot();
 });
 
-test('The component should render in inactive state', () => {
-    const component = render(<Switch active={false} />);
+test('The component should render in disabled state', () => {
+    const component = render(<Switch disabled={true} />);
     expect(component).toMatchSnapshot();
 });
 

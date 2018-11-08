@@ -16,12 +16,12 @@ exports[`The component should render in checked state 1`] = `
 </label>
 `;
 
-exports[`The component should render in inactive state 1`] = `
+exports[`The component should render in disabled state 1`] = `
 <label
-  class="label inactive"
+  class="label disabled"
 >
   <span
-    class="switch inactive"
+    class="switch disabled"
   >
     <input
       disabled=""

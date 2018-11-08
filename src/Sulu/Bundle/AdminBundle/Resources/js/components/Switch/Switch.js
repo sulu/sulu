@@ -5,17 +5,17 @@ import Icon from '../Icon';
 import type {SwitchProps} from './types';
 import switchStyles from './switch.scss';
 
-type Props = SwitchProps & {
+type Props = {|
+    ...SwitchProps,
     className?: string,
     icon?: string,
     type: string,
-    active: boolean,
+    disabled?: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
-};
+|};
 
 export default class Switch extends React.PureComponent<Props> {
     static defaultProps = {
-        active: true,
         type: 'checkbox',
     };
 
@@ -38,18 +38,18 @@ export default class Switch extends React.PureComponent<Props> {
             checked,
             children,
             className,
-            active,
+            disabled,
         } = this.props;
         const labelClass = classNames(
             switchStyles.label,
             {
-                [switchStyles.inactive]: !active,
+                [switchStyles.disabled]: disabled,
             }
         );
         const switchClass = classNames(
             switchStyles.switch,
             {
-                [switchStyles.inactive]: !active,
+                [switchStyles.disabled]: disabled,
             },
             className
         );
@@ -59,7 +59,7 @@ export default class Switch extends React.PureComponent<Props> {
                 <span className={switchClass}>
                     <input
                         checked={checked}
-                        disabled={!active}
+                        disabled={disabled}
                         name={name}
                         onChange={this.handleChange}
                         type={type}

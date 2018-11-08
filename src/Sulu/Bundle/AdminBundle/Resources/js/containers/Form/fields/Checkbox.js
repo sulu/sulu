@@ -31,8 +31,8 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
 
         return (
             <CheckboxComponent
-                active={!disabled}
                 checked={!!value}
+                disabled={!!disabled}
                 onChange={this.handleChange}
             >{label}</CheckboxComponent>
         );

@@ -16,7 +16,7 @@ $marginBottom: 10px;
         margin-top: $marginBottom;
     }
 
-    &.inactive {
+    &.disabled {
         cursor: default;
     }
 }
@@ -35,7 +35,7 @@ $marginBottom: 10px;
         z-index: 1;
     }
 
-    &.inactive {
+    &.disabled {
         input {
             cursor: default;
         }
