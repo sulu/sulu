@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
+
 * 1.6.22 (2018-10-05)
     * HOTFIX      #4146 [PreviewBundle]         Fixed preview render preview attribute and XmlHttpRequest state
     * BUGFIX      #4121 [HttpCache]             Set a timeout when purging caches
