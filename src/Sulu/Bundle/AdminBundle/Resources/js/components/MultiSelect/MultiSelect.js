@@ -5,12 +5,13 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
-type Props<T: string | number> = SelectProps & {
+type Props<T: string | number> = {|
+    ...SelectProps<T>,
     allSelectedText?: string,
     noneSelectedText?: string,
     values: Array<T>,
     onChange: (values: Array<T>) => void,
-};
+|};
 
 export default class MultiSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
@@ -64,7 +65,9 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
         return this.props.values.includes(option.props.value);
     };
 
-    handleSelect = (value: T) => {
+    // TODO: Remove explicit type annotation when flow bug is fixed
+    // https://github.com/facebook/flow/issues/6978
+    handleSelect: (value: T) => void = (value: T) => {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
 

@@ -8,21 +8,21 @@ import Checkbox from '../Checkbox';
 import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
 
-type Props = {
+type Props<T> = {
     anchorWidth: number,
     selected: boolean,
     disabled: boolean,
     focus: boolean,
-    value?: string | number,
+    value?: T,
     children: string,
-    onClick?: (value?: string | number) => void,
+    onClick?: (value: ?T) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selectedVisualization: OptionSelectedVisualization,
 };
 
 const ANCHOR_WIDTH_DIFFERENCE = 10;
 
-export default class Option extends React.PureComponent<Props> {
+export default class Option<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         anchorWidth: 0,
         disabled: false,

@@ -5,10 +5,11 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
-type Props<T: string | number> = SelectProps & {
+type Props<T: string | number> = {|
+    ...SelectProps<T>,
     onChange?: (value: T) => void,
     value: ?T,
-};
+|};
 
 export default class SingleSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
@@ -17,7 +18,9 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
     };
 
     static Action = Select.Action;
+
     static Option = Select.Option;
+
     static Divider = Select.Divider;
 
     get displayValue(): string {
@@ -46,7 +49,9 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
         return option.props.value === value && !option.props.disabled;
     };
 
-    handleSelect = (value: T) => {
+    // TODO: Remove explicit type annotation when flow bug is fixed
+    // https://github.com/facebook/flow/issues/6978
+    handleSelect: (value: T) => void = (value: T) => {
         if (this.props.onChange) {
             this.props.onChange(value);
         }
