@@ -18,25 +18,31 @@ export default class Select extends React.Component<Props> {
         }
 
         let {
-            default_value: {
-                value: defaultValue,
+            default_values: {
+                value: defaultValues,
             } = {},
         } = schemaOptions;
 
-        if (defaultValue === undefined || defaultValue === null) {
+        if (defaultValues === undefined || defaultValues === null) {
             return;
         }
 
-        if (typeof defaultValue === 'number' || typeof defaultValue === 'string') {
-            defaultValue = [defaultValue];
+        if (!Array.isArray(defaultValues)) {
+            throw new Error('The "default_values" schema option must be an array!');
         }
 
-        if (!Array.isArray(defaultValue)) {
-            throw new Error('The "default_value" schema option must be an array!');
-        }
+        defaultValues = defaultValues.map(({value, name}) => {
+            const defaultValue = value === undefined || value === null ? name : value;
+
+            if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
+                throw new Error('A single schema option of "default_values" must be a string or number');
+            }
+
+            return defaultValue;
+        });
 
         if (value === undefined) {
-            onChange(defaultValue);
+            onChange(defaultValues);
         }
     }
 
@@ -61,7 +67,9 @@ export default class Select extends React.Component<Props> {
 
         return (
             <MultiSelectComponent disabled={!!disabled} onChange={this.handleChange} values={value || []}>
-                {values.value.map(({value, title}) => {
+                {values.value.map(({name, value, title}) => {
+                    value = value === undefined || value === null ? name : value;
+
                     if (typeof value !== 'string' && typeof value !== 'number') {
                         throw new Error('The children of "values" must only contain values of type string or number!');
                     }

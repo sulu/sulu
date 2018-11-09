@@ -17,11 +17,11 @@ test('Pass props correctly to Select', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -40,11 +40,11 @@ test('Pass props correctly to Select', () => {
     expect(select.prop('values')).toEqual(['test']);
     expect(select.prop('disabled')).toBe(true);
     expect(select.find('Option').at(0).props()).toEqual(expect.objectContaining({
-        value: 'mr',
+        name: 'mr',
         children: 'Mister',
     }));
     expect(select.find('Option').at(1).props()).toEqual(expect.objectContaining({
-        value: 'ms',
+        name: 'ms',
         children: 'Miss',
     }));
 });
@@ -52,17 +52,17 @@ test('Pass props correctly to Select', () => {
 test('Should throw an exception if defaultValue is of wrong type', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const schemaOptions = {
-        default_value: {
+        default_values: {
             value: {},
         },
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -73,9 +73,9 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={schemaOptions}
+            schemaOptions={(schemaOptions: any)}
         />
-    )).toThrow(/"default_value"/);
+    )).toThrow(/"default_values"/);
 });
 
 test('Should throw an exception if value is of wrong type', () => {
@@ -84,11 +84,11 @@ test('Should throw an exception if value is of wrong type', () => {
         values: {
             value: [
                 {
-                    value: [],
+                    name: [],
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -99,7 +99,7 @@ test('Should throw an exception if value is of wrong type', () => {
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={schemaOptions}
+            schemaOptions={(schemaOptions: any)}
         />
     )).toThrow(/"values"/);
 });
@@ -140,17 +140,17 @@ test('Set default value of null should not call onChange', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const schemaOptions = {
-        default_value: {
-            value: null,
+        default_values: {
+            name: null,
         },
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -161,7 +161,7 @@ test('Set default value of null should not call onChange', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={schemaOptions}
+            schemaOptions={(schemaOptions: any)}
         />
     );
 
@@ -172,49 +172,17 @@ test('Set default value if no value is passed', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const schemaOptions = {
-        default_value: {
-            value: ['mr'],
+        default_values: {
+            value: [{name: 'mr'}],
         },
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
-                    title: 'Miss',
-                },
-            ],
-        },
-    };
-    shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
-
-    expect(changeSpy).toBeCalledWith(['mr']);
-});
-
-test('Set default value to a string "mr" should work', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
-    const changeSpy = jest.fn();
-    const schemaOptions = {
-        default_value: {
-            value: 'mr',
-        },
-        values: {
-            value: [
-                {
-                    value: 'mr',
-                    title: 'Mister',
-                },
-                {
-                    value: 'mrs',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -236,8 +204,8 @@ test('Set default value to a number of 0 should work', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
     const schemaOptions = {
-        default_value: {
-            value: 0,
+        default_values: {
+            value: [{value: 0}],
         },
         values: {
             value: [
