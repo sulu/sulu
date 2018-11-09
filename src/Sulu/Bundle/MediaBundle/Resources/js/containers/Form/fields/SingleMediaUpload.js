@@ -30,6 +30,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
 
     render() {
         const {
+            disabled,
             schemaOptions: {
                 collection_id: {
                     value: collectionId,
@@ -66,6 +67,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
         return (
             <SingleMediaUploadComponent
                 collectionId={collectionId}
+                disabled={!!disabled}
                 emptyIcon={emptyIcon}
                 imageSize={imageSize}
                 mediaUploadStore={this.mediaUploadStore}

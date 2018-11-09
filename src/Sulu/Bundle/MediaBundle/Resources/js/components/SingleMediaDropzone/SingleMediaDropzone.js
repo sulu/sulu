@@ -11,6 +11,7 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 const UPLOAD_ICON = 'fa-cloud-upload';
 
 type Props = {|
+    disabled: boolean,
     emptyIcon: string,
     image: ?string,
     mimeType: ?string,
@@ -24,6 +25,7 @@ type Props = {|
 @observer
 export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         emptyIcon: 'su-image',
         mimeType: '',
         progress: 0,
@@ -54,6 +56,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             emptyIcon,
             image,
             mimeType,
@@ -68,6 +71,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
             singleMediaDropzoneStyles[skin],
             {
                 [singleMediaDropzoneStyles.showUploadIndicator]: this.uploadIndicatorVisibility,
+                [singleMediaDropzoneStyles.disabled]: disabled,
             }
         );
 
@@ -75,6 +79,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
             <Dropzone
                 className={mediaContainerClass}
                 disableClick={uploading}
+                disabled={disabled}
                 multiple={false}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
