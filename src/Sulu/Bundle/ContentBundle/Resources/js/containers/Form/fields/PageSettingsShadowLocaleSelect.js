@@ -13,7 +13,7 @@ export default class PageSettingsShadowLocaleSelect extends React.Component<Fiel
     };
 
     render() {
-        const {formInspector, value} = this.props;
+        const {disabled, formInspector, value} = this.props;
         const contentLocales = toJS(formInspector.getValueByPath('/contentLocales'));
         const locale = formInspector.locale;
 
@@ -22,7 +22,7 @@ export default class PageSettingsShadowLocaleSelect extends React.Component<Fiel
         }
 
         return (
-            <SingleSelect onChange={this.handleChange} value={value}>
+            <SingleSelect disabled={!!disabled} onChange={this.handleChange} value={value}>
                 {contentLocales
                     .filter((contentLocale) => locale && contentLocale !== locale.get())
                     .map((contentLocale) => {
