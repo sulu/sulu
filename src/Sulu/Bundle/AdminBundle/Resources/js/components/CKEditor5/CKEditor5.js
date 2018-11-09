@@ -2,7 +2,6 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import log from 'loglevel';
-import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {observable, action} from 'mobx';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
@@ -18,8 +17,8 @@ import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import type {TextEditorProps} from '../../containers/TextEditor/types';
-import MediaLinkPlugin from './MediaLinkPlugin';
-import styles from './ckeditor5.scss';
+import MediaLinkPlugin, {MediaLinkPluginComponent} from './MediaLinkPlugin';
+import './ckeditor5.scss';
 
 type Props = TextEditorProps;
 
@@ -33,7 +32,7 @@ type Props = TextEditorProps;
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
-    @observable components = [];
+    @observable componentState = {};
 
     static defaultProps = {
         disabled: false,
@@ -46,18 +45,8 @@ export default class CKEditor5 extends React.Component<Props> {
         this.editorInstance = null;
     }
 
-    @action renderComponent = (component, props = {}) => {
-        let exists = false;
-        this.components = this.components.map((item) => {
-            if (component === item.component && props !== item.props) {
-                return {component, props};
-                exists = true;
-            }
-        });
-
-        if (!exists) {
-            this.components = [...this.components, {component, props}];
-        }
+    @action updateComponentState = (key, state) => {
+        this.componentState = {...this.componentState, [key]: state};
     };
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
@@ -97,7 +86,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     TablePlugin,
                     TableToolbarPlugin,
                     LinkPlugin,
-                    MediaLinkPlugin(this.renderComponent),
+                    MediaLinkPlugin(this.updateComponentState),
                 ],
                 toolbar: [
                     'bold',
@@ -179,17 +168,10 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     render() {
-        const className = classNames(
-            styles.portal,
-            {
-                [styles.portalVisible]: this.components.length > 0,
-            }
-        );
-
         return (
             <React.Fragment>
                 <div ref={this.setContainerRef}></div>
-                <div className={className}>{this.components.map(({Component, props}, index) => <Component key={index} {...props} />)}</div>
+                <MediaLinkPluginComponent {...this.componentState[MediaLinkPluginComponent.getPluginName()]} />
             </React.Fragment>
         );
     }

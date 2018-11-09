@@ -1,49 +1,75 @@
 // @flow
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {observable, autorun} from 'mobx';
+import {observable, autorun, computed, action} from 'mobx';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import mediaLinkIcon from '@ckeditor/ckeditor5-core/theme/icons/image.svg';
-import Overlay from 'sulu-admin-bundle/containers/Overlay';
+import Dialog from '../Dialog/Dialog';
 
-export default (
-    renderComponent: (component, props) => void
-) => {
-    const MyComponent = (props) => {
+const PLUGIN_NAME = 'ckeditor-media-link';
+
+type MediaLinkPluginComponentProps = {
+    open: boolean,
+    onClose: () => void,
+    onConfirm: () => void,
+};
+
+export class MediaLinkPluginComponent extends React.Component<MediaLinkPluginComponentProps> {
+    static defaultProps = {
+        open: false,
+    };
+
+    render() {
+        const {onClose, onConfirm, open} = this.props;
+
         return (
-            <div>
-                <Overlay
-                    confirmText="Auswählen"
-                    onClose={props.onClose}
-                    onConfirm={props.onConfirm}
-                    open={props.open}
-                    title="Bilder auswählen"
-                >
-                    Hello World!
-                </Overlay>
-            </div>
-        )
+            <Dialog
+                cancelText="Cancel"
+                confirmText="Confirm"
+                onCancel={onClose}
+                onConfirm={onConfirm}
+                open={open}
+                title="Dialog"
+            >
+                Hello world!
+            </Dialog>
+        );
     }
 
-    return class MediaLinlPlugin extends Plugin {
-        @observable componentProps = {
-            open: false,
-            onConfirm: this.onConfirm,
-            onClose: this.onClose,
+    static getPluginName() {
+        return PLUGIN_NAME;
+    }
+}
+export default function(
+    updateComponentState: (key: string, state: any) => void
+) {
+    return class MediaLinkPlugin extends Plugin {
+        @observable componentOpen = false;
+
+        @computed get componentProps() {
+            return {
+                open: this.componentOpen,
+                onConfirm: this.onConfirm,
+                onClose: this.onClose,
+            };
+        }
+
+        @action onConfirm = () => {
+            this.componentOpen = false;
         };
 
-        onConfirm = () => {
-
-        }
-
-        onClose = () => {
-            
-        }
+        @action onClose = () => {
+            this.componentOpen = false;
+        };
 
         init() {
             const editor = this.editor;
-            renderComponent(MyComponent);
+
+            updateComponentState(PLUGIN_NAME, this.componentProps);
+
+            autorun(() => {
+                updateComponentState(PLUGIN_NAME, this.componentProps);
+            });
 
             editor.ui.componentFactory.add('mediaLink', (locale) => {
                 const view = new ButtonView(locale);
@@ -54,10 +80,9 @@ export default (
                     tooltip: true,
                 });
 
-                view.on('execute', () => {
-                    console.log("test");
-                    renderComponent(MyComponent);
-                });
+                view.on('execute', action(() => {
+                    this.componentOpen = true;
+                }));
 
                 return view;
             });
