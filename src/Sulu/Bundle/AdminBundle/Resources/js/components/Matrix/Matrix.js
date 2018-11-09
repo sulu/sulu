@@ -6,14 +6,16 @@ import Item from './Item';
 import type {MatrixValues} from './types';
 import matrixStyles from './matrix.scss';
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Element<typeof Row>>,
+    disabled: boolean,
     onChange: (value: MatrixValues) => void,
     values: MatrixValues,
-};
+|};
 
 export default class Matrix extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         values: {},
     };
 
@@ -34,11 +36,12 @@ export default class Matrix extends React.PureComponent<Props> {
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
-        const values = this.props.values;
+        const {disabled, values} = this.props;
         return React.Children.map(originalRows, (row, index) => React.cloneElement(
             row,
             {
                 ...row.props,
+                disabled: disabled,
                 key: `matrix-row-${index}`,
                 onChange: this.handleChange,
                 values: values[row.props.name],

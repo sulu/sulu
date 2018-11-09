@@ -28,6 +28,38 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+            {
+                'id': 5,
+                'name': 'Test DEF',
+                'someOtherProperty': 'YES YES',
+            },
+        ];
+    });
+
+    const multiSelect = mount(
+        <MultiSelect
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(multiSelect.render()).toMatchSnapshot();
+});
+
 test('Render with data', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {

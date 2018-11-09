@@ -35,12 +35,14 @@ test('Pass props correctly to Permissions', () => {
     const permissions = shallow(
         <Permissions
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
         />
     );
 
     expect(permissions.prop('system')).toEqual('Sulu');
     expect(permissions.prop('value')).toEqual([]);
+    expect(permissions.prop('disabled')).toEqual(true);
 });
 
 test('Pass props with value correctly to Permissions', () => {

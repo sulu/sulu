@@ -78,11 +78,12 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
     };
 
     render() {
-        const {children, icon, skin} = this.props;
+        const {children, disabled, icon, skin} = this.props;
 
         return (
             <Select
                 closeOnSelect={false}
+                disabled={disabled}
                 displayValue={this.displayValue}
                 icon={icon}
                 isOptionSelected={this.isOptionSelected}

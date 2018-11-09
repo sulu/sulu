@@ -48,6 +48,45 @@ test('Render with minimal', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    const contextPermissions: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+
+    const securityContexts: SecurityContexts = {
+        'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+        'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+    };
+
+    expect(render(
+        <PermissionMatrix
+            contextPermissions={contextPermissions}
+            disabled={true}
+            onChange={jest.fn()}
+            securityContexts={securityContexts}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render with title', () => {
     const contextPermissions: Array<ContextPermission> = [
         {

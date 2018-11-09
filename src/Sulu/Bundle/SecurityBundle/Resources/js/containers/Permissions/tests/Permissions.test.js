@@ -80,6 +80,55 @@ test('Render with minimal', () => {
     });
 });
 
+test('Render in disabled state', () => {
+    const value: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+            },
+        },
+    ];
+
+    const securityContextGroups: SecurityContextGroups = {
+        'Contacts': {
+            'sulu.contact.people': ['view', 'add', 'edit', 'delete'],
+            'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    const permissions = mount(
+        <Permissions
+            disabled={true}
+            onChange={jest.fn()}
+            system="Sulu"
+            value={value}
+        />
+    );
+
+    return promise.then(() => {
+        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
+        permissions.update();
+        expect(permissions.render()).toMatchSnapshot();
+    });
+});
+
 test('Should trigger onChange correctly', () => {
     const value: Array<ContextPermission> = [
         {
@@ -776,6 +825,30 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
         expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
+    });
+});
+
+test('Pass disabled state to MultiSelect', () => {
+    const securityContextGroups: SecurityContextGroups = {
+        'Webspaces': {
+            'sulu.webspaces.#webspace#': ['view'],
+        },
+    };
+    const promise = Promise.resolve(securityContextGroups);
+    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+
+    const permissions = mount(
+        <Permissions
+            disabled={true}
+            onChange={jest.fn()}
+            system="Sulu"
+            value={[]}
+        />
+    );
+
+    return promise.then(() => {
+        permissions.update();
+        expect(permissions.find(MultiSelect).prop('disabled')).toEqual(true);
     });
 });
 

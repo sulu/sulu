@@ -11,6 +11,7 @@ import permissionsStyle from './permissions.scss';
 
 type Props = {|
     contextPermissions: Array<ContextPermission>,
+    disabled: boolean,
     onChange: (value: Array<ContextPermission>) => void,
     securityContexts: SecurityContexts,
     subTitle?: string,
@@ -19,6 +20,10 @@ type Props = {|
 
 @observer
 export default class PermissionMatrix extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     getIcon = (action: string) => {
         switch (action) {
             case 'view':
@@ -92,7 +97,7 @@ export default class PermissionMatrix extends React.Component<Props> {
     }
 
     render() {
-        const {title, subTitle, securityContexts} = this.props;
+        const {disabled, title, subTitle, securityContexts} = this.props;
         const matrixValues = {};
         const matrixRows = [];
 
@@ -112,6 +117,7 @@ export default class PermissionMatrix extends React.Component<Props> {
                     <h3>{subTitle}</h3>
                 }
                 <Matrix
+                    disabled={disabled}
                     onChange={this.handleMatrixChange}
                     values={matrixValues}
                 >

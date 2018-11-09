@@ -26,7 +26,7 @@ test('Render the Matrix component', () => {
     const handleChange = jest.fn();
 
     expect(render(
-        <Matrix onChange={handleChange} title="Global">
+        <Matrix onChange={handleChange}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
@@ -61,7 +61,42 @@ test('Render the Matrix component with values', () => {
     };
 
     expect(render(
-        <Matrix onChange={handleChange} title="Global" values={values}>
+        <Matrix onChange={handleChange} values={values}>
+            <Row name="global.articles" title="articles">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+                <Item icon="su-trash-alt" name="delete" />
+            </Row>
+            <Row name="global.redirects" title="redirects">
+                <Item icon="su-pen" name="view" />
+            </Row>
+            <Row name="global.settings" title="settings">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+            </Row>
+        </Matrix>
+    )).toMatchSnapshot();
+});
+
+test('Render the Matrix component with values in disabled state', () => {
+    const handleChange = jest.fn();
+    const values = {
+        'global.articles': {
+            'view': true,
+            'edit': true,
+            'delete': false,
+        },
+        'global.redirects': {
+            'view': true,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
+
+    expect(render(
+        <Matrix disabled={true} onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
@@ -96,7 +131,7 @@ test('Changing a value should call onChange ', () => {
     };
 
     const matrix = mount(
-        <Matrix onChange={handleChange} title="Global" values={values}>
+        <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
@@ -149,7 +184,7 @@ test('Deactivate all button should call onChange', () => {
     };
 
     const matrix = mount(
-        <Matrix onChange={handleChange} title="Global" values={values}>
+        <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
@@ -202,7 +237,7 @@ test('Activate all button should call onChange', () => {
     };
 
     const matrix = mount(
-        <Matrix onChange={handleChange} title="Global" values={values}>
+        <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
@@ -251,7 +286,7 @@ test('Activate all button should call onChange with all values, even when the va
     };
 
     const matrix = mount(
-        <Matrix onChange={handleChange} title="Global" values={values}>
+        <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />

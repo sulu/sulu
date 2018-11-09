@@ -205,3 +205,91 @@ exports[`Render the Matrix component with values 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render the Matrix component with values in disabled state 1`] = `
+<div
+  class="matrix"
+>
+  <div
+    class="row"
+  >
+    <div>
+      articles
+    </div>
+    <div>
+      <div
+        class="item selected disabled"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+      <div
+        class="item selected disabled"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+      <div
+        class="item disabled"
+        title="Delete"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div>
+      redirects
+    </div>
+    <div>
+      <div
+        class="item selected disabled"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <div>
+      settings
+    </div>
+    <div>
+      <div
+        class="item selected disabled"
+        title="View"
+      >
+        <span
+          aria-label="su-pen"
+          class="su-pen"
+        />
+      </div>
+      <div
+        class="item disabled"
+        title="Edit"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
