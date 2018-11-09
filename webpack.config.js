@@ -51,6 +51,10 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
                 use: 'babel-loader',
             },
             {
+                test: /node_modules\/@ckeditor\/ckeditor5-core\/src\/plugin\.js/,
+                use: 'babel-loader',
+            },
+            {
                 test: /\.css/,
                 exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                 use: [

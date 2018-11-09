@@ -13,6 +13,7 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import './ckeditor5.scss';
 import type {TextEditorProps} from '../../containers/TextEditor/types';
 
@@ -75,6 +76,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     UnderlinePlugin,
                     TablePlugin,
                     TableToolbarPlugin,
+                    LinkPlugin,
                 ],
                 toolbar: [
                     'bold',
@@ -89,6 +91,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     '|',
                     'bulletedlist',
                     'numberedlist',
+                    '|',
+                    'link',
                     '|',
                     'insertTable',
                 ],
