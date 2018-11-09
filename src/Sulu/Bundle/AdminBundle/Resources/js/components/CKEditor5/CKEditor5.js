@@ -33,7 +33,7 @@ type Props = TextEditorProps;
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
-    @observable components: Array<React.Element> = [];
+    @observable components = [];
 
     static defaultProps = {
         disabled: false,
@@ -46,13 +46,18 @@ export default class CKEditor5 extends React.Component<Props> {
         this.editorInstance = null;
     }
 
-    @action renderComponent = (component) => {
-        if (this.components.includes(component)) {
-            this.components = this.components.filter((comp) => comp !== component);
-            return;
-        }
+    @action renderComponent = (component, props = {}) => {
+        let exists = false;
+        this.components = this.components.map((item) => {
+            if (component === item.component && props !== item.props) {
+                return {component, props};
+                exists = true;
+            }
+        });
 
-        this.components = [...this.components, component];
+        if (!exists) {
+            this.components = [...this.components, {component, props}];
+        }
     };
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
@@ -177,14 +182,14 @@ export default class CKEditor5 extends React.Component<Props> {
         const className = classNames(
             styles.portal,
             {
-                [styles.visible]: this.components.length > 0,
+                [styles.portalVisible]: this.components.length > 0,
             }
         );
 
         return (
             <React.Fragment>
                 <div ref={this.setContainerRef}></div>
-                <div className={className}>{this.components.map((Component, index) => <Component key={index} />)}</div>
+                <div className={className}>{this.components.map(({Component, props}, index) => <Component key={index} {...props} />)}</div>
             </React.Fragment>
         );
     }

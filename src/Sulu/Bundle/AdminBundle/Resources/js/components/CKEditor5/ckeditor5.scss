@@ -101,14 +101,13 @@ $textEditorPanelBackground: $white;
 .portal {
     display: none;
 
-    .visible {
+    &-visible {
         display: block;
         position: fixed;
         left: 0;
         top: 0;
         width: 100vw;
         height: 100vh;
-        overflow: hidden auto;
-        background: rgba(250, 100, 50, 0.4);
+        z-index: 999999999;
     }
 }
