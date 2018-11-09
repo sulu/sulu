@@ -229,6 +229,7 @@ test('Should correctly pass props to the BlockCollection', () => {
     const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             label="Test"
             maxOccurs={2}
@@ -240,6 +241,7 @@ test('Should correctly pass props to the BlockCollection', () => {
     );
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
+        disabled: true,
         maxOccurs: 2,
         minOccurs: 1,
         onChange: changeSpy,
