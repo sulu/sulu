@@ -89,6 +89,15 @@ $textEditorPanelBackground: $white;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
+
+            /* stylelint-disable selector-type-no-unknown */
+            a,
+            sulu\:link,
+            sulu\:media {
+                color: blue !important;
+                text-decoration: underline !important;
+            }
+            /* stylelint-enable */
         }
 
         .ck-widget.table {
@@ -102,6 +111,32 @@ $textEditorPanelBackground: $white;
         &.disabled {
             opacity: .5;
             pointer-events: none;
+        }
+    }
+
+    .ck.ck-link-actions {
+        .ck-link-actions__preview {
+            display: inline-block;
+
+            .ck-button__label {
+                overflow: hidden;
+                color: blue !important;
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            &.ck-disabled {
+                pointer-events: none;
+
+                .ck-button__label {
+                    color: black !important;
+                    cursor: default;
+                    text-decoration: none !important;
+                }
+            }
         }
     }
 }

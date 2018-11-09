@@ -28,6 +28,13 @@ interface LinkProviderPoolInterface
     public function getProvider($name);
 
     /**
+     * Returns all providers.
+     *
+     * @return LinkProviderInterface[]
+     */
+    public function getAllProviders();
+
+    /**
      * Returns true if provider exists.
      *
      * @param string $name
@@ -35,11 +42,4 @@ interface LinkProviderPoolInterface
      * @return bool
      */
     public function hasProvider($name);
-
-    /**
-     * Returns configuration for content-type.
-     *
-     * @return LinkConfiguration[]
-     */
-    public function getConfiguration();
 }

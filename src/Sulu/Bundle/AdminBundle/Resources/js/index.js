@@ -80,6 +80,7 @@ import Form, {
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
+import linkTypeConfigStore from './stores/LinkTypeConfigStore';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 
@@ -244,6 +245,7 @@ function processConfig(config: Object) {
     navigationRegistry.set(config.navigation);
     resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
+    linkTypeConfigStore.setConfig(config.internalLinks);
 }
 
 function startApplication() {

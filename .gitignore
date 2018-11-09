@@ -35,6 +35,7 @@ phpunit.xml
 
 # IDEs
 /.idea
+.vscode/
 *.iml
 *~
 .web-server-pid

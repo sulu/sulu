@@ -12,7 +12,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
     const basePath = env && env.base_path ? env.base_path : 'build/admin';
     const rootPath = env && env.root_path ? env.root_path : __dirname; // eslint-disable-line no-undef
-
     const composerConfig = require(path.resolve('composer.json')); // eslint-disable-line import/no-dynamic-require
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
@@ -76,7 +75,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.css/,
-                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    exclude: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         'css-loader',
@@ -99,11 +98,15 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    test: /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
                     use: 'raw-loader',
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    use: 'raw-loader',
+                },
+                {
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
@@ -122,12 +125,28 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    exclude: [
+                        /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                        /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
+                    ],
                     use: [
                         {
                             loader: 'file-loader',
                             options: {
                                 name: '/' + basePath + '/fonts/[name].[hash].[ext]',
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/src\/[\w-/]+\.js$/,
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: [
+                                    require('babel-preset-env'),
+                                ],
                             },
                         },
                     ],

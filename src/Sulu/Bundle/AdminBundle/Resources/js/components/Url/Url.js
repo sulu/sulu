@@ -18,7 +18,7 @@ type Props = {|
     value: ?string,
 |};
 
-const URL_REGEX = new RegExp(
+export const URL_REGEX = new RegExp(
     '^(?:(?:https?|ftps?)://)(?:\\S+(?::\\S*)?@)?'
     + '('
     + '?:(?!127(?:\\.\\d{1,3}){3})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}'

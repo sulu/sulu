@@ -19,87 +19,46 @@ class LinkConfiguration implements \JsonSerializable
     /**
      * @var string
      */
-    protected $title;
+    private $resourceKey;
 
     /**
      * @var string
      */
-    protected $component;
+    private $adapter;
 
-    /**
-     * @var array
-     */
-    protected $componentOptions;
-
-    /**
-     * @var array
-     */
-    private $slideOptions;
-
-    /**
-     * @param string $title
-     * @param string $component
-     * @param array $componentOptions
-     * @param array $slideOptions
-     */
-    public function __construct($title, $component, array $componentOptions = [], array $slideOptions = [])
+    public function __construct(string $resourceKey, string $adapter)
     {
-        $this->title = $title;
-        $this->component = $component;
-        $this->componentOptions = $componentOptions;
-        $this->slideOptions = $slideOptions;
+        $this->resourceKey = $resourceKey;
+        $this->adapter = $adapter;
     }
 
-    /**
-     * Returns title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getResourceKey(): string
     {
-        return $this->title;
+        return $this->resourceKey;
     }
 
-    /**
-     * Returns component-name.
-     *
-     * @return string
-     */
-    public function getComponent()
+    public function setResourceKey(string $resourceKey): self
     {
-        return $this->component;
+        $this->resourceKey = $resourceKey;
+        return $this;
     }
 
-    /**
-     * Returns component-options.
-     *
-     * @return array
-     */
-    public function getComponentOptions()
+    public function getAdapter(): string
     {
-        return $this->componentOptions;
+        return $this->adapter;
     }
 
-    /**
-     * Returns slide-options.
-     *
-     * @return array
-     */
-    public function getSlideOptions()
+    public function setAdapter(string $adapter): self
     {
-        return $this->slideOptions;
+        $this->adapter = $adapter;
+        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
-            'title' => $this->title,
-            'component' => $this->component,
-            'componentOptions' => $this->componentOptions,
-            'slideOptions' => $this->slideOptions,
+            'resourceKey' => $this->getResourceKey(),
+            'adapter' => $this->getAdapter(),
         ];
     }
 }

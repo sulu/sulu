@@ -15,6 +15,9 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
+import ExternalLinkPlugin, {ExternalLinkPluginComponent} from './plugins/link/ExternalLinkPlugin';
+import InternalLinkPlugin, {InternalLinkPluginComponent} from './plugins/link/InternalLinkPlugin';
+import MediaLinkPlugin, {MediaLinkPluginComponent} from './plugins/link/MediaLinkPlugin';
 import './ckeditor5.scss';
 
 type Props = {|
@@ -34,6 +37,11 @@ type Props = {|
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
+    mounted: boolean;
+
+    externalLinkPlugin: ExternalLinkPlugin;
+    internalLinkPlugin: InternalLinkPlugin;
+    mediaLinkPlugin: MediaLinkPlugin;
 
     static defaultProps = {
         disabled: false,
@@ -45,6 +53,11 @@ export default class CKEditor5 extends React.Component<Props> {
         super(props);
 
         this.editorInstance = null;
+        this.mounted = false;
+
+        this.externalLinkPlugin = new ExternalLinkPlugin(this.handleChange);
+        this.internalLinkPlugin = new InternalLinkPlugin(this.handleChange);
+        this.mediaLinkPlugin = new MediaLinkPlugin(this.handleChange);
     }
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
@@ -69,8 +82,15 @@ export default class CKEditor5 extends React.Component<Props> {
         }
     }
 
+    handleChange = (): void => {
+        if (this.mounted) {
+            this.forceUpdate();
+        }
+    };
+
     componentDidMount() {
         const {formats} = this.props;
+        this.mounted = true;
 
         ClassicEditor
             .create(this.containerRef, {
@@ -86,6 +106,9 @@ export default class CKEditor5 extends React.Component<Props> {
                     UnderlinePlugin,
                     TablePlugin,
                     TableToolbarPlugin,
+                    this.externalLinkPlugin.getPlugin(),
+                    this.internalLinkPlugin.getPlugin(),
+                    this.mediaLinkPlugin.getPlugin(),
                 ],
                 toolbar: [
                     'heading',
@@ -102,6 +125,10 @@ export default class CKEditor5 extends React.Component<Props> {
                     '|',
                     'bulletedlist',
                     'numberedlist',
+                    '|',
+                    'external_link',
+                    'internal_link',
+                    'media_link',
                     '|',
                     'insertTable',
                 ],
@@ -200,6 +227,8 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        this.mounted = false;
+
         if (this.editorInstance) {
             this.editorInstance.destroy().then(() => this.editorInstance = null);
         }
@@ -211,6 +240,25 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     render() {
-        return <div ref={this.setContainerRef}></div>;
+        return (
+            <React.Fragment>
+                <div ref={this.setContainerRef} />
+
+                <ExternalLinkPluginComponent
+                    open={this.externalLinkPlugin.open}
+                    plugin={this.externalLinkPlugin}
+                />
+
+                <InternalLinkPluginComponent
+                    open={this.internalLinkPlugin.open}
+                    plugin={this.internalLinkPlugin}
+                />
+
+                <MediaLinkPluginComponent
+                    open={this.mediaLinkPlugin.open}
+                    plugin={this.mediaLinkPlugin}
+                />
+            </React.Fragment>
+        );
     }
 }

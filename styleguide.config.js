@@ -32,6 +32,7 @@ const javaScriptFileExists = (path, fileName) => {
 
 module.exports = { // eslint-disable-line
     require: [
+        require.resolve('regenerator-runtime/runtime.js'),
         'core-js/fn/array/includes',
         'core-js/fn/array/from',
         'core-js/fn/array/fill',
@@ -151,8 +152,21 @@ module.exports = { // eslint-disable-line
                     loader: 'babel-loader',
                 },
                 {
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/src\/[\w-/]+\.js$/,
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: [
+                                    require('babel-preset-env'),
+                                ],
+                            },
+                        },
+                    ],
+                },
+                {
                     test: /\.css/,
-                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    exclude: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                     use: [
                         'style-loader',
                         {
@@ -164,7 +178,7 @@ module.exports = { // eslint-disable-line
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                     use: [
                         {
                             loader: 'style-loader',
@@ -199,7 +213,11 @@ module.exports = { // eslint-disable-line
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    test: /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    use: 'raw-loader',
+                },
+                {
+                    test: /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
                     use: 'raw-loader',
                 },
                 {
@@ -212,7 +230,10 @@ module.exports = { // eslint-disable-line
                 },
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    exclude: [
+                        /node_modules\/@ckeditor\/ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                        /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
+                    ],
                     use: [
                         {
                             loader: 'file-loader',

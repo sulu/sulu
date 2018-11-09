@@ -17,7 +17,7 @@ type Props = {|
     emptyText: string,
     icon: string,
     locale?: ?IObservableValue<string>,
-    onChange: (selectedIds: ?string | number) => void,
+    onChange: (selectedId: ?string | number, selectedItem: ?Object) => void,
     overlayTitle: string,
     resourceKey: string,
     value: ?string | number,
@@ -48,7 +48,7 @@ export default class SingleSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (value !== loadedItemId) {
-                    onChange(loadedItemId);
+                    onChange(loadedItemId, this.singleSelectionStore.item);
                 }
             }
         );
@@ -84,8 +84,13 @@ export default class SingleSelection extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedItem: Object) => {
-        // need to load the whole item as the object returned from the overlay may not contain all displayProperties
-        this.singleSelectionStore.loadItem(selectedItem.id);
+        if (!selectedItem) {
+            this.singleSelectionStore.clear();
+        } else {
+            // need to load the whole item as the object returned from the overlay may not contain all displayProperties
+            this.singleSelectionStore.loadItem(selectedItem.id);
+        }
+
         this.closeOverlay();
     };
 

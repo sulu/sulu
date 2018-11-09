@@ -22,6 +22,9 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -97,6 +100,11 @@ class AdminController
     private $contactManager;
 
     /**
+     * @var LinkProviderPoolInterface
+     */
+    private $linkProviderPool;
+
+    /**
      * @var DataProviderPoolInterface
      */
     private $dataProviderPool;
@@ -164,6 +172,7 @@ class AdminController
         NavigationRegistry $navigationRegistry,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
+        LinkProviderPoolInterface $linkProviderPool,
         DataProviderPoolInterface $dataProviderPool,
         ManagerRegistry $managerRegistry,
         string $environment,
@@ -188,6 +197,7 @@ class AdminController
         $this->navigationRegistry = $navigationRegistry;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
+        $this->linkProviderPool = $linkProviderPool;
         $this->dataProviderPool = $dataProviderPool;
         $this->managerRegistry = $managerRegistry;
         $this->environment = $environment;
@@ -248,6 +258,9 @@ class AdminController
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
                 'resources' => $this->resources,
+                'internalLinks' => array_map(function(LinkProviderInterface $linkProvider) {
+                    return $linkProvider->getConfiguration()->jsonSerialize();
+                }, $this->linkProviderPool->getAllProviders()),
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
                 }, $this->dataProviderPool->getAll()),

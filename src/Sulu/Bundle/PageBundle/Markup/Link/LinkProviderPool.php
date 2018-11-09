@@ -52,13 +52,14 @@ class LinkProviderPool implements LinkProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getAllProviders()
     {
-        $configuration = [];
+        $providers = [];
+
         foreach ($this->providers as $name => $provider) {
-            $configuration[$name] = $provider->getConfiguration();
+            $providers[$name] = $provider;
         }
 
-        return $configuration;
+        return $providers;
     }
 }
