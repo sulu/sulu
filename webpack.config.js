@@ -25,7 +25,10 @@ entries.unshift('url-search-params-polyfill');
 const basePath = 'build/admin';
 
 module.exports = (env, argv) => ({ // eslint-disable-line no-undef
-    entry: entries,
+    entry: [
+        require.resolve('regenerator-runtime/runtime.js'),
+        ...entries
+    ],
     output: {
         path: path.resolve('public'),
         filename: basePath + '/[name].[chunkhash].js',
@@ -51,8 +54,17 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
                 use: 'babel-loader',
             },
             {
-                test: /node_modules\/@ckeditor\/ckeditor5-core\/src\/plugin\.js/,
-                use: 'babel-loader',
+                test: /ckeditor5-[^/]+\/src\/[\w-/]+\.js$/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                require('babel-preset-env'),
+                            ],
+                        },
+                    },
+                ],
             },
             {
                 test: /\.css/,

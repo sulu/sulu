@@ -2,6 +2,9 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import log from 'loglevel';
+import classNames from 'classnames';
+import {observer} from 'mobx-react';
+import {observable, action} from 'mobx';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
@@ -14,8 +17,9 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
-import './ckeditor5.scss';
 import type {TextEditorProps} from '../../containers/TextEditor/types';
+import MediaLinkPlugin from './MediaLinkPlugin';
+import styles from './ckeditor5.scss';
 
 type Props = TextEditorProps;
 
@@ -25,9 +29,11 @@ type Props = TextEditorProps;
  * Implementation is based upon the official ck-editor component:
  * https://github.com/ckeditor/ckeditor5-react/blob/089e28eafa64baf273c5e3690b08c1f8ee5ebbe5/src/ckeditor.jsx
  */
+@observer
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
+    @observable components: Array<React.Element> = [];
 
     static defaultProps = {
         disabled: false,
@@ -39,6 +45,15 @@ export default class CKEditor5 extends React.Component<Props> {
 
         this.editorInstance = null;
     }
+
+    @action renderComponent = (component) => {
+        if (this.components.includes(component)) {
+            this.components = this.components.filter((comp) => comp !== component);
+            return;
+        }
+
+        this.components = [...this.components, component];
+    };
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
         this.containerRef = containerRef;
@@ -77,6 +92,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     TablePlugin,
                     TableToolbarPlugin,
                     LinkPlugin,
+                    MediaLinkPlugin(this.renderComponent),
                 ],
                 toolbar: [
                     'bold',
@@ -93,6 +109,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     'numberedlist',
                     '|',
                     'link',
+                    'mediaLink',
                     '|',
                     'insertTable',
                 ],
@@ -157,6 +174,18 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     render() {
-        return <div ref={this.setContainerRef}></div>;
+        const className = classNames(
+            styles.portal,
+            {
+                [styles.visible]: this.components.length > 0,
+            }
+        );
+
+        return (
+            <React.Fragment>
+                <div ref={this.setContainerRef}></div>
+                <div className={className}>{this.components.map((Component, index) => <Component key={index} />)}</div>
+            </React.Fragment>
+        );
     }
 }

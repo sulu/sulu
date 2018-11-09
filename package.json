@@ -62,7 +62,7 @@
         "raw-loader": "^0.5.1",
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
-        "react-styleguidist": "^7.0.0",
+        "react-styleguidist": "^8.0.3",
         "react-test-renderer": "^16.2.0",
         "rimraf": "^2.6.2",
         "stylelint": "^7.12.0",

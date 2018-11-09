@@ -32,6 +32,7 @@ const javaScriptFileExists = (path, fileName) => {
 
 module.exports = { // eslint-disable-line
     require: [
+        require.resolve('regenerator-runtime/runtime.js'),
         'core-js/fn/array/includes',
         'core-js/fn/array/from',
         'core-js/fn/array/fill',
@@ -143,6 +144,19 @@ module.exports = { // eslint-disable-line
                     test: /\.js$/,
                     exclude: /node_modules/,
                     loader: 'babel-loader',
+                },
+                {
+                    test: /ckeditor5-[^/]+\/src\/[\w-/]+\.js$/,
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: [
+                                    require('babel-preset-env'),
+                                ],
+                            },
+                        },
+                    ],
                 },
                 {
                     test: /\.css/,

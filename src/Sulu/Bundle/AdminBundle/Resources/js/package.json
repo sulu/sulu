@@ -38,6 +38,7 @@
         "react-datetime": "^2.11.0",
         "react-portal": "^4.1.0",
         "react-sortable-hoc": "^0.6.7",
+        "regenerator-runtime": "^0.12.1",
         "resize-observer-polyfill": "^1.5.0",
         "url-search-params-polyfill": "^2.0.0",
         "whatwg-fetch": "^2.0.3"
