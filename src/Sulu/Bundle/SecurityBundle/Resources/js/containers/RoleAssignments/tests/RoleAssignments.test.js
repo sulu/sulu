@@ -142,6 +142,66 @@ test('Render component', () => {
     });
 });
 
+test('Render component in disabled state', () => {
+    const value: Array<Object> = [
+        {
+            id: 1,
+            role: {
+                id: 5,
+                name: 'Role Name 5',
+                system: 'Sulu',
+            },
+            locales: ['de', 'en'],
+        },
+        {
+            id: 2,
+            role: {
+                id: 23,
+                name: 'Role Name 23',
+                system: 'Sulu',
+            },
+            locales: ['de'],
+        },
+    ];
+
+    const localizations: Array<Localization> = [
+        {
+            country: '',
+            default: '1',
+            language: 'en',
+            locale: 'en',
+            localization: 'en',
+            shadow: '',
+            xDefault: '',
+        },
+        {
+            country: '',
+            default: '0',
+            language: 'de',
+            locale: 'de',
+            localization: 'de',
+            shadow: '',
+            xDefault: '',
+        },
+    ];
+    const promise = Promise.resolve(localizations);
+    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
+
+    const roleAssignments = mount(
+        <RoleAssignments
+            disabled={true}
+            onChange={jest.fn()}
+            value={value}
+        />
+    );
+
+    return promise.then(() => {
+        expect(localizationStore.loadLocalizations).toBeCalled();
+        roleAssignments.update();
+        expect(roleAssignments.render()).toMatchSnapshot();
+    });
+});
+
 test('Should trigger onChange correctly when MultiSelect for roles changes', () => {
     const value: Array<Object> = [
         {

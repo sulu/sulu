@@ -10,12 +10,17 @@ import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
 
 type Props = {|
+    disabled: boolean,
     onChange: (value: Array<Object>) => void,
     value: Array<Object>,
 |};
 
 @observer
 export default class RoleAssignments extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     @observable localizations: ?Array<Localization>;
 
     componentDidMount() {
@@ -75,7 +80,7 @@ export default class RoleAssignments extends React.Component<Props> {
     };
 
     render() {
-        const {value} = this.props;
+        const {disabled, value} = this.props;
         const localizations = this.localizations;
 
         if (!localizations) {
@@ -86,6 +91,7 @@ export default class RoleAssignments extends React.Component<Props> {
             <Grid>
                 <Grid.Item size={6}>
                     <MultiSelect
+                        disabled={disabled}
                         displayProperty="name"
                         onChange={this.handleRoleChange}
                         resourceKey="roles"
@@ -98,6 +104,7 @@ export default class RoleAssignments extends React.Component<Props> {
                             {value.map((userRole, key) => {
                                 return (
                                     <RoleAssignment
+                                        disabled={disabled}
                                         key={key}
                                         localizations={localizations}
                                         onChange={this.handleRoleAssignmentChange}

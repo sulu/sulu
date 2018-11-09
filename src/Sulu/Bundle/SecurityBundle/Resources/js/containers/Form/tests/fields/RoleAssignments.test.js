@@ -62,10 +62,12 @@ test('Pass props with value correctly to RoleAssignments', () => {
     const roleAssignments = shallow(
         <RoleAssignments
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             value={value}
         />
     );
 
+    expect(roleAssignments.prop('disabled')).toEqual(true);
     expect(roleAssignments.prop('value')).toEqual(value);
 });
