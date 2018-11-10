@@ -290,13 +290,13 @@ class FileVersion implements AuditableInterface
     /**
      * Set storageOptions.
      *
-     * @param string $storageOptions
+     * @param array $storageOptions
      *
      * @return FileVersion
      */
     public function setStorageOptions($storageOptions)
     {
-        $this->storageOptions = $storageOptions;
+        $this->storageOptions = json_encode($storageOptions);
 
         return $this;
     }
@@ -304,11 +304,11 @@ class FileVersion implements AuditableInterface
     /**
      * Get storageOptions.
      *
-     * @return string
+     * @return array
      */
     public function getStorageOptions()
     {
-        return $this->storageOptions;
+        return json_decode($this->storageOptions, true);
     }
 
     /**

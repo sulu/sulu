@@ -102,13 +102,11 @@ class ImagineImageConverterTest extends TestCase
         $palette = $this->prophesize(PaletteInterface::class);
 
         $fileVersion = new FileVersion();
-        $fileVersion->setName('test.jpg');
-        $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions('{}');
+        $fileVersion->setStorageOptions([]);
 
-        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->storage->load([])->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
@@ -130,11 +128,11 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions('{}');
+        $fileVersion->setStorageOptions([]);
 
-        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->storage->load([])->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
@@ -156,12 +154,12 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.svg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions('{}');
+        $fileVersion->setStorageOptions([]);
         $fileVersion->setMimeType('image/svg+xml');
 
-        $this->storage->loadAsString('test.svg', 1, '{}')->willReturn('image-content');
+        $this->storage->load([])->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
@@ -182,11 +180,11 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions('{}');
+        $fileVersion->setStorageOptions([]);
 
-        $this->storage->loadAsString('test.jpg', 1, '{}')->willReturn('image-content');
+        $this->storage->load([])->willReturn('image-content');
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->load('image-content')->willReturn($imagineImage->reveal());
+        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
@@ -206,9 +204,9 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions('{}');
+        $fileVersion->setStorageOptions([]);
 
-        $this->storage->loadAsString('test.jpg', 1, '{}')->willThrow(ImageProxyMediaNotFoundException::class);
+        $this->storage->load([])->willThrow(ImageProxyMediaNotFoundException::class);
 
         $this->imagineImageConverter->convert($fileVersion, '640x480');
     }

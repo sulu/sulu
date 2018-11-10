@@ -2,6 +2,17 @@
 
 ## dev-develop
 
+### Media Bundle several Interfaces changed
+
+To allow adding new features some interfaces where changed and needs to be updated if you did build something on top 
+of them:
+
+- FileVersion
+- MediaImageExtractor
+- MediaImageExtractorInterface
+- LocalStorage
+- StorageInterface
+
 ### Test Setup
 
 The `KERNEL_DIR` env variable in phpunit.xml was replaced with `KERNEL_CLASS`.

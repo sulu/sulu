@@ -105,16 +105,10 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     public function convert(FileVersion $fileVersion, $formatKey)
     {
-        $content = $this->storage->loadAsString(
-            $fileVersion->getName(),
-            $fileVersion->getVersion(),
-            $fileVersion->getStorageOptions()
-        );
-
-        $extractedImage = $this->mediaImageExtractor->extract($content);
+        $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
 
         try {
-            $image = $this->imagine->load($extractedImage);
+            $image = $this->imagine->read($imageResource);
         } catch (RuntimeException $e) {
             throw new InvalidFileTypeException($e->getMessage());
         }

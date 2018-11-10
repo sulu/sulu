@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\ExternalStorageInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -111,7 +112,7 @@ class MediaStreamController extends Controller
      * @param string $locale
      * @param string $dispositionType
      *
-     * @return BinaryFileResponse
+     * @return Response
      */
     protected function getFileResponse(
         $fileVersion,
@@ -122,10 +123,18 @@ class MediaStreamController extends Controller
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
         $mimeType = $fileVersion->getMimeType();
-        $version = $fileVersion->getVersion();
         $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
-        $path = $this->getStorage()->load($fileName, $version, $storageOptions);
+        $storage = $this->getStorage();
+
+        if ($storage instanceof ExternalStorageInterface) {
+            $response = $this->redirect($storage->getPublicUrl($storageOptions));
+            $response->setPrivate();
+
+            return $response;
+        }
+
+        $path = $storage->getLocalPath($storageOptions);
 
         $response = new BinaryFileResponse($path);
 

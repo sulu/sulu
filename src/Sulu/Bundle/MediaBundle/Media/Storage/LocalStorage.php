@@ -11,21 +11,15 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
-class LocalStorage implements StorageInterface
+class LocalStorage implements LocalStorageInterface
 {
-    /**
-     * @var string
-     */
-    private $storageOption = null;
-
     /**
      * @var string
      */
@@ -46,31 +40,29 @@ class LocalStorage implements StorageInterface
      */
     protected $logger;
 
-    public function __construct($uploadPath, $segments, Filesystem $filesystem, $logger = null)
-    {
+    public function __construct(
+        string $uploadPath,
+        string $segments,
+        Filesystem $filesystem,
+        LoggerInterface $logger = null
+    ) {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
         $this->filesystem = $filesystem;
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function save($tempPath, $fileName, $version, $storageOption = null)
+    public function save(string $tempPath, string $fileName, array $storageOption = []): array
     {
-        $this->storageOption = new stdClass();
-
-        if ($storageOption) {
-            $oldStorageOption = json_decode($storageOption);
-            $segment = $oldStorageOption->segment;
-        } else {
+        $segment = $this->getStorageOption($storageOption, 'segment');
+        if (!$segment) {
             $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
         }
 
-        $segmentPath = $this->uploadPath . '/' . $segment;
+        $segmentPath = $this->createPath($segment);
         $fileName = $this->getUniqueFileName($segmentPath, $fileName);
-        $filePath = $this->getPathByFolderAndFileName($segmentPath, $fileName);
+
+        $filePath = $this->createPath($segment, $fileName);
         $this->logger->debug('Check FilePath: ' . $filePath);
 
         if (!$this->filesystem->exists($segmentPath)) {
@@ -84,76 +76,48 @@ class LocalStorage implements StorageInterface
         }
         $this->filesystem->copy($tempPath, $filePath);
 
-        $this->addStorageOption('segment', $segment);
-        $this->addStorageOption('fileName', $fileName);
-
-        return json_encode($this->storageOption);
+        return [
+            'segment' => $segment,
+            'fileName' => $fileName,
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load($fileName, $version, $storageOption)
+    public function load(array $storageOption)
     {
-        $this->storageOption = json_decode($storageOption);
-
-        $segment = $this->getStorageOption('segment');
-        $fileName = $this->getStorageOption('fileName');
-
-        if ($segment && $fileName) {
-            return $this->uploadPath . '/' . $segment . '/' . $fileName;
-        }
-
-        return false;
+        return fopen($this->getLocalPath($storageOption), 'r');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadAsString($fileName, $version, $storageOption)
+    public function getLocalPath(array $storageOption): string
     {
-        $path = $this->load($fileName, $version, $storageOption);
-
-        if (!$path || !file_exists($path)) {
-            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
-        }
-
-        return file_get_contents($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($storageOption)
-    {
-        $this->storageOption = json_decode($storageOption);
-
-        $segment = $this->getStorageOption('segment');
-        $fileName = $this->getStorageOption('fileName');
+        $segment = $this->getStorageOption($storageOption, 'segment');
+        $fileName = $this->getStorageOption($storageOption, 'fileName');
 
         if (!$segment || !$fileName) {
-            return false;
+            throw new \RuntimeException();
+        }
+
+        return $this->createPath($segment, $fileName);
+    }
+
+    public function remove(array $storageOption): void
+    {
+        $segment = $this->getStorageOption($storageOption, 'segment');
+        $fileName = $this->getStorageOption($storageOption, 'fileName');
+
+        if (!$segment || !$fileName) {
+            throw new \RuntimeException();
         }
 
         try {
             $this->filesystem->remove($this->uploadPath . '/' . $segment . '/' . $fileName);
         } catch (IOException $ex) {
-            return false;
         }
-
-        return true;
     }
 
     /**
-     * get a unique filename in path.
-     *
-     * @param $folder
-     * @param $fileName
-     * @param int $counter
-     *
-     * @return string
+     * Get a unique filename in path.
      */
-    private function getUniqueFileName($folder, $fileName, $counter = 0)
+    private function getUniqueFileName(string $folder, string $fileName, int $counter = 0): string
     {
         $newFileName = $fileName;
 
@@ -179,33 +143,18 @@ class LocalStorage implements StorageInterface
         return $this->getUniqueFileName($folder, $fileName, $counter);
     }
 
-    /**
-     * @param $folder
-     * @param $fileName
-     *
-     * @return string
-     */
-    private function getPathByFolderAndFileName($folder, $fileName)
+    private function getPathByFolderAndFileName(string $folder, string $fileName): string
     {
         return rtrim($folder, '/') . '/' . ltrim($fileName, '/');
     }
 
-    /**
-     * @param $key
-     * @param $value
-     */
-    private function addStorageOption($key, $value)
+    private function createPath(string $segment, ?string $fileName = null): string
     {
-        $this->storageOption->$key = $value;
+        return implode('/', array_filter([$this->uploadPath, $segment, $fileName]));
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    private function getStorageOption($key)
+    private function getStorageOption(array $storageOption, string $key): ?string
     {
-        return isset($this->storageOption->$key) ? $this->storageOption->$key : null;
+        return array_key_exists($key, $storageOption) ? $storageOption[$key] : null;
     }
 }

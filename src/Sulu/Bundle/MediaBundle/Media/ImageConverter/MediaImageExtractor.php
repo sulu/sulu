@@ -15,7 +15,6 @@ use Imagine\Exception\RuntimeException;
 use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
-use Sulu\Bundle\MediaBundle\Media\Exception\OriginalFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 
 /**
@@ -48,45 +47,37 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $this->videoThumbnail = $videoThumbnail;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function extract($content)
+    public function extract($resource)
     {
-        $finfo = new \finfo();
-        $mimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
+        $mimeType = mime_content_type($resource);
 
         if ('application/pdf' === $mimeType) {
-            return $this->convertPdfToImage($content);
+            return $this->convertPdfToImage($resource);
         }
 
         if ('image/vnd.adobe.photoshop' === $mimeType) {
-            return $this->convertPsdToImage($content);
-        }
-
-        if ('image/svg+xml' === $mimeType) {
-            return $this->convertSvgToImage($content);
+            return $this->convertPsdToImage($resource);
         }
 
         if (fnmatch('video/*', $mimeType)) {
-            return $this->convertVideoToImage($content);
+            return $this->convertVideoToImage($resource);
         }
 
-        return $content;
+        return $resource;
     }
 
     /**
      * Converts the first page of pdf to an image using ghostscript.
      *
-     * @param string $content
+     * @param resource $resource
      *
-     * @return string
+     * @return resource
      *
      * @throws GhostScriptNotFoundException
      */
-    private function convertPdfToImage($content)
+    private function convertPdfToImage($resource)
     {
-        $temporaryFilePath = $this->createTemporaryFile($content);
+        $temporaryFilePath = $this->createTemporaryFile($resource);
 
         $command = $this->ghostScriptPath .
             ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
@@ -104,21 +95,21 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             );
         }
 
-        return $output;
+        return $this->createTemporaryResource($output);
     }
 
     /**
      * Converts a PSD to a png using imagine. Only works with Imagick and not with GD.
      *
-     * @param string $content
+     * @param resource $resource
      *
-     * @return string
+     * @return resource
      *
      * @throws InvalidMimeTypeForPreviewException
      */
-    private function convertPsdToImage($content)
+    private function convertPsdToImage($resource)
     {
-        $temporaryFilePath = $this->createTemporaryFile($content);
+        $temporaryFilePath = $this->createTemporaryFile($resource);
 
         try {
             $image = $this->imagine->open($temporaryFilePath);
@@ -126,7 +117,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
 
             unlink($temporaryFilePath);
 
-            return $image->get('png');
+            return $this->createTemporaryResource($image->get('png'));
         } catch (RuntimeException $e) {
             unlink($temporaryFilePath);
 
@@ -134,47 +125,52 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         }
     }
 
-    private function convertSvgToImage($content)
-    {
-        $temporaryFilePath = $this->createTemporaryFile($content);
-
-        $image = $this->imagine->open($temporaryFilePath);
-        unlink($temporaryFilePath);
-
-        return $image->get('png');
-    }
-
     /**
      * Converts one frame of a video to an image using FFMPEG.
      *
-     * @param string $content
+     * @param resource $resource
      *
-     * @return string
-     *
-     * @throws OriginalFileNotFoundException
+     * @return resource
      */
-    private function convertVideoToImage($content)
+    private function convertVideoToImage($resource)
     {
-        $temporaryFilePath = $this->createTemporaryFile($content);
+        $temporaryFilePath = $this->createTemporaryFile($resource);
         $this->videoThumbnail->generate($temporaryFilePath, '00:00:02:01', $temporaryFilePath);
 
         $extractedImage = file_get_contents($temporaryFilePath);
         unlink($temporaryFilePath);
 
-        return $extractedImage;
+        return $this->createTemporaryResource($extractedImage);
+    }
+
+    /**
+     * Create temporary resource which will removed on fclose or end of process.
+     *
+     * @param string $content
+     *
+     * @return resource
+     */
+    private function createTemporaryResource($content)
+    {
+        $tempResource = tmpfile();
+        fwrite($tempResource, $content);
+
+        return $tempResource;
     }
 
     /**
      * Returns the path to a temporary file containing the given content.
      *
-     * @param string $content
+     * @param resource $resource
      *
      * @return string
      */
-    private function createTemporaryFile($content)
+    private function createTemporaryFile($resource)
     {
         $path = tempnam(sys_get_temp_dir(), 'media');
-        file_put_contents($path, $content);
+        $tempResource = fopen($path, 'w');
+
+        stream_copy_to_stream($resource, $tempResource);
 
         return $path;
     }

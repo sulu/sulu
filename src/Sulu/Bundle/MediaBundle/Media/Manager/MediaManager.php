@@ -367,7 +367,6 @@ class MediaManager implements MediaManagerInterface
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
                 $this->getNormalizedFileName($uploadedFile->getClientOriginalName()),
-                $version,
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
@@ -458,8 +457,7 @@ class MediaManager implements MediaManagerInterface
 
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
-            $this->getNormalizedFileName($uploadedFile->getClientOriginalName()),
-            1
+            $this->getNormalizedFileName($uploadedFile->getClientOriginalName())
         );
 
         $data['name'] = $uploadedFile->getClientOriginalName();

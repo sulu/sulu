@@ -17,11 +17,11 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 interface MediaImageExtractorInterface
 {
     /**
-     * Extracts an image out of the given content.
+     * Extracts an image out of the given resource.
      *
-     * @param string $content
+     * @param resource $resource
      *
-     * @return string
+     * @return resource
      */
-    public function extract($content);
+    public function extract($resource);
 }

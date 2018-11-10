@@ -19,45 +19,18 @@ interface StorageInterface
 {
     /**
      * Save the document in a storage and give back the path to the document.
-     *
-     * @param $tempPath
-     * @param $fileName
-     * @param $version
-     *
-     * @return mixed
      */
-    public function save($tempPath, $fileName, $version);
+    public function save(string $tempPath, string $fileName, array $storageOption = []): array;
 
     /**
-     * Give back the path to the document.
+     * Returns the content for the given file as a resource.
      *
-     * @param $fileName
-     * @param $version
-     * @param $storageOption
-     *
-     * @return string
-     *
-     * @deprecated Deprecated since 1.4, will be removed in 2.0
+     * @return resource
      */
-    public function load($fileName, $version, $storageOption);
-
-    /**
-     * Returns the content for the given file as a binary string.
-     *
-     * @param $fileName
-     * @param $version
-     * @param $storageOption
-     *
-     * @return string
-     */
-    public function loadAsString($fileName, $version, $storageOption);
+    public function load(array $storageOption);
 
     /**
      * Removes the file from storage.
-     *
-     * @param $storageOption
-     *
-     * @return mixed
      */
-    public function remove($storageOption);
+    public function remove(array $storageOption): void;
 }
