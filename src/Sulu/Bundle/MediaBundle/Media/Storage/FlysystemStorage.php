@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
+use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
@@ -50,7 +51,11 @@ abstract class FlysystemStorage implements StorageInterface
         }
 
         try {
-            $this->filesystem->writeStream($filePath, fopen($tempPath, 'r'));
+            $this->filesystem->writeStream(
+                $filePath,
+                fopen($tempPath, 'r'),
+                ['visibility' => AdapterInterface::VISIBILITY_PUBLIC]
+            );
         } catch (FileExistsException $exception) {
             throw new FilenameAlreadyExistsException($filePath);
         }
