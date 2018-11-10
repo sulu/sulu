@@ -26,6 +26,10 @@ class InitCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!$this->getContainer()->has('sulu_media.media.storage.local.path')) {
+            return;
+        }
+
         $baseDir = dirname($this->getContainer()->get('kernel')->getRootDir());
 
         /** @var Filesystem $filesystem */

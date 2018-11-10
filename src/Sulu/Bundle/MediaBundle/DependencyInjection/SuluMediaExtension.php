@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
@@ -157,10 +158,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['format_manager']['blocked_file_types']
         );
 
-        // local storage
-        $container->setParameter('sulu_media.media.storage.local.path', $config['storage']['local']['path']);
-        $container->setParameter('sulu_media.media.storage.local.segments', $config['storage']['local']['segments']);
-
         // collections
         $container->setParameter('sulu_media.collection.type.default', ['id' => 1]);
 
@@ -239,5 +236,18 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
 
         $this->configurePersistence($config['objects'], $container);
+        $this->configureStorage($config, $container, $loader);
+    }
+
+    private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
+    {
+        $storage = $config['storage'];
+        foreach ($config['storages'][$storage] as $key => $value) {
+            $container->setParameter('sulu_media.media.storage.' . $storage . '.' . $key, $value);
+        }
+
+        $loader->load('storages/' . $storage . '.xml');
+
+        $container->setAlias('sulu_media.storage', 'sulu_media.storage.' . $storage)->setPublic(true);
     }
 }

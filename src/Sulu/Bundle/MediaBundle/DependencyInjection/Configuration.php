@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use FFMpeg\FFMpeg;
+use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -72,18 +73,6 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                      ->scalarNode('path')->defaultValue('gs')->end()
-                ->end()
-            ->end()
-            ->arrayNode('storage')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->arrayNode('local')
-                        ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('path')->defaultValue('%kernel.project_dir%/var/uploads/media')->end()
-                            ->scalarNode('segments')->defaultValue(10)->end()
-                        ->end()
-                    ->end()
                 ->end()
             ->end()
             ->arrayNode('upload')
@@ -181,8 +170,43 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addObjectsSection($rootNode);
+        $this->addStorageSection($rootNode);
 
         return $treeBuilder;
+    }
+
+    private function addStorageSection(ArrayNodeDefinition $node)
+    {
+        $storages = $node->children()
+            ->arrayNode('storages')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('local')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('path')->defaultValue('%kernel.project_dir%/var/uploads/media')->end()
+                            ->scalarNode('segments')->defaultValue(10)->end()
+                        ->end()
+                    ->end();
+
+        $values = ['local'];
+        if (class_exists(GoogleStorageAdapter::class)) {
+            $values[] = 'google_cloud';
+
+            $storages
+                ->arrayNode('google_cloud')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('key_file_path')->isRequired()->end()
+                        ->scalarNode('bucket')->isRequired()->end()
+                        ->scalarNode('segments')->defaultValue(10)->end()
+                    ->end()
+                ->end();
+        }
+
+        $node->children()
+                ->enumNode('storage')->values($values)->defaultValue('local')->end()
+            ->end();
     }
 
     /**
