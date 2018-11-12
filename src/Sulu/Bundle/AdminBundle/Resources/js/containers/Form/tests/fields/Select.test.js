@@ -40,11 +40,11 @@ test('Pass props correctly to Select', () => {
     expect(select.prop('values')).toEqual(['test']);
     expect(select.prop('disabled')).toBe(true);
     expect(select.find('Option').at(0).props()).toEqual(expect.objectContaining({
-        name: 'mr',
+        value: 'mr',
         children: 'Mister',
     }));
     expect(select.find('Option').at(1).props()).toEqual(expect.objectContaining({
-        name: 'ms',
+        value: 'ms',
         children: 'Miss',
     }));
 });
