@@ -17,21 +17,21 @@ export default class Select extends React.Component<Props> {
             return;
         }
 
-        let {
+        const {
             default_values: {
-                value: defaultValues,
+                value: defaultOptions,
             } = {},
         } = schemaOptions;
 
-        if (defaultValues === undefined || defaultValues === null) {
+        if (defaultOptions === undefined || defaultOptions === null) {
             return;
         }
 
-        if (!Array.isArray(defaultValues)) {
+        if (!Array.isArray(defaultOptions)) {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
-        defaultValues = defaultValues.map(({value, name}) => {
+        const defaultValues = defaultOptions.map(({value, name}) => {
             const defaultValue = value === undefined || value === null ? name : value;
 
             if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
