@@ -66,6 +66,14 @@ class FormXmlLoaderTest extends TestCase
             $formMetadata->getProperties()['formOfAddress']->getParameter(0)['name']
         );
         $this->assertSame(0, $formMetadata->getProperties()['formOfAddress']->getParameter(0)['value']);
+        $this->assertSame(
+            0,
+            ($formMetadata->getProperties()['formOfAddress']->getParameter(1)['value'][0]['name'])
+        );
+        $this->assertSame(
+            1,
+            ($formMetadata->getProperties()['formOfAddress']->getParameter(1)['value'][1]['name'])
+        );
         $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
         $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
         $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
