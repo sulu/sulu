@@ -20,6 +20,17 @@ const onChange = (newValue) => {
 <Input icon="fa-key" type="password" placeholder="Password" value={state.value} onChange={onChange} />
 ```
 
+It also offers a `headline` prop, which allows to use distinguish more important fields from others.
+
+```javascript
+initialState = {value: ''};
+const onChange = (newValue) => {
+    setState({value: newValue});
+};
+
+<Input icon="fa-key" headline={true} value={state.value} onChange={onChange} />
+```
+
 When setting the `valid` prop to `false` it will mark the field as invalid. The following example shows an input field
 that needs to contain some text.
 

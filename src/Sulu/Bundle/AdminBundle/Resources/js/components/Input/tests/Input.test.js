@@ -12,6 +12,10 @@ test('Input should render', () => {
     expect(render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />)).toMatchSnapshot();
 });
 
+test('Input should render as headline', () => {
+    expect(render(<Input headline={true} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+});
+
 test('Input should render with invalid value', () => {
     const onChange = jest.fn();
     expect(render(<Input onBlur={jest.fn()} onChange={onChange} valid={false} value="My value" />)).toMatchSnapshot();

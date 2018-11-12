@@ -5,6 +5,7 @@ export type InputProps<T: ?string | ?number> = {|
     alignment: 'left' | 'center' | 'right',
     collapsed?: boolean,
     name?: string,
+    headline?: boolean,
     icon?: string,
     id?: string,
     inputClass?: string,
