@@ -5,6 +5,11 @@ $datagridHeaderMarginBottom: 40px;
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
 }
 
 .header-container {

@@ -184,6 +184,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         const {
+            disabled,
             fieldTypeOptions: {
                 types: {
                     datagrid: {
@@ -199,7 +200,7 @@ export default class Selection extends React.Component<Props> {
 
         return (
             <div className={selectionStyles.datagrid}>
-                <Datagrid adapters={[adapter]} searchable={false} store={this.datagridStore} />
+                <Datagrid adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.datagridStore} />
             </div>
         );
     }

@@ -4,6 +4,7 @@ import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
+import classNames from 'classnames';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
@@ -24,6 +25,7 @@ type Props = {|
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
+    disabled: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
     movable: boolean,
@@ -41,6 +43,7 @@ export default class Datagrid extends React.Component<Props> {
         allowActivateForDisabledItems: true,
         copyable: true,
         deletable: true,
+        disabled: false,
         disabledIds: [],
         movable: true,
         orderable: true,
@@ -418,6 +421,7 @@ export default class Datagrid extends React.Component<Props> {
             adapters,
             copyable,
             deletable,
+            disabled,
             disabledIds,
             header,
             movable,
@@ -429,6 +433,13 @@ export default class Datagrid extends React.Component<Props> {
             store,
         } = this.props;
         const Adapter = this.currentAdapter;
+
+        const datagridClass = classNames(
+            datagridStyles.datagrid,
+            {
+                [datagridStyles.disabled]: disabled,
+            }
+        );
 
         return (
             <Fragment>
@@ -448,7 +459,7 @@ export default class Datagrid extends React.Component<Props> {
                         </div>
                     </div>
                 }
-                <div className={datagridStyles.datagrid}>
+                <div className={datagridClass}>
                     {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter

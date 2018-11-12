@@ -266,6 +266,7 @@ test('Should pass props correctly to datagrid component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -276,6 +277,7 @@ test('Should pass props correctly to datagrid component', () => {
     expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
     expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
+        disabled: true,
         searchable: false,
     }));
 });

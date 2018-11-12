@@ -239,6 +239,13 @@ test('Render the adapter in non-searchable mode', () => {
     ).toMatchSnapshot();
 });
 
+test('Render the adapter in disabled state', () => {
+    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    expect(
+        render(<Datagrid adapters={['test']} disabled={true} header={<h1>Title</h1>} store={datagridStore} />)
+    ).toMatchSnapshot();
+});
+
 test('Pass the ids to be disabled to the adapter', () => {
     const disabledIds = [1, 3];
     const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
