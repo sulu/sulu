@@ -19,7 +19,7 @@ abstract class ItemMetadata
     /**
      * Name of this item.
      *
-     * @var string
+     * @var string|int|float
      */
     protected $name;
 
