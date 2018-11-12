@@ -8,16 +8,15 @@ import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 
-type Props = {
-    /** Determines the position at which the selection box is rendered at the beginning. */
+type Props = {|
+    containerHeight: number,
+    containerWidth: number,
+    image: string,
     initialSelection?: SelectionData,
     minWidth?: number,
     minHeight?: number,
     onChange?: (s: SelectionData) => void,
-    src: string,
-    containerWidth: number,
-    containerHeight: number,
-};
+|};
 
 @observer
 export class ImageRectangleSelection extends React.Component<Props> {
@@ -53,8 +52,8 @@ export class ImageRectangleSelection extends React.Component<Props> {
 
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
-        this.image.onerror = () => log.error('Failed to preload image "' + this.props.src + '"');
-        this.image.src = this.props.src;
+        this.image.onerror = () => log.error('Failed to preload image "' + this.props.image + '"');
+        this.image.src = this.props.image;
     }
 
     @computed get imageResizedHeight(): number {
@@ -105,7 +104,7 @@ export class ImageRectangleSelection extends React.Component<Props> {
             >
                 <img
                     height={this.imageResizedHeight}
-                    src={this.props.src}
+                    src={this.props.image}
                     width={this.imageResizedWidth}
                 />
             </RectangleSelection>

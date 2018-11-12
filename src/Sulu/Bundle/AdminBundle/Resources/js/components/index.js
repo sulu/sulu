@@ -14,6 +14,7 @@ import Divider from './Divider';
 import Form from './Form';
 import Grid from './Grid';
 import Icon from './Icon';
+import ImageRectangleSelection from './ImageRectangleSelection';
 import InfiniteScroller from './InfiniteScroller';
 import Input from './Input';
 import Loader from './Loader';
@@ -47,6 +48,7 @@ export {
     Form,
     Grid,
     Icon,
+    ImageRectangleSelection,
     InfiniteScroller,
     Input,
     Loader,

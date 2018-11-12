@@ -1,0 +1,15 @@
+@import 'sulu-admin-bundle/containers/Application/variables.scss';
+@import 'sulu-admin-bundle/components/Overlay/variables.scss';
+
+.crop-overlay-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $viewPadding;
+    height: $overlayContentMaxHeight;
+}
+
+.format-select {
+    margin-bottom: 30px;
+}

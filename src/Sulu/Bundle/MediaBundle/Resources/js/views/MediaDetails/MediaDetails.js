@@ -158,6 +158,7 @@ class MediaDetails extends React.Component<Props> {
                     resourceStore={resourceStore}
                 />
                 <CropOverlay
+                    image={resourceStore.data.url}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}
                     open={this.showCropOverlay}

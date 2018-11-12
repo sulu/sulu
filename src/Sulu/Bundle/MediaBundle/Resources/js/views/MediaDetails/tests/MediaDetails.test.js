@@ -29,14 +29,11 @@ jest.mock('sulu-admin-bundle/services/Initializer', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.save':
-                return 'Save';
-            case 'sulu_media.upload_or_replace':
-                return 'Upload or replace';
-        }
-    },
+    translate: (key) => key,
+}));
+
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -52,6 +49,10 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.update = jest.fn();
     this.upload = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
+}));
+
+jest.mock('../../../stores/FormatStore', () => ({
+    loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
 }));
 
 beforeEach(() => {
@@ -285,7 +286,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
 test('Should render save button disabled only if form is not dirty', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form).items.find((item) => item.label === 'Save');
+        return toolbarFunction.call(form).items.find((item) => item.label === 'sulu_admin.save');
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
@@ -516,6 +517,7 @@ test('Should open and close crop overlay', (done) => {
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
     resourceStore.loading = false;
+    resourceStore.data.url = 'image.jpg';
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -546,6 +548,7 @@ test('Should open and close crop overlay', (done) => {
         jsonSchemaPromise.then(() => {
             mediaDetail.update();
             expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
+            expect(mediaDetail.find('CropOverlay').prop('image')).toEqual('image.jpg');
 
             mediaDetail.find('Button[icon="su-cut"]').prop('onClick')();
             mediaDetail.update();

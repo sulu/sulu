@@ -21,7 +21,7 @@ class MockedImageSelection extends ImageRectangleSelection {
 }
 
 test('The component should render with image source', () => {
-    const view = mount(<MockedImageSelection containerHeight={360} containerWidth={640} src="//:0" />);
+    const view = mount(<MockedImageSelection containerHeight={360} containerWidth={640} image="//:0" />);
     expect(view.render()).toMatchSnapshot();
 });
 
@@ -35,8 +35,8 @@ test('The component should calculate the selection with respect to the image', (
         <MockedImageSelection
             containerHeight={360}
             containerWidth={640}
+            image="//:0"
             onChange={onChangeSpy}
-            src="//:0"
         />
     );
 });
@@ -54,10 +54,10 @@ test('The component should render with initial selection', (done) => {
         <MockedImageSelection
             containerHeight={360}
             containerWidth={640}
+            image="//:0"
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             mountSpy={spy}
             onChange={onChangeSpy}
-            src="//:0"
         />
     );
 });
@@ -75,10 +75,10 @@ test('The component should render with minWidth and minHeight', (done) => {
         <MockedImageSelection
             containerHeight={360}
             containerWidth={640}
+            image="//:0"
             minHeight={300}
             minWidth={600}
             mountSpy={spy}
-            src="//:0"
         />
     );
 });
