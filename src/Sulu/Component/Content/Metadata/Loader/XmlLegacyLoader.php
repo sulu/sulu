@@ -456,7 +456,7 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
-        $name = $this->getValueFromXPath('@name', $xpath, $node, 'string');
+        $name = $this->getValueFromXPath('@name', $xpath, $node);
         $type = $this->getValueFromXPath('@type', $xpath, $node, 'string');
         $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);
 
@@ -465,7 +465,7 @@ class XmlLegacyLoader implements LoaderInterface
                 $value = $this->loadParams('x:param', $xpath, $node);
                 break;
             default:
-                $value = $this->getValueFromXPath('@value', $xpath, $node, 'string');
+                $value = $this->getValueFromXPath('@value', $xpath, $node);
                 break;
         }
 
