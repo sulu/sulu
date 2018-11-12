@@ -7,6 +7,9 @@
              <meta>
                  <title>sulu_admin.name</title>
              </meta>
+             <params>
+                 <param name="headline" value="true"/>
+             </params>
          </property>
      
          <property name="key" type="text_line">

@@ -7,6 +7,9 @@
             <meta>
                 <title>sulu_admin.name</title>
             </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
         </property>
 
         <property name="system" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
