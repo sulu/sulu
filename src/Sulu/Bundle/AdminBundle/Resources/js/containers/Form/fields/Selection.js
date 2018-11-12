@@ -82,6 +82,7 @@ export default class Selection extends React.Component<Props> {
 
     renderDatagridOverlay() {
         const {
+            disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
@@ -105,6 +106,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
+                disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 icon={icon}

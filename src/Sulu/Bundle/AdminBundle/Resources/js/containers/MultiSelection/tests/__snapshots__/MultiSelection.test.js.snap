@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render in disabled state 1`] = `
+<div
+  class="multiItemSelectionClass disabled"
+>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      disabled=""
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
+
 exports[`Should open an overlay 1`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>

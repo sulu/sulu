@@ -74,6 +74,7 @@ test('Should pass props correctly to selection component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             onFinish={jest.fn()}
@@ -85,6 +86,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        disabled: true,
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
         locale,
