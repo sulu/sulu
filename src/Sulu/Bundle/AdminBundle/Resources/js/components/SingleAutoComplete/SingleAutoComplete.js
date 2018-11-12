@@ -96,7 +96,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
             suggestions,
         } = this.props;
         const {inputValue} = this;
-        const showSuggestionList = !disabled && (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
+        const showSuggestionList = (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
 
         // The mousetrap class is required to allow mousetrap catch key bindings for up and down keys
         return (
@@ -117,7 +117,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
                     anchorElement={this.labelRef}
                     minWidth={this.popoverMinWidth}
                     onSelect={this.handleSelect}
-                    open={showSuggestionList}
+                    open={!disabled && showSuggestionList}
                     query={inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}

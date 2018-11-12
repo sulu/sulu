@@ -228,6 +228,42 @@ test('Render with given value', () => {
     expect(multiAutoComplete.render()).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+    });
+
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={[1, 2]}
+        />
+    );
+
+    expect(MultiSelectionStore).toBeCalledWith('test', [1, 2], undefined, 'ids');
+    multiAutoComplete.instance().selectionStore.items = [
+        {id: 1, name: 'James Bond', number: '007'},
+        {id: 2, name: 'John Doe', number: '005'},
+    ];
+
+    expect(multiAutoComplete.render()).toMatchSnapshot();
+});
+
 test('Do not load items if passed value has not changed', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {

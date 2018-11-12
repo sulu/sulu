@@ -382,6 +382,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -390,6 +391,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
 
     expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
         allowAdd: false,
+        disabled: true,
         displayProperty: 'name',
         filterParameter: 'names',
         idProperty: 'uuid',

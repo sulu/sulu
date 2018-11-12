@@ -10,6 +10,7 @@ import MultiSelectionStore from '../../stores/MultiSelectionStore';
 
 type Props = {|
     allowAdd: boolean,
+    disabled: boolean,
     displayProperty: string,
     filterParameter: string,
     id?: string,
@@ -25,6 +26,7 @@ type Props = {|
 export default class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
         allowAdd: false,
+        disabled: false,
         filterParameter: 'ids',
         idProperty: 'id',
     };
@@ -91,6 +93,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         const {
             props: {
                 allowAdd,
+                disabled,
                 displayProperty,
                 id,
                 idProperty,
@@ -101,6 +104,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         return (
             <MultiAutoCompleteComponent
                 allowAdd={allowAdd}
+                disabled={disabled}
                 displayProperty={displayProperty}
                 id={id}
                 idProperty={idProperty}

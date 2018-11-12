@@ -13,3 +13,11 @@ exports[`Should render item with children 1`] = `
   />
 </div>
 `;
+
+exports[`Should render item without icon in disabled state 1`] = `
+<div
+  class="item disabled"
+>
+  Name
+</div>
+`;

@@ -1,5 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render in disabled state 1`] = `
+<label
+  class="multiAutoComplete disabled"
+>
+  <div
+    class="icon"
+  >
+    <span
+      aria-label="su-search"
+      class="su-search"
+    />
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item disabled"
+    >
+      James Bond
+    </div>
+    <div
+      class="item disabled"
+    >
+      John Doe
+    </div>
+    <input
+      class="input mousetrap"
+      disabled=""
+      value=""
+    />
+  </div>
+</label>
+`;
+
 exports[`Render in loading state 1`] = `
 <label
   class="multiAutoComplete"

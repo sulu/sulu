@@ -128,6 +128,7 @@ export default class Selection extends React.Component<Props> {
     renderAutoComplete() {
         const {
             dataPath,
+            disabled,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
@@ -155,6 +156,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiAutoComplete
                 allowAdd={allowAdd}
+                disabled={!!disabled}
                 displayProperty={displayProperty}
                 filterParameter={filterParameter}
                 id={dataPath}
