@@ -12,6 +12,7 @@ const LENS_ICON = 'su-search';
 const DEBOUNCE_TIME = 300;
 
 type Props = {|
+    disabled: boolean,
     displayProperty: string,
     id?: string,
     loading?: boolean,
@@ -27,6 +28,10 @@ type Props = {|
 
 @observer
 export default class SingleAutoComplete extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     @observable labelRef: ElementRef<'label'>;
 
     @observable inputValue: ?string = this.props.value ? this.props.value[this.props.displayProperty] : undefined;
@@ -82,6 +87,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             id,
             loading,
             onFinish,
@@ -90,12 +96,13 @@ export default class SingleAutoComplete extends React.Component<Props> {
             suggestions,
         } = this.props;
         const {inputValue} = this;
-        const showSuggestionList = (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
+        const showSuggestionList = !disabled && (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
 
         // The mousetrap class is required to allow mousetrap catch key bindings for up and down keys
         return (
             <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
+                    disabled={disabled}
                     icon={LENS_ICON}
                     id={id}
                     inputClass="mousetrap"

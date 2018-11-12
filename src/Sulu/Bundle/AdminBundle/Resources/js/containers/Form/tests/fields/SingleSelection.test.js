@@ -54,6 +54,7 @@ test('Pass correct props to SingleAutoComplete', () => {
     const singleSelection = shallow(
         <SingleSelection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -61,6 +62,7 @@ test('Pass correct props to SingleAutoComplete', () => {
     );
 
     expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        disabled: true,
         displayProperty: 'name',
         resourceKey: 'accounts',
         searchProperties: ['name', 'number'],
@@ -144,6 +146,7 @@ test('Pass correct props to SingleItemSelection', () => {
     const singleSelection = shallow(
         <SingleSelection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -152,6 +155,7 @@ test('Pass correct props to SingleItemSelection', () => {
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        disabled: true,
         disabledIds: [],
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',

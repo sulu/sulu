@@ -12,6 +12,17 @@ test('Render with given children prop', () => {
     expect(render(<SingleItemSelection leftButton={leftButton}>Test Item</SingleItemSelection>)).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection disabled={true} leftButton={leftButton}>Test Item</SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render with given onRemove prop', () => {
     const leftButton = {
         icon: 'su-page',
