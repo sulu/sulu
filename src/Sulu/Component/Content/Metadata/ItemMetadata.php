@@ -108,7 +108,14 @@ abstract class ItemMetadata
         return $this[$name] = $value;
     }
 
-    public function setName(string $name): self
+    /**
+     * Set the name of the metadata property which can also be a int or float value.
+     *
+     * @param string|int|float $name
+     *
+     * @return self
+     */
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -248,7 +255,7 @@ abstract class ItemMetadata
     /**
      * Return the name of this item.
      *
-     * @return string
+     * @return string|int|float
      */
     public function getName()
     {

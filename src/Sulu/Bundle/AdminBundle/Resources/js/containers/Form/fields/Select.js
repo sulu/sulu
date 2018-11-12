@@ -31,9 +31,7 @@ export default class Select extends React.Component<Props> {
             throw new Error('The "default_values" schema option must be an array!');
         }
 
-        const defaultValues = defaultOptions.map(({value, name}) => {
-            const defaultValue = value === undefined || value === null ? name : value;
-
+        const defaultValues = defaultOptions.map(({name: defaultValue}) => {
             if (typeof defaultValue !== 'number' && typeof defaultValue !== 'string') {
                 throw new Error('A single schema option of "default_values" must be a string or number');
             }
@@ -67,9 +65,7 @@ export default class Select extends React.Component<Props> {
 
         return (
             <MultiSelectComponent disabled={!!disabled} onChange={this.handleChange} values={value || []}>
-                {values.value.map(({name, value, title}) => {
-                    value = value === undefined || value === null ? name : value;
-
+                {values.value.map(({name: value, title}) => {
                     if (typeof value !== 'string' && typeof value !== 'number') {
                         throw new Error('The children of "values" must only contain values of type string or number!');
                     }
