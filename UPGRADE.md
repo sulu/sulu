@@ -2,6 +2,28 @@
 
 ## dev-develop
 
+### Multiple Select renamed
+
+The multiple select content type was renamed to `select` to be equal to the other content types.
+
+**Before**
+
+```xml
+<property name="yourname" type="multiple_select">
+    <!-- ... -->
+</property>
+```
+
+**After**
+
+```xml
+<property name="yourname" type="select">
+    <!-- ... -->
+</property>
+```
+
+Also the service was renamed from `sulu.content.type.multiple_select` to `sulu.content.type.select`.
+
 ### Collection Controller
 
 The `include-root` option of this Controller was renamed to `includeRoot` to be more consistent. The `RootCollection`

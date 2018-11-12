@@ -19,7 +19,7 @@ use Sulu\Component\Content\SimpleContentType;
 /**
  * ContentType for a multiple select. Currently only support for checkboxes.
  */
-class MultipleSelect extends SimpleContentType
+class Select extends SimpleContentType
 {
     public function __construct()
     {
