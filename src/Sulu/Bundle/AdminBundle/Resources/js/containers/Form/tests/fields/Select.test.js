@@ -111,11 +111,11 @@ test('Should call onFinish callback on every onChange', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -205,16 +205,16 @@ test('Set default value to a number of 0 should work', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
-            value: [{value: 0}],
+            value: [{name: 0}],
         },
         values: {
             value: [
                 {
-                    value: 0,
+                    name: 0,
                     title: 'Mister',
                 },
                 {
-                    value: 1,
+                    name: 1,
                     title: 'Miss',
                 },
             ],

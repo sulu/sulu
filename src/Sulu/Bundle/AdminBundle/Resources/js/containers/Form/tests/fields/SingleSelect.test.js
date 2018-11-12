@@ -17,11 +17,11 @@ test('Pass props correctly to SingleSelect', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -58,11 +58,11 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -84,11 +84,11 @@ test('Should throw an exception if value is of wrong type', () => {
         values: {
             value: [
                 {
-                    value: [],
+                    name: [],
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -99,7 +99,7 @@ test('Should throw an exception if value is of wrong type', () => {
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={schemaOptions}
+            schemaOptions={(schemaOptions: any)}
         />
     )).toThrow(/"values"/);
 });
@@ -111,11 +111,11 @@ test('Should call onFinish callback on every onChange', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -146,11 +146,11 @@ test('Set default value of null should not call onChange', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -178,11 +178,11 @@ test('Set default value if no value is passed', () => {
         values: {
             value: [
                 {
-                    value: 'mr',
+                    name: 'mr',
                     title: 'Mister',
                 },
                 {
-                    value: 'ms',
+                    name: 'ms',
                     title: 'Miss',
                 },
             ],
@@ -210,11 +210,11 @@ test('Set default value to a number of 0 should work', () => {
         values: {
             value: [
                 {
-                    value: 0,
+                    name: 0,
                     title: 'Mister',
                 },
                 {
-                    value: 1,
+                    name: 1,
                     title: 'Miss',
                 },
             ],
