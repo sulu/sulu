@@ -150,10 +150,11 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      *
      * @return resource
      */
-    private function createTemporaryResource($content)
+    private function createTemporaryResource(string $content)
     {
-        $tempResource = tmpfile();
+        $tempResource = fopen('php://memory', 'r+');
         fwrite($tempResource, $content);
+        rewind($tempResource);
 
         return $tempResource;
     }

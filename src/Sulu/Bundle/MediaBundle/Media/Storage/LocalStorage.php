@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
-class LocalStorage implements LocalStorageInterface
+class LocalStorage implements StorageInterface
 {
     /**
      * @var string
@@ -84,10 +84,10 @@ class LocalStorage implements LocalStorageInterface
 
     public function load(array $storageOption)
     {
-        return fopen($this->getLocalPath($storageOption), 'r');
+        return fopen($this->getPath($storageOption), 'r');
     }
 
-    public function getLocalPath(array $storageOption): string
+    public function getPath(array $storageOption): string
     {
         $segment = $this->getStorageOption($storageOption, 'segment');
         $fileName = $this->getStorageOption($storageOption, 'fileName');
@@ -97,6 +97,11 @@ class LocalStorage implements LocalStorageInterface
         }
 
         return $this->createPath($segment, $fileName);
+    }
+
+    public function getPathType(array $storageOption): string
+    {
+        return self::PATH_TYPE_FILE;
     }
 
     public function remove(array $storageOption): void

@@ -18,7 +18,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Storage\ExternalStorageInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -127,14 +126,13 @@ class MediaStreamController extends Controller
 
         $storage = $this->getStorage();
 
-        if ($storage instanceof ExternalStorageInterface) {
-            $response = $this->redirect($storage->getPublicUrl($storageOptions));
+        $path = $storage->getPath($storageOptions);
+        if (StorageInterface::PATH_TYPE_REDIRECT === $storage->getPathType($storageOptions)) {
+            $response = $this->redirect($path);
             $response->setPrivate();
 
             return $response;
         }
-
-        $path = $storage->getLocalPath($storageOptions);
 
         $response = new BinaryFileResponse($path);
 

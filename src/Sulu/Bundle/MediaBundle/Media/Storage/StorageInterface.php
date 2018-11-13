@@ -17,6 +17,10 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
  */
 interface StorageInterface
 {
+    const PATH_TYPE_REDIRECT = 'redirect';
+
+    const PATH_TYPE_FILE = 'file';
+
     /**
      * Save the document in a storage and give back the path to the document.
      */
@@ -28,6 +32,16 @@ interface StorageInterface
      * @return resource
      */
     public function load(array $storageOption);
+
+    /**
+     * Returns the path for the given file.
+     */
+    public function getPath(array $storageOption): string;
+
+    /**
+     * Returns the path-type for the given file.
+     */
+    public function getPathType(array $storageOption): string;
 
     /**
      * Removes the file from storage.
