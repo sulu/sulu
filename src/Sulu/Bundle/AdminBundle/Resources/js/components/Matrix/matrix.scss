@@ -17,6 +17,10 @@ $itemBackgroundColorDisabledSelected: $silver;
     background: $white;
     border-radius: 3px;
     margin-top: 10px;
+
+    &.disabled {
+        opacity: .5;
+    }
 }
 
 .row {

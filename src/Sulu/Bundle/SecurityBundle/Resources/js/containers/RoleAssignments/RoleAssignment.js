@@ -3,6 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import type {Localization} from 'sulu-admin-bundle/stores';
+import classNames from 'classnames';
 import roleAssignmentStyle from './roleAssignment.scss';
 
 type Props = {|
@@ -28,8 +29,15 @@ export default class RoleAssignment extends React.Component<Props> {
     render() {
         const {disabled, localizations, value} = this.props;
 
+        const roleAssignmentContainerClass = classNames(
+            roleAssignmentStyle.roleAssignmentContainer,
+            {
+                [roleAssignmentStyle.disabled]: disabled,
+            }
+        );
+
         return (
-            <div className={roleAssignmentStyle.roleAssignmentContainer}>
+            <div className={roleAssignmentContainerClass}>
                 <div>{value.role.name}</div>
                 <div>{value.role.system}</div>
                 <div>

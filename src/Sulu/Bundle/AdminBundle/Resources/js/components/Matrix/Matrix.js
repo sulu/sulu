@@ -1,6 +1,7 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
+import classNames from 'classnames';
 import Row from './Row';
 import Item from './Item';
 import type {MatrixValues} from './types';
@@ -52,10 +53,18 @@ export default class Matrix extends React.PureComponent<Props> {
     render() {
         const {
             children,
+            disabled,
         } = this.props;
 
+        const matrixClass = classNames(
+            matrixStyles.matrix,
+            {
+                [matrixStyles.disabled]: disabled,
+            }
+        );
+
         return (
-            <div className={matrixStyles.matrix}>
+            <div className={matrixClass}>
                 {this.cloneRows(children)}
             </div>
         );

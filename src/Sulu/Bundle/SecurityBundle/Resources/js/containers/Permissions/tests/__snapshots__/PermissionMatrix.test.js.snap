@@ -5,7 +5,7 @@ exports[`Render in disabled state 1`] = `
   class="matrixContainer"
 >
   <div
-    class="matrix"
+    class="matrix disabled"
   >
     <div
       class="row"

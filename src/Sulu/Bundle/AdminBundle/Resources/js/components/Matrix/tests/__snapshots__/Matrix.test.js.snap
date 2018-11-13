@@ -208,7 +208,7 @@ exports[`Render the Matrix component with values 1`] = `
 
 exports[`Render the Matrix component with values in disabled state 1`] = `
 <div
-  class="matrix"
+  class="matrix disabled"
 >
   <div
     class="row"

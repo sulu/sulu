@@ -211,7 +211,7 @@ exports[`Render component in disabled state 1`] = `
       class="roleAssignmentsContainer"
     >
       <div
-        class="roleAssignmentContainer"
+        class="roleAssignmentContainer disabled"
       >
         <div>
           Role Name 5
@@ -262,7 +262,7 @@ exports[`Render component in disabled state 1`] = `
         </div>
       </div>
       <div
-        class="roleAssignmentContainer"
+        class="roleAssignmentContainer disabled"
       >
         <div>
           Role Name 23

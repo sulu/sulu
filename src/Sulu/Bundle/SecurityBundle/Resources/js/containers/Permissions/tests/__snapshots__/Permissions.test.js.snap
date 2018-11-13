@@ -8,7 +8,7 @@ exports[`Render in disabled state 1`] = `
     Contacts
   </h2>
   <div
-    class="matrix"
+    class="matrix disabled"
   >
     <div
       class="row"
