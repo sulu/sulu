@@ -10,6 +10,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
+    this.setMultiple = jest.fn();
     this.change = jest.fn();
     this.copyFromLocale = jest.fn();
     this.data = {};
@@ -326,6 +327,14 @@ test('Read dirty flag from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.dirty = true;
     const formStore = new FormStore(resourceStore);
+
+    expect(formStore.dirty).toEqual(true);
+});
+
+test('Set dirty flag from ResourceStore', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const formStore = new FormStore(resourceStore);
+    formStore.dirty = true;
 
     expect(formStore.dirty).toEqual(true);
 });
@@ -791,6 +800,18 @@ test('Set should be passed to resourceStore', () => {
     formStore.set('title', 'Title');
 
     expect(formStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    formStore.destroy();
+});
+
+test('SetMultiple should be passed to resourceStore', () => {
+    const formStore = new FormStore(new ResourceStore('snippets', '3'));
+    const data = {
+        title: 'Title',
+        description: 'Description',
+    };
+    formStore.setMultiple(data);
+
+    expect(formStore.resourceStore.setMultiple).toBeCalledWith(data);
     formStore.destroy();
 });
 

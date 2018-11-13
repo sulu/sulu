@@ -28,7 +28,6 @@ export default class Dialog extends React.Component<Props> {
     static defaultProps = {
         confirmDisabled: false,
         confirmLoading: false,
-        open: false,
     };
 
     @observable visible: boolean = false;

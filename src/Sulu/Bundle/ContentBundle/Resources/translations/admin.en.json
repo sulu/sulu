@@ -44,5 +44,8 @@
     "sulu_content.hide_in_sitemap": "Hide in sitemap",
     "sulu_content.cache_clear": "Clear website cache",
     "sulu_content.cache_clear_warning_title": "Clear website cache?",
-    "sulu_content.cache_clear_warning_text": "This operation will clear the entire cache for all webspaces. Do you really wish to proceed?"
+    "sulu_content.cache_clear_warning_text": "This operation will clear the entire cache for all webspaces. Do you really wish to proceed?",
+    "sulu_content.delete_draft": "Delete draft",
+    "sulu_content.delete_draft_warning_title": "Delete Draft?",
+    "sulu_content.delete_draft_warning_text": "Do you really want to delete the draft? All data will be lost. The published page will not be changed."
 }

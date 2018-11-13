@@ -391,6 +391,10 @@ export default class FormStore {
         this.resourceStore.set(name, value);
     }
 
+    setMultiple(data: Object) {
+        this.resourceStore.setMultiple(data);
+    }
+
     change(name: string, value: mixed) {
         this.resourceStore.change(name, value);
     }
@@ -456,6 +460,10 @@ export default class FormStore {
 
     @computed get dirty(): boolean {
         return this.resourceStore.dirty;
+    }
+
+    set dirty(dirty: boolean) {
+        this.resourceStore.dirty = dirty;
     }
 
     @action setType(type: string) {
