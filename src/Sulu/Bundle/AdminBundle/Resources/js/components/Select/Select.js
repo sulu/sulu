@@ -16,7 +16,7 @@ const VERTICAL_OFFSET = 2;
 
 type Props<T> = {|
     ...SelectProps<T>,
-    onSelect: (value: ?T) => void,
+    onSelect: (value: T) => void,
     displayValue: string,
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
@@ -96,7 +96,7 @@ export default class Select<T> extends React.Component<Props<T>> {
         });
     }
 
-    handleOptionClick = (value: ?T) => {
+    handleOptionClick = (value: T) => {
         this.props.onSelect(value);
 
         if (this.props.closeOnSelect) {

@@ -2,11 +2,11 @@
 import React from 'react';
 import actionStyles from './action.scss';
 
-type Props = {
+type Props = {|
     children: string,
     onClick: () => void,
     afterAction?: () => void,
-};
+|};
 
 export default class Action extends React.PureComponent<Props> {
     handleButtonClick = () => {

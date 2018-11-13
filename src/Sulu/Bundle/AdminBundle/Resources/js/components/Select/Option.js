@@ -8,17 +8,17 @@ import Checkbox from '../Checkbox';
 import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
 
-type Props<T> = {
+type Props<T> = {|
     anchorWidth: number,
     selected: boolean,
     disabled: boolean,
     focus: boolean,
-    value?: T,
+    value: T,
     children: string,
-    onClick?: (value: ?T) => void,
+    onClick?: (value: T) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selectedVisualization: OptionSelectedVisualization,
-};
+|};
 
 const ANCHOR_WIDTH_DIFFERENCE = 10;
 
