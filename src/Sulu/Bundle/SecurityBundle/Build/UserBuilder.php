@@ -43,7 +43,7 @@ class UserBuilder extends SuluBuilder
         $password = 'admin';
         $roleName = 'User';
         $system = 'Sulu';
-        $locale = 'de';
+        $locale = 'en';
         $doctrine = $this->container->get('doctrine')->getManager();
         $userRep = $this->container->get('sulu.repository.user');
         $userLocales = $this->container->getParameter('sulu_core.locales');
