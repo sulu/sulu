@@ -73,6 +73,33 @@ test('Render with selected item', () => {
     expect(singleSelection.render()).toMatchSnapshot();
 });
 
+test('Render with selected item in disabled state', () => {
+    const locale = observable.box('en');
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabled={true}
+            disabledIds={[]}
+            displayProperties={['name', 'value']}
+            emptyText="Nothing"
+            icon="su-test"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {
+        name: 'Name',
+        value: 'Value',
+    };
+    singleSelection.update();
+
+    expect(singleSelection.render()).toMatchSnapshot();
+});
+
 test('Pass resourceKey and locale to SingleDatagridOverlay', () => {
     const locale = observable.box('en');
     const singleSelection = shallow(
@@ -132,6 +159,29 @@ test('Should open and close an overlay', () => {
     expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
 
     singleSelection.find(SingleDatagridOverlay).prop('onClose')();
+    singleSelection.update();
+    expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
+});
+
+test('Should not open an overlay on button-click when disabled', () => {
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabled={true}
+            disabledIds={[]}
+            displayProperties={[]}
+            emptyText="Nothing"
+            icon="su-test"
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
+
+    singleSelection.find('.button').simulate('click');
     singleSelection.update();
     expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
 });

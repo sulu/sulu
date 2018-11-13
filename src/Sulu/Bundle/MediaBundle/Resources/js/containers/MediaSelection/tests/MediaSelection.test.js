@@ -361,3 +361,18 @@ test('Should add the selected medias to the selection store on confirm', () => {
     expect(finishSpy).toBeCalled();
     expect(mediaSelectionInstance.overlayOpen).toBe(false);
 });
+
+test('Pass correct props to MultiItemSelection component', () => {
+    MediaSelectionStore.mockImplementation(function() {
+        this.selectedMedia = [];
+        this.selectedMediaIds = [];
+    });
+
+    const formInspector = {
+        locale: observable.box('de'),
+    };
+
+    const mediaSelection = mount(<MediaSelection disabled={true} formInspector={formInspector} />);
+
+    expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
+});

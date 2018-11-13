@@ -42,6 +42,7 @@ test('Pass correct props to MultiSelect', () => {
     const pageSettingsNavigationSelect = shallow(
         <PageSettingsNavigationSelect
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             value={['footer']}
         />
@@ -50,6 +51,7 @@ test('Pass correct props to MultiSelect', () => {
     expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
 
     return webspacePromise.then(() => {
+        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
         expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
         expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
         expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');

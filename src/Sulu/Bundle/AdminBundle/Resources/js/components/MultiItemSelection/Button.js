@@ -3,20 +3,25 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import buttonStyles from './button.scss';
+import type {Button as ButtonConfig} from './types';
 
-type Props = {
-    icon: string,
-    onClick: () => void,
+type Props = {|
+    ...ButtonConfig,
     location: 'left' | 'right',
-};
+|};
 
 export default class Button extends React.PureComponent<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     handleClick = () => {
         this.props.onClick();
     };
 
     render() {
         const {
+            disabled,
             icon,
             location,
         } = this.props;
@@ -28,6 +33,7 @@ export default class Button extends React.PureComponent<Props> {
         return (
             <button
                 className={buttonClass}
+                disabled={disabled}
                 onClick={this.handleClick}
                 type="button"
             >

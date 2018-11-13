@@ -178,7 +178,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
     form.instance().formInspector.addFinishFieldHandler(handler1);
     form.instance().formInspector.addFinishFieldHandler(handler2);
-    form.find('SortableBlocks').prop('onExpand')(0);
+    form.find('SortableBlockList').prop('onExpand')(0);
     form.update();
     form.find('SortableBlock Field').at(0).instance().handleFinish();
     expect(handler1).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');

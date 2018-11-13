@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import classNames from 'classnames';
 import type {Node} from 'react';
 import Icon from '../Icon';
 import singleItemSelectionStyles from './singleItemSelection.scss';
@@ -7,19 +8,36 @@ import type {Button} from './types';
 
 type Props = {|
     children?: Node,
+    disabled: boolean,
     emptyText?: string,
     leftButton: Button,
     onRemove?: () => void,
 |};
 
 export default class SingleItemSelection extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     render() {
-        const {children, emptyText, leftButton, onRemove} = this.props;
+        const {children, disabled, emptyText, leftButton, onRemove} = this.props;
         const {icon, onClick} = leftButton;
 
+        const singleItemSelectionClass = classNames(
+            singleItemSelectionStyles.singleItemSelection,
+            {
+                [singleItemSelectionStyles.disabled]: disabled,
+            }
+        );
+
         return (
-            <div className={singleItemSelectionStyles.singleItemSelection}>
-                <button className={singleItemSelectionStyles.button} onClick={onClick} type="button">
+            <div className={singleItemSelectionClass}>
+                <button
+                    className={singleItemSelectionStyles.button}
+                    disabled={disabled}
+                    onClick={onClick}
+                    type="button"
+                >
                     <Icon name={icon} />
                 </button>
                 <div className={singleItemSelectionStyles.itemContainer}>
@@ -32,7 +50,12 @@ export default class SingleItemSelection extends React.Component<Props> {
                         }
                     </div>
                     {onRemove &&
-                        <button className={singleItemSelectionStyles.removeButton} onClick={onRemove} type="button">
+                        <button
+                            className={singleItemSelectionStyles.removeButton}
+                            disabled={disabled}
+                            onClick={onRemove}
+                            type="button"
+                        >
                             <Icon name="su-trash-alt" />
                         </button>
                     }

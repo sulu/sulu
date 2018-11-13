@@ -1,5 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render in disabled state 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render with emptyText if no children have been passed 1`] = `
 <div
   class="singleItemSelection"

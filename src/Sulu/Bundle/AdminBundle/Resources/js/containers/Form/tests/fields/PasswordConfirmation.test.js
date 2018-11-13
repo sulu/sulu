@@ -34,6 +34,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     const passwordConfirmation = shallow(
         <PasswordConfirmation
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -41,6 +42,7 @@ test('Pass props correctly to PasswordConfirmation component', () => {
     );
 
     expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('valid')).toBe(true);
+    expect(passwordConfirmation.find(PasswordConfirmationComponent).prop('disabled')).toBe(true);
 
     passwordConfirmation.find(PasswordConfirmationComponent).simulate('change', 'value');
 

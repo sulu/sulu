@@ -30,6 +30,23 @@ test('The component should render a generic select', () => {
     expect(select.getElement().type).toBe(Select);
 });
 
+test('The component should pass the disabled value to the select component', () => {
+    const onChange = jest.fn();
+    const select = shallow(
+        <MultiSelect
+            allSelectedText="All selected"
+            disabled={true}
+            noneSelectedText="None selected"
+            onChange={onChange}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+        </MultiSelect>
+    );
+
+    expect(select.find(Select).props().disabled).toBe(true);
+});
+
 test('The component should pass the correct display value if nothing is selected', () => {
     const onChange = jest.fn();
     const select = shallow(

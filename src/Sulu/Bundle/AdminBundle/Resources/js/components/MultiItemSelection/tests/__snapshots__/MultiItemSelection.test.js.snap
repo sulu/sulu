@@ -2,36 +2,222 @@
 
 exports[`Clicking the left and right button inside the header should call the right handler 1`] = `
 <div
-  class="header"
+  class="multiItemSelectionClass"
 >
-  <button
-    class="button left"
-    type="button"
-  >
-    <span
-      aria-label="su-plus"
-      class="su-plus"
-    />
-  </button>
   <div
-    class="label"
+    class="header"
   >
-    I have handler
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      I have handler
+    </div>
+    <button
+      class="button right"
+      type="button"
+    >
+      <span
+        aria-label="fa-gear"
+        class="fa fa-gear"
+      />
+    </button>
   </div>
-  <button
-    class="button right"
-    type="button"
+  <ul
+    class="list"
   >
-    <span
-      aria-label="fa-gear"
-      class="fa fa-gear"
-    />
-  </button>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 1
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 2
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 3
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render a disabled MultiItemSelection with children 1`] = `
+<div
+  class="multiItemSelectionClass disabled"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    >
+      I am disabled
+    </div>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 1
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 2
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 3
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>
 `;
 
 exports[`Render a not sortable MultiItemSelection with children 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header"
   >
@@ -40,7 +226,7 @@ Array [
     >
       I have children
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
   >
@@ -110,19 +296,21 @@ Array [
         </div>
       </div>
     </li>
-  </ul>,
-]
+  </ul>
+</div>
 `;
 
 exports[`Render an MultiItemSelection while loading 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
     <div
       class="label"
     >
-      I have children
+      I am loading
       <div
         class="loader"
       >
@@ -139,15 +327,17 @@ Array [
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Render an MultiItemSelection with children 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header"
   >
@@ -156,7 +346,7 @@ Array [
     >
       I have children
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
   >
@@ -238,12 +428,14 @@ Array [
         </div>
       </div>
     </li>
-  </ul>,
-]
+  </ul>
+</div>
 `;
 
 exports[`Render an empty MultiItemSelection 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -252,9 +444,9 @@ Array [
     >
       I am empty
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;

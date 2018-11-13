@@ -84,6 +84,47 @@ Array [
 ]
 `;
 
+exports[`Render the adapter in disabled state 1`] = `
+Array [
+  <div
+    class="headerContainer"
+  >
+    <h1>
+      Title
+    </h1>
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
+      >
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+    </div>
+  </div>,
+  <div
+    class="datagrid disabled"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>,
+]
+`;
+
 exports[`Render the adapter in non-searchable mode 1`] = `
 Array [
   <div

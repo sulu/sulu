@@ -229,6 +229,7 @@ test('Should correctly pass props to the BlockCollection', () => {
     const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             label="Test"
             maxOccurs={2}
@@ -240,6 +241,7 @@ test('Should correctly pass props to the BlockCollection', () => {
     );
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
+        disabled: true,
         maxOccurs: 2,
         minOccurs: 1,
         onChange: changeSpy,
@@ -276,8 +278,8 @@ test('Should pass correct schemaPath to FieldRender', () => {
         />
     );
 
-    fieldBlocks.find('SortableBlocks').prop('onExpand')(0);
-    fieldBlocks.find('SortableBlocks').prop('onExpand')(1);
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(0);
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(1);
     fieldBlocks.update();
 
     expect(fieldBlocks.find('FieldRenderer').at(0).prop('schemaPath')).toEqual('/types/default/form');

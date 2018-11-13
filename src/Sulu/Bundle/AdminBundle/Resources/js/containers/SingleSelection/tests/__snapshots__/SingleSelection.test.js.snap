@@ -47,6 +47,55 @@ exports[`Render with selected item 1`] = `
 </div>
 `;
 
+exports[`Render with selected item in disabled state 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-test"
+      class="su-test"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      <div>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Name
+        </span>
+        <span
+          class="itemColumn"
+          style="width: 50%;"
+        >
+          Value
+        </span>
+      </div>
+    </div>
+    <button
+      class="removeButton"
+      disabled=""
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
 exports[`Show with passed emptyText and icon 1`] = `
 Array [
   <div

@@ -95,6 +95,7 @@ export default class SmartContent extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             label,
             schemaOptions: {
                 present_as: {
@@ -124,6 +125,7 @@ export default class SmartContent extends React.Component<Props> {
 
         return (
             <SmartContentComponent
+                disabled={!!disabled}
                 fieldLabel={label}
                 presentations={presentations}
                 store={this.smartContentStore}

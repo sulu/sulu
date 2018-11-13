@@ -8,6 +8,7 @@ import Loader from '../../components/Loader';
 type Props<T: string | number> = {|
     apiOptions: Object,
     allSelectedText?: string,
+    disabled: boolean,
     displayProperty: string,
     idProperty: string,
     noneSelectedText?: string,
@@ -20,6 +21,7 @@ type Props<T: string | number> = {|
 export default class MultiSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         apiOptions: {},
+        disabled: false,
         idProperty: 'id',
         values: [],
     };
@@ -57,6 +59,7 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
     render() {
         const {
             allSelectedText,
+            disabled,
             noneSelectedText,
             displayProperty,
             idProperty,
@@ -70,6 +73,7 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
         return (
             <MultiSelectComponent
                 allSelectedText={allSelectedText}
+                disabled={disabled}
                 noneSelectedText={noneSelectedText}
                 onChange={this.handleChange}
                 values={values}

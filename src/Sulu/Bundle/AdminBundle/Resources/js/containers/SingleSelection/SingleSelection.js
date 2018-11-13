@@ -10,6 +10,7 @@ import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
+    disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     emptyText: string,
@@ -24,6 +25,7 @@ type Props = {|
 @observer
 export default class SingleSelection extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         disabledIds: [],
         icon: 'su-plus',
     };
@@ -97,6 +99,7 @@ export default class SingleSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            disabled,
             disabledIds,
             displayProperties,
             emptyText,
@@ -111,6 +114,7 @@ export default class SingleSelection extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleItemSelection
+                    disabled={disabled}
                     emptyText={emptyText}
                     leftButton={{
                         icon,

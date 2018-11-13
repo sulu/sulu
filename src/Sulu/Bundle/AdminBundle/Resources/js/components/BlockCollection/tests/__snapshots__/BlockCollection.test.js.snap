@@ -59,6 +59,66 @@ exports[`Should render a block list 1`] = `
 </section>
 `;
 
+exports[`Should render a disabled block list 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList disabled"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article />
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      Add block
+    </span>
+  </button>
+</section>
+`;
+
 exports[`Should render a fully filled block list without add button if maxOccurs is reached 1`] = `
 <section
   class="blockCollection"

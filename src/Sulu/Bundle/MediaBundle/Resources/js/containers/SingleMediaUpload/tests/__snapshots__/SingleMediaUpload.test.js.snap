@@ -71,6 +71,44 @@ Array [
 ]
 `;
 
+exports[`Render a SingleMediaUpload in disabled state 1`] = `
+<div
+  aria-disabled="true"
+  class="mediaContainer default disabled"
+  style="position:relative"
+>
+  <img
+    class="thumbnail"
+    src="sulu-400x400"
+  />
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
+        />
+        <div
+          class="uploadInfoText"
+        >
+          Upload media
+        </div>
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    disabled=""
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
+`;
+
 exports[`Render a SingleMediaUpload with a different image size 1`] = `
 Array [
   <div

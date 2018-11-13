@@ -124,6 +124,7 @@ test('Pass correct props to SmartContent component', () => {
     const smartContent = shallow(
         <SmartContent
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             label="Test"
             schemaOptions={schemaOptions}
@@ -135,6 +136,7 @@ test('Pass correct props to SmartContent component', () => {
         {name: 'two', value: 'Two column'},
     ]);
     expect(smartContent.find('SmartContent').prop('fieldLabel')).toEqual('Test');
+    expect(smartContent.find('SmartContent').prop('disabled')).toEqual(true);
 });
 
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {

@@ -82,6 +82,7 @@ export default class Selection extends React.Component<Props> {
 
     renderDatagridOverlay() {
         const {
+            disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
@@ -105,6 +106,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
+                disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 icon={icon}
@@ -128,6 +130,7 @@ export default class Selection extends React.Component<Props> {
     renderAutoComplete() {
         const {
             dataPath,
+            disabled,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
@@ -155,6 +158,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiAutoComplete
                 allowAdd={allowAdd}
+                disabled={!!disabled}
                 displayProperty={displayProperty}
                 filterParameter={filterParameter}
                 id={dataPath}
@@ -180,6 +184,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         const {
+            disabled,
             fieldTypeOptions: {
                 types: {
                     datagrid: {
@@ -195,7 +200,7 @@ export default class Selection extends React.Component<Props> {
 
         return (
             <div className={selectionStyles.datagrid}>
-                <Datagrid adapters={[adapter]} searchable={false} store={this.datagridStore} />
+                <Datagrid adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.datagridStore} />
             </div>
         );
     }

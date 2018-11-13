@@ -12,6 +12,7 @@ const LENS_ICON = 'su-search';
 const DEBOUNCE_TIME = 300;
 
 type Props = {|
+    disabled: boolean,
     displayProperty: string,
     id?: string,
     loading?: boolean,
@@ -27,6 +28,10 @@ type Props = {|
 
 @observer
 export default class SingleAutoComplete extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     @observable labelRef: ElementRef<'label'>;
 
     @observable inputValue: ?string = this.props.value ? this.props.value[this.props.displayProperty] : undefined;
@@ -82,6 +87,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             id,
             loading,
             onFinish,
@@ -96,6 +102,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
         return (
             <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
+                    disabled={disabled}
                     icon={LENS_ICON}
                     id={id}
                     inputClass="mousetrap"
@@ -110,7 +117,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
                     anchorElement={this.labelRef}
                     minWidth={this.popoverMinWidth}
                     onSelect={this.handleSelect}
-                    open={showSuggestionList}
+                    open={!disabled && showSuggestionList}
                     query={inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}

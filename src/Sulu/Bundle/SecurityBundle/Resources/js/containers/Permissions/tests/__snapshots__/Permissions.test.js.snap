@@ -1,5 +1,109 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render in disabled state 1`] = `
+<div
+  class="matrixContainer"
+>
+  <h2>
+    Contacts
+  </h2>
+  <div
+    class="matrix disabled"
+  >
+    <div
+      class="row"
+    >
+      <div>
+        people
+      </div>
+      <div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <div>
+        organizations
+      </div>
+      <div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.view"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="sulu_security.delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render with empty webspace section 1`] = `
 <h2>
   Webspaces

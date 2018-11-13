@@ -74,6 +74,7 @@ test('Should pass props correctly to selection component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             onFinish={jest.fn()}
@@ -85,6 +86,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        disabled: true,
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
         locale,
@@ -264,6 +266,7 @@ test('Should pass props correctly to datagrid component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -274,6 +277,7 @@ test('Should pass props correctly to datagrid component', () => {
     expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
     expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
+        disabled: true,
         searchable: false,
     }));
 });
@@ -382,6 +386,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
     const selection = shallow(
         <Selection
             {...fieldTypeDefaultProps}
+            disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             value={value}
@@ -390,6 +395,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
 
     expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
         allowAdd: false,
+        disabled: true,
         displayProperty: 'name',
         filterParameter: 'names',
         idProperty: 'uuid',

@@ -45,6 +45,7 @@ export default class SingleSelection extends React.Component<Props>
 
     renderDatagridOverlay() {
         const {
+            disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
@@ -73,6 +74,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                disabled={!!disabled}
                 disabledIds={isSameEndpoint && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
@@ -88,6 +90,7 @@ export default class SingleSelection extends React.Component<Props>
 
     renderAutoComplete() {
         const {
+            disabled,
             dataPath,
             fieldTypeOptions,
             value,
@@ -118,6 +121,7 @@ export default class SingleSelection extends React.Component<Props>
 
         return (
             <SingleAutoComplete
+                disabled={!!disabled}
                 displayProperty={displayProperty}
                 id={dataPath}
                 onChange={this.handleChange}

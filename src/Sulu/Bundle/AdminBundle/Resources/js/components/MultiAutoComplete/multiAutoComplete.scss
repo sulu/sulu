@@ -4,35 +4,48 @@ $multiAutoCompleteBackgroundColor: $white;
 $multiAutoCompleteBorderColor: $silver;
 $multiAutoCompleteIconColor: $dustyGray;
 
+$multiAutoCompleteDisabledColor: $gray;
+$multiAutoCompleteDisabledBackgroundColor: $wildSand;
+
 .multi-auto-complete {
     background-color: $multiAutoCompleteBackgroundColor;
     border: 1px solid $multiAutoCompleteBorderColor;
     border-radius: 3px;
     display: flex;
     align-items: center;
-}
 
-.input {
-    border: none;
-    font-size: 12px;
-    flex-grow: 1;
-    height: 28px;
-}
+    .input {
+        border: none;
+        font-size: 12px;
+        flex-grow: 1;
+        height: 28px;
+    }
 
-.icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 10px);
-    flex: 0 0 32px;
-    margin-right: 10px;
-    font-size: 16px;
-    color: $multiAutoCompleteIconColor;
-    border-right: 1px solid $multiAutoCompleteBorderColor;
-}
+    .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - 10px);
+        flex: 0 0 32px;
+        margin-right: 10px;
+        font-size: 16px;
+        color: $multiAutoCompleteIconColor;
+        border-right: 1px solid $multiAutoCompleteBorderColor;
+    }
 
-.items {
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 1;
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+    }
+
+    &.disabled {
+        color: $multiAutoCompleteDisabledColor;
+        background-color: $multiAutoCompleteDisabledBackgroundColor;
+
+        .input {
+            color: $multiAutoCompleteDisabledColor;
+            background-color: $multiAutoCompleteDisabledBackgroundColor;
+        }
+    }
 }

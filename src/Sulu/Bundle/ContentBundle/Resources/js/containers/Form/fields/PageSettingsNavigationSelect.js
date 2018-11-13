@@ -27,9 +27,7 @@ export default class PageSettingsNavigationSelect extends React.Component<FieldT
     };
 
     render() {
-        const {
-            value,
-        } = this.props;
+        const {disabled, value} = this.props;
 
         if (!this.webspace) {
             return null;
@@ -38,6 +36,7 @@ export default class PageSettingsNavigationSelect extends React.Component<FieldT
         return (
             <MultiSelect
                 allSelectedText={translate('sulu_content.all_navigations')}
+                disabled={!!disabled}
                 noneSelectedText={translate('sulu_content.no_navigation')}
                 onChange={this.handleChange}
                 values={value || []}

@@ -19,6 +19,7 @@ test('Pass props correctly to TextEditor', () => {
     const textEditor = shallow(
         <TextEditor
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -31,5 +32,6 @@ test('Pass props correctly to TextEditor', () => {
         onBlur: finishSpy,
         onChange: changeSpy,
         value: 'xyz',
+        disabled: true,
     }));
 });

@@ -74,6 +74,25 @@ test('Render with given value', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = true;
+    });
+
+    expect(render(
+        <SingleAutoComplete
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            searchProperties={[]}
+            value={{name: 'James Bond', number: '007'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Search using store when new search value is retrieved from SingleAutoComplete component', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {

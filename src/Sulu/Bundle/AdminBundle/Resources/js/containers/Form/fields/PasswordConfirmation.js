@@ -12,8 +12,8 @@ export default class PasswordConfirmation extends React.Component<FieldTypeProps
     };
 
     render() {
-        const {error} = this.props;
+        const {disabled, error} = this.props;
 
-        return <PasswordConfirmationComponent onChange={this.handleChange} valid={!error} />;
+        return <PasswordConfirmationComponent disabled={!!disabled} onChange={this.handleChange} valid={!error} />;
     }
 }

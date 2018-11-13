@@ -4,16 +4,18 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import matrixStyles from './matrix.scss';
 
-type Props = {
+type Props = {|
+    disabled: boolean,
     icon: string,
     name: string,
     onChange?: (name: string, value: boolean) => void,
     title?: string,
     value: boolean,
-};
+|};
 
 export default class Item extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         value: false,
     };
 
@@ -33,6 +35,7 @@ export default class Item extends React.PureComponent<Props> {
 
     render() {
         const {
+            disabled,
             icon,
             name,
             title,
@@ -42,13 +45,14 @@ export default class Item extends React.PureComponent<Props> {
             matrixStyles.item,
             {
                 [matrixStyles.selected]: value,
+                [matrixStyles.disabled]: disabled,
             }
         );
 
         const itemTitle = title ? title : name.charAt(0).toUpperCase() + name.slice(1);
 
         return (
-            <div className={itemClass} onClick={this.handleClick} title={itemTitle}>
+            <div className={itemClass} onClick={!disabled ? this.handleClick : undefined} title={itemTitle}>
                 <Icon name={icon} />
             </div>
         );

@@ -32,6 +32,31 @@ test('Render an MultiItemSelection with children', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a disabled MultiItemSelection with children', () => {
+    expect(render(
+        <MultiItemSelection disabled={true} label="I am disabled">
+            <MultiItemSelection.Item
+                id="1"
+                index={1}
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="2"
+                index={2}
+            >
+                Child 2
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="3"
+                index={3}
+            >
+                Child 3
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render a not sortable MultiItemSelection with children', () => {
     expect(render(
         <MultiItemSelection label="I have children" sortable={false}>
@@ -58,7 +83,7 @@ test('Render a not sortable MultiItemSelection with children', () => {
 });
 
 test('Render an MultiItemSelection while loading', () => {
-    expect(render(<MultiItemSelection label="I have children" loading={true} />)).toMatchSnapshot();
+    expect(render(<MultiItemSelection label="I am loading" loading={true} />)).toMatchSnapshot();
 });
 
 test('Clicking the left and right button inside the header should call the right handler', () => {
