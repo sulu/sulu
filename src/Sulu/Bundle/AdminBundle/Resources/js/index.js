@@ -41,6 +41,7 @@ import {
     Email,
     fieldRegistry,
     Input,
+    Select,
     Number,
     PasswordConfirmation,
     Phone,
@@ -132,6 +133,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('date', DatePicker, {dateFormat: true, timeFormat: false});
     fieldRegistry.add('datetime', DatePicker, {dateFormat: true, timeFormat: true});
     fieldRegistry.add('email', Email);
+    fieldRegistry.add('select', Select);
     fieldRegistry.add('number', Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
     fieldRegistry.add('phone', Phone);

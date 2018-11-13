@@ -46,12 +46,12 @@
                     <params>
                         <param name="default_value" value="0"/>
                         <param name="values" type="collection">
-                            <param name="0" value="0">
+                            <param name="0">
                                 <meta>
                                     <title>sulu_contact.male_form_of_address</title>
                                 </meta>
                             </param>
-                            <param name="1" value="1">
+                            <param name="1">
                                 <meta>
                                     <title>sulu_contact.female_form_of_address</title>
                                 </meta>

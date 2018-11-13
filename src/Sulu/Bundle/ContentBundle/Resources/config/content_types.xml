@@ -64,8 +64,8 @@
             <tag name="sulu.content.type" alias="checkbox"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
-        <service id="sulu.content.type.multiple_select" class="Sulu\Bundle\ContentBundle\Content\Types\MultipleSelect">
-            <tag name="sulu.content.type" alias="multiple_select"/>
+        <service id="sulu.content.type.select" class="Sulu\Bundle\ContentBundle\Content\Types\Select">
+            <tag name="sulu.content.type" alias="select"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">

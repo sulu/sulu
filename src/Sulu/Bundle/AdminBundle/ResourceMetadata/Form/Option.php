@@ -38,12 +38,18 @@ class Option
      */
     protected $infoText;
 
-    public function getName(): ?string
+    /**
+     * @return null|string|int|float
+     */
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName(string $name = null): void
+    /**
+     * @param null|string|int|float $name
+     */
+    public function setName($name = null): void
     {
         $this->name = $name;
     }
