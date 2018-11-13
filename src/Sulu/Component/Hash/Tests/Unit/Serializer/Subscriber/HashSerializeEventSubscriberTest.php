@@ -12,7 +12,6 @@
 namespace Sulu\Component\Hash\Tests\Unit\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\GenericSerializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,7 @@ class HashSerializeEventSubscriberTest extends TestCase
     private $hashSerializeEventSubscriber;
 
     /**
-     * @var GenericSerializationVisitor
+     * @var JsonSerializationVisitor
      */
     private $visitor;
 
@@ -57,7 +56,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = $this->prophesize(AuditableInterface::class);
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->addData('_hash', Argument::any())->shouldBeCalled();
+        $this->visitor->setData('_hash', Argument::any())->shouldBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
@@ -66,7 +65,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = new \stdClass();
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->addData('_hash', Argument::any())->shouldNotBeCalled();
+        $this->visitor->setData('_hash', Argument::any())->shouldNotBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
