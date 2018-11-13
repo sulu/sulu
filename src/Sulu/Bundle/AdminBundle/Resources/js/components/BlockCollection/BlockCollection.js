@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
-import SortableBlocks from './SortableBlocks';
+import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
@@ -147,7 +147,7 @@ export default class BlockCollection extends React.Component<Props> {
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
-                <SortableBlocks
+                <SortableBlockList
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"

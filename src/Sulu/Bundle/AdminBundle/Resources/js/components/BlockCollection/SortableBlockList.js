@@ -21,7 +21,7 @@ type Props = {|
 |};
 
 @observer
-class SortableBlocks extends React.Component<Props> {
+class SortableBlockList extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
@@ -82,4 +82,4 @@ class SortableBlocks extends React.Component<Props> {
     }
 }
 
-export default SortableContainer(SortableBlocks);
+export default SortableContainer(SortableBlockList);

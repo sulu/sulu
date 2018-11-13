@@ -278,8 +278,8 @@ test('Should pass correct schemaPath to FieldRender', () => {
         />
     );
 
-    fieldBlocks.find('SortableBlocks').prop('onExpand')(0);
-    fieldBlocks.find('SortableBlocks').prop('onExpand')(1);
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(0);
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(1);
     fieldBlocks.update();
 
     expect(fieldBlocks.find('FieldRenderer').at(0).prop('schemaPath')).toEqual('/types/default/form');
