@@ -16,7 +16,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\Mapper\ContentEvents;
 
 /**
  * Content Type for target groups from the audience targeting.
@@ -33,17 +32,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
     public function __construct(TargetGroupRepositoryInterface $targetGroupRepository)
     {
         $this->targetGroupRepository = $targetGroupRepository;
-    }
-
-    /**
-     * returns type of ContentType
-     * PRE_SAVE or POST_SAVE.
-     *
-     * @return int
-     */
-    public function getType()
-    {
-        return ContentEvents::NODE_PRE_SAVE;
     }
 
     /**
