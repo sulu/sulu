@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import {observer} from 'mobx-react';
 import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
@@ -26,8 +27,6 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
         values: [],
     };
 
-    handleChange: (Array<T>) => void;
-
     resourceListStore: ResourceListStore;
 
     constructor(props: Props<T>) {
@@ -39,22 +38,22 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
         } = this.props;
 
         this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
-
-        // TODO: Can be moved to the correct place when flow bug is fixed
-        // https://github.com/facebook/flow/issues/6978
-        this.handleChange = (values: Array<T>) => {
-            const {
-                onChange,
-                idProperty,
-            } = this.props;
-
-            const valueObjects = this.resourceListStore.data.filter((dataValue) => {
-                return values.includes(dataValue[idProperty]);
-            });
-
-            onChange(values, valueObjects);
-        };
     }
+
+    // TODO: Remove explicit type annotation when flow bug is fixed
+    // https://github.com/facebook/flow/issues/6978
+    handleChange: (Array<T>) => void = (values: Array<T>) => {
+        const {
+            onChange,
+            idProperty,
+        } = this.props;
+
+        const valueObjects = this.resourceListStore.data.filter((dataValue) => {
+            return values.includes(dataValue[idProperty]);
+        });
+
+        onChange(values, valueObjects);
+    };
 
     render() {
         const {
@@ -78,11 +77,11 @@ export default class MultiSelect<T: string | number> extends React.Component<Pro
                 onChange={this.handleChange}
                 values={values}
             >
-                {this.resourceListStore.data.map((object, index) => (
+                {this.resourceListStore.data.map((object, index) => ((
                     <MultiSelectComponent.Option key={index} value={object[idProperty]}>
                         {object[displayProperty]}
                     </MultiSelectComponent.Option>
-                ))}
+                ): Element<typeof MultiSelectComponent.Option>))}
             </MultiSelectComponent>
         );
     }
