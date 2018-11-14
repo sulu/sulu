@@ -42,7 +42,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
     };
 
     render() {
-        const {schemaOptions, value} = this.props;
+        const {schemaOptions, disabled, value} = this.props;
         if (!schemaOptions) {
             throw new Error(MISSING_VALUES_OPTIONS);
         }
@@ -54,8 +54,8 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         }
 
         return (
-            <SingleSelectComponent onChange={this.handleChange} value={value}>
-                {values.value.map(({value, title}) => {
+            <SingleSelectComponent disabled={!!disabled} onChange={this.handleChange} value={value}>
+                {values.value.map(({name: value, title}) => {
                     if (typeof value !== 'string' && typeof value !== 'number') {
                         throw new Error('The children of "values" must only contain values of type string or number!');
                     }

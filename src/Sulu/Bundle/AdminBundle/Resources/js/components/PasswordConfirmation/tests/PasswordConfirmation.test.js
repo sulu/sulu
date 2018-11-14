@@ -7,6 +7,11 @@ import PasswordConfirmation from '../PasswordConfirmation';
 jest.mock('debounce', () => jest.fn((value) => value));
 
 test('Should render two password fields and add a debounced function', () => {
+    expect(render(<PasswordConfirmation disabled={true} onChange={jest.fn()} />)).toMatchSnapshot();
+    expect(debounce).toBeCalledWith(expect.any(Function), 500);
+});
+
+test('Should render disabled input-components when disabled', () => {
     expect(render(<PasswordConfirmation onChange={jest.fn()} />)).toMatchSnapshot();
     expect(debounce).toBeCalledWith(expect.any(Function), 500);
 });

@@ -12,8 +12,9 @@ import AutoCompletePopover from '../AutoCompletePopover';
 import Item from './Item';
 import multiAutoCompleteStyles from './multiAutoComplete.scss';
 
-type Props = {
+type Props = {|
     allowAdd: boolean,
+    disabled: boolean,
     displayProperty: string,
     id?: string,
     idProperty: string,
@@ -24,7 +25,7 @@ type Props = {
     searchProperties: Array<string>,
     suggestions: Array<Object>,
     value: Array<Object>,
-};
+|};
 
 const DEBOUNCE_TIME = 300;
 
@@ -32,6 +33,7 @@ const DEBOUNCE_TIME = 300;
 export default class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
         allowAdd: false,
+        disabled: false,
         idProperty: 'id',
         loading: false,
     };
@@ -145,6 +147,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             displayProperty,
             id,
             idProperty,
@@ -156,6 +159,13 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
         const showSuggestionList = (!!this.inputValue && this.inputValue.length > 0) && suggestions.length > 0;
 
+        const multiAutoCompleteClass = classNames(
+            multiAutoCompleteStyles.multiAutoComplete,
+            {
+                [multiAutoCompleteStyles.disabled]: disabled,
+            }
+        );
+
         const inputClass = classNames(
             multiAutoCompleteStyles.input,
             'mousetrap' // required to allow mousetrap to catch key binding within input
@@ -163,7 +173,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
         return (
             <Fragment>
-                <label className={multiAutoCompleteStyles.multiAutoComplete} ref={this.setLabelRef}>
+                <label className={multiAutoCompleteClass} ref={this.setLabelRef}>
                     <div className={multiAutoCompleteStyles.icon}>
                         {loading
                             ? <Loader size={20} />
@@ -173,6 +183,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                     <div className={multiAutoCompleteStyles.items}>
                         {value.map((item) => (
                             <Item
+                                disabled={disabled}
                                 key={item[idProperty]}
                                 onDelete={this.handleDelete}
                                 value={item}
@@ -182,6 +193,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                         ))}
                         <input
                             className={inputClass}
+                            disabled={disabled}
                             id={id}
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
@@ -196,7 +208,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
                     idProperty={idProperty}
                     minWidth={this.popoverMinWidth}
                     onSelect={this.handleSelect}
-                    open={showSuggestionList}
+                    open={!disabled && showSuggestionList}
                     query={this.inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}

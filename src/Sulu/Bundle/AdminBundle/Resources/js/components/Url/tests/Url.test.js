@@ -8,9 +8,21 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
+test('Render the component as disabled', () => {
+    expect(render(
+        <Url disabled={true} onChange={jest.fn()} protocols={['http://', 'https://']} value={undefined} />
+    )).toMatchSnapshot();
+});
+
 test('Render the component with an error', () => {
     expect(render(
-        <Url onChange={jest.fn()} protocols={['http://', 'https://']} valid={false} value={undefined} />
+        <Url
+            defaultProtocol="http://"
+            onChange={jest.fn()}
+            protocols={['http://', 'https://']}
+            valid={false}
+            value={undefined}
+        />
     )).toMatchSnapshot();
 });
 

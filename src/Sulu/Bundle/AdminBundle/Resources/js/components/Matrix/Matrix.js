@@ -1,19 +1,22 @@
 // @flow
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
+import classNames from 'classnames';
 import Row from './Row';
 import Item from './Item';
 import type {MatrixValues} from './types';
 import matrixStyles from './matrix.scss';
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Element<typeof Row>>,
+    disabled: boolean,
     onChange: (value: MatrixValues) => void,
     values: MatrixValues,
-};
+|};
 
 export default class Matrix extends React.PureComponent<Props> {
     static defaultProps = {
+        disabled: false,
         values: {},
     };
 
@@ -34,11 +37,12 @@ export default class Matrix extends React.PureComponent<Props> {
     };
 
     cloneRows = (originalRows: ChildrenArray<Element<typeof Row>>) => {
-        const values = this.props.values;
+        const {disabled, values} = this.props;
         return React.Children.map(originalRows, (row, index) => React.cloneElement(
             row,
             {
                 ...row.props,
+                disabled: disabled,
                 key: `matrix-row-${index}`,
                 onChange: this.handleChange,
                 values: values[row.props.name],
@@ -49,10 +53,18 @@ export default class Matrix extends React.PureComponent<Props> {
     render() {
         const {
             children,
+            disabled,
         } = this.props;
 
+        const matrixClass = classNames(
+            matrixStyles.matrix,
+            {
+                [matrixStyles.disabled]: disabled,
+            }
+        );
+
         return (
-            <div className={matrixStyles.matrix}>
+            <div className={matrixClass}>
                 {this.cloneRows(children)}
             </div>
         );

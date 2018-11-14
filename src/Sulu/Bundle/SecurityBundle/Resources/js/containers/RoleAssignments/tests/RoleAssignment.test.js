@@ -50,6 +50,48 @@ test('Render component', () => {
     )).toMatchSnapshot();
 });
 
+test('Render component in disabled state', () => {
+    const value = {
+        id: 1,
+        role: {
+            id: 5,
+            name: 'Role Name 5',
+            system: 'Sulu',
+        },
+        locales: ['de'],
+    };
+
+    const localizations: Array<Localization> = [
+        {
+            country: '',
+            default: '1',
+            language: 'en',
+            locale: 'en',
+            localization: 'en',
+            shadow: '',
+            xDefault: '',
+        },
+        {
+            country: '',
+            default: '0',
+            language: 'de',
+            locale: 'de',
+            localization: 'de',
+            shadow: '',
+            xDefault: '',
+        },
+    ];
+
+    expect(render(
+        <RoleAssignment
+            disabled={true}
+            localizations={localizations}
+            onChange={jest.fn()}
+            value={value}
+        />
+    )).toMatchSnapshot();
+});
+
 test('The component should trigger the change callback', () => {
     const value = {
         id: 1,

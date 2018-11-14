@@ -54,7 +54,7 @@ export default class DatePicker extends React.Component<FieldTypeProps<?string>>
     };
 
     render() {
-        const {dataPath, error, fieldTypeOptions, value} = this.props;
+        const {dataPath, disabled, error, fieldTypeOptions, value} = this.props;
         const {dateFormat, timeFormat} = fieldTypeOptions;
 
         if (dateFormat === undefined || timeFormat === undefined) {
@@ -73,6 +73,7 @@ export default class DatePicker extends React.Component<FieldTypeProps<?string>>
 
         return (
             <DatePickerComponent
+                disabled={!!disabled}
                 id={dataPath}
                 onChange={this.handleChange}
                 options={options}

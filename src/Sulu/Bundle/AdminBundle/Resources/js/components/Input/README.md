@@ -20,20 +20,27 @@ const onChange = (newValue) => {
 <Input icon="fa-key" type="password" placeholder="Password" value={state.value} onChange={onChange} />
 ```
 
+It also offers a `headline` prop, which allows to use distinguish more important fields from others.
+
+```javascript
+initialState = {value: ''};
+const onChange = (newValue) => {
+    setState({value: newValue});
+};
+
+<Input icon="fa-key" headline={true} value={state.value} onChange={onChange} />
+```
+
 When setting the `valid` prop to `false` it will mark the field as invalid. The following example shows an input field
 that needs to contain some text.
 
 ```javascript
 initialState = {valid: false, error: {}};
 const onChange = (newValue) => {
-    let error = undefined;
-    if (newValue.length === 0) {
-        error = {};
-    }
-    setState({error, value: newValue});
+    setState({valid: !!newValue, value: newValue});
 };
 
-<Input error={state.error} value={state.value} onChange={onChange} />
+<Input valid={state.valid} value={state.value} onChange={onChange} />
 ```
 
 In addition to that the `onBlur` callback will be executed when `Input` components loses the focus.

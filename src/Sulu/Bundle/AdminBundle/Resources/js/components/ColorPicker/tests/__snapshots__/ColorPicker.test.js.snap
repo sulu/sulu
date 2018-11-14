@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ColorPicker should not open overlay on icon-click when disabled 1`] = `""`;
+
 exports[`ColorPicker should render 1`] = `
 <label
   class="input default left"
@@ -99,6 +101,26 @@ exports[`ColorPicker should render null value as empty string 1`] = `
     />
   </div>
   <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`ColorPicker should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-square"
+      class="su-square icon default icon"
+    />
+  </div>
+  <input
+    disabled=""
     type="text"
     value=""
   />

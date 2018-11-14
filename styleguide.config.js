@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const glob = require('glob');
+const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
@@ -145,6 +146,7 @@ module.exports = { // eslint-disable-line
                 },
                 {
                     test: /\.css/,
+                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                     use: [
                         'style-loader',
                         {
@@ -152,6 +154,25 @@ module.exports = { // eslint-disable-line
                             options: {
                                 modules: false,
                             },
+                        },
+                    ],
+                },
+                {
+                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    use: [
+                        {
+                            loader: 'style-loader',
+                            options: {
+                                singleton: true,
+                            },
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: styles.getPostCssConfig({
+                                themeImporter: {
+                                    themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
+                                },
+                            }),
                         },
                     ],
                 },

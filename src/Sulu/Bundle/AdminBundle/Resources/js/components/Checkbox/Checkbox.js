@@ -5,18 +5,19 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch';
 import checkboxStyles from './checkbox.scss';
 
-type Props = SwitchProps & {
+type Props = {|
+    ...SwitchProps,
     skin: 'dark' | 'light',
     className?: string,
-    active: boolean,
     onChange?: (checked: boolean, value?: string | number) => void,
-};
+|};
 
 const CHECKED_ICON = 'su-check';
 
 export default class Checkbox extends React.PureComponent<Props> {
     static defaultProps = {
-        active: true,
+        checked: false,
+        disabled: false,
         skin: 'dark',
     };
 
@@ -29,7 +30,7 @@ export default class Checkbox extends React.PureComponent<Props> {
             onChange,
             children,
             className,
-            active,
+            disabled,
         } = this.props;
         const checkboxClass = classNames(
             checkboxStyles.checkbox,
@@ -39,9 +40,9 @@ export default class Checkbox extends React.PureComponent<Props> {
 
         return (
             <Switch
-                active={active}
                 checked={checked}
                 className={checkboxClass}
+                disabled={disabled}
                 icon={checked ? CHECKED_ICON : undefined}
                 name={name}
                 onChange={onChange}

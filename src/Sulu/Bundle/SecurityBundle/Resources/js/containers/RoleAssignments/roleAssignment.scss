@@ -18,4 +18,8 @@ $roleAssignmentBackgroundColor: $white;
         align-self: center;
         width: 33.33%;
     }
+
+    &.disabled {
+        opacity: .5;
+    }
 }

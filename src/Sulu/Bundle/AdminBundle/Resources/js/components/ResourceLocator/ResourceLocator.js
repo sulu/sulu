@@ -7,12 +7,17 @@ import resourceLocatorStyles from './resourceLocator.scss';
 type Props = {|
     id?: string,
     value: ?string,
+    disabled: boolean,
     onChange: (value: ?string) => void,
     onBlur?: () => void,
     mode: 'full' | 'leaf',
 |};
 
 export default class ResourceLocator extends React.PureComponent<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     fixed: string = '/';
 
     constructor(props: Props) {
@@ -43,12 +48,18 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     };
 
     render() {
-        const {id, onBlur} = this.props;
+        const {disabled, id, onBlur} = this.props;
 
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
                 <span className={resourceLocatorStyles.fixed}>{this.fixed}</span>
-                <Input id={id} onBlur={onBlur} onChange={this.handleChange} value={this.changeableValue} />
+                <Input
+                    disabled={disabled}
+                    id={id}
+                    onBlur={onBlur}
+                    onChange={this.handleChange}
+                    value={this.changeableValue}
+                />
             </div>
         );
     }

@@ -5,7 +5,7 @@ import type {FieldTransformer} from '../types';
 export default class BytesFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
         if (value === undefined) {
-            return undefined;
+            return null;
         }
 
         if (value === 0) {

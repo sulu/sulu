@@ -40,11 +40,13 @@ test('Pass correct props to SingleSelect', () => {
     const pageSettingsShadowSelect = shallow(
         <PageSettingsShadowLocaleSelect
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             value="de"
         />
     );
 
+    expect(pageSettingsShadowSelect.find('SingleSelect').prop('disabled')).toEqual(true);
     expect(pageSettingsShadowSelect.find('SingleSelect').prop('value')).toEqual('de');
     expect(pageSettingsShadowSelect.find('Option').at(0).prop('children')).toEqual('de');
     expect(pageSettingsShadowSelect.find('Option').at(0).prop('value')).toEqual('de');

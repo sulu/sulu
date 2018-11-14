@@ -10,6 +10,7 @@ import singleMediaUploadStyles from './singleMediaUpload.scss';
 
 type Props = {|
     collectionId?: number,
+    disabled: boolean,
     deletable: boolean,
     downloadable: boolean,
     emptyIcon?: string,
@@ -24,6 +25,7 @@ type Props = {|
 export default class SingleMediaUpload extends React.Component<Props> {
     static defaultProps = {
         deletable: true,
+        disabled: false,
         downloadable: true,
         imageSize: 'sulu-400x400',
         skin: 'default',
@@ -92,8 +94,9 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
     render() {
         const {
-            downloadable,
             deletable,
+            disabled,
+            downloadable,
             emptyIcon,
             mediaUploadStore,
             imageSize,
@@ -110,6 +113,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleMediaDropzone
+                    disabled={disabled}
                     emptyIcon={emptyIcon}
                     image={mediaUploadStore.getThumbnail(imageSize)}
                     mimeType={mimeType}
@@ -119,7 +123,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
                     uploading={uploading}
                     uploadText={uploadText}
                 />
-                {mediaUploadStore.id &&
+                {mediaUploadStore.id && !disabled &&
                     <div className={singleMediaUploadStyles.buttons}>
                         {downloadable &&
                             <Button

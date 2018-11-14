@@ -472,6 +472,27 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
+    public function testPostWithNullLogo()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/accounts',
+            [
+                'name' => 'ExampleCompany',
+                'logo' => null,
+                'corporation' => null,
+                'note' => null,
+                'parent' => null,
+                'uid' => null,
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('ExampleCompany', $response->name);
+    }
+
     public function testPostWithIds()
     {
         $phoneType = $this->createPhoneType('Private');

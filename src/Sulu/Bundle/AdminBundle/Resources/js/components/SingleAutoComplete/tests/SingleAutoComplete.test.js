@@ -24,6 +24,27 @@ test('SingleAutoComplete should render', () => {
     )).toMatchSnapshot();
 });
 
+test('SingleAutoComplete should render in disabled state', () => {
+    const suggestions = [
+        {name: 'Suggestion 1'},
+        {name: 'Suggestion 2'},
+        {name: 'Suggestion 3'},
+    ];
+
+    expect(render(
+        <SingleAutoComplete
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render the SingleAutoComplete with open suggestions list', () => {
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},

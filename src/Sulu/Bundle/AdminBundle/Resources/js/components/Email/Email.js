@@ -10,6 +10,7 @@ type Props = {|
     name?: string,
     placeholder?: string,
     valid: boolean,
+    disabled: boolean,
     value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -18,6 +19,7 @@ type Props = {|
 @observer
 export default class Email extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         valid: true,
     };
 
@@ -93,6 +95,7 @@ export default class Email extends React.Component<Props> {
         const {
             id,
             valid,
+            disabled,
             name,
             placeholder,
             value,
@@ -100,6 +103,7 @@ export default class Email extends React.Component<Props> {
 
         return (
             <Input
+                disabled={disabled}
                 icon="su-envelope"
                 id={id}
                 name={name}

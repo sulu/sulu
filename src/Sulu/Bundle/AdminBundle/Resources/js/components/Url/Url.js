@@ -8,6 +8,8 @@ import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
 type Props = {|
+    defaultProtocol?: string,
+    disabled: boolean,
     id?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -30,6 +32,7 @@ const URL_REGEX = new RegExp(
 @observer
 export default class Url extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
         valid: true,
     };
@@ -153,7 +156,7 @@ export default class Url extends React.Component<Props> {
     };
 
     render() {
-        const {id, protocols, valid} = this.props;
+        const {disabled, defaultProtocol, id, protocols, valid} = this.props;
 
         const urlClass = classNames(
             urlStyles.url,
@@ -166,9 +169,10 @@ export default class Url extends React.Component<Props> {
             <div className={urlClass}>
                 <div className={urlStyles.protocols}>
                     <SingleSelect
+                        disabled={disabled}
                         onChange={this.handleProtocolChange}
                         skin="flat"
-                        value={this.protocol || protocols[0]}
+                        value={this.protocol || defaultProtocol || this.protocols[0]}
                     >
                         {protocols.map((protocol) => (
                             <SingleSelect.Option key={protocol} value={protocol}>{protocol}</SingleSelect.Option>
@@ -176,6 +180,7 @@ export default class Url extends React.Component<Props> {
                     </SingleSelect>
                 </div>
                 <input
+                    disabled={disabled}
                     id={id}
                     onBlur={this.handlePathBlur}
                     onChange={this.handlePathChange}

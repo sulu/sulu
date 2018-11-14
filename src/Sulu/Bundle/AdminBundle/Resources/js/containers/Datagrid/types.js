@@ -94,3 +94,8 @@ export type TreeItem = {
 export interface FieldTransformer {
     transform(value: *): Node,
 }
+
+export type ResolveCopyArgument = {copied: boolean, parent?: ?Object};
+export type ResolveDeleteArgument = {deleted: boolean};
+export type ResolveMoveArgument = {moved: boolean, parent?: ?Object};
+export type ResolveOrderArgument = {ordered: boolean};

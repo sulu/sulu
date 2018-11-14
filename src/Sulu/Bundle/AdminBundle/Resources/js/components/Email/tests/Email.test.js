@@ -19,6 +19,12 @@ test('Email should render with value', () => {
     expect(render(<Email onChange={onChange} value={value} />)).toMatchSnapshot();
 });
 
+test('Email should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = 'test@test.com';
+    expect(render(<Email disabled={true} onChange={onChange} value={value} />)).toMatchSnapshot();
+});
+
 test('Email should render null value as empty string', () => {
     const onChange = jest.fn();
     expect(render(<Email onChange={onChange} value={null} />)).toMatchSnapshot();

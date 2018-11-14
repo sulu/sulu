@@ -187,7 +187,7 @@ export default class Row extends React.PureComponent<Props> {
         );
     };
 
-    createButtonCells = () => {
+    createButtonCells = (): ?Array<Element<typeof ButtonCell>> => {
         const {buttons, rowIndex} = this.props;
 
         if (!buttons) {

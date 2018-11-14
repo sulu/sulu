@@ -6,6 +6,6 @@ import Checkbox from '../../../components/Checkbox';
 
 export default class BoolFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
-        return <Checkbox active={false} checked={!!value} />;
+        return <Checkbox checked={!!value} disabled={true} />;
     }
 }

@@ -45,7 +45,7 @@ class ContactAdmin extends Admin
         $contacts = $this->getNavigationItemContacts();
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
-            $people = new NavigationItem('sulu_contact.persons');
+            $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
             $people->setMainRoute('sulu_contact.contacts_datagrid');
 
@@ -80,7 +80,7 @@ class ContactAdmin extends Admin
 
         return [
             (new Route('sulu_contact.contacts_datagrid', '/contacts', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_contact.persons')
+                ->addOption('title', 'sulu_contact.people')
                 ->addOption('adapters', ['table'])
                 ->addOption('resourceKey', 'contacts')
                 ->addOption('addRoute', 'sulu_contact.contact_add_form.detail')

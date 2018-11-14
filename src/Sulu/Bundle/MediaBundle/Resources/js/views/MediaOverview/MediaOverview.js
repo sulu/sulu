@@ -73,7 +73,7 @@ class MediaOverview extends React.Component<ViewProps> {
         this.setCollectionStore(new CollectionStore(this.collectionId.get(), this.locale));
     };
 
-    @action setCollectionStore(collectionStore) {
+    @action setCollectionStore(collectionStore: CollectionStore) {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
@@ -126,14 +126,14 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionDatagridStore.clearSelection();
     }
 
-    @action handleCollectionNavigate = (collectionId) => {
+    @action handleCollectionNavigate = (collectionId: ?string | number) => {
         this.clearDatagrids();
         this.mediaPage.set(1);
         this.collectionPage.set(1);
         this.collectionId.set(collectionId);
     };
 
-    handleMediaNavigate = (mediaId) => {
+    handleMediaNavigate = (mediaId: string | number) => {
         const {router} = this.props;
         router.navigate(
             MEDIA_ROUTE,
@@ -144,7 +144,7 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     };
 
-    setMediaDatagridRef = (mediaDatagrid) => {
+    setMediaDatagridRef = (mediaDatagrid: ?ElementRef<typeof Datagrid>) => {
         this.mediaDatagrid = mediaDatagrid;
     };
 

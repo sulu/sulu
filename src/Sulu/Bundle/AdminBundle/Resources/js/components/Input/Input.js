@@ -15,6 +15,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     static defaultProps = {
         alignment: 'left',
         collapsed: false,
+        disabled: false,
         skin: 'default',
         type: 'text',
         valid: true,
@@ -55,9 +56,11 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     render() {
         const {
             alignment,
+            headline,
             id,
             inputClass,
             valid,
+            disabled,
             icon,
             loading,
             collapsed,
@@ -89,8 +92,10 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             inputStyles[alignment],
             {
                 [inputStyles.error]: !valid,
+                [inputStyles.disabled]: disabled,
                 [inputStyles.collapsed]: collapsed,
                 [inputStyles.hasAppendIcon]: onClearClick,
+                [inputStyles.headline]: headline,
             }
         );
 
@@ -137,6 +142,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
                     <input
                         className={inputClass}
+                        disabled={disabled}
                         id={id}
                         inputMode={inputMode}
                         max={max}

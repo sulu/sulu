@@ -26,6 +26,20 @@ test('Pass the label correctly to Checkbox component', () => {
     expect(checkbox.find(CheckboxComponent).prop('children')).toEqual('Checkbox Title');
 });
 
+test('Pass disabled correctly to Checkbox component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const checkbox = shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            label="Test"
+            schemaOptions={{label: {title: 'Checkbox Title'}}}
+        />
+    );
+    expect(checkbox.find(CheckboxComponent).props().disabled).toEqual(true);
+});
+
 test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const checkbox = shallow(
@@ -80,6 +94,20 @@ test('Pass the label correctly to Toggler component', () => {
         />
     );
     expect(checkbox.find(Toggler).prop('children')).toEqual('Toggler Title');
+});
+
+test('Pass disabled correctly to Toggler component', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const checkbox = shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            label="Test"
+            schemaOptions={{label: {title: 'Toggler Title'}, type: {value: 'toggler'}}}
+        />
+    );
+    expect(checkbox.find(Toggler).props().disabled).toEqual(true);
 });
 
 test('Pass the value of true correctly to Toggler component', () => {

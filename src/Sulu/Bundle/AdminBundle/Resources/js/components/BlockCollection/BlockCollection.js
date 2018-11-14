@@ -5,11 +5,12 @@ import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
-import SortableBlocks from './SortableBlocks';
+import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props = {
+type Props = {|
+    disabled: boolean,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
@@ -17,13 +18,14 @@ type Props = {
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
     value: Array<BlockEntry>,
-};
+|};
 
 @observer
 export default class BlockCollection extends React.Component<Props> {
     static idCounter = 0;
 
     static defaultProps = {
+        disabled: false,
         value: [],
     };
 
@@ -133,7 +135,7 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {renderBlockContent, types, value} = this.props;
+        const {disabled, renderBlockContent, types, value} = this.props;
 
         const identifiedValues = value.map((block) => {
             if (!block.__id) {
@@ -145,7 +147,8 @@ export default class BlockCollection extends React.Component<Props> {
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
-                <SortableBlocks
+                <SortableBlockList
+                    disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     lockAxis="y"
                     onCollapse={this.handleCollapse}
@@ -159,7 +162,7 @@ export default class BlockCollection extends React.Component<Props> {
                     value={identifiedValues}
                 />
                 <Button
-                    disabled={this.hasMaximumReached()}
+                    disabled={disabled || this.hasMaximumReached()}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
                     skin="secondary"

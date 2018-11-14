@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, observable, when} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Grid, Loader} from 'sulu-admin-bundle/components';
 import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
@@ -24,7 +26,7 @@ class MediaDetail extends React.Component<Props> {
     form: ?Form;
     formStore: FormStore;
     @observable showFocusPointOverlay: boolean = false;
-    showSuccess = observable.box(false);
+    showSuccess: IObservableValue<boolean> = observable.box(false);
 
     constructor(props: Props) {
         super(props);
@@ -55,7 +57,7 @@ class MediaDetail extends React.Component<Props> {
         this.formStore.destroy();
     }
 
-    setFormRef = (form) => {
+    setFormRef = (form: ?ElementRef<typeof Form>) => {
         this.form = form;
     };
 

@@ -21,19 +21,37 @@
         </section>
         <section name="contact" colspan="8">
             <properties>
-                <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
+                <property name="firstName" type="text_line" mandatory="true" colspan="6">
+                    <meta>
+                        <title>sulu_contact.first_name</title>
+                    </meta>
+                    <params>
+                        <param name="headline" value="true"/>
+                    </params>
+                </property>
+
+                <property name="lastName" type="text_line" mandatory="true" colspan="6">
+                    <meta>
+                        <title>sulu_contact.last_name</title>
+                    </meta>
+                    <params>
+                        <param name="headline" value="true"/>
+                    </params>
+                </property>
+
+                <property name="formOfAddress" type="single_select" mandatory="true" colspan="6">
                     <meta>
                         <title>sulu_contact.form_of_address</title>
                     </meta>
                     <params>
                         <param name="default_value" value="0"/>
                         <param name="values" type="collection">
-                            <param name="0" value="0">
+                            <param name="0">
                                 <meta>
                                     <title>sulu_contact.male_form_of_address</title>
                                 </meta>
                             </param>
-                            <param name="1" value="1">
+                            <param name="1">
                                 <meta>
                                     <title>sulu_contact.female_form_of_address</title>
                                 </meta>
@@ -42,15 +60,9 @@
                     </params>
                 </property>
 
-                <property name="firstName" type="text_line" mandatory="true" colspan="6">
+                <property name="birthday" type="date" colspan="6">
                     <meta>
-                        <title>sulu_contact.first_name</title>
-                    </meta>
-                </property>
-
-                <property name="lastName" type="text_line" mandatory="true" colspan="6">
-                    <meta>
-                        <title>sulu_contact.last_name</title>
+                        <title>sulu_contact.birthday</title>
                     </meta>
                 </property>
 

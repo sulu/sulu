@@ -15,6 +15,7 @@ type Props = {|
     labelRef?: (ref: ?ElementRef<'label'>) => void,
     inputRef?: (ref: ?ElementRef<'input'>) => void,
     valid: boolean,
+    disabled: boolean,
     value: ?number,
     onBlur?: () => void,
     onChange: (value: ?number, event: SyntheticEvent<HTMLInputElement>) => void,
@@ -30,6 +31,7 @@ type Props = {|
 export default class Number extends React.PureComponent<Props> {
     static defaultProps = {
         alignment: 'left',
+        disabled: false,
         valid: true,
     };
 
@@ -59,6 +61,7 @@ export default class Number extends React.PureComponent<Props> {
             labelRef: this.props.labelRef,
             inputRef: this.props.inputRef,
             valid: this.props.valid,
+            disabled: this.props.disabled,
             value: this.props.value,
             onBlur: this.props.onBlur,
             onIconClick: this.props.onIconClick,

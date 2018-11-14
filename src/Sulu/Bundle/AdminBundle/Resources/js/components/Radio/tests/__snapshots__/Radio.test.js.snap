@@ -15,6 +15,22 @@ exports[`The component should render in dark skin 1`] = `
 </label>
 `;
 
+exports[`The component should render in disabled state 1`] = `
+<label
+  class="label disabled"
+>
+  <span
+    class="switch disabled radio dark disabled"
+  >
+    <input
+      disabled=""
+      type="radio"
+    />
+    <span />
+  </span>
+</label>
+`;
+
 exports[`The component should render in light skin 1`] = `
 <label
   class="label"

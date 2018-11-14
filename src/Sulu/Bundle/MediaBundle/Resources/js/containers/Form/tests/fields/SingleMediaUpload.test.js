@@ -37,6 +37,7 @@ test('Pass correct props', () => {
     const singleMediaUpload = shallow(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
@@ -46,6 +47,7 @@ test('Pass correct props', () => {
     expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
     expect(singleMediaUpload.prop('imageSize')).toEqual('sulu-400x400-inset');
     expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
+    expect(singleMediaUpload.prop('disabled')).toEqual(true);
 });
 
 test('Pass correct skin to props', () => {

@@ -5,6 +5,7 @@ import SingleAutoCompleteComponent from '../../components/SingleAutoComplete';
 import SearchStore from '../../stores/SearchStore';
 
 type Props = {|
+    disabled: boolean,
     displayProperty: string,
     id?: string,
     searchProperties: Array<string>,
@@ -15,6 +16,10 @@ type Props = {|
 
 @observer
 export default class SingleAutoComplete extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     searchStore: SearchStore;
 
     constructor(props: Props) {
@@ -36,16 +41,17 @@ export default class SingleAutoComplete extends React.Component<Props> {
 
     render() {
         const {
-            props: {
-                displayProperty,
-                id,
-                searchProperties,
-                value,
-            },
-        } = this;
+            disabled,
+            displayProperty,
+            id,
+            searchProperties,
+            value,
+
+        } = this.props;
 
         return (
             <SingleAutoCompleteComponent
+                disabled={disabled}
                 displayProperty={displayProperty}
                 id={id}
                 loading={this.searchStore.loading}

@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
-import SortableContainer from '../SortableBlocks';
+import SortableBlockList from '../SortableBlockList';
 
 beforeEach(() => {
     BlockCollection.idCounter = 0;
@@ -25,6 +25,17 @@ test('Should render an empty block list', () => {
 test('Should render a block list', () => {
     expect(render(
         <BlockCollection
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Should render a disabled block list', () => {
+    expect(render(
+        <BlockCollection
+            disabled={true}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
             value={[{content: 'Test 1'}, {content: 'Test 2'}]}
@@ -188,7 +199,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
 
-    blockCollection.find(SortableContainer).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
+    blockCollection.find(SortableBlockList).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({content: 'Test 2'}),
         expect.objectContaining({content: 'Test 3'}),

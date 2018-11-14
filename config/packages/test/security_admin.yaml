@@ -1,0 +1,14 @@
+security:
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        admin:
+            http_basic:
+                provider: testprovider
+            json_login:
+                provider: sulu
+
+sulu_test:
+    enable_test_user_provider: true

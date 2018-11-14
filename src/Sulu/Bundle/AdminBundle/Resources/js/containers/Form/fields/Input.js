@@ -12,8 +12,12 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
         const {
             dataPath,
             error,
+            disabled,
             onChange,
             schemaOptions: {
+                headline: {
+                    value: headline,
+                } = {},
                 max_characters: {
                     value: maxCharacters,
                 } = {},
@@ -26,6 +30,10 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
             } = {},
             value,
         } = this.props;
+
+        if (headline !== undefined && typeof headline !== 'boolean') {
+            throw new Error('The "headline" schema option must be a boolean!');
+        }
 
         if (maxCharacters !== undefined && isNaN(maxCharacters)) {
             throw new Error('The "max_characters" schema option must be a number!');
@@ -41,6 +49,8 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
 
         return (
             <InputComponent
+                disabled={!!disabled}
+                headline={headline}
                 id={dataPath}
                 maxCharacters={maxCharacters ? parseInt(maxCharacters) : undefined}
                 maxSegments={maxSegments ? parseInt(maxSegments) : undefined}

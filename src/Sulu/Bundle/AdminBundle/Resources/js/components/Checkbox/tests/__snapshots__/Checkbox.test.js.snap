@@ -15,6 +15,22 @@ exports[`The component should render in dark skin 1`] = `
 </label>
 `;
 
+exports[`The component should render in disabled state 1`] = `
+<label
+  class="label disabled"
+>
+  <span
+    class="switch disabled checkbox dark"
+  >
+    <input
+      disabled=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
 exports[`The component should render in light skin 1`] = `
 <label
   class="label"
@@ -23,22 +39,6 @@ exports[`The component should render in light skin 1`] = `
     class="switch checkbox light"
   >
     <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
-`;
-
-exports[`The component should render inactive 1`] = `
-<label
-  class="label"
->
-  <span
-    class="switch inactive checkbox dark"
-  >
-    <input
-      disabled=""
       type="checkbox"
     />
     <span />

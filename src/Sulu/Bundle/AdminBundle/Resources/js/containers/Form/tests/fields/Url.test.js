@@ -51,6 +51,7 @@ test('Pass props correctly to Url component', () => {
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             value="http://www.sulu.io"
@@ -59,10 +60,18 @@ test('Pass props correctly to Url component', () => {
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://']);
     expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
+    expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
 });
 
-test('Pass correct default props to Url component', () => {
-    const schemaOptions = {};
+test('Not call changed when only protocol is given', () => {
+    const schemaOptions = {
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'http://'},
+            ],
+        },
+    };
+
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
@@ -76,7 +85,33 @@ test('Pass correct default props to Url component', () => {
     );
 
     expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
-    expect(changeSpy).toBeCalledWith('https://');
+    expect(url.find(UrlComponent).prop('defaultProtocol')).toEqual('http://');
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Pass correct default props to Url component', () => {
+    const schemaOptions = {
+        defaults: {
+            value: [
+                {name: 'scheme', value: 'http://'},
+                {name: 'specific_part', value: 'github.com'},
+            ],
+        },
+    };
+    const changeSpy = jest.fn();
+
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const url = shallow(
+        <Url
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(changeSpy).toBeCalledWith('http://github.com');
 });
 
 test('Throw error if only specific_part default is set', () => {

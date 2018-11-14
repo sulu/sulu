@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, render} from 'enzyme';
 import React from 'react';
 import RadioGroup from '../RadioGroup';
@@ -33,17 +33,33 @@ test('The component should check the correct radio', () => {
     expect(radios.get(2).props.checked).toBe(false);
 });
 
-test('The component should pass the change callback to the radios', () => {
-    const onChange = jest.fn().mockReturnValue('my-on-change');
+test('The component should pass the disabled state to the radios', () => {
     const group = mount(
-        <RadioGroup onChange={onChange}>
+        <RadioGroup disabled={true} value="1">
             <Radio value="1" />
             <Radio value="2" />
             <Radio value="3" />
         </RadioGroup>
     );
     const radios = group.find(Radio);
-    expect(radios.get(0).props.onChange()).toBe('my-on-change');
-    expect(radios.get(1).props.onChange()).toBe('my-on-change');
-    expect(radios.get(2).props.onChange()).toBe('my-on-change');
+    expect(radios.get(0).props.disabled).toBe(true);
+    expect(radios.get(1).props.disabled).toBe(true);
+    expect(radios.get(2).props.disabled).toBe(true);
+});
+
+test('The component should pass the change callback to the radios', () => {
+    const onChange = jest.fn();
+    const group = mount(
+        <RadioGroup onChange={onChange} value="1">
+            <Radio value="1" />
+            <Radio value="2" />
+            <Radio value="3" />
+        </RadioGroup>
+    );
+    const radios = group.find(Radio);
+    radios.get(0).props.onChange();
+    radios.get(1).props.onChange();
+    radios.get(2).props.onChange();
+
+    expect(onChange).toHaveBeenCalledTimes(3);
 });

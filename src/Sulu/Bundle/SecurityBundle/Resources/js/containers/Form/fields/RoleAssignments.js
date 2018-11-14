@@ -13,10 +13,10 @@ export default class RoleAssignments extends React.Component<Props> {
     };
 
     render() {
-        const {value} = this.props;
+        const {disabled, value} = this.props;
 
         return (
-            <RoleAssignmentsContainer onChange={this.handleChange} value={value ? value : []} />
+            <RoleAssignmentsContainer disabled={!!disabled} onChange={this.handleChange} value={value ? value : []} />
         );
     }
 }

@@ -11,6 +11,7 @@ import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
+    disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     onChange: (selectedIds: Array<string | number>) => void,
@@ -25,6 +26,7 @@ type Props = {|
 @observer
 export default class MultiSelection extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         disabledIds: [],
         displayProperties: [],
         icon: 'su-plus',
@@ -105,13 +107,25 @@ export default class MultiSelection extends React.Component<Props> {
     };
 
     render() {
-        const {adapter, disabledIds, displayProperties, icon, label, locale, resourceKey, overlayTitle} = this.props;
+        const {
+            adapter,
+            disabled,
+            disabledIds,
+            displayProperties,
+            icon,
+            label,
+            locale,
+            resourceKey,
+            overlayTitle,
+        } = this.props;
+
         const {items, loading} = this.selectionStore;
         const columns = displayProperties.length;
 
         return (
             <Fragment>
                 <MultiItemSelection
+                    disabled={disabled}
                     label={label}
                     leftButton={{
                         icon,

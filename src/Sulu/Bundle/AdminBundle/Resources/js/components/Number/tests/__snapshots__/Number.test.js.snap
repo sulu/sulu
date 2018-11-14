@@ -10,3 +10,15 @@ exports[`Number should render 1`] = `
   />
 </label>
 `;
+
+exports[`Number should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <input
+    disabled=""
+    type="number"
+    value="8"
+  />
+</label>
+`;

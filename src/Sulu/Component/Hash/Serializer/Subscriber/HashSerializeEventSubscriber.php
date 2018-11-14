@@ -62,10 +62,12 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!$event->getVisitor() instanceof GenericSerializationVisitor) {
+        $visitor = $event->getVisitor();
+
+        if (!$visitor instanceof GenericSerializationVisitor) {
             return;
         }
 
-        $event->getVisitor()->addData('_hash', $this->hasher->hash($object));
+        $visitor->setData('_hash', $this->hasher->hash($object));
     }
 }

@@ -5,11 +5,12 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class TextEditor extends React.Component<FieldTypeProps<?string>> {
     render() {
-        const {onChange, onFinish, value} = this.props;
+        const {disabled, onChange, onFinish, value} = this.props;
 
         return (
             <TextEditorContainer
                 adapter="ckeditor5"
+                disabled={!!disabled}
                 onBlur={onFinish}
                 onChange={onChange}
                 value={value}

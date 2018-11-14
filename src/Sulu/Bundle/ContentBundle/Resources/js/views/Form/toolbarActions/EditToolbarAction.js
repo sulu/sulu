@@ -24,7 +24,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         } = this;
 
         if (!id) {
-            return;
+            return null;
         }
 
         if (!locales || !locale) {

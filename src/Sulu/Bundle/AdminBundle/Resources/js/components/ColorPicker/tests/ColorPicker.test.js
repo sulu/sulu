@@ -26,6 +26,12 @@ test('ColorPicker should render with value', () => {
     expect(render(<ColorPicker onChange={onChange} value={value} />)).toMatchSnapshot();
 });
 
+test('ColorPicker should render when disabled', () => {
+    const onChange = jest.fn();
+    const value = '#abc';
+    expect(render(<ColorPicker disabled={true} onChange={onChange} value={value} />)).toMatchSnapshot();
+});
+
 test('ColorPicker should render null value as empty string', () => {
     const onChange = jest.fn();
     expect(render(<ColorPicker onChange={onChange} value={null} />)).toMatchSnapshot();
@@ -90,6 +96,15 @@ test('ColorPicker should render with open overlay', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
     const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
+
+    colorPicker.find('Icon').simulate('click');
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+});
+
+test('ColorPicker should not open overlay on icon-click when disabled', () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    const colorPicker = mount(<ColorPicker disabled={true} onBlur={onBlur} onChange={onChange} value={null} />);
 
     colorPicker.find('Icon').simulate('click');
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();

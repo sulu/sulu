@@ -1,27 +1,40 @@
 // @flow
 import React from 'react';
+import classNames from 'classnames';
 import Icon from '../../components/Icon';
 import itemStyles from './item.scss';
 
-type Props = {
+type Props = {|
     children: string,
+    disabled: boolean,
     onDelete: (value: Object) => void,
     value: Object,
-};
+|};
 
 export default class Item extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     handleDelete = () => {
         const {onDelete, value} = this.props;
         onDelete(value);
     };
 
     render() {
-        const {children} = this.props;
+        const {children, disabled} = this.props;
+
+        const itemClass = classNames(
+            itemStyles.item,
+            {
+                [itemStyles.disabled]: disabled,
+            }
+        );
 
         return (
-            <div className={itemStyles.item}>
+            <div className={itemClass}>
                 {children}
-                <Icon className={itemStyles.icon} name="su-times" onClick={this.handleDelete} />
+                {!disabled && <Icon className={itemStyles.icon} name="su-times" onClick={this.handleDelete} />}
             </div>
         );
     }

@@ -32,11 +32,13 @@ test('Pass props correctly to component', () => {
     const field = shallow(
         <Number
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
         />
     );
 
     expect(field.find(NumberComponent).prop('valid')).toBe(true);
+    expect(field.find(NumberComponent).prop('disabled')).toBe(true);
 });
 
 test('Pass props correctly to component inclusive schemaOptions', () => {

@@ -8,10 +8,19 @@ $itemBorderColor: $shakespeare;
 $itemBackgroundColorSelected: $shakespeare;
 $itemColorSelected: $white;
 
+$itemColorDisabled: $silver;
+$itemBorderColorDisabled: $silver;
+$itemColorDisabledSelected: $white;
+$itemBackgroundColorDisabledSelected: $silver;
+
 .matrix {
     background: $white;
     border-radius: 3px;
     margin-top: 10px;
+
+    &.disabled {
+        opacity: .5;
+    }
 }
 
 .row {
@@ -71,5 +80,16 @@ $itemColorSelected: $white;
     &.selected {
         background-color: $itemBackgroundColorSelected;
         color: $itemColorSelected;
+    }
+
+    &.disabled {
+        cursor: default;
+        color: $itemColorDisabled;
+        border-color: $itemBorderColorDisabled;
+    }
+
+    &.selected.disabled {
+        background-color: $itemBackgroundColorDisabledSelected;
+        color: $itemColorDisabledSelected;
     }
 }

@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in disabled state 1`] = `
+<label
+  class="label disabled"
+>
+  <span
+    class="switch disabled toggler"
+  >
+    <input
+      checked=""
+      disabled=""
+      name="my-name"
+      type="checkbox"
+      value="my-value"
+    />
+    <span />
+  </span>
+  <div>
+    Label
+  </div>
+</label>
+`;
+
+exports[`The component should render in the default state 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch toggler"
+  >
+    <input
+      checked=""
+      name="my-name"
+      type="checkbox"
+      value="my-value"
+    />
+    <span />
+  </span>
+  <div>
+    Label
+  </div>
+</label>
+`;

@@ -8,17 +8,19 @@ import Item from './Item';
 import matrixStyles from './matrix.scss';
 import type {MatrixRowValue} from './types';
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Element<typeof Item>>,
+    disabled: boolean,
     name: string,
     onChange?: (name: string, value: {[string]: boolean}) => void,
     title?: string,
     values: MatrixRowValue,
-};
+|};
 
 @observer
 export default class Row extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         values: {},
     };
 
@@ -51,11 +53,12 @@ export default class Row extends React.Component<Props> {
     };
 
     cloneItems = (originalItems: ChildrenArray<Element<typeof Item>>) => {
-        const values = this.props.values;
+        const {disabled, values} = this.props;
         return React.Children.map(originalItems, (item, index) => React.cloneElement(
             item,
             {
                 ...item.props,
+                disabled: disabled,
                 key: `matrix-item-${index}`,
                 onChange: this.handleChange,
                 value: values[item.props.name],
@@ -92,6 +95,7 @@ export default class Row extends React.Component<Props> {
 
     render() {
         const {
+            disabled,
             children,
             name,
             title,
@@ -102,7 +106,7 @@ export default class Row extends React.Component<Props> {
                 <div>{title ? title : name}</div>
                 <div>
                     {this.cloneItems(children)}
-                    {this.renderAllButton()}
+                    {!disabled && this.renderAllButton()}
                 </div>
             </div>
         );

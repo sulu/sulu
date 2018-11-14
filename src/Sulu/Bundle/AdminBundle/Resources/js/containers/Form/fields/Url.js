@@ -12,11 +12,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             schemaOptions: {
                 defaults: {
                     value: defaults,
-                } = {
-                    value: [
-                        {name: 'scheme', value: 'https://'},
-                    ],
-                },
+                } = {},
             } = {},
             value,
         } = this.props;
@@ -30,30 +26,23 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             (defaultOption) => defaultOption.name === 'specific_part'
         );
 
-        if (!defaultSchemeOption && defaultSpecificPartOption) {
+        if (value || !defaultSpecificPartOption) {
+            return;
+        }
+
+        if (!defaultSchemeOption) {
             throw new Error('It is not allowed to set a default URL without a scheme!');
         }
 
-        if (!value) {
-            let defaultValue = undefined;
-            if (defaultSchemeOption) {
-                if (typeof defaultSchemeOption.value !== 'string') {
-                    throw new Error('The "scheme" default must be a string if set!');
-                }
-                defaultValue = defaultSchemeOption.value;
-
-                if (defaultSpecificPartOption) {
-                    if (typeof defaultSpecificPartOption.value !== 'string') {
-                        throw new Error('The "specific_part" default must be a string if set!');
-                    }
-                    defaultValue += defaultSpecificPartOption.value;
-                }
-            }
-
-            if (defaultValue) {
-                onChange(defaultValue);
-            }
+        if (typeof defaultSchemeOption.value !== 'string') {
+            throw new Error('The "scheme" default must be a string if set!');
         }
+
+        if (typeof defaultSpecificPartOption.value !== 'string') {
+            throw new Error('The "specific_part" default must be a string if set!');
+        }
+
+        onChange(defaultSchemeOption.value + defaultSpecificPartOption.value);
     }
 
     handleBlur = () => {
@@ -63,9 +52,13 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
     render() {
         const {
             dataPath,
+            disabled,
             error,
             onChange,
             schemaOptions: {
+                defaults: {
+                    value: defaults = [],
+                } = {},
                 schemes: {
                     value: schemes = [
                         {name: 'http://'},
@@ -91,8 +84,25 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             return scheme.name;
         });
 
+        if (!Array.isArray(defaults)) {
+            throw new Error('The "defaults" schema option must be an array!');
+        }
+
+        let defaultProtocol = protocols[0];
+        const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
+
+        if (defaultScheme && defaultScheme.value) {
+            if (typeof defaultScheme.value !== 'string') {
+                throw new Error('The "scheme" value of the "defaults" schema option must be a string!');
+            }
+
+            defaultProtocol = defaultScheme.value;
+        }
+
         return (
             <UrlComponent
+                defaultProtocol={defaultProtocol}
+                disabled={!!disabled}
                 id={dataPath}
                 onBlur={this.handleBlur}
                 onChange={onChange}

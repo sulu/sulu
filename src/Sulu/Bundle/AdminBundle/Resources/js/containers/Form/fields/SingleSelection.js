@@ -41,10 +41,13 @@ export default class SingleSelection extends React.Component<Props>
         if (this.type === 'auto_complete') {
             return this.renderAutoComplete();
         }
+
+        throw new Error('The "' + this.type + '" type does not exist in the SingleSelection field type.');
     }
 
     renderDatagridOverlay() {
         const {
+            disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
@@ -73,6 +76,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                disabled={!!disabled}
                 disabledIds={isSameEndpoint && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
@@ -88,6 +92,7 @@ export default class SingleSelection extends React.Component<Props>
 
     renderAutoComplete() {
         const {
+            disabled,
             dataPath,
             fieldTypeOptions,
             value,
@@ -118,6 +123,7 @@ export default class SingleSelection extends React.Component<Props>
 
         return (
             <SingleAutoComplete
+                disabled={!!disabled}
                 displayProperty={displayProperty}
                 id={dataPath}
                 onChange={this.handleChange}

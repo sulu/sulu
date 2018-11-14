@@ -28,14 +28,19 @@ export default class Permissions extends React.Component<Props> {
     };
 
     render() {
-        const {value} = this.props;
+        const {disabled, value} = this.props;
 
         if (!this.system) {
             return null;
         }
 
         return (
-            <PermissionsContainer onChange={this.handleChange} system={this.system} value={value ? value : []} />
+            <PermissionsContainer
+                disabled={!!disabled}
+                onChange={this.handleChange}
+                system={this.system}
+                value={value ? value : []}
+            />
         );
     }
 }

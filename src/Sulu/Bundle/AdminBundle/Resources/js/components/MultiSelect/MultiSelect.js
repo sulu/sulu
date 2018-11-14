@@ -14,6 +14,7 @@ type Props<T: string | number> = SelectProps & {
 
 export default class MultiSelect<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        disabled: false,
         skin: 'default',
         values: [],
     };
@@ -77,11 +78,12 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
     };
 
     render() {
-        const {children, icon, skin} = this.props;
+        const {children, disabled, icon, skin} = this.props;
 
         return (
             <Select
                 closeOnSelect={false}
+                disabled={disabled}
                 displayValue={this.displayValue}
                 icon={icon}
                 isOptionSelected={this.isOptionSelected}

@@ -44,6 +44,18 @@ test('Show with default plus icon', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in disabled state', () => {
+    expect(render(
+        <MultiSelection
+            adapter="table"
+            disabled={true}
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Show with passed label', () => {
     expect(render(
         <MultiSelection
@@ -131,6 +143,22 @@ test('Should open an overlay', () => {
 
     const body = document.body;
     expect(pretty(body ? body.innerHTML : null)).toMatchSnapshot();
+});
+
+test('Should not open an overlay on icon-click when disabled', () => {
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            disabled={true}
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    selection.find('Button[icon="su-plus"]').simulate('click');
+    selection.update();
+    expect(selection.find('MultiDatagridOverlay').prop('open')).toEqual(false);
 });
 
 test('Should close an overlay using the close button', () => {

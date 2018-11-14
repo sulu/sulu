@@ -45,6 +45,40 @@ exports[`MultiAutoComplete should render 1`] = `
 </label>
 `;
 
+exports[`MultiAutoComplete should render in disabled state 1`] = `
+<label
+  class="multiAutoComplete disabled"
+>
+  <div
+    class="icon"
+  >
+    <span
+      aria-label="su-search"
+      class="su-search"
+    />
+  </div>
+  <div
+    class="items"
+  >
+    <div
+      class="item disabled"
+    >
+      Test
+    </div>
+    <div
+      class="item disabled"
+    >
+      Test 2
+    </div>
+    <input
+      class="input mousetrap"
+      disabled=""
+      value=""
+    />
+  </div>
+</label>
+`;
+
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
 <label
   class="multiAutoComplete"

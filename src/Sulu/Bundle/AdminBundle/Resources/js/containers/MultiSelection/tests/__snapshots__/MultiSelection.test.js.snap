@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render in disabled state 1`] = `
+<div
+  class="multiItemSelectionClass disabled"
+>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      disabled=""
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
+
 exports[`Should open an overlay 1`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>
@@ -26,7 +53,9 @@ exports[`Should open an overlay 1`] = `
 `;
 
 exports[`Show with default plus icon 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -42,15 +71,17 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed icon 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -66,15 +97,17 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed label 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header emptyList"
   >
@@ -92,15 +125,17 @@ Array [
     >
       Select Snippets
     </div>
-  </div>,
+  </div>
   <ul
     class="list"
-  />,
-]
+  />
+</div>
 `;
 
 exports[`Show with passed values as items in right locale 1`] = `
-Array [
+<div
+  class="multiItemSelectionClass"
+>
   <div
     class="header"
   >
@@ -116,7 +151,7 @@ Array [
     <div
       class="label"
     />
-  </div>,
+  </div>
   <ul
     class="list"
   >
@@ -264,6 +299,6 @@ Array [
         </button>
       </div>
     </li>
-  </ul>,
-]
+  </ul>
+</div>
 `;

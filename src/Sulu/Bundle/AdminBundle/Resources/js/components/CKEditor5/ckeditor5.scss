@@ -1,60 +1,99 @@
 @import '../../containers/Application/colors.scss';
 
+$textEditorfontSize: 12px;
+$textEditorButtonMinSize: 20px;
 $textEditorBorderRadius: 3px;
-$textEditorButtonBorderRadius: 2px;
-$textEditorToolbarBackgroundColor: $silver;
-$textEditorBackgroundColor: $white;
-$textEditorBorderColor: $silver;
-$textEditorButtonActiveBackground: $dustyGray;
+$textEditorBackgroundColor: $silver;
+$textEditorDarkBackgroundColor: $dustyGray;
+$textEditorBorderColor: $textEditorBackgroundColor;
+$textEditorDarkBorderColor: $textEditorDarkBackgroundColor;
+$textEditorAccentColor: $shakespeare;
+$textEditorLightAccentColor: #e5f4f7;
+$textEditorWhiteHover: $mercury;
+$textEditorPanelBackground: $white;
 
 :global {
-    .ck.ck-toolbar {
-        background-color: $textEditorToolbarBackgroundColor;
-        border-radius: $textEditorBorderRadius;
+    :root {
+        /* font size */
+        --ck-font-size-base: $textEditorfontSize;
+        --ck-icon-size: $textEditorfontSize;
+
+        /* shadows */
+        --ck-color-shadow-inner: none;
+        --ck-color-shadow-drop: none;
+        --ck-color-button-default-active-shadow: none;
+        --ck-color-button-on-active-shadow: none;
+
+        /* toolbar */
+        --ck-ui-component-min-height: $textEditorButtonMinSize;
+        --ck-color-toolbar-background: $textEditorBackgroundColor;
+        --ck-color-toolbar-border: $textEditorBorderColor;
+
+        /* borders */
+        --ck-border-radius: $textEditorBorderRadius;
+        --ck-color-base-border: $textEditorBorderColor;
+        --ck-color-focus-border: $textEditorAccentColor;
+
+        /* buttons */
+        --ck-color-button-default-background: transparent;
+        --ck-color-button-default-hover-background: var(--ck-color-button-default-background);
+        --ck-color-button-default-active-background: var(--ck-color-button-default-background);
+        --ck-color-button-on-background: $textEditorDarkBackgroundColor;
+        --ck-color-button-on-hover-background: var(--ck-color-button-on-background);
+        --ck-color-button-on-active-background: var(--ck-color-button-on-background);
+
+        /* panel */
+        --ck-color-panel-background: $textEditorPanelBackground;
+        --ck-color-panel-border: $textEditorDarkBorderColor;
+        --ck-color-base-foreground: $textEditorBackgroundColor;
+
+        /* list */
+        --ck-color-list-button-hover-background: $textEditorWhiteHover;
+
+        /* toggle button */
+        --ck-color-switch-button-off-background: $textEditorBackgroundColor;
+        --ck-color-switch-button-on-background: $textEditorAccentColor;
+
+        /* table insert box */
+        --ck-insert-table-dropdown-box-border-active-color: $textEditorAccentColor;
+        --ck-insert-table-dropdown-box-active-background: $textEditorLightAccentColor;
+
+        /* table widget */
+        --ck-color-widget-hover-border: $textEditorBorderColor;
+        --ck-color-widget-blurred-border: $textEditorBorderColor;
+    }
+
+    .ck.ck-editor__top {
         margin-bottom: 10px;
-        padding: 10px;
-        height: 40px;
 
-        .ck.ck-button {
-            display: flex;
-            background-color: transparent;
-            border: none;
-            border-radius: $textEditorButtonBorderRadius;
-            height: 20px;
-            width: 20px;
-            padding: 4px;
-            margin-right: 5px;
-
-            &.ck-on {
-                background-color: $textEditorButtonActiveBackground;
-            }
-
-            .ck.ck-icon {
-                width: 12px;
-                height: 12px;
-                justify-content: center;
-            }
-
-            .ck.ck-button__label {
-                display: none;
-            }
-        }
-
-        .ck.ck-toolbar__separator {
-            width: 20px;
+        .ck.ck-toolbar {
+            border-radius: $textEditorBorderRadius !important;
+            padding: 5px 10px;
         }
     }
 
-    .ck.ck-content {
-        background-color: $textEditorBackgroundColor;
-        border: 1px solid $textEditorBorderColor;
-        border-radius: $textEditorBorderRadius;
-        padding: 10px;
-        font-size: 12px;
-        line-height: 20px;
+    .ck.ck-editor {
+        .ck.ck-toolbar__separator {
+            background: none;
+            width: $textEditorButtonMinSize;
+        }
 
-        p {
-            margin-top: 0;
+        .ck.ck-content {
+            border-radius: $textEditorBorderRadius !important;
+            border-color: $textEditorBackgroundColor !important;
+        }
+
+        .ck-widget.table {
+            width: 100%;
+
+            table {
+                width: 100%;
+            }
+        }
+
+        &.disabled {
+            opacity: .5;
+            pointer-events: none;
         }
     }
 }

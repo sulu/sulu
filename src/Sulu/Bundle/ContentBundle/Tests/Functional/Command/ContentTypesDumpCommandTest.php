@@ -50,7 +50,7 @@ class ContentTypesDumpCommandTest extends SuluTestCase
         $this->assertContains('date', $output);
         $this->assertContains('email', $output);
         $this->assertContains('internal_link', $output);
-        $this->assertContains('multiple_select', $output);
+        $this->assertContains('select', $output);
         $this->assertContains('number', $output);
         $this->assertContains('password', $output);
         $this->assertContains('phone', $output);

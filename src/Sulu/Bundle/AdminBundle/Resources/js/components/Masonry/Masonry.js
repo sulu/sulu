@@ -41,7 +41,7 @@ export default class Masonry extends React.PureComponent<Props> {
         this.masonryRef = ref;
     };
 
-    getChildNodes() {
+    getChildNodes(): Array<*> {
         const {masonryRef} = this;
 
         if (!masonryRef) {
@@ -69,7 +69,7 @@ export default class Masonry extends React.PureComponent<Props> {
         }
     }
 
-    cloneItems(originalItems: ChildrenArray<*>) {
+    cloneItems(originalItems: ?ChildrenArray<*>) {
         const itemStyle = {marginBottom: MASONRY_OPTIONS.gutter};
 
         return React.Children.map(originalItems, (item) => (

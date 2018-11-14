@@ -11,14 +11,19 @@ import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 import PermissionMatrix from './PermissionMatrix';
 
-type Props = {
+type Props = {|
+    disabled: boolean,
     system: string,
     onChange: (value: Array<ContextPermission>) => void,
     value: Array<ContextPermission>,
-};
+|};
 
 @observer
 export default class Permissions extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     static webspacePlaceholder = '#webspace#';
 
     systemDisposer: () => void;
@@ -165,6 +170,7 @@ export default class Permissions extends React.Component<Props> {
                 <div className={permissionsStyle.selectContainer}>
                     <MultiSelect
                         apiOptions={{checkForPermissions: 0, locale: userStore.user.locale}}
+                        disabled={this.props.disabled}
                         displayProperty="name"
                         idProperty="key"
                         onChange={this.handleWebspaceChange}
@@ -177,6 +183,7 @@ export default class Permissions extends React.Component<Props> {
                         return (
                             <PermissionMatrix
                                 contextPermissions={this.props.value}
+                                disabled={this.props.disabled}
                                 key={matrixIndex}
                                 onChange={this.handleChange}
                                 securityContexts={this.getWebspaceSecurityContexts(webspace)}
@@ -190,7 +197,7 @@ export default class Permissions extends React.Component<Props> {
     }
 
     renderMatrixes(): Array<*> {
-        const {value} = this.props;
+        const {disabled, value} = this.props;
 
         return Object.keys(this.securityContextGroups).sort().map((securityContextGroupKey, matrixIndex) => {
             // ignore webspace group here
@@ -205,6 +212,7 @@ export default class Permissions extends React.Component<Props> {
             return (
                 <PermissionMatrix
                     contextPermissions={value}
+                    disabled={disabled}
                     key={matrixIndex}
                     onChange={this.handleChange}
                     securityContexts={securityContexts}

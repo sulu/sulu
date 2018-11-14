@@ -30,6 +30,22 @@ test('Render a SingleMediaUpload', () => {
     ).toMatchSnapshot();
 });
 
+test('Render a SingleMediaUpload in disabled state', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+
+    expect(render(
+        <SingleMediaUpload
+            collectionId={5}
+            disabled={true}
+            mediaUploadStore={mediaUploadStore}
+            uploadText="Upload media"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a SingleMediaUpload with an empty icon if no image is passed', () => {
     const mediaUploadStore = new MediaUploadStore(
         undefined,

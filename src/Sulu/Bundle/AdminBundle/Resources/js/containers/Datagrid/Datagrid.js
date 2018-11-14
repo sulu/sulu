@@ -4,13 +4,21 @@ import {observable, action, computed} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
+import classNames from 'classnames';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
 import Loader from '../../components/Loader';
 import SingleDatagridOverlay from '../SingleDatagridOverlay';
 import {translate} from '../../utils/Translator';
-import type {Schema, SortOrder} from './types';
+import type {
+    ResolveCopyArgument,
+    ResolveDeleteArgument,
+    ResolveMoveArgument,
+    ResolveOrderArgument,
+    Schema,
+    SortOrder,
+} from './types';
 import DatagridStore from './stores/DatagridStore';
 import datagridAdapterRegistry from './registries/DatagridAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -24,6 +32,7 @@ type Props = {|
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
+    disabled: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
     movable: boolean,
@@ -41,6 +50,7 @@ export default class Datagrid extends React.Component<Props> {
         allowActivateForDisabledItems: true,
         copyable: true,
         deletable: true,
+        disabled: false,
         disabledIds: [],
         movable: true,
         orderable: true,
@@ -61,10 +71,10 @@ export default class Datagrid extends React.Component<Props> {
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
-    resolveCopy: ?({copied: boolean, parent?: ?Object}) => void;
-    resolveDelete: ?({deleted: boolean}) => void;
-    resolveMove: ?({moved: boolean, parent?: ?Object}) => void;
-    resolveOrder: ?({ordered: boolean}) => void;
+    resolveCopy: ?(ResolveCopyArgument) => void;
+    resolveDelete: ?(ResolveDeleteArgument) => void;
+    resolveMove: ?(ResolveMoveArgument) => void;
+    resolveOrder: ?(ResolveOrderArgument) => void;
     moveId: ?string | number;
 
     @computed get currentAdapter(): typeof AbstractAdapter {
@@ -142,7 +152,7 @@ export default class Datagrid extends React.Component<Props> {
     @action handleRequestItemDelete = (id: string | number) => {
         this.showDeleteDialog = true;
 
-        const deletePromise = new Promise((resolve) => this.resolveDelete = resolve);
+        const deletePromise: Promise<ResolveDeleteArgument> = new Promise((resolve) => this.resolveDelete = resolve);
         deletePromise.then(action((response) => {
             if (!response.deleted) {
                 this.showDeleteDialog = false;
@@ -181,7 +191,7 @@ export default class Datagrid extends React.Component<Props> {
         this.moveId = id;
         this.showMoveOverlay = true;
 
-        const movePromise = new Promise((resolve) => this.resolveMove = resolve);
+        const movePromise: Promise<ResolveMoveArgument> = new Promise((resolve) => this.resolveMove = resolve);
         movePromise.then(action((response) => {
             if (!response.moved || !response.parent) {
                 this.showMoveOverlay = false;
@@ -226,7 +236,7 @@ export default class Datagrid extends React.Component<Props> {
     @action handleRequestItemCopy = (id: string | number) => {
         this.showCopyOverlay = true;
 
-        const copyPromise = new Promise((resolve) => this.resolveCopy = resolve);
+        const copyPromise: Promise<ResolveCopyArgument> = new Promise((resolve) => this.resolveCopy = resolve);
         copyPromise.then(action((response) => {
             if (!response.copied) {
                 this.showCopyOverlay = false;
@@ -265,7 +275,7 @@ export default class Datagrid extends React.Component<Props> {
     @action handleRequestItemOrder = (id: string | number, position: number) => {
         this.showOrderDialog = true;
 
-        const orderPromise = new Promise((resolve) => this.resolveOrder = resolve);
+        const orderPromise: Promise<ResolveOrderArgument> = new Promise((resolve) => this.resolveOrder = resolve);
         orderPromise.then(action((response) => {
             if (!response.ordered) {
                 this.showOrderDialog = false;
@@ -418,6 +428,7 @@ export default class Datagrid extends React.Component<Props> {
             adapters,
             copyable,
             deletable,
+            disabled,
             disabledIds,
             header,
             movable,
@@ -429,6 +440,13 @@ export default class Datagrid extends React.Component<Props> {
             store,
         } = this.props;
         const Adapter = this.currentAdapter;
+
+        const datagridClass = classNames(
+            datagridStyles.datagrid,
+            {
+                [datagridStyles.disabled]: disabled,
+            }
+        );
 
         return (
             <Fragment>
@@ -448,7 +466,7 @@ export default class Datagrid extends React.Component<Props> {
                         </div>
                     </div>
                 }
-                <div className={datagridStyles.datagrid}>
+                <div className={datagridClass}>
                     {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
