@@ -11,12 +11,12 @@
 
 namespace Sulu\Component\Serializer;
 
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\GenericSerializationVisitor;
 
 /**
  * Enables serialization to an array with the JMSSerializer.
  */
-class ArraySerializationVisitor extends JsonSerializationVisitor
+class ArraySerializationVisitor extends GenericSerializationVisitor
 {
     /**
      * Returns the visited data as array.
