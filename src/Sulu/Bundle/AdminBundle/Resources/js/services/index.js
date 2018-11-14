@@ -5,6 +5,7 @@ import initializer from './Initializer';
 import ResourceRequester from './ResourceRequester';
 import Requester from './Requester';
 import Router from './Router';
+import type {AttributeMap, Route} from './Router/types';
 
 export {
     bundleReady,
@@ -13,4 +14,9 @@ export {
     Requester,
     ResourceRequester,
     Router,
+};
+
+export type {
+    AttributeMap,
+    Route,
 };

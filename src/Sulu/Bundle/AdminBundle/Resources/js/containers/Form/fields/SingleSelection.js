@@ -41,6 +41,8 @@ export default class SingleSelection extends React.Component<Props>
         if (this.type === 'auto_complete') {
             return this.renderAutoComplete();
         }
+
+        throw new Error('The "' + this.type + '" type does not exist in the SingleSelection field type.');
     }
 
     renderDatagridOverlay() {

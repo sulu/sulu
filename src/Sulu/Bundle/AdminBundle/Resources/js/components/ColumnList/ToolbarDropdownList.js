@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {Element} from 'react';
 import classNames from 'classnames';
 import ToolbarDropdownListOption from './ToolbarDropdownListOption';
 import type {ToolbarDropdownOptionConfig} from './types';
@@ -16,7 +17,7 @@ export default class ToolbarDropdownList extends React.Component<Props> {
         skin: 'primary',
     };
 
-    renderOptions = () => {
+    renderOptions = (): Array<Element<typeof ToolbarDropdownListOption>> => {
         const {options} = this.props;
 
         return options.map((dropdownOptionConfig: ToolbarDropdownOptionConfig, columnIndex: number) => {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
+import type {Element, Node} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
@@ -87,7 +87,7 @@ export default class Item extends React.Component<Props> {
         }
     };
 
-    renderButtons = () => {
+    renderButtons = (): ?Array<Element<typeof ItemButton>> => {
         const {buttons, id} = this.props;
 
         if (!buttons) {

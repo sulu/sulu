@@ -103,7 +103,7 @@ test('Return no dialog if no id is set', () => {
     const editToolbarAction = createEditToolbarAction(['en']);
     editToolbarAction.formStore.resourceStore.id = undefined;
 
-    expect(editToolbarAction.getNode()).toEqual(undefined);
+    expect(editToolbarAction.getNode()).toEqual(null);
 });
 
 test('Throw error if no locale is given', () => {

@@ -106,7 +106,7 @@ export default class Header extends React.PureComponent<Props> {
         );
     };
 
-    createHeaderButtonCells = () => {
+    createHeaderButtonCells = (): ?Array<Element<typeof HeaderCell>> => {
         const {buttons} = this.props;
 
         if (!buttons) {

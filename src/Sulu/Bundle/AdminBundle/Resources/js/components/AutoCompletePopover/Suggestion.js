@@ -21,7 +21,7 @@ export default class Suggestion extends React.PureComponent<Props> {
 
     highlightMatchingTextPart = (text: string) => {
         if (!text) {
-            return;
+            return null;
         }
 
         const query = this.props.query || '';

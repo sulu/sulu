@@ -1,6 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
+import type {Element} from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
@@ -15,7 +16,7 @@ export default class TableAdapter extends AbstractTableAdapter {
 
     static icon = 'su-align-justify';
 
-    renderRows() {
+    renderRows(): Array<Element<typeof Table.Row>> {
         const {data, selections} = this.props;
 
         return data.map((item) => {

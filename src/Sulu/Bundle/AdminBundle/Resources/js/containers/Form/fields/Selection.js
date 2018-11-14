@@ -78,6 +78,8 @@ export default class Selection extends React.Component<Props> {
         if (this.type === 'datagrid') {
             return this.renderDatagrid();
         }
+
+        throw new Error('The "' + this.type + '" type does not exist in the Selection field type.');
     }
 
     renderDatagridOverlay() {

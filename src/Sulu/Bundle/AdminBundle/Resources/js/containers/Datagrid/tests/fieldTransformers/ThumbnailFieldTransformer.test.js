@@ -10,21 +10,21 @@ jest.mock('loglevel', () => ({
 }));
 
 test('Test undefined', () => {
-    expect(thumbnailTransformer.transform(undefined)).toBe(undefined);
+    expect(thumbnailTransformer.transform(undefined)).toBe(null);
 });
 
 test('Test string', () => {
-    expect(thumbnailTransformer.transform('Test1')).toBe(undefined);
+    expect(thumbnailTransformer.transform('Test1')).toBe(null);
     expect(log.error).toBeCalledWith('Invalid type given: "string". "object" is needed.');
 });
 
 test('Test number', () => {
-    expect(thumbnailTransformer.transform(5)).toBe(undefined);
+    expect(thumbnailTransformer.transform(5)).toBe(null);
     expect(log.error).toBeCalledWith('Invalid type given: "number". "object" is needed.');
 });
 
 test('Test invalid object', () => {
-    expect(thumbnailTransformer.transform({test: 'test'})).toBe(undefined);
+    expect(thumbnailTransformer.transform({test: 'test'})).toBe(null);
     expect(log.error).toBeCalledWith('Object needs property "sulu-40x40".');
 });
 
