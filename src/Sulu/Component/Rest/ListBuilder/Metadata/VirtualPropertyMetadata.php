@@ -18,7 +18,8 @@ class VirtualPropertyMetadata extends PropertyMetadata
 {
     public function __construct($class, $name)
     {
-        parent::__construct($class, $name);
+        $this->class = $class;
+        $this->name = $name;
     }
 
     /**
