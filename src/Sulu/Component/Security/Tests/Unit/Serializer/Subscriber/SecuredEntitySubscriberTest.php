@@ -12,7 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\GenericSerializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -60,7 +60,7 @@ class SecuredEntitySubscriberTest extends TestCase
     private $user;
 
     /**
-     * @var GenericSerializationVisitor
+     * @var JsonSerializationVisitor
      */
     private $visitor;
 
@@ -78,7 +78,7 @@ class SecuredEntitySubscriberTest extends TestCase
             $this->tokenStorage->reveal()
         );
 
-        $this->visitor = $this->prophesize(GenericSerializationVisitor::class);
+        $this->visitor = $this->prophesize(JsonSerializationVisitor::class);
         $this->objectEvent = $this->prophesize(ObjectEvent::class);
         $this->objectEvent->getVisitor()->willReturn($this->visitor);
     }
