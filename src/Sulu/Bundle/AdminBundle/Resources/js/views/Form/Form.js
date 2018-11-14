@@ -2,6 +2,7 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import {action, computed, isObservableArray, observable, when} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
@@ -26,7 +27,7 @@ class Form extends React.Component<Props> {
     formStore: FormStore;
     form: ?ElementRef<typeof FormContainer>;
     @observable errors = [];
-    showSuccess = observable.box(false);
+    showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions = [];
     @observable hasPreview: boolean = false;
 
@@ -196,7 +197,7 @@ class Form extends React.Component<Props> {
         jexl.eval(preview, this.resourceStore.data).then(this.setHasPreview);
     };
 
-    handleSubmit = (actionParameter) => {
+    handleSubmit = (actionParameter: ?string) => {
         const {resourceStore, router} = this.props;
 
         const {
@@ -250,7 +251,7 @@ class Form extends React.Component<Props> {
             }));
     };
 
-    setFormRef = (form) => {
+    setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
         this.form = form;
     };
 

@@ -8,6 +8,7 @@ import {Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
+import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/WebspaceStore';
@@ -36,7 +37,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     excludeGhostsAndShadowsDisposer: () => void;
     webspaceDisposer: () => void;
 
-    static getDerivedRouteAttributes(route, attributes) {
+    static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         const webspace = attributes.webspace
             ? attributes.webspace
             : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);

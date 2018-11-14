@@ -299,7 +299,7 @@ export default class DatagridStore {
         return this.structureStrategy.findById(id);
     }
 
-    delete = (id: string | number): Promise<void> => {
+    delete = (id: string | number): Promise<Object> => {
         return ResourceRequester.delete(this.resourceKey, id, this.queryOptions)
             .then(action(() => {
                 this.deselectById(id);

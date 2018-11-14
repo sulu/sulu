@@ -4,7 +4,7 @@ import BytesFieldTransformer from '../../fieldTransformers/BytesFieldTransformer
 const bytesFieldTransformer = new BytesFieldTransformer();
 
 test('Test undefined', () => {
-    expect(bytesFieldTransformer.transform(undefined)).toBe(undefined);
+    expect(bytesFieldTransformer.transform(undefined)).toBe(null);
 });
 
 test('Test example 0', () => {

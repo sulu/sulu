@@ -9,19 +9,19 @@ const IMAGE_FORMAT = 'sulu-40x40';
 export default class ThumbnailFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
         if (!value) {
-            return undefined;
+            return null;
         }
 
         if (typeof value !== 'object') {
             log.error('Invalid type given: "' + typeof value + '". "object" is needed.');
 
-            return undefined;
+            return null;
         }
 
         if (!value.hasOwnProperty(IMAGE_FORMAT)) {
             log.error('Object needs property "' + IMAGE_FORMAT + '".');
 
-            return undefined;
+            return null;
         }
 
         return <img alt={value.alt} src={value[IMAGE_FORMAT]} />;

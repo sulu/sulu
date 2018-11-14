@@ -159,5 +159,7 @@ export default class DatagridOverlay extends React.Component<Props> {
                 </Dialog>
             );
         }
+
+        throw new Error('The "' + overlayType + '" overlayType does not exist in the DatagridOverlay.');
     }
 }

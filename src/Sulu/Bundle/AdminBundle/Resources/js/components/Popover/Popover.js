@@ -37,7 +37,7 @@ export default class Popover extends React.Component<Props> {
         verticalOffset: 0,
     };
 
-    @observable popoverChildRef: ElementRef<'div'>;
+    @observable popoverChildRef: ElementRef<*>;
 
     @observable popoverWidth: number;
 

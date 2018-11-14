@@ -86,7 +86,7 @@ class Datagrid extends React.Component<ViewProps> {
         this.datagridStore.destroy();
     }
 
-    handleItemAdd = (rowId) => {
+    handleItemAdd = (rowId: string | number) => {
         const {router} = this.props;
         const {
             route: {
@@ -99,12 +99,12 @@ class Datagrid extends React.Component<ViewProps> {
         router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
     };
 
-    handleEditClick = (rowId) => {
+    handleEditClick = (rowId: string | number) => {
         const {router} = this.props;
         router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
     };
 
-    setDatagridRef = (datagrid) => {
+    setDatagridRef = (datagrid: ?ElementRef<typeof DatagridContainer>) => {
         this.datagrid = datagrid;
     };
 
