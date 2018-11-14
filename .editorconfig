@@ -10,3 +10,7 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# markdown uses two trailing spaces for explicit line breaks
+[*.md]
+trim_trailing_whitespace = false
