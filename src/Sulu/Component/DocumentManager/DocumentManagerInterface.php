@@ -151,13 +151,4 @@ interface DocumentManagerInterface
      * @return Query
      */
     public function createQuery($query, $locale = null, array $options = []);
-
-    /**
-     * Create a new query builder.
-     *
-     * By default this will return the PHPCR-ODM query builder.
-     *
-     * http://doctrine-phpcr-odm.readthedocs.org/en/latest/reference/query-builder.html
-     */
-    public function createQueryBuilder();
 }

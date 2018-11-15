@@ -15,7 +15,6 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
-use Sulu\Component\DocumentManager\Event\QueryCreateBuilderEvent;
 use Sulu\Component\DocumentManager\Event\QueryCreateEvent;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -89,19 +88,6 @@ class QuerySubscriber implements EventSubscriberInterface
                 $event->getPrimarySelector()
             )
         );
-    }
-
-    /**
-     * TODO: We should reuse the PHPCR-ODM query builder here, see:
-     *       https://github.com/doctrine/phpcr-odm/issues/627.
-     *
-     * @param QueryCreateBuilderEvent $event
-     *
-     * @throws \Exception
-     */
-    public function handleCreateBuilder(QueryCreateBuilderEvent $event)
-    {
-        throw new \Exception('Not implemented');
     }
 
     /**
