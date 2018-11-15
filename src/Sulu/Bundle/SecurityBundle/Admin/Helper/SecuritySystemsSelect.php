@@ -36,7 +36,7 @@ class SecuritySystemsSelect
         $values = [];
         foreach (array_keys($this->adminPool->getSecurityContexts()) as $context) {
             $values[] = [
-                'value' => $context,
+                'name' => $context,
                 'title' => ucfirst($context),
             ];
         }
