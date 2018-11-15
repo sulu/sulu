@@ -24,6 +24,8 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
     const SCHEMA_URI = '';
 
+    const SCHEME_PATH = '';
+
     const SCALE_MODE_DEFAULT = 'outbound';
 
     const SCALE_RETINA_DEFAULT = false;
