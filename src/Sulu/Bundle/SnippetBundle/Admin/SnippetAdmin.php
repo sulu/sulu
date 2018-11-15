@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
@@ -27,6 +28,17 @@ use Sulu\Component\Webspace\Webspace;
  */
 class SnippetAdmin extends Admin
 {
+    const DATAGRID_ROUTE = 'sulu_snippet.datagrid';
+
+    const ADD_FORM_ROUTE = 'sulu_snippet.add_form';
+
+    const EDIT_FORM_ROUTE = 'sulu_snippet.edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -55,10 +67,12 @@ class SnippetAdmin extends Admin
     }
 
     public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         WebspaceManagerInterface $webspaceManager,
         $defaultEnabled
     ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->webspaceManager = $webspaceManager;
         $this->defaultEnabled = $defaultEnabled;
@@ -102,33 +116,34 @@ class SnippetAdmin extends Admin
         ];
 
         return [
-            (new Route('sulu_snippet.datagrid', '/snippets/:locale', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_snippet.snippets')
-                ->addOption('resourceKey', 'snippets')
-                ->addOption('adapters', ['table'])
-                ->addOption('addRoute', 'sulu_snippet.add_form.detail')
-                ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
-                ->addOption('locales', $snippetLocales)
-                ->addAttributeDefault('locale', $snippetLocales[0]),
-            (new Route('sulu_snippet.add_form', '/snippets/:locale/add', 'sulu_admin.resource_tabs'))
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/snippets/:locale')
+                ->setResourceKey('snippets')
+                ->setTitle('sulu_snippet.snippets')
+                ->addDatagridAdapters(['table'])
+                ->addLocales($snippetLocales)
+                ->setDefaultLocale($snippetLocales[0])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            (new Route(static::ADD_FORM_ROUTE, '/snippets/:locale/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('formKey', 'snippets')
-                ->addOption('backRoute', 'sulu_snippet.datagrid')
+                ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
-                ->setParent('sulu_snippet.add_form'),
-            (new Route('sulu_snippet.edit_form', '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
+                ->setParent(static::ADD_FORM_ROUTE),
+            (new Route(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'snippets')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('formKey', 'snippets')
-                ->addOption('backRoute', 'sulu_snippet.datagrid')
-                ->setParent('sulu_snippet.edit_form'),
+                ->addOption('backRoute', static::DATAGRID_ROUTE)
+                ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }
 

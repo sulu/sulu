@@ -70,6 +70,12 @@
             <tag name="kernel.cache_warmer"/>
         </service>
 
+        <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory" />
+        <service
+            id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"
+            alias="sulu_admin.route_factory"
+        />
+
         <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
             <argument type="service" id="translator.default"/>

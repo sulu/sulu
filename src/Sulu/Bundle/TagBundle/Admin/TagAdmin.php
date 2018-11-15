@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -20,13 +21,27 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class TagAdmin extends Admin
 {
+    const DATAGRID_ROUTE = 'sulu_tag.datagrid';
+
+    const ADD_FORM_ROUTE = 'sulu_tag.add_form';
+
+    const EDIT_FORM_ROUTE = 'sulu_tag.edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var SecurityCheckerInterface
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker)
-    {
+    public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
+        SecurityCheckerInterface $securityChecker
+    ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
     }
 
@@ -57,29 +72,30 @@ class TagAdmin extends Admin
         ];
 
         return [
-            (new Route('sulu_tag.datagrid', '/tags', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_tag.tags')
-                ->addOption('resourceKey', 'tags')
-                ->addOption('adapters', ['table'])
-                ->addOption('addRoute', 'sulu_tag.add_form.detail')
-                ->addOption('editRoute', 'sulu_tag.edit_form.detail'),
-            (new Route('sulu_tag.add_form', '/tags/add', 'sulu_admin.resource_tabs'))
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/tags')
+                ->setResourceKey('tags')
+                ->setTitle('sulu_tag.tags')
+                ->addDatagridAdapters(['table'])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            (new Route(static::ADD_FORM_ROUTE, '/tags/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'tags')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('formKey', 'tags')
-                ->addOption('backRoute', 'sulu_tag.datagrid')
+                ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_tag.edit_form.detail')
-                ->setParent('sulu_tag.add_form'),
-            (new Route('sulu_tag.edit_form', '/tags/:id', 'sulu_admin.resource_tabs'))
+                ->setParent(static::ADD_FORM_ROUTE),
+            (new Route(static::EDIT_FORM_ROUTE, '/tags/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'tags')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('formKey', 'tags')
-                ->addOption('backRoute', 'sulu_tag.datagrid')
-                ->setParent('sulu_tag.edit_form'),
+                ->addOption('backRoute', static::DATAGRID_ROUTE)
+                ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }
 

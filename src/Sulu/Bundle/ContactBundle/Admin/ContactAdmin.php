@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -20,13 +21,33 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactAdmin extends Admin
 {
+    const CONTACT_DATAGRID_ROUTE = 'sulu_contact.contacts_datagrid';
+
+    const CONTACT_ADD_FORM_ROUTE = 'sulu_contact.contact_add_form';
+
+    const CONTACT_EDIT_FORM_ROUTE = 'sulu_contact.contact_edit_form';
+
+    const ACCOUNT_DATAGRID_ROUTE = 'sulu_contact.accounts_datagrid';
+
+    const ACCOUNT_ADD_FORM_ROUTE = 'sulu_contact.account_add_form';
+
+    const ACCOUNT_EDIT_FORM_ROUTE = 'sulu_contact.account_edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var SecurityCheckerInterface
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker)
-    {
+    public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
+        SecurityCheckerInterface $securityChecker
+    ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
     }
 
@@ -79,56 +100,58 @@ class ContactAdmin extends Admin
         ];
 
         return [
-            (new Route('sulu_contact.contacts_datagrid', '/contacts', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_contact.people')
-                ->addOption('adapters', ['table'])
-                ->addOption('resourceKey', 'contacts')
-                ->addOption('addRoute', 'sulu_contact.contact_add_form.detail')
-                ->addOption('editRoute', 'sulu_contact.contact_edit_form.detail'),
-            (new Route('sulu_contact.contact_add_form', '/contacts/add', 'sulu_admin.resource_tabs'))
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::CONTACT_DATAGRID_ROUTE, '/contacts')
+                ->setResourceKey('contacts')
+                ->setTitle('sulu_contact.people')
+                ->addDatagridAdapters(['table'])
+                ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
+                ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                ->getRoute(),
+            (new Route(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'contacts')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_contact.contact_add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('formKey', 'contacts')
-                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
+                ->addOption('backRoute', static::CONTACT_DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_contact.contact_edit_form.detail')
                 ->addOption('toolbarActions', $formToolbarActionsWithDelete)
-                ->setParent('sulu_contact.contact_add_form'),
-            (new Route('sulu_contact.contact_edit_form', '/contacts/:id', 'sulu_admin.resource_tabs'))
+                ->setParent(static::CONTACT_ADD_FORM_ROUTE),
+            (new Route(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'contacts')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_contact.contact_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('formKey', 'contacts')
-                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
+                ->addOption('backRoute', static::CONTACT_DATAGRID_ROUTE)
                 ->addOption('toolbarActions', $formToolbarActionsWithDelete)
-                ->setParent('sulu_contact.contact_edit_form'),
-            (new Route('sulu_contact.accounts_datagrid', '/accounts', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_contact.organizations')
-                ->addOption('adapters', ['table'])
-                ->addOption('resourceKey', 'accounts')
-                ->addOption('addRoute', 'sulu_contact.account_add_form.detail')
-                ->addOption('editRoute', 'sulu_contact.account_edit_form.detail'),
-            (new Route('sulu_contact.account_add_form', '/accounts/add', 'sulu_admin.resource_tabs'))
+                ->setParent(static::CONTACT_EDIT_FORM_ROUTE),
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::ACCOUNT_DATAGRID_ROUTE, '/accounts')
+                ->setResourceKey('accounts')
+                ->setTitle('sulu_contact.organizations')
+                ->addDatagridAdapters(['table'])
+                ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)
+                ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
+                ->getRoute(),
+            (new Route(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'accounts')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_contact.account_add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('formKey', 'accounts')
-                ->addOption('backRoute', 'sulu_contact.accounts_datagrid')
+                ->addOption('backRoute', static::ACCOUNT_DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_contact.account_edit_form.detail')
                 ->addOption('toolbarActions', $formToolbarActionsWithDelete)
-                ->setParent('sulu_contact.account_add_form'),
-            (new Route('sulu_contact.account_edit_form', '/accounts/:id', 'sulu_admin.resource_tabs'))
+                ->setParent(static::ACCOUNT_ADD_FORM_ROUTE),
+            (new Route(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id', 'sulu_admin.resource_tabs'))
                 ->addOption('resourceKey', 'accounts')
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_contact.account_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_contact.details')
                 ->addOption('formKey', 'accounts')
-                ->addOption('backRoute', 'sulu_contact.accounts_datagrid')
+                ->addOption('backRoute', static::ACCOUNT_DATAGRID_ROUTE)
                 ->addOption('toolbarActions', $formToolbarActionsWithDelete)
-                ->setParent('sulu_contact.account_edit_form'),
+                ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE),
         ];
     }
 

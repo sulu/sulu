@@ -100,11 +100,26 @@ class Route
         return $this->path;
     }
 
+    public function getView(): string
+    {
+        return $this->view;
+    }
+
     public function addOption(string $key, $value): self
     {
+        // TODO rename to setOption, since old values will be simply overridden?
         $this->options[$key] = $value;
 
         return $this;
+    }
+
+    public function getOption(string $key)
+    {
+        if (!array_key_exists($key, $this->options)) {
+            return null;
+        }
+
+        return $this->options[$key];
     }
 
     public function mergeRoute(self $route): self
@@ -116,9 +131,19 @@ class Route
 
     public function addAttributeDefault(string $key, string $value): self
     {
+        // TODO rename to setAttributeDefault, since old values will be simply overridden?
         $this->attributeDefaults[$key] = $value;
 
         return $this;
+    }
+
+    public function getAttributeDefault(string $key)
+    {
+        if (!array_key_exists($key, $this->attributeDefaults)) {
+            return null;
+        }
+
+        return $this->attributeDefaults[$key];
     }
 
     public function setParent(string $parent): self
