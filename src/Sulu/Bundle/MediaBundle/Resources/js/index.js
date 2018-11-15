@@ -7,7 +7,7 @@ import MediaOverview from './views/MediaOverview';
 import MediaDetail from './views/MediaDetail';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
-import MediaSelection from './containers/MediaSelection';
+import MediaSelection from './containers/Form/fields/MediaSelection';
 
 viewRegistry.add('sulu_media.overview', MediaOverview);
 viewRegistry.add('sulu_media.detail', MediaDetail);
