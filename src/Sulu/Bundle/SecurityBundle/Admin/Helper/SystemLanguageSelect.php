@@ -28,7 +28,7 @@ class SystemLanguageSelect
         $values = [];
         foreach ($this->translatedLocales as $value => $title) {
             $values[] = [
-                'value' => $value,
+                'name' => $value,
                 'title' => $title,
             ];
         }
