@@ -14,13 +14,14 @@ import selectStyles from './select.scss';
 const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;
 
-type Props<T> = SelectProps & {
-    onSelect: (values: T) => void,
+type Props<T> = {|
+    ...SelectProps<T>,
+    onSelect: (value: T) => void,
     displayValue: string,
     closeOnSelect: boolean,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
     selectedVisualization?: OptionSelectedVisualization,
-};
+|};
 
 @observer
 export default class Select<T> extends React.Component<Props<T>> {
@@ -80,7 +81,7 @@ export default class Select<T> extends React.Component<Props<T>> {
         });
     }
 
-    cloneChildren(): SelectChildren {
+    cloneChildren(): SelectChildren<T> {
         return React.Children.map(this.props.children, (child: any) => {
             switch (child.type) {
                 case Option:
