@@ -44,6 +44,7 @@ abstract class BaseRole extends Role implements RoleInterface
 
     public function __construct()
     {
+        parent::__construct('');
     }
 
     /**

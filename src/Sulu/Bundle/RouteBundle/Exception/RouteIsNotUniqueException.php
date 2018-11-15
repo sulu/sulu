@@ -37,6 +37,10 @@ class RouteIsNotUniqueException extends \DomainException
     {
         $this->route = $route;
         $this->entity = $entity;
+
+        parent::__construct(
+            sprintf('Route "%s" is not unique "%s"(%s)', $route->getPath(), get_class($entity), $entity->getId())
+        );
     }
 
     /**

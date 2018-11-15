@@ -24,13 +24,13 @@ class SchemaXmlParser
         $allOfNode = $xpath->query('x:allOf', $contextNode)->item(0);
         $allOfs = [];
         if ($allOfNode) {
-            $allOfs = $this->loadAllOfs($xpath, $allOfNode, $contextNode);
+            $allOfs = $this->loadAllOfs($xpath, $allOfNode);
         }
 
         $anyOfNode = $xpath->query('x:anyOf', $contextNode)->item(0);
         $anyOfs = [];
         if ($anyOfNode) {
-            $anyOfs = $this->loadAnyOfs($xpath, $anyOfNode, $contextNode);
+            $anyOfs = $this->loadAnyOfs($xpath, $anyOfNode);
         }
 
         $propertiesNode = $xpath->query('x:properties', $contextNode)->item(0);

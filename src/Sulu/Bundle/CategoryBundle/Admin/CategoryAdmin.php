@@ -28,7 +28,7 @@ class CategoryAdmin extends Admin
     private $securityChecker;
 
     /**
-     * @var LocalizationManager
+     * @var LocalizationManagerInterface
      */
     private $localizationManager;
 

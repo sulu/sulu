@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Webspace\StructureProvider;
 
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Provide templates which are implemented in a single webspace.
@@ -23,7 +23,7 @@ interface WebspaceStructureProviderInterface
      *
      * @param string $webspaceKey
      *
-     * @return Page[]
+     * @return StructureInterface[]
      */
     public function getStructures($webspaceKey);
 }

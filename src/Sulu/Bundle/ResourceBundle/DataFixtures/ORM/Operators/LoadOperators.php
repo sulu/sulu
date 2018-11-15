@@ -39,7 +39,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
         $file = dirname(__FILE__) . '/../../operators.xml';
         $doc = new \DOMDocument();
         $doc->load($file);
-        $xpath = new \DOMXpath($doc);
+        $xpath = new \DOMXPath($doc);
         $elements = $xpath->query('/operators/operator');
         if (!is_null($elements)) {
             /** @var $element DOMNode */

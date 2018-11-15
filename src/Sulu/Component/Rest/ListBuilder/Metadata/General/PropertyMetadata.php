@@ -78,7 +78,6 @@ class PropertyMetadata extends BasePropertyMetadata
     {
         $this->class = $class;
         $this->name = $name;
-
         // default for translation can be overwritten by setter
         $this->translation = ucfirst($name);
     }

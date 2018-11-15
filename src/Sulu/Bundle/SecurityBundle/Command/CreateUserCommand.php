@@ -189,7 +189,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('firstName')) {
             $question = new Question('Please choose a FirstName: ');
             $question->setValidator(
-                function ($firstName) use ($doctrine) {
+                function ($firstName) {
                     if (empty($firstName)) {
                         throw new \InvalidArgumentException('FirstName can not be empty');
                     }
@@ -205,7 +205,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('lastName')) {
             $question = new Question('Please choose a LastName: ');
             $question->setValidator(
-                function ($lastName) use ($doctrine) {
+                function ($lastName) {
                     if (empty($lastName)) {
                         throw new \InvalidArgumentException('LastName can not be empty');
                     }
@@ -260,7 +260,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $question = new Question('Please choose a Password: ');
             $question->setHidden(true);
             $question->setValidator(
-                function ($password) use ($doctrine) {
+                function ($password) {
                     if (empty($password)) {
                         throw new \InvalidArgumentException('Password can not be empty');
                     }

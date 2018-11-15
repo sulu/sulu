@@ -18,7 +18,7 @@ class NoSuchPropertyException extends \Exception
      */
     private $propertyName;
 
-    public function __construct($propertyName, $message)
+    public function __construct($propertyName, $message = '')
     {
         parent::__construct($message);
         $this->propertyName = $propertyName;

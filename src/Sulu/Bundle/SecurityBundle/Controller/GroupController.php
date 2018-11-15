@@ -218,7 +218,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             return $entity->getId();
         };
 
-        $delete = function ($role) use ($group) {
+        $delete = function ($role) {
             $this->getDoctrine()->getManager()->remove($role);
         };
 

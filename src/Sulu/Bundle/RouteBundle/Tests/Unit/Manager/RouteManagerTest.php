@@ -125,6 +125,7 @@ class RouteManagerTest extends TestCase
         $loadedRoute = $this->prophesize(RouteInterface::class);
         $loadedRoute->getId()->willReturn(5);
 
+        $this->entity->getId()->willReturn(3);
         $this->entity->getRoute()->willReturn(null);
         $this->entity->setRoute($route->reveal())->shouldNotBeCalled();
 

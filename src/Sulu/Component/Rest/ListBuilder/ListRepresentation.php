@@ -114,7 +114,7 @@ class ListRepresentation extends PaginatedRepresentation
     /**
      * Returns data.
      *
-     * @return \mixed[]
+     * @return mixed[]
      */
     public function getData()
     {

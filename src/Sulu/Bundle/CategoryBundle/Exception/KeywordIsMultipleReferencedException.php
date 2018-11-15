@@ -20,7 +20,7 @@ use Sulu\Component\Rest\Exception\RestException;
 class KeywordIsMultipleReferencedException extends RestException
 {
     /**
-     * @var Keyword
+     * @var KeywordInterface
      */
     private $keyword;
 
@@ -35,7 +35,7 @@ class KeywordIsMultipleReferencedException extends RestException
     }
 
     /**
-     * @return Keyword
+     * @return KeywordInterface
      */
     public function getKeyword()
     {

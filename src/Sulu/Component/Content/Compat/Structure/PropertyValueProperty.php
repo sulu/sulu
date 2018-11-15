@@ -19,8 +19,6 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
  */
 class PropertyValueProperty extends Property
 {
-    private $propertyValue;
-
     public function setPropertyValue(PropertyValue $propertyValue)
     {
         $this->propertyValue = $propertyValue;

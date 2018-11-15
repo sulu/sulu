@@ -66,7 +66,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     protected $exportManager;
 
     /**
-     * @var ImportManager
+     * @var ImportManagerInterface
      */
     protected $importManager;
 

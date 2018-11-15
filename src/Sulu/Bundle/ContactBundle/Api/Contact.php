@@ -576,7 +576,7 @@ class Contact extends ApiWrapper
      */
     public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
     {
-        $this->entity->addSocialMediaProfile($fax);
+        $this->entity->addSocialMediaProfile($socialMediaProfile);
 
         return $this;
     }

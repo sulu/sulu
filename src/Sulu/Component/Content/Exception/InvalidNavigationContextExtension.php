@@ -24,24 +24,24 @@ class InvalidNavigationContextExtension extends \Exception
     private $navContexts;
 
     /**
-     * @param string $selectedNavContexts
-     * @param string $navContexts
+     * @param array $selectedNavContext
+     * @param array $navContexts
      */
-    public function __construct($selectedNavContexts, $navContexts)
+    public function __construct($selectedNavContext, $navContexts)
     {
         parent::__construct(
             sprintf(
                 'Navigation Context "%s" not found in [%s]',
-                implode(',', $selectedNavContexts),
+                implode(',', $selectedNavContext),
                 implode(',', $navContexts)
             )
         );
-        $this->selectedNavContexts = $selectedNavContexts;
+        $this->selectedNavContext = $selectedNavContext;
         $this->navContexts = $navContexts;
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getSelectedNavContext()
     {

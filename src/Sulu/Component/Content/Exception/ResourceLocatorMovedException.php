@@ -33,6 +33,9 @@ class ResourceLocatorMovedException extends Exception
     {
         $this->newResourceLocator = $newResourceLocator;
         $this->newResourceLocatorUuid = $newResourceLocatorUuid;
+        parent::__construct(
+            sprintf('Could not move resourcelocator "%s" (%s)', $newResourceLocator, $newResourceLocatorUuid)
+        );
     }
 
     /**
