@@ -92,7 +92,7 @@ export default class MediaSelection extends React.Component<Props> {
             return `${itemCount} ${translate('sulu_media.media_selected_plural')}`;
         }
 
-        return translate('sulu_media.select_media');
+        return translate('sulu_media.select_media_plural');
     }
 
     handleRemove = (mediaId: number) => {

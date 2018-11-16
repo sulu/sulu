@@ -205,7 +205,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
                 open={open}
-                title={translate('sulu_media.select_media')}
+                title={translate('sulu_media.select_media_plural')}
             >
                 <div className={mediaSelectionOverlayStyles.overlay}>
                     <MediaCollection

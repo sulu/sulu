@@ -153,7 +153,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
                 return 'media elements selected';
             case 'sulu_media.reset_selection':
                 return 'Reset fields';
-            case 'sulu_media.select_media':
+            case 'sulu_media.select_media_plural':
                 return 'Select media';
             case 'sulu_admin.confirm':
                 return 'Confirm';
