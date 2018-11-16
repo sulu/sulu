@@ -1,11 +1,9 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
 import MediaSelection from '../MediaSelection';
-import MediaCardSelectionAdapter from '../../Datagrid/adapters/MediaCardSelectionAdapter';
 import MediaSelectionStore from '../stores/MediaSelectionStore';
 
 jest.mock('../stores/MediaSelectionStore', () => jest.fn());
@@ -17,7 +15,6 @@ jest.mock('sulu-admin-bundle/containers', () => {
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey, observableOptions) {
-            const {extendObservable} = require.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -58,7 +55,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                     thumbnails: thumbnails,
                 },
             ];
-            extendObservable(this, {
+            mockExtendObservable(this, {
                 selections: [],
                 selectionIds: [],
             });
@@ -108,14 +105,17 @@ jest.mock('sulu-admin-bundle/containers', () => {
 });
 
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
-    const getAllAdaptersMock = jest.fn();
-
     return {
-        getAllAdaptersMock: getAllAdaptersMock,
         add: jest.fn(),
-        get: jest.fn((key) => getAllAdaptersMock()[key]),
         getOptions: jest.fn().mockReturnValue({}),
-        has: jest.fn(),
+        has: jest.fn(() => true),
+        get: jest.fn((key) => {
+            const adapters = {
+                'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+                'media_card_selection': require('../../Datagrid/adapters/MediaCardSelectionAdapter').default,
+            };
+            return adapters[key];
+        }),
     };
 });
 
@@ -181,15 +181,8 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => je
     this.selections = [];
 }));
 
-beforeEach(() => {
-    datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-        'media_card_selection': MediaCardSelectionAdapter,
-    });
-});
-
 test('Render a MediaSelection field', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
             {
@@ -212,11 +205,12 @@ test('Render a MediaSelection field', () => {
     });
 
     expect(render(
-        <MediaSelection locale={observable.box('en')} />
+        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     )).toMatchSnapshot();
 });
 
 test('The MediaSelection should have 3 child-items', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
             {
@@ -239,26 +233,28 @@ test('The MediaSelection should have 3 child-items', () => {
     });
 
     const mediaSelection = shallow(
-        <MediaSelection locale={observable.box('en')} />
+        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     );
 
     expect(mediaSelection.find('Item').length).toBe(3);
 });
 
 test('Clicking on the "add media" button should open up an overlay', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
     });
 
     const body = document.body;
-    const mediaSelection = mount(<MediaSelection locale={observable.box('en')} />);
+    const mediaSelection = mount(<MediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
 
     mediaSelection.find('.button.left').simulate('click');
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('Should remove media from the selection store', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
@@ -266,7 +262,7 @@ test('Should remove media from the selection store', () => {
     });
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} />
+        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.handleRemove(1);
@@ -274,6 +270,7 @@ test('Should remove media from the selection store', () => {
 });
 
 test('Should move media inside the selection store', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
@@ -281,7 +278,7 @@ test('Should move media inside the selection store', () => {
     });
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} />
+        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
@@ -289,6 +286,7 @@ test('Should move media inside the selection store', () => {
 });
 
 test('Should add the selected medias to the selection store on confirm', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
@@ -300,7 +298,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} />
+        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.openMediaOverlay();
@@ -330,6 +328,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
 });
 
 test('Should call the onChange handler if selection store changes', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function(selectedIds) {
         mockExtendObservable(this, {
             selectedMedia: selectedIds.map((id) => {
@@ -355,12 +354,13 @@ test('Should call the onChange handler if selection store changes', () => {
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
+    // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
     });
 
-    const mediaSelection = mount(<MediaSelection disabled={true} locale={observable.box('en')} />);
+    const mediaSelection = mount(<MediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
 
     expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });
