@@ -2,11 +2,12 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
-import {action, observable} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import singleSelectionStyles from 'sulu-admin-bundle/containers/SingleSelection/singleSelection.scss';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import MediaSelectionOverlay from '../MediaSelection/MediaSelectionOverlay';
+import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore/SingleMediaSelectionStore';
 
 type Props = {|
     disabled: boolean,
@@ -21,10 +22,56 @@ export default class SingleMediaSelection extends React.Component<Props> {
         disabled: false,
     };
 
+    singleMediaSelectionStore: SingleMediaSelectionStore;
+    changeDisposer: () => void;
+    changeAutorunInitialized: boolean = false;
+
     @observable overlayOpen: boolean = false;
 
     @action openOverlay() {
         this.overlayOpen = true;
+    }
+
+    constructor(props: Props) {
+        super(props);
+
+        const {onChange, locale, value} = this.props;
+
+        this.singleMediaSelectionStore = new SingleMediaSelectionStore(value, locale);
+        this.changeDisposer = autorun(() => {
+            const {value} = this.props;
+            const {selectedMedia} = this.singleMediaSelectionStore;
+            const itemId = selectedMedia ? selectedMedia.id : undefined;
+
+            if (!this.changeAutorunInitialized) {
+                this.changeAutorunInitialized = true;
+                return;
+            }
+
+            if (value === itemId) {
+                return;
+            }
+
+            onChange(itemId);
+        });
+    }
+
+    componentWillUnmount() {
+        this.changeDisposer();
+    }
+
+    componentDidUpdate() {
+        const {
+            locale,
+            value,
+        } = this.props;
+
+        const newValue = toJS(value);
+        const oldValue = toJS(this.singleMediaSelectionStore.selectedMediaId);
+
+        if (oldValue !== newValue) {
+            this.singleMediaSelectionStore.loadSelectedMedia(newValue, locale);
+        }
     }
 
     @action closeOverlay() {
@@ -40,14 +87,12 @@ export default class SingleMediaSelection extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedMedia: Array<Object>) => {
-        // this.singleSelectionStore.set(selectedItem);
-        console.log(selectedMedia);
+        this.singleMediaSelectionStore.set(selectedMedia ? selectedMedia[0] : undefined);
         this.closeOverlay();
     };
 
     handleRemove = () => {
-        // this.singleSelectionStore.clear();
-        console.log('clear selection');
+        this.singleMediaSelectionStore.clear();
     };
 
     render() {
@@ -66,8 +111,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                         icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
-                    //onRemove={this.singleSelectionStore.item ? this.handleRemove : undefined}
-                    onRemove={this.handleRemove}
+                    onRemove={this.singleMediaSelectionStore.selectedMedia ? this.handleRemove : undefined}
                 >
                     {value &&
                     <div>
