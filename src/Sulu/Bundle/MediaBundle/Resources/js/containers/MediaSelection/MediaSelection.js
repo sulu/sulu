@@ -6,7 +6,7 @@ import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
-import MediaSelectionStore from './stores/MediaSelectionStore';
+import MediaSelectionStore from '../../stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
 

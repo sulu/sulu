@@ -4,9 +4,9 @@ import pretty from 'pretty';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MediaSelection from '../MediaSelection';
-import MediaSelectionStore from '../stores/MediaSelectionStore';
+import MediaSelectionStore from '../../../stores/MediaSelectionStore';
 
-jest.mock('../stores/MediaSelectionStore', () => jest.fn());
+jest.mock('../../../stores/MediaSelectionStore', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
