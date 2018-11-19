@@ -7,8 +7,8 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MediaSelectionStore from '../../stores/MediaSelectionStore';
-import MediaSelectionOverlay from '../MediaSelectionOverlay';
 import MediaSelectionItem from '../../components/MediaSelectionItem';
+import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay/MultiMediaSelectionOverlay';
 import type {Value} from './types';
 
 type Props = {|
@@ -160,7 +160,7 @@ export default class MediaSelection extends React.Component<Props> {
                         );
                     })}
                 </MultiItemSelection>
-                <MediaSelectionOverlay
+                <MultiMediaSelectionOverlay
                     excludedIds={selectedMediaIds}
                     locale={locale}
                     onClose={this.handleOverlayClose}

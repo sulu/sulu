@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import {action, autorun, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, autorun, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -10,15 +10,13 @@ import MediaCollection from '../MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
 
-const MEDIA_RESOURCE_KEY = 'media';
-const COLLECTIONS_RESOURCE_KEY = 'collections';
-
-const USER_SETTINGS_KEY = 'media_selection_overlay';
-
 type Props = {
     open: boolean,
     locale: IObservableValue<string>,
     excludedIds: Array<number>,
+    collectionId: IObservableValue<?string | number>,
+    collectionDatagridStore: DatagridStore,
+    mediaDatagridStore: DatagridStore,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
 };
@@ -30,164 +28,80 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         open: false,
     };
 
-    mediaPage: IObservableValue<number> = observable.box(1);
-    collectionPage: IObservableValue<number> = observable.box(1);
-    collectionId: IObservableValue<?string | number> = observable.box();
-    @observable mediaDatagridStore: DatagridStore;
-    @observable collectionDatagridStore: DatagridStore;
     @observable collectionStore: CollectionStore;
-    overlayDisposer: () => void;
+    updateCollectionStoreDisposer: () => void;
+    updateExcludedIdsDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
-        const {open} = this.props;
+        this.updateCollectionStoreDisposer = autorun(() => this.updateCollectionStore(this.props.collectionId.get()));
+        this.updateExcludedIdsDisposer = autorun(() => this.updateExcludedIds());
+    }
 
-        if (open) {
-            this.initialize();
+    componentDidUpdate(prevProps: Props) {
+        const {mediaDatagridStore, open} = this.props;
+
+        if (!mediaDatagridStore.loading && prevProps.open === false && open === true) {
+            mediaDatagridStore.reload();
+        }
+
+        if (prevProps.open === true && open === false) {
+            mediaDatagridStore.clearSelection();
         }
     }
 
     componentWillUnmount() {
-        this.destroy();
-    }
-
-    componentWillReceiveProps(nextProps: Props) {
-        const {open} = this.props;
-
-        if (!open && nextProps.open) {
-            this.initialize();
-        }
-    }
-
-    @computed get locale(): IObservableValue<string> {
-        return this.props.locale;
-    }
-
-    @action initialize() {
-        this.createCollectionDatagridStore();
-        this.createMediaDatagridStore();
-        this.overlayDisposer = autorun(this.createCollectionStore);
-        this.mediaPage.set(1);
-        this.collectionPage.set(1);
-    }
-
-    @action destroy() {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
 
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
+        if (this.updateCollectionStoreDisposer) {
+            this.updateCollectionStoreDisposer();
         }
-
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
-        }
-
-        if (this.overlayDisposer) {
-            this.overlayDisposer();
-        }
-
-        this.collectionId.set(undefined);
     }
 
-    @action setMediaPage(page: number) {
-        this.mediaPage.set(page);
-    }
-
-    @action setCollectionPage(page: number) {
-        this.collectionPage.set(page);
-    }
-
-    @action createCollectionDatagridStore() {
-        this.collectionDatagridStore = new DatagridStore(
-            COLLECTIONS_RESOURCE_KEY,
-            USER_SETTINGS_KEY,
-            {
-                page: this.collectionPage,
-                locale: this.locale,
-                parentId: this.collectionId,
-            }
-        );
-    }
-
-    createCollectionStore = () => {
-        this.setCollectionStore(new CollectionStore(this.collectionId.get(), this.locale));
+    updateExcludedIds() {
+        const {excludedIds, mediaDatagridStore} = this.props;
+        mediaDatagridStore.options.excluded = excludedIds.length ? excludedIds.join(',') : undefined;
     };
 
-    @action setCollectionStore(collectionStore: CollectionStore) {
+    @action updateCollectionStore(collectionId: ?string | number) {
         if (this.collectionStore) {
             this.collectionStore.destroy();
         }
 
-        this.collectionStore = collectionStore;
-    }
-
-    @action createMediaDatagridStore() {
-        const {excludedIds} = this.props;
-        const options = {};
-
-        options.limit = 50;
-        options.fields = [
-            'id',
-            'type',
-            'name',
-            'size',
-            'title',
-            'mimeType',
-            'subVersion',
-            'thumbnails',
-        ].join(',');
-
-        if (excludedIds.length) {
-            options.excluded = excludedIds.join(',');
-        }
-
-        this.mediaDatagridStore = new DatagridStore(
-            MEDIA_RESOURCE_KEY,
-            USER_SETTINGS_KEY,
-            {
-                page: this.mediaPage,
-                locale: this.locale,
-                collection: this.collectionId,
-            },
-            options
-        );
-    }
+        this.collectionStore = new CollectionStore(collectionId, this.props.locale);
+    };
 
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
-        this.mediaDatagridStore.clear();
-        this.collectionDatagridStore.clear();
-        this.setMediaPage(1);
-        this.setCollectionPage(1);
-        this.collectionId.set(collectionId);
+        this.props.collectionId.set(collectionId);
+
+        this.props.collectionDatagridStore.clear();
+        this.props.collectionDatagridStore.setPage(1);
+
+        this.props.mediaDatagridStore.clear();
+        this.props.mediaDatagridStore.setPage(1);
     };
 
     handleClose = () => {
-        const {
-            open,
-            onClose,
-        } = this.props;
-
-        if (open) {
-            this.destroy();
-        }
-
-        onClose();
+        this.props.onClose();
+        this.props.mediaDatagridStore.clearSelection();
     };
 
     handleSelectionReset = () => {
-        this.mediaDatagridStore.clearSelection();
+        this.props.mediaDatagridStore.clearSelection();
     };
 
     handleConfirm = () => {
-        this.props.onConfirm(this.mediaDatagridStore.selections);
-        this.destroy();
+        this.props.onConfirm(this.props.mediaDatagridStore.selections);
+        this.props.mediaDatagridStore.clearSelection();
     };
 
     render() {
         const {
+            collectionDatagridStore,
+            mediaDatagridStore,
             open,
             locale,
         } = this.props;
@@ -209,11 +123,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             >
                 <div className={mediaSelectionOverlayStyles.overlay}>
                     <MediaCollection
-                        collectionDatagridStore={this.collectionDatagridStore}
+                        collectionDatagridStore={collectionDatagridStore}
                         collectionStore={this.collectionStore}
                         locale={locale}
                         mediaDatagridAdapters={['media_card_selection']}
-                        mediaDatagridStore={this.mediaDatagridStore}
+                        mediaDatagridStore={mediaDatagridStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
                         overlayType="dialog"
                     />

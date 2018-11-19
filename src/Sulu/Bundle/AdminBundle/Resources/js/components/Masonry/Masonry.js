@@ -141,8 +141,11 @@ export default class Masonry extends React.PureComponent<Props> {
     }
 
     handleImagesLoading() {
-        imagesLoaded(this.layoutedChildNodes)
-            .once('always', () => this.masonry.layout());
+        imagesLoaded(this.layoutedChildNodes).once('always', () => {
+            if (this.masonry) {
+                this.masonry.layout();
+            }
+        });
     }
 
     render() {
