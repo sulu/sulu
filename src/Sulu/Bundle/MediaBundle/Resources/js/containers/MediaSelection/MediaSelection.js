@@ -7,8 +7,8 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MediaSelectionStore from '../../stores/MediaSelectionStore';
-import MediaSelectionItem from '../../components/MediaSelectionItem/MediaSelectionItem';
-import MediaSelectionOverlay from './MediaSelectionOverlay';
+import MediaSelectionOverlay from '../MediaSelectionOverlay';
+import MediaSelectionItem from '../../components/MediaSelectionItem';
 import type {Value} from './types';
 
 type Props = {|

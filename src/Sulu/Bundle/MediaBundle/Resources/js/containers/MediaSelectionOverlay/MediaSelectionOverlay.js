@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import MediaCollection from '../../containers/MediaCollection';
+import MediaCollection from '../MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
 

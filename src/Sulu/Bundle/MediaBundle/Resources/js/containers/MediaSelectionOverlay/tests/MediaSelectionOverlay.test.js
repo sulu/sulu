@@ -1,12 +1,11 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
+
 import {mount, shallow} from 'enzyme';
 import {observable, toJS} from 'mobx';
 import pretty from 'pretty';
 import React from 'react';
-import datagridAdapterRegistry from 'sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
-import MediaCardSelectionAdapter from '../../Datagrid/adapters/MediaCardSelectionAdapter';
-import MediaSelectionOverlay from '../MediaSelectionOverlay';
+import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
@@ -15,7 +14,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
         AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
         Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
         DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
-            const {extendObservable} = require.requireActual('mobx');
+            const {extendObservable} = jest.requireActual('mobx');
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -110,14 +109,17 @@ jest.mock('sulu-admin-bundle/containers', () => {
 });
 
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
-    const getAllAdaptersMock = jest.fn();
-
     return {
-        getAllAdaptersMock: getAllAdaptersMock,
         add: jest.fn(),
-        get: jest.fn((key) => getAllAdaptersMock()[key]),
         getOptions: jest.fn().mockReturnValue({}),
         has: jest.fn(),
+        get: jest.fn((key) => {
+            const adapters = {
+                'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+                'media_card_selection': require('../../Datagrid/adapters/MediaCardSelectionAdapter').default,
+            };
+            return adapters[key];
+        }),
     };
 });
 
@@ -162,17 +164,8 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
 
-beforeEach(() => {
-    datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-        'media_card_selection': MediaCardSelectionAdapter,
-    });
-});
-
 test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
-    const body = document.body;
     mount(
         <MediaSelectionOverlay
             excludedIds={[]}
@@ -183,7 +176,7 @@ test('Render an open MediaSelectionOverlay', () => {
         />
     ).render();
 
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('Should instantiate the needed stores when the overlay opens', () => {
@@ -203,10 +196,15 @@ test('Should instantiate the needed stores when the overlay opens', () => {
     expect(mediaSelectionOverlayInstance.mediaPage.get()).toBe(1);
     expect(mediaSelectionOverlayInstance.collectionPage.get()).toBe(1);
 
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[1][0]).toBe(mediaResourceKey);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[1][1]).toBe('media_selection_overlay');
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[1][2].locale).toBe(locale);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[1][2].page.get()).toBe(1);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[1][3].fields).toEqual([
         'id',
         'type',
@@ -218,10 +216,15 @@ test('Should instantiate the needed stores when the overlay opens', () => {
         'thumbnails',
     ].join(','));
 
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[0][0]).toBe(collectionResourceKey);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[0][1]).toBe('media_selection_overlay');
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[0][2].locale).toBe(locale);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[0][2].page.get()).toBe(1);
+    // $FlowFixMe
     expect(DatagridStore.mock.calls[0][2].parentId.get()).toBe(undefined);
 });
 

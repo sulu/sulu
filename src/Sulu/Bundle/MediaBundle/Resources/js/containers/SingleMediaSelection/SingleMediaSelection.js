@@ -4,11 +4,10 @@ import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
 import {action, autorun, observable, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
-import singleSelectionStyles from 'sulu-admin-bundle/containers/SingleSelection/singleSelection.scss';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
-import MediaSelectionOverlay from '../MediaSelection/MediaSelectionOverlay';
+import MediaSelectionOverlay from '../MediaSelectionOverlay';
 import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore/SingleMediaSelectionStore';
-import MediaSelectionItem from "../../components/MediaSelectionItem/MediaSelectionItem";
+import MediaSelectionItem from '../../components/MediaSelectionItem';
 
 type Props = {|
     disabled: boolean,
@@ -106,10 +105,6 @@ export default class SingleMediaSelection extends React.Component<Props> {
             selectedMedia,
         } = this.singleMediaSelectionStore;
 
-        if (selectedMedia) {
-            console.log(selectedMedia);
-        }
-
         return (
             <Fragment>
                 <SingleItemSelection
@@ -122,7 +117,10 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     onRemove={this.singleMediaSelectionStore.selectedMedia ? this.handleRemove : undefined}
                 >
                     {selectedMedia &&
-                    <MediaSelectionItem mimeType={selectedMedia.mimeType} thumbnail={selectedMedia.thumbnail}>
+                    <MediaSelectionItem
+                        mimeType={selectedMedia.mimeType}
+                        thumbnail={selectedMedia.thumbnail ? selectedMedia.thumbnail : undefined}
+                    >
                         {selectedMedia.title}
                     </MediaSelectionItem>
                     }
