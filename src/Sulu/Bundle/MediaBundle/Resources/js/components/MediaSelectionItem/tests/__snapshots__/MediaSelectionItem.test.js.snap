@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a MediaSelectionItem 1`] = `
+<div
+  class="mediaSelectionItem"
+>
+  <div
+    class="thumbnail"
+  >
+    <img
+      alt="http://lorempixel.com/25/25"
+      src="http://lorempixel.com/25/25"
+    />
+  </div>
+  test media
+</div>
+`;
+
+exports[`Should render a MediaSelectionItem without thumbnail 1`] = `
+<div
+  class="mediaSelectionItem"
+>
+  <div
+    class="thumbnail"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color:#fff;font-size:16px;background-color:#00723a;height:25px"
+    >
+      <span
+        aria-label="fa-file-excel-o"
+        class="fa fa-file-excel-o"
+      />
+    </div>
+  </div>
+  test media
+</div>
+`;

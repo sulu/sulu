@@ -8,6 +8,7 @@ import singleSelectionStyles from 'sulu-admin-bundle/containers/SingleSelection/
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import MediaSelectionOverlay from '../MediaSelection/MediaSelectionOverlay';
 import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore/SingleMediaSelectionStore';
+import MediaSelectionItem from "../../components/MediaSelectionItem/MediaSelectionItem";
 
 type Props = {|
     disabled: boolean,
@@ -101,6 +102,13 @@ export default class SingleMediaSelection extends React.Component<Props> {
             locale,
             value,
         } = this.props;
+        const {
+            selectedMedia,
+        } = this.singleMediaSelectionStore;
+
+        if (selectedMedia) {
+            console.log(selectedMedia);
+        }
 
         return (
             <Fragment>
@@ -113,12 +121,10 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     }}
                     onRemove={this.singleMediaSelectionStore.selectedMedia ? this.handleRemove : undefined}
                 >
-                    {value &&
-                    <div>
-                        <span className={singleSelectionStyles.itemColumn}>
-                            {value}
-                        </span>
-                    </div>
+                    {selectedMedia &&
+                    <MediaSelectionItem mimeType={selectedMedia.mimeType} thumbnail={selectedMedia.thumbnail}>
+                        {selectedMedia.title}
+                    </MediaSelectionItem>
                     }
                 </SingleItemSelection>
                 <MediaSelectionOverlay

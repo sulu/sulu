@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import MimeTypeIndicator from '../MimeTypeIndicator/index';
 import mediaSelectionItemStyle from './mediaSelectionItem.scss';
 
 type Props = {
     mimeType: string,
     children: string,
-    thumbnail: ?string,
+    thumbnail?: string,
 };
 
 export default class MediaSelectionItem extends React.PureComponent<Props> {

@@ -7,8 +7,8 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MediaSelectionStore from '../../stores/MediaSelectionStore';
+import MediaSelectionItem from '../../components/MediaSelectionItem/MediaSelectionItem';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
-import MediaSelectionItem from './MediaSelectionItem';
 import type {Value} from './types';
 
 type Props = {|
@@ -153,7 +153,7 @@ export default class MediaSelection extends React.Component<Props> {
                                 index={index + 1}
                                 key={id}
                             >
-                                <MediaSelectionItem mimeType={mimeType} thumbnail={thumbnail}>
+                                <MediaSelectionItem mimeType={mimeType} thumbnail={thumbnail ? thumbnail : undefined}>
                                     {title}
                                 </MediaSelectionItem>
                             </MultiItemSelection.Item>
