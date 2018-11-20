@@ -10,6 +10,10 @@ import MediaCollection from '../MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
 
+const MEDIA_RESOURCE_KEY = 'media';
+const COLLECTIONS_RESOURCE_KEY = 'collections';
+const USER_SETTINGS_KEY = 'media_selection_overlay';
+
 type Props = {
     open: boolean,
     locale: IObservableValue<string>,
@@ -28,6 +32,51 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         open: false,
     };
 
+    static createCollectionDatagridStore(
+        collectionId: IObservableValue<?string | number>,
+        locale: IObservableValue<string>
+    ) {
+        return new DatagridStore(
+            COLLECTIONS_RESOURCE_KEY,
+            USER_SETTINGS_KEY,
+            {
+                page: observable.box(1),
+                locale: locale,
+                parentId: collectionId,
+            }
+        );
+    }
+
+    static createMediaDatagridStore(
+        collectionId: IObservableValue<?string | number>,
+        locale: IObservableValue<string>
+    ) {
+        const options = {};
+
+        options.limit = 50;
+        options.fields = [
+            'id',
+            'type',
+            'name',
+            'size',
+            'title',
+            'mimeType',
+            'subVersion',
+            'thumbnails',
+        ].join(',');
+
+        return new DatagridStore(
+            MEDIA_RESOURCE_KEY,
+            USER_SETTINGS_KEY,
+            {
+                page: observable.box(1),
+                locale: locale,
+                collection: collectionId,
+            },
+            options
+        );
+    }
+
     @observable collectionStore: CollectionStore;
     updateCollectionStoreDisposer: () => void;
     updateExcludedIdsDisposer: () => void;
@@ -41,10 +90,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     componentDidUpdate(prevProps: Props) {
         const {mediaDatagridStore, open} = this.props;
-
-        if (!mediaDatagridStore.loading && prevProps.open === false && open === true) {
-            mediaDatagridStore.reload();
-        }
 
         if (prevProps.open === true && open === false) {
             mediaDatagridStore.clearSelection();
@@ -63,7 +108,13 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     updateExcludedIds() {
         const {excludedIds, mediaDatagridStore} = this.props;
-        mediaDatagridStore.options.excluded = excludedIds.length ? excludedIds.join(',') : undefined;
+        const previousExcludedOption = mediaDatagridStore.options.excluded;
+        const newExcludedOption = excludedIds.length ? excludedIds.sort().join(',') : undefined;
+
+        if (previousExcludedOption !== newExcludedOption) {
+            mediaDatagridStore.options.excluded = newExcludedOption;
+            mediaDatagridStore.reload();
+        }
     };
 
     @action updateCollectionStore(collectionId: ?string | number) {

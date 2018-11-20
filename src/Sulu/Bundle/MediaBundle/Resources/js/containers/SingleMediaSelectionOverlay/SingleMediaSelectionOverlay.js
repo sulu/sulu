@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
@@ -15,7 +15,7 @@ type Props = {
 };
 
 @observer
-export default class MultiMediaSelectionOverlay extends React.Component<Props> {
+export default class SingleMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         excludedIds: [],
         open: false,
@@ -24,6 +24,7 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     collectionId: IObservableValue<?string | number> = observable.box();
     mediaDatagridStore: DatagridStore;
     collectionDatagridStore: DatagridStore;
+    mediaSelectionDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -33,6 +34,23 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
             this.collectionId,
             props.locale
         );
+
+        this.mediaSelectionDisposer = autorun(() => {
+            const {selections} = this.mediaDatagridStore;
+
+            if (selections.length <= 1) {
+                return;
+            }
+
+            const selection = selections[selections.length - 1];
+
+            if (!selection) {
+                return;
+            }
+
+            this.mediaDatagridStore.clearSelection();
+            this.mediaDatagridStore.select(selection);
+        });
     }
 
     componentWillUnmount() {
@@ -42,6 +60,11 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
 
         if (this.collectionDatagridStore) {
             this.collectionDatagridStore.destroy();
+        }
+
+        if (this.mediaSelectionDisposer) {
+            this.mediaSelectionDisposer();
+
         }
     }
 
