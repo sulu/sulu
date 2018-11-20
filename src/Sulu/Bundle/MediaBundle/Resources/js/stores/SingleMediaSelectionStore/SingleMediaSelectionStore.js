@@ -2,7 +2,7 @@
 import type {IObservableValue} from 'mobx';
 import {action, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services/index';
-import type {MediaItem} from '../../containers/MediaSelection/types';
+import type {MediaItem} from '../MediaSelectionStore/types';
 
 const THUMBNAIL_SIZE = 'sulu-25x25';
 const MEDIA_RESOURCE_KEY = 'media';
