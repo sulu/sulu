@@ -1,125 +1,128 @@
 // @flow
 import {observable, toJS} from 'mobx';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore/SingleSelectionStore';
+import Preview from 'sulu-preview-bundle/containers/Preview/Preview';
 import SingleMediaSelectionStore from '../SingleMediaSelectionStore';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    getList: jest.fn(),
+    get: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
-test('Should not make a request if the given ids array is empty or undefined', () => {
-    const Promise = jest.requireActual('promise');
-
-    ResourceRequester.getList.mockReturnValue(Promise.resolve());
-
-    const mediaIds = [];
-
-    new SingleMediaSelectionStore(mediaIds, observable.box('en'));
-    new SingleMediaSelectionStore(null, observable.box('en'));
-
-    expect(ResourceRequester.getList).not.toBeCalled();
+beforeEach(() => {
+    jest.resetAllMocks();
 });
 
-test('Should prepare media data and store it inside an array', () => {
-    const mediaSelectionStore = new SingleMediaSelectionStore(null, observable.box('en'));
-
-    mediaSelectionStore.add({
-        id: 1,
-        title: 'Awesome',
+test('Should load media when being constructed', () => {
+    const getPromise = Promise.resolve({
+        id: 22,
+        title: 'test media',
+        mimeType: 'image/jpeg',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },
     });
+    ResourceRequester.get.mockReturnValue(getPromise);
 
-    expect(mediaSelectionStore.selectedMediaIds).toEqual([1]);
-    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
+    const singleMediaSelectionStore = new SingleMediaSelectionStore(22, observable.box('en'));
+
+    expect(ResourceRequester.get).toBeCalledWith(
+        'media',
+        22,
         {
-            id: 1,
-            title: 'Awesome',
+            locale: 'en',
+        }
+    );
+
+    return getPromise.then(() => {
+        expect(singleMediaSelectionStore.selectedMedia).toEqual({
+            id: 22,
+            title: 'test media',
+            mimeType: 'image/jpeg',
             thumbnail: '/images/25x25/awesome.png',
-        },
-    ]);
+        });
+        expect(singleMediaSelectionStore.selectedMediaId).toEqual(22);
+    });
 });
 
-test('Should remove media from array', () => {
-    const mediaSelectionStore = new SingleMediaSelectionStore(null, observable.box('en'));
+test('Should not make a request when being constructed with undefined', () => {
+    const singleMediaSelectionStore = new SingleMediaSelectionStore(undefined, observable.box('en'));
 
-    mediaSelectionStore.add({
-        id: 1,
-        title: 'Awesome 1',
-        thumbnails: {
-            'sulu-25x25': '/images/25x25/awesome.png',
-        },
-    });
-
-    mediaSelectionStore.add({
-        id: 2,
-        title: 'Awesome 2',
-        thumbnails: {
-            'sulu-25x25': '/images/25x25/awesome.png',
-        },
-    });
-
-    mediaSelectionStore.removeById(1);
-    expect(mediaSelectionStore.selectedMediaIds).toEqual([2]);
-    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
-        {
-            id: 2,
-            title: 'Awesome 2',
-            thumbnail: '/images/25x25/awesome.png',
-        },
-    ]);
-
-    mediaSelectionStore.removeById(2);
-    expect(mediaSelectionStore.selectedMediaIds).toEqual([]);
-    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([]);
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
+    expect(singleMediaSelectionStore.selectedMedia).toBeUndefined();
 });
 
-test('Should move the media positions inside the array', () => {
-    const mediaSelectionStore = new SingleMediaSelectionStore(null, observable.box('en'));
+test('Should prepare media data and store it as selected-media', () => {
+    const singleMediaSelectionStore = new SingleMediaSelectionStore(undefined, observable.box('en'));
 
-    mediaSelectionStore.add({
-        id: 1,
-        title: 'Awesome 1',
+    singleMediaSelectionStore.set({
+        id: 33,
+        title: 'test media',
+        mimeType: 'image/jpeg',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },
     });
 
-    mediaSelectionStore.add({
-        id: 2,
-        title: 'Awesome 2',
+    expect(toJS(singleMediaSelectionStore.selectedMedia)).toEqual({
+        id: 33,
+        title: 'test media',
+        mimeType: 'image/jpeg',
+        thumbnail: '/images/25x25/awesome.png',
+    });
+    expect(singleMediaSelectionStore.selectedMediaId).toEqual(33);
+});
+
+test('Should clear selected-media', () => {
+    const singleMediaSelectionStore = new SingleMediaSelectionStore(undefined, observable.box('en'));
+
+    singleMediaSelectionStore.set({
+        id: 33,
+        title: 'test media',
+        mimeType: 'image/jpeg',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },
     });
 
-    mediaSelectionStore.add({
-        id: 3,
-        title: 'Awesome 3',
+    expect(singleMediaSelectionStore.selectedMediaId).toEqual(33);
+
+    singleMediaSelectionStore.clear();
+
+    expect(toJS(singleMediaSelectionStore.selectedMedia)).toEqual(undefined);
+    expect(singleMediaSelectionStore.selectedMediaId).toEqual(undefined);
+});
+
+test('Should load media with given id', () => {
+    const singleMediaSelectionStore = new SingleMediaSelectionStore(undefined, observable.box('en'));
+
+    const getPromise = Promise.resolve({
+        id: 22,
+        title: 'test media',
+        mimeType: 'image/jpeg',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },
     });
+    ResourceRequester.get.mockReturnValue(getPromise);
 
-    expect(mediaSelectionStore.selectedMediaIds).toEqual([1, 2, 3]);
-    mediaSelectionStore.move(0, 2);
-    expect(mediaSelectionStore.selectedMediaIds).toEqual([2, 3, 1]);
-    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
+    singleMediaSelectionStore.loadSelectedMedia(22, observable.box('en'));
+
+    expect(ResourceRequester.get).toBeCalledWith(
+        'media',
+        22,
         {
-            id: 2,
-            title: 'Awesome 2',
+            locale: 'en',
+        }
+    );
+
+    return getPromise.then(() => {
+        expect(singleMediaSelectionStore.selectedMedia).toEqual({
+            id: 22,
+            title: 'test media',
+            mimeType: 'image/jpeg',
             thumbnail: '/images/25x25/awesome.png',
-        },
-        {
-            id: 3,
-            title: 'Awesome 3',
-            thumbnail: '/images/25x25/awesome.png',
-        },
-        {
-            id: 1,
-            title: 'Awesome 1',
-            thumbnail: '/images/25x25/awesome.png',
-        },
-    ]);
+        });
+        expect(singleMediaSelectionStore.selectedMediaId).toEqual(22);
+    });
 });
