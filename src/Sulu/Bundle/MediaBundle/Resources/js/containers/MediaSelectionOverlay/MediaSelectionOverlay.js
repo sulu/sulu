@@ -166,6 +166,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         return (
             <Overlay
                 actions={actions}
+                confirmDisabled={!mediaDatagridStore.selections.length}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}

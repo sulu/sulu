@@ -11,7 +11,7 @@ type Props = {
     locale: IObservableValue<string>,
     excludedIds: Array<number>,
     onClose: () => void,
-    onConfirm: (selectedMedia: Array<Object>) => void,
+    onConfirm: (selectedMedia: Object) => void,
 };
 
 @observer
@@ -64,15 +64,24 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
 
         if (this.mediaSelectionDisposer) {
             this.mediaSelectionDisposer();
-
         }
     }
+
+    handleConfirm = () => {
+        if (this.mediaDatagridStore.selections.length > 1) {
+            throw new Error(
+                'The SingleMediaSelectionOverlay can only handle single selection.'
+                + 'This should not happen and is likely a bug.'
+            );
+        }
+
+        this.props.onConfirm(this.mediaDatagridStore.selections[0]);
+    };
 
     render() {
         const {
             excludedIds,
             onClose,
-            onConfirm,
             open,
             locale,
         } = this.props;
@@ -85,7 +94,7 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
                 locale={locale}
                 mediaDatagridStore={this.mediaDatagridStore}
                 onClose={onClose}
-                onConfirm={onConfirm}
+                onConfirm={this.handleConfirm}
                 open={open}
             />
         );

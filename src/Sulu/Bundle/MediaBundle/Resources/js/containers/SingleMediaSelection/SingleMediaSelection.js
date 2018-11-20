@@ -5,9 +5,9 @@ import type {IObservableValue} from 'mobx';
 import {action, autorun, observable, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
-import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore/SingleMediaSelectionStore';
+import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore';
 import MediaSelectionItem from '../../components/MediaSelectionItem';
-import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay/SingleMediaSelectionOverlay';
+import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
 
 type Props = {|
     disabled: boolean,
@@ -86,8 +86,8 @@ export default class SingleMediaSelection extends React.Component<Props> {
         this.closeOverlay();
     };
 
-    handleOverlayConfirm = (selectedMedia: Array<Object>) => {
-        this.singleMediaSelectionStore.set(selectedMedia ? selectedMedia[0] : undefined);
+    handleOverlayConfirm = (selectedMedia: Object) => {
+        this.singleMediaSelectionStore.set(selectedMedia);
         this.closeOverlay();
     };
 
