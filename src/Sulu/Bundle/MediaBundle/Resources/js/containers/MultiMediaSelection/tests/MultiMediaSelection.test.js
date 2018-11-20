@@ -3,7 +3,7 @@ import {mount, render, shallow} from 'enzyme';
 import pretty from 'pretty';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import MediaSelection from '../MediaSelection';
+import MultiMediaSelection from '../MultiMediaSelection';
 import MediaSelectionStore from '../../../stores/MediaSelectionStore';
 
 jest.mock('../../../stores/MediaSelectionStore', () => jest.fn());
@@ -181,7 +181,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => je
     this.selections = [];
 }));
 
-test('Render a MediaSelection field', () => {
+test('Render a MultiMediaSelection field', () => {
     // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
@@ -205,11 +205,11 @@ test('Render a MediaSelection field', () => {
     });
 
     expect(render(
-        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     )).toMatchSnapshot();
 });
 
-test('The MediaSelection should have 3 child-items', () => {
+test('The MultiMediaSelection should have 3 child-items', () => {
     // $FlowFixMe
     MediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
@@ -233,7 +233,7 @@ test('The MediaSelection should have 3 child-items', () => {
     });
 
     const mediaSelection = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     );
 
     expect(mediaSelection.find('Item').length).toBe(3);
@@ -247,7 +247,7 @@ test('Clicking on the "add media" button should open up an overlay', () => {
     });
 
     const body = document.body;
-    const mediaSelection = mount(<MediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
+    const mediaSelection = mount(<MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
 
     mediaSelection.find('.button.left').simulate('click');
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
@@ -262,7 +262,7 @@ test('Should remove media from the selection store', () => {
     });
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.handleRemove(1);
@@ -278,7 +278,7 @@ test('Should move media inside the selection store', () => {
     });
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.handleSorted(1, 3);
@@ -298,7 +298,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
     ).instance();
 
     mediaSelectionInstance.openMediaOverlay();
@@ -343,7 +343,7 @@ test('Should call the onChange handler if selection store changes', () => {
     const changeSpy = jest.fn();
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ ids: [55] }} />
     ).instance();
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99});
@@ -360,7 +360,7 @@ test('Pass correct props to MultiItemSelection component', () => {
         this.selectedMediaIds = [];
     });
 
-    const mediaSelection = mount(<MediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
+    const mediaSelection = mount(<MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
 
     expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });

@@ -7,7 +7,7 @@ import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
 import MediaSelection from '../../fields/MediaSelection';
-import MediaSelectionComponent from '../../../MediaSelection/MediaSelection';
+import MediaSelectionComponent from '../../../MultiMediaSelection';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Pass correct props to MediaSelection component', () => {
+test('Pass correct props to MultiMediaSelection component', () => {
     const formInspector = new FormInspector(
         new FormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')})

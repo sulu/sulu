@@ -19,7 +19,7 @@ type Props = {|
 |}
 
 @observer
-export default class MediaSelection extends React.Component<Props> {
+export default class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         value: {ids: []},
