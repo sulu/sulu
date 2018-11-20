@@ -164,7 +164,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.7-dev",
+            "dev-master": "1.6-dev",
             "dev-develop": "2.0-dev"
         }
     }
