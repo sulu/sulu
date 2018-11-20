@@ -1,184 +1,22 @@
 // @flow
 import {mount, render, shallow} from 'enzyme';
-import pretty from 'pretty';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiMediaSelection from '../MultiMediaSelection';
 import MultiMediaSelectionStore from '../../../stores/MultiMediaSelectionStore';
-
-jest.mock('../../../stores/MultiMediaSelectionStore', () => jest.fn());
-
-jest.mock('sulu-admin-bundle/containers', () => {
-    return {
-        Form: require('sulu-admin-bundle/containers/Form').default,
-        FormStore: jest.fn(),
-        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
-        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey, observableOptions) {
-            const COLLECTIONS_RESOURCE_KEY = 'collections';
-
-            const collectionData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    objectCount: 1,
-                    description: 'Description 1',
-                },
-                {
-                    id: 2,
-                    title: 'Title 2',
-                    objectCount: 0,
-                    description: 'Description 2',
-                },
-            ];
-
-            const thumbnails = {
-                'sulu-240x': 'http://lorempixel.com/240/100',
-                'sulu-25x25': 'http://lorempixel.com/25/25',
-            };
-
-            const mediaData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    mimeType: 'image/png',
-                    size: 12345,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
-                },
-                {
-                    id: 2,
-                    title: 'Title 2',
-                    mimeType: 'image/jpeg',
-                    size: 54321,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
-                },
-            ];
-            mockExtendObservable(this, {
-                selections: [],
-                selectionIds: [],
-            });
-            this.observableOptions = observableOptions;
-            this.loading = false;
-            this.pageCount = 3;
-            this.active = {
-                get: jest.fn(),
-            };
-            this.sortColumn = {
-                get: jest.fn(),
-            };
-            this.sortOrder = {
-                get: jest.fn(),
-            };
-            this.searchTerm = {
-                get: jest.fn(),
-            };
-            this.limit = {
-                get: jest.fn().mockReturnValue(10),
-            };
-            this.setLimit = jest.fn();
-            this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
-                ? collectionData
-                : mediaData;
-            this.getPage = jest.fn().mockReturnValue(2);
-            this.getFields = jest.fn().mockReturnValue({
-                title: {},
-                description: {},
-            });
-            this.updateLoadingStrategy = jest.fn();
-            this.updateStructureStrategy = jest.fn();
-            this.destroy = jest.fn();
-            this.sendRequest = jest.fn();
-            this.clearSelection = jest.fn();
-            this.deselectEntirePage = jest.fn();
-            this.getSchema = jest.fn().mockReturnValue({});
-        }),
-        FlatStructureStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
-        ).default,
-        InfiniteLoadingStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
-        ).default,
-        SingleDatagridOverlay: jest.fn(() => null),
-    };
-});
-
-jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
-    return {
-        add: jest.fn(),
-        getOptions: jest.fn().mockReturnValue({}),
-        has: jest.fn(() => true),
-        get: jest.fn((key) => {
-            const adapters = {
-                'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-                'media_card_selection': require('../../Datagrid/adapters/MediaCardSelectionAdapter').default,
-            };
-            return adapters[key];
-        }),
-    };
-});
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function() {
-        this.destroy = jest.fn();
-        this.loading = false;
-        this.id = 1;
-        this.data = {
-            id: 1,
-        };
-    }),
-}));
-
-jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.all_media':
-                return 'All Media';
-            case 'sulu_media.copy_url':
-                return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Download master file';
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-            case 'sulu_media.media_selected_singular':
-                return 'media element selected';
-            case 'sulu_media.media_selected_plural':
-                return 'media elements selected';
-            case 'sulu_media.reset_selection':
-                return 'Reset fields';
-            case 'sulu_media.select_media_plural':
-                return 'Select media';
-            case 'sulu_admin.confirm':
-                return 'Confirm';
-        }
-    },
-}));
+import MultiMediaSelectionOverlay from '../../MultiMediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
-    },
+    translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => jest.fn(function() {
-    this.clearSelection = jest.fn();
-    this.selections = [];
+jest.mock('../../MultiMediaSelectionOverlay', () => jest.fn(function() {
+    return <div>single media selection overlay</div>;
+}));
+
+jest.mock('../../../stores/MultiMediaSelectionStore', () => jest.fn(function() {
+    this.selectedMedia = [];
+    this.selectedMediaIds = [];
 }));
 
 test('Render a MultiMediaSelection field', () => {
@@ -240,17 +78,11 @@ test('The MultiMediaSelection should have 3 child-items', () => {
 });
 
 test('Clicking on the "add media" button should open up an overlay', () => {
-    // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [];
-        this.selectedMediaIds = [];
-    });
-
-    const body = document.body;
     const mediaSelection = mount(<MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
 
+    expect(mediaSelection.find(MultiMediaSelectionOverlay).prop('open')).toEqual(false);
     mediaSelection.find('.button.left').simulate('click');
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(mediaSelection.find(MultiMediaSelectionOverlay).prop('open')).toEqual(true);
 });
 
 test('Should remove media from the selection store', () => {
@@ -354,13 +186,9 @@ test('Should call the onChange handler if selection store changes', () => {
 });
 
 test('Pass correct props to MultiItemSelection component', () => {
-    // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [];
-        this.selectedMediaIds = [];
-    });
-
-    const mediaSelection = mount(<MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />);
+    const mediaSelection = mount(
+        <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
+    );
 
     expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });

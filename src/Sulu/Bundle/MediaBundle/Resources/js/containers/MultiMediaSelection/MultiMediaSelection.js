@@ -8,7 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MultiMediaSelectionStore from '../../stores/MultiMediaSelectionStore';
 import MediaSelectionItem from '../../components/MediaSelectionItem';
-import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay/MultiMediaSelectionOverlay';
+import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import type {Value} from './types';
 
 type Props = {|
