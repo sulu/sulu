@@ -1,7 +1,7 @@
 // @flow
 import {observable, toJS} from 'mobx';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
-import MediaSelectionStore from '../MediaSelectionStore';
+import MultiMediaSelectionStore from '../MultiMediaSelectionStore';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn(),
@@ -14,14 +14,14 @@ test('Should not make a request if the given ids array is empty or undefined', (
 
     const mediaIds = [];
 
-    new MediaSelectionStore(mediaIds, observable.box('en'));
-    new MediaSelectionStore(null, observable.box('en'));
+    new MultiMediaSelectionStore(mediaIds, observable.box('en'));
+    new MultiMediaSelectionStore(null, observable.box('en'));
 
     expect(ResourceRequester.getList).not.toBeCalled();
 });
 
 test('Should prepare media data and store it inside an array', () => {
-    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
+    const mediaSelectionStore = new MultiMediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,
@@ -42,7 +42,7 @@ test('Should prepare media data and store it inside an array', () => {
 });
 
 test('Should remove media from array', () => {
-    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
+    const mediaSelectionStore = new MultiMediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,
@@ -76,7 +76,7 @@ test('Should remove media from array', () => {
 });
 
 test('Should move the media positions inside the array', () => {
-    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
+    const mediaSelectionStore = new MultiMediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,

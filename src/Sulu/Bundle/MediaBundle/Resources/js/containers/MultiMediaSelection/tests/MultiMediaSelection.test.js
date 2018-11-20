@@ -4,9 +4,9 @@ import pretty from 'pretty';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiMediaSelection from '../MultiMediaSelection';
-import MediaSelectionStore from '../../../stores/MediaSelectionStore';
+import MultiMediaSelectionStore from '../../../stores/MultiMediaSelectionStore';
 
-jest.mock('../../../stores/MediaSelectionStore', () => jest.fn());
+jest.mock('../../../stores/MultiMediaSelectionStore', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
@@ -183,7 +183,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () => je
 
 test('Render a MultiMediaSelection field', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
             {
                 id: 1,
@@ -211,7 +211,7 @@ test('Render a MultiMediaSelection field', () => {
 
 test('The MultiMediaSelection should have 3 child-items', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [
             {
                 id: 1,
@@ -241,7 +241,7 @@ test('The MultiMediaSelection should have 3 child-items', () => {
 
 test('Clicking on the "add media" button should open up an overlay', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
     });
@@ -255,7 +255,7 @@ test('Clicking on the "add media" button should open up an overlay', () => {
 
 test('Should remove media from the selection store', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
         this.removeById = jest.fn();
@@ -271,7 +271,7 @@ test('Should remove media from the selection store', () => {
 
 test('Should move media inside the selection store', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
         this.move = jest.fn();
@@ -287,7 +287,7 @@ test('Should move media inside the selection store', () => {
 
 test('Should add the selected medias to the selection store on confirm', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
         this.add = jest.fn();
@@ -329,7 +329,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
 
 test('Should call the onChange handler if selection store changes', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function(selectedIds) {
+    MultiMediaSelectionStore.mockImplementationOnce(function(selectedIds) {
         mockExtendObservable(this, {
             selectedMedia: selectedIds.map((id) => {
                 return {id};
@@ -355,7 +355,7 @@ test('Should call the onChange handler if selection store changes', () => {
 
 test('Pass correct props to MultiItemSelection component', () => {
     // $FlowFixMe
-    MediaSelectionStore.mockImplementationOnce(function() {
+    MultiMediaSelectionStore.mockImplementationOnce(function() {
         this.selectedMedia = [];
         this.selectedMediaIds = [];
     });

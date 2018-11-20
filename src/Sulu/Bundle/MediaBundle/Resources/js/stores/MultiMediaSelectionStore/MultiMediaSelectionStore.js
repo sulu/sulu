@@ -8,7 +8,7 @@ import type {MediaItem} from './types';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 const MEDIA_RESOURCE_KEY = 'media';
 
-export default class MediaSelectionStore {
+export default class MultiMediaSelectionStore {
     @observable selectedMedia: Array<MediaItem> = [];
     @observable loading: boolean = false;
 

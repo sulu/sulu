@@ -6,7 +6,7 @@ import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
-import MediaSelectionStore from '../../stores/MediaSelectionStore';
+import MultiMediaSelectionStore from '../../stores/MultiMediaSelectionStore';
 import MediaSelectionItem from '../../components/MediaSelectionItem';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay/MultiMediaSelectionOverlay';
 import type {Value} from './types';
@@ -25,7 +25,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
         value: {ids: []},
     };
 
-    mediaSelectionStore: MediaSelectionStore;
+    mediaSelectionStore: MultiMediaSelectionStore;
     changeDisposer: () => void;
     changeAutorunInitialized: boolean = false;
 
@@ -39,7 +39,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
             value,
         } = this.props;
 
-        this.mediaSelectionStore = new MediaSelectionStore(value.ids, locale);
+        this.mediaSelectionStore = new MultiMediaSelectionStore(value.ids, locale);
         this.changeDisposer = autorun(() => {
             const {onChange, value} = this.props;
             const loadedMediaIds = this.mediaSelectionStore.selectedMediaIds;
