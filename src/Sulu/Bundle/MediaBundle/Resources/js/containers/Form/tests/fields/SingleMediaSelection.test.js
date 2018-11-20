@@ -6,8 +6,8 @@ import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
-import MediaSelectionComponent from '../../../MultiMediaSelection';
-import SingleMediaSelection from "../../fields/SingleMediaSelection";
+import SingleMediaSelectionComponent from '../../../SingleMediaSelection';
+import SingleMediaSelection from '../../fields/SingleMediaSelection';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
@@ -37,11 +37,11 @@ test('Pass correct props to MultiMediaSelection component', () => {
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
-            value={{ids: [55, 66, 77]}}
+            value={{id: 33}}
         />
     );
 
-    expect(mediaSelection.find(MediaSelectionComponent).props().disabled).toEqual(true);
-    expect(mediaSelection.find(MediaSelectionComponent).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MediaSelectionComponent).props().value).toEqual([55, 66, 77]);
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().disabled).toEqual(true);
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('en');
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual(33);
 });
