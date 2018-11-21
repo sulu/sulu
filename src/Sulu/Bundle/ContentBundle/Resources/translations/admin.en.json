@@ -41,5 +41,8 @@
     "sulu_content.canonical_url": "Canonical URL  (Canonical tag)",
     "sulu_content.no_index": "no-index (page will not be indexed by search engines)",
     "sulu_content.no_follow": "no-follow (links on this page will not be followed by the search engine)",
-    "sulu_content.hide_in_sitemap": "Hide in sitemap"
+    "sulu_content.hide_in_sitemap": "Hide in sitemap",
+    "sulu_content.cache_clear": "Clear website cache",
+    "sulu_content.cache_clear_warning_title": "Clear website cache?",
+    "sulu_content.cache_clear_warning_text": "This operation will clear the entire cache for all webspaces. Do you really wish to proceed?"
 }

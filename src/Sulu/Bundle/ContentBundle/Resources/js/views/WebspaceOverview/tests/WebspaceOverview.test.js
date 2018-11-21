@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
+import {Requester, Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceStore from '../../../stores/WebspaceStore';
 
@@ -65,6 +65,10 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 
 jest.mock('../../../stores/WebspaceStore', () => ({
     loadWebspaces: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock('sulu-admin-bundle/services/Requester', () => ({
+    delete: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
@@ -227,6 +231,122 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
         toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
         expect(toolbarConfig.items[0].value).toEqual(true);
         expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
+    });
+});
+
+test('Should close Cache Clear dialog if cancel is clicked', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const WebspaceOverview = require('../WebspaceOverview').default;
+    // $FlowFixMe
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    // $FlowFixMe
+    const webspaceStore: typeof WebspaceStore = require('../../../stores/WebspaceStore');
+
+    const promise = Promise.resolve(
+        [
+            {
+                key: 'sulu',
+                localizations: [{locale: 'en', default: true}],
+                allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
+            },
+        ]
+    );
+
+    webspaceStore.loadWebspaces.mockReturnValue(promise);
+
+    const router = new Router({});
+
+    const webspaceOverview = mount(<WebspaceOverview route={router.route} router={router} />);
+
+    return promise.then(() => {
+        webspaceOverview.instance().webspace.set('sulu');
+        const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(false);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(false);
+        toolbarConfig.items[1].onClick();
+
+        webspaceOverview.update();
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(true);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(false);
+
+        webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('onCancel')();
+        webspaceOverview.update();
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(false);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(false);
+
+        expect(Requester.delete).not.toBeCalled();
+    });
+});
+
+test('Should clear cache and close dialog if confirm is clicked', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const Requester = require('sulu-admin-bundle/services').Requester;
+    const WebspaceOverview = require('../WebspaceOverview').default;
+    // $FlowFixMe
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    // $FlowFixMe
+    const webspaceStore: typeof WebspaceStore = require('../../../stores/WebspaceStore');
+
+    const promise = Promise.resolve(
+        [
+            {
+                key: 'sulu',
+                localizations: [{locale: 'en', default: true}],
+                allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
+            },
+        ]
+    );
+
+    webspaceStore.loadWebspaces.mockReturnValue(promise);
+
+    const cacheClearPromise = Promise.resolve();
+    Requester.delete.mockReturnValue(cacheClearPromise);
+
+    const router = new Router({});
+
+    WebspaceOverview.clearCacheEndpoint = '/admin/website/cache';
+    const webspaceOverview = mount(<WebspaceOverview route={router.route} router={router} />);
+
+    return promise.then(() => {
+        webspaceOverview.instance().webspace.set('sulu');
+        const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(false);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(false);
+        toolbarConfig.items[1].onClick();
+
+        webspaceOverview.update();
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(true);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(false);
+
+        webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('onConfirm')();
+        expect(Requester.delete).toBeCalledWith('/admin/website/cache');
+
+        webspaceOverview.update();
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+            .toEqual(true);
+        expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading'))
+            .toEqual(true);
+
+        return cacheClearPromise.then(() => {
+            webspaceOverview.update();
+            expect(webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('open'))
+                .toEqual(false);
+            expect(
+                webspaceOverview.find('Dialog[title="sulu_content.cache_clear_warning_title"]').prop('confirmLoading')
+            ).toEqual(false);
+        });
     });
 });
 
