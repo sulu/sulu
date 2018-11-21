@@ -3,8 +3,10 @@ import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import pretty from 'pretty';
 import React from 'react';
+import {Portal} from 'react-portal';
 import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
+import MediaCollection from '../../MediaCollection/MediaCollection';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -71,57 +73,60 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () =>
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn());
 
-const collectionDatagridStoreMock = new DatagridStore('collections', 'media_selection_overlay', {
-    page: observable.box(),
-}, {});
-collectionDatagridStoreMock.data.push({
-    id: 1,
-    title: 'Title 1',
-    objectCount: 1,
-    description: 'Description 1',
-},
-{
-    id: 2,
-    title: 'Title 2',
-    objectCount: 0,
-    description: 'Description 2',
-});
+let collectionDatagridStoreMock: DatagridStore;
+let mediaDatagridStoreMock: DatagridStore;
 
-const mediaDatagridStoreMock = new DatagridStore('media', 'media_selection_overlay', {
-    page: observable.box(),
-}, {});
-mediaDatagridStoreMock.data.push(
-    {
+beforeEach(() => {
+    jest.clearAllMocks();
+
+    collectionDatagridStoreMock = new DatagridStore('collections', 'media_selection_overlay', {
+        page: observable.box(),
+    }, {});
+    collectionDatagridStoreMock.data.push({
         id: 1,
         title: 'Title 1',
-        mimeType: 'image/png',
-        size: 12345,
-        url: 'http://lorempixel.com/500/500',
-        thumbnails: {
-            'sulu-240x': 'http://lorempixel.com/240/100',
-            'sulu-25x25': 'http://lorempixel.com/25/25',
-        },
+        objectCount: 1,
+        description: 'Description 1',
     },
     {
         id: 2,
         title: 'Title 2',
-        mimeType: 'image/jpeg',
-        size: 54321,
-        url: 'http://lorempixel.com/500/500',
-        thumbnails: {
-            'sulu-240x': 'http://lorempixel.com/240/100',
-            'sulu-25x25': 'http://lorempixel.com/25/25',
-        },
-    }
-);
+        objectCount: 0,
+        description: 'Description 2',
+    });
 
-beforeEach(() => {
-    jest.clearAllMocks();
+    mediaDatagridStoreMock = new DatagridStore('media', 'media_selection_overlay', {
+        page: observable.box(),
+    }, {});
+    mediaDatagridStoreMock.data.push(
+        {
+            id: 1,
+            title: 'Title 1',
+            mimeType: 'image/png',
+            size: 12345,
+            url: 'http://lorempixel.com/500/500',
+            thumbnails: {
+                'sulu-240x': 'http://lorempixel.com/240/100',
+                'sulu-25x25': 'http://lorempixel.com/25/25',
+            },
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            mimeType: 'image/jpeg',
+            size: 54321,
+            url: 'http://lorempixel.com/500/500',
+            thumbnails: {
+                'sulu-240x': 'http://lorempixel.com/240/100',
+                'sulu-25x25': 'http://lorempixel.com/25/25',
+            },
+        }
+    );
 });
 
 test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
-    mount(
+    const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
@@ -132,9 +137,31 @@ test('Render an open MediaSelectionOverlay', () => {
             onConfirm={jest.fn()}
             open={true}
         />
-    ).render();
+    );
 
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
+});
+
+test('Render an open MediaSelectionOverlay with selected items', () => {
+    mediaDatagridStoreMock.selections.push({id: 1});
+
+    const locale = observable.box();
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
+            excludedIds={[]}
+            locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(mediaSelectionOverlay.render()).toMatchSnapshot();
+    expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
 });
 
 test('Should call onConfirm callback with selected medias from media datagrid', () => {
