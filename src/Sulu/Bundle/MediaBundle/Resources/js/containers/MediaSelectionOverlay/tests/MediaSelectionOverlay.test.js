@@ -1,9 +1,7 @@
 // @flow
 import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import pretty from 'pretty';
 import React from 'react';
-import {Portal} from 'react-portal';
 import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 import MediaCollection from '../../MediaCollection/MediaCollection';

@@ -115,7 +115,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             mediaDatagridStore.options.excluded = newExcludedOption;
             mediaDatagridStore.reload();
         }
-    };
+    }
 
     @action updateCollectionStore(collectionId: ?string | number) {
         if (this.collectionStore) {
@@ -123,7 +123,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         }
 
         this.collectionStore = new CollectionStore(collectionId, this.props.locale);
-    };
+    }
 
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
         this.props.collectionId.set(collectionId);

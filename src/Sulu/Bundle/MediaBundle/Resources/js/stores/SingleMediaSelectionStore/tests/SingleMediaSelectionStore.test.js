@@ -1,8 +1,6 @@
 // @flow
 import {observable, toJS} from 'mobx';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
-import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore/SingleSelectionStore';
-import Preview from 'sulu-preview-bundle/containers/Preview/Preview';
 import SingleMediaSelectionStore from '../SingleMediaSelectionStore';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
