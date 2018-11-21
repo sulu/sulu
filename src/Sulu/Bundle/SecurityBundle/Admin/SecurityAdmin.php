@@ -107,19 +107,19 @@ class SecurityAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            (new Route(static::ADD_FORM_ROUTE, '/roles/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'roles')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('toolbarActions', $formToolbarActions),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
+                ->setResourceKey('roles')
+                ->getRoute(),
             (new Route('sulu_security.role_add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.role_form_detail')
                 ->addOption('formKey', 'roles')
+                ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_security.role_edit_form.detail')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent(static::ADD_FORM_ROUTE),
-            (new Route(static::EDIT_FORM_ROUTE, '/roles/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'roles')
-                ->addOption('toolbarActions', $formToolbarActions),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
+                ->setResourceKey('roles')
+                ->getRoute(),
             (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.role_form_detail')
                 ->addOption('formKey', 'roles')
@@ -133,7 +133,7 @@ class SecurityAdmin extends Admin
                 ->addOption('formKey', 'users')
                 ->addOption('idQueryParameter', 'contactId')
                 ->addOption('toolbarActions', ['sulu_admin.save'])
-                ->setParent('sulu_contact.contact_edit_form'),
+                ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE),
         ];
     }
 }

@@ -88,11 +88,6 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
             'locales' => array_keys($locales),
-            'toolbarActions' => [
-                'sulu_admin.save',
-                'sulu_admin.type',
-                'sulu_admin.delete',
-            ],
         ], 'options', $addFormRoute);
         $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
         $this->assertAttributeEquals([
@@ -100,16 +95,16 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippets',
             'backRoute' => 'sulu_snippet.datagrid',
             'editRoute' => 'sulu_snippet.edit_form.detail',
-        ], 'options', $addDetailRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
-        $this->assertAttributeEquals([
-            'resourceKey' => 'snippets',
-            'locales' => array_keys($locales),
             'toolbarActions' => [
                 'sulu_admin.save',
                 'sulu_admin.type',
                 'sulu_admin.delete',
             ],
+        ], 'options', $addDetailRoute);
+        $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
+        $this->assertAttributeEquals([
+            'resourceKey' => 'snippets',
+            'locales' => array_keys($locales),
         ], 'options', $editFormRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form.detail', 'name', $editDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
@@ -117,6 +112,11 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_snippet.details',
             'formKey' => 'snippets',
             'backRoute' => 'sulu_snippet.datagrid',
+            'toolbarActions' => [
+                'sulu_admin.save',
+                'sulu_admin.type',
+                'sulu_admin.delete',
+            ],
         ], 'options', $editDetailRoute);
     }
 }

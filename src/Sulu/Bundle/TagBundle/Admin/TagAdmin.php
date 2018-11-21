@@ -79,22 +79,24 @@ class TagAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            (new Route(static::ADD_FORM_ROUTE, '/tags/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'tags')
-                ->addOption('toolbarActions', $formToolbarActions),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
+                ->setResourceKey('tags')
+                ->getRoute(),
             (new Route('sulu_tag.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('formKey', 'tags')
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_tag.edit_form.detail')
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent(static::ADD_FORM_ROUTE),
-            (new Route(static::EDIT_FORM_ROUTE, '/tags/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'tags')
-                ->addOption('toolbarActions', $formToolbarActions),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
+                ->setResourceKey('tags')
+                ->getRoute(),
             (new Route('sulu_tag.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
                 ->addOption('formKey', 'tags')
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }

@@ -104,25 +104,27 @@ class CategoryAdmin extends Admin
                 ->enableSearching()
                 ->enableMoving()
                 ->getRoute(),
-            (new Route(static::ADD_FORM_ROUTE, '/categories/:locale/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'categories')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('routerAttributesToFormStore', ['parentId'])
-                ->addOption('locales', $locales),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+                ->setResourceKey('categories')
+                ->addLocales($locales)
+                ->getRoute(),
             (new Route('sulu_category.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_category.details')
                 ->addOption('formKey', 'categories')
+                ->addOption('toolbarActions', $formToolbarActions)
+                ->addOption('routerAttributesToFormStore', ['parentId'])
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_category.edit_form.detail')
                 ->setParent(static::ADD_FORM_ROUTE),
-            (new Route(static::EDIT_FORM_ROUTE, '/categories/:locale/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'categories')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('locales', $locales),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+                ->setResourceKey('categories')
+                ->addLocales($locales)
+                ->getRoute(),
             (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_category.details')
                 ->addOption('formKey', 'categories')
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }

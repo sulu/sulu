@@ -125,24 +125,26 @@ class SnippetAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            (new Route(static::ADD_FORM_ROUTE, '/snippets/:locale/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'snippets')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('locales', $snippetLocales),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
+                ->setResourceKey('snippets')
+                ->addLocales($snippetLocales)
+                ->getRoute(),
             (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('formKey', 'snippets')
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
                 ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
-                ->setParent(static::ADD_FORM_ROUTE),
-            (new Route(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'snippets')
                 ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('locales', $snippetLocales),
+                ->setParent(static::ADD_FORM_ROUTE),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
+                ->setResourceKey('snippets')
+                ->addLocales($snippetLocales)
+                ->getRoute(),
             (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
                 ->addOption('formKey', 'snippets')
                 ->addOption('backRoute', static::DATAGRID_ROUTE)
+                ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }
