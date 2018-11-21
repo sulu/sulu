@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
-import MediaSelectionOverlay from '../MediaSelectionOverlay/MediaSelectionOverlay';
+import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {
     open: boolean,
