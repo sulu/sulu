@@ -5,9 +5,9 @@
 [![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
 [![Travis](https://travis-ci.org/sulu/sulu.png?branch=develop)](https://travis-ci.org/sulu/sulu)
 [![CircleCI](https://circleci.com/gh/sulu/sulu/tree/develop.svg?style=shield)](https://circleci.com/gh/sulu/sulu/tree/develop)
-[![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/sulu/sulu.svg)](https://github.com/sulu/sulu-standard/graphs/contributors)
+[![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/sulu/sulu.svg)](https://github.com/sulu/sulu/graphs/contributors)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu/sulu/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/sulu/sulu/?branch=develop)
-[![Packagist](https://img.shields.io/packagist/dt/sulu/sulu.svg)](packagist.org/packages/sulu/sulu)
+[![Packagist](https://img.shields.io/packagist/dt/sulu/sulu.svg)](https://packagist.org/packages/sulu/sulu)
 
 This package contains the main stack for the
 [Sulu Content Management Framework](https://github.com/sulu/sulu-minimal) (CMF) licensed under the [MIT License](LICENSE).
