@@ -8,18 +8,20 @@ import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore';
 import MediaSelectionItem from '../../components/MediaSelectionItem';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
+import type {Value} from './types';
 
 type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
-    onChange: (selectedIds: ?number) => void,
-    value: ?number,
+    onChange: (selectedIds: Value) => void,
+    value: Value,
 |}
 
 @observer
 export default class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        value: { id: undefined },
     };
 
     singleMediaSelectionStore: SingleMediaSelectionStore;
@@ -28,36 +30,27 @@ export default class SingleMediaSelection extends React.Component<Props> {
 
     @observable overlayOpen: boolean = false;
 
-    @action openOverlay() {
-        this.overlayOpen = true;
-    }
-
     constructor(props: Props) {
         super(props);
 
         const {onChange, locale, value} = this.props;
 
-        this.singleMediaSelectionStore = new SingleMediaSelectionStore(value, locale);
+        this.singleMediaSelectionStore = new SingleMediaSelectionStore(value.id, locale);
         this.changeDisposer = autorun(() => {
             const {value} = this.props;
-            const {selectedMedia} = this.singleMediaSelectionStore;
-            const itemId = selectedMedia ? selectedMedia.id : undefined;
+            const loadedMediaId = this.singleMediaSelectionStore.selectedMediaId;
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
                 return;
             }
 
-            if (value === itemId) {
+            if (value === loadedMediaId) {
                 return;
             }
 
-            onChange(itemId);
+            onChange({ id: loadedMediaId });
         });
-    }
-
-    componentWillUnmount() {
-        this.changeDisposer();
     }
 
     componentDidUpdate() {
@@ -66,23 +59,35 @@ export default class SingleMediaSelection extends React.Component<Props> {
             value,
         } = this.props;
 
-        const newValue = toJS(value);
-        const oldValue = toJS(this.singleMediaSelectionStore.selectedMediaId);
+        const newSelectedId = toJS(value.id);
+        const loadedSelectedId = toJS(this.singleMediaSelectionStore.selectedMediaId);
 
-        if (oldValue !== newValue) {
-            this.singleMediaSelectionStore.loadSelectedMedia(newValue, locale);
+        if (loadedSelectedId !== newSelectedId) {
+            this.singleMediaSelectionStore.loadSelectedMedia(newSelectedId, locale);
         }
+    }
+
+    componentWillUnmount() {
+        this.changeDisposer();
+    }
+
+    @action openOverlay() {
+        this.overlayOpen = true;
     }
 
     @action closeOverlay() {
         this.overlayOpen = false;
     }
 
-    @action handleOverlayOpen = () => {
+    handleRemove = () => {
+        this.singleMediaSelectionStore.clear();
+    };
+
+    handleOverlayOpen = () => {
         this.openOverlay();
     };
 
-    @action handleOverlayClose = () => {
+    handleOverlayClose = () => {
         this.closeOverlay();
     };
 
@@ -91,18 +96,14 @@ export default class SingleMediaSelection extends React.Component<Props> {
         this.closeOverlay();
     };
 
-    handleRemove = () => {
-        this.singleMediaSelectionStore.clear();
-    };
-
     render() {
         const {
             disabled,
             locale,
-            value,
         } = this.props;
         const {
             selectedMedia,
+            selectedMediaId,
         } = this.singleMediaSelectionStore;
 
         return (
@@ -126,7 +127,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay
-                    excludedIds={value ? [value] : []}
+                    excludedIds={selectedMediaId ? [selectedMediaId] : []}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Pass correct props to MultiMediaSelection component', () => {
+test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
         new FormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')})
@@ -43,7 +43,7 @@ test('Pass correct props to MultiMediaSelection component', () => {
 
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().disabled).toEqual(true);
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual(33);
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual({ id: 33 });
 });
 
 test('Should throw an error if locale is not present in form-inspector', () => {
@@ -84,7 +84,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
         />
     );
 
-    mediaSelection.find(SingleMediaSelectionComponent).props().onChange(44);
+    mediaSelection.find(SingleMediaSelectionComponent).props().onChange({ id: 44 });
 
     expect(changeSpy).toBeCalledWith({ id: 44 });
     expect(finishSpy).toBeCalled();

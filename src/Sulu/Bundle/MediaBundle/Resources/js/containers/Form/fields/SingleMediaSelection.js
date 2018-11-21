@@ -3,17 +3,14 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import SingleMediaSelectionComponent from '../../SingleMediaSelection';
-
-type Props = FieldTypeProps<{id: ?number}>;
+import type {Value} from '../../SingleMediaSelection';
 
 @observer
-export default class SingleMediaSelection extends React.Component<Props> {
-    handleChange = (mediaId: ?number) => {
+export default class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
+    handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
-        onChange({
-            id: mediaId,
-        });
+        onChange(value);
         onFinish();
     };
 
@@ -31,7 +28,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 disabled={!!disabled}
                 locale={locale}
                 onChange={this.handleChange}
-                value={value && value.id ? value.id : undefined}
+                value={value ? value : undefined}
             />
         );
     }
