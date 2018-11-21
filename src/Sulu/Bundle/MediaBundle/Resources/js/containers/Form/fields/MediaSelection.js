@@ -7,12 +7,10 @@ import MediaSelectionComponent from '../../MediaSelection';
 
 @observer
 export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
-    handleChange = (selectedIds: Array<number>) => {
+    handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
-        onChange({
-            ids: selectedIds,
-        });
+        onChange(value);
         onFinish();
     };
 
@@ -30,7 +28,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
                 disabled={!!disabled}
                 locale={locale}
                 onChange={this.handleChange}
-                value={value && value.ids ? value.ids : []}
+                value={value ? value : undefined}
             />
         );
     }

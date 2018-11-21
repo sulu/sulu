@@ -343,14 +343,14 @@ test('Should call the onChange handler if selection store changes', () => {
     const changeSpy = jest.fn();
 
     const mediaSelectionInstance = shallow(
-        <MediaSelection locale={observable.box('en')} onChange={changeSpy} value={[55]} />
+        <MediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ ids: [55] }} />
     ).instance();
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99});
-    expect(changeSpy).toBeCalledWith([55, 99]);
+    expect(changeSpy).toBeCalledWith({ ids: [55, 99] });
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.splice(0, 1);
-    expect(changeSpy).toBeCalledWith([99]);
+    expect(changeSpy).toBeCalledWith({ ids: [99] });
 });
 
 test('Pass correct props to MultiItemSelection component', () => {

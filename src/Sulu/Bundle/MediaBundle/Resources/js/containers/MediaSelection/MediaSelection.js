@@ -9,19 +9,20 @@ import type {IObservableValue} from 'mobx';
 import MediaSelectionStore from '../../stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
+import type {Value} from './types';
 
 type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
-    onChange: (selectedIds: Array<number>) => void,
-    value: Array<number>,
+    onChange: (selectedIds: Value) => void,
+    value: Value,
 |}
 
 @observer
 export default class MediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        value: [],
+        value: { ids: [] },
     };
 
     mediaSelectionStore: MediaSelectionStore;
@@ -38,21 +39,21 @@ export default class MediaSelection extends React.Component<Props> {
             value,
         } = this.props;
 
-        this.mediaSelectionStore = new MediaSelectionStore(value, locale);
+        this.mediaSelectionStore = new MediaSelectionStore(value.ids, locale);
         this.changeDisposer = autorun(() => {
             const {onChange, value} = this.props;
-            const mediaIds = this.mediaSelectionStore.selectedMediaIds;
+            const loadedMediaIds = this.mediaSelectionStore.selectedMediaIds;
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
                 return;
             }
 
-            if (equals(toJS(value), toJS(mediaIds))) {
+            if (equals(toJS(value.ids), toJS(loadedMediaIds))) {
                 return;
             }
 
-            onChange(mediaIds);
+            onChange({ ids: loadedMediaIds });
         });
     }
 
@@ -62,13 +63,13 @@ export default class MediaSelection extends React.Component<Props> {
             value,
         } = this.props;
 
-        const newValue = toJS(value);
-        const oldValue = toJS(this.mediaSelectionStore.selectedMediaIds);
+        const newSelectedIds = toJS(value.ids);
+        const currentSelectedIds = toJS(this.mediaSelectionStore.selectedMediaIds);
 
-        newValue.sort();
-        oldValue.sort();
-        if (!equals(newValue, oldValue) && !this.mediaSelectionStore.loading) {
-            this.mediaSelectionStore.loadSelectedMedia(newValue, locale);
+        newSelectedIds.sort();
+        currentSelectedIds.sort();
+        if (!equals(newSelectedIds, currentSelectedIds) && !this.mediaSelectionStore.loading) {
+            this.mediaSelectionStore.loadSelectedMedia(newSelectedIds, locale);
         }
     }
 
