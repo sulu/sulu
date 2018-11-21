@@ -10,7 +10,7 @@ type Props = {|
 export default class SmartContentItem extends React.Component<Props> {
     render() {
         const {
-            id, // eslint-disable-line no-unused-vars
+            id,
             image,
             title,
             publishedState,
