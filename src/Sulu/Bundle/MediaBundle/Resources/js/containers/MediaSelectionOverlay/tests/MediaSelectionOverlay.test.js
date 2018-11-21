@@ -1,118 +1,27 @@
 // @flow
-
 import {mount, shallow} from 'enzyme';
-import {observable, toJS} from 'mobx';
+import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import pretty from 'pretty';
 import React from 'react';
-import {DatagridStore} from 'sulu-admin-bundle/containers';
+import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 
-jest.mock('sulu-admin-bundle/containers', () => {
-    return {
-        Form: require('sulu-admin-bundle/containers/Form').default,
-        FormStore: jest.fn(),
-        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
-        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
-            const {extendObservable} = jest.requireActual('mobx');
-            const COLLECTIONS_RESOURCE_KEY = 'collections';
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
 
-            const collectionData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    objectCount: 1,
-                    description: 'Description 1',
-                },
-                {
-                    id: 2,
-                    title: 'Title 2',
-                    objectCount: 0,
-                    description: 'Description 2',
-                },
-            ];
-
-            const thumbnails = {
-                'sulu-240x': 'http://lorempixel.com/240/100',
-                'sulu-25x25': 'http://lorempixel.com/25/25',
-            };
-
-            const mediaData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    mimeType: 'image/png',
-                    size: 12345,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
-                },
-                {
-                    id: 2,
-                    title: 'Title 2',
-                    mimeType: 'image/jpeg',
-                    size: 54321,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
-                },
-            ];
-            extendObservable(this, {
-                selections: [],
-                selectionIds: [],
-            });
-            this.userSettingsKey = userSettingsKey;
-            this.observableOptions = observableOptions;
-            this.loading = false;
-            this.pageCount = 3;
-            this.active = {
-                get: jest.fn(),
-            };
-            this.sortColumn = {
-                get: jest.fn(),
-            };
-            this.sortOrder = {
-                get: jest.fn(),
-            };
-            this.searchTerm = {
-                get: jest.fn(),
-            };
-            this.limit = {
-                get: jest.fn().mockReturnValue(10),
-            };
-            this.setLimit = jest.fn();
-            this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
-                ? collectionData
-                : mediaData;
-            this.getPage = jest.fn().mockReturnValue(2);
-            this.getFields = jest.fn().mockReturnValue({
-                title: {},
-                description: {},
-            });
-            this.updateLoadingStrategy = jest.fn();
-            this.updateStructureStrategy = jest.fn();
-            this.destroy = jest.fn();
-            this.sendRequest = jest.fn();
-            this.clearSelection = jest.fn();
-            this.clear = jest.fn();
-            this.setAppendRequestData = jest.fn();
-            this.deselectEntirePage = jest.fn();
-            this.select = jest.fn();
-            this.getSchema = jest.fn().mockReturnValue({});
-        }),
-        FlatStructureStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
-        ).default,
-        InfiniteLoadingStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
-        ).default,
-        SingleDatagridOverlay: jest.fn(() => null),
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+    this.id = 1;
+    this.data = {
+        id: 1,
     };
-});
+}));
 
 jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
     return {
-        add: jest.fn(),
         getOptions: jest.fn().mockReturnValue({}),
-        has: jest.fn(),
+        has: jest.fn().mockReturnValue(true),
         get: jest.fn((key) => {
             const adapters = {
                 'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
@@ -123,53 +32,102 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
     };
 });
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function() {
-        this.destroy = jest.fn();
-        this.loading = false;
-        this.id = 1;
-        this.data = {
-            id: 1,
+jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () =>
+    jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
+        mockExtendObservable(this, {
+            selections: [],
+            selectionIds: [],
+        });
+        this.observableOptions = observableOptions;
+        this.pageCount = 3;
+        this.active = {
+            get: jest.fn(),
         };
-    }),
-}));
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
+        this.searchTerm = {
+            get: jest.fn(),
+        };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.data = [];
+        this.getPage = jest.fn().mockReturnValue(2);
+        this.setPage = jest.fn();
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
+        this.updateLoadingStrategy = jest.fn();
+        this.updateStructureStrategy = jest.fn();
+        this.clearSelection = jest.fn();
+        this.reload = jest.fn();
+        this.clear = jest.fn();
+        this.getSchema = jest.fn().mockReturnValue({});
+        this.options = {};
+    })
+);
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn());
+
+const collectionDatagridStoreMock = new DatagridStore('collections', 'media_selection_overlay', {
+    page: observable.box(),
+}, {});
+collectionDatagridStoreMock.data.push({
+    id: 1,
+    title: 'Title 1',
+    objectCount: 1,
+    description: 'Description 1',
+},
+{
+    id: 2,
+    title: 'Title 2',
+    objectCount: 0,
+    description: 'Description 2',
+});
+
+const mediaDatagridStoreMock = new DatagridStore('media', 'media_selection_overlay', {
+    page: observable.box(),
+}, {});
+mediaDatagridStoreMock.data.push(
+    {
+        id: 1,
+        title: 'Title 1',
+        mimeType: 'image/png',
+        size: 12345,
+        url: 'http://lorempixel.com/500/500',
+        thumbnails: {
+            'sulu-240x': 'http://lorempixel.com/240/100',
+            'sulu-25x25': 'http://lorempixel.com/25/25',
+        },
     },
-}));
+    {
+        id: 2,
+        title: 'Title 2',
+        mimeType: 'image/jpeg',
+        size: 54321,
+        url: 'http://lorempixel.com/500/500',
+        thumbnails: {
+            'sulu-240x': 'http://lorempixel.com/240/100',
+            'sulu-25x25': 'http://lorempixel.com/25/25',
+        },
+    }
+);
 
-jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.reset_selection':
-                return 'Reset fields';
-            case 'sulu_media.select_media_plural':
-                return 'Select media';
-            case 'sulu_admin.confirm':
-                return 'Confirm';
-        }
-    },
-}));
-
-jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
+beforeEach(() => {
+    jest.clearAllMocks();
+});
 
 test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
     mount(
         <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
             excludedIds={[]}
             locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -179,62 +137,16 @@ test('Render an open MediaSelectionOverlay', () => {
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
-test('Should instantiate the needed stores when the overlay opens', () => {
-    const mediaResourceKey = 'media';
-    const collectionResourceKey = 'collections';
-    const locale = observable.box();
-    const mediaSelectionOverlayInstance = shallow(
-        <MediaSelectionOverlay
-            excludedIds={[]}
-            locale={locale}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-        />
-    ).instance();
-
-    expect(mediaSelectionOverlayInstance.mediaPage.get()).toBe(1);
-    expect(mediaSelectionOverlayInstance.collectionPage.get()).toBe(1);
-
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[1][0]).toBe(mediaResourceKey);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[1][1]).toBe('media_selection_overlay');
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[1][2].locale).toBe(locale);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[1][2].page.get()).toBe(1);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[1][3].fields).toEqual([
-        'id',
-        'type',
-        'name',
-        'size',
-        'title',
-        'mimeType',
-        'subVersion',
-        'thumbnails',
-    ].join(','));
-
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[0][0]).toBe(collectionResourceKey);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[0][1]).toBe('media_selection_overlay');
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[0][2].locale).toBe(locale);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[0][2].page.get()).toBe(1);
-    // $FlowFixMe
-    expect(DatagridStore.mock.calls[0][2].parentId.get()).toBe(undefined);
-});
-
-test('Should call onConfirm callback with selections from datagrid', () => {
+test('Should call onConfirm callback with selected medias from media datagrid', () => {
     const confirmSpy = jest.fn();
     const locale = observable.box();
     const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
             excludedIds={[]}
             locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
@@ -245,18 +157,21 @@ test('Should call onConfirm callback with selections from datagrid', () => {
         {id: 1},
         {id: 3},
     ];
-    mediaSelectionOverlay.instance().mediaDatagridStore.selections = selections;
+    mediaDatagridStoreMock.selections = selections;
     mediaSelectionOverlay.find('Overlay').simulate('confirm');
 
-    expect(toJS(confirmSpy.mock.calls[0][0])).toEqual(selections);
+    expect(confirmSpy).toBeCalledWith(selections);
 });
 
-test('Should reset the selection array when the "Reset Selection" button was clicked', () => {
+test('Should reset the selection of the media datagrid when the reset-button is clicked', () => {
     const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
             excludedIds={[]}
             locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -264,73 +179,72 @@ test('Should reset the selection array when the "Reset Selection" button was cli
     ).instance();
 
     mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaSelectionOverlayInstance.mediaDatagridStore.clearSelection).toBeCalled();
+    expect(mediaDatagridStoreMock.clearSelection).toBeCalled();
 });
 
-test('Should destroy the stores and cleanup all states when the overlay is closed', () => {
+test('Should reset the selection of the media datagrid when the overlay is closed', () => {
     const locale = observable.box();
-    const mediaSelectionOverlayInstance = shallow(
+    const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
             excludedIds={[]}
             locale={locale}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-        />
-    ).instance();
-
-    mediaSelectionOverlayInstance.collectionId.set(1);
-
-    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(1);
-
-    mediaSelectionOverlayInstance.handleClose();
-    expect(mediaSelectionOverlayInstance.collectionId.get()).toBe(undefined);
-    expect(mediaSelectionOverlayInstance.collectionStore.resourceStore.destroy).toBeCalled();
-    expect(mediaSelectionOverlayInstance.mediaDatagridStore.destroy).toBeCalled();
-    expect(mediaSelectionOverlayInstance.collectionDatagridStore.destroy).toBeCalled();
-});
-
-test('Should change collection with selected media', () => {
-    const locale = observable.box();
-    const mediaSelectionOverlay = mount(
-        <MediaSelectionOverlay
-            excludedIds={[]}
-            locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
         />
     );
 
-    mediaSelectionOverlay.instance().mediaPage.set(4);
-    mediaSelectionOverlay.instance().collectionPage.set(3);
+    mediaSelectionOverlay.setProps({open: false});
+    expect(mediaDatagridStoreMock.clearSelection).toBeCalled();
+});
+
+test('Should change the current collection id and reset the page of the datagrids on collection-change', () => {
+    const locale = observable.box();
+    const collectionId = observable.box();
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={collectionId}
+            excludedIds={[]}
+            locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(collectionDatagridStoreMock.setPage).not.toHaveBeenCalled();
+    expect(mediaDatagridStoreMock.setPage).not.toHaveBeenCalled();
 
     mediaSelectionOverlay.find('Folder').at(0).simulate('click');
 
-    expect(mediaSelectionOverlay.instance().mediaPage.get()).toEqual(1);
-    expect(mediaSelectionOverlay.instance().collectionPage.get()).toEqual(1);
-    expect(mediaSelectionOverlay.instance().collectionId.get()).toEqual(1);
-    expect(mediaSelectionOverlay.instance().mediaDatagridStore.clearSelection).not.toBeCalled();
+    expect(collectionDatagridStoreMock.setPage).toHaveBeenCalledWith(1);
+    expect(mediaDatagridStoreMock.setPage).toHaveBeenCalledWith(1);
+    expect(collectionId.get()).toEqual(1);
+    expect(mediaDatagridStoreMock.clearSelection).not.toBeCalled();
 });
 
-test('Should reset both datagrid to first page after reopening overlay', () => {
+test('should update the excluded-option of the media datagrid if the excluded-id prop changes', () => {
     const locale = observable.box();
-    const mediaSelectionOverlay = mount(
+    const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
+            collectionDatagridStore={collectionDatagridStoreMock}
+            collectionId={observable.box()}
             excludedIds={[]}
             locale={locale}
+            mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
         />
     );
 
-    mediaSelectionOverlay.instance().mediaPage.set(3);
-    mediaSelectionOverlay.instance().collectionPage.set(2);
-
-    mediaSelectionOverlay.setProps({open: false});
-    mediaSelectionOverlay.setProps({open: true});
-
-    expect(mediaSelectionOverlay.instance().mediaPage.get()).toEqual(1);
-    expect(mediaSelectionOverlay.instance().collectionPage.get()).toEqual(1);
+    expect(mediaDatagridStoreMock.options.excluded).toBeUndefined();
+    mediaSelectionOverlay.setProps({excludedIds: [99, 22, 44]});
+    expect(mediaDatagridStoreMock.options.excluded).toEqual('22,44,99');
+    expect(mediaDatagridStoreMock.reload).toHaveBeenCalled();
 });

@@ -9,7 +9,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
-          <h2>Select media</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>sulu_media.select_media_plural</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
         </header>
         <article>
           <div class=\\"overlay\\">
@@ -18,7 +18,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                 <div class=\\"collectionSection\\">
                   <div class=\\"left\\">
                     <ul class=\\"breadcrumb\\">
-                      <li><button class=\\"item\\" disabled=\\"\\"></button></li>
+                      <li><button class=\\"item\\" disabled=\\"\\">sulu_media.all_media</button></li>
                     </ul>
                     <div class=\\"icons\\"><span aria-label=\\"su-pen\\" class=\\"su-pen clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-arrows-alt\\" class=\\"su-arrows-alt clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
                   </div>
@@ -34,7 +34,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                           <div class=\\"iconContainer\\"><span aria-label=\\"su-folder\\" class=\\"su-folder\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 1</h5>
-                            <div class=\\"info\\">1 Object</div>
+                            <div class=\\"info\\">1 sulu_admin.object</div>
                           </div>
                         </div>
                       </li>
@@ -43,17 +43,17 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                           <div class=\\"iconContainer\\"><span aria-label=\\"su-folder\\" class=\\"su-folder\\"></span></div>
                           <div class=\\"description\\">
                             <h5 class=\\"title\\">Title 2</h5>
-                            <div class=\\"info\\">0 Objects</div>
+                            <div class=\\"info\\">0 sulu_admin.objects</div>
                           </div>
                         </div>
                       </li>
                     </ul>
-                    <nav class=\\"pagination\\"><span class=\\"display\\">:</span><span><div class=\\"select\\"><button class=\\"displayValue dark\\" type=\\"button\\"><div aria-label=\\"10\\" class=\\"croppedText\\" title=\\"10\\"><div aria-hidden=\\"true\\" class=\\"front\\">1</div><div aria-hidden=\\"true\\" class=\\"back\\"><span>0</span>
+                    <nav class=\\"pagination\\"><span class=\\"display\\">sulu_admin.per_page:</span><span><div class=\\"select\\"><button class=\\"displayValue dark\\" type=\\"button\\"><div aria-label=\\"10\\" class=\\"croppedText\\" title=\\"10\\"><div aria-hidden=\\"true\\" class=\\"front\\">1</div><div aria-hidden=\\"true\\" class=\\"back\\"><span>0</span>
                 </div>
                 <div class=\\"whole\\">10</div>
               </div><span aria-label=\\"su-angle-down\\" class=\\"su-angle-down toggle\\"></span></button>
             </div></span>
-            <div class=\\"loader\\"></div><span>Page:</span><span class=\\"inputContainer\\"><label class=\\"input dark center\\"><input inputmode=\\"numeric\\" type=\\"text\\" value=\\"2\\"></label></span><span class=\\"display\\">of 3</span><button class=\\"previous\\"><span aria-label=\\"su-angle-left\\" class=\\"su-angle-left\\"></span></button><button class=\\"next\\"><span aria-label=\\"su-angle-right\\" class=\\"su-angle-right\\"></span></button></nav>
+            <div class=\\"loader\\"></div><span>sulu_admin.page:</span><span class=\\"inputContainer\\"><label class=\\"input dark center\\"><input inputmode=\\"numeric\\" type=\\"text\\" value=\\"2\\"></label></span><span class=\\"display\\">sulu_admin.of 3</span><button class=\\"previous\\"><span aria-label=\\"su-angle-left\\" class=\\"su-angle-left\\"></span></button><button class=\\"next\\"><span aria-label=\\"su-angle-right\\" class=\\"su-angle-right\\"></span></button></nav>
       </section>
     </div>
   </div>
@@ -61,7 +61,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
   <div>
     <div class=\\"headerContainer\\">
       <div class=\\"toolbar\\"><label class=\\"input dark left collapsed hasAppendIcon\\">
-          <div class=\\"prependedContainer dark collapsed\\"><span aria-label=\\"su-search\\" class=\\"su-search clickable icon dark iconClickable collapsed\\" role=\\"button\\" tabindex=\\"0\\"></span></div><input type=\\"text\\" value=\\"\\">
+          <div class=\\"prependedContainer dark collapsed\\"><span aria-label=\\"su-search\\" class=\\"su-search clickable icon dark iconClickable collapsed\\" role=\\"button\\" tabindex=\\"0\\"></span></div><input placeholder=\\"sulu_admin.datagrid_search_placeholder\\" type=\\"text\\" value=\\"\\">
         </label></div>
     </div>
     <div class=\\"datagrid\\">
@@ -91,6 +91,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       </div>
                     </div>
                   </div>
+                  <div><button class=\\"downloadButton\\"><span aria-label=\\"fa-cloud-download\\" class=\\"fa fa-cloud-download\\"></span></button></div>
                 </div>
                 <div class=\\"media\\"><img alt=\\"Title 1\\" src=\\"http://lorempixel.com/240/100\\">
                   <div class=\\"cover\\"><span aria-label=\\"su-check\\" class=\\"su-check mediaIcon\\"></span></div>
@@ -120,6 +121,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
                       </div>
                     </div>
                   </div>
+                  <div><button class=\\"downloadButton\\"><span aria-label=\\"fa-cloud-download\\" class=\\"fa fa-cloud-download\\"></span></button></div>
                 </div>
                 <div class=\\"media\\"><img alt=\\"Title 2\\" src=\\"http://lorempixel.com/240/100\\">
                   <div class=\\"cover\\"><span aria-label=\\"su-check\\" class=\\"su-check mediaIcon\\"></span></div>
@@ -135,9 +137,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
 </div>
 </div>
 </article>
-<footer>
-  <div class=\\"actions\\"><button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Reset fields</span></button></div><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Confirm</span></button>
-</footer>
+<footer><button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button></footer>
 </section>
 </div>
 </div>

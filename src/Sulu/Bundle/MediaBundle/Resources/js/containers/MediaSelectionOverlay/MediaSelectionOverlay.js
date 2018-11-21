@@ -137,7 +137,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     handleClose = () => {
         this.props.onClose();
-        this.props.mediaDatagridStore.clearSelection();
     };
 
     handleSelectionReset = () => {
@@ -146,7 +145,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     handleConfirm = () => {
         this.props.onConfirm(this.props.mediaDatagridStore.selections);
-        this.props.mediaDatagridStore.clearSelection();
     };
 
     render() {
@@ -156,16 +154,18 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             open,
             locale,
         } = this.props;
-        const actions = [
-            {
+
+        const overlayActions = [];
+        if (mediaDatagridStore.selections.length) {
+            overlayActions.push({
                 title: translate('sulu_media.reset_selection'),
                 onClick: this.handleSelectionReset,
-            },
-        ];
+            });
+        }
 
         return (
             <Overlay
-                actions={actions}
+                actions={overlayActions}
                 confirmDisabled={!mediaDatagridStore.selections.length}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={this.handleClose}
