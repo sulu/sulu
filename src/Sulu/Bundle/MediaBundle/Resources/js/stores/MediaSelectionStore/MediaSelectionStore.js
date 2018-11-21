@@ -1,8 +1,8 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line
-import {arrayMove} from 'sulu-admin-bundle/components/index';
-import {ResourceRequester} from 'sulu-admin-bundle/services/index';
+import {arrayMove} from 'sulu-admin-bundle/components';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {MediaItem} from '../../containers/MediaSelection/types';
 
 const THUMBNAIL_SIZE = 'sulu-25x25';
