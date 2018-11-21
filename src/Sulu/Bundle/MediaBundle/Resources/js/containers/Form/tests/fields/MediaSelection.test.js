@@ -45,3 +45,47 @@ test('Pass correct props to MediaSelection component', () => {
     expect(mediaSelection.find(MediaSelectionComponent).props().locale.get()).toEqual('en');
     expect(mediaSelection.find(MediaSelectionComponent).props().value).toEqual([55, 66, 77]);
 });
+
+test('Should throw an error if locale is not present in form-inspector', () => {
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: undefined })
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            value={{ids: [55, 66, 77]}}
+        />
+    )).toThrowError();
+});
+
+test('Should call onChange and onFinish if the selection changes', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
+
+    const mediaSelection = shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={{ids: [55, 66, 77]}}
+        />
+    );
+
+    mediaSelection.find(MediaSelectionComponent).props().onChange([33, 44]);
+
+    expect(changeSpy).toBeCalledWith({ ids: [33, 44] });
+    expect(finishSpy).toBeCalled();
+});
