@@ -21,13 +21,17 @@ const ToolbarItemTypes = {
 function getItemComponentByType(itemConfig, key) {
     switch (itemConfig.type) {
         case ToolbarItemTypes.Select:
-            return <ToolbarComponent.Select {...itemConfig} key={key} />;
+            const {type: selectType, ...selectConfig} = itemConfig;
+            return <ToolbarComponent.Select {...selectConfig} key={key} />;
         case ToolbarItemTypes.Dropdown:
-            return <ToolbarComponent.Dropdown {...itemConfig} key={key} />;
+            const {type: dropdownType, ...dropdownConfig} = itemConfig;
+            return <ToolbarComponent.Dropdown {...dropdownConfig} key={key} />;
         case ToolbarItemTypes.Toggler:
-            return <ToolbarComponent.Toggler {...itemConfig} key={key} />;
+            const {type: togglerType, ...togglerConfig} = itemConfig;
+            return <ToolbarComponent.Toggler {...togglerConfig} key={key} />;
         default:
-            return <ToolbarComponent.Button {...itemConfig} key={key} />;
+            const {type: buttonType, ...buttonConfig} = itemConfig;
+            return <ToolbarComponent.Button {...buttonConfig} key={key} />;
     }
 }
 

@@ -4,10 +4,26 @@ import type {IObservableValue} from 'mobx';
 import type {Button, Dropdown, Select, Toggler} from '../../components/Toolbar/types';
 
 export type {Button, Dropdown, Select, Toggler};
-export type ButtonItemConfig = Button & { type: 'button' };
-export type DropdownItemConfig = Dropdown & { type: 'dropdown' };
-export type SelectItemConfig = Select & { type: 'select' };
-export type TogglerItemConfig = Toggler & { type: 'toggler'};
+
+export type ButtonItemConfig = {|
+    ...Button,
+    type: 'button',
+|};
+
+export type DropdownItemConfig = {|
+    ...Dropdown,
+    type: 'dropdown',
+|};
+
+export type SelectItemConfig = {|
+    ...Select,
+    type: 'select',
+|};
+
+export type TogglerItemConfig = {|
+    ...Toggler,
+    type: 'toggler',
+|};
 export type ToolbarItemConfig = ButtonItemConfig | DropdownItemConfig | SelectItemConfig | TogglerItemConfig;
 
 export type ToolbarProps = {

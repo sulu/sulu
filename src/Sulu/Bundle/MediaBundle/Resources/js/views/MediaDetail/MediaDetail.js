@@ -168,14 +168,14 @@ export default withToolbar(MediaDetail, function() {
         },
         items: [
             {
-                type: 'button',
-                value: translate('sulu_admin.save'),
-                icon: 'su-save',
                 disabled: !resourceStore.dirty,
+                icon: 'su-save',
+                label: translate('sulu_admin.save'),
                 loading: resourceStore.saving,
                 onClick: () => {
                     this.form.submit();
                 },
+                type: 'button',
             },
         ],
         showSuccess,

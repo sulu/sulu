@@ -84,11 +84,11 @@ export default class Dropdown extends React.Component<DropdownProps> {
                     disabled={disabled || allChildrenDisabled}
                     hasOptions={true}
                     icon={icon}
+                    label={showText ? label : undefined}
                     loading={loading}
                     onClick={this.handleButtonClick}
                     size={size}
                     skin={skin}
-                    value={showText ? label : undefined}
                 />
                 <Popover
                     anchorElement={this.buttonRef}

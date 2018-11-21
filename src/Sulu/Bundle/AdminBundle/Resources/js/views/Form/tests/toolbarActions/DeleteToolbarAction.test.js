@@ -71,8 +71,8 @@ test('Return item config with correct disabled, loading, icon, type and value an
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: false,
         icon: 'su-trash-alt',
+        label: 'sulu_admin.delete',
         type: 'button',
-        value: 'sulu_admin.delete',
     }));
 
     const element = shallow(deleteToolbarAction.getNode());

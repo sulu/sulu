@@ -198,31 +198,31 @@ export default withToolbar(Datagrid, function() {
 
     if (addRoute) {
         items.push({
-            type: 'button',
-            value: translate('sulu_admin.add'),
             icon: 'su-plus-circle',
+            label: translate('sulu_admin.add'),
             onClick: this.handleItemAdd,
+            type: 'button',
         });
     }
 
     items.push({
-        type: 'button',
-        value: translate('sulu_admin.delete'),
-        icon: 'su-trash-alt',
         disabled: this.datagridStore.selectionIds.length === 0,
+        icon: 'su-trash-alt',
+        label: translate('sulu_admin.delete'),
         loading: this.datagridStore.selectionDeleting,
         onClick: this.datagrid.requestSelectionDelete,
+        type: 'button',
     });
 
     if (movable) {
         items.push({
-            type: 'button',
-            value: translate('sulu_admin.move_selected'),
-            icon: 'su-arrows-alt',
             disabled: this.datagridStore.selectionIds.length === 0,
+            icon: 'su-arrows-alt',
+            label: translate('sulu_admin.move_selected'),
             onClick: action(() => {
                 this.showMoveOverlay = true;
             }),
+            type: 'button',
         });
     }
 
