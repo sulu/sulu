@@ -1,5 +1,5 @@
 // @flow
-import {mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import React from 'react';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
@@ -9,15 +9,19 @@ jest.mock('../../MediaSelectionOverlay', () => {
     const MediaSelectionOverlay = function() {
         return <div>single media selection overlay</div>;
     };
-    MediaSelectionOverlay.createMediaDatagridStore = jest.fn();
-    MediaSelectionOverlay.createCollectionDatagridStore = jest.fn();
+    MediaSelectionOverlay.createCollectionDatagridStore = jest.fn().mockReturnValue({
+        destroy: jest.fn(),
+    });
+    MediaSelectionOverlay.createMediaDatagridStore = jest.fn().mockReturnValue({
+        destroy: jest.fn(),
+    });
 
     return MediaSelectionOverlay;
 });
 
 test('Should create datagrid-stores with correct locale', () => {
     const locale = observable.box('en');
-    mount(
+    shallow(
         <MultiMediaSelectionOverlay
             excludedIds={[]}
             locale={locale}
@@ -33,15 +37,15 @@ test('Should create datagrid-stores with correct locale', () => {
 
 test('Should pass correct props to media-selection-overlay', () => {
     const mediaDatagridStoreMock = jest.fn();
-    MediaSelectionOverlay.createMediaDatagridStore.mockReturnValue(mediaDatagridStoreMock);
+    MediaSelectionOverlay.createMediaDatagridStore.mockReturnValueOnce(mediaDatagridStoreMock);
     const collectionDatagridStoreMock = jest.fn();
-    MediaSelectionOverlay.createCollectionDatagridStore.mockReturnValue(collectionDatagridStoreMock);
+    MediaSelectionOverlay.createCollectionDatagridStore.mockReturnValueOnce(collectionDatagridStoreMock);
 
     const locale = observable.box('en');
     const onClose = jest.fn();
     const onConfirm = jest.fn();
 
-    const multiMediaSelectionOverlay = mount(
+    const multiMediaSelectionOverlay = shallow(
         <MultiMediaSelectionOverlay
             excludedIds={[22, 44]}
             locale={locale}
@@ -62,13 +66,7 @@ test('Should pass correct props to media-selection-overlay', () => {
 });
 
 test('Should destroy datagrid-stores on unmount', () => {
-    const mediaDatagridStoreMock = { destroy: jest.fn() };
-    MediaSelectionOverlay.createMediaDatagridStore.mockReturnValue(mediaDatagridStoreMock);
-
-    const collectionDatagridStoreMock = { destroy: jest.fn() };
-    MediaSelectionOverlay.createCollectionDatagridStore.mockReturnValue(collectionDatagridStoreMock);
-
-    const multiMediaSelectionOverlay = mount(
+    const multiMediaSelectionOverlay = shallow(
         <MultiMediaSelectionOverlay
             excludedIds={[]}
             locale={observable.box('en')}
@@ -77,6 +75,9 @@ test('Should destroy datagrid-stores on unmount', () => {
             open={true}
         />
     );
+
+    const mediaDatagridStoreMock = multiMediaSelectionOverlay.instance().mediaDatagridStore;
+    const collectionDatagridStoreMock = multiMediaSelectionOverlay.instance().collectionDatagridStore;
 
     expect(mediaDatagridStoreMock.destroy).not.toHaveBeenCalled();
     expect(collectionDatagridStoreMock.destroy).not.toHaveBeenCalled();

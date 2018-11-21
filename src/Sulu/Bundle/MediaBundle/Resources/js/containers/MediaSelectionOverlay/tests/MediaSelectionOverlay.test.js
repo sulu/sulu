@@ -1,6 +1,6 @@
 // @flow
 import {mount, shallow} from 'enzyme';
-import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import pretty from 'pretty';
 import React from 'react';
 import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
