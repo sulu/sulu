@@ -1,7 +1,7 @@
 // @flow
 import type {IObservableValue} from 'mobx';
 import {action, computed, observable} from 'mobx';
-import {ResourceRequester} from 'sulu-admin-bundle/services/index';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import type {MediaItem} from '../MultiMediaSelectionStore/types';
 
 const THUMBNAIL_SIZE = 'sulu-25x25';

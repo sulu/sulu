@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import MimeTypeIndicator from '../MimeTypeIndicator/index';
+import MimeTypeIndicator from '../MimeTypeIndicator';
 import mediaSelectionItemStyle from './mediaSelectionItem.scss';
 
 type Props = {

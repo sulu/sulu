@@ -4,7 +4,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
 import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
-import MediaCollection from '../../MediaCollection/MediaCollection';
+import MediaCollection from '../../MediaCollection';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),

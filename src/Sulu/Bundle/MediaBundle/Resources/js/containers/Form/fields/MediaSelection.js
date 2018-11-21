@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import MultiMediaSelectionComponent from '../../MultiMediaSelection';
-import type {Value} from '../../MediaSelection/types';
+import type {Value} from '../../MultiMediaSelection';
 
 @observer
 export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {

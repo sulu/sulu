@@ -2,16 +2,16 @@
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection/SingleItemSelection';
+import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import SingleMediaSelection from '../SingleMediaSelection';
 import SingleMediaSelectionStore from '../../../stores/SingleMediaSelectionStore';
-import SingleMediaSelectionOverlay from '../../SingleMediaSelectionOverlay/SingleMediaSelectionOverlay';
+import SingleMediaSelectionOverlay from '../../SingleMediaSelectionOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../SingleMediaSelectionOverlay/SingleMediaSelectionOverlay', () => jest.fn(function() {
+jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn(function() {
     return <div>single media selection overlay</div>;
 }));
 
