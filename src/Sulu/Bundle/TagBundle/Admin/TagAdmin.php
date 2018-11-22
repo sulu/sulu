@@ -82,22 +82,26 @@ class TagAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
                 ->setResourceKey('tags')
                 ->getRoute(),
-            (new Route('sulu_tag.add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_tag.details')
-                ->addOption('formKey', 'tags')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('editRoute', 'sulu_tag.edit_form.detail')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.detail', '/details')
+                ->setResourceKey('tags')
+                ->setFormkey('tags')
+                ->setTabTitle('sulu_tag.details')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
                 ->setResourceKey('tags')
                 ->getRoute(),
-            (new Route('sulu_tag.edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_tag.details')
-                ->addOption('formKey', 'tags')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.detail', '/details')
+                ->setResourceKey('tags')
+                ->setFormKey('tags')
+                ->setTabTitle('sulu_tag.details')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

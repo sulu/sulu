@@ -16,4 +16,6 @@ interface RouteBuilderFactoryInterface
     public function createDatagridRouteBuilder(string $name, string $path): DatagridRouteBuilderInterface;
 
     public function createResourceTabRouteBuilder(string $name, string $path): ResourceTabRouteBuilderInterface;
+
+    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface;
 }

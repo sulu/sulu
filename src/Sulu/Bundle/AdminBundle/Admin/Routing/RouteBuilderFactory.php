@@ -22,4 +22,9 @@ class RouteBuilderFactory implements RouteBuilderFactoryInterface
     {
         return new ResourceTabRouteBuilder($name, $path);
     }
+
+    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface
+    {
+        return new FormRouteBuilder($name, $path);
+    }
 }

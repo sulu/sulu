@@ -52,10 +52,6 @@ class CategoryAdmin extends Admin
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
-
-        if (!$this->securityChecker) {
-            return;
-        }
     }
 
     public function getNavigation(): Navigation
@@ -108,24 +104,28 @@ class CategoryAdmin extends Admin
                 ->setResourceKey('categories')
                 ->addLocales($locales)
                 ->getRoute(),
-            (new Route('sulu_category.add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_category.details')
-                ->addOption('formKey', 'categories')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('routerAttributesToFormStore', ['parentId'])
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('editRoute', 'sulu_category.edit_form.detail')
-                ->setParent(static::ADD_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.detail', '/details')
+                ->setResourceKey('categories')
+                ->setFormKey('categories')
+                ->setTabTitle('sulu_category.details')
+                ->addToolbarActions($formToolbarActions)
+                ->addRouterAttributesToFormStore(['parentId'])
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
                 ->setResourceKey('categories')
                 ->addLocales($locales)
                 ->getRoute(),
-            (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_category.details')
-                ->addOption('formKey', 'categories')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.detail', '/details')
+                ->setResourceKey('categories')
+                ->setFormKey('categories')
+                ->setTabTitle('sulu_category.details')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

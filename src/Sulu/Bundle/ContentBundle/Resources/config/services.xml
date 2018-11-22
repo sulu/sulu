@@ -13,6 +13,7 @@
         <service id="sulu_content.admin" class="%sulu_content.admin.class%">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>

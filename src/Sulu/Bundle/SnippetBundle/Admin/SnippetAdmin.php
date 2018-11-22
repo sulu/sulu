@@ -129,23 +129,27 @@ class SnippetAdmin extends Admin
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
                 ->getRoute(),
-            (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_snippet.details')
-                ->addOption('formKey', 'snippets')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.detail', '/details')
+                ->setResourceKey('snippets')
+                ->setFormKey('snippets')
+                ->setTabTitle('sulu_snippet.details')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
                 ->getRoute(),
-            (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_snippet.details')
-                ->addOption('formKey', 'snippets')
-                ->addOption('backRoute', static::DATAGRID_ROUTE)
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.detail', '/details')
+                ->setResourceKey('snippets')
+                ->setFormKey('snippets')
+                ->setTabTitle('sulu_snippet.details')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

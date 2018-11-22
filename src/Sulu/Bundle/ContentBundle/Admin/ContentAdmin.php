@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -30,6 +31,17 @@ class ContentAdmin extends Admin
      */
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
+    const WEBSPACES_ROUTE = 'sulu_content.webspaces';
+
+    const ADD_FORM_ROUTE = 'sulu_content.page_add_form';
+
+    const EDIT_FORM_ROUTE = 'sulu_content.page_edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -46,10 +58,12 @@ class ContentAdmin extends Admin
     private $sessionManager;
 
     public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager
     ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
@@ -95,50 +109,67 @@ class ContentAdmin extends Admin
             'sulu_admin.save_with_publishing',
         ];
 
+        $routerAttributesToFormStore = ['parentId', 'webspace'];
+
         $previewExpression = 'nodeType == 1';
 
         return [
-            (new Route('sulu_content.webspaces', '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
+            (new Route(static::WEBSPACES_ROUTE, '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
                 ->addAttributeDefault('webspace', $firstWebspace->getKey())
                 ->addAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace'),
-            (new Route('sulu_content.page_add_form', '/webspaces/:webspace/:locale/add/:parentId', 'sulu_content.page_tabs'))
-                ->addOption('resourceKey', 'pages')
-                ->addOption('backRoute', 'sulu_content.webspaces')
-                ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
-                ->addOption('toolbarActions', $formToolbarActionsWithoutType),
-            (new Route('sulu_content.page_add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('formKey', 'pages')
-                ->addOption('tabTitle', 'sulu_content.page_form_detail')
-                ->addOption('editRoute', 'sulu_content.page_edit_form.detail')
-                ->addOption('routerAttributesToEditRoute', ['webspace'])
-                ->addOption('toolbarActions', $formToolbarActionsWithType)
-                ->setParent('sulu_content.page_add_form'),
-            (new Route('sulu_content.page_edit_form', '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
-                ->addOption('resourceKey', 'pages')
-                ->addOption('backRoute', 'sulu_content.webspaces')
-                ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
-                ->addOption('toolbarActions', $formToolbarActionsWithoutType),
-            (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('formKey', 'pages')
-                ->addOption('tabTitle', 'sulu_content.page_form_detail')
-                ->addOption('toolbarActions', $formToolbarActionsWithType)
-                ->addOption('preview', $previewExpression)
-                ->setParent('sulu_content.page_edit_form'),
-            (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_content.page_form_seo')
-                ->addOption('formKey', 'pages_seo')
-                ->addOption('resourceKey', 'pages_seo')
-                ->setParent('sulu_content.page_edit_form'),
-            (new Route('sulu_content.page_edit_form.excerpt', '/excerpt', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
-                ->addOption('formKey', 'pages_excerpt')
-                ->addOption('resourceKey', 'pages_excerpt')
-                ->setParent('sulu_content.page_edit_form'),
-            (new Route('sulu_content.page_edit_form.settings', '/settings', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_content.page_form_settings')
-                ->addOption('formKey', 'pages_settings')
-                ->setParent('sulu_content.page_edit_form'),
+            (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_content.page_tabs'))
+                ->addOption('resourceKey', 'pages'),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_add_form.detail', '/details')
+                ->setResourceKey('pages')
+                ->setFormKey('pages')
+                ->setTabTitle('sulu_content.page_form_detail')
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->addRouterAttributesToEditRoute(['webspace'])
+                ->addToolbarActions($formToolbarActionsWithType)
+                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
+            (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
+                ->addOption('resourceKey', 'pages'),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.detail', '/details')
+                ->setResourceKey('pages')
+                ->setFormKey('pages')
+                ->setTabTitle('sulu_content.page_form_detail')
+                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->addToolbarActions($formToolbarActionsWithType)
+                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setPreviewCondition($previewExpression)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.seo', '/seo')
+                ->setFormKey('pages_seo')
+                ->setResourceKey('pages_seo')
+                ->setTabTitle('sulu_content.page_form_seo')
+                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->addToolbarActions($formToolbarActionsWithoutType)
+                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.excerpt', '/excerpt')
+                ->setResourceKey('pages_excerpt')
+                ->setFormKey('pages_excerpt')
+                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->setTabTitle('sulu_content.page_form_excerpt')
+                ->addToolbarActions($formToolbarActionsWithoutType)
+                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.settings', '/settings')
+                ->setResourceKey('pages_settings')
+                ->setFormKey('pages_settings')
+                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->setTabTitle('sulu_content.page_form_settings')
+                ->addToolbarActions($formToolbarActionsWithoutType)
+                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 
