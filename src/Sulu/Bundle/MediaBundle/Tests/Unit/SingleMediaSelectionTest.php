@@ -69,6 +69,24 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
+    public function testReadEmpty()
+    {
+        $property = $this->prophesize(Property::class);
+        $property->getName()->willReturn('media');
+
+        $this->node->hasProperty('media')->willReturn(false);
+
+        $property->setValue(['id' => null])->shouldBeCalled();
+
+        $this->singleMediaSelection->read(
+            $this->node->reveal(),
+            $property->reveal(),
+            'sulu',
+            'de',
+            ''
+        );
+    }
+
     public function testRead()
     {
         $property = $this->prophesize(Property::class);
@@ -82,6 +100,26 @@ class SingleMediaSelectionTest extends TestCase
         $this->singleMediaSelection->read(
             $this->node->reveal(),
             $property->reveal(),
+            'sulu',
+            'de',
+            ''
+        );
+    }
+
+    public function testWriteEmpty()
+    {
+        $property = new Property('media', [], 'single_media_selection');
+        $property->setValue(null);
+
+        $this->node->getProperty('media')->willReturn($this->nodeProperty->reveal());
+        $this->node->hasProperty('media')->willReturn(true);
+
+        $this->nodeProperty->remove()->shouldBeCalled();
+
+        $this->singleMediaSelection->write(
+            $this->node->reveal(),
+            $property,
+            null,
             'sulu',
             'de',
             ''
@@ -105,26 +143,6 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testWriteNothing()
-    {
-        $property = new Property('media', [], 'single_media_selection');
-        $property->setValue(null);
-
-        $this->node->getProperty('media')->willReturn($this->nodeProperty->reveal());
-        $this->node->hasProperty('media')->willReturn(true);
-
-        $this->nodeProperty->remove()->shouldBeCalled();
-
-        $this->singleMediaSelection->write(
-            $this->node->reveal(),
-            $property,
-            null,
-            'sulu',
-            'de',
-            ''
-        );
-    }
-
     public function testDefaultParams()
     {
         $property = new Property('media', [], 'single_media_selection');
@@ -133,6 +151,14 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertEquals(
             [],
             $this->singleMediaSelection->getDefaultParams($property)
+        );
+    }
+
+    public function testDefaultValue()
+    {
+        $this->assertEquals(
+            '{"id": null}',
+            $this->singleMediaSelection->getDefaultValue()
         );
     }
 
