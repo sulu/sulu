@@ -45,7 +45,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 return;
             }
 
-            if (value === loadedMediaId) {
+            if (value.id === loadedMediaId) {
                 return;
             }
 
