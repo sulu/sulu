@@ -43,6 +43,6 @@
     "sulu_content.no_follow": "no-follow (Links auf der Seite wird von Suchmaschinen nicht gefolgt)",
     "sulu_content.hide_in_sitemap": "In Sitemap ausblenden",
     "sulu_content.cache_clear": "Webseiten Cache löschen",
-    "sulu_content.cache_clear_warning_title": "Websiten Cache löschen?",
+    "sulu_content.cache_clear_warning_title": "Webseiten Cache löschen?",
     "sulu_content.cache_clear_warning_text": "Diese Operation leert den gesamten Cache für jeden Webspace. Wollen Sie wirklich fortfahren?"
 }
