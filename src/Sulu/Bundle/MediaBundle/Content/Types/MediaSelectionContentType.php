@@ -90,7 +90,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $languageCode,
         $segmentKey
     ) {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{"ids": []}'), true);
 
         $property->setValue($data);
     }
