@@ -29,11 +29,11 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
         return {
             disabled: !this.formStore.id,
             icon: 'su-trash-alt',
+            label: translate('sulu_admin.delete'),
             onClick: action(() => {
                 this.showDialog = true;
             }),
             type: 'button',
-            value: translate('sulu_admin.delete'),
         };
     }
 

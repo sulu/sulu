@@ -239,19 +239,19 @@ export default withToolbar(MediaOverview, function() {
             {
                 disabled: this.mediaDatagridStore.selectionIds.length === 0,
                 icon: 'su-trash-alt',
+                label: translate('sulu_admin.delete'),
                 loading: this.mediaDatagridStore.selectionDeleting,
                 onClick: this.mediaDatagrid.requestSelectionDelete,
                 type: 'button',
-                value: translate('sulu_admin.delete'),
             },
             {
                 disabled: this.mediaDatagridStore.selectionIds.length === 0,
                 icon: 'su-arrows-alt',
+                label: translate('sulu_admin.move_selected'),
                 onClick: action(() => {
                     this.showMediaMoveOverlay = true;
                 }),
                 type: 'button',
-                value: translate('sulu_admin.move_selected'),
             },
         ],
     };

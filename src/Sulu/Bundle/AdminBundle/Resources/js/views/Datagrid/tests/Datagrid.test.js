@@ -335,7 +335,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
     expect(toolbarConfig.items).toEqual(
         expect.arrayContaining(
             [
-                expect.objectContaining({icon: 'su-plus-circle', value: 'Add'}),
+                expect.objectContaining({icon: 'su-plus-circle', label: 'Add'}),
             ]
         )
     );
@@ -483,12 +483,12 @@ test('Should render the delete item enabled only if something is selected', () =
 
     let toolbarConfig, item;
     toolbarConfig = toolbarFunction.call(datagrid.instance());
-    item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    item = toolbarConfig.items.find((item) => item.label === 'Delete');
     expect(item.disabled).toBe(true);
 
     datagridStore.selectionIds.push(1);
     toolbarConfig = toolbarFunction.call(datagrid.instance());
-    item = toolbarConfig.items.find((item) => item.value === 'Delete');
+    item = toolbarConfig.items.find((item) => item.label === 'Delete');
     expect(item.disabled).toBe(false);
 });
 
@@ -585,7 +585,7 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
 
 test('Should delete selected items when delete button is clicked', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Delete');
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.label === 'Delete');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -615,7 +615,7 @@ test('Should delete selected items when delete button is clicked', () => {
 
 test('Should make move overlay disappear if cancel is clicked', () => {
     function getMoveItem() {
-        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Move selected');
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.label === 'Move selected');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
@@ -650,7 +650,7 @@ test('Should make move overlay disappear if cancel is clicked', () => {
 
 test('Should move items after move overlay was confirmed', () => {
     function getMoveItem() {
-        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.value === 'Move selected');
+        return toolbarFunction.call(datagrid.instance()).items.find((item) => item.label === 'Move selected');
     }
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');

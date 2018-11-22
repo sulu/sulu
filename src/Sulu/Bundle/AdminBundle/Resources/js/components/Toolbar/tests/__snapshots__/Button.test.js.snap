@@ -49,7 +49,6 @@ exports[`Render button with dropdown indicator 1`] = `
 exports[`Render button with value 1`] = `
 <button
   class="button"
-  value="Click"
 >
   <span
     class="label"

@@ -54,6 +54,11 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
               aria-label="fa-trash-o"
               class="fa fa-trash-o icon"
             />
+            <span
+              class="label"
+            >
+              Delete
+            </span>
           </button>
         </li>
         <li>
@@ -62,7 +67,6 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
           >
             <button
               class="button light"
-              value="Save"
             >
               <span
                 aria-label="fa-floppy-more"

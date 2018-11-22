@@ -238,6 +238,11 @@ class AdminController
                 'user' => $user,
                 'contact' => $contact,
             ],
+            'sulu_content' => [
+                'routes' => [
+                    'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
+                ],
+            ],
             'sulu_preview' => [
                 'routes' => [
                     'start' => $this->urlGenerator->generate('sulu_preview.start'),

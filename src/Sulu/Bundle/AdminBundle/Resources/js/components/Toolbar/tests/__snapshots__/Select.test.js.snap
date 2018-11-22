@@ -7,7 +7,6 @@ exports[`Render disabled select 1`] = `
   <button
     class="button"
     disabled=""
-    value="Chose an option"
   >
     <span
       class="label"
@@ -28,7 +27,6 @@ exports[`Render loading select 1`] = `
 >
   <button
     class="button"
-    value="Chose an option"
   >
     <div
       class="spinner loader"
@@ -60,7 +58,6 @@ exports[`Render select 1`] = `
 >
   <button
     class="button"
-    value="Chose an option"
   >
     <span
       class="label"
@@ -81,7 +78,6 @@ exports[`Render select with a different size 1`] = `
 >
   <button
     class="button small"
-    value="Chose an option"
   >
     <span
       class="label"
@@ -102,7 +98,6 @@ exports[`Render select with a prepended icon 1`] = `
 >
   <button
     class="button"
-    value="Chose an option"
   >
     <span
       aria-label="fa-floppy-o"

@@ -19,10 +19,10 @@ test('Set toolbar items and let mobx react', () => {
     toolbarStore.setConfig({
         items: [
             {
-                type: 'button',
-                value: 'Test',
                 icon: 'test',
+                label: 'Test',
                 onClick: () => {},
+                type: 'button',
             },
         ],
         errors,
@@ -40,7 +40,7 @@ test('Set toolbar items and let mobx react', () => {
 
     expect(isObservable(toolbarStore.config.items)).toBe(true);
     expect(toolbarConfigItems).toHaveLength(1);
-    expect(buttonConfig.value).toBe('Test');
+    expect(buttonConfig.label).toBe('Test');
     expect(buttonConfig.icon).toBe('test');
     expect(toolbarStore.errors).toEqual(errors);
 });

@@ -16,11 +16,11 @@ export type Group = Element<typeof ItemsComponent> | Element<typeof IconsCompone
 
 export type Skin = 'light' | 'dark';
 
-export type Button = {
+export type Button = {|
     buttonRef?: (ref: ElementRef<'button'>) => void,
     children?: Node,
     onClick: () => ?Promise<*>,
-    value?: string | number,
+    label?: string | number,
     icon?: string,
     showText?: boolean,
     size?: string,
@@ -30,32 +30,32 @@ export type Button = {
     loading?: boolean,
     primary?: boolean,
     skin?: Skin,
-};
+|};
 
-export type Toggler = {
+export type Toggler = {|
     disabled?: boolean,
     label: string,
     loading?: boolean,
     onClick: () => void,
     skin?: Skin,
     value: boolean,
-};
+|};
 
-export type DropdownOption = {
+export type DropdownOption = {|
     label: string | number,
     onClick?: () => void,
     disabled?: boolean,
     skin?: Skin,
-};
+|};
 
-export type SelectOption = {
+export type SelectOption = {|
     label: string | number,
     value: string | number,
     disabled?: boolean,
     skin?: Skin,
-};
+|};
 
-export type Dropdown = {
+export type Dropdown = {|
     options: Array<DropdownOption>,
     label?: string | number,
     icon?: string,
@@ -64,9 +64,9 @@ export type Dropdown = {
     disabled?: boolean,
     loading?: boolean,
     skin?: Skin,
-};
+|};
 
-export type Select = {
+export type Select = {|
     value: string | number,
     options: Array<SelectOption>,
     onChange: (optionValue: string | number) => void,
@@ -78,4 +78,4 @@ export type Select = {
     disabled?: boolean,
     loading?: boolean,
     skin?: Skin,
-};
+|};

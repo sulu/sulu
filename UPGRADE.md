@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Toolbar Button label configuration
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The name of the property to configure the text shown on a button in the toolbar has been change from `value` to `label`
+in order to be more consistent.
+
 ### Multiple Select renamed
 
 The multiple select content type was renamed to `select` to be equal to the other content types.

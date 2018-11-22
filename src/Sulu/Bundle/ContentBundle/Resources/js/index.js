@@ -1,5 +1,5 @@
 // @flow
-import {bundleReady} from 'sulu-admin-bundle/services';
+import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {fieldRegistry, viewRegistry} from 'sulu-admin-bundle/containers';
 import {toolbarActionRegistry} from 'sulu-admin-bundle/views';
 import SearchResult from './containers/Form/fields/SearchResult';
@@ -8,6 +8,10 @@ import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSetting
 import EditToolbarAction from './views/Form/toolbarActions/EditToolbarAction';
 import PageTabs from './views/PageTabs';
 import WebspaceOverview from './views/WebspaceOverview';
+
+initializer.addUpdateConfigHook('sulu_content', (config: Object) => {
+    WebspaceOverview.clearCacheEndpoint = config.routes.clearCache;
+});
 
 viewRegistry.add('sulu_content.page_tabs', PageTabs);
 viewRegistry.add('sulu_content.webspace_overview', WebspaceOverview);

@@ -91,11 +91,11 @@ export default class Select extends React.Component<SelectProps> {
                     disabled={disabled}
                     hasOptions={true}
                     icon={icon}
+                    label={showText ? buttonValue : undefined}
                     loading={loading}
                     onClick={this.handleButtonClick}
                     size={size}
                     skin={skin}
-                    value={showText ? buttonValue : undefined}
                 />
 
                 <Popover

@@ -4,10 +4,11 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
-import {Loader} from 'sulu-admin-bundle/components';
+import {Dialog, Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
+import {Requester} from 'sulu-admin-bundle/services';
 import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import WebspaceSelect from '../../components/WebspaceSelect';
@@ -28,12 +29,16 @@ function getUserSettingsKeyForWebspace(webspace: string) {
 
 @observer
 class WebspaceOverview extends React.Component<ViewProps> {
+    static clearCacheEndpoint: string;
+
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     webspace: IObservableValue<string> = observable.box();
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     datagridStore: DatagridStore;
     @observable webspaces: Array<Webspace>;
+    @observable showCacheClearDialog: boolean = false;
+    @observable cacheClearing: boolean = false;
     excludeGhostsAndShadowsDisposer: () => void;
     webspaceDisposer: () => void;
 
@@ -171,6 +176,18 @@ class WebspaceOverview extends React.Component<ViewProps> {
         );
     };
 
+    @action handleCacheClearCancel = () => {
+        this.showCacheClearDialog = false;
+    };
+
+    @action handleCacheClearConfirm = () => {
+        this.cacheClearing = true;
+        Requester.delete(WebspaceOverviewWithToolbar.clearCacheEndpoint).then(action(() => {
+            this.showCacheClearDialog = false;
+            this.cacheClearing = false;
+        }));
+    };
+
     render() {
         return (
             <div className={webspaceOverviewStyles.webspaceOverview}>
@@ -196,12 +213,23 @@ class WebspaceOverview extends React.Component<ViewProps> {
                         <Loader />
                     </div>
                 }
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.cacheClearing}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleCacheClearCancel}
+                    onConfirm={this.handleCacheClearConfirm}
+                    open={this.showCacheClearDialog}
+                    title={translate('sulu_content.cache_clear_warning_title')}
+                >
+                    {translate('sulu_content.cache_clear_warning_text')}
+                </Dialog>
             </div>
         );
     }
 }
 
-export default withToolbar(WebspaceOverview, function() {
+const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
     if (!this.selectedWebspace) {
         return {};
     }
@@ -216,6 +244,14 @@ export default withToolbar(WebspaceOverview, function() {
                 type: 'toggler',
                 value: !this.excludeGhostsAndShadows.get(),
             },
+            {
+                icon: 'su-paint',
+                label: translate('sulu_content.cache_clear'),
+                onClick: action(() => {
+                    this.showCacheClearDialog = true;
+                }),
+                type: 'button',
+            },
         ],
         locale: {
             value: this.locale.get(),
@@ -229,3 +265,5 @@ export default withToolbar(WebspaceOverview, function() {
         },
     };
 });
+
+export default WebspaceOverviewWithToolbar;

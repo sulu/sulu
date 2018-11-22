@@ -288,7 +288,7 @@ test('The collectionId should be update along with the content when a collection
 
 test('Should delete selected items when delete button is clicked', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.value === 'sulu_admin.delete');
+        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.label === 'sulu_admin.delete');
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
@@ -337,7 +337,7 @@ test('Move overlay button should be disabled if nothing is selected', () => {
     mediaOverview.locale.set('de');
 
     expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(true);
-    expect(toolbarFunction.call(mediaOverview).items[1].value).toEqual('sulu_admin.move_selected');
+    expect(toolbarFunction.call(mediaOverview).items[1].label).toEqual('sulu_admin.move_selected');
 
     mediaOverview.mediaDatagridStore.selectionIds.push(8);
     expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(false);
@@ -367,7 +367,7 @@ test('Move overlay should disappear when overlay is closed', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
 
-    expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
+    expect(toolbarConfig.items[1].label).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[1].onClick();
     mediaOverview.update();
     expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
@@ -404,7 +404,7 @@ test('Media should be moved when overlay is confirmed', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
 
-    expect(toolbarConfig.items[1].value).toEqual('sulu_admin.move_selected');
+    expect(toolbarConfig.items[1].label).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[1].onClick();
     mediaOverview.update();
     expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');

@@ -32,16 +32,16 @@ export default class Button extends React.PureComponent<ButtonProps> {
 
     render() {
         const {
-            icon,
-            size,
-            skin,
-            value,
             active,
-            primary,
-            loading,
             disabled,
+            label,
+            loading,
             hasOptions,
+            icon,
+            primary,
+            size,
             showText,
+            skin,
         } = this.props;
         const buttonClass = classNames(
             buttonStyles.button,
@@ -52,7 +52,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 [buttonStyles.primary]: primary,
             }
         );
-        const buttonContent = this.props.children || value;
+        const buttonContent = this.props.children || label;
 
         return (
             <button
@@ -60,7 +60,6 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 disabled={disabled}
                 onClick={this.handleOnClick}
                 ref={this.setButtonRef}
-                value={value}
             >
                 {loading &&
                     <Loader className={buttonStyles.loader} size={LOADER_SIZE} />

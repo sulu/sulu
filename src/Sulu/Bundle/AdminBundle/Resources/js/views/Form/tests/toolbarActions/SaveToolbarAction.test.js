@@ -54,10 +54,10 @@ test('Return item config with correct disabled, loading, icon, type and value', 
 
     expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: true,
+        label: 'sulu_admin.save',
         loading: false,
         icon: 'su-save',
         type: 'button',
-        value: 'sulu_admin.save',
     }));
 });
 

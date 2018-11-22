@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import Button from '../Button';
@@ -12,7 +12,7 @@ test('Render loading button', () => {
 });
 
 test('Render button with value', () => {
-    expect(render(<Button value="Click" />)).toMatchSnapshot();
+    expect(render(<Button label="Click" />)).toMatchSnapshot();
 });
 
 test('Render button without text', () => {
