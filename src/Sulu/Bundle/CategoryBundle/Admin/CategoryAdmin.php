@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -62,7 +61,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
             $categoryItem = new NavigationItem('sulu_category.categories', $settings);
             $categoryItem->setPosition(20);
-            $categoryItem->setMainRoute('sulu_category.datagrid');
+            $categoryItem->setMainRoute(static::DATAGRID_ROUTE);
         }
 
         if ($settings->hasChildren()) {

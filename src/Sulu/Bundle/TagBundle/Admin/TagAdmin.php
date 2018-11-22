@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -54,7 +53,7 @@ class TagAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
             $roles = new NavigationItem('sulu_tag.tags', $settings);
             $roles->setPosition(30);
-            $roles->setMainRoute('sulu_tag.datagrid');
+            $roles->setMainRoute(static::DATAGRID_ROUTE);
         }
 
         if ($settings->hasChildren()) {

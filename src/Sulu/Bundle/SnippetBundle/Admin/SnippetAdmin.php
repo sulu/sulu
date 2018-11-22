@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -87,7 +86,7 @@ class SnippetAdmin extends Admin
             $snippet->setPosition(20);
             $snippet->setIcon('su-snippet');
             $snippet->setAction('snippet/snippets');
-            $snippet->setMainRoute('sulu_snippet.datagrid');
+            $snippet->setMainRoute(static::DATAGRID_ROUTE);
 
             $rootNavigationItem->addChild($snippet);
         }

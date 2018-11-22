@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -55,7 +54,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
             $roles = new NavigationItem('sulu_security.roles', $settings);
             $roles->setPosition(10);
-            $roles->setMainRoute('sulu_security.roles_datagrid');
+            $roles->setMainRoute(static::DATAGRID_ROUTE);
         }
 
         if ($settings->hasChildren()) {

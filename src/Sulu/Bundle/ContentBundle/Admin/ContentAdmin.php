@@ -79,7 +79,7 @@ class ContentAdmin extends Admin
                 $webspaceItem = new NavigationItem('sulu_content.webspaces');
                 $webspaceItem->setPosition(10);
                 $webspaceItem->setIcon('su-webspace');
-                $webspaceItem->setMainRoute('sulu_content.webspaces');
+                $webspaceItem->setMainRoute(static::WEBSPACES_ROUTE);
 
                 $rootNavigationItem->addChild($webspaceItem);
 

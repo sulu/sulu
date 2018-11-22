@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -68,7 +67,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
-            $people->setMainRoute('sulu_contact.contacts_datagrid');
+            $people->setMainRoute(static::CONTACT_DATAGRID_ROUTE);
 
             $contacts->addChild($people);
         }
@@ -76,7 +75,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
             $companies = new NavigationItem('sulu_contact.organizations');
             $companies->setPosition(20);
-            $companies->setMainRoute('sulu_contact.accounts_datagrid');
+            $companies->setMainRoute(static::ACCOUNT_DATAGRID_ROUTE);
 
             $contacts->addChild($companies);
         }
