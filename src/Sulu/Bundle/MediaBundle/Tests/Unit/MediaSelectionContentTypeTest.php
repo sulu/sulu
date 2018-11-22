@@ -186,7 +186,7 @@ class MediaSelectionContentTypeTest extends TestCase
                 [
                     [
                         'property',
-                        '{}',
+                        '{"ids": []}',
                         $config,
                     ],
                 ]
@@ -238,7 +238,7 @@ class MediaSelectionContentTypeTest extends TestCase
                 [
                     [
                         'property',
-                        '{}',
+                        '{"ids": []}',
                         $config,
                     ],
                 ]
@@ -291,7 +291,7 @@ class MediaSelectionContentTypeTest extends TestCase
                 [
                     [
                         'property',
-                        '{}',
+                        '{"ids": []}',
                         $config,
                     ],
                 ]

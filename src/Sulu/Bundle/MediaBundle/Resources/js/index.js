@@ -2,12 +2,11 @@
 import {bundleReady} from 'sulu-admin-bundle/services';
 import {datagridAdapterRegistry, fieldRegistry, viewRegistry} from 'sulu-admin-bundle/containers';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/Datagrid';
-import {SingleMediaUpload} from './containers/Form';
+import {MediaSelection, SingleMediaUpload} from './containers/Form';
 import MediaOverview from './views/MediaOverview';
 import MediaDetail from './views/MediaDetail';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
-import MediaSelection from './containers/MediaSelection';
 
 viewRegistry.add('sulu_media.overview', MediaOverview);
 viewRegistry.add('sulu_media.detail', MediaDetail);

@@ -1,34 +1,80 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, autorun, toJS, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import MediaSelectionStore from './stores/MediaSelectionStore';
+import type {IObservableValue} from 'mobx';
+import MediaSelectionStore from '../../stores/MediaSelectionStore';
 import MediaSelectionOverlay from './MediaSelectionOverlay';
 import MediaSelectionItem from './MediaSelectionItem';
 import type {Value} from './types';
 
+type Props = {|
+    disabled: boolean,
+    locale: IObservableValue<string>,
+    onChange: (selectedIds: Value) => void,
+    value: Value,
+|}
+
 @observer
-export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
+export default class MediaSelection extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+        value: { ids: [] },
+    };
+
     mediaSelectionStore: MediaSelectionStore;
+    changeDisposer: () => void;
+    changeAutorunInitialized: boolean = false;
+
     @observable overlayOpen: boolean = false;
 
-    constructor(props: FieldTypeProps<Value>) {
+    constructor(props: Props) {
         super(props);
 
         const {
-            formInspector,
+            locale,
             value,
         } = this.props;
-        const selectedMediaIds = (value && value.ids) ? value.ids : null;
 
-        if (!formInspector || !formInspector.locale) {
-            throw new Error('The media selection needs a locale to work properly');
+        this.mediaSelectionStore = new MediaSelectionStore(value.ids, locale);
+        this.changeDisposer = autorun(() => {
+            const {onChange, value} = this.props;
+            const loadedMediaIds = this.mediaSelectionStore.selectedMediaIds;
+
+            if (!this.changeAutorunInitialized) {
+                this.changeAutorunInitialized = true;
+                return;
+            }
+
+            if (equals(toJS(value.ids), toJS(loadedMediaIds))) {
+                return;
+            }
+
+            onChange({ ids: loadedMediaIds });
+        });
+    }
+
+    componentDidUpdate() {
+        const {
+            locale,
+            value,
+        } = this.props;
+
+        const newSelectedIds = toJS(value.ids);
+        const currentSelectedIds = toJS(this.mediaSelectionStore.selectedMediaIds);
+
+        newSelectedIds.sort();
+        currentSelectedIds.sort();
+        if (!equals(newSelectedIds, currentSelectedIds) && !this.mediaSelectionStore.loading) {
+            this.mediaSelectionStore.loadSelectedMedia(newSelectedIds, locale);
         }
+    }
 
-        this.mediaSelectionStore = new MediaSelectionStore(selectedMediaIds, formInspector.locale);
+    componentWillUnmount() {
+        this.changeDisposer();
     }
 
     @action openMediaOverlay() {
@@ -37,15 +83,6 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
 
     @action closeMediaOverlay() {
         this.overlayOpen = false;
-    }
-
-    callChangeHandler() {
-        const {onChange, onFinish} = this.props;
-
-        onChange({
-            ids: this.mediaSelectionStore.selectedMediaIds,
-        });
-        onFinish();
     }
 
     getLabel(itemCount: number) {
@@ -60,12 +97,10 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
 
     handleRemove = (mediaId: number) => {
         this.mediaSelectionStore.removeById(mediaId);
-        this.callChangeHandler();
     };
 
     handleSorted = (oldItemIndex: number, newItemIndex: number) => {
         this.mediaSelectionStore.move(oldItemIndex, newItemIndex);
-        this.callChangeHandler();
     };
 
     handleOverlayOpen = () => {
@@ -78,18 +113,11 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
 
     handleOverlayConfirm = (selectedMedia: Array<Object>) => {
         selectedMedia.forEach((media) => this.mediaSelectionStore.add(media));
-        this.callChangeHandler();
         this.closeMediaOverlay();
     };
 
     render() {
-        const {formInspector, disabled} = this.props;
-
-        if (!formInspector || !formInspector.locale) {
-            throw new Error('The media selection needs a locale to work properly');
-        }
-
-        const {locale} = formInspector;
+        const {locale, disabled} = this.props;
 
         const {
             loading,

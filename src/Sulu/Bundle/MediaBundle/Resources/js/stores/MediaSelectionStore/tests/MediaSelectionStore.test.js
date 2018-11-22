@@ -1,30 +1,27 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-import {ResourceRequester} from 'sulu-admin-bundle/services';
-import MediaSelectionStore from '../../stores/MediaSelectionStore';
+// @flow
+import {observable, toJS} from 'mobx';
+import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
+import MediaSelectionStore from '../MediaSelectionStore';
 
-jest.mock('sulu-admin-bundle/services', () => ({
-    ResourceRequester: {
-        getList: jest.fn(),
-    },
+jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
+    getList: jest.fn(),
 }));
 
 test('Should not make a request if the given ids array is empty or undefined', () => {
-    const Promise = require.requireActual('promise');
+    const Promise = jest.requireActual('promise');
 
     ResourceRequester.getList.mockReturnValue(Promise.resolve());
 
-    const locale = 'en';
     const mediaIds = [];
 
-    new MediaSelectionStore(mediaIds, locale);
-    new MediaSelectionStore(null, locale);
+    new MediaSelectionStore(mediaIds, observable.box('en'));
+    new MediaSelectionStore(null, observable.box('en'));
 
     expect(ResourceRequester.getList).not.toBeCalled();
 });
 
 test('Should prepare media data and store it inside an array', () => {
-    const locale = 'en';
-    const mediaSelectionStore = new MediaSelectionStore(null, locale);
+    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,
@@ -35,7 +32,7 @@ test('Should prepare media data and store it inside an array', () => {
     });
 
     expect(mediaSelectionStore.selectedMediaIds).toEqual([1]);
-    expect(mediaSelectionStore.selectedMedia.toJS()).toEqual([
+    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
         {
             id: 1,
             title: 'Awesome',
@@ -45,8 +42,7 @@ test('Should prepare media data and store it inside an array', () => {
 });
 
 test('Should remove media from array', () => {
-    const locale = 'en';
-    const mediaSelectionStore = new MediaSelectionStore(null, locale);
+    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,
@@ -66,7 +62,7 @@ test('Should remove media from array', () => {
 
     mediaSelectionStore.removeById(1);
     expect(mediaSelectionStore.selectedMediaIds).toEqual([2]);
-    expect(mediaSelectionStore.selectedMedia.toJS()).toEqual([
+    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
         {
             id: 2,
             title: 'Awesome 2',
@@ -76,12 +72,11 @@ test('Should remove media from array', () => {
 
     mediaSelectionStore.removeById(2);
     expect(mediaSelectionStore.selectedMediaIds).toEqual([]);
-    expect(mediaSelectionStore.selectedMedia.toJS()).toEqual([]);
+    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([]);
 });
 
 test('Should move the media positions inside the array', () => {
-    const locale = 'en';
-    const mediaSelectionStore = new MediaSelectionStore(null, locale);
+    const mediaSelectionStore = new MediaSelectionStore(null, observable.box('en'));
 
     mediaSelectionStore.add({
         id: 1,
@@ -110,7 +105,7 @@ test('Should move the media positions inside the array', () => {
     expect(mediaSelectionStore.selectedMediaIds).toEqual([1, 2, 3]);
     mediaSelectionStore.move(0, 2);
     expect(mediaSelectionStore.selectedMediaIds).toEqual([2, 3, 1]);
-    expect(mediaSelectionStore.selectedMedia.toJS()).toEqual([
+    expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
         {
             id: 2,
             title: 'Awesome 2',
