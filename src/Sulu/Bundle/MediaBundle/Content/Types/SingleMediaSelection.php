@@ -35,7 +35,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         $this->mediaManager = $mediaManager;
         $this->mediaReferenceStore = $referenceStore;
 
-        parent::__construct('SingleMediaSelection');
+        parent::__construct('SingleMediaSelection', '{"id": null}');
     }
 
     /**
