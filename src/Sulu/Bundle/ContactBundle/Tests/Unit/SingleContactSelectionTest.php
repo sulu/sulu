@@ -14,9 +14,12 @@ namespace Sulu\Bundle\ContactBundle\Util;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 
 class SingleContactSelectionTest extends TestCase
@@ -30,6 +33,11 @@ class SingleContactSelectionTest extends TestCase
      * @var ContactRepositoryInterface
      */
     private $contactRepository;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $contactReferenceStore;
 
     /**
      * @var NodeInterface
@@ -49,10 +57,14 @@ class SingleContactSelectionTest extends TestCase
     protected function setUp()
     {
         $this->contactRepository = $this->prophesize(ContactRepositoryInterface::class);
+        $this->contactReferenceStore = $this->prophesize(ReferenceStore::class);
         $this->contact = $this->prophesize(ContactInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
-        $this->singleContactSelection = new SingleContactSelection($this->contactRepository->reveal());
+        $this->singleContactSelection = new SingleContactSelection(
+            $this->contactRepository->reveal(),
+            $this->contactReferenceStore->reveal()
+        );
     }
 
     public function testRead()
@@ -147,5 +159,25 @@ class SingleContactSelectionTest extends TestCase
         $this->contactRepository->findById(1)->willReturn($this->contact->reveal())->shouldBeCalled();
 
         $this->assertEquals($this->contact->reveal(), $this->singleContactSelection->getContentData($property));
+    }
+
+    public function testPreResolveEmpty()
+    {
+        $property = new Property('contact', [], 'single_contact_selection');
+        $property->setValue(null);
+
+        $this->contactReferenceStore->add(Argument::any())->shouldNotBeCalled();
+
+        $this->singleContactSelection->preResolve($property);
+    }
+
+    public function testPreResolve()
+    {
+        $property = new Property('contact', [], 'single_contact_selection');
+        $property->setValue(22);
+
+        $this->contactReferenceStore->add(22)->shouldBeCalled();
+
+        $this->singleContactSelection->preResolve($property);
     }
 }
