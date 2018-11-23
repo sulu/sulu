@@ -37,7 +37,7 @@ test('Icon should call the callback on click', () => {
     const onClick = jest.fn();
     const stopPropagation = jest.fn();
     const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-    icon.simulate('click', { stopPropagation });
+    icon.simulate('click', {stopPropagation});
     expect(onClick).toBeCalled();
     expect(stopPropagation).toBeCalled();
 });

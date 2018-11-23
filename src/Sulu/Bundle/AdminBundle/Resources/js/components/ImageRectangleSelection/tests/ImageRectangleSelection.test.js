@@ -47,7 +47,7 @@ test('The component should render with initial selection', (done) => {
         done();
     });
     const onChangeSpy = jest.fn((data) => {
-        expect(data).toEqual({ width: 1500, height: 800, top: 200, left: 300 });
+        expect(data).toEqual({width: 1500, height: 800, top: 200, left: 300});
     });
 
     const view = mount(

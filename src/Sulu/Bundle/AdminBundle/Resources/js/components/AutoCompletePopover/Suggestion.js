@@ -38,7 +38,7 @@ export default class Suggestion extends React.PureComponent<Props> {
         });
 
         return (
-            <span dangerouslySetInnerHTML={{ __html: highlightedMatches }} />
+            <span dangerouslySetInnerHTML={{__html: highlightedMatches}} />
         );
     };
 

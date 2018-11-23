@@ -22,7 +22,7 @@ type Props = {|
 export default class MediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        value: { ids: [] },
+        value: {ids: []},
     };
 
     mediaSelectionStore: MediaSelectionStore;
@@ -53,7 +53,7 @@ export default class MediaSelection extends React.Component<Props> {
                 return;
             }
 
-            onChange({ ids: loadedMediaIds });
+            onChange({ids: loadedMediaIds});
         });
     }
 

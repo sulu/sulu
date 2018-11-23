@@ -59,6 +59,7 @@
         ],
         "comma-spacing": "error",
         "key-spacing": "error",
+        "object-curly-spacing": "error",
         "no-alert": "error",
         "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
         "padded-blocks": [

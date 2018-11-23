@@ -128,7 +128,7 @@ test('After the request was successful the progress will be reset', (done) => {
         }
     );
 
-    window.XMLHttpRequest.mock.instances[0].onload({ target: {response: '{}'} });
+    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{}'}});
 });
 
 test('Should return thumbnail path if available', () => {
