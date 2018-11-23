@@ -25,6 +25,8 @@ test('Should prepare media data and store it inside an array', () => {
 
     mediaSelectionStore.add({
         id: 1,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
@@ -46,6 +48,8 @@ test('Should remove media from array', () => {
 
     mediaSelectionStore.add({
         id: 1,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome 1',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
@@ -54,6 +58,8 @@ test('Should remove media from array', () => {
 
     mediaSelectionStore.add({
         id: 2,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome 2',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
@@ -80,6 +86,8 @@ test('Should move the media positions inside the array', () => {
 
     mediaSelectionStore.add({
         id: 1,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome 1',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
@@ -88,6 +96,8 @@ test('Should move the media positions inside the array', () => {
 
     mediaSelectionStore.add({
         id: 2,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome 2',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
@@ -96,6 +106,8 @@ test('Should move the media positions inside the array', () => {
 
     mediaSelectionStore.add({
         id: 3,
+        mimeType: 'image/jpeg',
+        url: '',
         title: 'Awesome 3',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',

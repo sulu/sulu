@@ -57,6 +57,7 @@ test('Should prepare media data and store it as selected-media', () => {
         id: 33,
         title: 'test media',
         mimeType: 'image/jpeg',
+        url: '',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },
@@ -78,6 +79,7 @@ test('Should clear selected-media', () => {
         id: 33,
         title: 'test media',
         mimeType: 'image/jpeg',
+        url: '',
         thumbnails: {
             'sulu-25x25': '/images/25x25/awesome.png',
         },

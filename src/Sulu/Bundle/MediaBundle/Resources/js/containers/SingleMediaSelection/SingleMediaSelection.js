@@ -17,6 +17,8 @@ type Props = {|
     value: Value,
 |}
 
+const THUMBNAIL_SIZE = 'sulu-25x25';
+
 @observer
 export default class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
@@ -120,7 +122,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     {selectedMedia &&
                         <MediaSelectionItem
                             mimeType={selectedMedia.mimeType}
-                            thumbnail={selectedMedia.thumbnail ? selectedMedia.thumbnail : undefined}
+                            thumbnail={selectedMedia.thumbnails[THUMBNAIL_SIZE]}
                         >
                             {selectedMedia.title}
                         </MediaSelectionItem>

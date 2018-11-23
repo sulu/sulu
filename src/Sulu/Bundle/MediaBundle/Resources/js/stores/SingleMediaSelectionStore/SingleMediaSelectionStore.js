@@ -2,13 +2,12 @@
 import type {IObservableValue} from 'mobx';
 import {action, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {MediaItem} from '../MultiMediaSelectionStore/types';
+import type {Media} from '../../types';
 
-const THUMBNAIL_SIZE = 'sulu-25x25';
 const MEDIA_RESOURCE_KEY = 'media';
 
 export default class SingleMediaSelectionStore {
-    @observable selectedMedia: ?MediaItem;
+    @observable selectedMedia: ?Media;
     @observable loading: boolean = false;
 
     constructor(selectedMediaId: ?number, locale: IObservableValue<string>) {
@@ -17,8 +16,8 @@ export default class SingleMediaSelectionStore {
         }
     }
 
-    @action set(media: ?Object) {
-        this.selectedMedia = media ? this.prepareMedia(media) : undefined;
+    @action set(media: Media) {
+        this.selectedMedia = media;
     }
 
     @action clear() {
@@ -33,18 +32,9 @@ export default class SingleMediaSelectionStore {
         return this.selectedMedia ? this.selectedMedia.id : undefined;
     }
 
-    prepareMedia(media: Object) {
-        return {
-            id: media.id,
-            title: media.title,
-            mimeType: media.mimeType,
-            thumbnail: media.thumbnails ? media.thumbnails[THUMBNAIL_SIZE] : null,
-        };
-    }
-
     loadSelectedMedia = (selectedMediaId: ?number, locale: IObservableValue<string>) => {
         if (!selectedMediaId) {
-            this.set(undefined);
+            this.clear();
             return;
         }
 

@@ -49,7 +49,7 @@ test('Calling the "update" method should make a "POST" request to the media upda
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -86,7 +86,7 @@ test('Calling the "create" method should make a "POST" request to the media upda
 
 test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 2, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        {id: 2, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
 
@@ -109,7 +109,7 @@ test('After the request was successful the progress will be reset', (done) => {
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url: ''},
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -137,6 +137,7 @@ test('Should return thumbnail path if available', () => {
         {
             id: 1,
             mimeType: 'image/jpeg',
+            title: 'test',
             thumbnails: {
                 'sulu-400x400-inset': thumbnailUrl,
             },
@@ -160,7 +161,7 @@ test('Should return undefined if thumbnail is not available yet', () => {
 test('Should return the mime type of the media if available', () => {
     const mimeType = 'image/jpg';
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, mimeType, thumbnails: {}, url: ''},
+        {id: 1, mimeType, title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
 
@@ -179,7 +180,7 @@ test('Should return undefined if the mime type is not available yet', () => {
 test('Should return downloadUrl if available', () => {
     const url = 'test.jpg';
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, mimeType: 'image/jpeg', thumbnails: {}, url},
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url},
         observable.box('en')
     );
 

@@ -1,15 +1,14 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line
+import type {IObservableValue} from 'mobx';
 import {arrayMove} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {MediaItem} from './types';
+import type {Media} from '../../types';
 
-const THUMBNAIL_SIZE = 'sulu-25x25';
 const MEDIA_RESOURCE_KEY = 'media';
 
 export default class MultiMediaSelectionStore {
-    @observable selectedMedia: Array<MediaItem> = [];
+    @observable selectedMedia: Array<Media> = [];
     @observable loading: boolean = false;
 
     constructor(selectedMediaIds: ?Array<number>, locale: IObservableValue<string>) {
@@ -18,9 +17,8 @@ export default class MultiMediaSelectionStore {
         }
     }
 
-    @action add(media: Object) {
-        const preparedMedia = this.prepareMedia(media);
-        this.selectedMedia.push(preparedMedia);
+    @action add(media: Media) {
+        this.selectedMedia.push(media);
     }
 
     @action removeById(mediaId: number) {
@@ -37,15 +35,6 @@ export default class MultiMediaSelectionStore {
 
     @computed get selectedMediaIds(): Array<number> {
         return this.selectedMedia.map((media) => media.id);
-    }
-
-    prepareMedia(media: Object) {
-        return {
-            id: media.id,
-            title: media.title,
-            mimeType: media.mimeType,
-            thumbnail: media.thumbnails ? media.thumbnails[THUMBNAIL_SIZE] : null,
-        };
     }
 
     loadSelectedMedia = (selectedMediaIds: Array<number>, locale: IObservableValue<string>) => {
