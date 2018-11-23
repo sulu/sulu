@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -22,6 +23,11 @@ use Sulu\Component\Webspace\Webspace;
 
 class ContentAdminTest extends TestCase
 {
+    /**
+     * @var RouteBuilderFactory
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var SecurityChecker
      */
@@ -39,6 +45,7 @@ class ContentAdminTest extends TestCase
 
     public function setUp()
     {
+        $this->routeBuilderFactory = new RouteBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
@@ -66,6 +73,7 @@ class ContentAdminTest extends TestCase
         $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
 
         $contentAdmin = new ContentAdmin(
+            $this->routeBuilderFactory,
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
