@@ -42,11 +42,6 @@ class SectionMetadata extends ItemMetadata
 
     public function getColSpan()
     {
-        @trigger_error(
-            sprintf('Do not use getter "%s" from "%s"', 'getColSpan', __CLASS__),
-            E_USER_DEPRECATED
-        );
-
         return $this->colSpan;
     }
 
