@@ -106,7 +106,7 @@ test('Media that is selected in the overlay should be set to the selection store
     }));
 });
 
-test('onChange-property should be called handler if selection store changes', () => {
+test('Should call given onChange handler if value of selection store changes', () => {
     // $FlowFixMe
     SingleMediaSelectionStore.mockImplementationOnce(function() {
         this.loadSelectedMedia = jest.fn();
