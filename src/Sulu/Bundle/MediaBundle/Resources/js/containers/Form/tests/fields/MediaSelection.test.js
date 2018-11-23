@@ -7,7 +7,7 @@ import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
 import MediaSelection from '../../fields/MediaSelection';
-import MultiMediaSelectionComponent from '../../../MultiMediaSelection';
+import MultiMediaSelection from '../../../MultiMediaSelection';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
@@ -41,9 +41,9 @@ test('Pass correct props to MultiMediaSelection component', () => {
         />
     );
 
-    expect(mediaSelection.find(MultiMediaSelectionComponent).props().disabled).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelectionComponent).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MultiMediaSelectionComponent).props().value).toEqual({ids: [55, 66, 77]});
+    expect(mediaSelection.find(MultiMediaSelection).props().disabled).toEqual(true);
+    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('en');
+    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
 });
 
 test('Should throw an error if locale is not present in form-inspector', () => {
@@ -84,7 +84,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
         />
     );
 
-    mediaSelection.find(MultiMediaSelectionComponent).props().onChange({ids: [33, 44]});
+    mediaSelection.find(MultiMediaSelection).props().onChange({ids: [33, 44]});
 
     expect(changeSpy).toBeCalledWith({ids: [33, 44]});
     expect(finishSpy).toBeCalled();
