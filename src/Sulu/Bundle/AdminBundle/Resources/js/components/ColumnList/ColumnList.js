@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import Column from './Column';
 import Item from './Item';
 import Toolbar from './Toolbar';
-import type { ToolbarItemConfig} from './types';
+import type {ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
 
 type Props = {|

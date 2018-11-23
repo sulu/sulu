@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, observable } from 'mobx';
+import {autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import DatagridOverlay from '../DatagridOverlay';

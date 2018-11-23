@@ -100,7 +100,7 @@ test('Dragging a file outside of the area will hide the upload indicator', () =>
 
 test('Dropping a file on the area will hide the upload indicator and call the "onDrop" handler', () => {
     const dropSpy = jest.fn();
-    const testFileData = { name: 'test-file' };
+    const testFileData = {name: 'test-file'};
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
