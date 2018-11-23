@@ -5,7 +5,7 @@
 ### Output folder of admin build changed
 
 The output file of the admin build has changed from `/admin/build` to `/admin-build`
-to solve issues with the php internal webserveri.
+to solve issues with the php internal webserver.
 
 ```bash
 git mv public/admin/build public/admin-build
@@ -15,7 +15,7 @@ As in every update you should also update the build by running:
 
 ```bash
 npm install
-npm rum build
+npm run build
 ```
 
 ### Toolbar Button label configuration
