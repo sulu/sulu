@@ -22,7 +22,7 @@ entries.unshift('core-js/fn/symbol');
 entries.unshift('whatwg-fetch');
 entries.unshift('url-search-params-polyfill');
 
-const basePath = 'admin/build';
+const basePath = 'admin-build';
 
 module.exports = (env, argv) => ({ // eslint-disable-line no-undef
     entry: entries,
