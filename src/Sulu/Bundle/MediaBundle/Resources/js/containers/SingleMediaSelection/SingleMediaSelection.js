@@ -118,12 +118,12 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     onRemove={this.singleMediaSelectionStore.selectedMedia ? this.handleRemove : undefined}
                 >
                     {selectedMedia &&
-                    <MediaSelectionItem
-                        mimeType={selectedMedia.mimeType}
-                        thumbnail={selectedMedia.thumbnail ? selectedMedia.thumbnail : undefined}
-                    >
-                        {selectedMedia.title}
-                    </MediaSelectionItem>
+                        <MediaSelectionItem
+                            mimeType={selectedMedia.mimeType}
+                            thumbnail={selectedMedia.thumbnail ? selectedMedia.thumbnail : undefined}
+                        >
+                            {selectedMedia.title}
+                        </MediaSelectionItem>
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay
