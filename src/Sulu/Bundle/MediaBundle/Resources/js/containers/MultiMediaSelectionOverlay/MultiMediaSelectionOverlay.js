@@ -18,7 +18,6 @@ type Props = {
 export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         excludedIds: [],
-        open: false,
     };
 
     collectionId: IObservableValue<?string | number> = observable.box();

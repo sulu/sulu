@@ -29,7 +29,6 @@ type Props = {
 export default class MediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         excludedIds: [],
-        open: false,
     };
 
     static createCollectionDatagridStore(
