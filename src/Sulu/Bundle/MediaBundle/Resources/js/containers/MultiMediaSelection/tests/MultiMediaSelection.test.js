@@ -175,7 +175,7 @@ test('Should call the onChange handler if selection store changes', () => {
     const changeSpy = jest.fn();
 
     const mediaSelectionInstance = shallow(
-        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ ids: [55] }} />
+        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
     ).instance();
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99});

@@ -39,7 +39,7 @@ test('Component should render with selected media', () => {
     });
 
     const singleMediaSelection = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{ id: 33 }} />
+        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
     );
 
     expect(SingleMediaSelectionStore).toBeCalledWith(33, expect.anything());
@@ -70,7 +70,7 @@ test('Click on remove-button should clear the selection store', () => {
     });
 
     const singleMediaSelection = mount(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{ id: 33 }} />
+        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
     );
 
     singleMediaSelection.find('.removeButton').simulate('click');
@@ -130,7 +130,7 @@ test('onChange-property should be called handler if selection store changes', ()
         title: 'test media',
         mimeType: 'image/jpeg',
     };
-    expect(changeSpy).toBeCalledWith({ id: 77 });
+    expect(changeSpy).toBeCalledWith({id: 77});
 });
 
 test('Correct props should be passed to SingleItemSelection component', () => {

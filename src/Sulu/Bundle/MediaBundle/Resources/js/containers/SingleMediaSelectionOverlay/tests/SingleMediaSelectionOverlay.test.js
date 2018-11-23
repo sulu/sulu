@@ -58,7 +58,7 @@ test('Should update selections of media-datagrid-store to only contain a single 
 });
 
 test('Should pass correct props to media-selection-overlay', () => {
-    const mediaDatagridStoreMock = { selections: mockObservable([]) };
+    const mediaDatagridStoreMock = {selections: mockObservable([])};
     MediaSelectionOverlay.createMediaDatagridStore.mockReturnValueOnce(mediaDatagridStoreMock);
     const collectionDatagridStoreMock = jest.fn();
     MediaSelectionOverlay.createCollectionDatagridStore.mockReturnValueOnce(collectionDatagridStoreMock);

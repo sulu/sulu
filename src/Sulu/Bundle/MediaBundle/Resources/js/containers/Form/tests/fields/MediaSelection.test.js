@@ -43,13 +43,13 @@ test('Pass correct props to MultiMediaSelection component', () => {
 
     expect(mediaSelection.find(MultiMediaSelectionComponent).props().disabled).toEqual(true);
     expect(mediaSelection.find(MultiMediaSelectionComponent).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MultiMediaSelectionComponent).props().value).toEqual({ ids: [55, 66, 77] });
+    expect(mediaSelection.find(MultiMediaSelectionComponent).props().value).toEqual({ids: [55, 66, 77]});
 });
 
 test('Should throw an error if locale is not present in form-inspector', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: undefined })
+            new ResourceStore('test', undefined, {locale: undefined})
         )
     );
 
@@ -84,7 +84,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
         />
     );
 
-    mediaSelection.find(MultiMediaSelectionComponent).props().onChange({ ids: [33, 44] });
+    mediaSelection.find(MultiMediaSelectionComponent).props().onChange({ids: [33, 44]});
 
     expect(changeSpy).toBeCalledWith({ids: [33, 44]});
     expect(finishSpy).toBeCalled();

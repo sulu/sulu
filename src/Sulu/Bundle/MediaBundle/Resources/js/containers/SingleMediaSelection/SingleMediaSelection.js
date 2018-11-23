@@ -21,7 +21,7 @@ type Props = {|
 export default class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        value: { id: undefined },
+        value: {id: undefined},
     };
 
     singleMediaSelectionStore: SingleMediaSelectionStore;
@@ -49,7 +49,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 return;
             }
 
-            onChange({ id: loadedMediaId });
+            onChange({id: loadedMediaId});
         });
     }
 
