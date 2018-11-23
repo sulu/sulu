@@ -154,13 +154,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             locale,
         } = this.props;
 
-        const overlayActions = [];
-        if (mediaDatagridStore.selections.length) {
-            overlayActions.push({
-                title: translate('sulu_media.reset_selection'),
-                onClick: this.handleSelectionReset,
-            });
-        }
+        const overlayActions = [{
+            title: translate('sulu_media.reset_selection'),
+            onClick: this.handleSelectionReset,
+        }];
 
         return (
             <Overlay
