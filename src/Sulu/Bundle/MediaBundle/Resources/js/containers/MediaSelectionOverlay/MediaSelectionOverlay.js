@@ -31,6 +31,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         excludedIds: [],
     };
 
+    @observable collectionStore: CollectionStore;
+    updateCollectionStoreDisposer: () => void;
+    updateExcludedIdsDisposer: () => void;
+
     static createCollectionDatagridStore(
         collectionId: IObservableValue<?string | number>,
         locale: IObservableValue<string>
@@ -75,10 +79,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             options
         );
     }
-
-    @observable collectionStore: CollectionStore;
-    updateCollectionStoreDisposer: () => void;
-    updateExcludedIdsDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
