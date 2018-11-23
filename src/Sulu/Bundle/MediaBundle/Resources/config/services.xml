@@ -15,7 +15,6 @@
         <parameter key="sulu_media.image.transformation_pool.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPool</parameter>
         <parameter key="sulu_media.image.transformation.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\CropTransformation</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
-        <parameter key="sulu_media.single_media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.format_options_manager.class">Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager</parameter>
@@ -184,7 +183,7 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
-        <service id="sulu_media.type.single_media_selection" class="%sulu_media.single_media_selection.class%">
+        <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
 
