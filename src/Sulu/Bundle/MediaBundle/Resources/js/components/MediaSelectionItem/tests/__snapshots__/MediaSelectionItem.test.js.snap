@@ -5,12 +5,51 @@ exports[`Should render a MediaSelectionItem 1`] = `
   class="mediaSelectionItem"
 >
   <div
-    class="thumbnail"
+    style="width:25px;height:25px;margin-right:20px"
   >
     <img
       alt="http://lorempixel.com/25/25"
+      class="thumbnailImage"
       src="http://lorempixel.com/25/25"
     />
+  </div>
+  test media
+</div>
+`;
+
+exports[`Should render a MediaSelectionItem with custom size and margin 1`] = `
+<div
+  class="mediaSelectionItem"
+>
+  <div
+    style="width:15px;height:15px;margin-right:10px"
+  >
+    <img
+      alt="http://lorempixel.com/25/25"
+      class="thumbnailImage"
+      src="http://lorempixel.com/25/25"
+    />
+  </div>
+  test media
+</div>
+`;
+
+exports[`Should render a MediaSelectionItem with custom size and without thumbnail 1`] = `
+<div
+  class="mediaSelectionItem"
+>
+  <div
+    style="width:40px;height:40px;margin-right:20px"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color:#fff;font-size:25px;background-color:#00723a;height:40px"
+    >
+      <span
+        aria-label="fa-file-excel-o"
+        class="fa fa-file-excel-o"
+      />
+    </div>
   </div>
   test media
 </div>
@@ -21,11 +60,11 @@ exports[`Should render a MediaSelectionItem without thumbnail 1`] = `
   class="mediaSelectionItem"
 >
   <div
-    class="thumbnail"
+    style="width:25px;height:25px;margin-right:20px"
   >
     <div
       class="mimeTypeIndicator"
-      style="color:#fff;font-size:16px;background-color:#00723a;height:25px"
+      style="color:#fff;font-size:15.625px;background-color:#00723a;height:25px"
     >
       <span
         aria-label="fa-file-excel-o"

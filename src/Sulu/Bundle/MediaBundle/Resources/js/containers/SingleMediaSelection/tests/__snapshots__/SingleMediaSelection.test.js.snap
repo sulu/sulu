@@ -24,10 +24,11 @@ Array [
           class="mediaSelectionItem"
         >
           <div
-            class="thumbnail"
+            style="width:19px;height:19px;margin-right:10px"
           >
             <img
               alt="http://lorempixel.com/25/25"
+              class="thumbnailImage"
               src="http://lorempixel.com/25/25"
             />
           </div>

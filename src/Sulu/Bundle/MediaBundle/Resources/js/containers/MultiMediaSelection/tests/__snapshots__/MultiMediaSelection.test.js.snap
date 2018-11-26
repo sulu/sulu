@@ -52,10 +52,11 @@ Array [
               class="mediaSelectionItem"
             >
               <div
-                class="thumbnail"
+                style="width:25px;height:25px;margin-right:20px"
               >
                 <img
                   alt="http://lorempixel.com/25/25"
+                  class="thumbnailImage"
                   src="http://lorempixel.com/25/25"
                 />
               </div>
@@ -99,10 +100,11 @@ Array [
               class="mediaSelectionItem"
             >
               <div
-                class="thumbnail"
+                style="width:25px;height:25px;margin-right:20px"
               >
                 <img
                   alt="http://lorempixel.com/25/25"
+                  class="thumbnailImage"
                   src="http://lorempixel.com/25/25"
                 />
               </div>
@@ -146,10 +148,11 @@ Array [
               class="mediaSelectionItem"
             >
               <div
-                class="thumbnail"
+                style="width:25px;height:25px;margin-right:20px"
               >
                 <img
                   alt="http://lorempixel.com/25/25"
+                  class="thumbnailImage"
                   src="http://lorempixel.com/25/25"
                 />
               </div>
