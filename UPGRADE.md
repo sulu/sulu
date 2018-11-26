@@ -2,6 +2,23 @@
 
 ## dev-develop
 
+### Output folder of admin build changed
+
+The output file of the admin build has changed from `/admin/build` to `/build/admin`
+to solve issues with the php internal webserver.
+
+```bash
+mkdir public/build
+git mv public/admin/build public/build/admin
+```
+
+As in every update you should also update the build by running:
+
+```bash
+npm install
+npm run build
+```
+
 ### Toolbar Button label configuration
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
