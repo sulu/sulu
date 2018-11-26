@@ -252,24 +252,3 @@ test('Should change the current collection id and reset the page of the datagrid
     expect(collectionId.get()).toEqual(1);
     expect(mediaDatagridStoreMock.clearSelection).not.toBeCalled();
 });
-
-test('should update the excluded-option of the media datagrid if the excluded-id prop changes', () => {
-    const locale = observable.box();
-    const mediaSelectionOverlay = shallow(
-        <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
-            collectionId={observable.box()}
-            excludedIds={[]}
-            locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-        />
-    );
-
-    expect(mediaDatagridStoreMock.options.excluded).toBeUndefined();
-    mediaSelectionOverlay.setProps({excludedIds: [99, 22, 44]});
-    expect(mediaDatagridStoreMock.options.excluded).toEqual('22,44,99');
-    expect(mediaDatagridStoreMock.reload).toHaveBeenCalled();
-});

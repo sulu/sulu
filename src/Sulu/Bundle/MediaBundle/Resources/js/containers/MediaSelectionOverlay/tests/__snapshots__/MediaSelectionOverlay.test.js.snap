@@ -554,6 +554,20 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
         </div>
       </article>
       <footer>
+        <div
+          class="actions"
+        >
+          <button
+            class="button link"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              sulu_media.reset_selection
+            </span>
+          </button>
+        </div>
         <button
           class="button primary"
           disabled=""

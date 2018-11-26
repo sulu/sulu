@@ -22,11 +22,11 @@ jest.mock('../../MediaSelectionOverlay', () => {
     return MediaSelectionOverlay;
 });
 
-test('Should create datagrid-stores with correct locale', () => {
+test('Should create datagrid-stores with correct locale and excluded-id-string', () => {
     const locale = mockObservable.box('en');
     shallow(
         <SingleMediaSelectionOverlay
-            excludedIds={[]}
+            excludedIds={[66, 55]}
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -34,7 +34,12 @@ test('Should create datagrid-stores with correct locale', () => {
         />
     ).render();
 
-    expect(MediaSelectionOverlay.createMediaDatagridStore).toHaveBeenCalledWith(expect.anything(), locale);
+    expect(MediaSelectionOverlay.createMediaDatagridStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale
+    );
+    expect(MediaSelectionOverlay.createMediaDatagridStore.mock.calls[0][1].get()).toEqual('55,66');
     expect(MediaSelectionOverlay.createCollectionDatagridStore).toHaveBeenCalledWith(expect.anything(), locale);
 });
 

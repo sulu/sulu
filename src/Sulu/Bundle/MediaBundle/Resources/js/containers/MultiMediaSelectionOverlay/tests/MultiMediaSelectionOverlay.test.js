@@ -23,7 +23,7 @@ test('Should create datagrid-stores with correct locale', () => {
     const locale = observable.box('en');
     shallow(
         <MultiMediaSelectionOverlay
-            excludedIds={[]}
+            excludedIds={[44, 22]}
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -31,7 +31,12 @@ test('Should create datagrid-stores with correct locale', () => {
         />
     ).render();
 
-    expect(MediaSelectionOverlay.createMediaDatagridStore).toHaveBeenCalledWith(expect.anything(), locale);
+    expect(MediaSelectionOverlay.createMediaDatagridStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale
+    );
+    expect(MediaSelectionOverlay.createMediaDatagridStore.mock.calls[0][1].get()).toEqual('22,44');
     expect(MediaSelectionOverlay.createCollectionDatagridStore).toHaveBeenCalledWith(expect.anything(), locale);
 });
 
