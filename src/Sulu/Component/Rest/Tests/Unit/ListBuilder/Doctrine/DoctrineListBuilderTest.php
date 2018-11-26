@@ -666,13 +666,21 @@ class DoctrineListBuilderTest extends TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                    '', '', '', '', [
-                        new DoctrineJoinDescriptor('', '', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
+                    '',
+                    '',
+                    '',
+                    '',
+                    [
+                        'a' => new DoctrineJoinDescriptor('a', 'a.test', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
                     ]
                 ),
             'id2' => new DoctrineFieldDescriptor(
-                    '', '', '', '', [
-                        new DoctrineJoinDescriptor('', '', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
+                    '',
+                    '',
+                    '',
+                    '',
+                    [
+                        'b' => new DoctrineJoinDescriptor('b', 'b.test', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
                     ]
                 ),
         ];
@@ -682,10 +690,41 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
 
         // not necessary for id join
-        $this->queryBuilder->leftJoin('', 0, 'WITH', '')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('a.test', 'a', 'WITH', '')->shouldBeCalled();
         // called when select ids and for selecting data
-        $this->queryBuilder->innerJoin('', 0, 'WITH', '')->shouldBeCalled();
-        $this->queryBuilder->innerJoin('', 1, 'WITH', '')->shouldBeCalled();
+        $this->queryBuilder->innerJoin('b.test', 'b', 'WITH', '')->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testJoinWithoutFieldName()
+    {
+        $fieldDescriptors = [
+            'name' => new DoctrineFieldDescriptor(
+                'name',
+                'name',
+                self::$entityName,
+                '',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        null,
+                        'alias.id = translation.id'
+                    ),
+                ]
+            ),
+        ];
+
+        $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name')->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(
+            self::$translationEntityName,
+            self::$translationEntityNameAlias,
+            'WITH',
+            'alias.id = translation.id'
+        )->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -700,8 +739,8 @@ class DoctrineListBuilderTest extends TestCase
                 '',
                 [
                     self::$entityName . '1' => new DoctrineJoinDescriptor(
-                        self::$entityName,
-                        '',
+                        self::$entityName . '1',
+                        null,
                         'field1 = value1',
                         DoctrineJoinDescriptor::JOIN_METHOD_LEFT
                     ),
@@ -714,8 +753,8 @@ class DoctrineListBuilderTest extends TestCase
                 '',
                 [
                     self::$entityName . '2' => new DoctrineJoinDescriptor(
-                        self::$entityName,
-                        '',
+                        self::$entityName . '2',
+                        null,
                         'field2 = value2',
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER,
                         DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON
@@ -729,14 +768,14 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
 
         $this->queryBuilder->leftJoin(
-            '',
+            self::$entityName . '1',
             self::$entityNameAlias . '1',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             'field1 = value1'
         )->shouldBeCalled();
 
         $this->queryBuilder->innerJoin(
-            '',
+            self::$entityName . '2',
             self::$entityNameAlias . '2',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON,
             'field2 = value2'
