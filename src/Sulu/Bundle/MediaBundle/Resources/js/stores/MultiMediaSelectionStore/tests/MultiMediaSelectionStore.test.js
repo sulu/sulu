@@ -37,8 +37,12 @@ test('Should prepare media data and store it inside an array', () => {
     expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
         {
             id: 1,
+            mimeType: 'image/jpeg',
+            url: '',
             title: 'Awesome',
-            thumbnail: '/images/25x25/awesome.png',
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
         },
     ]);
 });
@@ -71,8 +75,12 @@ test('Should remove media from array', () => {
     expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
         {
             id: 2,
+            mimeType: 'image/jpeg',
+            url: '',
             title: 'Awesome 2',
-            thumbnail: '/images/25x25/awesome.png',
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
         },
     ]);
 
@@ -118,20 +126,26 @@ test('Should move the media positions inside the array', () => {
     mediaSelectionStore.move(0, 2);
     expect(mediaSelectionStore.selectedMediaIds).toEqual([2, 3, 1]);
     expect(toJS(mediaSelectionStore.selectedMedia)).toEqual([
-        {
+        expect.objectContaining({
             id: 2,
             title: 'Awesome 2',
-            thumbnail: '/images/25x25/awesome.png',
-        },
-        {
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
+        }),
+        expect.objectContaining({
             id: 3,
             title: 'Awesome 3',
-            thumbnail: '/images/25x25/awesome.png',
-        },
-        {
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
+        }),
+        expect.objectContaining({
             id: 1,
             title: 'Awesome 1',
-            thumbnail: '/images/25x25/awesome.png',
-        },
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
+        }),
     ]);
 });

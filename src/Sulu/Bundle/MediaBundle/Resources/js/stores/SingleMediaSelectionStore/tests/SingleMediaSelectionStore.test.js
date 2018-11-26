@@ -37,7 +37,9 @@ test('Should load media when being constructed', () => {
             id: 22,
             title: 'test media',
             mimeType: 'image/jpeg',
-            thumbnail: '/images/25x25/awesome.png',
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
         });
         expect(singleMediaSelectionStore.selectedMediaId).toEqual(22);
     });
@@ -50,7 +52,7 @@ test('Should not make a request when being constructed with undefined', () => {
     expect(singleMediaSelectionStore.selectedMedia).toBeUndefined();
 });
 
-test('Should prepare media data and store it as selected-media', () => {
+test('Should set selected-media', () => {
     const singleMediaSelectionStore = new SingleMediaSelectionStore(undefined, observable.box('en'));
 
     singleMediaSelectionStore.set({
@@ -67,7 +69,10 @@ test('Should prepare media data and store it as selected-media', () => {
         id: 33,
         title: 'test media',
         mimeType: 'image/jpeg',
-        thumbnail: '/images/25x25/awesome.png',
+        url: '',
+        thumbnails: {
+            'sulu-25x25': '/images/25x25/awesome.png',
+        },
     });
     expect(singleMediaSelectionStore.selectedMediaId).toEqual(33);
 });
@@ -117,12 +122,14 @@ test('Should load media with given id', () => {
     );
 
     return getPromise.then(() => {
-        expect(singleMediaSelectionStore.selectedMedia).toEqual({
+        expect(singleMediaSelectionStore.selectedMedia).toEqual(expect.objectContaining({
             id: 22,
             title: 'test media',
             mimeType: 'image/jpeg',
-            thumbnail: '/images/25x25/awesome.png',
-        });
+            thumbnails: {
+                'sulu-25x25': '/images/25x25/awesome.png',
+            },
+        }));
         expect(singleMediaSelectionStore.selectedMediaId).toEqual(22);
     });
 });
