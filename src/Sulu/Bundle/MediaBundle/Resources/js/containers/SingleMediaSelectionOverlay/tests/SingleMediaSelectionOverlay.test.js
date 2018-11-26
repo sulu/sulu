@@ -84,7 +84,6 @@ test('Should pass correct props to media-selection-overlay', () => {
 
     expect(mediaSelectionOverlay.prop('mediaDatagridStore')).toEqual(mediaDatagridStoreMock);
     expect(mediaSelectionOverlay.prop('collectionDatagridStore')).toEqual(collectionDatagridStoreMock);
-    expect(mediaSelectionOverlay.prop('excludedIds')).toEqual([22, 44]);
     expect(mediaSelectionOverlay.prop('locale')).toEqual(locale);
     expect(mediaSelectionOverlay.prop('open')).toEqual(true);
     expect(mediaSelectionOverlay.prop('onClose')).toEqual(onClose);

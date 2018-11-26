@@ -14,7 +14,7 @@ const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 const USER_SETTINGS_KEY = 'media_selection_overlay';
 
-type Props = {
+type Props = {|
     open: boolean,
     locale: IObservableValue<string>,
     collectionId: IObservableValue<?string | number>,
@@ -22,7 +22,7 @@ type Props = {
     mediaDatagridStore: DatagridStore,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
-};
+|};
 
 @observer
 export default class MediaSelectionOverlay extends React.Component<Props> {

@@ -6,13 +6,13 @@ import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
-type Props = {
+type Props = {|
     open: boolean,
     locale: IObservableValue<string>,
     excludedIds: Array<number>,
     onClose: () => void,
     onConfirm: (selectedMedia: Object) => void,
-};
+|};
 
 @observer
 export default class SingleMediaSelectionOverlay extends React.Component<Props> {
@@ -95,7 +95,6 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
 
     render() {
         const {
-            excludedIds,
             onClose,
             open,
             locale,
@@ -105,7 +104,6 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
             <MediaSelectionOverlay
                 collectionDatagridStore={this.collectionDatagridStore}
                 collectionId={this.collectionId}
-                excludedIds={excludedIds}
                 locale={locale}
                 mediaDatagridStore={this.mediaDatagridStore}
                 onClose={onClose}

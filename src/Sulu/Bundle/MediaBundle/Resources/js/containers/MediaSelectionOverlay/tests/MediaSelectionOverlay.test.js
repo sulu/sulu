@@ -128,7 +128,6 @@ test('Render an open MediaSelectionOverlay', () => {
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
@@ -149,7 +148,6 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
@@ -169,7 +167,6 @@ test('Should call onConfirm callback with selected medias from media datagrid', 
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
@@ -194,7 +191,6 @@ test('Should reset the selection of the media datagrid when the reset-button is 
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
@@ -213,7 +209,6 @@ test('Should reset the selection of the media datagrid when the overlay is close
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
@@ -233,7 +228,6 @@ test('Should change the current collection id and reset the page of the datagrid
         <MediaSelectionOverlay
             collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={collectionId}
-            excludedIds={[]}
             locale={locale}
             mediaDatagridStore={mediaDatagridStoreMock}
             onClose={jest.fn()}
