@@ -1,12 +1,16 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
+import {Dialog} from 'sulu-admin-bundle/components';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractToolbarAction} from 'sulu-admin-bundle/views';
 import CopyLocaleDialog from './CopyLocaleDialog';
 
 export default class EditToolbarAction extends AbstractToolbarAction {
     @observable showCopyLocaleDialog = false;
+    @observable showDeleteDraftDialog = false;
+    @observable deletingDraft = false;
 
     getNode() {
         const {
@@ -36,21 +40,34 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         }
 
         return (
-            <CopyLocaleDialog
-                availableLocales={availableLocales}
-                id={id}
-                key="sulu_admin.edit"
-                locale={locale.get()}
-                locales={locales}
-                onClose={this.handleCopyLocaleDialogClose}
-                open={this.showCopyLocaleDialog}
-                webspace={webspace}
-            />
+            <Fragment key="sulu_content.edit">
+                <CopyLocaleDialog
+                    availableLocales={availableLocales}
+                    id={id}
+                    locale={locale.get()}
+                    locales={locales}
+                    onClose={this.handleCopyLocaleDialogClose}
+                    open={this.showCopyLocaleDialog}
+                    webspace={webspace}
+                />
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.deletingDraft}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeleteDraftDialogClose}
+                    onConfirm={this.handleDeleteDraftDialogConfirm}
+                    open={this.showDeleteDraftDialog}
+                    title={translate('sulu_content.delete_draft_warning_title')}
+                >
+                    {translate('sulu_content.delete_draft_warning_text')}
+                </Dialog>
+            </Fragment>
         );
     }
 
     getToolbarItemConfig() {
-        const {id} = this.formStore;
+        const {id, data} = this.formStore;
+        const {published, publishedState} = data;
 
         return {
             type: 'dropdown',
@@ -64,6 +81,13 @@ export default class EditToolbarAction extends AbstractToolbarAction {
                         this.showCopyLocaleDialog = true;
                     }),
                 },
+                {
+                    disabled: !id || !published || publishedState,
+                    label: translate('sulu_content.delete_draft'),
+                    onClick: action(() => {
+                        this.showDeleteDraftDialog = true;
+                    }),
+                },
             ],
         };
     }
@@ -74,5 +98,43 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         }
 
         this.showCopyLocaleDialog = false;
+    };
+
+    @action handleDeleteDraftDialogConfirm = () => {
+        const {
+            id,
+            locale,
+            options: {
+                webspace,
+            },
+        } = this.formStore;
+
+        if (!id) {
+            throw new Error(
+                'The draft can only be deleted if an ID is given! This should not happen and is likely a bug.'
+            );
+        }
+
+        this.deletingDraft = true;
+
+        ResourceRequester.postWithId(
+            'pages',
+            id,
+            undefined,
+            {
+                action: 'remove-draft',
+                locale,
+                webspace,
+            }
+        ).then(action((response) => {
+            this.deletingDraft = false;
+            this.showDeleteDraftDialog = false;
+            this.formStore.setMultiple(response);
+            this.formStore.dirty = false;
+        }));
+    };
+
+    @action handleDeleteDraftDialogClose = () => {
+        this.showDeleteDraftDialog = false;
     };
 }
