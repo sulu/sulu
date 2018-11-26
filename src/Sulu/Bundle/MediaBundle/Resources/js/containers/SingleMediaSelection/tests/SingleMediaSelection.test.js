@@ -33,7 +33,9 @@ test('Component should render with selected media', () => {
             id: 33,
             title: 'test media',
             mimeType: 'image/jpeg',
-            thumbnail: '/images/25x25/awesome.png',
+            thumbnails: {
+                'sulu-25x25': 'http://lorempixel.com/25/25',
+            },
         };
         this.selectedMediaId = 33;
     });
@@ -63,7 +65,9 @@ test('Click on remove-button should clear the selection store', () => {
             id: 33,
             title: 'test media',
             mimeType: 'image/jpeg',
-            thumbnail: '/images/25x25/awesome.png',
+            thumbnails: {
+                'sulu-25x25': 'http://lorempixel.com/25/25',
+            },
         };
         this.selectedMediaId = 33;
         this.clear = jest.fn();
@@ -129,6 +133,7 @@ test('Should call given onChange handler if value of selection store changes', (
         id: 77,
         title: 'test media',
         mimeType: 'image/jpeg',
+        thumbnails: {},
     };
     expect(changeSpy).toBeCalledWith({id: 77});
 });

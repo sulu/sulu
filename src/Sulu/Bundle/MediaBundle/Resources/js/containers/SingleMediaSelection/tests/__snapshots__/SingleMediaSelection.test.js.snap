@@ -27,8 +27,8 @@ Array [
             class="thumbnail"
           >
             <img
-              alt="/images/25x25/awesome.png"
-              src="/images/25x25/awesome.png"
+              alt="http://lorempixel.com/25/25"
+              src="http://lorempixel.com/25/25"
             />
           </div>
           test media

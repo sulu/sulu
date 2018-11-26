@@ -26,17 +26,23 @@ test('Render a MultiMediaSelection field', () => {
             {
                 id: 1,
                 title: 'Media 1',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
             {
                 id: 2,
                 title: 'Media 2',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
             {
                 id: 3,
                 title: 'Media 3',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
         ];
         this.selectedMediaIds = [1, 2, 3];
@@ -54,17 +60,23 @@ test('The MultiMediaSelection should have 3 child-items', () => {
             {
                 id: 1,
                 title: 'Media 1',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
             {
                 id: 2,
                 title: 'Media 2',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
             {
                 id: 3,
                 title: 'Media 3',
-                thumbnail: 'http://lorempixel.com/25/25',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
             },
         ];
         this.selectedMediaIds = [1, 2, 3];
@@ -164,7 +176,7 @@ test('Should call the onChange handler if selection store changes', () => {
     MultiMediaSelectionStore.mockImplementationOnce(function(selectedIds) {
         mockExtendObservable(this, {
             selectedMedia: selectedIds.map((id) => {
-                return {id};
+                return {id, thumbnails: {}};
             }),
             get selectedMediaIds() {
                 return this.selectedMedia.map((media) => media.id);
@@ -178,7 +190,7 @@ test('Should call the onChange handler if selection store changes', () => {
         <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
     ).instance();
 
-    mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99});
+    mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99, thumbnails: {}});
     expect(changeSpy).toBeCalledWith({ids: [55, 99]});
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.splice(0, 1);
