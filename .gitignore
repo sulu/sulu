@@ -12,11 +12,10 @@
 /src/Sulu/Bundle/*/Tests/app/cache
 /src/Sulu/Bundle/*/Tests/Resources/app/cache
 
-# web
+# public
 /public/bundles
 /public/uploads
-/public/admin
-!/public/admin/.gitkeep
+/public/build
 
 # composer
 /composer.phar

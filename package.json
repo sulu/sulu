@@ -9,7 +9,7 @@
         "test": "jest",
         "styleguide": "styleguidist server",
         "styleguide:build": "styleguidist build",
-        "clean": "rimraf public/admin-build",
+        "clean": "rimraf public/build/admin",
         "build": "npm run clean && webpack -p",
         "watch": "npm run clean && webpack -d -w"
     },
