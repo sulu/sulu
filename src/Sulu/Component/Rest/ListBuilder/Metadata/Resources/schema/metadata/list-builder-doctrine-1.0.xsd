@@ -27,6 +27,7 @@
             <xs:element type="xs:string" name="entity-name"/>
             <xs:element type="xs:string" name="field-name"/>
             <xs:element type="xs:string" name="condition" minOccurs="0"/>
+            <xs:element type="xs:string" name="condition-method" minOccurs="0"/>
             <xs:element type="xs:string" name="method" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>

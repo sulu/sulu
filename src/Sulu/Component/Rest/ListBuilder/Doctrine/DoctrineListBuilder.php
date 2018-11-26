@@ -521,7 +521,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             switch ($join->getJoinMethod()) {
                 case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
                     $queryBuilder->leftJoin(
-                        $join->getJoin(),
+                        $join->getJoin() ?: $entity,
                         $this->encodeAlias($entity),
                         $join->getJoinConditionMethod(),
                         $join->getJoinCondition()
@@ -529,7 +529,7 @@ class DoctrineListBuilder extends AbstractListBuilder
                     break;
                 case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
                     $queryBuilder->innerJoin(
-                        $join->getJoin(),
+                        $join->getJoin() ?: $entity,
                         $this->encodeAlias($entity),
                         $join->getJoinConditionMethod(),
                         $join->getJoinCondition()
