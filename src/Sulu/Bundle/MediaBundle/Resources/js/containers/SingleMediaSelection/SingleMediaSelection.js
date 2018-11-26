@@ -123,6 +123,8 @@ export default class SingleMediaSelection extends React.Component<Props> {
                         <MediaSelectionItem
                             mimeType={selectedMedia.mimeType}
                             thumbnail={selectedMedia.thumbnails[THUMBNAIL_SIZE]}
+                            thumbnailMargin={10}
+                            thumbnailSize={19}
                         >
                             {selectedMedia.title}
                         </MediaSelectionItem>

@@ -6,12 +6,8 @@ $thumbnailSize: 25px;
     align-items: center;
 }
 
-.thumbnail {
-    margin: 0 20px 0 10px;
-    width: $thumbnailSize;
-    height: $thumbnailSize;
-
-    img {
-        display: block;
-    }
+.thumbnail-image {
+    display: block;
+    width: 100%;
+    height: 100%;
 }

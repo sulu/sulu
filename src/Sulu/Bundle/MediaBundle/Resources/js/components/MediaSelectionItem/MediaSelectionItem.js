@@ -3,28 +3,47 @@ import React from 'react';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import mediaSelectionItemStyle from './mediaSelectionItem.scss';
 
-type Props = {
+type Props = {|
     mimeType: string,
     children: string,
     thumbnail?: string,
-};
+    thumbnailSize: number,
+    thumbnailMargin: number,
+|};
 
 export default class MediaSelectionItem extends React.PureComponent<Props> {
+    static defaultProps = {
+        thumbnailMargin: 20,
+        thumbnailSize: 25,
+    };
+
     render() {
         const {
             mimeType,
             children,
             thumbnail,
+            thumbnailSize,
+            thumbnailMargin,
         } = this.props;
+
+        const thumbnailStyles = {
+            width: thumbnailSize,
+            height: thumbnailSize,
+            marginRight: thumbnailMargin,
+        };
 
         return (
             <div className={mediaSelectionItemStyle.mediaSelectionItem}>
-                <div className={mediaSelectionItemStyle.thumbnail}>
+                <div style={thumbnailStyles}>
                     {thumbnail
-                        ? <img alt={thumbnail} src={thumbnail} />
+                        ? <img
+                            alt={thumbnail}
+                            className={mediaSelectionItemStyle.thumbnailImage}
+                            src={thumbnail}
+                        />
                         : <MimeTypeIndicator
-                            height={25}
-                            iconSize={16}
+                            height={thumbnailSize}
+                            iconSize={thumbnailSize / 1.6}
                             mimeType={mimeType}
                         />
                     }
