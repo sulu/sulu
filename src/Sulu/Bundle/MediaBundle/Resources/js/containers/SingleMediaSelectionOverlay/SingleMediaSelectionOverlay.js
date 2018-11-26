@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, observable} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {DatagridStore} from 'sulu-admin-bundle/containers';
@@ -21,6 +21,7 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
     };
 
     collectionId: IObservableValue<?string | number> = observable.box();
+    excludedIdString: IObservableValue<string>;
     mediaDatagridStore: DatagridStore;
     collectionDatagridStore: DatagridStore;
     mediaSelectionDisposer: () => void;
@@ -28,7 +29,13 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
     constructor(props: Props) {
         super(props);
 
-        this.mediaDatagridStore = MediaSelectionOverlay.createMediaDatagridStore(this.collectionId, props.locale);
+        this.excludedIdString = observable.box(props.excludedIds.sort().join(','));
+
+        this.mediaDatagridStore = MediaSelectionOverlay.createMediaDatagridStore(
+            this.collectionId,
+            this.excludedIdString,
+            props.locale
+        );
         this.collectionDatagridStore = MediaSelectionOverlay.createCollectionDatagridStore(
             this.collectionId,
             props.locale
@@ -50,6 +57,15 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
             this.mediaDatagridStore.clearSelection();
             this.mediaDatagridStore.select(selection);
         });
+    }
+
+    @action componentDidUpdate() {
+        const newExcludedIdString = this.props.excludedIds.sort().join(',');
+
+        if (this.excludedIdString.get() !== newExcludedIdString) {
+            this.mediaDatagridStore.clear();
+            this.excludedIdString.set(this.props.excludedIds.sort().join(','));
+        }
     }
 
     componentWillUnmount() {

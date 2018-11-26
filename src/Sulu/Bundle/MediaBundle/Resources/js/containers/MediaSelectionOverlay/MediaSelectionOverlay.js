@@ -17,7 +17,6 @@ const USER_SETTINGS_KEY = 'media_selection_overlay';
 type Props = {
     open: boolean,
     locale: IObservableValue<string>,
-    excludedIds: Array<number>,
     collectionId: IObservableValue<?string | number>,
     collectionDatagridStore: DatagridStore,
     mediaDatagridStore: DatagridStore,
@@ -27,13 +26,8 @@ type Props = {
 
 @observer
 export default class MediaSelectionOverlay extends React.Component<Props> {
-    static defaultProps = {
-        excludedIds: [],
-    };
-
     @observable collectionStore: CollectionStore;
     updateCollectionStoreDisposer: () => void;
-    updateExcludedIdsDisposer: () => void;
 
     static createCollectionDatagridStore(
         collectionId: IObservableValue<?string | number>,
@@ -43,7 +37,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
-                page: observable.box(1),
+                page: observable.box(),
                 locale: locale,
                 parentId: collectionId,
             }
@@ -52,6 +46,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     static createMediaDatagridStore(
         collectionId: IObservableValue<?string | number>,
+        excludedIdString: IObservableValue<string>,
         locale: IObservableValue<string>
     ) {
         const options = {};
@@ -72,9 +67,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
-                page: observable.box(1),
-                locale: locale,
+                page: observable.box(),
                 collection: collectionId,
+                excluded: excludedIdString,
+                locale: locale,
             },
             options
         );
@@ -84,7 +80,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         super(props);
 
         this.updateCollectionStoreDisposer = autorun(() => this.updateCollectionStore(this.props.collectionId.get()));
-        this.updateExcludedIdsDisposer = autorun(() => this.updateExcludedIds());
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -102,17 +97,6 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
         if (this.updateCollectionStoreDisposer) {
             this.updateCollectionStoreDisposer();
-        }
-    }
-
-    updateExcludedIds() {
-        const {excludedIds, mediaDatagridStore} = this.props;
-        const previousExcludedOption = mediaDatagridStore.options.excluded;
-        const newExcludedOption = excludedIds.length ? excludedIds.sort().join(',') : undefined;
-
-        if (previousExcludedOption !== newExcludedOption) {
-            mediaDatagridStore.options.excluded = newExcludedOption;
-            mediaDatagridStore.reload();
         }
     }
 
