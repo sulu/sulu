@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, untracked} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import SingleItemSelection from '../../components/SingleItemSelection';
@@ -43,7 +43,7 @@ export default class SingleSelection extends React.Component<Props> {
 
         this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const {onChange, value} = this.props;
+            const {onChange, value} = untracked(() => this.props);
             const itemId = this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined;
 
             if (!this.changeAutorunInitialized) {
@@ -51,7 +51,7 @@ export default class SingleSelection extends React.Component<Props> {
                 return;
             }
 
-            if (value === itemId || this.singleSelectionStore.loading) {
+            if (value === itemId) {
                 return;
             }
 

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, untracked} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -46,7 +46,7 @@ export default class MultiSelection extends React.Component<Props> {
 
         this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const {onChange, value} = this.props;
+            const {onChange, value} = untracked(() => this.props);
             const itemIds = this.selectionStore.items.map((item) => item.id);
 
             if (!this.changeAutorunInitialized) {
@@ -54,7 +54,7 @@ export default class MultiSelection extends React.Component<Props> {
                 return;
             }
 
-            if (equals(toJS(value), toJS(itemIds)) || this.selectionStore.loading) {
+            if (equals(toJS(value), toJS(itemIds))) {
                 return;
             }
 
