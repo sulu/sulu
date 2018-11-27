@@ -22,8 +22,6 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
 
     public function __construct(string $name, string $path)
     {
-        // TODO If some of the Builder functions is called after the getRoute function, it will affect the outputted route.
-        // Maybe create the route later, and make it immutable?
         $this->route = new Route($name, $path, static::VIEW);
     }
 
