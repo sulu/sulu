@@ -16,6 +16,14 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\ResourceTabRouteBuilder;
 
 class ResourceTabRouteBuilderTest extends TestCase
 {
+    public function testBuildResourceTabRouteWithClone()
+    {
+        $routeBuilder = (new ResourceTabRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles');
+
+        $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
+    }
+
     public function testBuildResourceTabRouteWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);

@@ -16,6 +16,14 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\FormRouteBuilder;
 
 class FormRouteBuilderTest extends TestCase
 {
+    public function testBuildFormRouteWithClone()
+    {
+        $routeBuilder = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles');
+
+        $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
+    }
+
     public function testBuildFormRouteWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);

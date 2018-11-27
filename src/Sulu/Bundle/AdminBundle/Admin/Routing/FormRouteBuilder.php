@@ -145,6 +145,6 @@ class FormRouteBuilder implements FormRouteBuilderInterface
             );
         }
 
-        return $this->route;
+        return clone($this->route);
     }
 }

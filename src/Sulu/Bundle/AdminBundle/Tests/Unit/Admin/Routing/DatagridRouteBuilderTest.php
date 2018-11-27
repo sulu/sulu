@@ -16,6 +16,15 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\DatagridRouteBuilder;
 
 class DatagridRouteBuilderTest extends TestCase
 {
+    public function testBuildDatagridRouteWithClone()
+    {
+        $routeBuilder = (new DatagridRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->addDatagridAdapters(['table']);
+
+        $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
+    }
+
     public function testBuildDatagridRouteWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);

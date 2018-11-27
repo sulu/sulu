@@ -64,6 +64,6 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
             );
         }
 
-        return $this->route;
+        return clone($this->route);
     }
 }
