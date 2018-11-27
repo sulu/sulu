@@ -183,6 +183,14 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
+        <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="sulu_media.reference_store.media"/>
+
+            <tag name="sulu.content.type" alias="single_media_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
         <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%" public="true">
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.media" />

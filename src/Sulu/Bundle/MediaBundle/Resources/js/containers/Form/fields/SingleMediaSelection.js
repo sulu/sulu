@@ -2,11 +2,11 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import MultiMediaSelection from '../../MultiMediaSelection';
-import type {Value} from '../../MultiMediaSelection';
+import SingleMediaSelectionComponent from '../../SingleMediaSelection';
+import type {Value} from '../../SingleMediaSelection';
 
 @observer
-export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
+export default class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
     handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
@@ -24,7 +24,7 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         const {locale} = formInspector;
 
         return (
-            <MultiMediaSelection
+            <SingleMediaSelectionComponent
                 disabled={!!disabled}
                 locale={locale}
                 onChange={this.handleChange}

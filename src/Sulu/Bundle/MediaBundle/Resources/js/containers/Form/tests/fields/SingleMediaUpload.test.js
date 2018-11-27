@@ -204,6 +204,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     const data = {
         id: 1,
         mimeType: 'image/jpeg',
+        title: 'test_title',
         thumbnails: {},
         url: '',
     };

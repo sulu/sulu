@@ -6,8 +6,8 @@ import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
-import MediaSelection from '../../fields/MediaSelection';
-import MultiMediaSelection from '../../../MultiMediaSelection';
+import SingleMediaSelectionComponent from '../../../SingleMediaSelection';
+import SingleMediaSelection from '../../fields/SingleMediaSelection';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Pass correct props to MultiMediaSelection component', () => {
+test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
         new FormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')})
@@ -33,17 +33,17 @@ test('Pass correct props to MultiMediaSelection component', () => {
     );
 
     const mediaSelection = shallow(
-        <MediaSelection
+        <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
-            value={{ids: [55, 66, 77]}}
+            value={{id: 33}}
         />
     );
 
-    expect(mediaSelection.find(MultiMediaSelection).props().disabled).toEqual(true);
-    expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().disabled).toEqual(true);
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('en');
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual({id: 33});
 });
 
 test('Should throw an error if locale is not present in form-inspector', () => {
@@ -54,11 +54,11 @@ test('Should throw an error if locale is not present in form-inspector', () => {
     );
 
     expect(() => shallow(
-        <MediaSelection
+        <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
-            value={{ids: [55, 66, 77]}}
+            value={{id: 55}}
         />
     )).toThrowError();
 });
@@ -74,18 +74,18 @@ test('Should call onChange and onFinish if the selection changes', () => {
     );
 
     const mediaSelection = shallow(
-        <MediaSelection
+        <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={{ids: [55, 66, 77]}}
+            value={{id: 55}}
         />
     );
 
-    mediaSelection.find(MultiMediaSelection).props().onChange({ids: [33, 44]});
+    mediaSelection.find(SingleMediaSelectionComponent).props().onChange({id: 44});
 
-    expect(changeSpy).toBeCalledWith({ids: [33, 44]});
+    expect(changeSpy).toBeCalledWith({id: 44});
     expect(finishSpy).toBeCalled();
 });
