@@ -7,8 +7,9 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MultiMediaSelectionStore from '../../stores/MultiMediaSelectionStore';
-import MediaSelectionItem from '../../components/MediaSelectionItem';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
+import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {Value} from './types';
 
 type Props = {|
@@ -17,8 +18,6 @@ type Props = {|
     onChange: (selectedIds: Value) => void,
     value: Value,
 |}
-
-const THUMBNAIL_SIZE = 'sulu-25x25';
 
 @observer
 export default class MultiMediaSelection extends React.Component<Props> {
@@ -138,23 +137,29 @@ export default class MultiMediaSelection extends React.Component<Props> {
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
-                    {selectedMedia.map((selectedMedia, index) => {
-                        const {
-                            id,
-                            title,
-                            mimeType,
-                            thumbnails,
-                        } = selectedMedia;
-
+                    {selectedMedia.map((media, index) => {
                         return (
                             <MultiItemSelection.Item
-                                id={id}
+                                id={media.id}
                                 index={index + 1}
-                                key={id}
+                                key={media.id}
                             >
-                                <MediaSelectionItem mimeType={mimeType} thumbnail={thumbnails[THUMBNAIL_SIZE]}>
-                                    {title}
-                                </MediaSelectionItem>
+                                <div className={multiMediaSelectionStyle.mediaItem}>
+                                    {!media.thumbnails['sulu-25x25']
+                                        ? <img
+                                            alt={media.thumbnails['sulu-25x25']}
+                                            className={multiMediaSelectionStyle.thumbnailImage}
+                                            src={media.thumbnails['sulu-25x25']}
+                                        />
+                                        : <MimeTypeIndicator
+                                            height={25}
+                                            iconSize={16}
+                                            mimeType={media.mimeType}
+                                            width={25}
+                                        />
+                                    }
+                                    <div className={multiMediaSelectionStyle.mediaTitle}>{media.title}</div>
+                                </div>
                             </MultiItemSelection.Item>
                         );
                     })}

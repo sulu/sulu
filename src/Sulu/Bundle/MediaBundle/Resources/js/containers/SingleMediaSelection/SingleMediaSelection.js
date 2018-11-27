@@ -119,22 +119,22 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     onRemove={selectedMedia ? this.handleRemove : undefined}
                 >
                     {selectedMedia &&
-                    <div className={singleMediaSelectionStyle.mediaItem}>
-                        {selectedMedia.thumbnails['sulu-25x25']
-                            ? <img
-                                alt={selectedMedia.thumbnails['sulu-25x25']}
-                                className={singleMediaSelectionStyle.thumbnailImage}
-                                src={selectedMedia.thumbnails['sulu-25x25']}
-                            />
-                            : <MimeTypeIndicator
-                                height={19}
-                                iconSize={14}
-                                mimeType={selectedMedia.mimeType}
-                                width={19}
-                            />
-                        }
-                        <div className={singleMediaSelectionStyle.mediaTitle}>{selectedMedia.title}</div>
-                    </div>
+                        <div className={singleMediaSelectionStyle.mediaItem}>
+                            {selectedMedia.thumbnails['sulu-25x25']
+                                ? <img
+                                    alt={selectedMedia.thumbnails['sulu-25x25']}
+                                    className={singleMediaSelectionStyle.thumbnailImage}
+                                    src={selectedMedia.thumbnails['sulu-25x25']}
+                                />
+                                : <MimeTypeIndicator
+                                    height={19}
+                                    iconSize={14}
+                                    mimeType={selectedMedia.mimeType}
+                                    width={19}
+                                />
+                            }
+                            <div className={singleMediaSelectionStyle.mediaTitle}>{selectedMedia.title}</div>
+                        </div>
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay

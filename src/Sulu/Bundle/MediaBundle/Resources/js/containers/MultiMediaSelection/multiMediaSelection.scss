@@ -1,0 +1,15 @@
+.media-item {
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+    .thumbnail-image {
+        display: block;
+        width: 25px;
+        height: 25px;
+    }
+
+    .media-title {
+        margin-left: 15px;
+    }
+}
