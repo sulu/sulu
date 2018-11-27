@@ -1,7 +1,8 @@
 // @flow
 import React, {Fragment} from 'react';
-import {computed, observable} from 'mobx';
+import {action, autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
+import jexl from 'jexl';
 import Tabs from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
@@ -14,6 +15,9 @@ type Props = ViewProps & {
 @observer
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
+
+    @observable visibleTabIndices: Array<?number> = [];
+    visibleTabIndicesDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -40,6 +44,8 @@ export default class ResourceTabs extends React.Component<Props> {
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
+
+        this.visibleTabIndicesDisposer = autorun(this.updateVisibleTabIndices);
     }
 
     componentDidMount() {
@@ -51,6 +57,7 @@ export default class ResourceTabs extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        this.visibleTabIndicesDisposer();
         this.resourceStore.destroy();
     }
 
@@ -66,6 +73,30 @@ export default class ResourceTabs extends React.Component<Props> {
 
         return routeLocales ? routeLocales : propsLocales;
     }
+
+    updateVisibleTabIndices = () => {
+        const data = toJS(this.resourceStore.data);
+        if (this.resourceStore.loading || this.resourceStore.saving) {
+            return;
+        }
+
+        const {route} = this.props;
+        const tabConditionPromises = route.children.map((childRoute) => {
+            const {tabCondition} = childRoute.options;
+
+            if (!tabCondition) {
+                return Promise.resolve(true);
+            }
+
+            return jexl.eval(childRoute.options.tabCondition, data);
+        });
+
+        Promise.all(tabConditionPromises).then(action((tabConditionResults) => {
+            this.visibleTabIndices = tabConditionResults
+                .map((tabConditionResult, index) => tabConditionResult ? index : undefined)
+                .filter((tabConditionIndex) => tabConditionIndex !== undefined);
+        }));
+    };
 
     handleSelect = (index: number) => {
         const {router, route} = this.props;
@@ -84,14 +115,19 @@ export default class ResourceTabs extends React.Component<Props> {
         return (
             <Fragment>
                 <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                    {route.children.map((childRoute) => {
-                        const tabTitle = childRoute.options.tabTitle;
-                        return (
-                            <Tabs.Tab key={childRoute.name}>
-                                {tabTitle ? translate(tabTitle) : childRoute.name}
-                            </Tabs.Tab>
-                        );
-                    })}
+                    {route.children
+                        .map((childRoute, index) => {
+                            if (!this.visibleTabIndices.includes(index)) {
+                                return false;
+                            }
+                            const tabTitle = childRoute.options.tabTitle;
+                            return (
+                                <Tabs.Tab key={childRoute.name}>
+                                    {tabTitle ? translate(tabTitle) : childRoute.name}
+                                </Tabs.Tab>
+                            );
+                        })
+                    }
                 </Tabs>
                 {ChildComponent}
             </Fragment>

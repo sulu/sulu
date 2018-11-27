@@ -78,9 +78,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                         'pages_excerpt' => [
                             'endpoint' => 'get_page-excerpts',
                         ],
-                        'pages_settings' => [
-                            'endpoint' => 'get_pages',
-                        ],
                     ],
                 ]
             );

@@ -24,6 +24,8 @@ interface FormRouteBuilderInterface
 
     public function setTabTitle(string $tabTitle): self;
 
+    public function setTabCondition(string $tabCondition): self;
+
     /**
      * @param string[] $toolbarActions
      */

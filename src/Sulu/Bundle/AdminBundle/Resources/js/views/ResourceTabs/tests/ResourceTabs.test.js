@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
-import {observable} from 'mobx';
+import {mount} from 'enzyme';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -16,9 +16,12 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../../stores/ResourceStore');
+jest.mock('../../../stores/ResourceStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+    mockExtendObservable(this, {data: {}});
+}));
 
-test('Should render the child components after the tabs', () => {
+test('Should render the child components after the tabs', (done) => {
     const route = {
         options: {
             resourceKey: 'test',
@@ -42,15 +45,21 @@ test('Should render the child components after the tabs', () => {
         attributes: {
             id: 1,
         },
-        route,
+        route: route.children[0],
     };
 
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>)).toMatchSnapshot();
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    setTimeout(() => {
+        expect(resourceTabs.find('ResourceTabs > Tabs').render()).toMatchSnapshot();
+        expect(resourceTabs.find('ResourceTabs > Child').render()).toMatchSnapshot();
+        done();
+    });
 });
 
-test('Should mark the currently active child route as selected tab', () => {
+test('Should mark the currently active child route as selected tab', (done) => {
     const childRoute1 = {
         name: 'Tab 1',
         options: {
@@ -78,13 +87,76 @@ test('Should mark the currently active child route as selected tab', () => {
         attributes: {
             id: 1,
         },
-        route,
+        route: route.children[1],
     };
 
     const Child = () => (<h1>Child</h1>);
 
-    expect(render(<ResourceTabs route={route} router={router}>{() => (<Child route={childRoute2} />)}</ResourceTabs>))
-        .toMatchSnapshot();
+    const resourceTabs = mount(
+        <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
+    );
+
+    setTimeout(() => {
+        expect(resourceTabs.find('ResourceTabs > Tabs').render()).toMatchSnapshot();
+        expect(resourceTabs.find('ResourceTabs > Child').render()).toMatchSnapshot();
+        done();
+    });
+});
+
+test('Should hide tabs which do not match the tab condition', (done) => {
+    const childRoute1 = {
+        name: 'Tab 1',
+        options: {
+            tabCondition: 'test == 1',
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'Tab 2',
+        options: {
+            tabCondition: 'test == 2',
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[1],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(
+        <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
+    );
+
+    resourceTabs.instance().resourceStore.data = {test: 1};
+
+    setTimeout(() => {
+        resourceTabs.update();
+        expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(1);
+        expect(resourceTabs.find('ResourceTabs Tab').text()).toEqual('Tab Titel 1');
+
+        resourceTabs.instance().resourceStore.data.test = 2;
+        setTimeout(() => {
+            resourceTabs.update();
+            expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(1);
+            expect(resourceTabs.find('ResourceTabs Tab').text()).toEqual('Tab Titel 2');
+            done();
+        });
+    });
 });
 
 test('Should redirect to first child route if no tab is active', () => {
@@ -167,7 +239,7 @@ test('Should not redirect to first child route if a tab is already active', () =
     expect(router.redirect).not.toBeCalled();
 });
 
-test('Should navigate to child route if tab is clicked', () => {
+test('Should navigate to child route if tab is clicked', (done) => {
     const childRoute1 = {
         name: 'route1',
         options: {},
@@ -199,9 +271,12 @@ test('Should navigate to child route if tab is clicked', () => {
     const Child = () => (<h1>Child</h1>);
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    resourceTabs.find('Tab button').at(1).simulate('click');
-
-    expect(router.navigate).toBeCalledWith('route2', attributes);
+    setTimeout(() => {
+        resourceTabs.update();
+        resourceTabs.find('Tab button').at(1).simulate('click');
+        expect(router.navigate).toBeCalledWith('route2', attributes);
+        done();
+    });
 });
 
 test('Should create a ResourceStore on mount and destroy it on unmount', () => {

@@ -5,7 +5,7 @@ import Tab from './Tab';
 import tabsStyles from './tabs.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Tab>>,
+    children: ChildrenArray<Element<typeof Tab> | false>,
     selectedIndex: ?number,
     onSelect: (tabIndex: number) => void,
 };
@@ -17,8 +17,12 @@ export default class Tabs extends React.PureComponent<Props> {
         return tabIndex === this.props.selectedIndex;
     }
 
-    createTabItems(tabs: ChildrenArray<Element<typeof Tab>>) {
+    createTabItems(tabs: ChildrenArray<Element<typeof Tab> | false>) {
         return React.Children.map(tabs, (tab, index) => {
+            if (!tab) {
+                return null;
+            }
+
             return React.cloneElement(
                 tab,
                 {
