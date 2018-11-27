@@ -110,8 +110,8 @@ export default class SingleSelection extends React.Component<Props> {
             overlayTitle,
             resourceKey,
         } = this.props;
+        const {item, loading} = this.singleSelectionStore;
         const columns = displayProperties.length;
-        const item = this.singleSelectionStore.item;
 
         return (
             <Fragment>
@@ -122,6 +122,7 @@ export default class SingleSelection extends React.Component<Props> {
                         icon,
                         onClick: this.handleOverlayOpen,
                     }}
+                    loading={loading}
                     onRemove={this.singleSelectionStore.item ? this.handleRemove : undefined}
                 >
                     {item &&
