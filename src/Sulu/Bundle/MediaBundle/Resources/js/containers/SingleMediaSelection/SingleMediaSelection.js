@@ -6,9 +6,10 @@ import {action, autorun, observable, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore';
-import MediaSelectionItem from '../../components/MediaSelectionItem';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
+import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import type {Value} from './types';
+import singleMediaSelectionStyle from './singleMediaSelection.scss';
 
 type Props = {|
     disabled: boolean,
@@ -16,8 +17,6 @@ type Props = {|
     onChange: (selectedIds: Value) => void,
     value: Value,
 |}
-
-const THUMBNAIL_SIZE = 'sulu-25x25';
 
 @observer
 export default class SingleMediaSelection extends React.Component<Props> {
@@ -117,17 +116,25 @@ export default class SingleMediaSelection extends React.Component<Props> {
                         icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
-                    onRemove={this.singleMediaSelectionStore.selectedMedia ? this.handleRemove : undefined}
+                    onRemove={selectedMedia ? this.handleRemove : undefined}
                 >
                     {selectedMedia &&
-                        <MediaSelectionItem
-                            mimeType={selectedMedia.mimeType}
-                            thumbnail={selectedMedia.thumbnails[THUMBNAIL_SIZE]}
-                            thumbnailMargin={10}
-                            thumbnailSize={19}
-                        >
-                            {selectedMedia.title}
-                        </MediaSelectionItem>
+                    <div className={singleMediaSelectionStyle.mediaItem}>
+                        {selectedMedia.thumbnails['sulu-25x25']
+                            ? <img
+                                alt={selectedMedia.thumbnails['sulu-25x25']}
+                                className={singleMediaSelectionStyle.thumbnailImage}
+                                src={selectedMedia.thumbnails['sulu-25x25']}
+                            />
+                            : <MimeTypeIndicator
+                                height={19}
+                                iconSize={14}
+                                mimeType={selectedMedia.mimeType}
+                                width={19}
+                            />
+                        }
+                        <div className={singleMediaSelectionStyle.mediaTitle}>{selectedMedia.title}</div>
+                    </div>
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay
