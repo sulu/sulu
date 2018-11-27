@@ -37,24 +37,21 @@ export default class MultiMediaSelectionStore {
         return this.selectedMedia.map((media) => media.id);
     }
 
-    loadSelectedMedia = (selectedMediaIds: Array<number>, locale: IObservableValue<string>) => {
+    @action loadSelectedMedia = (selectedMediaIds: Array<number>, locale: IObservableValue<string>) => {
+        if (!selectedMediaIds || selectedMediaIds.length === 0) {
+            this.selectedMedia = [];
+            return;
+        }
+
         this.setLoading(true);
         return ResourceRequester.getList(MEDIA_RESOURCE_KEY, {
             locale: locale.get(),
             ids: selectedMediaIds.join(','),
             limit: undefined, // TODO: Should be replaced by pagination
             page: 1,
-        }).then((data) => {
-            const {
-                _embedded: {
-                    media,
-                },
-            } = data;
-
-            media.forEach((mediaItem) => {
-                this.add(mediaItem);
-            });
+        }).then(action((data) => {
+            this.selectedMedia = data._embedded[MEDIA_RESOURCE_KEY];
             this.setLoading(false);
-        });
+        }));
     };
 }

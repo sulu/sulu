@@ -138,6 +138,22 @@ test('Should call given onChange handler if value of selection store changes', (
     expect(changeSpy).toBeCalledWith({id: 77});
 });
 
+test('Should not call the onChange callback if the component props change', () => {
+    // $FlowFixMe
+    SingleMediaSelectionStore.mockImplementationOnce(function() {
+        this.loadSelectedMedia = jest.fn();
+    });
+
+    const changeSpy = jest.fn();
+
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{id: 5}} />
+    );
+
+    singleMediaSelection.setProps({disabled: true});
+    expect(changeSpy).not.toBeCalled();
+});
+
 test('Correct props should be passed to SingleItemSelection component', () => {
     const singleMediaSelection = shallow(
         <SingleMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} value={undefined} />

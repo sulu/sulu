@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, untracked} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore';
@@ -36,11 +36,11 @@ export default class SingleMediaSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {onChange, locale, value} = this.props;
+        const {locale, value} = this.props;
 
         this.singleMediaSelectionStore = new SingleMediaSelectionStore(value.id, locale);
         this.changeDisposer = autorun(() => {
-            const {value} = this.props;
+            const {onChange, value} = untracked(() => this.props);
             const loadedMediaId = this.singleMediaSelectionStore.selectedMediaId;
 
             if (!this.changeAutorunInitialized) {

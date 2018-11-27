@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, toJS, observable} from 'mobx';
+import {action, autorun, toJS, observable, untracked} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
@@ -41,7 +41,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
 
         this.mediaSelectionStore = new MultiMediaSelectionStore(value.ids, locale);
         this.changeDisposer = autorun(() => {
-            const {onChange, value} = this.props;
+            const {onChange, value} = untracked(() => this.props);
             const loadedMediaIds = this.mediaSelectionStore.selectedMediaIds;
 
             if (!this.changeAutorunInitialized) {
@@ -68,7 +68,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
 
         newSelectedIds.sort();
         loadedSelectedIds.sort();
-        if (!equals(newSelectedIds, loadedSelectedIds) && !this.mediaSelectionStore.loading) {
+        if (!equals(newSelectedIds, loadedSelectedIds)) {
             this.mediaSelectionStore.loadSelectedMedia(newSelectedIds, locale);
         }
     }

@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, toJS, untracked} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -42,11 +42,11 @@ export default class MultiSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {onChange, locale, resourceKey, value} = this.props;
+        const {locale, resourceKey, value} = this.props;
 
         this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const {value} = this.props;
+            const {onChange, value} = untracked(() => this.props);
             const itemIds = this.selectionStore.items.map((item) => item.id);
 
             if (!this.changeAutorunInitialized) {
@@ -63,13 +63,13 @@ export default class MultiSelection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const newValue = toJS(this.props.value);
-        const oldValue = toJS(this.selectionStore.items.map((item) => item.id));
+        const newIds = toJS(this.props.value);
+        const loadedIds = toJS(this.selectionStore.items.map((item) => item.id));
 
-        newValue.sort();
-        oldValue.sort();
-        if (!equals(newValue, oldValue) && !this.selectionStore.loading) {
-            this.selectionStore.loadItems(newValue);
+        newIds.sort();
+        loadedIds.sort();
+        if (!equals(newIds, loadedIds)) {
+            this.selectionStore.loadItems(newIds);
         }
     }
 
