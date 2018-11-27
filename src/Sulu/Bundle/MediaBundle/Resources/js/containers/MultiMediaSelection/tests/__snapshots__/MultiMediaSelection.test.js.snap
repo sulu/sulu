@@ -49,18 +49,18 @@ Array [
             class="content"
           >
             <div
-              class="mediaSelectionItem"
+              class="mediaItem"
             >
+              <img
+                alt="http://lorempixel.com/25/25"
+                class="thumbnailImage"
+                src="http://lorempixel.com/25/25"
+              />
               <div
-                style="width:25px;height:25px;margin-right:20px"
+                class="mediaTitle"
               >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  class="thumbnailImage"
-                  src="http://lorempixel.com/25/25"
-                />
+                Media 1
               </div>
-              Media 1
             </div>
           </div>
           <button
@@ -97,18 +97,18 @@ Array [
             class="content"
           >
             <div
-              class="mediaSelectionItem"
+              class="mediaItem"
             >
+              <img
+                alt="http://lorempixel.com/25/25"
+                class="thumbnailImage"
+                src="http://lorempixel.com/25/25"
+              />
               <div
-                style="width:25px;height:25px;margin-right:20px"
+                class="mediaTitle"
               >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  class="thumbnailImage"
-                  src="http://lorempixel.com/25/25"
-                />
+                Media 2
               </div>
-              Media 2
             </div>
           </div>
           <button
@@ -145,18 +145,18 @@ Array [
             class="content"
           >
             <div
-              class="mediaSelectionItem"
+              class="mediaItem"
             >
+              <img
+                alt="http://lorempixel.com/25/25"
+                class="thumbnailImage"
+                src="http://lorempixel.com/25/25"
+              />
               <div
-                style="width:25px;height:25px;margin-right:20px"
+                class="mediaTitle"
               >
-                <img
-                  alt="http://lorempixel.com/25/25"
-                  class="thumbnailImage"
-                  src="http://lorempixel.com/25/25"
-                />
+                Media 3
               </div>
-              Media 3
             </div>
           </div>
           <button

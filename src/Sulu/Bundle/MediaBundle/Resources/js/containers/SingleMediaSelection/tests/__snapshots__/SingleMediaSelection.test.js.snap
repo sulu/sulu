@@ -21,18 +21,18 @@ Array [
         class="item"
       >
         <div
-          class="mediaSelectionItem"
+          class="mediaItem"
         >
+          <img
+            alt="http://lorempixel.com/25/25"
+            class="thumbnailImage"
+            src="http://lorempixel.com/25/25"
+          />
           <div
-            style="width:19px;height:19px;margin-right:10px"
+            class="mediaTitle"
           >
-            <img
-              alt="http://lorempixel.com/25/25"
-              class="thumbnailImage"
-              src="http://lorempixel.com/25/25"
-            />
+            test media
           </div>
-          test media
         </div>
       </div>
       <button
