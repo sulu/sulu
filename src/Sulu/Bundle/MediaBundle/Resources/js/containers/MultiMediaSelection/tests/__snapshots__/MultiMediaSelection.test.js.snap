@@ -52,7 +52,7 @@ Array [
               class="mediaItem"
             >
               <img
-                alt="http://lorempixel.com/25/25"
+                alt="Media 1"
                 class="thumbnailImage"
                 src="http://lorempixel.com/25/25"
               />
@@ -100,7 +100,7 @@ Array [
               class="mediaItem"
             >
               <img
-                alt="http://lorempixel.com/25/25"
+                alt="Media 2"
                 class="thumbnailImage"
                 src="http://lorempixel.com/25/25"
               />
@@ -148,7 +148,7 @@ Array [
               class="mediaItem"
             >
               <img
-                alt="http://lorempixel.com/25/25"
+                alt="Media 3"
                 class="thumbnailImage"
                 src="http://lorempixel.com/25/25"
               />
