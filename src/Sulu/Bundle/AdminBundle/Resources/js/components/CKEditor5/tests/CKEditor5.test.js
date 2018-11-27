@@ -31,6 +31,116 @@ test('Create a CKEditor5 instance', () => {
     expect(ClassicEditor.create).toBeCalled();
 });
 
+test('Set data on editor when value is updated', () => {
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        element: {
+            classList: {
+                add: jest.fn(),
+                remove: jest.fn(),
+            },
+        },
+        getData: jest.fn(),
+        setData: jest.fn(),
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    return editorPromise.then(() => {
+        ckeditor.setProps({value: '<p>Test</p>'});
+
+        expect(editor.setData).toBeCalledWith('<p>Test</p>');
+    });
+});
+
+test('Do not set data on editor when value is not changed when props change', () => {
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        element: {
+            classList: {
+                add: jest.fn(),
+                remove: jest.fn(),
+            },
+        },
+        getData: jest.fn().mockReturnValue('<p>Test</p>'),
+        setData: jest.fn(),
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value="<p>Test</p>" />);
+
+    return editorPromise.then(() => {
+        editor.setData.mockClear();
+        ckeditor.setProps({value: '<p>Test</p>'});
+
+        expect(editor.setData).not.toBeCalled();
+    });
+});
+
+test('Do not set data on editor when value and editorData is undefined', () => {
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        element: {
+            classList: {
+                add: jest.fn(),
+                remove: jest.fn(),
+            },
+        },
+        getData: jest.fn().mockReturnValue(),
+        setData: jest.fn(),
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    return editorPromise.then(() => {
+        editor.setData.mockClear();
+        ckeditor.setProps({});
+
+        expect(editor.setData).not.toBeCalled();
+    });
+});
+
 test('Set disabled class and isReadOnly property to CKEditor5', () => {
     const editor = {
         editing: {

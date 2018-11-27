@@ -54,7 +54,8 @@ export default class CKEditor5 extends React.Component<Props> {
                 this.editorInstance.element.classList.remove('disabled');
             }
 
-            if (this.editorInstance.getData() !== value) {
+            const editorData = this.getEditorData();
+            if (editorData !== value && !(value === '' && editorData === undefined)) {
                 this.editorInstance.setData(value);
             }
         }
@@ -130,8 +131,7 @@ export default class CKEditor5 extends React.Component<Props> {
                 if (onChange) {
                     modelDocument.on('change', () => {
                         if (modelDocument.differ.getChanges().length > 0) {
-                            const editorData = editor.getData();
-                            onChange(editorData === '<p>&nbsp;</p>' ? undefined : editorData);
+                            onChange(this.getEditorData());
                         }
                     });
                 }
@@ -145,6 +145,11 @@ export default class CKEditor5 extends React.Component<Props> {
         if (this.editorInstance) {
             this.editorInstance.destroy().then(() => this.editorInstance = null);
         }
+    }
+
+    getEditorData() {
+        const editorData = this.editorInstance.getData();
+        return editorData === '<p>&nbsp;</p>' ? undefined : editorData;
     }
 
     render() {
