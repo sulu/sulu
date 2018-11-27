@@ -63,13 +63,13 @@ export default class MultiSelection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const newValue = toJS(this.props.value);
-        const oldValue = toJS(this.selectionStore.items.map((item) => item.id));
+        const newIds = toJS(this.props.value);
+        const loadedIds = toJS(this.selectionStore.items.map((item) => item.id));
 
-        newValue.sort();
-        oldValue.sort();
-        if (!equals(newValue, oldValue) && !this.selectionStore.loading) {
-            this.selectionStore.loadItems(newValue);
+        newIds.sort();
+        loadedIds.sort();
+        if (!equals(newIds, loadedIds) && !this.selectionStore.loading) {
+            this.selectionStore.loadItems(newIds);
         }
     }
 
