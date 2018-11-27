@@ -39,20 +39,19 @@ export default class SingleSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {onChange, locale, resourceKey, value} = this.props;
+        const {locale, resourceKey, value} = this.props;
 
         this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const {value} = this.props;
-            const {item} = this.singleSelectionStore;
-            const itemId = item ? item.id : undefined;
+            const {onChange, value} = this.props;
+            const itemId = this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined;
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
                 return;
             }
 
-            if (value === itemId) {
+            if (value === itemId || this.singleSelectionStore.loading) {
                 return;
             }
 

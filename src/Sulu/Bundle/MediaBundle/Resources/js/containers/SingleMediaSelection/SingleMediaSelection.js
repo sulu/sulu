@@ -36,11 +36,11 @@ export default class SingleMediaSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {onChange, locale, value} = this.props;
+        const {locale, value} = this.props;
 
         this.singleMediaSelectionStore = new SingleMediaSelectionStore(value.id, locale);
         this.changeDisposer = autorun(() => {
-            const {value} = this.props;
+            const {onChange, value} = this.props;
             const loadedMediaId = this.singleMediaSelectionStore.selectedMediaId;
 
             if (!this.changeAutorunInitialized) {
@@ -48,7 +48,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 return;
             }
 
-            if (value.id === loadedMediaId) {
+            if (value.id === loadedMediaId || this.singleMediaSelectionStore.loading) {
                 return;
             }
 

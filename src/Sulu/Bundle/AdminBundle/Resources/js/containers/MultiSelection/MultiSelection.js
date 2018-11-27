@@ -42,11 +42,11 @@ export default class MultiSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {onChange, locale, resourceKey, value} = this.props;
+        const {locale, resourceKey, value} = this.props;
 
         this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
         this.changeDisposer = autorun(() => {
-            const {value} = this.props;
+            const {onChange, value} = this.props;
             const itemIds = this.selectionStore.items.map((item) => item.id);
 
             if (!this.changeAutorunInitialized) {
@@ -54,7 +54,7 @@ export default class MultiSelection extends React.Component<Props> {
                 return;
             }
 
-            if (equals(toJS(value), toJS(itemIds))) {
+            if (equals(toJS(value), toJS(itemIds)) || this.selectionStore.loading) {
                 return;
             }
 

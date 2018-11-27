@@ -49,7 +49,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
                 return;
             }
 
-            if (equals(toJS(value.ids), toJS(loadedMediaIds))) {
+            if (equals(toJS(value.ids), toJS(loadedMediaIds)) || this.mediaSelectionStore.loading) {
                 return;
             }
 
