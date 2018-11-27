@@ -27,14 +27,14 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
 
     public function setResourceKey(string $resourceKey): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('resourceKey', $resourceKey);
+        $this->route->setOption('resourceKey', $resourceKey);
 
         return $this;
     }
 
     public function setTitle(string $title): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('title', $title);
+        $this->route->setOption('title', $title);
 
         return $this;
     }
@@ -43,7 +43,7 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
     {
         $oldDatagridAdapters = $this->route->getOption('adapters');
         $newDatagridAdapters = $oldDatagridAdapters ? array_merge($oldDatagridAdapters, $datagridAdapters) : $datagridAdapters;
-        $this->route->addOption('adapters', $newDatagridAdapters);
+        $this->route->setOption('adapters', $newDatagridAdapters);
 
         return $this;
     }
@@ -52,56 +52,56 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
     {
         $oldLocales = $this->route->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->addOption('locales', $newLocales);
+        $this->route->setOption('locales', $newLocales);
 
         return $this;
     }
 
     public function setDefaultLocale(string $locale): DatagridRouteBuilderInterface
     {
-        $this->route->addAttributeDefault('locale', $locale);
+        $this->route->setAttributeDefault('locale', $locale);
 
         return $this;
     }
 
     public function setAddRoute(string $addRoute): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('addRoute', $addRoute);
+        $this->route->setOption('addRoute', $addRoute);
 
         return $this;
     }
 
     public function setEditRoute(string $editRoute): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('editRoute', $editRoute);
+        $this->route->setOption('editRoute', $editRoute);
 
         return $this;
     }
 
     public function enableSearching(): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('searchable', true);
+        $this->route->setOption('searchable', true);
 
         return $this;
     }
 
     public function disableSearching(): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('searchable', false);
+        $this->route->setOption('searchable', false);
 
         return $this;
     }
 
     public function enableMoving(): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('movable', true);
+        $this->route->setOption('movable', true);
 
         return $this;
     }
 
     public function disableMoving(): DatagridRouteBuilderInterface
     {
-        $this->route->addOption('movable', false);
+        $this->route->setOption('movable', false);
 
         return $this;
     }

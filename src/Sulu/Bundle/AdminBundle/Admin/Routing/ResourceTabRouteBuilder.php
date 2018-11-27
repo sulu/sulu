@@ -27,7 +27,7 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 
     public function setResourceKey(string $resourceKey): ResourceTabRouteBuilderInterface
     {
-        $this->route->addOption('resourceKey', $resourceKey);
+        $this->route->setOption('resourceKey', $resourceKey);
 
         return $this;
     }
@@ -36,7 +36,7 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
     {
         $oldLocales = $this->route->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->addOption('locales', $newLocales);
+        $this->route->setOption('locales', $newLocales);
 
         return $this;
     }

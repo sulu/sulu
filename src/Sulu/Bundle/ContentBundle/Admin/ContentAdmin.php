@@ -115,11 +115,11 @@ class ContentAdmin extends Admin
 
         return [
             (new Route(static::WEBSPACES_ROUTE, '/webspaces/:webspace/:locale', 'sulu_content.webspace_overview'))
-                ->addAttributeDefault('webspace', $firstWebspace->getKey())
-                ->addAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
+                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+                ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace'),
             (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_content.page_tabs'))
-                ->addOption('resourceKey', 'pages'),
+                ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_add_form.detail', '/details')
                 ->setResourceKey('pages')
                 ->setFormKey('pages')
@@ -132,7 +132,7 @@ class ContentAdmin extends Admin
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_content.page_tabs'))
-                ->addOption('resourceKey', 'pages'),
+                ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.detail', '/details')
                 ->setResourceKey('pages')
                 ->setFormKey('pages')

@@ -105,9 +105,8 @@ class Route
         return $this->view;
     }
 
-    public function addOption(string $key, $value): self
+    public function setOption(string $key, $value): self
     {
-        // TODO rename to setOption, since old values will be simply overridden?
         $this->options[$key] = $value;
 
         return $this;
@@ -129,9 +128,8 @@ class Route
         return $this;
     }
 
-    public function addAttributeDefault(string $key, string $value): self
+    public function setAttributeDefault(string $key, string $value): self
     {
-        // TODO rename to setAttributeDefault, since old values will be simply overridden?
         $this->attributeDefaults[$key] = $value;
 
         return $this;

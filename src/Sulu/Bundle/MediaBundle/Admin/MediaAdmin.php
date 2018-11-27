@@ -97,22 +97,22 @@ class MediaAdmin extends Admin
 
         return [
             (new Route(static::MEDIA_OVERVIEW_ROUTE, '/collections/:locale/:id?', 'sulu_media.overview'))
-                ->addOption('locales', $mediaLocales)
-                ->addAttributeDefault('locale', $mediaLocales[0]),
+                ->setOption('locales', $mediaLocales)
+                ->setAttributeDefault('locale', $mediaLocales[0]),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
                 ->setResourceKey('media')
                 ->addLocales($mediaLocales)
                 ->getRoute(),
             (new Route(static::EDIT_FORM_DETAIL_ROUTE, '/details', 'sulu_media.detail'))
-                ->addOption('tabTitle', 'sulu_media.information_taxonomy')
-                ->addOption('locales', $mediaLocales)
-                ->addOption('toolbarActions', $toolbarActions)
+                ->setOption('tabTitle', 'sulu_media.information_taxonomy')
+                ->setOption('locales', $mediaLocales)
+                ->setOption('toolbarActions', $toolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE),
             (new Route(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats'))
-                ->addOption('tabTitle', 'sulu_media.formats')
+                ->setOption('tabTitle', 'sulu_media.formats')
                 ->setParent(static::EDIT_FORM_ROUTE),
             (new Route(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history'))
-                ->addOption('tabTitle', 'sulu_media.history')
+                ->setOption('tabTitle', 'sulu_media.history')
                 ->setParent(static::EDIT_FORM_ROUTE),
         ];
     }
