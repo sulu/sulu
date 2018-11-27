@@ -20,5 +20,7 @@ interface ResourceTabRouteBuilderInterface
      */
     public function addLocales(array $locales): self;
 
+    public function setBackRoute(string $backRoute): self;
+
     public function getRoute(): Route;
 }

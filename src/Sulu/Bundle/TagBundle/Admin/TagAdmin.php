@@ -80,24 +80,24 @@ class TagAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
                 ->setResourceKey('tags')
+                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.detail', '/details')
                 ->setResourceKey('tags')
                 ->setFormkey('tags')
                 ->setTabTitle('sulu_tag.details')
-                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
                 ->setResourceKey('tags')
+                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.detail', '/details')
                 ->setResourceKey('tags')
                 ->setFormKey('tags')
                 ->setTabTitle('sulu_tag.details')
-                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),

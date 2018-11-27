@@ -40,11 +40,13 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'sulu_category.add_form',
                 '/categories/add',
                 'categories',
+                'sulu_category.datagrid',
             ],
             [
                 'sulu_tag.edit_form',
                 '/tags/:id',
                 'tags',
+                null,
             ],
         ];
     }
@@ -55,15 +57,22 @@ class ResourceTabRouteBuilderTest extends TestCase
     public function testBuildResourceTabRoute(
         string $name,
         string $path,
-        string $resourceKey
+        string $resourceKey,
+        ?string $backRoute
     ) {
-        $route = (new ResourceTabRouteBuilder($name, $path))
-            ->setResourceKey($resourceKey)
-            ->getRoute();
+        $routeBuilder = (new ResourceTabRouteBuilder($name, $path))
+            ->setResourceKey($resourceKey);
+
+        if ($backRoute) {
+            $routeBuilder->setBackRoute($backRoute);
+        }
+
+        $route = $routeBuilder->getRoute();
 
         $this->assertEquals($name, $route->getName());
         $this->assertEquals($path, $route->getPath());
         $this->assertEquals($resourceKey, $route->getOption('resourceKey'));
+        $this->assertEquals($backRoute, $route->getOption('backRoute'));
         $this->assertEquals('sulu_admin.resource_tabs', $route->getView());
     }
 

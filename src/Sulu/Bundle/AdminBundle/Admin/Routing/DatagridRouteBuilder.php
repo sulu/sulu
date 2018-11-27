@@ -134,6 +134,6 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
             );
         }
 
-        return clone($this->route);
+        return clone $this->route;
     }
 }

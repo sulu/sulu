@@ -127,12 +127,12 @@ class SnippetAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
+                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.detail', '/details')
                 ->setResourceKey('snippets')
                 ->setFormKey('snippets')
                 ->setTabTitle('sulu_snippet.details')
-                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ADD_FORM_ROUTE)
@@ -140,12 +140,12 @@ class SnippetAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
+                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.detail', '/details')
                 ->setResourceKey('snippets')
                 ->setFormKey('snippets')
                 ->setTabTitle('sulu_snippet.details')
-                ->setBackRoute(static::DATAGRID_ROUTE)
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
