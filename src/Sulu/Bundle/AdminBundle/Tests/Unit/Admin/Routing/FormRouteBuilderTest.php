@@ -92,7 +92,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithToolbarActions()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addToolbarActions(['sulu_admin.save', 'sulu_admin.types'])
@@ -107,7 +107,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithRouterAttributesToFormStore()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addRouterAttributesToFormStore(['webspace', 'parent'])
@@ -122,7 +122,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithRouterAttributesToEditRoute()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addRouterAttributesToEditRoute(['webspace', 'parent'])
@@ -137,7 +137,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithIdQueryParameter()
     {
-        $route = (new FormRouteBuilder('sulu_security.add_form', '/roles/:locale'))
+        $route = (new FormRouteBuilder('sulu_security.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->setIdQueryParameter('contactId')

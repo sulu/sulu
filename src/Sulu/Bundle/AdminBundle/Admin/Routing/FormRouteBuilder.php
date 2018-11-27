@@ -34,7 +34,7 @@ class FormRouteBuilder implements FormRouteBuilderInterface
 
     public function setFormKey(string $formKey): FormRouteBuilderInterface
     {
-        $this->route->addOption('formKey', $formKey);
+        $this->route->setOption('formKey', $formKey);
 
         return $this;
     }
@@ -130,6 +130,18 @@ class FormRouteBuilder implements FormRouteBuilderInterface
             throw new \DomainException(
                 'A route for a Form view needs a "formKey" option.'
                 . ' You have likely forgotten to call the "setFormKey" method.'
+            );
+        }
+
+        if ($this->route->getOption('locales') && false === strpos($this->route->getPath(), ':locale')) {
+            throw new \DomainException(
+                'A route for a Form view needs a ":locale" placeholder in its URL if some "locales" have been set.'
+            );
+        }
+
+        if (!$this->route->getOption('locales') && false !== strpos($this->route->getPath(), ':locale')) {
+            throw new \DomainException(
+                'A route for a Form view cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );
         }
 
