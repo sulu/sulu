@@ -68,7 +68,7 @@ export default class MultiSelection extends React.Component<Props> {
 
         newIds.sort();
         loadedIds.sort();
-        if (!equals(newIds, loadedIds) && !this.selectionStore.loading) {
+        if (!equals(newIds, loadedIds)) {
             this.selectionStore.loadItems(newIds);
         }
     }

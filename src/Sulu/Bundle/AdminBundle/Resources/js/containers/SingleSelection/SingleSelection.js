@@ -67,7 +67,7 @@ export default class SingleSelection extends React.Component<Props> {
         const newId = toJS(this.props.value);
         const loadedId = this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined;
 
-        if (loadedId !== newId && !this.singleSelectionStore.loading) {
+        if (loadedId !== newId) {
             this.singleSelectionStore.loadItem(newId);
         }
     }

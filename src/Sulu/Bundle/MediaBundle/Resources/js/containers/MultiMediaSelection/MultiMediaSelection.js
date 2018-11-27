@@ -68,7 +68,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
 
         newSelectedIds.sort();
         loadedSelectedIds.sort();
-        if (!equals(newSelectedIds, loadedSelectedIds) && !this.mediaSelectionStore.loading) {
+        if (!equals(newSelectedIds, loadedSelectedIds)) {
             this.mediaSelectionStore.loadSelectedMedia(newSelectedIds, locale);
         }
     }

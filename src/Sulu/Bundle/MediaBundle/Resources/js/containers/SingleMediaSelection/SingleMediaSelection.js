@@ -65,7 +65,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
         const newSelectedId = toJS(value.id);
         const loadedSelectedId = toJS(this.singleMediaSelectionStore.selectedMediaId);
 
-        if (loadedSelectedId !== newSelectedId && !this.singleMediaSelectionStore.loading) {
+        if (loadedSelectedId !== newSelectedId) {
             this.singleMediaSelectionStore.loadSelectedMedia(newSelectedId, locale);
         }
     }
