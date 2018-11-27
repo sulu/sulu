@@ -3,6 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import type {Node} from 'react';
 import Icon from '../Icon';
+import Loader from '../Loader/Loader';
 import singleItemSelectionStyles from './singleItemSelection.scss';
 import type {Button} from './types';
 
@@ -11,16 +12,18 @@ type Props = {|
     disabled: boolean,
     emptyText?: string,
     leftButton: Button,
+    loading: boolean,
     onRemove?: () => void,
 |};
 
 export default class SingleItemSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        loading: false,
     };
 
     render() {
-        const {children, disabled, emptyText, leftButton, onRemove} = this.props;
+        const {children, disabled, emptyText, leftButton, loading, onRemove} = this.props;
         const {icon, onClick} = leftButton;
 
         const singleItemSelectionClass = classNames(
@@ -49,7 +52,7 @@ export default class SingleItemSelection extends React.Component<Props> {
                             </div>
                         }
                     </div>
-                    {onRemove &&
+                    {onRemove && !loading &&
                         <button
                             className={singleItemSelectionStyles.removeButton}
                             disabled={disabled}
@@ -58,6 +61,9 @@ export default class SingleItemSelection extends React.Component<Props> {
                         >
                             <Icon name="su-trash-alt" />
                         </button>
+                    }
+                    {loading &&
+                        <Loader className={singleItemSelectionStyles.loader} size={14} />
                     }
                 </div>
             </div>
