@@ -89,7 +89,8 @@ export default class SingleSelection extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedItem: Object) => {
-        this.singleSelectionStore.set(selectedItem);
+        // need to load the whole item as the object returned from the overlay may not contain all displayProperties
+        this.singleSelectionStore.loadItem(selectedItem.id);
         this.closeOverlay();
     };
 
