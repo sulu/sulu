@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import {observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import pretty from 'pretty';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
@@ -23,11 +23,14 @@ jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(fun
 }));
 
 jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
-    this.items = [];
     this.set = jest.fn();
     this.move = jest.fn();
     this.removeById = jest.fn();
     this.loadItems = jest.fn();
+
+    mockExtendObservable(this, {
+        items: [],
+    });
 }));
 
 beforeEach(() => {
@@ -409,4 +412,38 @@ test('Should reorder the items on drag and drop', () => {
     selection.find('MultiItemSelection').prop('onItemsSorted')(1, 2);
 
     expect(selection.instance().selectionStore.move).toBeCalledWith(1, 2);
+});
+
+test('Should call the onChange callback if the value of the selection-store changes', () => {
+    const changeSpy = jest.fn();
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            onChange={changeSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1]}
+        />
+    );
+
+    selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
+    expect(changeSpy).toBeCalledWith([22, 23]);
+});
+
+test('Should not call the onChange callback if the component props change', () => {
+    const changeSpy = jest.fn();
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            onChange={changeSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1]}
+        />
+    );
+
+    selection.setProps({overlayTitle: 'New Selection Title'});
+    expect(changeSpy).not.toBeCalled();
 });

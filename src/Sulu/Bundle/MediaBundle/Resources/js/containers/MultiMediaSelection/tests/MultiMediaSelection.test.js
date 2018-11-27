@@ -17,6 +17,7 @@ jest.mock('../../MultiMediaSelectionOverlay', () => jest.fn(function() {
 jest.mock('../../../stores/MultiMediaSelectionStore', () => jest.fn(function() {
     this.selectedMedia = [];
     this.selectedMediaIds = [];
+    this.loadSelectedMedia = jest.fn();
 }));
 
 test('Render a MultiMediaSelection field', () => {
@@ -195,6 +196,17 @@ test('Should call the onChange handler if selection store changes', () => {
 
     mediaSelectionInstance.mediaSelectionStore.selectedMedia.splice(0, 1);
     expect(changeSpy).toBeCalledWith({ids: [99]});
+});
+
+test('Should not call the onChange callback if the component props change', () => {
+    const changeSpy = jest.fn();
+
+    const mediaSelection = shallow(
+        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+    );
+
+    mediaSelection.setProps({disabled: true});
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Pass correct props to MultiItemSelection component', () => {

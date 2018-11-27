@@ -272,3 +272,45 @@ test('Should remove an item when the remove button is clicked', () => {
     singleSelection.find('SingleItemSelection').prop('onRemove')();
     expect(singleSelection.instance().singleSelectionStore.clear).toBeCalledWith();
 });
+
+test('Should call the onChange callback if the value of the selection-store changes', () => {
+    const changeSpy = jest.fn();
+
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={[]}
+            emptyText="Nothing"
+            icon="su-test"
+            onChange={changeSpy}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {id: 6};
+    expect(changeSpy).toBeCalledWith(6);
+});
+
+test('Should not call the onChange callback if the component props change', () => {
+    const changeSpy = jest.fn();
+
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={[]}
+            emptyText="Nothing"
+            icon="su-test"
+            onChange={changeSpy}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    singleSelection.setProps({emptyText: 'New Empty Text'});
+    expect(changeSpy).not.toBeCalled();
+});
