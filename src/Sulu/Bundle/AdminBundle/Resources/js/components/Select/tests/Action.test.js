@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {render, shallow} from 'enzyme';
 import React from 'react';
 import Action from '../Action';
@@ -17,4 +17,12 @@ test('The component should call the callbacks after a click', () => {
     action.find('button').simulate('click');
     expect(onClick).toBeCalled();
     expect(afterAction).toBeCalled();
+});
+
+test('The component should call the onClick callbacks with its value', () => {
+    const onClick = jest.fn();
+    const action = shallow(<Action onClick={onClick} value="my-value">My action</Action>);
+
+    action.find('button').simulate('click');
+    expect(onClick).toBeCalledWith('my-value');
 });
