@@ -16,6 +16,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="templating"/>
             <argument type="service" id="translator.default"/>
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
@@ -34,6 +35,11 @@
         </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
+
+        <service
+            id="sulu_admin.metadata_provider_registry"
+            class="Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry"
+        />
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
 

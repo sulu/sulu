@@ -50,6 +50,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('sulu_preview', $response);
     }
 
+    public function testGetNotExistingMetdata()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/metdata/test1/test');
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testGetResourcePages()
     {
         $client = $this->createAuthenticatedClient();

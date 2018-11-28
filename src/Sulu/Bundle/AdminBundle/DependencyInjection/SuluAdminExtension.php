@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
+use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -80,6 +81,19 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            MetadataProviderNotFoundException::class => 404,
+                        ],
+                    ],
+                ]
+            );
+        }
+
         $container->prependExtensionConfig(
             'sulu_admin',
             [
@@ -110,8 +124,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.xml');
 
         $container->registerForAutoconfiguration(Admin::class)
-                  ->addTag(AddAdminPass::ADMIN_TAG)
-                  ->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, ['context' => SuluKernel::CONTEXT_ADMIN]);
+            ->addTag(AddAdminPass::ADMIN_TAG)
+            ->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, ['context' => SuluKernel::CONTEXT_ADMIN]);
 
         $this->loadFieldTypeOptions(
             $config['field_type_options'],

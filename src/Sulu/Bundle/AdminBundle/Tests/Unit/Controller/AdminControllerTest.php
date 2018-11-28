@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
@@ -89,6 +90,11 @@ class AdminControllerTest extends TestCase
      * @var TranslatorBagInterface
      */
     private $translatorBag;
+
+    /**
+     * @var MetadataProviderRegistry
+     */
+    private $metadataProviderRegistry;
 
     /**
      * @var ResourceMetadataPool
@@ -173,6 +179,7 @@ class AdminControllerTest extends TestCase
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
+        $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
@@ -191,6 +198,7 @@ class AdminControllerTest extends TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
+            $this->metadataProviderRegistry->reveal(),
             $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
