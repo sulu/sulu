@@ -16,10 +16,12 @@
     <xs:element name="form" type="formType"/>
 
     <xs:complexType name="formType">
-        <xs:choice maxOccurs="unbounded">
+        <xs:all>
+            <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="xs:string" name="resourceKey" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
-            <xs:element type="schemaType" name="schema" minOccurs="1" maxOccurs="1"/>
-        </xs:choice>
+            <xs:element type="schemaType" name="schema" minOccurs="0" maxOccurs="1"/>
+        </xs:all>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 </xs:schema>

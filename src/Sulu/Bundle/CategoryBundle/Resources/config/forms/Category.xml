@@ -2,30 +2,33 @@
  <form xmlns="http://schemas.sulu.io/template/template"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
-     <properties>
-         <property name="name" type="text_line" mandatory="true">
-             <meta>
-                 <title>sulu_admin.name</title>
-             </meta>
-             <params>
-                 <param name="headline" value="true"/>
-             </params>
-         </property>
-     
-         <property name="key" type="text_line">
-             <meta>
-                 <title>sulu_admin.key</title>
-             </meta>
-         </property>
-         <property name="description" type="text_editor">
-             <meta>
-                 <title>sulu_admin.description</title>
-             </meta>
-         </property>
-         <property name="medias" type="media_selection">
-             <meta>
-                 <title>sulu_media.media</title>
-             </meta>
-         </property>
-     </properties>
- </form>
+    <key>categories</key>
+    <resourceKey>categories</resourceKey>
+
+    <properties>
+        <property name="name" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_admin.name</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+        </property>
+
+        <property name="key" type="text_line">
+            <meta>
+                <title>sulu_admin.key</title>
+            </meta>
+        </property>
+        <property name="description" type="text_editor">
+            <meta>
+                <title>sulu_admin.description</title>
+            </meta>
+        </property>
+        <property name="medias" type="media_selection">
+            <meta>
+                <title>sulu_media.media</title>
+            </meta>
+        </property>
+    </properties>
+</form>

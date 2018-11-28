@@ -2,6 +2,9 @@
 <form xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <key>pages_seo</key>
+    <resourceKey>pages_seo</resourceKey>
+
     <properties>
         <property name="search_result" type="search_result" colspan="9">
             <meta>
