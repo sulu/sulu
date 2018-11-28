@@ -5,6 +5,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 import SingleDatagridOverlay from '../../../containers/SingleDatagridOverlay';
 import SingleSelection from '../SingleSelection';
+import SingleItemSelection from '../../../components/SingleItemSelection';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -27,6 +28,7 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function() {
 
     mockExtendObservable(this, {
         item: undefined,
+        loading: false,
     });
 }));
 
@@ -317,4 +319,41 @@ test('Should not call the onChange callback if the component props change', () =
 
     singleSelection.setProps({emptyText: 'New Empty Text'});
     expect(changeSpy).not.toBeCalled();
+});
+
+test('Correct props should be passed to SingleItemSelection component', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            disabled={true}
+            displayProperties={[]}
+            emptyText="nothing"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
+    expect(singleSelection.find(SingleItemSelection).prop('emptyText')).toEqual('nothing');
+});
+
+test('Set loading prop of SingleItemSelection component if SingleSelectionStore is loading', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            disabled={true}
+            displayProperties={[]}
+            emptyText="nothing"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(false);
+    singleSelection.instance().singleSelectionStore.loading = true;
+    expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
 });
