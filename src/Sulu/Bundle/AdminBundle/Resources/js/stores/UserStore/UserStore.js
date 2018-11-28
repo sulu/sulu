@@ -3,7 +3,10 @@ import 'core-js/library/fn/promise';
 import {action, computed, observable} from 'mobx';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/Initializer';
+import localizationStore from '../LocalizationStore';
 import type {Contact, User} from './types';
+
+const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.user.content_locale';
 
 class UserStore {
     @observable persistentSettings: Map<string, string> = new Map();
@@ -28,6 +31,20 @@ class UserStore {
 
     @computed get systemLocale() {
         return this.user ? this.user.locale : Config.fallbackLocale;
+    }
+
+    @computed get contentLocale() {
+        const userLocale = this.getPersistentSetting(CONTENT_LOCALE_SETTING_KEY);
+
+        if (!userLocale) {
+            localizationStore.loadLocalizations().then((localizations) => {
+                const defaultLocalizations = localizations.filter((localization) => localization.default);
+                const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+                this.setPersistentSetting(CONTENT_LOCALE_SETTING_KEY, fallbackLocalization.locale);
+            });
+        }
+
+        return userLocale ? userLocale : Config.fallbackLocale;
     }
 
     @action setLoggedIn(loggedIn: boolean) {

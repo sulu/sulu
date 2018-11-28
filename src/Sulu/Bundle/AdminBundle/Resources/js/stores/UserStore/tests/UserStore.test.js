@@ -2,6 +2,7 @@
 import userStore from '../UserStore';
 import Requester from '../../../services/Requester';
 import initializer from '../../../services/Initializer';
+import LocalizationStore from '../../../stores/LocalizationStore';
 
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
@@ -10,6 +11,10 @@ jest.mock('../../../services/Requester', () => ({
 
 jest.mock('../../../services/Initializer', () => ({
     initialize: jest.fn(),
+}));
+
+jest.mock('../../../stores/LocalizationStore', () => ({
+    loadLocalizations: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -40,7 +45,7 @@ test('Should clear the user store', () => {
     expect(userStore.persistentSettings.size).toBe(0);
 });
 
-test('Should return the locale of the user', () => {
+test('Should return the locale of the user as system-locale', () => {
     userStore.setUser({
         id: 5,
         locale: 'de',
@@ -51,8 +56,48 @@ test('Should return the locale of the user', () => {
     expect(userStore.systemLocale).toEqual('de');
 });
 
-test('Should return the fallback locale if the user has none set', () => {
+test('Should return the fallback locale as system-locale if the user has none set', () => {
     expect(userStore.systemLocale).toEqual('en');
+});
+
+test('Should return the persisted content-locale', () => {
+    userStore.setPersistentSetting('sulu_admin.user.content_locale', 'de');
+    expect(userStore.contentLocale).toEqual('de');
+});
+
+test('Should return the fallback locale as content-locale if no content-locale is persisted', () => {
+    LocalizationStore.loadLocalizations.mockReturnValueOnce(new Promise((resolve) => resolve([])));
+    expect(userStore.contentLocale).toEqual('en');
+});
+
+test('Should persist first default-localization of localization-store as content-locale', () => {
+    const localizationsPromise = new Promise((resolve) => resolve([
+        {locale: 'cz', default: false},
+        {locale: 'ru', default: true},
+        {locale: 'de', default: false},
+    ]));
+    LocalizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+
+    expect(userStore.contentLocale).toEqual('en');
+
+    return localizationsPromise.then(() => {
+        expect(userStore.getPersistentSetting('sulu_admin.user.content_locale')).toEqual('ru');
+    });
+});
+
+test('Should persist first localization as content-locale if store does not return a default-localization', () => {
+    const localizationsPromise = new Promise((resolve) => resolve([
+        {locale: 'cz', default: false},
+        {locale: 'ru', default: false},
+        {locale: 'de', default: false},
+    ]));
+    LocalizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+
+    expect(userStore.contentLocale).toEqual('en');
+
+    return localizationsPromise.then(() => {
+        expect(userStore.getPersistentSetting('sulu_admin.user.content_locale')).toEqual('cz');
+    });
 });
 
 test('Should set persistent setting', () => {
