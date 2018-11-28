@@ -18,6 +18,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Tests\Application\AppCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\CookieJar;

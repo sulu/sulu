@@ -39,7 +39,7 @@ class PasteTransformationTest extends SuluTestCase
     {
         $this->fileLocator = $this->prophesize(FileLocator::class);
         $this->fileLocator->locate('test.jpg')->willReturn(
-            __DIR__ . '/../../../../app/Resources/images/photo.jpeg'
+            __DIR__ . '/../../../../Fixtures/files/photo.jpeg'
         );
 
         $this->pasteTransformation = new PasteTransformation(

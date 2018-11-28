@@ -1,6 +1,4 @@
 /.env
-/var/
-!/var/.gitkeep
 /vendor/
 /.web-server-pid
 phpunit.stderr
@@ -10,6 +8,7 @@ phpunit.stdout
 /src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache/
 /tests/Resources/cache/
 /src/Sulu/Bundle/*/Tests/var/
+/src/Sulu/Bundle/*/Tests/Application/var/
 /src/Sulu/Bundle/*/Resources/app/cache
 /src/Sulu/Bundle/*/Tests/app/cache
 /src/Sulu/Bundle/*/Tests/Resources/app/cache

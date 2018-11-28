@@ -1,5 +1,6 @@
 /Tests/app/cache/*
 /Tests/app/logs/*
+/Tests/app/var/*
 /composer.phar
 /composer.lock
 /.sass-cache/

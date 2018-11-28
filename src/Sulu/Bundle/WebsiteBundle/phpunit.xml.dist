@@ -19,7 +19,7 @@
 
     <php>
         <env name="APP_ENV" value="test"/>
-        <env name="KERNEL_CLASS" value="Sulu\Bundle\WebsiteBundle\Tests\Functional\AppKernel"/>
+        <env name="KERNEL_CLASS" value="Sulu\Bundle\WebsiteBundle\Tests\Application\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>

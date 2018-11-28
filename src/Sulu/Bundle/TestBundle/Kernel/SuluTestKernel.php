@@ -99,7 +99,7 @@ class SuluTestKernel extends SuluKernel
     public function getProjectDir()
     {
         if (null === $this->projectDir) {
-            $this->projectDir = dirname($this->rootDir);
+            $this->projectDir = $this->rootDir;
         }
 
         return $this->projectDir;
