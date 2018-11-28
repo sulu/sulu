@@ -4,21 +4,29 @@ import {shallow} from 'enzyme';
 import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {observable} from 'mobx';
 import SingleMediaUpload from '../../fields/SingleMediaUpload';
 import SingleMediaUploadComponent from '../../../SingleMediaUpload';
 import MediaUploadStore from '../../../../stores/MediaUploadStore';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(),
-    FormStore: jest.fn(),
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
+    this.locale = observableOptions.locale;
 }));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
+jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function(resourceStore) {
+    this.locale = resourceStore.locale;
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
+    this.locale = formStore.locale;
 }));
 
 test('Pass correct props', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 3,
@@ -51,7 +59,11 @@ test('Pass correct props', () => {
 });
 
 test('Pass correct skin to props', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 2,
@@ -73,7 +85,11 @@ test('Pass correct skin to props', () => {
 });
 
 test('Throw if emptyIcon is set but not a valid value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 2,
@@ -95,7 +111,11 @@ test('Throw if emptyIcon is set but not a valid value', () => {
 });
 
 test('Throw if skin is set but not a valid value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 2,
@@ -117,7 +137,11 @@ test('Throw if skin is set but not a valid value', () => {
 });
 
 test('Throw if image_size is set but not a valid value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 2,
@@ -139,7 +163,11 @@ test('Throw if image_size is set but not a valid value', () => {
 });
 
 test('Throw if collectionId is not set', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {};
 
     expect(
@@ -154,7 +182,11 @@ test('Throw if collectionId is not set', () => {
 });
 
 test('Call onChange and onFinish when upload has completed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const media = {name: 'test.jpg'};
@@ -181,7 +213,11 @@ test('Call onChange and onFinish when upload has completed', () => {
 });
 
 test('Create a MediaUploadStore when constructed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const schemaOptions = {
         collection_id: {
             value: 2,
@@ -200,11 +236,15 @@ test('Create a MediaUploadStore when constructed', () => {
 });
 
 test('Create a MediaUploadStore when constructed with data', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')})
+        )
+    );
     const data = {
         id: 1,
+        title: 'test title',
         mimeType: 'image/jpeg',
-        title: 'test_title',
         thumbnails: {},
         url: '',
     };
