@@ -52,6 +52,28 @@ class ExcerptControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('published', $response);
     }
 
+    public function testPutWithNullValues()
+    {
+        $client = $this->createAuthenticatedClient();
+        $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
+
+        $client->request('PUT', '/api/page-excerpts/' . $webspaceUuid . '?locale=en&webspace=sulu_io', [
+            'title' => 'Excerpt Title',
+        ]);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('Excerpt Title', $response->title);
+
+        $client->request('PUT', '/api/page-excerpts/' . $webspaceUuid . '?locale=en&webspace=sulu_io', [
+            'title' => null,
+        ]);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('', $response->title);
+    }
+
     public function testPutAndGetPublished()
     {
         $client = $this->createAuthenticatedClient();

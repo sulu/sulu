@@ -118,7 +118,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         foreach ($excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-            if (isset($data[$property->getName()])) {
+            if (array_key_exists($property->getName(), $data)) {
                 $property->setValue($data[$property->getName()]);
                 $contentType->write(
                     $node,
