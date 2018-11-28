@@ -161,3 +161,20 @@ test('Correct props should be passed to SingleItemSelection component', () => {
 
     expect(singleMediaSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
 });
+
+test('Set loading prop of SingleItemSelection component if SingleMediaSelectionStore is loading', () => {
+    // $FlowFixMe
+    SingleMediaSelectionStore.mockImplementationOnce(function() {
+        mockExtendObservable(this, {
+            loading: false,
+        });
+    });
+
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
+    );
+
+    expect(singleMediaSelection.find(SingleItemSelection).prop('loading')).toEqual(false);
+    singleMediaSelection.instance().singleMediaSelectionStore.loading = true;
+    expect(singleMediaSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
+});

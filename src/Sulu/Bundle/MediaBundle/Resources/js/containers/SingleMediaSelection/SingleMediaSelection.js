@@ -105,6 +105,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
             locale,
         } = this.props;
         const {
+            loading,
             selectedMedia,
             selectedMediaId,
         } = this.singleMediaSelectionStore;
@@ -118,6 +119,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                         icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
+                    loading={loading}
                     onRemove={selectedMedia ? this.handleRemove : undefined}
                 >
                     {selectedMedia &&

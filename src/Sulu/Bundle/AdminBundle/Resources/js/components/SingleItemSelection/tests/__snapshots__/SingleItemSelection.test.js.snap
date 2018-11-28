@@ -26,6 +26,42 @@ exports[`Render in disabled state 1`] = `
 </div>
 `;
 
+exports[`Render in loading state 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+    <div
+      class="spinner loader"
+      style="width:14px;height:14px"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render with emptyText if no children have been passed 1`] = `
 <div
   class="singleItemSelection"

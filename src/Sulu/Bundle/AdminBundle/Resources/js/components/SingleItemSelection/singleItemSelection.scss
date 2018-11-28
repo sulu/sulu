@@ -59,9 +59,13 @@ $singleItemSelectionBorderRadius: 3px;
 
     .remove-button {
         border: 0;
-        padding: 0 10px;
+        margin: 0 10px;
         cursor: pointer;
         background-color: transparent;
+    }
+
+    .loader {
+        margin: 0 10px;
     }
 
     &.disabled {
