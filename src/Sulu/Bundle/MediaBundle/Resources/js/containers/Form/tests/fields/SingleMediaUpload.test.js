@@ -21,6 +21,10 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
+jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+    contentLocale: 'userContentLocale',
+}));
+
 test('Pass correct props', () => {
     const formInspector = new FormInspector(
         new FormStore(
@@ -232,7 +236,31 @@ test('Create a MediaUploadStore when constructed', () => {
     );
 
     expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('en');
     expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(undefined);
+});
+
+test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', () => {
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('test', undefined, {})
+        )
+    );
+    const schemaOptions = {
+        collection_id: {
+            value: 2,
+        },
+    };
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
+    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('userContentLocale');
 });
 
 test('Create a MediaUploadStore when constructed with data', () => {

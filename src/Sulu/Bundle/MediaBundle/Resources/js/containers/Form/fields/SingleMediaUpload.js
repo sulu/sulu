@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import userStore from 'sulu-admin-bundle/stores/UserStore';
+import {computed} from 'mobx';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import SingleMediaUploadComponent from '../../SingleMediaUpload';
 import type {Media} from '../../../types';
@@ -12,12 +14,9 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
         super(props);
 
         const {formInspector, value} = this.props;
-
-        if (!formInspector || !formInspector.locale) {
-            throw new Error('The single media upload needs a locale to work properly');
-        }
-
-        const {locale} = formInspector;
+        const locale = formInspector && formInspector.locale
+            ? formInspector.locale
+            : computed(() => userStore.contentLocale);
 
         this.mediaUploadStore = new MediaUploadStore(
             value,
