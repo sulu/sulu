@@ -20,7 +20,9 @@ jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function() {
     this.set = jest.fn((item) => {
         this.item = item;
     });
-    this.loadItem = jest.fn();
+    this.loadItem = jest.fn((id) => {
+        this.item = {id};
+    });
     this.clear = jest.fn();
 
     mockExtendObservable(this, {
@@ -64,6 +66,7 @@ test('Render with selected item', () => {
     expect(SingleSelectionStore).toBeCalledWith('test', 3, locale);
 
     singleSelection.instance().singleSelectionStore.item = {
+        id: 3,
         name: 'Name',
         value: 'Value',
     };
@@ -92,6 +95,7 @@ test('Render with selected item in disabled state', () => {
     );
 
     singleSelection.instance().singleSelectionStore.item = {
+        id: 3,
         name: 'Name',
         value: 'Value',
     };
@@ -208,7 +212,7 @@ test('Should call the onChange callback if a new item was selected', () => {
     expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
 
     singleSelection.find(SingleDatagridOverlay).prop('onConfirm')({id: 6});
-    expect(singleSelection.instance().singleSelectionStore.set).toBeCalledWith({id: 6});
+    expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(6);
     expect(changeSpy).toBeCalledWith(6);
     singleSelection.update();
     expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
