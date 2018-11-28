@@ -48,11 +48,11 @@ test('Should return the locale of the user', () => {
         username: 'test',
     });
 
-    expect(userStore.locale).toEqual('de');
+    expect(userStore.systemLocale).toEqual('de');
 });
 
 test('Should return the fallback locale if the user has none set', () => {
-    expect(userStore.locale).toEqual('en');
+    expect(userStore.systemLocale).toEqual('en');
 });
 
 test('Should set persistent setting', () => {

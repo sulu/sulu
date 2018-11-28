@@ -26,7 +26,7 @@ class UserStore {
         this.resetSuccess = false;
     }
 
-    @computed get locale() {
+    @computed get systemLocale() {
         return this.user ? this.user.locale : Config.fallbackLocale;
     }
 
