@@ -27,22 +27,24 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
     const basePath = env && env.base_path ? env.base_path : 'build/admin';
 
-    // Read public dir from composer.json:
     const composerConfig = require(path.resolve('composer.json')); // eslint-disable-line import/no-dynamic-require
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
     }
 
-    // Remove old build files
-    if (!publicDir.startsWith('/')) {
-        rimraf.sync(path.resolve(publicDir, basePath));
-    } else {
-        console.warn([ // eslint-disable-line no-console
-            'WARN: Using absolute path for "public-dir" detected',
-            '      This can end up in accidentally remove of files outside your project dir.',
-            '      Removing old build files was skipped!',
-        ].join('\n'));
+    if (publicDir.startsWith('/')) {
+        const errorMessage = [
+            '\x1b[31mUsing absolute path for \x1b[0m"public-dir"\x1b[31m detected',
+            '       This can end up in accidentally remove of files outside your project dir.',
+            '       Build was cancelled!\x1b[0m',
+            ''
+        ].join('\n');
+
+        throw new Error(errorMessage);
     }
+
+    // Remove old build files
+    rimraf.sync(path.resolve(publicDir, basePath));
 
     return {
         entry: entries,
