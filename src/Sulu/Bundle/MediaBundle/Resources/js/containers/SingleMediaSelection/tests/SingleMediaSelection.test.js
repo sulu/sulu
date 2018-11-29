@@ -156,10 +156,17 @@ test('Should not call the onChange callback if the component props change', () =
 
 test('Correct props should be passed to SingleItemSelection component', () => {
     const singleMediaSelection = shallow(
-        <SingleMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
+        <SingleMediaSelection
+            disabled={true}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            valid={false}
+            value={undefined}
+        />
     );
 
     expect(singleMediaSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
+    expect(singleMediaSelection.find(SingleItemSelection).prop('valid')).toEqual(false);
 });
 
 test('Set loading prop of SingleItemSelection component if SingleMediaSelectionStore is loading', () => {

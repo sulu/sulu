@@ -34,6 +34,17 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in invalid state', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection leftButton={leftButton} valid={false}>Test Item</SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render with given onRemove prop', () => {
     const leftButton = {
         icon: 'su-page',
