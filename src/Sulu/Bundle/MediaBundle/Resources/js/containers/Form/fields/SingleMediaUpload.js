@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import userStore from 'sulu-admin-bundle/stores/UserStore';
+import {observable} from 'mobx';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import SingleMediaUploadComponent from '../../SingleMediaUpload';
 import type {Media} from '../../../types';
@@ -12,13 +13,10 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
     constructor(props: FieldTypeProps<Object>) {
         super(props);
 
-        const {value} = this.props;
+        const {formInspector, value} = this.props;
+        const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        this.mediaUploadStore = new MediaUploadStore(
-            value,
-            // TODO remove 'en' and determine language to upload
-            observable.box('en')
-        );
+        this.mediaUploadStore = new MediaUploadStore(value, locale);
     }
 
     handleUploadComplete = (media: Object) => {

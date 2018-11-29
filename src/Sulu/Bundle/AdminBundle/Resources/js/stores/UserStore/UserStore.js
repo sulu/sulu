@@ -3,6 +3,7 @@ import 'core-js/library/fn/promise';
 import {action, computed, observable} from 'mobx';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/Initializer';
+import localizationStore from '../LocalizationStore';
 import type {Contact, User} from './types';
 
 class UserStore {
@@ -10,6 +11,7 @@ class UserStore {
 
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
+    @observable contentLocale: string = Config.fallbackLocale;
 
     @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
@@ -26,7 +28,7 @@ class UserStore {
         this.resetSuccess = false;
     }
 
-    @computed get locale() {
+    @computed get systemLocale() {
         return this.user ? this.user.locale : Config.fallbackLocale;
     }
 
@@ -48,6 +50,14 @@ class UserStore {
 
     @action setUser(user: User) {
         this.user = user;
+
+        // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
+        // load and use first (default) localization of first webspace as content-locale for the user
+        localizationStore.loadLocalizations().then(action((localizations) => {
+            const defaultLocalizations = localizations.filter((localization) => localization.default);
+            const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+            this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
+        }));
     }
 
     @action setContact(contact: Contact) {

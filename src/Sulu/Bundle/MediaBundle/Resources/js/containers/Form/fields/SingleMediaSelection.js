@@ -2,6 +2,8 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import userStore from 'sulu-admin-bundle/stores/UserStore';
+import {observable} from 'mobx';
 import SingleMediaSelectionComponent from '../../SingleMediaSelection';
 import type {Value} from '../../SingleMediaSelection';
 
@@ -16,12 +18,7 @@ export default class SingleMediaSelection extends React.Component<FieldTypeProps
 
     render() {
         const {formInspector, disabled, value} = this.props;
-
-        if (!formInspector || !formInspector.locale) {
-            throw new Error('The media selection needs a locale to work properly');
-        }
-
-        const {locale} = formInspector;
+        const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
         return (
             <SingleMediaSelectionComponent
