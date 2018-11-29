@@ -60,17 +60,17 @@ test('Should return the fallback locale as system-locale if the user has none se
     expect(userStore.systemLocale).toEqual('en');
 });
 
-test('Should return the persisted content-locale', () => {
-    userStore.setPersistentSetting('sulu_admin.user.content_locale', 'de');
+test('Should return the user-conent-locale as content-locale', () => {
+    userStore.userContentLocale = 'de';
     expect(userStore.contentLocale).toEqual('de');
 });
 
-test('Should return the fallback locale as content-locale if no content-locale is persisted', () => {
+test('Should return the fallback-locale as content-locale if no user-content-locale is not set', () => {
     LocalizationStore.loadLocalizations.mockReturnValueOnce(new Promise((resolve) => resolve([])));
     expect(userStore.contentLocale).toEqual('en');
 });
 
-test('Should persist first default-localization of localization-store as content-locale', () => {
+test('Should set first default-localization of localization-store as user-content-locale', () => {
     const localizationsPromise = new Promise((resolve) => resolve([
         {locale: 'cz', default: false},
         {locale: 'ru', default: true},
@@ -81,11 +81,11 @@ test('Should persist first default-localization of localization-store as content
     expect(userStore.contentLocale).toEqual('en');
 
     return localizationsPromise.then(() => {
-        expect(userStore.getPersistentSetting('sulu_admin.user.content_locale')).toEqual('ru');
+        expect(userStore.userContentLocale).toEqual('ru');
     });
 });
 
-test('Should persist first localization as content-locale if store does not return a default-localization', () => {
+test('Should set first localization as user-content-locale if store does not return a default-localization', () => {
     const localizationsPromise = new Promise((resolve) => resolve([
         {locale: 'cz', default: false},
         {locale: 'ru', default: false},
@@ -96,7 +96,7 @@ test('Should persist first localization as content-locale if store does not retu
     expect(userStore.contentLocale).toEqual('en');
 
     return localizationsPromise.then(() => {
-        expect(userStore.getPersistentSetting('sulu_admin.user.content_locale')).toEqual('cz');
+        expect(userStore.userContentLocale).toEqual('cz');
     });
 });
 
