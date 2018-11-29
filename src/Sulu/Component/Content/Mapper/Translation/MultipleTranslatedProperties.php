@@ -49,10 +49,8 @@ class MultipleTranslatedProperties
         $this->languageNamespace = $languageNamespace;
         $this->properties = [];
         foreach ($names as $name) {
-            if (empty($this->properties[$name])) {
-                $propertyName = (!empty($namespace) ? $namespace . '-' : '') . $name;
-                $this->properties[$name] = new Property($propertyName, [], 'none', false, true);
-            }
+            $propertyName = (!empty($namespace) ? $namespace . '-' : '') . $name;
+            $this->properties[$name] = new Property($propertyName, [], 'none', false, true);
         }
     }
 
