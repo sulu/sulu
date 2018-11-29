@@ -2,7 +2,7 @@
 import userStore from '../UserStore';
 import Requester from '../../../services/Requester';
 import initializer from '../../../services/Initializer';
-import LocalizationStore from '../../../stores/LocalizationStore';
+import localizationStore from '../../../stores/LocalizationStore';
 
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
@@ -14,7 +14,7 @@ jest.mock('../../../services/Initializer', () => ({
 }));
 
 jest.mock('../../../stores/LocalizationStore', () => ({
-    loadLocalizations: jest.fn(),
+    loadLocalizations: jest.fn(() => new Promise((resolve) => resolve([]))),
 }));
 
 beforeEach(() => {
@@ -60,43 +60,49 @@ test('Should return the fallback locale as system-locale if the user has none se
     expect(userStore.systemLocale).toEqual('en');
 });
 
-test('Should return the user-conent-locale as content-locale', () => {
-    userStore.userContentLocale = 'de';
-    expect(userStore.contentLocale).toEqual('de');
-});
-
-test('Should return the fallback-locale as content-locale if no user-content-locale is not set', () => {
-    LocalizationStore.loadLocalizations.mockReturnValueOnce(new Promise((resolve) => resolve([])));
+test('Should return the fallback-locale as content-locale if the user is not set', () => {
     expect(userStore.contentLocale).toEqual('en');
 });
 
-test('Should set first default-localization of localization-store as user-content-locale', () => {
+test('Should load and set first default-localization as content-locale when user is set', () => {
     const localizationsPromise = new Promise((resolve) => resolve([
         {locale: 'cz', default: false},
         {locale: 'ru', default: true},
         {locale: 'de', default: false},
     ]));
-    LocalizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+    localizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
 
-    expect(userStore.contentLocale).toEqual('en');
+    userStore.setUser({
+        id: 5,
+        locale: 'de',
+        settings: [],
+        username: 'test',
+    });
 
     return localizationsPromise.then(() => {
-        expect(userStore.userContentLocale).toEqual('ru');
+        expect(localizationStore.loadLocalizations).toBeCalled();
+        expect(userStore.contentLocale).toEqual('ru');
     });
 });
 
-test('Should set first localization as user-content-locale if store does not return a default-localization', () => {
+test('Should load and set first localization as content-locale if there is no default-localiztion', () => {
     const localizationsPromise = new Promise((resolve) => resolve([
         {locale: 'cz', default: false},
         {locale: 'ru', default: false},
         {locale: 'de', default: false},
     ]));
-    LocalizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+    localizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
 
-    expect(userStore.contentLocale).toEqual('en');
+    userStore.setUser({
+        id: 5,
+        locale: 'de',
+        settings: [],
+        username: 'test',
+    });
 
     return localizationsPromise.then(() => {
-        expect(userStore.userContentLocale).toEqual('cz');
+        expect(localizationStore.loadLocalizations).toBeCalled();
+        expect(userStore.contentLocale).toEqual('cz');
     });
 });
 

@@ -11,7 +11,7 @@ class UserStore {
 
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
-    @observable userContentLocale: ?string = undefined;
+    @observable contentLocale: string = Config.fallbackLocale;
 
     @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
@@ -24,25 +24,12 @@ class UserStore {
         this.loading = false;
         this.user = undefined;
         this.contact = undefined;
-        this.userContentLocale = undefined;
         this.loginError = false;
         this.resetSuccess = false;
     }
 
     @computed get systemLocale() {
         return this.user ? this.user.locale : Config.fallbackLocale;
-    }
-
-    @computed get contentLocale() {
-        if (!this.userContentLocale) {
-            localizationStore.loadLocalizations().then(action((localizations) => {
-                const defaultLocalizations = localizations.filter((localization) => localization.default);
-                const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
-                this.userContentLocale = fallbackLocalization.locale;
-            }));
-        }
-
-        return this.userContentLocale ? this.userContentLocale : Config.fallbackLocale;
     }
 
     @action setLoggedIn(loggedIn: boolean) {
@@ -63,6 +50,14 @@ class UserStore {
 
     @action setUser(user: User) {
         this.user = user;
+
+        // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
+        // load and use first (default) localization of first webspace of user as content-locale for the user
+        localizationStore.loadLocalizations().then(action((localizations) => {
+            const defaultLocalizations = localizations.filter((localization) => localization.default);
+            const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+            this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
+        }));
     }
 
     @action setContact(contact: Contact) {
