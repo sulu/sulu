@@ -11,6 +11,7 @@ const Divider = SingleSelect.Divider;
 
 initialState = {selectValue: 'page-1'};
 const onChange = (selectValue) => setState({selectValue});
+const onActionClick = (actionValue) => console.log('clicked action with value:', actionValue);
 
 <SingleSelect value={state.selectValue} onChange={onChange}>
     <Option value="page-1">Page 1 of 4</Option>
@@ -18,7 +19,8 @@ const onChange = (selectValue) => setState({selectValue});
     <Option value="page-3">Page 3 of 4</Option>
     <Option value="page-4">Page 4 of 4</Option>
     <Divider />
-    <Action onClick={() => {/* do stuff */}}>Create new page</Action>
+    <Action onClick={onActionClick}>Action without value</Action>
+    <Action onClick={onActionClick} value="my-value">Action with value</Action>
 </SingleSelect>
 ```
 
