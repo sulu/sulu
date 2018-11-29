@@ -2,20 +2,22 @@
 import React from 'react';
 import actionStyles from './action.scss';
 
-type Props = {|
+type Props<T> = {|
     children: string,
-    onClick: () => void,
+    onClick: (value: T) => void,
     afterAction?: () => void,
+    value: T,
 |};
 
-export default class Action extends React.PureComponent<Props> {
+export default class Action<T> extends React.PureComponent<Props<T>> {
     handleButtonClick = () => {
         const {
             onClick,
             afterAction,
+            value,
         } = this.props;
 
-        onClick();
+        onClick(value);
 
         if (afterAction) {
             afterAction();
