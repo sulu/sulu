@@ -35,9 +35,10 @@ class SuluTestKernel extends SuluKernel
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
-            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Dubture\FFmpegBundle\DubtureFFmpegBundle(),
+            new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new \FOS\RestBundle\FOSRestBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
@@ -45,7 +46,6 @@ class SuluTestKernel extends SuluKernel
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
-            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
@@ -63,7 +63,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
-            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
@@ -76,8 +75,10 @@ class SuluTestKernel extends SuluKernel
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
             // rest
-            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
-            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
+            $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
+            $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
+            $bundles[] = new \Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle();
+            $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
         }
 
         return $bundles;

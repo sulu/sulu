@@ -2,9 +2,13 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
+
+* 1.6.22 (2018-10-05)
     * HOTFIX      #4146 [PreviewBundle]         Fixed preview render preview attribute and XmlHttpRequest state
     * BUGFIX      #4121 [HttpCache]             Set a timeout when purging caches
     * BUGFIX      #4109 [ContentBundle]         Remove validation-state from rendered link
+    * HOTFIX      #4092 [TestBundle]            Fixed firewall in test website kernel for community bundle
 
 * 1.6.21 (2018-07-18)
     * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
@@ -254,6 +258,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.18 (2018-10-05)
+    * HOTFIX      #4092 [TestBundle]            Fixed firewall in test website kernel for community bundle
 
 * 1.5.17 (2018-07-18)
     * HOTFIX      #4063 [ContentComponent]      Fixed copy language function, which didn't copy the extension data
