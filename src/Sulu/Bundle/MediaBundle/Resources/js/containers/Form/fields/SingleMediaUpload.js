@@ -14,9 +14,7 @@ export default class SingleMediaUpload extends React.Component<FieldTypeProps<Me
         super(props);
 
         const {formInspector, value} = this.props;
-        const locale = formInspector && formInspector.locale
-            ? formInspector.locale
-            : computed(() => userStore.contentLocale);
+        const locale = formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
 
         this.mediaUploadStore = new MediaUploadStore(
             value,

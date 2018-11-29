@@ -18,9 +18,7 @@ export default class SingleMediaSelection extends React.Component<FieldTypeProps
 
     render() {
         const {formInspector, disabled, value} = this.props;
-        const locale = formInspector && formInspector.locale
-            ? formInspector.locale
-            : computed(() => userStore.contentLocale);
+        const locale = formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
 
         return (
             <SingleMediaSelectionComponent
