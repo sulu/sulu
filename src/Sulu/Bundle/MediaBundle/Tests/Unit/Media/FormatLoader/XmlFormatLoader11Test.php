@@ -38,20 +38,20 @@ class XmlFormatLoader11Test extends WebspaceTestCase
     public function testSupports10()
     {
         $this->assertFalse(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/version10.xml')
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml')
         );
     }
 
     public function testSupports11()
     {
         $this->assertTrue(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image/formats/version11.xml')
+            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml')
         );
     }
 
     public function testLoad()
     {
-        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version11.xml');
+        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml');
 
         $this->assertEquals(4, count($result));
 
@@ -163,6 +163,6 @@ class XmlFormatLoader11Test extends WebspaceTestCase
     public function testLoadWithMissingDimension()
     {
         $this->expectException(MissingScaleDimensionException::class);
-        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/version11_missing_dimension.xml');
+        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image-formats/version11_missing_dimension.xml');
     }
 }

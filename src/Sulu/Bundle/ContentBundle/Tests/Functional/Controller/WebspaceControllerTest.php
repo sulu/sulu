@@ -22,6 +22,8 @@ class WebspaceControllerTest extends SuluTestCase
         $client->request('GET', '/api/webspaces?locale=en');
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $data = $response['_embedded']['webspaces'];
         $this->assertCount(3, $data);
 

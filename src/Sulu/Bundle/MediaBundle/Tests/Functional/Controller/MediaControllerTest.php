@@ -1577,7 +1577,7 @@ class MediaControllerTest extends SuluTestCase
      */
     private function getImagePath()
     {
-        return __DIR__ . '/../../app/Resources/images/photo.jpeg';
+        return __DIR__ . '/../../Fixtures/files/photo.jpeg';
     }
 
     /**
@@ -1585,6 +1585,6 @@ class MediaControllerTest extends SuluTestCase
      */
     private function getFilePath()
     {
-        return __DIR__ . '/../../app/Resources/files/small.txt';
+        return __DIR__ . '/../../Fixtures/files/small.txt';
     }
 }

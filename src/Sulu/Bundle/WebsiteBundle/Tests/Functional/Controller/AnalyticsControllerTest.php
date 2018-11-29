@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
@@ -80,28 +80,28 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('UA123-123', $items[0]['content']);
         $this->assertCount(1, $items[0]['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $items[0]['domains'][0]['url']);
-        $this->assertEquals('dev', $items[0]['domains'][0]['environment']);
+        $this->assertEquals('test', $items[0]['domains'][0]['environment']);
 
         $this->assertEquals('test-2', $items[1]['title']);
         $this->assertEquals('piwik', $items[1]['type']);
         $this->assertEquals('123', $items[1]['content']);
         $this->assertCount(1, $items[1]['domains']);
         $this->assertEquals('{country}.test.io', $items[1]['domains'][0]['url']);
-        $this->assertEquals('dev', $items[1]['domains'][0]['environment']);
+        $this->assertEquals('test', $items[1]['domains'][0]['environment']);
 
         $this->assertEquals('test-3', $items[2]['title']);
         $this->assertEquals('custom', $items[2]['type']);
         $this->assertEquals('<div/>', $items[2]['content']);
         $this->assertCount(1, $items[2]['domains']);
         $this->assertEquals('{localization}.google.at', $items[2]['domains'][0]['url']);
-        $this->assertEquals('dev', $items[2]['domains'][0]['environment']);
+        $this->assertEquals('test', $items[2]['domains'][0]['environment']);
 
         $this->assertEquals('test-4', $items[3]['title']);
         $this->assertEquals('google_tag_manager', $items[3]['type']);
         $this->assertEquals('GTM-XXXX', $items[3]['content']);
         $this->assertCount(1, $items[3]['domains']);
         $this->assertEquals('www.sulu.io', $items[3]['domains'][0]['url']);
-        $this->assertEquals('dev', $items[3]['domains'][0]['environment']);
+        $this->assertEquals('test', $items[3]['domains'][0]['environment']);
     }
 
     public function testGet()
@@ -118,7 +118,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('UA123-123', $response['content']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]['url']);
-        $this->assertEquals('dev', $response['domains'][0]['environment']);
+        $this->assertEquals('test', $response['domains'][0]['environment']);
     }
 
     public function testPost()
@@ -132,7 +132,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'dev']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
 
@@ -145,7 +145,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('UA123-123', $response['content']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]['url']);
-        $this->assertEquals('dev', $response['domains'][0]['environment']);
+        $this->assertEquals('test', $response['domains'][0]['environment']);
     }
 
     public function testPut()
@@ -160,7 +160,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'type' => 'custom',
                 'content' => '<div/>',
                 'domains' => [
-                    ['url' => 'www.sulu.io', 'environment' => 'dev'],
+                    ['url' => 'www.sulu.io', 'environment' => 'test'],
                     ['url' => 'www.sulu.at/{localization}', 'environment' => 'prod'],
                 ],
             ]
@@ -175,7 +175,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('<div/>', $response['content']);
         $this->assertCount(2, $response['domains']);
         $this->assertEquals('www.sulu.io', $response['domains'][0]['url']);
-        $this->assertEquals('dev', $response['domains'][0]['environment']);
+        $this->assertEquals('test', $response['domains'][0]['environment']);
         $this->assertEquals('www.sulu.at/{localization}', $response['domains'][1]['url']);
         $this->assertEquals('prod', $response['domains'][1]['environment']);
     }
@@ -223,7 +223,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'title' => 'test-1',
                 'type' => 'google',
                 'content' => 'UA123-123',
-                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'dev']],
+                'domains' => [['url' => 'www.sulu.io/{localization}', 'environment' => 'test']],
             ]
         );
         $this->entities[] = $this->analyticsManager->create(
@@ -234,7 +234,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'content' => '123',
                 'domains' => [
                     ['url' => 'www.test.io', 'environment' => 'prod'],
-                    ['url' => '{country}.test.io', 'environment' => 'dev'],
+                    ['url' => '{country}.test.io', 'environment' => 'test'],
                 ],
             ]
         );
@@ -246,7 +246,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'content' => '<div/>',
                 'domains' => [
                     ['url' => 'www.google.at', 'environment' => 'stage'],
-                    ['url' => '{localization}.google.at', 'environment' => 'dev'],
+                    ['url' => '{localization}.google.at', 'environment' => 'test'],
                 ],
             ]
         );
@@ -256,7 +256,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'title' => 'test-4',
                 'type' => 'google_tag_manager',
                 'content' => 'GTM-XXXX',
-                'domains' => [['url' => 'www.sulu.io', 'environment' => 'dev']],
+                'domains' => [['url' => 'www.sulu.io', 'environment' => 'test']],
             ]
         );
         $this->entities[] = $this->analyticsManager->create(
@@ -266,8 +266,8 @@ class AnalyticsControllerTest extends SuluTestCase
                 'type' => 'piwik',
                 'content' => '123',
                 'domains' => [
-                    ['url' => 'www.test.io', 'environment' => 'dev'],
-                    ['url' => '{country}.test.io', 'environment' => 'dev'],
+                    ['url' => 'www.test.io', 'environment' => 'test'],
+                    ['url' => '{country}.test.io', 'environment' => 'test'],
                 ],
             ]
         );

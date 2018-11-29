@@ -174,7 +174,7 @@ class MediaStreamControllerTest extends SuluTestCase
     private function createMediaFile($name)
     {
         $filePath = sys_get_temp_dir() . '/' . $name;
-        copy(__DIR__ . '/../../app/Resources/images/photo.jpeg', $filePath);
+        copy(__DIR__ . '/../../Fixtures/files/photo.jpeg', $filePath);
 
         return $filePath;
     }

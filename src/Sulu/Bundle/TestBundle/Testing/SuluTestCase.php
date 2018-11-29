@@ -25,9 +25,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
-/**
- * Base test case for functional tests in Sulu.
- */
 abstract class SuluTestCase extends KernelTestCase
 {
     private static $workspaceInitialized = false;
@@ -116,7 +113,7 @@ abstract class SuluTestCase extends KernelTestCase
     {
         return $this->createClient(
             [
-                'environment' => 'dev',
+                'environment' => 'test',
             ],
             [
                 'PHP_AUTH_USER' => 'test',
@@ -135,7 +132,7 @@ abstract class SuluTestCase extends KernelTestCase
         return $this->createClient(
             [
                 'sulu_context' => 'website',
-                'environment' => 'dev',
+                'environment' => 'test',
             ]
         );
     }

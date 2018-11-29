@@ -9,13 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Analytics;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
-use Functional\BaseFunctional;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-
-require_once __DIR__ . '/../BaseFunctional.php';
 
 class AnalyticsManagerTest extends BaseFunctional
 {

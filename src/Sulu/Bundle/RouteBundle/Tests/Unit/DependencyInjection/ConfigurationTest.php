@@ -30,7 +30,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testLoadMappingConfigWithDashUnderlines()
     {
         $config = [
-            __DIR__ . '/../../app/Resources/test_config.yml',
+            __DIR__ . '/../../Application/config/test_config.yml',
         ];
 
         $this->assertProcessedConfigurationEquals(

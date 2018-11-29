@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Tests;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
@@ -18,19 +18,18 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Tests\Application\AppCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpFoundation\Cookie;
-
-require_once __DIR__ . '/../app/AppCache.php';
 
 class CachingTest extends SuluTestCase
 {
     public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
-        $cacheKernel = new \AppCache($this->getKernel(['sulu_context' => 'website']), true);
+        $cacheKernel = new AppCache($this->getKernel(['sulu_context' => 'website']), true);
         $cookieJar = new CookieJar();
         $client = new Client($cacheKernel, [], null, $cookieJar);
 
@@ -47,6 +46,7 @@ class CachingTest extends SuluTestCase
         // first request should be cache miss
         $client->request('GET', '/');
         $response = $client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
         $this->assertContains('X-Sulu-Target-Group', $response->getVary());
         $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
@@ -71,6 +71,8 @@ class CachingTest extends SuluTestCase
 
         $client->request('GET', '/');
         $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
         $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
         $this->assertCount(0, $response->headers->getCookies());
 

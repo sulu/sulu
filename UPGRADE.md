@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Test Setup
+
+The `KERNEL_DIR` env variable in phpunit.xml was replaced with `KERNEL_CLASS`.
+
 ### Output folder of admin build changed
 
 The output file of the admin build has changed from `/admin/build` to `/build/admin`

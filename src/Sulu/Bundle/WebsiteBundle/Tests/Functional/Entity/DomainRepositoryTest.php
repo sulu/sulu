@@ -9,11 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Entity;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Entity;
 
-use Functional\BaseFunctional;
-
-require_once __DIR__ . '/../BaseFunctional.php';
+use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 
 class DomainRepositoryTest extends BaseFunctional
 {
