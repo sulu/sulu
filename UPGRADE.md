@@ -2,6 +2,29 @@
 
 ## dev-develop
 
+### MediaBundle storage configuration
+
+Configuration tree for local storage has changed:
+
+__Before:__
+```
+sulu_media:
+    storage:
+        local:
+            path: '%kernel.project_dir%/var/uploads/media'
+            segments: 10
+```
+
+__After:__
+```
+sulu_media:
+    storage: local
+    storages:
+        local:
+            path: '%kernel.project_dir%/var/uploads/media'
+            segments: 10
+```
+
 ### Media Bundle several Interfaces changed
 
 To allow adding new features some interfaces where changed and needs to be updated if you did build something on top 

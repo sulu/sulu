@@ -41,9 +41,6 @@ class GoogleCloudStorage extends FlysystemStorage
         return $this->adapter->getUrl($segment . '/' . $fileName);
     }
 
-    /**
-     * Returns the path-type for the given file.
-     */
     public function getType(array $storageOptions): string
     {
         return self::TYPE_REMOTE;

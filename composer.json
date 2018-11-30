@@ -141,6 +141,8 @@
         "sulu/content-bundle": "self.version"
     },
     "suggest": {
+        "league/flysystem": "^1.0 - Needed for remote media-storages",
+        "superbalist/flysystem-google-storage": "^7.1 - Needed for Google-Bucket media-storage implementation",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "symfony/monolog-bundle": "^3.1",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
