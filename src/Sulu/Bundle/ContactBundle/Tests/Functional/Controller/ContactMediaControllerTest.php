@@ -212,7 +212,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $fileVersion->setStorageOptions(['segment' => '01', 'fileName' => 'photo.jpeg']);
         $file->addFileVersion($fileVersion);
 
         // create file version
@@ -223,7 +223,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $fileVersion->setFile($file2);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $fileVersion->setStorageOptions(['segment' => '01', 'fileName' => 'photo.jpeg']);
         $file2->addFileVersion($fileVersion);
 
         $collection = new Collection();

@@ -106,28 +106,41 @@ class MediaStreamController extends Controller
         }
     }
 
-    /**
-     * @param FileVersion $fileVersion
-     * @param string $locale
-     * @param string $dispositionType
-     *
-     * @return BinaryFileResponse
-     */
     protected function getFileResponse(
-        $fileVersion,
-        $locale,
-        $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
-    ) {
+        FileVersion $fileVersion,
+        string $locale,
+        string $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+    ): Response {
+        $storageOptions = $fileVersion->getStorageOptions();
+
+        $storage = $this->getStorage();
+        $storageType = $storage->getType($storageOptions);
+
+        if (StorageInterface::TYPE_REMOTE === $storageType) {
+            $response = $this->redirect($storage->getPath($storageOptions));
+            $response->setPrivate();
+
+            return $response;
+        } elseif (StorageInterface::TYPE_LOCAL === $storageType) {
+            return $this->createBinaryFileResponse($fileVersion, $storage, $locale, $dispositionType);
+        }
+
+        throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
+    }
+
+    private function createBinaryFileResponse(
+        FileVersion $fileVersion,
+        StorageInterface $storage,
+        string $locale,
+        string $dispositionType
+    ): BinaryFileResponse {
         $fileName = $fileVersion->getName();
         $fileSize = $fileVersion->getSize();
         $storageOptions = $fileVersion->getStorageOptions();
         $mimeType = $fileVersion->getMimeType();
-        $version = $fileVersion->getVersion();
         $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
-        $path = $this->getStorage()->load($fileName, $version, $storageOptions);
-
-        $response = new BinaryFileResponse($path);
+        $response = new BinaryFileResponse($storage->getPath($storageOptions));
 
         // Prepare headers
         $disposition = $response->headers->makeDisposition(

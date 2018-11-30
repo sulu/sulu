@@ -17,47 +17,34 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
  */
 interface StorageInterface
 {
+    const TYPE_REMOTE = 'remote';
+
+    const TYPE_LOCAL = 'local';
+
     /**
      * Save the document in a storage and give back the path to the document.
-     *
-     * @param $tempPath
-     * @param $fileName
-     * @param $version
-     *
-     * @return mixed
      */
-    public function save($tempPath, $fileName, $version);
+    public function save(string $tempPath, string $fileName, array $storageOptions = []): array;
 
     /**
-     * Give back the path to the document.
+     * Returns the content for the given file as a resource.
      *
-     * @param $fileName
-     * @param $version
-     * @param $storageOption
-     *
-     * @return string
-     *
-     * @deprecated Deprecated since 1.4, will be removed in 2.0
+     * @return resource
      */
-    public function load($fileName, $version, $storageOption);
+    public function load(array $storageOptions);
 
     /**
-     * Returns the content for the given file as a binary string.
-     *
-     * @param $fileName
-     * @param $version
-     * @param $storageOption
-     *
-     * @return string
+     * Returns the path for the given file.
      */
-    public function loadAsString($fileName, $version, $storageOption);
+    public function getPath(array $storageOptions): string;
+
+    /**
+     * Returns the type for the given file.
+     */
+    public function getType(array $storageOptions): string;
 
     /**
      * Removes the file from storage.
-     *
-     * @param $storageOption
-     *
-     * @return mixed
      */
-    public function remove($storageOption);
+    public function remove(array $storageOptions): void;
 }

@@ -287,28 +287,21 @@ class FileVersion implements AuditableInterface
         return null;
     }
 
-    /**
-     * Set storageOptions.
-     *
-     * @param string $storageOptions
-     *
-     * @return FileVersion
-     */
-    public function setStorageOptions($storageOptions)
+    public function setStorageOptions(array $storageOptions)
     {
-        $this->storageOptions = $storageOptions;
+        $this->storageOptions = json_encode($storageOptions);
 
         return $this;
     }
 
-    /**
-     * Get storageOptions.
-     *
-     * @return string
-     */
-    public function getStorageOptions()
+    public function getStorageOptions(): array
     {
-        return $this->storageOptions;
+        $storageOptions = json_decode($this->storageOptions, true);
+        if (!$storageOptions) {
+            return [];
+        }
+
+        return $storageOptions;
     }
 
     /**

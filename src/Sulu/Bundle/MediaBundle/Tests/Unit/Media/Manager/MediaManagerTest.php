@@ -254,7 +254,7 @@ class MediaManagerTest extends TestCase
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
         $fileVersion->getMimeType()->willReturn('image/png');
-        $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
+        $fileVersion->getStorageOptions()->willReturn(['segment' => '01', 'fileName' => 'test.jpg']);
 
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
@@ -268,7 +268,7 @@ class MediaManagerTest extends TestCase
             1,
             'test',
             'image/png',
-            json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
+            ['segment' => '01', 'fileName' => 'test.jpg']
         )->shouldBeCalled();
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -277,7 +277,7 @@ class MediaManagerTest extends TestCase
             'delete'
         )->shouldBeCalled();
 
-        $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+        $this->storage->remove(['segment' => '01', 'fileName' => 'test.jpg'])->shouldBeCalled();
 
         $this->em->remove($media->reveal())->shouldBeCalled();
         $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
@@ -303,7 +303,7 @@ class MediaManagerTest extends TestCase
 
         $this->mediaRepository->createNew()->willReturn(new Media());
 
-        $this->storage->save('', $cleanUpResult . $extension, 1)->shouldBeCalled();
+        $this->storage->save('', $cleanUpResult . $extension)->shouldBeCalled();
 
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
@@ -434,6 +434,8 @@ class MediaManagerTest extends TestCase
         $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class)->shouldBeCalled();
 
         $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->storage->save(Argument::cetera())->willReturn([]);
 
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
         $this->assertNotNull($media);
