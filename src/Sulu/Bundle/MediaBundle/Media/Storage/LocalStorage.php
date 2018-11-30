@@ -52,9 +52,9 @@ class LocalStorage implements StorageInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function save(string $tempPath, string $fileName, array $storageOption = []): array
+    public function save(string $tempPath, string $fileName, array $storageOptions = []): array
     {
-        $segment = $this->getStorageOption($storageOption, 'segment');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
         if (!$segment) {
             $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
         }
@@ -82,15 +82,15 @@ class LocalStorage implements StorageInterface
         ];
     }
 
-    public function load(array $storageOption)
+    public function load(array $storageOptions)
     {
-        return fopen($this->getPath($storageOption), 'r');
+        return fopen($this->getPath($storageOptions), 'r');
     }
 
-    public function getPath(array $storageOption): string
+    public function getPath(array $storageOptions): string
     {
-        $segment = $this->getStorageOption($storageOption, 'segment');
-        $fileName = $this->getStorageOption($storageOption, 'fileName');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $fileName = $this->getStorageOption($storageOptions, 'fileName');
 
         if (!$segment || !$fileName) {
             throw new \RuntimeException();
@@ -99,15 +99,15 @@ class LocalStorage implements StorageInterface
         return $this->createPath($segment, $fileName);
     }
 
-    public function getPathType(array $storageOption): string
+    public function getType(array $storageOptions): string
     {
-        return self::PATH_TYPE_FILE;
+        return self::TYPE_LOCAL;
     }
 
-    public function remove(array $storageOption): void
+    public function remove(array $storageOptions): void
     {
-        $segment = $this->getStorageOption($storageOption, 'segment');
-        $fileName = $this->getStorageOption($storageOption, 'fileName');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $fileName = $this->getStorageOption($storageOptions, 'fileName');
 
         if (!$segment || !$fileName) {
             throw new \RuntimeException();

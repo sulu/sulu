@@ -125,16 +125,18 @@ class MediaStreamController extends Controller
         $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
         $storage = $this->getStorage();
+        $storageType = $storage->getType($storageOptions);
 
-        $path = $storage->getPath($storageOptions);
-        if (StorageInterface::PATH_TYPE_REDIRECT === $storage->getPathType($storageOptions)) {
-            $response = $this->redirect($path);
+        if (StorageInterface::TYPE_REMOTE === $storageType) {
+            $response = $this->redirect($storage->getPath($storageOptions));
             $response->setPrivate();
 
             return $response;
+        } elseif (StorageInterface::TYPE_LOCAL !== $storageType) {
+            throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
         }
 
-        $response = new BinaryFileResponse($path);
+        $response = new BinaryFileResponse($storage->getPath($storageOptions));
 
         // Prepare headers
         $disposition = $response->headers->makeDisposition(
