@@ -51,7 +51,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         'template',
         'changed',
         'changer',
-        'created',
         'creator',
         'created',
         'nodeType',
@@ -87,7 +86,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $this->extensionManager = $extensionManager;
         $this->languageNamespace = $languageNamespace;
 
-        $properties = array_merge($this->defaultProperties, $this->properties);
+        $properties = array_unique(array_merge($this->defaultProperties, $this->properties));
         $this->translatedProperties = new MultipleTranslatedProperties($properties, $this->languageNamespace);
     }
 
