@@ -153,9 +153,9 @@ class MediaTagTest extends TestCase
         $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->shouldBeCalled();
         $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->willReturn([]);
 
-        $tag1 = '<sulu:link id="1">Test-Content</sulu:link>';
+        $tag1 = '<sulu:link id="1">Test-Content</sulu:createLinkPlugin>';
         $tag2 = '<sulu:link id="1" title="Test-Title"/>';
-        $tag3 = '<sulu:link id="1" title="Test-Title">Test-Content</sulu:link>';
+        $tag3 = '<sulu:link id="1" title="Test-Title">Test-Content</sulu:createLinkPlugin>';
         $tag4 = '<sulu:link id="1"/>';
 
         $result = $this->mediaTag->parseAll(

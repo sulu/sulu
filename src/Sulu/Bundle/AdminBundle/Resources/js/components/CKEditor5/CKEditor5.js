@@ -15,9 +15,10 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import type {TextEditorProps} from '../../containers/TextEditor/types';
-import MediaLinkPlugin, {MediaLinkPluginComponent} from './MediaLinkPlugin';
+import ExternalLinkPlugin from './plugins/link/ExternalLinkPlugin';
+import InternalLinkPlugin from './plugins/link/InternalLinkPlugin';
+import MediaLinkPlugin from './plugins/link/MediaLinkPlugin';
 import './ckeditor5.scss';
 
 type Props = TextEditorProps;
@@ -53,6 +54,10 @@ export default class CKEditor5 extends React.Component<Props> {
         this.containerRef = containerRef;
     };
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     componentDidUpdate() {
         if (this.editorInstance) {
             const {value, disabled} = this.props;
@@ -85,8 +90,9 @@ export default class CKEditor5 extends React.Component<Props> {
                     UnderlinePlugin,
                     TablePlugin,
                     TableToolbarPlugin,
-                    LinkPlugin,
-                    MediaLinkPlugin(this.updateComponentState),
+                    ExternalLinkPlugin,
+                    InternalLinkPlugin,
+                    MediaLinkPlugin,
                 ],
                 toolbar: [
                     'bold',
@@ -102,8 +108,9 @@ export default class CKEditor5 extends React.Component<Props> {
                     'bulletedlist',
                     'numberedlist',
                     '|',
-                    'link',
-                    'mediaLink',
+                    'external_link',
+                    'internal_link',
+                    'media_link',
                     '|',
                     'insertTable',
                 ],
@@ -170,8 +177,7 @@ export default class CKEditor5 extends React.Component<Props> {
     render() {
         return (
             <React.Fragment>
-                <div ref={this.setContainerRef}></div>
-                <MediaLinkPluginComponent {...this.componentState[MediaLinkPluginComponent.getPluginName()]} />
+                <div ref={this.setContainerRef} />
             </React.Fragment>
         );
     }

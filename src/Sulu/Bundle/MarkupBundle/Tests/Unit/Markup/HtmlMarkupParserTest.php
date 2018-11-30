@@ -176,7 +176,7 @@ EOT;
     {
         $this->linkTag->parseAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -184,13 +184,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => '<a href="/test" title="test">link content</a>']
+            ['<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => '<a href="/test" title="test">createLinkPlugin content</a>']
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>
     </body>
 </html>
 EOT;
@@ -204,7 +204,7 @@ EOT;
     {
         $this->linkTag->parseAll(
             [
-                '<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => '<sulu:media id="1"/>',
@@ -212,7 +212,7 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => '<a href="/test" title="test"><sulu:media id="1"/></a>']
+            ['<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:createLinkPlugin>' => '<a href="/test" title="test"><sulu:media id="1"/></a>']
         );
 
         $this->mediaTag->parseAll(['<sulu:media id="1"/>' => ['id' => 1]], 'de')
@@ -221,7 +221,7 @@ EOT;
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>
+        <sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:createLinkPlugin>
     </body>
 </html>
 EOT;
@@ -235,7 +235,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -247,7 +247,7 @@ EOT;
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>
     </body>
 </html>
 EOT;
@@ -261,7 +261,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -269,13 +269,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_UNPUBLISHED]
+            ['<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => self::VALIDATE_UNPUBLISHED]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>
     </body>
 </html>
 EOT;
@@ -285,7 +285,7 @@ EOT;
         $this->assertCount(1, $response);
         $this->assertEquals(
             self::VALIDATE_UNPUBLISHED,
-            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
+            $response['<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>']
         );
     }
 
@@ -293,7 +293,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -301,13 +301,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_REMOVED]
+            ['<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>' => self::VALIDATE_REMOVED]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>
     </body>
 </html>
 EOT;
@@ -317,7 +317,7 @@ EOT;
         $this->assertCount(1, $response);
         $this->assertEquals(
             self::VALIDATE_REMOVED,
-            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
+            $response['<sulu:link href="123-123-123" title="test">createLinkPlugin content</sulu:createLinkPlugin>']
         );
     }
 

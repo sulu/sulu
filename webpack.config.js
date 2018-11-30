@@ -95,6 +95,10 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
                 use: 'raw-loader',
             },
             {
+                test: /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
+                use: 'raw-loader',
+            },
+            {
                 test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
@@ -114,7 +118,10 @@ module.exports = (env, argv) => ({ // eslint-disable-line no-undef
             },
             {
                 test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                exclude: [
+                    /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    /components\/CKEditor5\/plugins\/.*\/[^/]+\.svg$/,
+                ],
                 use: [
                     {
                         loader: 'file-loader',

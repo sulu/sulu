@@ -81,6 +81,21 @@ $textEditorPanelBackground: $white;
         .ck.ck-content {
             border-radius: $textEditorBorderRadius !important;
             border-color: $textEditorBackgroundColor !important;
+
+            a {
+                color: blue !important;
+                text-decoration: underline !important;
+            }
+
+            sulu\:link {
+                color: green !important;
+                text-decoration: underline !important;
+            }
+
+            sulu\:media {
+                color: red !important;
+                text-decoration: underline !important;
+            }
         }
 
         .ck-widget.table {
@@ -94,6 +109,16 @@ $textEditorPanelBackground: $white;
         &.disabled {
             opacity: .5;
             pointer-events: none;
+        }
+    }
+
+    .ck.ck-link-actions {
+        .ck-link-actions__preview {
+            display: inline-block;
+
+            .ck-button__label {
+                overflow: hidden;
+            }
         }
     }
 }

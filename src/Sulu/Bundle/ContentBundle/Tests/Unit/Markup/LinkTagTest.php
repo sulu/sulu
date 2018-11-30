@@ -55,7 +55,7 @@ class LinkTagTest extends TestCase
     {
         return [
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>',
                 [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
@@ -72,19 +72,19 @@ class LinkTagTest extends TestCase
                 '<a href="/de/test" title="Test-Title">Page-Title</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article"></sulu:link>',
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article"></sulu:createLinkPlugin>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
                 '<a href="/de/test" title="Test-Title">Page-Title</a>',
             ],
             [
-                '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:createLinkPlugin>',
                 ['href' => '123-123-123', 'content' => 'Test-Content', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
                 '<a href="/de/test" title="Page-Title">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu:createLinkPlugin>',
                 [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
@@ -96,7 +96,7 @@ class LinkTagTest extends TestCase
                 '<a href="/de/test" title="Test-Title" target="_blank">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" target="_self" provider="article">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" title="Test-Title" target="_self" provider="article">Test-Content</sulu:createLinkPlugin>',
                 [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
@@ -108,7 +108,7 @@ class LinkTagTest extends TestCase
                 '<a href="/de/test" title="Test-Title" target="_self">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" provider="article" class="test">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" provider="article" class="test">Test-Content</sulu:createLinkPlugin>',
                 [
                     'href' => '123-123-123',
                     'provider' => 'article',
@@ -119,7 +119,7 @@ class LinkTagTest extends TestCase
                 '<a href="/de/test" class="test" title="Page-Title">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" class="test" provider="article">Test-Content</sulu:link>',
+                '<sulu:link href="123-123-123" title="Test-Title" class="test" provider="article">Test-Content</sulu:createLinkPlugin>',
                 [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
@@ -156,10 +156,10 @@ class LinkTagTest extends TestCase
                 ]
             );
 
-        $tag1 = '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:link>';
+        $tag1 = '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:createLinkPlugin>';
         $tag2 = '<sulu:link href="123-123-123" title="Test-Title" provider="article"/>';
-        $tag3 = '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>';
-        $tag4 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu:link>';
+        $tag3 = '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>';
+        $tag4 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu:createLinkPlugin>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -265,9 +265,9 @@ class LinkTagTest extends TestCase
 
     public function testParseAllMultipleTagsMissingContent()
     {
-        $tag1 = '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:link>';
+        $tag1 = '<sulu:link href="123-123-123" provider="article">Test-Content</sulu:createLinkPlugin>';
         $tag2 = '<sulu:link href="123-123-123" title="Test-Title" provider="article"/>';
-        $tag3 = '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>';
+        $tag3 = '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>';
         $tag4 = '<sulu:link href="123-123-123" provider="article"/>';
 
         $this->providers['article']->preload(['123-123-123'], 'de', true)->willReturn([]);
@@ -307,8 +307,8 @@ class LinkTagTest extends TestCase
                 ]
             );
 
-        $tag1 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="unpublished">Test-Content</sulu:link>';
-        $tag2 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="removed">Test-Content</sulu:link>';
+        $tag1 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="unpublished">Test-Content</sulu:createLinkPlugin>';
+        $tag2 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="removed">Test-Content</sulu:createLinkPlugin>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -352,7 +352,7 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -371,7 +371,7 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -382,7 +382,7 @@ class LinkTagTest extends TestCase
         );
 
         $this->assertEquals(
-            ['<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED],
+            ['<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => LinkTag::VALIDATE_REMOVED],
             $result
         );
     }
@@ -398,7 +398,7 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -409,7 +409,7 @@ class LinkTagTest extends TestCase
         );
 
         $this->assertEquals(
-            ['<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => LinkTag::VALIDATE_UNPUBLISHED],
+            ['<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => LinkTag::VALIDATE_UNPUBLISHED],
             $result
         );
     }
@@ -426,19 +426,19 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
                     'provider' => 'article',
                 ],
-                '<sulu:link href="312-312-312" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="312-312-312" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '312-312-312',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
                     'provider' => 'article',
                 ],
-                '<sulu:link href="123-312-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => [
+                '<sulu:link href="123-312-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => [
                     'href' => '123-456-789',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -450,8 +450,8 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                '<sulu:link href="312-312-312" title="Test-Title" provider="article">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED,
-                '<sulu:link href="123-312-123" title="Test-Title" provider="article">Test-Content</sulu:link>' => LinkTag::VALIDATE_UNPUBLISHED,
+                '<sulu:link href="312-312-312" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => LinkTag::VALIDATE_REMOVED,
+                '<sulu:link href="123-312-123" title="Test-Title" provider="article">Test-Content</sulu:createLinkPlugin>' => LinkTag::VALIDATE_UNPUBLISHED,
             ],
             $result
         );

@@ -54,7 +54,7 @@ class DelegatingTagExtractorTest extends TestCase
 
         $extractors[0]->extract($this->html)->willReturn(
             [
-                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'link', ['<sulu:createLinkPlugin/>' => ['content' => '']]),
                 new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
             ]
         )->shouldBeCalledTimes(1);
@@ -80,7 +80,7 @@ class DelegatingTagExtractorTest extends TestCase
 
         $this->assertEquals(
             [
-                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'link', ['<sulu:createLinkPlugin/>' => ['content' => '']]),
                 new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
                 new TagMatchGroup(
                     'test',
