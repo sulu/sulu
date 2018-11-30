@@ -106,23 +106,12 @@ class MediaStreamController extends Controller
         }
     }
 
-    /**
-     * @param FileVersion $fileVersion
-     * @param string $locale
-     * @param string $dispositionType
-     *
-     * @return Response
-     */
     protected function getFileResponse(
-        $fileVersion,
-        $locale,
-        $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
-    ) {
-        $fileName = $fileVersion->getName();
-        $fileSize = $fileVersion->getSize();
+        FileVersion $fileVersion,
+        string $locale,
+        string $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
+    ): Response {
         $storageOptions = $fileVersion->getStorageOptions();
-        $mimeType = $fileVersion->getMimeType();
-        $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
         $storage = $this->getStorage();
         $storageType = $storage->getType($storageOptions);
@@ -132,9 +121,24 @@ class MediaStreamController extends Controller
             $response->setPrivate();
 
             return $response;
-        } elseif (StorageInterface::TYPE_LOCAL !== $storageType) {
-            throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
+        } elseif (StorageInterface::TYPE_LOCAL === $storageType) {
+            return $this->createBinaryFileResponse($fileVersion, $storage, $locale, $dispositionType);
         }
+
+        throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
+    }
+
+    private function createBinaryFileResponse(
+        FileVersion $fileVersion,
+        StorageInterface $storage,
+        string $locale,
+        string $dispositionType
+    ): BinaryFileResponse {
+        $fileName = $fileVersion->getName();
+        $fileSize = $fileVersion->getSize();
+        $storageOptions = $fileVersion->getStorageOptions();
+        $mimeType = $fileVersion->getMimeType();
+        $lastModified = $fileVersion->getCreated(); // use created as file itself is not changed when entity is changed
 
         $response = new BinaryFileResponse($storage->getPath($storageOptions));
 
