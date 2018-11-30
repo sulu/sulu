@@ -53,7 +53,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         'changer',
         'created',
         'creator',
-        'created',
         'nodeType',
         'state',
         'shadow-on',
