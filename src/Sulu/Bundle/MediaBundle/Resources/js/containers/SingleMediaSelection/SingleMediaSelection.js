@@ -15,6 +15,7 @@ type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
+    valid: boolean,
     value: Value,
 |}
 
@@ -24,6 +25,7 @@ const THUMBNAIL_SIZE = 'sulu-25x25';
 export default class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        valid: true,
         value: {id: undefined},
     };
 
@@ -103,6 +105,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
         const {
             disabled,
             locale,
+            valid,
         } = this.props;
         const {
             loading,
@@ -121,6 +124,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                     }}
                     loading={loading}
                     onRemove={selectedMedia ? this.handleRemove : undefined}
+                    valid={valid}
                 >
                     {selectedMedia &&
                         <div className={singleMediaSelectionStyle.mediaItem}>

@@ -26,6 +26,31 @@ exports[`Render in disabled state 1`] = `
 </div>
 `;
 
+exports[`Render in invalid state 1`] = `
+<div
+  class="singleItemSelection error"
+>
+  <button
+    class="button"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render in loading state 1`] = `
 <div
   class="singleItemSelection"

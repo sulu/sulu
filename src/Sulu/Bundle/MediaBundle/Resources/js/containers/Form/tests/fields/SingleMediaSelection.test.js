@@ -40,12 +40,14 @@ test('Pass correct props to SingleMediaSelection component', () => {
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
+            error={{keyword: 'mandatory', parameters: {}}}
             formInspector={formInspector}
             value={{id: 33}}
         />
     );
 
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().disabled).toEqual(true);
+    expect(mediaSelection.find(SingleMediaSelectionComponent).props().valid).toEqual(false);
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('en');
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual({id: 33});
 });

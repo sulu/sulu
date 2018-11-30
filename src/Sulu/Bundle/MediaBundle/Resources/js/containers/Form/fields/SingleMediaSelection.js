@@ -17,7 +17,7 @@ export default class SingleMediaSelection extends React.Component<FieldTypeProps
     };
 
     render() {
-        const {formInspector, disabled, value} = this.props;
+        const {formInspector, disabled, error, value} = this.props;
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
         return (
@@ -25,6 +25,7 @@ export default class SingleMediaSelection extends React.Component<FieldTypeProps
                 disabled={!!disabled}
                 locale={locale}
                 onChange={this.handleChange}
+                valid={!error}
                 value={value ? value : undefined}
             />
         );
