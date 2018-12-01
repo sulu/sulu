@@ -6,14 +6,14 @@
 
     <testsuites>
         <testsuite name="components">
-            <directory suffix="Test.php">./src/Sulu/Component/*/Tests</directory>
+            <directory suffix="Test.php">./*/Tests</directory>
         </testsuite>
     </testsuites>
 
     <!-- Code coverage filter -->
     <filter>
         <whitelist>
-            <directory>./src/Sulu/Component/</directory>
+            <directory>./</directory>
             <exclude>
                 <directory>./tests</directory>
                 <directory>./vendor</directory>

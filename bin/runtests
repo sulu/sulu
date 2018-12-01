@@ -513,7 +513,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     write_header('Component Tests');
 
     $process = exec_cmd(
-        sprintf('%s -c phpunit.xml.dist ' . $input->getOption('flags'), get_phpunit_path()),
+        sprintf('%s -c src/Sulu/Components/phpunit.xml.dist ' . $input->getOption('flags'), get_phpunit_path()),
         true,
         false
     );
