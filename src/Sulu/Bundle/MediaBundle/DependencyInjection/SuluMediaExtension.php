@@ -225,11 +225,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('audience_targeting.xml');
         }
 
-        if (class_exists(FFMpeg::class)) {
-            if (!array_key_exists('ffmpeg', $config)) {
-                throw new InvalidConfigurationException('The child node "ffmpeg" at path "sulu_media" must be configured.');
-            }
-
+        if (class_exists(FFMpeg::class) && array_key_exists('ffmpeg', $config)) {
             $container->setParameter('sulu_media.ffmpeg.binary', $config['ffmpeg']['ffmpeg_binary']);
             $container->setParameter('sulu_media.ffprobe.binary', $config['ffmpeg']['ffprobe_binary']);
             $container->setParameter('sulu_media.ffmpeg.binary_timeout', $config['ffmpeg']['binary_timeout']);

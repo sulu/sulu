@@ -99,6 +99,7 @@
         "symfony/debug-bundle": "^3.4 || ^4.0",
         "symfony/dotenv": "^3.4 || ^4.0",
         "symfony/monolog-bundle": "^3.1",
+        "symfony/panther": "^0.2.0",
         "symfony/phpunit-bridge": "^3.4.8 || ^4.0",
         "symfony/process": "^3.4 || ^4.0",
         "symfony/stopwatch": "^3.4 || ^4.0",
