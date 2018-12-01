@@ -26,6 +26,7 @@ composer.lock
 # npm
 package-lock.json
 /node_modules
+yarn.lock
 
 # phpunit
 .phpunit
