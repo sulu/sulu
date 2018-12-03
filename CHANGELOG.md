@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
     * HOTFIX      #4263 [Content]               Fix param default value
