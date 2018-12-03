@@ -18,7 +18,7 @@ matrix:
   include:
     - php: 5.5
       env:
-        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
+        - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction -vvv"
     - php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
@@ -57,6 +57,8 @@ before_script:
   # the content tests are intensive and there are memory leaks, this is more pronounced with the Jackalope DBAL PHPCR implementation.
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
+  - php -i | grep memory_limit
+  - php -m
   - composer self-update
   - if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2  --no-update --no-interaction ; fi
   - composer update $COMPOSER_FLAGS

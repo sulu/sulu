@@ -64,11 +64,11 @@ class UserProvider implements UserProviderInterface
             $user = $this->userRepository->findUserByIdentifier($username);
 
             if (!$user->getEnabled()) {
-                throw new DisabledException();
+                throw new DisabledException('User is not enabled yet.');
             }
 
             if ($user->getLocked()) {
-                throw new LockedException();
+                throw new LockedException('User is locked.');
             }
 
             foreach ($user->getRoleObjects() as $role) {
@@ -101,11 +101,11 @@ class UserProvider implements UserProviderInterface
         $user = $this->userRepository->findUserWithSecurityById($user->getId());
 
         if (!$user->getEnabled()) {
-            throw new DisabledException();
+            throw new DisabledException('User is not enabled yet.');
         }
 
         if ($user->getLocked()) {
-            throw new LockedException();
+            throw new LockedException('User is locked.');
         }
 
         return $user;
