@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.19 (2018-12-03)
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
     * HOTFIX      #4263 [Content]               Fix param default value
     * HOTFIX      #4240 [All]                   Fix travis timeout for PHP 5.5
