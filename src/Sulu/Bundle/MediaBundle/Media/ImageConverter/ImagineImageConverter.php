@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Exception\RuntimeException;
+use Imagine\Filter\Basic\Autorotate;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
@@ -114,6 +115,8 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         $image = $this->toRGB($image);
+
+        $image = $this->autorotate($image);
 
         $format = $this->getFormat($formatKey);
 
@@ -274,6 +277,20 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
+     * Autorotate based on metadata of an image.
+     *
+     * @param ImageInterface $image
+     *
+     * @return ImageInterface
+     */
+    private function autorotate(ImageInterface $image)
+    {
+        $autorotateFilter = new Autorotate();
+
+        return $autorotateFilter->apply($image);
+    }
+
+    /**
      * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
@@ -294,12 +311,12 @@ class ImagineImageConverter implements ImageConverterInterface
             ];
 
             if ($this->cropper->isValid(
-                    $image,
-                    $parameters['x'],
-                    $parameters['y'],
-                    $parameters['width'],
-                    $parameters['height'],
-                    $format
+                $image,
+                $parameters['x'],
+                $parameters['y'],
+                $parameters['width'],
+                $parameters['height'],
+                $format
             )
             ) {
                 return $parameters;

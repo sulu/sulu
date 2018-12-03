@@ -143,6 +143,9 @@ class ContentRouteProvider implements RouteProviderInterface
             if (preg_match('/\/$/', $resourceLocator) && $prefix) {
                 // redirect page to page without slash at the end
                 $url = $prefix . rtrim($resourceLocator, '/');
+                if ($request->getQueryString()) {
+                    $url .= '?' . $request->getQueryString();
+                }
                 $collection->add('redirect_' . uniqid(), $this->getRedirectRoute($request, $url));
             } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
                 // redirect internal link

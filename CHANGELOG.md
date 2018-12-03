@@ -1,6 +1,15 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.23 (2018-12-03)
+    * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
+    * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
+    * HOTFIX      #4263 [Content]               Fix param default value
+    * HOTFIX      #4240 [All]                   Fix travis timeout for PHP 5.5
+    * HOTFIX      #4207 [WebsiteBundle]         Redirect pages with trailing slashes were missing query paraamters
+    * HOTFIX      #4241 [SecurityBundle]        Set default locale for admin user to "en"
+    * HOTFIX      #4112 [SecurityBundle]        Added exception messages to user provider for enabled and locked
+
 * 1.6.22 (2018-10-05)
     * HOTFIX      #4146 [PreviewBundle]         Fixed preview render preview attribute and XmlHttpRequest state
     * BUGFIX      #4121 [HttpCache]             Set a timeout when purging caches
@@ -255,6 +264,14 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.19 (2018-12-03)
+    * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
+    * HOTFIX      #4263 [Content]               Fix param default value
+    * HOTFIX      #4240 [All]                   Fix travis timeout for PHP 5.5
+    * HOTFIX      #4207 [WebsiteBundle]         Redirect pages with trailing slashes were missing query paraamters
+    * HOTFIX      #4241 [SecurityBundle]        Set default locale for admin user to "en"
+    * HOTFIX      #4112 [SecurityBundle]        Added exception messages to user provider for enabled and locked
 
 * 1.5.18 (2018-10-05)
     * HOTFIX      #4092 [TestBundle]            Fixed firewall in test website kernel for community bundle

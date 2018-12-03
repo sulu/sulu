@@ -111,6 +111,8 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
+        $imagineImage->metadata()->willReturn(['']);
+
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
@@ -134,6 +136,7 @@ class ImagineImageConverterTest extends TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
@@ -161,6 +164,7 @@ class ImagineImageConverterTest extends TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
@@ -186,6 +190,7 @@ class ImagineImageConverterTest extends TestCase
         $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
         $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
+        $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
         $imagineImage->layers()->willReturn(['']);
@@ -209,5 +214,32 @@ class ImagineImageConverterTest extends TestCase
         $this->storage->load([])->willThrow(ImageProxyMediaNotFoundException::class);
 
         $this->imagineImageConverter->convert($fileVersion, '640x480');
+    }
+
+    public function testConvertAutorotate()
+    {
+        $imagineImage = $this->prophesize(ImageInterface::class);
+        $palette = $this->prophesize(PaletteInterface::class);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions([]);
+
+        $this->storage->load([])->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
+        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
+
+        $imagineImage->palette()->willReturn($palette->reveal());
+        $imagineImage->strip()->shouldBeCalled();
+        $imagineImage->layers()->willReturn(['']);
+        $imagineImage->metadata()->willReturn(['ifd0.Orientation' => 3]);
+
+        $imagineImage->rotate(180, Argument::any())->shouldBeCalled();
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+
+        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+
+        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
     }
 }
