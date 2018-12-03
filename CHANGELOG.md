@@ -2,6 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-release/1.5
+    * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
+    * HOTFIX      #4263 [Content]               Fix param default value
+    * HOTFIX      #4240 [All]                   Fix travis timeout for PHP 5.5
+    * HOTFIX      #4207 [WebsiteBundle]         Redirect pages with trailing slashes were missing query paraamters
     * HOTFIX      #4241 [SecurityBundle]        Set default locale for admin user to "en"
     * HOTFIX      #4112 [SecurityBundle]        Added exception messages to user provider for enabled and locked
 
