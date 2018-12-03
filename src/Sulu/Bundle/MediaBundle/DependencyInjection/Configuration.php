@@ -177,7 +177,8 @@ class Configuration implements ConfigurationInterface
 
     private function addStorageSection(ArrayNodeDefinition $node)
     {
-        $storages = $node->children()
+        $storages = ['local'];
+        $storagesNode = $node->children()
             ->arrayNode('storages')
                 ->addDefaultsIfNotSet()
                 ->children()
@@ -189,11 +190,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
 
-        $values = ['local'];
         if (class_exists(GoogleStorageAdapter::class)) {
-            $values[] = 'google_cloud';
+            $storages[] = 'google_cloud';
 
-            $storages
+            $storagesNode
                 ->arrayNode('google_cloud')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -205,7 +205,7 @@ class Configuration implements ConfigurationInterface
         }
 
         $node->children()
-                ->enumNode('storage')->values($values)->defaultValue('local')->end()
+                ->enumNode('storage')->values($storages)->defaultValue('local')->end()
             ->end();
     }
 

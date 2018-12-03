@@ -98,6 +98,7 @@
         "phpstan/phpstan-symfony": "^0.10.2",
         "phpunit/phpunit": "^6.5",
         "superbalist/flysystem-google-storage": "^7.1",
+        "google/cloud-storage": "~1.0",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/debug": "^3.4 || ^4.0",
         "symfony/debug-bundle": "^3.4 || ^4.0",

@@ -114,6 +114,6 @@ abstract class FlysystemStorage implements StorageInterface
 
     protected function getStorageOption(array $storageOptions, string $key): ?string
     {
-        return array_key_exists($key, $storageOptions) ? $storageOptions[$key] : null;
+        return $storageOptions[$key] ?? null;
     }
 }

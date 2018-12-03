@@ -246,7 +246,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $container->setParameter('sulu_media.media.storage.' . $storage . '.' . $key, $value);
         }
 
-        $loader->load('storages/' . $storage . '.xml');
+        $loader->load('services_storage_' . $storage . '.xml');
 
         $container->setAlias('sulu_media.storage', 'sulu_media.storage.' . $storage)->setPublic(true);
     }

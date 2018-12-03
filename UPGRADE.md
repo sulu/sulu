@@ -18,7 +18,6 @@ sulu_media:
 __After:__
 ```
 sulu_media:
-    storage: local
     storages:
         local:
             path: '%kernel.project_dir%/var/uploads/media'
