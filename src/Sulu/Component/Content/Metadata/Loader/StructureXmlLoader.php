@@ -165,8 +165,7 @@ class StructureXmlLoader extends AbstractLoader
         $result = $this->loadTemplateAttributes($resource, $xpath, $type);
 
         // load properties
-        $result['properties'] = $this->propertiesXmlParser->loadAndCreateProperties(
-            $result['key'],
+        $result['properties'] = $this->propertiesXmlParser->load(
             '/x:template/x:properties/x:*',
             $tags,
             $xpath
