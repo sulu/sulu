@@ -49,12 +49,11 @@ class PropertiesXmlParser
     }
 
     public function load(
-        $path,
         &$tags,
         \DOMXPath $xpath,
-        \DOMNode $context = null
+        \DOMNode $context
     ): array {
-        $propertyData = $this->loadProperties($path, $tags, $xpath, $context);
+        $propertyData = $this->loadProperties($tags, $xpath, $context);
 
         return $this->mapProperties($propertyData);
     }
@@ -62,12 +61,12 @@ class PropertiesXmlParser
     /**
      * load properties from given context.
      */
-    private function loadProperties($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null): array
+    private function loadProperties(&$tags, \DOMXPath $xpath, \DOMNode $context): array
     {
         $result = [];
 
         /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
+        foreach ($xpath->query('x:*', $context) as $node) {
             if ('property' === $node->tagName) {
                 $value = $this->loadProperty($xpath, $node, $tags);
                 $result[$value['name']] = $value;
@@ -108,9 +107,9 @@ class PropertiesXmlParser
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getValueFromXPath('@multilingual', $xpath, $node, true);
         $result['onInvalid'] = $this->getValueFromXPath('@onInvalid', $xpath, $node);
-        $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
+        $result['tags'] = $this->loadTags($tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
+        $result['meta'] = $this->loadMeta($xpath, $node);
 
         return $result;
     }
@@ -171,10 +170,10 @@ class PropertiesXmlParser
 
         $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
         $result['type'] = 'block';
-        $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
+        $result['tags'] = $this->loadTags($tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
-        $result['types'] = $this->loadTypes('x:types/x:type', $tags, $xpath, $node);
+        $result['meta'] = $this->loadMeta($xpath, $node);
+        $result['types'] = $this->loadTypes($tags, $xpath, $node);
 
         return $result;
     }
@@ -192,8 +191,10 @@ class PropertiesXmlParser
 
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
-        $result['properties'] = $this->loadProperties('x:properties/x:*', $tags, $xpath, $node);
+        $result['meta'] = $this->loadMeta($xpath, $node);
+
+        $propertiesNode = $xpath->query('x:properties', $node)->item(0);
+        $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode);
 
         return $result;
     }
@@ -201,12 +202,12 @@ class PropertiesXmlParser
     /**
      * load tags from given tag and validates them.
      */
-    private function loadTags($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadTags(&$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
 
         /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
+        foreach ($xpath->query('x:tag', $context) as $node) {
             $tag = $this->loadTag($xpath, $node);
             $this->validateTag($tag, $tags);
 
@@ -219,12 +220,12 @@ class PropertiesXmlParser
     /**
      * load types from given node.
      */
-    private function loadTypes($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadTypes(&$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
 
         /** @var \DOMElement $node */
-        foreach ($xpath->query($path, $context) as $node) {
+        foreach ($xpath->query('x:types/x:type', $context) as $node) {
             $value = $this->loadType($xpath, $node, $tags);
             $result[$value['name']] = $value;
         }
@@ -239,8 +240,10 @@ class PropertiesXmlParser
     {
         $result = $this->loadValues($xpath, $node, ['name']);
 
-        $result['meta'] = $this->loadMeta('x:meta', $xpath, $node);
-        $result['properties'] = $this->loadProperties('x:properties/x:*', $tags, $xpath, $node);
+        $result['meta'] = $this->loadMeta($xpath, $node);
+
+        $propertiesNode = $xpath->query('x:properties', $node)->item(0);
+        $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode);
 
         return $result;
     }
@@ -259,10 +262,10 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadMeta($path, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadMeta(\DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
-        $metaNode = $xpath->query($path, $context)->item(0);
+        $metaNode = $xpath->query('x:meta', $context)->item(0);
 
         if (!$metaNode) {
             return $result;
@@ -329,7 +332,7 @@ class PropertiesXmlParser
         $result = [
             'name' => $this->getValueFromXPath('@name', $xpath, $node),
             'type' => $this->getValueFromXPath('@type', $xpath, $node, 'string'),
-            'meta' => $this->loadMeta('x:meta', $xpath, $node),
+            'meta' => $this->loadMeta($xpath, $node),
         ];
 
         $expression = $this->getValueFromXPath('@expression', $xpath, $node);
