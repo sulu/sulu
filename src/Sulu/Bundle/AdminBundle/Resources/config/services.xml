@@ -41,6 +41,19 @@
             class="Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry"
         />
 
+        <service
+            id="sulu_admin.form_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider"
+        >
+            <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument>%sulu_core.locales%</argument>
+            <argument>%sulu_admin.forms.directories%</argument>
+            <argument>%sulu.cache_dir%/forms</argument>
+            <argument>%kernel.debug%</argument>
+            <tag name="sulu_admin.metadata_provider" type="form" />
+        </service>
+
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
 
         <service id="sulu_admin.metadata.resource_metadata_provider.form"
@@ -55,6 +68,7 @@
             <argument>%kernel.debug%</argument>
 
             <tag name="sulu.resource_metadata_provider"/>
+            <tag name="kernel.cache_warmer"/>
         </service>
 
         <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">

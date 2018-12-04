@@ -77,15 +77,15 @@ global $output, $input, $failedTests, $termWidth, $verbose;
 function write_logo()
 {
     writeln(<<<'EOT'
-   _____       _        _____ __  __ ______ 
+   _____       _        _____ __  __ ______
   / ____|     | |      / ____|  \/  |  ____|
- | (___  _   _| |_   _| |    | \  / | |__   
-  \___ \| | | | | | | | |    | |\/| |  __|  
-  ____) | |_| | | |_| | |____| |  | | |     
- |_____/ \__,_|_|\__,_|\_____|_|  |_|_|     
+ | (___  _   _| |_   _| |    | \  / | |__
+  \___ \| | | | | | | | |    | |\/| |  __|
+  ____) | |_| | | |_| | |____| |  | | |
+ |_____/ \__,_|_|\__,_|\_____|_|  |_|_|
 
              * Test Runner *
-                                            
+
 EOT
     );
 }
@@ -172,22 +172,6 @@ function exec_cmd($cmdLine, $echo = true, $checkForError = true)
 
 // Information functions
 // =====================
-
-function show_storage_params()
-{
-    write_header('Storage parameters');
-    $process = exec_sf_cmd('debug:container --parameters', false);
-    foreach (explode("\n", $process->getOutput()) as $line) {
-        if (0 === strpos(trim($line), 'database')) {
-            write_formatted_field_value($line);
-        }
-
-        if (0 === strpos(trim($line), 'phpcr')) {
-            write_formatted_field_value($line);
-        }
-    }
-    write(PHP_EOL);
-}
 
 function show_help()
 {
@@ -478,9 +462,6 @@ if (!isset($argv[1]) || $input->getOption('help')) {
     show_help();
     exit(0);
 }
-
-// show the storage parameters
-show_storage_params();
 
 if ($input->getOption('initialize')) {
     write_header('Initialization');

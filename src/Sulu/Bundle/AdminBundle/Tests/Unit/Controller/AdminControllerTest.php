@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
@@ -275,6 +276,23 @@ class AdminControllerTest extends TestCase
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configAction();
+    }
+
+    public function testMetadataAction()
+    {
+        $form = new Form();
+
+        $this->user->getLocale()->willReturn('en');
+
+        $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $metadataProvider->getMetadata('pages', 'en')->willReturn($form);
+        $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
+            return $form === $view->getData();
+        }))->shouldBeCalled()->willReturn(new Response());
+
+        $this->adminController->metadataAction('form', 'pages');
     }
 
     public function testResourcesActionWithSchema()

@@ -86,6 +86,11 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'resources' => [
                         'roles' => [
                             'form' => ['@SuluSecurityBundle/Resources/config/forms/Role.xml'],

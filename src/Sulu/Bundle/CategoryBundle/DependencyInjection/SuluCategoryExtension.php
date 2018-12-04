@@ -92,6 +92,11 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'resources' => [
                         'categories' => [
                             'form' => ['@SuluCategoryBundle/Resources/config/forms/Category.xml'],

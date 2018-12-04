@@ -11,18 +11,27 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class MetadataProviderNotFoundException extends \Exception
+class MetadataNotFoundException extends \Exception
 {
     private $type;
 
-    public function __construct(string $type)
+    public function __construct(string $type, string $key)
     {
         $this->type = $type;
-        parent::__construct(sprintf('There is no MetadataProvider registered for the type "%s".', $this->type));
+        $this->key = $key;
+
+        parent::__construct(
+            sprintf('There is no Metadata available for the type "%s" with the key "%s".', $this->type, $this->key)
+        );
     }
 
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
     }
 }

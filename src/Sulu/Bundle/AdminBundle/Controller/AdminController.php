@@ -28,7 +28,6 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -291,9 +290,16 @@ class AdminController
         return new JsonResponse($translations);
     }
 
-    public function metadataAction(string $type, string $key)
+    public function metadataAction(string $type, string $key): Response
     {
-        return new JsonResponse($this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key));
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $view = View::create(
+            $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale())
+        );
+        $view->setFormat('json');
+
+        return $this->viewHandler->handle($view);
     }
 
     /**

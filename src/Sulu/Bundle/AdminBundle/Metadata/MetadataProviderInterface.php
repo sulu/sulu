@@ -13,5 +13,5 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 
 interface MetadataProviderInterface
 {
-    public function getMetadata(string $key);
+    public function getMetadata(string $key, string $locale);
 }

@@ -34,6 +34,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'internal_links' => [

@@ -38,6 +38,11 @@ interface StructureMetadataFactoryInterface
     public function getStructures($type);
 
     /**
+     * @return string[]
+     */
+    public function getStructureTypes(): array;
+
+    /**
      * Return true if the given type has been registered with the structure factory.
      *
      * @param string $type

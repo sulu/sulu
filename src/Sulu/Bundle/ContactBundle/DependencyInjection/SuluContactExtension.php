@@ -76,6 +76,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'resources' => [
                         'contacts' => [
                             'form' => ['@SuluContactBundle/Resources/config/forms/Contact.xml'],

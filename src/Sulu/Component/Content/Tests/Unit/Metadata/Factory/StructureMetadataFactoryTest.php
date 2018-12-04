@@ -167,6 +167,11 @@ class StructureMetadataFactoryTest extends TestCase
         $this->factory->getStructureMetadata('page');
     }
 
+    public function testGetStructureTypes()
+    {
+        $this->assertEquals(['page', 'snoopet'], $this->factory->getStructureTypes());
+    }
+
     /**
      * It should cache the result.
      */
