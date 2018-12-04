@@ -68,6 +68,7 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
             leftButton,
             loading,
             rightButton,
+            onItemRemove,
             sortable,
         } = this.props;
         const emptyList = !React.Children.count(children);
@@ -98,12 +99,17 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
                     useDragHandle={true}
                 >
                     {children && React.Children.map(children, (item, index) => (
-                        <ItemWrapperComponent
-                            sortable={sortable}
-                            onRemove={this.props.onItemRemove && this.handleItemRemove}
-                            index={index}
-                        >
-                            {item}
+                        <ItemWrapperComponent index={index}>
+                            {
+                                React.cloneElement(
+                                    item,
+                                    {
+                                        ...item.props,
+                                        onRemove: onItemRemove && this.handleItemRemove,
+                                        sortable,
+                                    }
+                                )
+                            }
                         </ItemWrapperComponent>
                     ))}
                 </ListWrapperComponent>
