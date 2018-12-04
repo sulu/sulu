@@ -55,8 +55,7 @@ class FormXmlLoader extends AbstractLoader
         $form = new FormMetadata();
         $form->setResource($resource);
 
-        $properties = $this->propertiesXmlParser->loadAndCreateProperties(
-            $type,
+        $properties = $this->propertiesXmlParser->load(
             '/x:form/x:properties/x:*',
             $tags,
             $xpath
