@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
