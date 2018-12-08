@@ -194,7 +194,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
 
         $this->assertEquals(
-            '(CASE WHEN SuluTagBundle:Tag.name IS NOT NULL THEN SuluTagBundle:Tag.name ELSE SuluTagBundle:Tag.name END)',
+            '(CASE WHEN SuluTagBundle_Tag.name IS NOT NULL THEN SuluTagBundle_Tag.name ELSE SuluTagBundle_Tag.name END)',
             $fieldDescriptor['tag']->getSelect()
         );
     }

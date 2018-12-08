@@ -21,6 +21,8 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
+    use EncodeAlias;
+
     /**
      * The name of the field in the database.
      *
@@ -80,7 +82,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function getSelect()
     {
-        return $this->entityName . '.' . $this->getFieldName();
+        return $this->encodeAlias($this->entityName) . '.' . $this->getFieldName();
     }
 
     /**

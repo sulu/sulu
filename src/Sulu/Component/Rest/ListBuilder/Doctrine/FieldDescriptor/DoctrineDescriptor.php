@@ -16,6 +16,8 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
  */
 class DoctrineDescriptor
 {
+    use EncodeAlias;
+
     /**
      * @var string
      */
@@ -45,7 +47,7 @@ class DoctrineDescriptor
      */
     public function getSelect()
     {
-        return sprintf('%s.%s', $this->entityName, $this->fieldName);
+        return sprintf('%s.%s', $this->encodeAlias($this->entityName), $this->fieldName);
     }
 
     /**

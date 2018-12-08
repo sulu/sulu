@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
+use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
+
 /**
  * This class describes a doctrine join.
  */
@@ -23,6 +25,8 @@ class DoctrineJoinDescriptor
     const JOIN_CONDITION_METHOD_ON = 'ON';
 
     const JOIN_CONDITION_METHOD_WITH = 'WITH';
+
+    use EncodeAliasTrait;
 
     /**
      * The name of the entity to join.
@@ -86,7 +90,7 @@ class DoctrineJoinDescriptor
      */
     public function getJoin()
     {
-        return $this->join;
+        return $this->encodeAlias($this->join);
     }
 
     /**
@@ -94,7 +98,7 @@ class DoctrineJoinDescriptor
      */
     public function getJoinCondition()
     {
-        return $this->joinCondition;
+        return $this->encodeAlias($this->joinCondition);
     }
 
     /**
