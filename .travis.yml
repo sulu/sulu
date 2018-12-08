@@ -13,6 +13,7 @@ env:
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
