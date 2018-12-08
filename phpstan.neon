@@ -25,3 +25,6 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
+    ignoreErrors:
+        # To be removed once we've removed the metadata dependency from the ListBuilder
+        - '#does not call parent constructor from Metadata\\PropertyMetadata#'
