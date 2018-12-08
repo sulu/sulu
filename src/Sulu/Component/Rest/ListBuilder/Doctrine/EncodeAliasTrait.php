@@ -24,7 +24,8 @@ trait EncodeAliasTrait
                 if (false !== strpos($matches[0], '"')) {
                     return $matches[0];
                 }
-                 return '_';
+
+                return '_';
             },
             $value
         );

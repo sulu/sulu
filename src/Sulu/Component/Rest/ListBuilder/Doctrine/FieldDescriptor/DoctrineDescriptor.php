@@ -11,12 +11,14 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
+use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
+
 /**
  * This class describes a doctrine case.
  */
 class DoctrineDescriptor
 {
-    use EncodeAlias;
+    use EncodeAliasTrait;
 
     /**
      * @var string

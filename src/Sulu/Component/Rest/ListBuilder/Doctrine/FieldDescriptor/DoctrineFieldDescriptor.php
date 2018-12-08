@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
@@ -21,7 +22,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
-    use EncodeAlias;
+    use EncodeAliasTrait;
 
     /**
      * The name of the field in the database.

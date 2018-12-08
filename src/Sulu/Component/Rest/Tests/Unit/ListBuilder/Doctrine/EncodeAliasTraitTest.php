@@ -52,4 +52,4 @@ class EncodeAliasTraitTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
         $this->assertEquals($expected, $method->invoke($this->encodeAlias, $value));
     }
- }
+}
