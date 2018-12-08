@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
+namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
@@ -32,7 +33,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
+class FieldDescriptorFactoryTest extends TestCase
 {
     /**
      * @var string
@@ -241,9 +242,9 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'joins' => [
                     'SuluContactBundle:ContactAddress' => [
                         'entity-name' => 'SuluContactBundle:ContactAddress',
-                        'field-name' => 'SuluContactBundle:Contact.contactAddresses',
+                        'field-name' => 'SuluContactBundle_Contact.contactAddresses',
                         'method' => 'LEFT',
-                        'condition' => 'SuluContactBundle:ContactAddress.locale = \'de\'',
+                        'condition' => 'SuluContactBundle_ContactAddress.locale = \'de\'',
                     ],
                 ],
             ],
