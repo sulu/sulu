@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
-use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
