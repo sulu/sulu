@@ -23,7 +23,7 @@ use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class SuluTestCase extends KernelTestCase
 {
@@ -83,7 +83,7 @@ abstract class SuluTestCase extends KernelTestCase
      * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime).
      *
-     * @return TestUser
+     * @return UserInterface
      */
     protected function getTestUser()
     {
