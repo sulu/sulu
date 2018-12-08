@@ -25,5 +25,3 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
-    ignoreErrors:
-        - '#Instantiated class AppKernel not found.#'
