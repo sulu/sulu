@@ -25,9 +25,11 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpressi
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineNotExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;

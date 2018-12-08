@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
@@ -58,8 +59,10 @@ class DoctrineAndExpressionTest extends \PHPUnit_Framework_TestCase
 
         $statement = $andExpression->getStatement($this->queryBuilder);
         $result = preg_match(
-            '/^SuluCoreBundle:Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
-            '} AND SuluCoreBundle:Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}/',
+            sprintf(
+                '/^SuluCoreBundle_Example\.name1 = :name1[\S]{%1$s} AND SuluCoreBundle_Example\.name2 = :name2[\S]{%1$s}/',
+                $this->uniqueIdLength
+            ),
             $statement
         );
 

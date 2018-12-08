@@ -92,7 +92,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
 
-        $this->queryBuilder->from(self::$entityName, self::$entityNameAlias)->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->from(self::$entityName, self::$entityNameAlias)->wilLReturn($this->queryBuilder->reveal());
         $this->queryBuilder->select(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->addGroupBy()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where(Argument::any())->willReturn($this->queryBuilder->reveal());
@@ -156,7 +156,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             new DoctrineFieldDescriptor(
                 'name',
                 'name_alias',
-                self::$entityNameAlias,
+                self::$entityName,
                 '',
                 [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
@@ -233,7 +233,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 self::$translationEntityName => new DoctrineJoinDescriptor(
                     self::$translationEntityName,
                     self::$entityName . '.translations'
-                    ),
+                ),
                 'anotherEntityName' => new DoctrineJoinDescriptor(
                     self::$translationEntityName,
                     'anotherEntityName' . '.translations'
@@ -281,13 +281,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
-                            self::$translationEntityName, self::$entityName . '.translations'
-                        ),
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
                 ]
             )
         );
 
-        $this->queryBuilder->addSelect(self::$translationEntityName . '.desc AS desc_alias')->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$translationEntityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
         $this->queryBuilder->leftJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
@@ -304,8 +304,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
-                            self::$translationEntityName, self::$entityName . '.translations'
-                        ),
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
                 ]
             )
         );
@@ -326,8 +326,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
-                            self::$translationEntityName, self::$entityName . '.translations'
-                        ),
+                        self::$translationEntityName, self::$entityName . '.translations'
+                    ),
                 ]
             )
         );
@@ -497,8 +497,8 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 new DoctrineFieldDescriptor(
                     'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                         self::$translationEntityName => new DoctrineJoinDescriptor(
-                                self::$translationEntityName, self::$entityName . '.translations'
-                            ),
+                            self::$translationEntityName, self::$entityName . '.translations'
+                        ),
                     ]
                 ),
             ]
@@ -665,15 +665,23 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                    null, null, null, null, [
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
-                    ]
-                ),
+                '',
+                '',
+                '',
+                '',
+                [
+                    'a' => new DoctrineJoinDescriptor('a', 'a.test', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
+                ]
+            ),
             'id2' => new DoctrineFieldDescriptor(
-                    null, null, null, null, [
-                        new DoctrineJoinDescriptor(null, null, null, DoctrineJoinDescriptor::JOIN_METHOD_INNER),
-                    ]
-                ),
+                '',
+                '',
+                '',
+                '',
+                [
+                    'b' => new DoctrineJoinDescriptor('b', 'b.test', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
+                ]
+            ),
         ];
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
@@ -681,10 +689,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
 
         // not necessary for id join
-        $this->queryBuilder->leftJoin('', 0, 'WITH', '')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('a.test', 'a', 'WITH', '')->shouldBeCalled();
         // called when select ids and for selecting data
-        $this->queryBuilder->innerJoin('', 0, 'WITH', '')->shouldBeCalled();
-        $this->queryBuilder->innerJoin('', 1, 'WITH', '')->shouldBeCalled();
+        $this->queryBuilder->innerJoin('b.test', 'b', 'WITH', '')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -693,13 +700,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                null,
-                null,
-                null,
-                null,
+                '',
+                '',
+                '',
+                '',
                 [
                     self::$entityName . '1' => new DoctrineJoinDescriptor(
-                        self::$entityName,
+                        self::$entityName . '1',
                         null,
                         'field1 = value1',
                         DoctrineJoinDescriptor::JOIN_METHOD_LEFT
@@ -707,13 +714,13 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
             'id2' => new DoctrineFieldDescriptor(
-                null,
-                null,
-                null,
-                null,
+                '',
+                '',
+                '',
+                '',
                 [
                     self::$entityName . '2' => new DoctrineJoinDescriptor(
-                        self::$entityName,
+                        self::$entityName . '2',
                         null,
                         'field2 = value2',
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER,
@@ -722,25 +729,20 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
         ];
-
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
-
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
-
         $this->queryBuilder->leftJoin(
             '',
             self::$entityNameAlias . '1',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_WITH,
             'field1 = value1'
         )->shouldBeCalled();
-
         $this->queryBuilder->innerJoin(
             '',
             self::$entityNameAlias . '2',
             DoctrineJoinDescriptor::JOIN_CONDITION_METHOD_ON,
             'field2 = value2'
         )->shouldBeCalled();
-
         $this->doctrineListBuilder->execute();
     }
 
@@ -749,7 +751,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityName . '.name')->shouldBeCalledTimes(2);
+        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(2);
 
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -874,7 +876,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
         $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $this->queryBuilder->setParameter('entityClass', 'SuluCoreBundle:Example')->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
@@ -912,7 +914,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
         $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $this->queryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
@@ -957,7 +959,7 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
         $this->queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL')->shouldBeCalled();
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $this->queryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
+        $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();

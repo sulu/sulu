@@ -53,7 +53,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = preg_match(
-            '/^SuluCoreBundle:Example\.name = :name[\S]{' . $this->uniqueIdLength . '}/',
+            '/^SuluCoreBundle_Example\.name = :name[\S]{' . $this->uniqueIdLength . '}/',
             $statement
         );
         $this->assertEquals(1, $result);
@@ -76,7 +76,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
         $whereExpression = new DoctrineWhereExpression($fieldDescriptor, null, $comparator);
 
         $this->assertEquals(
-            'SuluCoreBundle:Example.name ' . $expected,
+            'SuluCoreBundle_Example.name ' . $expected,
             $whereExpression->getStatement($this->queryBuilder->reveal())
         );
     }
@@ -92,7 +92,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = preg_match(
-            '/^SuluCoreBundle:Example\.name LIKE :name[\S]{' . $this->uniqueIdLength . '}/',
+            '/^SuluCoreBundle_Example\.name LIKE :name[\S]{' . $this->uniqueIdLength . '}/',
             $statement
         );
         $this->assertEquals(1, $result);
@@ -118,7 +118,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = preg_match(
-            '/^(SuluCoreBundle:Example\.name = :name[\S]{' . $this->uniqueIdLength . '}[\S]{1}( ' . $comparator . ' )?){3}/',
+            '/^(SuluCoreBundle_Example\.name = :name[\S]{' . $this->uniqueIdLength . '}[\S]{1}( ' . $comparator . ' )?){3}/',
             $statement
         );
         $this->assertEquals(1, $result);
