@@ -204,10 +204,11 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
         }
 
         if (count($expectedFields)) {
-            $this->unitOfWork->recomputeSingleEntityChangeSet(
-                $this->classMetadata->reveal(),
-                $this->userBlameObject->reveal()
-            )->shouldBeCalled();
+            $this->unitOfWork->method('recomputeSingleEntityChangeSet')
+                ->with(
+                    $this->equalTo($this->classMetadata->reveal()),
+                    $this->equalTo($this->userBlameObject->reveal())
+                );
         }
 
         $this->subscriber->onFlush($this->onFlushEvent->reveal());
@@ -228,13 +229,14 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $subscriber = new UserBlameSubscriber($tokenStorage->reveal(), User::class);
 
         $entity = $this->userBlameObject->reveal();
-        $this->unitOfWork->getScheduledEntityInsertions()->willReturn([
-            $entity,
-        ]);
-        $this->unitOfWork->getScheduledEntityUpdates()->willReturn([]);
+
+        $this->unitOfWork->method('getScheduledEntityInsertions')->willReturn([$entity]);
+        $this->unitOfWork->method('getScheduledEntityUpdates')->willReturn([]);
+        $this->unitOfWork->method('getEntityChangeSet')
+            ->with($this->equalTo($this->userBlameObject->reveal()))
+            ->willReturn($changeset);
 
         $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
-        $this->unitOfWork->getEntityChangeSet($this->userBlameObject->reveal())->willReturn($changeset);
 
         foreach (['creator', 'changer'] as $field) {
             $prophecy = $this->classMetadata->setFieldValue(
