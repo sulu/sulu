@@ -179,6 +179,9 @@ class ManagedStructure extends Structure
     {
         $this->init();
         $values = [];
+        if (is_null($this->structureMetadata)) {
+            return $values;
+        }
         foreach (array_keys($this->structureMetadata->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
