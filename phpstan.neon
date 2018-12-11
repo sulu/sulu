@@ -1,0 +1,33 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+parameters:
+    level: 0
+    symfony:
+        container_xml_path: %rootDir%/../../../var/cache/admin/dev/adminApp_KernelDevDebugContainer.xml
+    excludes_analyse:
+        - %currentWorkingDirectory%/config/*
+        - %currentWorkingDirectory%/flow_types/*
+        - %currentWorkingDirectory%/node_modules/*
+        - %currentWorkingDirectory%/public/*
+        - %currentWorkingDirectory%/styleguide/*
+        - %currentWorkingDirectory%/templates/*
+        - %currentWorkingDirectory%/tests/app/cache/*
+        - %currentWorkingDirectory%/tests/Resources/cache/*
+        - %currentWorkingDirectory%/var/*
+        - %currentWorkingDirectory%/vendor/*
+        - %currentWorkingDirectory%/*/phpcr-migrations/*
+        - %currentWorkingDirectory%/*/Tests/app/cache/*
+        - %currentWorkingDirectory%/*/Tests/app/log/*
+        - %currentWorkingDirectory%/*/Tests/var/cache/*
+        - %currentWorkingDirectory%/*/Tests/var/log/*
+        - %currentWorkingDirectory%/*/vendor/*
+        - %currentWorkingDirectory%/bin/console
+        - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
+        # The following should be removed at some point
+        - %currentWorkingDirectory%/*/Tests/*
+    ignoreErrors:
+        # To be removed once we've removed the metadata dependency from the ListBuilder
+        - '#does not call parent constructor from Metadata\\PropertyMetadata.#'
+        - '#Service "sulu_document_manager.node_manager" is private.#'
+        - '#Service "sulu_test.doctrine_phpcr.session" is not registered in the container.#'
+        - '#Service "sulu_test.doctrine_phpcr.live_session" is not registered in the container.#'

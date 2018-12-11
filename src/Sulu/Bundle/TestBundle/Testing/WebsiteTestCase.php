@@ -29,20 +29,7 @@ abstract class WebsiteTestCase extends BaseWebTestCase
      */
     protected static function getKernelClass()
     {
-        if (isset($_SERVER['KERNEL_DIR'])) {
-            $dir = $_SERVER['KERNEL_DIR'];
-
-            if (!is_dir($dir)) {
-                $phpUnitDir = static::getPhpUnitXmlDir();
-                if (is_dir("$phpUnitDir/$dir")) {
-                    $dir = "$phpUnitDir/$dir";
-                }
-            }
-        } else {
-            $dir = static::getPhpUnitXmlDir();
-        }
-
-        $file = $dir . DIRECTORY_SEPARATOR . 'WebsiteKernel.php';
+        $file = $_SERVER['KERNEL_DIR'] . DIRECTORY_SEPARATOR . 'WebsiteKernel.php';
 
         if (!file_exists($file)) {
             throw new \RuntimeException('Either set KERNEL_DIR in your phpunit.xml according to https://symfony.com/doc/current/book/testing.html#your-first-functional-test or override the WebsiteTestCase::createKernel() method.');

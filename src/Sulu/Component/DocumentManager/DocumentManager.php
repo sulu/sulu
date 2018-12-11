@@ -188,17 +188,6 @@ class DocumentManager implements DocumentManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createQueryBuilder()
-    {
-        $event = new Event\QueryCreateBuilderEvent();
-        $this->eventDispatcher->dispatch(Events::QUERY_CREATE_BUILDER, $event);
-
-        return $event->getQueryBuilder();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     private function getOptionsResolver($eventName)
     {
         if (isset($this->optionsResolvers[$eventName])) {
