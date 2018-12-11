@@ -96,6 +96,70 @@ test('Should pass props correctly to selection component', () => {
     }));
 });
 
+test('Should pass props with schema-options type correctly to selection component', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: 'datagrid_overlay',
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+
+    expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
+        adapter: 'table',
+        disabled: true,
+        displayProperties: ['id', 'title'],
+        label: 'sulu_snippet.selection_label',
+        locale,
+        resourceKey: 'snippets',
+        overlayTitle: 'sulu_snippet.selection_overlay_title',
+        value,
+    }));
+});
+
 test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
         default_type: 'datagrid_overlay',
@@ -404,6 +468,152 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         searchProperties: ['name'],
         value,
     }));
+});
+
+test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: 'auto_complete',
+        },
+    };
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+        allowAdd: false,
+        disabled: true,
+        displayProperty: 'name',
+        filterParameter: 'names',
+        idProperty: 'uuid',
+        locale,
+        resourceKey: 'snippets',
+        searchProperties: ['name'],
+        value,
+    }));
+});
+
+test('Throw an error if a none string was passed to schema-options', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: true,
+        },
+    };
+
+    expect(
+        () => shallow(
+            <Selection
+                {...fieldTypeDefaultProps}
+                disabled={true}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+                schemaOptions={schemaOptions}
+                value={value}
+            />
+        )
+    ).toThrow(/"type"/);
+});
+
+test('Throw an error if a none string was passed to field-type-options', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: true,
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale})
+        )
+    );
+
+    expect(
+        () => shallow(
+            <Selection
+                {...fieldTypeDefaultProps}
+                disabled={true}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+                value={value}
+            />
+        )
+    ).toThrow(/"default_type"/);
 });
 
 test('Should pass allowAdd prop to MultiAutoComplete component', () => {

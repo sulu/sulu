@@ -41,5 +41,7 @@
     "sulu_contact.upload_avatar_info_text": "Drop image or click to change avatar",
     "sulu_contact.upload_logo_info_text": "Drop image or click to change logo",
     "sulu_contact.no_contact_selected": "No contact selected",
-    "sulu_contact.single_selection_overlay_title": "Choose contact"
+    "sulu_contact.single_contact_selection_overlay_title": "Choose contact",
+    "sulu_contact.no_account_selected": "No account selected",
+    "sulu_contact.single_account_selection_overlay_title": "Choose account"
 }
