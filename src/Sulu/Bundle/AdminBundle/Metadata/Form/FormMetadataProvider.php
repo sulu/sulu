@@ -18,14 +18,17 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Field;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FieldType;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Item;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Tag;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
@@ -40,6 +43,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
      * @var StructureMetadataFactory
      */
     private $structureMetadataFactory;
+
+    /**
+     * @var ExpressionLanguage
+     */
+    private $expressionLanguage;
 
     /**
      * @var string[]
@@ -64,6 +72,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     public function __construct(
         FormXmlLoader $formXmlLoader,
         StructureMetadataFactory $structureMetadataFactory,
+        ExpressionLanguage $expressionLanguage,
         array $locales,
         array $formDirectories,
         string $cacheDir,
@@ -71,6 +80,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     ) {
         $this->formXmlLoader = $formXmlLoader;
         $this->structureMetadataFactory = $structureMetadataFactory;
+        $this->expressionLanguage = $expressionLanguage;
         $this->locales = $locales;
         $this->formDirectories = $formDirectories;
         $this->cacheDir = $cacheDir;
@@ -89,7 +99,35 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             throw new MetadataNotFoundException('form', $key);
         }
 
-        return unserialize(file_get_contents($configCache->getPath()));
+        $form = unserialize(file_get_contents($configCache->getPath()));
+
+        $this->evaluateFormItemExpressions($form->getItems());
+
+        return $form;
+    }
+
+    /**
+     * @param Item[] $items
+     */
+    private function evaluateFormItemExpressions(array $items)
+    {
+        foreach ($items as $item) {
+            if ($item instanceof Section) {
+                $this->evaluateFormItemExpressions($item->getItems());
+            }
+
+            if ($item instanceof Field) {
+                foreach ($item->getTypes() as $type) {
+                    $this->evaluateFormItemExpressions($type->getForm()->getItems());
+                }
+
+                foreach ($item->getOptions() as $option) {
+                    if (Option::TYPE_EXPRESSION === $option->getType()) {
+                        $option->setValue($this->expressionLanguage->evaluate($option->getValue()));
+                    }
+                }
+            }
+        }
     }
 
     public function warmUp($cacheDir)
@@ -218,6 +256,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     {
         $option = new Option();
         $option->setName($parameter['name']);
+        $option->setType($parameter['type']);
 
         if ('collection' === $parameter['type']) {
             foreach ($parameter['value'] as $parameterName => $parameterValue) {
@@ -229,7 +268,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
                 $option->addValueOption($valueOption);
             }
-        } elseif ('string' === $parameter['type']) {
+        } elseif ('string' === $parameter['type'] || 'expression' === $parameter['type']) {
             $option->setValue($parameter['value']);
             $this->mapOptionMeta($parameter, $locale, $option);
         } else {

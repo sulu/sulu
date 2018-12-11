@@ -41,7 +41,6 @@ class FormXmlLoaderTest extends TestCase
         $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $propertiesXmlParser = new PropertiesXmlParser(
-            $this->expressionLanguage->reveal(),
             $this->translator->reveal(),
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
         );
@@ -271,13 +270,20 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormWithExpressionParam()
     {
-        $this->expressionLanguage->evaluate('service(\'test\').getId()')->willReturn(5);
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->loader->load(
             __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_expression_param.xml'
         );
 
-        $this->assertEquals(5, $formMetadata->getProperties()['name']->getParameters()[0]['value']);
+        $this->assertEquals(
+            'service(\'test\').getId()',
+            $formMetadata->getProperties()['name']->getParameters()[0]['value']
+        );
+
+        $this->assertEquals(
+            'expression',
+            $formMetadata->getProperties()['name']->getParameters()[0]['type']
+        );
     }
 
     public function testLoadFormWithSizedSections()

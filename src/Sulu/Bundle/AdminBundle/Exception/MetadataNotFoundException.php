@@ -13,7 +13,15 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class MetadataNotFoundException extends \Exception
 {
+    /**
+     * @var string
+     */
     private $type;
+
+    /**
+     * @var string
+     */
+    private $key;
 
     public function __construct(string $type, string $key)
     {

@@ -164,7 +164,7 @@ class ResourceMetadataMapper
 
                 $option->addValueOption($valueOption);
             }
-        } elseif ('string' === $parameter['type']) {
+        } elseif ('string' === $parameter['type'] || 'expression' === $parameter['type']) {
             $option->setValue($parameter['value']);
             $this->mapOptionMeta($parameter, $locale, $option);
         } else {

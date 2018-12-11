@@ -19,7 +19,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/pages_seos');
+        $client->request('GET', '/admin/metadata/form/pages_seo');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
@@ -33,7 +33,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/pages_excerpts');
+        $client->request('GET', '/admin/metadata/form/pages_excerpt');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());

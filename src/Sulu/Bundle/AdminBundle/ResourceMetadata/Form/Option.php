@@ -11,12 +11,26 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Form;
 
+use JMS\Serializer\Annotation\Exclude;
+
 class Option
 {
+    const TYPE_STRING = 'string';
+
+    const TYPE_COLLECTION = 'collection';
+
+    const TYPE_EXPRESSION = 'expression';
+
     /**
      * @var null|string
      */
     protected $name;
+
+    /**
+     * @var string
+     * @Exclude
+     */
+    protected $type;
 
     /**
      * @var string|int|Option[]
@@ -52,6 +66,16 @@ class Option
     public function setName($name = null): void
     {
         $this->name = $name;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

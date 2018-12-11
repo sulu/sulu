@@ -53,7 +53,7 @@ class AdminControllerTest extends SuluTestCase
     public function testGetNotExistingMetdata()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/metdata/test1/test');
+        $client->request('GET', '/admin/metadata/test1/test');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }

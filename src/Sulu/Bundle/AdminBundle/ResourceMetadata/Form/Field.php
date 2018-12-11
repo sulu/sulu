@@ -16,12 +16,12 @@ class Field extends Item
     /**
      * @var Option[]
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * @var FieldType[]
      */
-    protected $types;
+    protected $types = [];
 
     /**
      * @var bool

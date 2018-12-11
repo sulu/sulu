@@ -16,7 +16,6 @@ use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -25,11 +24,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class PropertiesXmlParser
 {
     use XmlParserTrait;
-
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
 
     /**
      * @var TranslatorInterface
@@ -41,9 +35,8 @@ class PropertiesXmlParser
      */
     private $locales;
 
-    public function __construct(ExpressionLanguage $expressionLanguage, TranslatorInterface $translator, array $locales)
+    public function __construct(TranslatorInterface $translator, array $locales)
     {
-        $this->expressionLanguage = $expressionLanguage;
         $this->translator = $translator;
         $this->locales = array_keys($locales);
     }
@@ -337,7 +330,8 @@ class PropertiesXmlParser
 
         $expression = $this->getValueFromXPath('@expression', $xpath, $node);
         if ($expression) {
-            $result['value'] = $this->expressionLanguage->evaluate($expression);
+            $result['type'] = 'expression';
+            $result['value'] = $expression;
 
             return $result;
         }
