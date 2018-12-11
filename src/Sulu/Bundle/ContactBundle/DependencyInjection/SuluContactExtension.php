@@ -100,9 +100,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     ],
                                     'datagrid_overlay' => [
                                         'adapter' => 'table',
-                                        'display_properties' => ['number', 'name'],
+                                        'display_properties' => ['name'],
                                         'empty_text' => 'sulu_contact.no_account_selected',
-                                        'icon' => 'su-add',
+                                        'icon' => 'su-house',
                                         'overlay_title' => 'sulu_contact.single_account_selection_overlay_title',
                                     ],
                                 ],

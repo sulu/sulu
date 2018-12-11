@@ -70,6 +70,57 @@ test('Pass correct props to SingleAutoComplete', () => {
     }));
 });
 
+test('Pass correct props with schema-options type to SingleAutoComplete', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const value = {
+        test: 'value',
+    };
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: 'auto_complete',
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        disabled: true,
+        displayProperty: 'name',
+        resourceKey: 'accounts',
+        searchProperties: ['name', 'number'],
+        value,
+    }));
+});
+
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
     const changeSpy = jest.fn();
@@ -164,6 +215,123 @@ test('Pass correct props to SingleItemSelection', () => {
         resourceKey: 'accounts',
         value,
     }));
+});
+
+test('Pass correct props with schema-options type to SingleItemSelection', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: 'datagrid_overlay',
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
+        adapter: 'table',
+        disabled: true,
+        disabledIds: [],
+        displayProperties: ['name'],
+        emptyText: 'sulu_contact.nothing',
+        icon: 'su-account',
+        overlayTitle: 'sulu_contact.overlay_title',
+        resourceKey: 'accounts',
+        value,
+    }));
+});
+
+test('Throw an error if a none string was passed to schema-options', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        type: {
+            name: 'type',
+            value: true,
+        },
+    };
+
+    expect(
+        () => shallow(
+            <SingleSelection
+                {...fieldTypeDefaultProps}
+                disabled={true}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+                schemaOptions={schemaOptions}
+                value={value}
+            />
+        )
+    ).toThrow(/"type"/);
+});
+
+test('Throw an error if a none string was passed to field-type-options', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: true,
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    expect(
+        () => shallow(
+            <SingleSelection
+                {...fieldTypeDefaultProps}
+                disabled={true}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+                value={value}
+            />
+        )
+    ).toThrow(/"default_type"/);
 });
 
 test('Pass correct locale and disabledIds to SingleItemSelection', () => {

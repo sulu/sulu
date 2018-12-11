@@ -30,7 +30,28 @@ export default class SingleSelection extends React.Component<Props>
     };
 
     @computed get type() {
-        return this.props.fieldTypeOptions.default_type;
+        const defaultType = this.props.fieldTypeOptions.default_type;
+        if (typeof defaultType !== 'string') {
+            throw new Error('The "default_type" field-type option must be a string!');
+        }
+
+        const {schemaOptions} = this.props;
+
+        if (!schemaOptions) {
+            return defaultType;
+        }
+
+        const {
+            type: {
+                value: type = defaultType,
+            } = {},
+        } = schemaOptions;
+
+        if (typeof type !== 'string') {
+            throw new Error('The "type" schema option must be a string!');
+        }
+
+        return type;
     }
 
     render() {
