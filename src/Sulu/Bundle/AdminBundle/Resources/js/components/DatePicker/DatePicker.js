@@ -102,6 +102,14 @@ export default class DatePicker extends React.Component<Props> {
 
     handleInputBlur = () => {
         if (this.inputChanged && typeof this.value === 'string') {
+            const fieldOptions = this.getFieldOptions(this.props.options);
+            const currentMoment = moment(this.value, this.getPlaceholder(fieldOptions));
+
+            if (currentMoment.isValid()) {
+                this.handleChange(currentMoment.toDate());
+                return;
+            }
+
             this.handleChange(undefined);
         }
     };
@@ -134,6 +142,15 @@ export default class DatePicker extends React.Component<Props> {
         return placeholderTime;
     };
 
+    getFieldOptions(options: Object) {
+        return {
+            closeOnSelect: true,
+            timeFormat: false,
+            dateFormat: moment.localeData().longDateFormat('L'),
+            ...options,
+        };
+    }
+
     renderInput = (props: Object) => {
         const handleInputChange = this.getInputChange(props);
 
@@ -156,12 +173,7 @@ export default class DatePicker extends React.Component<Props> {
     render() {
         const {disabled, options, placeholder, valid} = this.props;
 
-        const fieldOptions = {
-            closeOnSelect: true,
-            timeFormat: false,
-            dateFormat: moment.localeData().longDateFormat('L'),
-            ...options,
-        };
+        const fieldOptions = this.getFieldOptions(options);
 
         const inputProps = {
             placeholder: placeholder ? placeholder : this.getPlaceholder(fieldOptions),
