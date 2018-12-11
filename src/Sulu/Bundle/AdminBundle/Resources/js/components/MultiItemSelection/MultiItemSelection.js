@@ -20,6 +20,22 @@ type Props<T> = {|
     sortable: boolean,
 |};
 
+const ItemWrapper = ({children}: Object) => (
+    <li className={multiItemSelectionStyles.listElement}>
+        {children}
+    </li>
+);
+
+const SortableItemWrapper = SortableElement(ItemWrapper);
+
+const ListWrapper = ({children}: Object) => (
+    <ul className={multiItemSelectionStyles.list}>
+        {children}
+    </ul>
+);
+
+const SortableListWrapper = SortableContainer(ListWrapper);
+
 export default class MultiItemSelection<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         disabled: false,
@@ -29,55 +45,10 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
 
     static Item = Item;
 
-    createItem() {
-        const {sortable} = this.props;
-
-        const Item = ({children}: Object) => (
-            <li className={multiItemSelectionStyles.listElement}>
-                {
-                    React.cloneElement(
-                        children,
-                        {
-                            ...children.props,
-                            onRemove: this.props.onItemRemove && this.handleItemRemove,
-                            sortable,
-                        }
-                    )
-                }
-            </li>
-        );
-
-        if (!sortable) {
-            return Item;
-        }
-
-        return SortableElement(Item);
-    }
-
-    createList() {
-        const SortableItem = this.createItem();
-        const {sortable} = this.props;
-
-        const container = ({children}: Object) => (
-            <ul className={multiItemSelectionStyles.list}>
-                {React.Children.map(children, (item, index) => (
-                    <SortableItem index={index}>
-                        {item}
-                    </SortableItem>
-                ))}
-            </ul>
-        );
-
-        if (!sortable) {
-            return container;
-        }
-
-        return SortableContainer(container);
-    }
-
     handleItemRemove = (itemId: T) => {
-        if (this.props.onItemRemove) {
-            this.props.onItemRemove(itemId);
+        const {onItemRemove} = this.props;
+        if (onItemRemove) {
+            onItemRemove(itemId);
         }
     };
 
@@ -97,9 +68,12 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
             leftButton,
             loading,
             rightButton,
+            onItemRemove,
+            sortable,
         } = this.props;
         const emptyList = !React.Children.count(children);
-        const List = this.createList();
+        const ItemWrapperComponent = sortable ? SortableItemWrapper : ItemWrapper;
+        const ListWrapperComponent = sortable ? SortableListWrapper : ListWrapper;
 
         const multiItemSelectionClass = classNames(
             multiItemSelectionStyles.multiItemSelectionClass,
@@ -117,15 +91,28 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
                     loading={loading}
                     rightButton={rightButton ? {disabled, ...rightButton} : undefined}
                 />
-                <List
+                <ListWrapperComponent
                     axis="y"
                     helperClass={multiItemSelectionStyles.dragging}
                     lockAxis="y"
                     onSortEnd={this.handleItemsSorted}
                     useDragHandle={true}
                 >
-                    {children}
-                </List>
+                    {children && React.Children.map(children, (item, index) => (
+                        <ItemWrapperComponent index={index}>
+                            {
+                                React.cloneElement(
+                                    item,
+                                    {
+                                        ...item.props,
+                                        onRemove: onItemRemove && this.handleItemRemove,
+                                        sortable,
+                                    }
+                                )
+                            }
+                        </ItemWrapperComponent>
+                    ))}
+                </ListWrapperComponent>
             </div>
         );
     }
