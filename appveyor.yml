@@ -8,10 +8,12 @@ environment:
     # see http://windows.php.net/downloads/releases/ for available versions
     - PHP_VERSION: 5.6.33
       SYMFONY__DATABASE__PASSWORD: Password12!
+      SYMFONY_DEPRECATIONS_HELPER: weak
     - PHP_VERSION: 7.1.14
       JACKRABBIT_VERSION: 2.12.0
       SYMFONY__PHPCR__TRANSPORT: jackrabbit
       SYMFONY__DATABASE__PASSWORD: Password12!
+      SYMFONY_DEPRECATIONS_HELPER: weak
 
 services:
   - mysql

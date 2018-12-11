@@ -13,13 +13,14 @@ env:
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
     - php: 5.5
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction -vvv"
-    - php: 7.1
+    - php: 7.3
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
@@ -56,7 +57,7 @@ before_script:
     fi
   # the content tests are intensive and there are memory leaks, this is more pronounced with the Jackalope DBAL PHPCR implementation.
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || true # dont fail when xdebug is not available
   - php -i | grep memory_limit
   - php -m
   - composer self-update

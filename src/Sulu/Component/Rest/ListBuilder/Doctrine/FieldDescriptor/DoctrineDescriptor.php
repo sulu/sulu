@@ -11,11 +11,15 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
+use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
+
 /**
  * This class describes a doctrine case.
  */
 class DoctrineDescriptor
 {
+    use EncodeAliasTrait;
+
     /**
      * @var string
      */
@@ -45,7 +49,7 @@ class DoctrineDescriptor
      */
     public function getSelect()
     {
-        return sprintf('%s.%s', $this->entityName, $this->fieldName);
+        return sprintf('%s.%s', $this->encodeAlias($this->entityName), $this->fieldName);
     }
 
     /**

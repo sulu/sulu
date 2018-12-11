@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
+namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
@@ -194,7 +194,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
 
         $this->assertEquals(
-            '(CASE WHEN SuluTagBundle:Tag.name IS NOT NULL THEN SuluTagBundle:Tag.name ELSE SuluTagBundle:Tag.name END)',
+            '(CASE WHEN SuluTagBundle_Tag.name IS NOT NULL THEN SuluTagBundle_Tag.name ELSE SuluTagBundle_Tag.name END)',
             $fieldDescriptor['tag']->getSelect()
         );
     }
@@ -241,9 +241,9 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'joins' => [
                     'SuluContactBundle:ContactAddress' => [
                         'entity-name' => 'SuluContactBundle:ContactAddress',
-                        'field-name' => 'SuluContactBundle:Contact.contactAddresses',
+                        'field-name' => 'SuluContactBundle_Contact.contactAddresses',
                         'method' => 'LEFT',
-                        'condition' => 'SuluContactBundle:ContactAddress.locale = \'de\'',
+                        'condition' => 'SuluContactBundle_ContactAddress.locale = \'de\'',
                     ],
                 ],
             ],
