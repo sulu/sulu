@@ -191,10 +191,10 @@ class Configuration implements ConfigurationInterface
                     ->end();
 
         if (class_exists(GoogleStorageAdapter::class)) {
-            $storages[] = 'google_cloud_storage';
+            $storages[] = 'google_cloud';
 
             $storagesNode
-                ->arrayNode('google_cloud_storage')
+                ->arrayNode('google_cloud')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('key_file_path')->isRequired()->end()
