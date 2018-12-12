@@ -6,7 +6,7 @@
 
     <xs:complexType name="formatsType">
         <xs:sequence>
-            <xs:element name="format" type="formatType" maxOccurs="unbounded"/>
+            <xs:element name="format" type="formatType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
