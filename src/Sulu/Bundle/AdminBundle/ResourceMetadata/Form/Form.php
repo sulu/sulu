@@ -11,16 +11,22 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Form;
 
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 
 class Form
 {
     /**
      * @var Item[]
      *
-     * @Serializer\Inline()
+     * @SerializedName("form")
      */
-    protected $items;
+    private $items;
+
+    /**
+     * @var array
+     */
+    private $schema;
 
     /**
      * @return Item[]
@@ -33,5 +39,10 @@ class Form
     public function addItem(Item $item): void
     {
         $this->items[$item->getName()] = $item;
+    }
+
+    public function setSchema(array $schema)
+    {
+        $this->schema = $schema;
     }
 }

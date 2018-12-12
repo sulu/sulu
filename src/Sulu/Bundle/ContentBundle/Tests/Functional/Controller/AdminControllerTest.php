@@ -24,9 +24,15 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('search_result', $response);
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('description', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('search_result', $form);
+        $this->assertObjectHasAttribute('title', $form);
+        $this->assertObjectHasAttribute('description', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEmpty($schema);
     }
 
     public function testPageExcerptMetadataAction()
@@ -38,9 +44,15 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('more', $response);
-        $this->assertObjectHasAttribute('description', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('title', $form);
+        $this->assertObjectHasAttribute('more', $form);
+        $this->assertObjectHasAttribute('description', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEmpty($schema);
     }
 
     public function testPageSettingMetadataAction()
@@ -52,8 +64,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('navContexts', $response);
-        $this->assertObjectHasAttribute('pageType', $response);
-        $this->assertObjectHasAttribute('shadowPage', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('navContexts', $form);
+        $this->assertObjectHasAttribute('pageType', $form);
+        $this->assertObjectHasAttribute('shadowPage', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['nodeType'], $schema->required);
     }
 }

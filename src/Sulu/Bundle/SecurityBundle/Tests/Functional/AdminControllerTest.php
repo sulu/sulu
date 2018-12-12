@@ -24,8 +24,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('username', $response);
-        $this->assertObjectHasAttribute('password', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('username', $form);
+        $this->assertObjectHasAttribute('password', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['username', 'locale', 'userRoles'], $schema->required);
     }
 
     public function testRoleMetadataAction()
@@ -37,7 +43,13 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('name', $response);
-        $this->assertObjectHasAttribute('system', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('name', $form);
+        $this->assertObjectHasAttribute('system', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['name', 'system'], $schema->required);
     }
 }

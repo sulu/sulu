@@ -51,8 +51,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('avatar', $response);
-        $this->assertObjectHasAttribute('contact', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('avatar', $form);
+        $this->assertObjectHasAttribute('contact', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['firstName', 'lastName', 'formOfAddress'], $schema->required);
     }
 
     public function testAccountMetadataAction()
@@ -64,7 +70,13 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('logo', $response);
-        $this->assertObjectHasAttribute('account', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('logo', $form);
+        $this->assertObjectHasAttribute('account', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['name'], $schema->required);
     }
 }

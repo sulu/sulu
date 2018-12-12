@@ -24,8 +24,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('description', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('title', $form);
+        $this->assertObjectHasAttribute('description', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['title'], $schema->required);
     }
 
     public function testMediaMetadataAction()
@@ -37,8 +43,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('description', $response);
-        $this->assertObjectHasAttribute('license', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('title', $form);
+        $this->assertObjectHasAttribute('description', $form);
+        $this->assertObjectHasAttribute('license', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['title'], $schema->required);
     }
 }

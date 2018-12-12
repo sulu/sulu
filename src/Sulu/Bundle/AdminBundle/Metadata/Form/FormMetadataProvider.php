@@ -22,6 +22,8 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Item;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Tag;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -171,6 +173,8 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             $form->addItem($item);
         }
 
+        $form->setSchema($this->mapSchema($formMetadata)->toJsonSchema());
+
         return $form;
     }
 
@@ -299,6 +303,19 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 }
             }
         }
+    }
+
+    private function mapSchema(FormMetadata $formMetadata): Schema
+    {
+        $schemaProperties = array_filter(array_map(function(PropertyMetadata $propertyMetadata) {
+            if (!$propertyMetadata->isRequired()) {
+                return;
+            }
+
+            return new Property($propertyMetadata->getName(), $propertyMetadata->isRequired());
+        }, $formMetadata->getProperties()));
+
+        return new Schema($schemaProperties);
     }
 
     private function getConfigCache(string $key, string $locale): ConfigCache

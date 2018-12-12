@@ -24,6 +24,12 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('name', $response);
+        $form = $response->form;
+
+        $this->assertObjectHasAttribute('name', $form);
+
+        $schema = $response->schema;
+
+        $this->assertEquals(['name'], $schema->required);
     }
 }
