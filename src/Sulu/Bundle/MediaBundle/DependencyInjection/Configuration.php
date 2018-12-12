@@ -198,7 +198,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('key_file_path')->isRequired()->end()
-                        ->scalarNode('bucket')->isRequired()->end()
+                        ->scalarNode('bucket_name')->isRequired()->end()
                         ->scalarNode('segments')->defaultValue(10)->end()
                     ->end()
                 ->end();

@@ -11,7 +11,7 @@
         <service id="sulu_media.storage.google_cloud_storage.bucket" class="Google\Cloud\Storage\Bucket">
             <factory service="sulu_media.storage.google_cloud_storage.client" method="bucket"/>
 
-            <argument type="string">%sulu_media.media.storage.google_cloud_storage.bucket%</argument>
+            <argument type="string">%sulu_media.media.storage.google_cloud_storage.bucket_name%</argument>
         </service>
 
         <service id="sulu_media.storage.google_cloud_storage.adapter"
