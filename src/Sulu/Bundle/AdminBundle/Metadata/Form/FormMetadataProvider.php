@@ -22,12 +22,15 @@ use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Item;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Tag;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\TypedForm;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -103,7 +106,13 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
         $form = unserialize(file_get_contents($configCache->getPath()));
 
-        $this->evaluateFormItemExpressions($form->getItems());
+        if ($form instanceof Form) {
+            $this->evaluateFormItemExpressions($form->getItems());
+        } elseif ($form instanceof TypedForm) {
+            foreach ($form->getForms() as $formType) {
+                $this->evaluateFormItemExpressions($formType->getItems());
+            }
+        }
 
         return $form;
     }
@@ -141,7 +150,29 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             $formsMetadata[$formMetadata->getKey()] = $formMetadata;
         }
 
+        $structuresMetadataByTypes = [];
+        foreach ($this->structureMetadataFactory->getStructureTypes() as $structureType) {
+            foreach ($this->structureMetadataFactory->getStructures($structureType) as $structureMetadata) {
+                if ($structureMetadata->isInternal()) {
+                    continue;
+                }
+
+                $structuresMetadataByTypes[$structureType][] = $structureMetadata;
+            }
+        }
+
         foreach ($this->locales as $locale) {
+            foreach ($structuresMetadataByTypes as $structureType => $structuresMetadata) {
+                $form = $this->mapStructureMetadata($structuresMetadata, $structureType, $locale);
+                $configCache = $this->getConfigCache($structureType, $locale);
+                $configCache->write(
+                    serialize($form),
+                    array_map(function(StructureMetadata $structureMetadata) {
+                        return new FileResource($structureMetadata->getResource());
+                    }, $structuresMetadata)
+                );
+            }
+
             foreach ($formsMetadata as $key => $formMetadata) {
                 $form = $this->mapFormMetadata($formMetadata, $locale);
                 $configCache = $this->getConfigCache($key, $locale);
@@ -155,11 +186,41 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return false;
     }
 
+    /**
+     * @param StructureMetadata[] $structuresMetadata
+     */
+    public function mapStructureMetadata(array $structuresMetadata, string $structureType, string $locale)
+    {
+        $typedForm = new TypedForm();
+
+        foreach ($structuresMetadata as $structureMetadata) {
+            $form = new Form();
+            $form->setName($structureMetadata->getName());
+            $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
+            $this->mapChildren($structureMetadata->getChildren(), $form, $locale);
+            $form->setSchema($this->mapSchema($structureMetadata->getProperties())->toJsonSchema());
+
+            $typedForm->addForm($structureMetadata->getName(), $form);
+        }
+
+        return $typedForm;
+    }
+
     private function mapFormMetadata(FormMetadata $formMetadata, $locale)
     {
         $form = new Form();
+        $this->mapChildren($formMetadata->getChildren(), $form, $locale);
+        $form->setSchema($this->mapSchema($formMetadata->getProperties())->toJsonSchema());
 
-        foreach ($formMetadata->getChildren() as $child) {
+        return $form;
+    }
+
+    /**
+     * @param ItemMetadata[] $children
+     */
+    private function mapChildren(array $children, Form $form, string $locale)
+    {
+        foreach ($children as $child) {
             if ($child instanceof BlockMetadata) {
                 $item = $this->mapBlock($child, $locale);
             } elseif ($child instanceof PropertyMetadata) {
@@ -172,13 +233,9 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
             $form->addItem($item);
         }
-
-        $form->setSchema($this->mapSchema($formMetadata)->toJsonSchema());
-
-        return $form;
     }
 
-    protected function mapSection(SectionMetadata $property, string $locale): Section
+    private function mapSection(SectionMetadata $property, string $locale): Section
     {
         $section = new Section($property->getName());
 
@@ -305,7 +362,10 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         }
     }
 
-    private function mapSchema(FormMetadata $formMetadata): Schema
+    /**
+     * @param PropertyMetadata[] $propertyMetadata
+     */
+    private function mapSchema(array $propertyMetadata): Schema
     {
         $schemaProperties = array_filter(array_map(function(PropertyMetadata $propertyMetadata) {
             if (!$propertyMetadata->isRequired()) {
@@ -313,7 +373,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             }
 
             return new Property($propertyMetadata->getName(), $propertyMetadata->isRequired());
-        }, $formMetadata->getProperties()));
+        }, $propertyMetadata));
 
         return new Schema($schemaProperties);
     }

@@ -15,6 +15,49 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function testPagesMetadataAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/admin/metadata/form/page');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $types = $response->types;
+
+        // check for both types
+        $this->assertObjectHasAttribute('default', $types);
+        $this->assertObjectHasAttribute('overview', $types);
+
+        $defaultType = $types->default;
+        $this->assertObjectHasAttribute('name', $defaultType);
+        $this->assertEquals('default', $defaultType->name);
+        $this->assertObjectHasAttribute('title', $defaultType);
+        $this->assertEquals('Standard page', $defaultType->title);
+        $this->assertObjectHasAttribute('form', $defaultType);
+        $this->assertObjectHasAttribute('title', $defaultType->form);
+        $this->assertObjectHasAttribute('url', $defaultType->form);
+        $this->assertEquals('sulu.rlp.part', $defaultType->form->title->tags[0]->name);
+        $this->assertEquals(1, $defaultType->form->title->tags[0]->priority);
+
+        $this->assertObjectHasAttribute('schema', $defaultType);
+        $this->assertEquals(['title'], $defaultType->schema->required);
+
+        $overviewType = $types->overview;
+        $this->assertObjectHasAttribute('name', $overviewType);
+        $this->assertEquals('overview', $overviewType->name);
+        $this->assertObjectHasAttribute('title', $overviewType);
+        $this->assertEquals('Overview', $overviewType->title);
+        $this->assertObjectHasAttribute('form', $overviewType);
+        $this->assertObjectHasAttribute('title', $overviewType->form);
+        $this->assertObjectHasAttribute('tags', $overviewType->form);
+        $this->assertObjectHasAttribute('url', $overviewType->form);
+        $this->assertObjectHasAttribute('article', $overviewType->form);
+        $this->assertObjectHasAttribute('schema', $overviewType);
+        $this->assertEquals([], $overviewType->schema);
+    }
+
     public function testPageSeoMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

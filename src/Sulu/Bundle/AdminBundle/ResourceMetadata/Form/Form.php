@@ -12,10 +12,19 @@
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Form;
 
 use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 
 class Form
 {
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $title;
+
     /**
      * @var Item[]
      *
@@ -27,6 +36,16 @@ class Form
      * @var array
      */
     private $schema;
+
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+    }
 
     /**
      * @return Item[]
