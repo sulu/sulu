@@ -11,10 +11,37 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function setUp()
+    {
+        $this->purgeDatabase();
+        $em = $this->getEntityManager();
+        //
+        // force id = 1
+        $metadata = $em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $collectionType1 = new CollectionType();
+        $collectionType1->setId(1);
+        $collectionType1->setName('Default Collection Type');
+        $collectionType1->setKey('collection.default');
+
+        $collectionType2 = new CollectionType();
+        $collectionType2->setId(2);
+        $collectionType2->setName('System Collections');
+        $collectionType2->setKey('collection.system');
+
+        $em->persist($collectionType1);
+        $em->persist($collectionType2);
+        $em->flush();
+    }
+
     public function testContactMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
