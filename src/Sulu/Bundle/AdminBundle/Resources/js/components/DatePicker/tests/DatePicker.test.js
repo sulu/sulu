@@ -69,19 +69,23 @@ test('DatePicker should try to guess incomplete value using format on blur.', ()
     };
     const datePicker = mount(<DatePicker onChange={onChangeCallback} options={options} value={null} />);
 
-    const target = {
+    const eventTarget = {
         value: '9',
     };
 
-    datePicker.find('input').at(0).simulate('change', {target, currentTarget: target});
+    datePicker.find('input').at(0).simulate('change', {target: eventTarget, currentTarget: eventTarget});
     datePicker.find('input').at(0).simulate('blur');
 
     expect(onChangeCallback).toBeCalledWith(expect.any(Date));
 
     const date = onChangeCallback.mock.calls[0][0];
 
-    expect(date && date.getHours()).toBe(9);
-    expect(date && date.getMinutes()).toBe(0);
+    const expectedMoment = moment('09:00', options.timeFormat);
+    expect(expectedMoment.isValid()).toBe(true);
+
+    const expectedDate = expectedMoment.toDate();
+    expect(date && date.getHours()).toBe(expectedDate.getHours());
+    expect(date && date.getMinutes()).toBe(expectedDate.getMinutes());
 });
 
 test('DatePicker should render null value as empty string', () => {
