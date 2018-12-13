@@ -20,7 +20,6 @@ type Props = {|
     onChange: (value: ?Date) => void,
     /** Configure the datepicker to your needs, for more information have a look in the README.md */
     options: {
-        [any]: any,
         dateFormat?: ?string | boolean,
         timeFormat?: ?string | boolean,
     },
@@ -128,20 +127,20 @@ export default class DatePicker extends React.Component<Props> {
     };
 
     getDateFormat = (): string => {
-        let dateFormat = this.props.options.dateFormat;
+        const dateFormat = this.props.options.dateFormat;
 
         if ((!dateFormat && dateFormat !== false) || dateFormat === true || (!dateFormat && !this.getTimeFormat())) {
-            dateFormat = moment.localeData().longDateFormat('L');
+            return moment.localeData().longDateFormat('L') || '';
         }
 
         return dateFormat || '';
     };
 
     getTimeFormat = (): string => {
-        let timeFormat = this.props.options.timeFormat;
+        const timeFormat = this.props.options.timeFormat;
 
         if (timeFormat === true) {
-            timeFormat = moment.localeData().longDateFormat('LT');
+            return moment.localeData().longDateFormat('LT') || '';
         }
 
         return timeFormat || '';

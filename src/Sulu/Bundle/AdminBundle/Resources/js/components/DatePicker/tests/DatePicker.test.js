@@ -61,6 +61,29 @@ test('DatePicker should render with value', () => {
     expect(datePicker.render()).toMatchSnapshot();
 });
 
+test('DatePicker should try to guess incomplete value using format on blur.', () => {
+    const onChangeCallback = jest.fn();
+    const options = {
+        dateFormat: false,
+        timeFormat: 'HH:mm',
+    };
+    const datePicker = mount(<DatePicker onChange={onChangeCallback} options={options} value={null} />);
+
+    const target = {
+        value: '9',
+    };
+
+    datePicker.find('input').at(0).simulate('change', {target, currentTarget: target});
+    datePicker.find('input').at(0).simulate('blur');
+
+    expect(onChangeCallback).toBeCalledWith(expect.any(Date));
+
+    const date = onChangeCallback.mock.calls[0][0];
+
+    expect(date && date.getHours()).toBe(9);
+    expect(date && date.getMinutes()).toBe(0);
+});
+
 test('DatePicker should render null value as empty string', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
