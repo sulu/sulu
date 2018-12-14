@@ -78,62 +78,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('id', $resource->datagrid->id->name);
         $this->assertEquals('ID', $resource->datagrid->id->label);
         $this->assertEquals('string', $resource->datagrid->id->type);
-
-        // check for types
-        $this->assertObjectHasAttribute('types', $resource);
-
-        // check for both types
-        $this->assertObjectHasAttribute('default', $resource->types);
-        $this->assertObjectHasAttribute('overview', $resource->types);
-
-        // check if type 'default' has it's needed attributes
-        $this->assertObjectHasAttribute('name', $resource->types->default);
-        $this->assertEquals('default', $resource->types->default->name);
-        $this->assertObjectHasAttribute('title', $resource->types->default);
-        $this->assertEquals('Animals', $resource->types->default->title);
-        $this->assertObjectHasAttribute('form', $resource->types->default);
-        // check if form has all fields
-        $this->assertObjectHasAttribute('title', $resource->types->default->form);
-        $this->assertObjectHasAttribute('url', $resource->types->default->form);
-        $this->assertObjectHasAttribute('animals', $resource->types->default->form);
-        $this->assertObjectHasAttribute('blog', $resource->types->default->form);
-        $this->assertObjectHasAttribute('localized_blog', $resource->types->default->form);
-        // check if form has tags
-        $this->assertEquals('sulu.rlp.part', $resource->types->default->form->title->tags[0]->name);
-        $this->assertEquals(100, $resource->types->default->form->title->tags[0]->priority);
-        // check field "animals"
-        $this->assertObjectHasAttribute('label', $resource->types->default->form->animals);
-        $this->assertObjectHasAttribute('type', $resource->types->default->form->animals);
-        $this->assertObjectHasAttribute('required', $resource->types->default->form->animals);
-        $this->assertObjectHasAttribute('options', $resource->types->default->form->animals);
-        $this->assertEquals('Animals', $resource->types->default->form->animals->label);
-        $this->assertEquals('snippet', $resource->types->default->form->animals->type);
-        $this->assertEquals(false, $resource->types->default->form->animals->required);
-        $this->assertObjectHasAttribute('snippetType', $resource->types->default->form->animals->options);
-        $this->assertObjectHasAttribute('name', $resource->types->default->form->animals->options->snippetType);
-        $this->assertObjectHasAttribute('value', $resource->types->default->form->animals->options->snippetType);
-        $this->assertEquals('snippetType', $resource->types->default->form->animals->options->snippetType->name);
-        $this->assertEquals('animal', $resource->types->default->form->animals->options->snippetType->value);
-        // check if schema is valid
-        $this->assertObjectHasAttribute('schema', $resource->types->default);
-        $this->assertObjectHasAttribute('required', $resource->types->default->schema);
-
-        // check if type 'overview' has it's needed attributes
-        $this->assertObjectHasAttribute('name', $resource->types->overview);
-        $this->assertEquals('overview', $resource->types->overview->name);
-        $this->assertObjectHasAttribute('title', $resource->types->overview);
-        $this->assertEquals('Overview', $resource->types->overview->title);
-        $this->assertObjectHasAttribute('form', $resource->types->overview);
-        // check if form has all fields
-        $this->assertObjectHasAttribute('title', $resource->types->overview->form);
-        $this->assertObjectHasAttribute('tags', $resource->types->overview->form);
-        $this->assertObjectHasAttribute('url', $resource->types->overview->form);
-        $this->assertObjectHasAttribute('article', $resource->types->overview->form);
-        $this->assertObjectHasAttribute('blog', $resource->types->overview->form);
-        $this->assertObjectHasAttribute('external', $resource->types->overview->form);
-        // check if schema is valid
-        $this->assertObjectHasAttribute('schema', $resource->types->overview);
-        $this->assertEquals(['title', 'url'], $resource->types->overview->schema->required);
     }
 
     public function testGetResourceContacts()
@@ -151,18 +95,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('title', $resource->datagrid);
         $this->assertObjectHasAttribute('account', $resource->datagrid);
         $this->assertObjectHasAttribute('firstName', $resource->datagrid);
-
-        // check for form
-        $this->assertObjectHasAttribute('form', $resource);
-        $contactForm = $resource->form->contact->items;
-        $this->assertObjectHasAttribute('formOfAddress', $contactForm);
-        $this->assertObjectHasAttribute('firstName', $contactForm);
-        $this->assertObjectHasAttribute('lastName', $contactForm);
-        $this->assertObjectHasAttribute('salutation', $contactForm);
-
-        // check for schema
-        $this->assertObjectHasAttribute('schema', $resource);
-        $this->assertObjectHasAttribute('required', $resource->schema);
     }
 
     public function testGetResourceAccounts()
@@ -180,14 +112,5 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('name', $resource->datagrid);
         $this->assertObjectHasAttribute('zip', $resource->datagrid);
         $this->assertObjectHasAttribute('city', $resource->datagrid);
-
-        // check for form
-        $this->assertObjectHasAttribute('form', $resource);
-        $accountForm = $resource->form->account->items;
-        $this->assertObjectHasAttribute('name', $accountForm);
-
-        // check for schema
-        $this->assertObjectHasAttribute('schema', $resource);
-        $this->assertObjectHasAttribute('required', $resource->schema);
     }
 }

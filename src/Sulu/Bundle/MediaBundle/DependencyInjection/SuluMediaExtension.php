@@ -92,17 +92,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                     ],
                     'resources' => [
                         'media' => [
-                            'form' => ['@SuluMediaBundle/Resources/config/forms/Media.xml'],
                             'datagrid' => '%sulu.model.media.class%',
                             'endpoint' => 'cget_media',
                         ],
                         'collections' => [
-                            'form' => ['@SuluMediaBundle/Resources/config/forms/Collection.xml'],
                             'datagrid' => Collection::class,
                             'endpoint' => 'get_collections',
                         ],
                         'formats' => [
-                            'form' => [],
                             'endpoint' => 'get_formats',
                         ],
                     ],

@@ -103,7 +103,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
     public function testLoadSnippet()
     {
         /** @var SnippetDocument $snippet */
-        $snippet = $this->documentManager->create('snippet');
+        $snippet = $this->documentManager->create('snippets');
         $snippet->setStructureType('car');
         $snippet->setTitle('test-title');
         $snippet->getStructure()->bind(['description' => 'test-description']);
@@ -134,7 +134,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
     public function testLoadSnippetLocale()
     {
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('snippet');
+        $document = $this->documentManager->create('snippets');
         $document->setTitle('de-test-title');
         $document->getStructure()->bind(['description' => 'de-test-description']);
         $document->setStructureType('car');

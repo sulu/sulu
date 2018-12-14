@@ -46,7 +46,7 @@ class XmlFileLoader11 extends XmlFileLoader10
      */
     protected function generateDefaultTemplates(Webspace $webspace)
     {
-        $expected = ['page', 'home'];
+        $expected = ['pages', 'home'];
 
         foreach ($this->xpath->query('/x:webspace/x:default-templates/x:default-template') as $node) {
             /* @var \DOMNode $node */

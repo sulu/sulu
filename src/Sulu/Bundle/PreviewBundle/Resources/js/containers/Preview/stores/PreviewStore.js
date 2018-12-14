@@ -7,14 +7,14 @@ import type {PreviewRouteName} from './../types';
 const generateRoute = (name: PreviewRouteName, options: Object): string => {
     const query = queryString.stringify(options);
     if (query.length === 0) {
-        return PreviewStore.routes[name];
+        return PreviewStore.endpoints[name];
     }
 
-    return PreviewStore.routes[name] + '?' + query;
+    return PreviewStore.endpoints[name] + '?' + query;
 };
 
 export default class PreviewStore {
-    static routes: {[PreviewRouteName]: string} = {};
+    static endpoints: {[PreviewRouteName]: string} = {};
 
     resourceKey: string;
     id: ?string | number;

@@ -91,7 +91,7 @@ class SearchIntegrationTest extends SuluTestCase
             $testAdapter->purge($indexName);
         }
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo/fo');
         $document->setStructureType('images');
@@ -113,7 +113,7 @@ class SearchIntegrationTest extends SuluTestCase
     {
         $testAdapter = $this->getContainer()->get('sulu_test.massive_search.adapter.test');
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('images');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo');

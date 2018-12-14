@@ -576,7 +576,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function postAction(Request $request)
     {
-        $type = 'page';
+        $type = 'pages';
         $language = $this->getLanguage($request);
         $action = $request->get('action');
 

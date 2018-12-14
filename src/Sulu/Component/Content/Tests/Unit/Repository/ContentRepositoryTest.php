@@ -148,7 +148,7 @@ class ContentRepositoryTest extends TestCase
         $qomFactory->childNode(Argument::cetera())->willReturn($this->prophesize(ChildNodeInterface::class)->reveal());
 
         $structure = $this->prophesize(StructureInterface::class);
-        $this->structureManager->getStructures('page')->willReturn([$structure->reveal()]);
+        $this->structureManager->getStructures('pages')->willReturn([$structure->reveal()]);
         $this->structureManager->getStructure('test')->willReturn($structure->reveal());
 
         $this->query = $this->prophesize(QueryInterface::class);

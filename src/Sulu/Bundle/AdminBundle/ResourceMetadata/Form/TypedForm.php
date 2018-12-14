@@ -19,7 +19,7 @@ class TypedForm
      * @var Form[]
      * @SerializedName("types")
      */
-    private $forms;
+    private $forms = [];
 
     public function addForm($key, Form $form): void
     {

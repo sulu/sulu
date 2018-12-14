@@ -3,7 +3,6 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
     <key>accounts</key>
-    <resourceKey>accounts</resourceKey>
 
     <properties>
         <section name="logo" colspan="4">

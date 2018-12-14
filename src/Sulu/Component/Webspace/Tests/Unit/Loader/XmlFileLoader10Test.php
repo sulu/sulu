@@ -76,7 +76,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
         $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
-            ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
+            ['pages' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
             $webspace->getDefaultTemplates()
         );
 
@@ -123,7 +123,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->assertEquals('at.sulu.de', $environmentMain->getUrls()[2]->getUrl());
         $this->assertFalse($environmentMain->getUrls()[2]->isMain());
 
-        $this->assertEquals(['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'], $webspace->getDefaultTemplates());
+        $this->assertEquals(['pages' => 'default', 'homepage' => 'overview', 'home' => 'overview'], $webspace->getDefaultTemplates());
         $this->assertEquals(['error-404' => 'test.html.twig', 'error' => 'test.html.twig'], $webspace->getTemplates());
     }
 

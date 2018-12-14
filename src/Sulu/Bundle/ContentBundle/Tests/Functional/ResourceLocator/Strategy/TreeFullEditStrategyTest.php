@@ -206,7 +206,7 @@ class TreeFullEditStrategyTest extends SuluTestCase
 
     private function createDocument($parentDocument, $title, $url)
     {
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setTitle($title);
         $document->setParent($parentDocument);
         $document->setStructureType('default');

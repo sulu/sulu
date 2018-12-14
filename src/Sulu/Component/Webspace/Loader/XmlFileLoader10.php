@@ -420,7 +420,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function generateDefaultTemplates(Webspace $webspace)
     {
-        $expected = ['page', 'home'];
+        $expected = ['pages', 'home'];
 
         foreach ($this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template') as $node) {
             /* @var \DOMNode $node */

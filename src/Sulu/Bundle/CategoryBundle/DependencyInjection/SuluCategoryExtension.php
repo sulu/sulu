@@ -99,7 +99,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     ],
                     'resources' => [
                         'categories' => [
-                            'form' => ['@SuluCategoryBundle/Resources/config/forms/Category.xml'],
                             'datagrid' => '%sulu.model.category.class%',
                             'endpoint' => 'get_categories',
                         ],

@@ -456,7 +456,7 @@ class SnippetControllerTest extends SuluTestCase
 
     public function testDeleteReferenced()
     {
-        $page = $this->documentManager->create('page');
+        $page = $this->documentManager->create('pages');
         $page->setStructureType('hotel_page');
         $page->setTitle('Hotels page');
         $page->setResourceSegment('/hotels');
@@ -488,7 +488,7 @@ class SnippetControllerTest extends SuluTestCase
 
     public function testCopyLocale()
     {
-        $snippet = $this->documentManager->create('snippet');
+        $snippet = $this->documentManager->create('snippets');
         $snippet->setStructureType('hotel');
         $snippet->setTitle('Hotel de');
         $this->documentManager->persist($snippet, 'de');
@@ -513,7 +513,7 @@ class SnippetControllerTest extends SuluTestCase
     private function loadFixtures()
     {
         // HOTELS
-        $this->hotel1 = $this->documentManager->create('snippet');
+        $this->hotel1 = $this->documentManager->create('snippets');
         $this->hotel1->setStructureType('hotel');
         $this->hotel1->setTitle('The Grand Budapest');
         $this->hotel1->getStructure()->getProperty('description')->setValue('Hello World');
@@ -523,28 +523,28 @@ class SnippetControllerTest extends SuluTestCase
         $this->hotel1->setTitle('Das Großes Budapest');
         $this->documentManager->persist($this->hotel1, 'de');
 
-        $this->hotel2 = $this->documentManager->create('snippet');
+        $this->hotel2 = $this->documentManager->create('snippets');
         $this->hotel2->setStructureType('hotel');
         $this->hotel2->setTitle('L\'Hôtel New Hampshire');
         $this->documentManager->persist($this->hotel2, 'de');
 
         // CARS
-        $car = $this->documentManager->create('snippet');
+        $car = $this->documentManager->create('snippets');
         $car->setStructureType('car');
         $car->setTitle('Skoda');
         $this->documentManager->persist($car, 'de');
 
-        $car = $this->documentManager->create('snippet');
+        $car = $this->documentManager->create('snippets');
         $car->setStructureType('car');
         $car->setTitle('Volvo');
         $this->documentManager->persist($car, 'de');
 
-        $car = $this->documentManager->create('snippet');
+        $car = $this->documentManager->create('snippets');
         $car->setStructureType('car');
         $car->setTitle('Ford');
         $this->documentManager->persist($car, 'de');
 
-        $car = $this->documentManager->create('snippet');
+        $car = $this->documentManager->create('snippets');
         $car->setStructureType('car');
         $car->setTitle('VW');
         $this->documentManager->persist($car, 'en');

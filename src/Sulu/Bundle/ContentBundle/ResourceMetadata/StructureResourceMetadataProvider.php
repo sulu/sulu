@@ -14,8 +14,7 @@ namespace Sulu\Bundle\ContentBundle\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\TypedResourceMetadata;
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
@@ -81,40 +80,11 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
         array $structureTypes,
         string $endpoint,
         string $locale
-    ): TypedResourceMetadata {
-        $resourceMetadata = new TypedResourceMetadata();
+    ): ResourceMetadata {
+        $resourceMetadata = new ResourceMetadata();
         $resourceMetadata->setKey($resourceKey);
         $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
         $resourceMetadata->setEndpoint($endpoint);
-
-        foreach ($structureTypes as $structureType) {
-            /** @var StructureMetadata $structureMetadata */
-            foreach ($this->structureMetadataFactory->getStructures($structureType) as $structureMetadata) {
-                if ($structureMetadata->isInternal()) {
-                    continue;
-                }
-
-                // check if type was already added
-                // this is needed because we have two types which are pointing to the same directory
-                if (array_key_exists($structureMetadata->getName(), $resourceMetadata->getTypes())) {
-                    continue;
-                }
-
-                $type = new Type($structureMetadata->getName());
-                $type->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
-                $type->setForm($this->resourceMetadataMapper->mapForm($structureMetadata->getChildren(), $locale));
-
-                $schema = $this->resourceMetadataMapper->mapSchema($structureMetadata->getProperties());
-                $templateSchema = $structureMetadata->getSchema();
-                if ($templateSchema) {
-                    $schema = $schema->merge($templateSchema);
-                }
-
-                $type->setSchema($schema);
-
-                $resourceMetadata->addType($type);
-            }
-        }
 
         return $resourceMetadata;
     }

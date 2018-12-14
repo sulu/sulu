@@ -18,7 +18,6 @@
     <xs:complexType name="formType">
         <xs:all>
             <xs:element type="xs:string" name="key" minOccurs="1" maxOccurs="1"/>
-            <xs:element type="xs:string" name="resourceKey" minOccurs="1" maxOccurs="1"/>
             <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
             <xs:element type="schemaType" name="schema" minOccurs="0" maxOccurs="1"/>
         </xs:all>

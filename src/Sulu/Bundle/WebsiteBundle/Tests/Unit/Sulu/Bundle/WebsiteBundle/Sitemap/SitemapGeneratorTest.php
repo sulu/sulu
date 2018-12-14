@@ -182,7 +182,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         // TODO set published state?
         /** @var PageDocument $newsDocument */
-        $newsDocument = $this->documentManager->create('page');
+        $newsDocument = $this->documentManager->create('pages');
         $newsDocument->setStructureType('overview');
         $newsDocument->setTitle('News ' . $locale);
         $newsDocument->setResourceSegment('/news');
@@ -193,7 +193,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->flush();
 
         /** @var PageDocument $productDocument */
-        $productDocument = $this->documentManager->create('page');
+        $productDocument = $this->documentManager->create('pages');
         $productDocument->setStructureType('overview');
         $productDocument->setTitle('Products ' . $locale);
         $productDocument->setResourceSegment('/products');
@@ -203,7 +203,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->flush();
 
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('simple');
         $document->setTitle('News-1 ' . $locale);
         $document->setResourceSegment('/news/news-1');
@@ -214,7 +214,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('simple');
         $document->setTitle('News-2 ' . $locale);
         $document->setResourceSegment('/news/news-2');
@@ -225,7 +225,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('overview');
         $document->setTitle('Products-1 ' . $locale);
         $document->setResourceSegment('/products/product-1');
@@ -238,7 +238,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('overview');
         $document->setTitle('Products-2 ' . $locale);
         $document->setResourceSegment('/products/product-w');
@@ -251,7 +251,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('overview');
         $document->setRedirectTarget('overview');
         $document->setTitle('Products-3 ' . $locale);
@@ -265,7 +265,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setStructureType('overview');
         $document->setTitle('SEO-NoSitemap ' . $locale);
         $document->setResourceSegment('/seo-no-sitemap');

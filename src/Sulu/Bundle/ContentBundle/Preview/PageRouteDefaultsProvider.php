@@ -65,7 +65,7 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
      */
     public function getByEntity($entityClass, $id, $locale, $object = null)
     {
-        $metadata = $this->structureMetadataFactory->getStructureMetadata('page', $object->getStructureType());
+        $metadata = $this->structureMetadataFactory->getStructureMetadata('pages', $object->getStructureType());
 
         return [
             '_controller' => $metadata->getController(),

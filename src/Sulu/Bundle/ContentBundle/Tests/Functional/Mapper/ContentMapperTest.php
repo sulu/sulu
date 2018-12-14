@@ -2524,7 +2524,7 @@ class ContentMapperTest extends SuluTestCase
      */
     public function testLanguageCopyInternalLink()
     {
-        $page = $this->documentManager->create('page');
+        $page = $this->documentManager->create('pages');
         $page->setStructureType('default');
         $page->setTitle('Hallo');
         $page->setResourceSegment('/hallo');
@@ -2559,7 +2559,7 @@ class ContentMapperTest extends SuluTestCase
      */
     public function testGetResourceLocatorsWithShadow()
     {
-        $page = $this->documentManager->create('page');
+        $page = $this->documentManager->create('pages');
         $page->setStructureType('overview');
         $page->setTitle('Beschreibung');
         $page->setResourceSegment('/beschreibung');

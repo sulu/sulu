@@ -51,7 +51,7 @@ class ContentLocaleCopyCommandTest extends SuluTestCase
     {
         $this->initPhpcr();
 
-        $page = $this->documentManager->create('page');
+        $page = $this->documentManager->create('pages');
         $page->setStructureType('default');
         $page->setTitle('Hallo');
         $page->getStructure()->bind(['article' => 'This is a perfect description.']);

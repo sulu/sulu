@@ -8,7 +8,7 @@ fieldRegistry.add('permissions', Permissions);
 fieldRegistry.add('role_assignments', RoleAssignments);
 
 initializer.addUpdateConfigHook('sulu_security', (config: Object) => {
-    securityContextStore.endpoint = config.routes.contexts;
+    securityContextStore.endpoint = config.endpoints.contexts;
 });
 
 bundleReady();

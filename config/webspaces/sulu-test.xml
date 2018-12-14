@@ -11,7 +11,7 @@
     </localizations>
 
     <default-templates>
-        <default-template type="page">default</default-template>
+        <default-template type="pages">default</default-template>
         <default-template type="home">homepage</default-template>
     </default-templates>
 

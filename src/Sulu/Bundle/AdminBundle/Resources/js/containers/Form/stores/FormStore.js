@@ -59,7 +59,7 @@ function collectTagPathsWithPriority(
             continue;
         }
 
-        if (types && data[key]) {
+        if (types && Object.keys(types).length > 0 && data[key]) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
                 pathsWithPriority.push(

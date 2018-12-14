@@ -10,7 +10,7 @@ import PageTabs from './views/PageTabs';
 import WebspaceOverview from './views/WebspaceOverview';
 
 initializer.addUpdateConfigHook('sulu_content', (config: Object) => {
-    WebspaceOverview.clearCacheEndpoint = config.routes.clearCache;
+    WebspaceOverview.clearCacheEndpoint = config.endpoints.clearCache;
 });
 
 viewRegistry.add('sulu_content.page_tabs', PageTabs);

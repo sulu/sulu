@@ -25,11 +25,6 @@ class FormMetadata extends PropertiesMetadata
     private $key;
 
     /**
-     * @var string
-     */
-    private $resourceKey;
-
-    /**
      * @var Schema
      */
     private $schema;
@@ -42,16 +37,6 @@ class FormMetadata extends PropertiesMetadata
     public function getKey(): string
     {
         return $this->key;
-    }
-
-    public function setResourceKey(string $resourceKey)
-    {
-        $this->resourceKey = $resourceKey;
-    }
-
-    public function getResourceKey(): string
-    {
-        return $this->resourceKey;
     }
 
     public function setSchema(Schema $schema)

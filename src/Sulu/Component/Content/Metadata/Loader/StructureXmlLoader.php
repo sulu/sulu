@@ -42,7 +42,7 @@ class StructureXmlLoader extends AbstractLoader
      * @var array
      */
     private $requiredTagNames = [
-        'page' => ['sulu.rlp'],
+        'pages' => ['sulu.rlp'],
         'home' => ['sulu.rlp'],
         'snippet' => [],
     ];
@@ -123,7 +123,7 @@ class StructureXmlLoader extends AbstractLoader
     public function load($resource, $type = null)
     {
         if (null === $type) {
-            $type = 'page';
+            $type = 'pages';
         }
 
         $data = parent::load($resource, $type);
@@ -228,7 +228,7 @@ class StructureXmlLoader extends AbstractLoader
      */
     protected function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
     {
-        if ('page' === $type || 'home' === $type) {
+        if ('pages' === $type || 'home' === $type) {
             $result = [
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),

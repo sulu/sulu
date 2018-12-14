@@ -58,7 +58,6 @@ class FormXmlLoaderTest extends TestCase
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
         $this->assertEquals('form', $formMetadata->getKey());
-        $this->assertEquals('resource', $formMetadata->getResourceKey());
         $this->assertCount(4, $formMetadata->getProperties());
 
         $this->assertEquals('formOfAddress', $formMetadata->getProperties()['formOfAddress']->getName());

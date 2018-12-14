@@ -106,7 +106,7 @@ class WebspaceImportTest extends SuluTestCase
             $this->pages[0]->getUuid(),
             'en',
             [
-                'type' => 'page',
+                'type' => 'pages',
                 'load_ghost_content' => false,
             ]
         );
@@ -116,7 +116,7 @@ class WebspaceImportTest extends SuluTestCase
             $this->pages[1]->getUuid(),
             'en',
             [
-                'type' => 'page',
+                'type' => 'pages',
                 'load_ghost_content' => false,
             ]
         );
@@ -180,7 +180,7 @@ class WebspaceImportTest extends SuluTestCase
             $this->pages[0]->getUuid(),
             'fr',
             [
-                'type' => 'page',
+                'type' => 'pages',
                 'load_ghost_content' => false,
             ]
         );
@@ -190,7 +190,7 @@ class WebspaceImportTest extends SuluTestCase
             $this->pages[1]->getUuid(),
             'fr',
             [
-                'type' => 'page',
+                'type' => 'pages',
                 'load_ghost_content' => false,
             ]
         );
@@ -301,7 +301,7 @@ class WebspaceImportTest extends SuluTestCase
     private function createSimplePage($title, $url)
     {
         /** @var PageDocument $page */
-        $page = $this->documentManager->create('page');
+        $page = $this->documentManager->create('pages');
         $page->setTitle($title);
         $page->setResourceSegment($url);
         $page->setLocale('en');

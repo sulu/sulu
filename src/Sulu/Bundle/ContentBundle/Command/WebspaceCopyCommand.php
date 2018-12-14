@@ -301,7 +301,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         try {
             $documentDestination = $this->documentManager->find($newPath, $localeDestination);
         } catch (DocumentNotFoundException $exception) {
-            $documentDestination = $this->documentManager->create('page');
+            $documentDestination = $this->documentManager->create('pages');
         }
 
         // Set data.

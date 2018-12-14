@@ -4,7 +4,7 @@ import {sidebarRegistry} from 'sulu-admin-bundle/containers';
 import Preview, {PreviewStore} from './containers';
 
 initializer.addUpdateConfigHook('sulu_preview', (config: Object) => {
-    PreviewStore.routes = config.routes;
+    PreviewStore.endpoints = config.endpoints;
     Preview.debounceDelay = config.debounceDelay;
     Preview.mode = config.mode;
 

@@ -55,7 +55,6 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                     ],
                     'resources' => [
                         'tags' => [
-                            'form' => ['@SuluTagBundle/Resources/config/forms/Tag.xml'],
                             'datagrid' => '%sulu.model.tag.class%',
                             'endpoint' => 'get_tags',
                         ],

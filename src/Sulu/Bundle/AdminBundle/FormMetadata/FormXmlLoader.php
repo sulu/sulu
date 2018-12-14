@@ -55,7 +55,6 @@ class FormXmlLoader extends AbstractLoader
         $form = new FormMetadata();
         $form->setResource($resource);
         $form->setKey($xpath->query('/x:form/x:key')->item(0)->nodeValue);
-        $form->setResourceKey($xpath->query('/x:form/x:resourceKey')->item(0)->nodeValue);
 
         $propertiesNode = $xpath->query('/x:form/x:properties')->item(0);
         $properties = $this->propertiesXmlParser->load(

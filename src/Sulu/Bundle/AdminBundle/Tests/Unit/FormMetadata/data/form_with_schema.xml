@@ -3,7 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
     <key>form</key>
-    <resourceKey>resource</resourceKey>
 
     <schema>
         <allOf>

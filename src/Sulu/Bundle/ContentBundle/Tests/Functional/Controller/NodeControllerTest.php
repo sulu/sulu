@@ -2149,6 +2149,6 @@ class NodeControllerTest extends SuluTestCase
      */
     private function createPageDocument()
     {
-        return $this->documentManager->create('page');
+        return $this->documentManager->create('pages');
     }
 }

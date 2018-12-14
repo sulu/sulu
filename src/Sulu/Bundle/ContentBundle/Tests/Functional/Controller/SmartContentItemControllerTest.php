@@ -217,7 +217,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             $data
         );
 
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
 
         $options = ['csrf_protection' => false, 'webspace_key' => 'sulu_io'];
         $form = $this->formFactory->create(PageDocumentType::class, $document, $options);

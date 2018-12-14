@@ -1,10 +1,12 @@
 // @flow
-import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
+import metadataStore from '../../../stores/MetadataStore';
 import type {RawSchema, SchemaTypes} from '../types';
 
+const FORM_TYPE = 'form';
+
 class MetadataStore {
-    getSchemaTypes(resourceKey: string): Promise<SchemaTypes> {
-        return resourceMetadataStore.loadConfiguration(resourceKey)
+    getSchemaTypes(formKey: string): Promise<SchemaTypes> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey)
             .then((configuration) => {
                 const {types} = configuration;
 
@@ -24,17 +26,17 @@ class MetadataStore {
             });
     }
 
-    getSchema(resourceKey: string, type: ?string): Promise<RawSchema> {
-        return resourceMetadataStore.loadConfiguration(resourceKey)
+    getSchema(formKey: string, type: ?string): Promise<RawSchema> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey)
             .then((configuration) => {
-                const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);
+                const typeConfiguration = this.getTypeConfiguration(configuration, type, formKey);
 
                 if (!typeConfiguration && type) {
-                    throw new Error('Type "' + type + '" not found for the resourceKey "' + resourceKey + '"');
+                    throw new Error('Type "' + type + '" not found for the formKey "' + formKey + '"');
                 }
 
                 if (!('form' in typeConfiguration)) {
-                    let errorMessage = 'There is no form schema for the resourceKey "' + resourceKey + '"';
+                    let errorMessage = 'There is no form schema for the formKey "' + formKey + '"';
                     if (type) {
                         errorMessage += ' for the type "' + type + '"';
                     }
@@ -46,13 +48,13 @@ class MetadataStore {
             });
     }
 
-    getJsonSchema(resourceKey: string, type: ?string): Promise<Object> {
-        return resourceMetadataStore.loadConfiguration(resourceKey)
+    getJsonSchema(formKey: string, type: ?string): Promise<Object> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey)
             .then((configuration) => {
-                const typeConfiguration = this.getTypeConfiguration(configuration, type, resourceKey);
+                const typeConfiguration = this.getTypeConfiguration(configuration, type, formKey);
 
                 if (!('schema' in typeConfiguration)) {
-                    let errorMessage = 'There is no json schema for the resourceKey "' + resourceKey + '"';
+                    let errorMessage = 'There is no json schema for the formKey "' + formKey + '"';
                     if (type) {
                         errorMessage += ' for the type "' + type + '"';
                     }
@@ -64,16 +66,16 @@ class MetadataStore {
             });
     }
 
-    getTypeConfiguration(configuration: Object, type: ?string, resourceKey: string) {
+    getTypeConfiguration(configuration: Object, type: ?string, formKey: string) {
         if (configuration.types && !type) {
             throw new Error(
-                'The "' + resourceKey + '" configuration requires a type for loading the form schema'
+                'The "' + formKey + '" configuration requires a type for loading the form schema'
             );
         }
 
         if (!configuration.types && type) {
             throw new Error(
-                'The "' + resourceKey + '" configuration does not support types,'
+                'The "' + formKey + '" configuration does not support types,'
                 + ' but a type of "' + type + '" was given'
             );
         }

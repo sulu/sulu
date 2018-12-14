@@ -235,6 +235,12 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
+                'endpoints' => [
+                    'metadata' => $this->urlGenerator->generate(
+                        'sulu_admin.metadata',
+                        ['type' => ':type', 'key' => ':key']
+                    ),
+                ],
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
@@ -246,12 +252,12 @@ class AdminController
                 'contact' => $contact,
             ],
             'sulu_content' => [
-                'routes' => [
+                'endpoints' => [
                     'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
                 ],
             ],
             'sulu_preview' => [
-                'routes' => [
+                'endpoints' => [
                     'start' => $this->urlGenerator->generate('sulu_preview.start'),
                     'render' => $this->urlGenerator->generate('sulu_preview.render'),
                     'update' => $this->urlGenerator->generate('sulu_preview.update'),
@@ -262,7 +268,7 @@ class AdminController
                 'mode' => $this->previewMode,
             ],
             'sulu_security' => [
-                'routes' => [
+                'endpoints' => [
                     'contexts' => $this->urlGenerator->generate('cget_contexts'),
                 ],
             ],
@@ -317,24 +323,6 @@ class AdminController
 
         $resourceMetadataArray = [];
 
-        if ($resourceMetadata instanceof TypesInterface) {
-            foreach ($resourceMetadata->getTypes() as $typeName => $type) {
-                $typeSchema = $type->getSchema()->toJsonSchema();
-                $resourceMetadataArray['types'][$typeName] = [
-                    'name' => $type->getName(),
-                    'title' => $type->getTitle(),
-                    'form' => $type->getForm(),
-                    'schema' => !empty($typeSchema) ? $typeSchema : new \stdClass(),
-                ];
-            }
-        }
-        if ($resourceMetadata instanceof FormInterface) {
-            $resourceMetadataArray['form'] = $resourceMetadata->getForm();
-        }
-        if ($resourceMetadata instanceof SchemaInterface) {
-            $resourceSchema = $resourceMetadata->getSchema()->toJsonSchema();
-            $resourceMetadataArray['schema'] = !empty($resourceSchema) ? $resourceSchema : new \stdClass();
-        }
         if ($resourceMetadata instanceof DatagridInterface) {
             $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();
         }

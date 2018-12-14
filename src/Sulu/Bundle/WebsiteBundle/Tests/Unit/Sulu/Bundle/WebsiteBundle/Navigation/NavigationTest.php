@@ -496,7 +496,7 @@ class NavigationTest extends SuluTestCase
      */
     private function createPageDocument()
     {
-        return $this->documentManager->create('page');
+        return $this->documentManager->create('pages');
     }
 }
 

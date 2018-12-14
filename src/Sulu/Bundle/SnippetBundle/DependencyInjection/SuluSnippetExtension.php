@@ -66,19 +66,18 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'content' => [
                         'structure' => [
                             'paths' => [
-                                'snippet' => [
+                                'snippets' => [
                                     'path' => '%kernel.project_dir%/config/templates/snippets',
-                                    'type' => 'snippet',
+                                    'type' => 'snippets',
                                 ],
                             ],
                             'default_type' => [
                                 'snippet' => 'default',
                             ],
-                            'type_map' => ['snippet' => SnippetBridge::class],
+                            'type_map' => ['snippets' => SnippetBridge::class],
                             'resources' => [
                                 'snippets' => [
                                     'datagrid' => SnippetDocument::class,
-                                    'types' => ['snippet'],
                                     'endpoint' => 'get_snippets',
                                 ],
                             ],
@@ -106,7 +105,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                 'sulu_document_manager',
                 [
                     'mapping' => [
-                        'snippet' => ['class' => SnippetDocument::class, 'phpcr_type' => 'sulu:snippet', 'form_type' => SnippetType::class],
+                        'snippets' => ['class' => SnippetDocument::class, 'phpcr_type' => 'sulu:snippet', 'form_type' => SnippetType::class],
                     ],
                 ]
             );

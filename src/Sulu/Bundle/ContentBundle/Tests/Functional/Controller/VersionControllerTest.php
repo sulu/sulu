@@ -27,7 +27,7 @@ class VersionControllerTest extends SuluTestCase
     public function testPostRestore()
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $document = $documentManager->create('page');
+        $document = $documentManager->create('pages');
         $document->setTitle('first title');
         $document->setStructureType('default');
         $document->setResourceSegment('/first-title');
@@ -56,7 +56,7 @@ class VersionControllerTest extends SuluTestCase
     public function testPostRestoreInvalidVersion()
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $document = $documentManager->create('page');
+        $document = $documentManager->create('pages');
         $document->setTitle('first title');
         $document->setStructureType('default');
         $document->setResourceSegment('/first-title');
@@ -77,7 +77,7 @@ class VersionControllerTest extends SuluTestCase
     public function testCGet()
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $document = $documentManager->create('page');
+        $document = $documentManager->create('pages');
         $document->setTitle('first title');
         $document->setStructureType('default');
         $document->setResourceSegment('/first-title');

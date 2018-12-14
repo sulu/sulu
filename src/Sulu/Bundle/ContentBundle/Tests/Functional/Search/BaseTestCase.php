@@ -76,7 +76,7 @@ class BaseTestCase extends SuluTestCase
     public function indexDocument($title, $url)
     {
         /* @var ContentMapperInterface $mapper */
-        $document = $this->documentManager->create('page');
+        $document = $this->documentManager->create('pages');
         $document->setTitle($title);
         $document->setStructureType('default');
         $document->setParent($this->homeDocument);

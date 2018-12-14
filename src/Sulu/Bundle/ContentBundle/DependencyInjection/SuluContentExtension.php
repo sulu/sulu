@@ -73,15 +73,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'resources' => [
                         'pages_seo' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageSeo.xml'],
                             'endpoint' => 'get_page-seos',
                         ],
                         'pages_excerpt' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageExcerpt.xml'],
                             'endpoint' => 'get_page-excerpts',
                         ],
                         'pages_settings' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageSettings.xml'],
                             'endpoint' => 'get_pages',
                         ],
                     ],
@@ -104,25 +101,24 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             'paths' => [
                                 'page_extension' => [
                                     'path' => __DIR__ . '/../Content/templates',
-                                    'type' => 'page',
+                                    'type' => 'pages',
                                 ],
                                 'home' => [
                                     'path' => '%kernel.project_dir%/config/templates/pages',
                                     'type' => 'home',
                                 ],
-                                'page' => [
+                                'pages' => [
                                     'path' => '%kernel.project_dir%/config/templates/pages',
-                                    'type' => 'page',
+                                    'type' => 'pages',
                                 ],
                             ],
                             'type_map' => [
-                                'page' => PageBridge::class,
+                                'pages' => PageBridge::class,
                                 'home' => PageBridge::class,
                             ],
                             'resources' => [
                                 'pages' => [
                                     'datagrid' => BasePageDocument::class,
-                                    'types' => ['page', 'home'],
                                     'endpoint' => 'get_pages',
                                 ],
                             ],
@@ -190,7 +186,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 'sulu_document_manager',
                 [
                     'mapping' => [
-                        'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
+                        'pages' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
                         'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home', 'form_type' => HomeDocumentType::class],
                         'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
                     ],
@@ -204,7 +200,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 [
                     'resources' => [
                         'webspaces' => [
-                            'form' => [],
                             'endpoint' => 'get_webspaces',
                         ],
                     ],
@@ -276,7 +271,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 'sulu_document_manager',
                 [
                     'mapping' => [
-                        'page' => ['set_default_author' => $config['default_author']],
+                        'pages' => ['set_default_author' => $config['default_author']],
                         'home' => ['set_default_author' => $config['default_author']],
                     ],
                 ]
@@ -288,7 +283,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $mapping = $container->getParameter('sulu_document_manager.mapping');
 
         foreach ($mapping as $key => $item) {
-            if ('page' === $item['alias'] || 'home' === $item['alias']) {
+            if ('pages' === $item['alias'] || 'home' === $item['alias']) {
                 $mapping[$key]['set_default_author'] = $config['default_author'];
             }
         }
