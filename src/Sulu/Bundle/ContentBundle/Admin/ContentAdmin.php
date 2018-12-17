@@ -108,6 +108,7 @@ class ContentAdmin extends Admin
                 ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
                 ->addOption('toolbarActions', $formToolbarActionsWithoutType),
             (new Route('sulu_content.page_add_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('formKey', 'pages')
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('editRoute', 'sulu_content.page_edit_form.detail')
                 ->addOption('routerAttributesToEditRoute', ['webspace'])
@@ -119,21 +120,24 @@ class ContentAdmin extends Admin
                 ->addOption('routerAttributesToFormStore', ['parentId', 'webspace'])
                 ->addOption('toolbarActions', $formToolbarActionsWithoutType),
             (new Route('sulu_content.page_edit_form.detail', '/details', 'sulu_admin.form'))
+                ->addOption('formKey', 'pages')
                 ->addOption('tabTitle', 'sulu_content.page_form_detail')
                 ->addOption('toolbarActions', $formToolbarActionsWithType)
                 ->addOption('preview', $previewExpression)
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.seo', '/seo', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_seo')
+                ->addOption('formKey', 'pages_seo')
                 ->addOption('resourceKey', 'pages_seo')
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.excerpt', '/excerpt', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_excerpt')
+                ->addOption('formKey', 'pages_excerpt')
                 ->addOption('resourceKey', 'pages_excerpt')
                 ->setParent('sulu_content.page_edit_form'),
             (new Route('sulu_content.page_edit_form.settings', '/settings', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_content.page_form_settings')
-                ->addOption('resourceKey', 'pages_settings')
+                ->addOption('formKey', 'pages_settings')
                 ->setParent('sulu_content.page_edit_form'),
         ];
     }

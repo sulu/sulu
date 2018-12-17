@@ -23,7 +23,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass props correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     const roleAssignments = shallow(
         <RoleAssignments
@@ -36,7 +36,7 @@ test('Pass props correctly to RoleAssignments', () => {
 });
 
 test('Pass props with value correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     const value: Array<Object> = [
         {

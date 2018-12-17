@@ -89,6 +89,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
+            'formKey' => 'snippets',
             'backRoute' => 'sulu_snippet.datagrid',
             'editRoute' => 'sulu_snippet.edit_form.detail',
         ], 'options', $addDetailRoute);
@@ -106,6 +107,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
         $this->assertAttributeSame([
             'tabTitle' => 'sulu_snippet.details',
+            'formKey' => 'snippets',
             'backRoute' => 'sulu_snippet.datagrid',
         ], 'options', $editDetailRoute);
     }

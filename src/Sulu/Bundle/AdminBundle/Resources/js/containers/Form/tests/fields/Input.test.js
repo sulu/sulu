@@ -13,7 +13,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass error correctly to Input component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
     const inputInvalid = shallow(
@@ -28,7 +28,7 @@ test('Pass error correctly to Input component', () => {
 });
 
 test('Pass props correctly to Input component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const inputValid = shallow(
         <Input
             {...fieldTypeDefaultProps}
@@ -49,7 +49,7 @@ test('Pass headline prop correctly', () => {
             value: true,
         },
     };
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const inputValid = shallow(
         <Input
             {...fieldTypeDefaultProps}
@@ -73,7 +73,7 @@ test('Pass props correctly including maxCharacters to Input component', () => {
             value: ',',
         },
     };
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const inputValid = shallow(
         <Input
             {...fieldTypeDefaultProps}
@@ -89,7 +89,7 @@ test('Pass props correctly including maxCharacters to Input component', () => {
 });
 
 test('Should not pass any arguments to onFinish callback', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const finishSpy = jest.fn();
 
     const input = shallow(

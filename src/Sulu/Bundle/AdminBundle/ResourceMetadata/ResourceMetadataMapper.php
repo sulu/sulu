@@ -13,9 +13,6 @@ namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Field as DatagridField;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 

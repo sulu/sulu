@@ -216,6 +216,7 @@ function evaluateFieldConditions(rawSchema: RawSchema, locale: ?string, data: Ob
 
 export default class FormStore {
     resourceStore: ResourceStore;
+    formKey: string;
     rawSchema: RawSchema;
     validator: ?(data: Object) => boolean;
     @observable errors: Object = {};
@@ -232,11 +233,12 @@ export default class FormStore {
     @observable disabledFieldPaths: Array<string> = [];
     @observable hiddenFieldPaths: Array<string> = [];
 
-    constructor(resourceStore: ResourceStore, options: Object = {}) {
+    constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}) {
         this.resourceStore = resourceStore;
+        this.formKey = formKey;
         this.options = options;
 
-        metadataStore.getSchemaTypes(this.resourceStore.resourceKey)
+        metadataStore.getSchemaTypes(this.formKey)
             .then(this.handleSchemaTypeResponse);
     }
 
@@ -278,14 +280,14 @@ export default class FormStore {
             }
 
             Promise.all([
-                metadataStore.getSchema(this.resourceStore.resourceKey, type),
-                metadataStore.getJsonSchema(this.resourceStore.resourceKey, type),
+                metadataStore.getSchema(this.formKey, type),
+                metadataStore.getJsonSchema(this.formKey, type),
             ]).then(this.handleSchemaResponse);
         });
     };
 
     @action handleSchemaResponse = ([schema, jsonSchema]: [RawSchema, Object]) => {
-        this.validator = ajv.compile(jsonSchema);
+        this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
         this.rawSchema = schema;
@@ -481,7 +483,7 @@ export default class FormStore {
     validateTypes() {
         if (Object.keys(this.types).length === 0) {
             throw new Error(
-                'The resource "' + this.resourceStore.resourceKey + '" handled by this FormStore cannot handle types'
+                'The form "' + this.formKey + '" handled by this FormStore cannot handle types'
             );
         }
     }

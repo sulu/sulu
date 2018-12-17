@@ -24,7 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass props correctly to Permissions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/system':
@@ -46,7 +46,7 @@ test('Pass props correctly to Permissions', () => {
 });
 
 test('Pass props with value correctly to Permissions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/system':

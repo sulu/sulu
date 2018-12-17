@@ -12,9 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class FormResourceMetadataProvider implements ResourceMetadataProviderInterface, CacheWarmerInterface
 {

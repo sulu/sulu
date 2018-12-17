@@ -4,7 +4,6 @@ import {computed} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
-import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
 import {translate} from '../../../utils/Translator';
 
 type Props = FieldTypeProps<?Object | string | number>;
@@ -92,13 +91,11 @@ export default class SingleSelection extends React.Component<Props>
             );
         }
 
-        const isSameEndpoint = resourceMetadataStore.isSameEndpoint(resourceKey, formInspector.resourceKey);
-
         return (
             <SingleSelectionComponent
                 adapter={adapter}
                 disabled={!!disabled}
-                disabledIds={isSameEndpoint && formInspector.id ? [formInspector.id] : []}
+                disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
                 icon={icon}

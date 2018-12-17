@@ -11,12 +11,11 @@
 
 namespace Sulu\Bundle\ContentBundle\ResourceMetadata;
 
+use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class StructureResourceMetadataProvider implements ResourceMetadataProviderInterface
 {

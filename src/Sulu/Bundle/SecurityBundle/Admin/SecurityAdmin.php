@@ -96,6 +96,7 @@ class SecurityAdmin extends Admin
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_security.role_add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.role_form_detail')
+                ->addOption('formKey', 'roles')
                 ->addOption('editRoute', 'sulu_security.role_edit_form.detail')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent('sulu_security.role_add_form'),
@@ -104,6 +105,7 @@ class SecurityAdmin extends Admin
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_security.role_form_detail')
+                ->addOption('formKey', 'roles')
                 ->addOption('backRoute', 'sulu_security.roles_datagrid')
                 ->addOption('toolbarActions', $formToolbarActions)
                 ->setParent('sulu_security.role_edit_form'),
@@ -111,6 +113,7 @@ class SecurityAdmin extends Admin
                 ->addOption('tabTitle', 'sulu_security.permissions')
                 ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
                 ->addOption('resourceKey', 'users')
+                ->addOption('formKey', 'users')
                 ->addOption('idQueryParameter', 'contactId')
                 ->addOption('toolbarActions', ['sulu_admin.save'])
                 ->setParent('sulu_contact.contact_edit_form'),

@@ -96,6 +96,7 @@ class CategoryAdmin extends Admin
                 ->addOption('locales', $locales),
             (new Route('sulu_category.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_category.details')
+                ->addOption('formKey', 'categories')
                 ->addOption('backRoute', 'sulu_category.datagrid')
                 ->addOption('editRoute', 'sulu_category.edit_form.detail')
                 ->setParent('sulu_category.add_form'),
@@ -105,6 +106,7 @@ class CategoryAdmin extends Admin
                 ->addOption('locales', $locales),
             (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_category.details')
+                ->addOption('formKey', 'categories')
                 ->addOption('backRoute', 'sulu_category.datagrid')
                 ->setParent('sulu_category.edit_form'),
         ];

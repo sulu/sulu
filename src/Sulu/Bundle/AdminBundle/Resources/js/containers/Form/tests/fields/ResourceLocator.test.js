@@ -15,7 +15,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = observableOptions.locale ? observableOptions.locale.get() : undefined;
 }));
 
-jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore, options) {
+jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore, formKey, options) {
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
     this.options = options;
@@ -37,7 +37,7 @@ jest.mock('../../../../services/Requester', () => ({
 }));
 
 test('Pass props correctly to ResourceLocator', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         mode: {
             value: 'full',
@@ -61,7 +61,7 @@ test('Pass props correctly to ResourceLocator', () => {
 });
 
 test('Throw an exception if a non-valid mode is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         mode: {
             value: 'test',
@@ -81,7 +81,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
 });
 
 test('Throw an exception if a no generationUrl is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     expect(
         () => shallow(
@@ -94,7 +94,7 @@ test('Throw an exception if a no generationUrl is passed', () => {
 });
 
 test('Set default mode correctly', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const resourceLocator = mount(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -108,7 +108,7 @@ test('Set default mode correctly', () => {
 });
 
 test('Should not pass any argument to onFinish callback', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
 
     const resourceLocator = mount(
@@ -126,7 +126,7 @@ test('Should not pass any argument to onFinish callback', () => {
 });
 
 test('Should not request a new URL if on an edit form', () =>{
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1)));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1), 'test'));
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -145,7 +145,8 @@ test('Should not request a new URL if on an edit form', () =>{
 test('Should request a new URL if no URL was defined', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
     const changeSpy = jest.fn();
@@ -191,7 +192,8 @@ test('Should request a new URL if no URL was defined', () => {
 test('Should not request a new URL if URL was defined', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
     const changeSpy = jest.fn();
@@ -225,7 +227,7 @@ test('Should not request a new URL if URL was defined', () => {
 });
 
 test('Should request a new URL including the options from the FormStore if no URL was defined', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'example'}));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test', {webspace: 'example'}));
     const changeSpy = jest.fn();
 
     shallow(
@@ -268,7 +270,7 @@ test('Should request a new URL including the options from the FormStore if no UR
 });
 
 test('Should not request a new URL if no parts are available', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -295,7 +297,7 @@ test('Should not request a new URL if no parts are available', () => {
 });
 
 test('Should not request a new URL if only empty parts are available', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -322,7 +324,7 @@ test('Should not request a new URL if only empty parts are available', () => {
 });
 
 test('Should not request a new URL if a field without the "sulu.rlp.part" tag has finished editing', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -349,7 +351,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
 });
 
 test('Should not request a new URL if a field without any tags has finished editing', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
@@ -371,7 +373,7 @@ test('Should not request a new URL if a field without any tags has finished edit
 });
 
 test('Should not request a new URL if the resource locator field has already been edited', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'example'}));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test', {webspace: 'example'}));
     const changeSpy = jest.fn();
 
     shallow(

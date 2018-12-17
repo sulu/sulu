@@ -13,7 +13,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'minLength', parameters: {}};
 
     const field = shallow(
@@ -28,7 +28,7 @@ test('Pass error correctly to component', () => {
 });
 
 test('Pass props correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const onFinish = jest.fn();
     const onChange = jest.fn();
 

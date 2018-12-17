@@ -75,7 +75,7 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertEmpty($schema);
+        $this->assertNull($schema);
     }
 
     public function testPageExcerptMetadataAction()
@@ -95,7 +95,7 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertEmpty($schema);
+        $this->assertNull($schema);
     }
 
     public function testPageSettingMetadataAction()

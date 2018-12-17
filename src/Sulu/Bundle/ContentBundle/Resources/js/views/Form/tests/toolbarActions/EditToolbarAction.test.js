@@ -58,7 +58,7 @@ jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
 
 function createEditToolbarAction(locales) {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore);
+    const formStore = new FormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],

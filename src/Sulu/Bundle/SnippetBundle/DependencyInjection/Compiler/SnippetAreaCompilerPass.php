@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler;
 
-use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

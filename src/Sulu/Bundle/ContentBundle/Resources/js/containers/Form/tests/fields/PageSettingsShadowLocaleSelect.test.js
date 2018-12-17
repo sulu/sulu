@@ -28,7 +28,8 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 test('Pass correct props to SingleSelect', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
     formInspector.getValueByPath.mockImplementation((path) => {
@@ -60,7 +61,8 @@ test('Call onChange and onFinish if the value is changed', () => {
 
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('nl')})
+            new ResourceStore('test', undefined, {locale: observable.box('nl')}),
+            'test'
         )
     );
     formInspector.getValueByPath.mockImplementation((path) => {

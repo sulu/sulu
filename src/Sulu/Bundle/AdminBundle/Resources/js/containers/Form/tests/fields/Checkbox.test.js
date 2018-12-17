@@ -14,7 +14,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass the label correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -27,7 +27,7 @@ test('Pass the label correctly to Checkbox component', () => {
 });
 
 test('Pass disabled correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -41,7 +41,7 @@ test('Pass disabled correctly to Checkbox component', () => {
 });
 
 test('Pass the value of true correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -53,7 +53,7 @@ test('Pass the value of true correctly to Checkbox component', () => {
 });
 
 test('Pass the value of false correctly to Checkbox component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -65,7 +65,7 @@ test('Pass the value of false correctly to Checkbox component', () => {
 });
 
 test('Call onChange and onFinish on the changed callback of the Checkbox', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -84,7 +84,7 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 });
 
 test('Pass the label correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -97,7 +97,7 @@ test('Pass the label correctly to Toggler component', () => {
 });
 
 test('Pass disabled correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -111,7 +111,7 @@ test('Pass disabled correctly to Toggler component', () => {
 });
 
 test('Pass the value of true correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -125,7 +125,7 @@ test('Pass the value of true correctly to Toggler component', () => {
 });
 
 test('Pass the value of false correctly to Toggler component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
@@ -138,7 +138,7 @@ test('Pass the value of false correctly to Toggler component', () => {
 });
 
 test('Call onChange and onFinish on the changed callback of the Toggler', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 

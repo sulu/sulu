@@ -210,7 +210,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     {
         $form = new Form();
         $this->mapChildren($formMetadata->getChildren(), $form, $locale);
-        $form->setSchema($this->mapSchema($formMetadata->getProperties())->toJsonSchema());
+
+        $schema = $this->mapSchema($formMetadata->getProperties())->toJsonSchema();
+        if (count($schema) > 0) {
+            $form->setSchema($schema);
+        }
 
         return $form;
     }

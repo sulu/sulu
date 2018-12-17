@@ -43,7 +43,7 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         },
     };
     const fieldFinishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = mount(
         <Renderer
@@ -80,7 +80,7 @@ test('Should render field types based on schema', () => {
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = render(
         <Renderer
@@ -136,7 +136,7 @@ test('Should not render fields when the schema contains a visible flag of false'
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = render(
         <Renderer
@@ -175,7 +175,7 @@ test('Should pass correct schemaPath to fields', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = shallow(
         <Renderer
@@ -214,7 +214,7 @@ test('Should pass name, schema and formInspector to fields', () => {
     const changeSpy = jest.fn();
     const fieldFinishSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = shallow(
         <Renderer
@@ -271,7 +271,7 @@ test('Should pass errors to fields that have already been modified at least once
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
     formInspector.isFieldModified.mockImplementation((dataPath) => {
         return dataPath === '/text' ? true : false;
     });
@@ -324,7 +324,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = shallow(
         <Renderer
@@ -383,7 +383,7 @@ test('Should render nested sections', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     expect(render(
         <Renderer
@@ -430,7 +430,7 @@ test('Should render sections with size', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     expect(render(
         <Renderer
@@ -476,7 +476,7 @@ test('Should render sections without label', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     expect(render(
         <Renderer

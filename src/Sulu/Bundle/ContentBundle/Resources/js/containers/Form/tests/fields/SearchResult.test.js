@@ -24,7 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass correct fields to SearchResult component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/description':
@@ -51,7 +51,8 @@ test('Pass correct fields to SearchResult component', () => {
 test('Pass correct fields to SearchResult component', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
     formInspector.getValueByPath.mockImplementation((path) => {

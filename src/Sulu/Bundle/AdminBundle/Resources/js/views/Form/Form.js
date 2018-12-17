@@ -11,7 +11,6 @@ import {default as FormContainer, FormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import resourceMetadataStore from '../../stores/ResourceMetadataStore';
 import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import formStyles from './form.scss';
@@ -65,6 +64,7 @@ class Form extends React.Component<Props> {
             attributes,
             route: {
                 options: {
+                    formKey,
                     idQueryParameter,
                     resourceKey,
                     apiOptions,
@@ -96,9 +96,6 @@ class Form extends React.Component<Props> {
 
             if (idQueryParameter) {
                 this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter);
-            } else if (resourceMetadataStore.isSameEndpoint(resourceKey, resourceStore.resourceKey)) {
-                this.resourceStore = resourceStore.clone();
-                this.resourceStore.resourceKey = resourceKey;
             } else {
                 this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
             }
@@ -113,7 +110,7 @@ class Form extends React.Component<Props> {
             this.resourceStore.load();
         }
 
-        this.formStore = new FormStore(this.resourceStore, formStoreOptions);
+        this.formStore = new FormStore(this.resourceStore, formKey, formStoreOptions);
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);

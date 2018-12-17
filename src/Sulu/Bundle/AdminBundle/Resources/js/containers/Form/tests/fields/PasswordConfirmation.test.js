@@ -13,7 +13,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass error correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const error = {keyword: 'required', parameters: {}};
 
     const passwordConfirmation = shallow(
@@ -28,7 +28,7 @@ test('Pass error correctly to PasswordConfirmation component', () => {
 });
 
 test('Pass props correctly to PasswordConfirmation component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const passwordConfirmation = shallow(

@@ -12,19 +12,14 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\FormResourceMetadataProvider;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 

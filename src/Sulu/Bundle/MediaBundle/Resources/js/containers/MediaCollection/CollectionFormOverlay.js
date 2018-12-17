@@ -17,6 +17,8 @@ type Props = {
     overlayType: OverlayType,
 };
 
+const FORM_KEY = 'collections';
+
 @observer
 export default class CollectionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
@@ -28,7 +30,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         super(props);
 
         const {resourceStore} = this.props;
-        this.formStore = new FormStore(resourceStore);
+        this.formStore = new FormStore(resourceStore, FORM_KEY);
     }
 
     @action componentWillReceiveProps(nextProps: Props) {
@@ -41,7 +43,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         }
 
         if (this.props.resourceStore !== nextProps.resourceStore) {
-            this.formStore = new FormStore(nextProps.resourceStore);
+            this.formStore = new FormStore(nextProps.resourceStore, FORM_KEY);
         }
     }
 

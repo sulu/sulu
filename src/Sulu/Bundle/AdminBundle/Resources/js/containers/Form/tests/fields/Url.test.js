@@ -24,7 +24,7 @@ test('Pass error prop correctly to Url component', () => {
 
     const error = {keyword: 'minLength', parameters: {}};
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -47,7 +47,7 @@ test('Pass props correctly to Url component', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -74,7 +74,7 @@ test('Not call changed when only protocol is given', () => {
 
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -100,7 +100,7 @@ test('Pass correct default props to Url component', () => {
     };
     const changeSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const url = shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -129,7 +129,7 @@ test('Throw error if only specific_part default is set', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -157,7 +157,7 @@ test('Do not build URL from defaults if value is already given', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -189,7 +189,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     shallow(
         <Url
             {...fieldTypeDefaultProps}
@@ -212,7 +212,7 @@ test('Should not pass any arguments to onFinish callback', () => {
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
 
     const url = shallow(
