@@ -67,6 +67,7 @@ class Form extends React.Component<Props> {
                 options: {
                     idQueryParameter,
                     resourceKey,
+                    apiOptions,
                     routerAttributesToFormStore,
                 },
             },
@@ -80,15 +81,12 @@ class Form extends React.Component<Props> {
             );
         }
 
-        const formStoreOptions = routerAttributesToFormStore
-            ? routerAttributesToFormStore.reduce(
-                (options: Object, routerAttribute: string) => {
-                    options[routerAttribute] = attributes[routerAttribute];
-                    return options;
-                },
-                {}
-            )
-            : {};
+        const formStoreOptions = apiOptions ? apiOptions : {};
+        if (routerAttributesToFormStore) {
+            routerAttributesToFormStore.forEach((routerAttribute) => {
+                formStoreOptions[routerAttribute] = attributes[routerAttribute];
+            });
+        }
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
