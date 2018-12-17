@@ -19,7 +19,10 @@ type Props = {|
     /** Listen for changes of this component */
     onChange: (value: ?Date) => void,
     /** Configure the datepicker to your needs, for more information have a look in the README.md */
-    options: Object,
+    options: {
+        dateFormat?: ?string | boolean,
+        timeFormat?: ?string | boolean,
+    },
     valid: boolean,
     disabled: boolean,
     value: ?Date,
@@ -102,7 +105,9 @@ export default class DatePicker extends React.Component<Props> {
 
     handleInputBlur = () => {
         if (this.inputChanged && typeof this.value === 'string') {
-            this.handleChange(undefined);
+            const newMoment = moment(this.value, this.getFormat());
+
+            this.handleChange(newMoment.isValid() ? newMoment.toDate() : undefined);
         }
     };
 
@@ -121,17 +126,31 @@ export default class DatePicker extends React.Component<Props> {
         };
     };
 
-    getPlaceholder = (fieldOptions: {} => string) => {
-        const placeholderDate = fieldOptions.dateFormat ? fieldOptions.dateFormat : '';
-        const placeholderTime = fieldOptions.timeFormat ? moment.localeData().longDateFormat('LT') : '';
+    getDateFormat = (): string => {
+        const dateFormat = this.props.options.dateFormat;
 
-        if (!fieldOptions.timeFormat) {
-            return placeholderDate;
-        } else if (fieldOptions.dateFormat && fieldOptions.timeFormat) {
-            return placeholderDate + ' ' + placeholderTime;
+        if ((!dateFormat && dateFormat !== false) || dateFormat === true || (!dateFormat && !this.getTimeFormat())) {
+            return moment.localeData().longDateFormat('L') || '';
         }
 
-        return placeholderTime;
+        return dateFormat || '';
+    };
+
+    getTimeFormat = (): string => {
+        const timeFormat = this.props.options.timeFormat;
+
+        if (timeFormat === true) {
+            return moment.localeData().longDateFormat('LT') || '';
+        }
+
+        return timeFormat || '';
+    };
+
+    getFormat = (): string => {
+        return [
+            this.getDateFormat(),
+            this.getTimeFormat(),
+        ].filter((format) => !!format).join(' ');
     };
 
     renderInput = (props: Object) => {
@@ -158,13 +177,13 @@ export default class DatePicker extends React.Component<Props> {
 
         const fieldOptions = {
             closeOnSelect: true,
-            timeFormat: false,
-            dateFormat: moment.localeData().longDateFormat('L'),
             ...options,
+            dateFormat: this.getDateFormat() || false,
+            timeFormat: this.getTimeFormat() || false,
         };
 
         const inputProps = {
-            placeholder: placeholder ? placeholder : this.getPlaceholder(fieldOptions),
+            placeholder: placeholder ? placeholder : this.getFormat(),
             valid: valid && !this.showError,
             disabled: disabled,
             icon: fieldOptions.dateFormat ? 'su-calendar' : 'su-clock',
