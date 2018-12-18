@@ -94,5 +94,9 @@
             id="sulu_admin.field_type_option_registry"
             class="Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry"
         />
+
+        <service id="sulu_admin.schema_handler" class="Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler">
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
     </services>
 </container>

@@ -147,7 +147,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         foreach ($formFinder as $formFile) {
             $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
-            $formsMetadata[$formMetadata->getKey()] = $formMetadata;
+            $formKey = $formMetadata->getKey();
+            if (!array_key_exists($formKey, $formsMetadata)) {
+                $formsMetadata[$formKey] = [];
+            }
+            $formsMetadata[$formKey][] = $formMetadata;
         }
 
         $structuresMetadataByTypes = [];
@@ -174,9 +178,14 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             }
 
             foreach ($formsMetadata as $key => $formMetadata) {
-                $form = $this->mapFormMetadata($formMetadata, $locale);
+                $form = $this->mapFormsMetadata($formMetadata, $locale);
                 $configCache = $this->getConfigCache($key, $locale);
-                $configCache->write(serialize($form), [new FileResource($formMetadata->getResource())]);
+                $configCache->write(
+                    serialize($form),
+                    array_map(function(FormMetadata $formMetadata) {
+                        return new FileResource($formMetadata->getResource());
+                    }, $formMetadata)
+                );
             }
         }
     }
@@ -198,7 +207,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             $form->setName($structureMetadata->getName());
             $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
             $this->mapChildren($structureMetadata->getChildren(), $form, $locale);
-            $form->setSchema($this->mapSchema($structureMetadata->getProperties())->toJsonSchema());
+            $form->setSchema($this->mapSchema($structureMetadata->getProperties()));
 
             $typedForm->addForm($structureMetadata->getName(), $form);
         }
@@ -206,17 +215,32 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return $typedForm;
     }
 
-    private function mapFormMetadata(FormMetadata $formMetadata, $locale)
+    /**
+     * @param FormMetadata[] $formsMetadata
+     */
+    private function mapFormsMetadata(array $formsMetadata, $locale)
     {
-        $form = new Form();
-        $this->mapChildren($formMetadata->getChildren(), $form, $locale);
+        $mergedForm = null;
+        foreach ($formsMetadata as $formMetadata) {
+            $form = new Form();
+            $this->mapChildren($formMetadata->getChildren(), $form, $locale);
 
-        $schema = $this->mapSchema($formMetadata->getProperties())->toJsonSchema();
-        if (count($schema) > 0) {
+            $schema = $this->mapSchema($formMetadata->getProperties());
+            $formSchema = $formMetadata->getSchema();
+            if ($formSchema) {
+                $schema = $schema->merge($formSchema);
+            }
+
             $form->setSchema($schema);
+
+            if (!$mergedForm) {
+                $mergedForm = $form;
+            } else {
+                $mergedForm = $mergedForm->merge($form);
+            }
         }
 
-        return $form;
+        return $mergedForm;
     }
 
     /**

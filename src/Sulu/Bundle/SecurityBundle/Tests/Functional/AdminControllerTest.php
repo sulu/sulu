@@ -31,7 +31,9 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertEquals(['username', 'locale', 'userRoles'], $schema->required);
+        $this->assertEquals(['username', 'locale', 'userRoles'], $schema->allOf[0]->required);
+        $this->assertEquals(['id'], $schema->allOf[1]->anyOf[0]->required);
+        $this->assertEquals(['password'], $schema->allOf[1]->anyOf[1]->required);
     }
 
     public function testRoleMetadataAction()

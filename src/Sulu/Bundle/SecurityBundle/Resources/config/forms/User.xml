@@ -18,6 +18,7 @@
             </schema>
         </anyOf>
     </schema>
+
     <properties>
         <property name="username" type="text_line" mandatory="true" colspan="6">
             <meta>

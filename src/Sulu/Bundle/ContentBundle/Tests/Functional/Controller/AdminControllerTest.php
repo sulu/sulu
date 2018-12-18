@@ -55,7 +55,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('url', $overviewType->form);
         $this->assertObjectHasAttribute('article', $overviewType->form);
         $this->assertObjectHasAttribute('schema', $overviewType);
-        $this->assertEquals([], $overviewType->schema);
+        $this->assertNull($overviewType->schema);
     }
 
     public function testPageSeoMetadataAction()
@@ -115,6 +115,7 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertEquals(['nodeType'], $schema->required);
+        $this->assertCount(2, $schema->allOf);
+        $this->assertEquals(['nodeType'], $schema->allOf[0]->required);
     }
 }

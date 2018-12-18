@@ -2,7 +2,7 @@
 <form xmlns="http://schemas.sulu.io/template/template"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/properties-1.0.xsd">
-    <key>form</key>
+    <key>form_with_schema</key>
 
     <schema>
         <allOf>
@@ -27,7 +27,7 @@
     </schema>
 
     <properties>
-        <property name="first" type="text_line" colspan="6"/>
+        <property name="first" type="text_line" colspan="6" mandatory="true"/>
         <property name="second" type="text_line" colspan="6"/>
     </properties>
 </form>

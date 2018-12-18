@@ -22,3 +22,13 @@ security:
 twig:
     debug: "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+
+sulu_admin:
+    forms:
+        directories:
+            - "%kernel.project_dir%/config/forms"
+
+services:
+    sulu_admin_test.form_metadata_provider:
+        alias: sulu_admin.form_metadata_provider
+        public: true

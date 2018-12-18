@@ -51,9 +51,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadForm()
     {
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -114,9 +112,7 @@ class FormXmlLoaderTest extends TestCase
         $this->translator->trans('salutation', [], 'admin', 'nl')->willReturn('nl_salutation');
 
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_localizations.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_localizations.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
         $this->assertCount(4, $formMetadata->getProperties());
@@ -163,9 +159,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithEvaluations()
     {
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_evaluations.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_evaluations.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -211,9 +205,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithSchema()
     {
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_schema.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_schema.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
@@ -260,9 +252,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithoutLabel()
     {
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_without_label.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_without_label.xml');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
     }
@@ -270,9 +260,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithExpressionParam()
     {
         /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_expression_param.xml'
-        );
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_expression_param.xml');
 
         $this->assertEquals(
             'service(\'test\').getId()',
@@ -289,7 +277,7 @@ class FormXmlLoaderTest extends TestCase
     {
         /** @var FormMetadata $formMetadata */
         $formMetadata = $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_with_sections.xml'
+            $this->getFormDirectory() . 'form_with_sections.xml'
         );
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
@@ -310,5 +298,11 @@ class FormXmlLoaderTest extends TestCase
         $this->loader->load(
             __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_invalid.xml'
         );
+    }
+
+    private function getFormDirectory()
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+            . 'Application' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR;
     }
 }
