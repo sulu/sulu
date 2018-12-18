@@ -75,6 +75,10 @@ sulu_route_api:
     resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
     prefix: /admin/api
 
+sulu_preview:
+    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    prefix: /admin/preview
+
 # for preview
 sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
