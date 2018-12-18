@@ -68,11 +68,13 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
                 $template['defaultTitle'] = $default ? $default->getTitle() : null;
             }
 
-            $templates[] = $template;
+            $templates[$type->getKey()] = $template;
         }
 
+        ksort($templates);
+
         $data = [
-            '_embedded' => $templates,
+            '_embedded' => array_values($templates),
             'total' => count($templates),
         ];
 
