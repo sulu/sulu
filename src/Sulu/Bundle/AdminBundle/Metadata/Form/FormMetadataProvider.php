@@ -158,7 +158,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $structuresMetadataByTypes = [];
         foreach ($this->structureMetadataFactory->getStructureTypes() as $structureType) {
             foreach ($this->structureMetadataFactory->getStructures($structureType) as $structureMetadata) {
-                if ($structureMetadata->isInternal()) {
+                if ($structureMetadata->isInternal() || 'home' === $structureType) {
                     continue;
                 }
 
