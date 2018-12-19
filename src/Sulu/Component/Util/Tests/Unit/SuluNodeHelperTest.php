@@ -202,8 +202,8 @@ class SuluNodeHelperTest extends TestCase
     public function provideGetStructureTypeForNode()
     {
         return [
-            ['sulu:snippet', 'snippets'],
-            ['sulu:page', 'pages'],
+            ['sulu:snippet', 'snippet'],
+            ['sulu:page', 'page'],
             ['sulu:foobar', null],
             ['', null],
         ];

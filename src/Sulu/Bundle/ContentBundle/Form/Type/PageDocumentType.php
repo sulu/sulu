@@ -65,7 +65,7 @@ class PageDocumentType extends BasePageDocumentType
      */
     public function configureOptions(OptionsResolver $options)
     {
-        $metadata = $this->metadataFactory->getMetadataForAlias('pages');
+        $metadata = $this->metadataFactory->getMetadataForAlias('page');
 
         $options->setDefaults([
             'data_class' => $metadata->getClass(),

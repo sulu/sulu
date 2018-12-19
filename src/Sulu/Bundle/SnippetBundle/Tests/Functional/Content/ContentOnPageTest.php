@@ -51,7 +51,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
 
     public function loadFixtures()
     {
-        $this->snippet1 = $this->documentManager->create('snippets');
+        $this->snippet1 = $this->documentManager->create('snippet');
         $this->snippet1->setStructureType('hotel');
         $this->snippet1->setTitle('ElePHPant');
         $this->snippet1->getStructure()->bind([
@@ -61,7 +61,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         $this->documentManager->persist($this->snippet1, 'de');
         $this->documentManager->flush();
 
-        $this->snippet1 = $this->documentManager->create('snippets');
+        $this->snippet1 = $this->documentManager->create('snippet');
         $this->snippet1->setStructureType('hotel');
         $this->snippet1->setTitle('Penguin');
         $this->snippet1->getStructure()->bind([
@@ -108,7 +108,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         }
 
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setStructureType($templateKey);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->setTitle($data['title']);

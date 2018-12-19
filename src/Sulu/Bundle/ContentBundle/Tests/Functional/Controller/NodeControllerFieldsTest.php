@@ -540,7 +540,7 @@ class NodeControllerFieldsTest extends SuluTestCase
     private function createPage($title, $locale, $data = [], $parent = null, array $permissions = [], $path = null)
     {
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
 
         if (!$path) {
             $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
@@ -615,7 +615,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $data['url'] = '/' . $title;
 
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setStructureType('simple');
         $document->setTitle($title);
         $document->setResourceSegment($data['url']);
@@ -649,7 +649,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $data['url'] = '/' . $title;
 
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setStructureType('simple');
         $document->setTitle($title);
         $document->setResourceSegment($data['url']);

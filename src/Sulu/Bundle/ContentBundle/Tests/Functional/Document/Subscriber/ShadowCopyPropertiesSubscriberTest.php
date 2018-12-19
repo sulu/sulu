@@ -42,7 +42,7 @@ class ShadowCopyPropertiesSubscriberTest extends SuluTestCase
 
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
 
-        $englishDocument = $this->documentManager->create('pages');
+        $englishDocument = $this->documentManager->create('page');
         $englishDocument->setStructureType('default');
         $englishDocument->setParent($this->homeDocument);
         $englishDocument->setTitle('English page');

@@ -105,7 +105,7 @@ class SnippetImportTest extends SuluTestCase
             $this->snippets[0]->getUuid(),
             'en',
             [
-                'type' => 'snippets',
+                'type' => 'snippet',
                 'load_ghost_content' => false,
             ]
         );
@@ -114,7 +114,7 @@ class SnippetImportTest extends SuluTestCase
             $this->snippets[1]->getUuid(),
             'en',
             [
-                'type' => 'snippets',
+                'type' => 'snippet',
                 'load_ghost_content' => false,
             ]
         );
@@ -170,7 +170,7 @@ class SnippetImportTest extends SuluTestCase
      */
     private function prepareData()
     {
-        $this->snippets[0] = $this->documentManager->create('snippets');
+        $this->snippets[0] = $this->documentManager->create('snippet');
         $this->snippets[0]->setStructureType('hotel');
         $this->snippets[0]->setTitle('Title1');
         $this->snippets[0]->getStructure()->bind([
@@ -180,7 +180,7 @@ class SnippetImportTest extends SuluTestCase
         $this->documentManager->persist($this->snippets[0], 'en');
         $this->documentManager->flush();
 
-        $this->snippets[1] = $this->documentManager->create('snippets');
+        $this->snippets[1] = $this->documentManager->create('snippet');
         $this->snippets[1]->setStructureType('hotel');
         $this->snippets[1]->setTitle('Title2');
         $this->snippets[1]->getStructure()->bind([

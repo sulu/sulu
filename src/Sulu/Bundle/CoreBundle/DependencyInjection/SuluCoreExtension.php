@@ -71,7 +71,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                         'paths' => [
                             'sulu' => [
                                 'path' => $templatesPath,
-                                'type' => 'pages',
+                                'type' => 'page',
                             ],
                         ],
                     ],

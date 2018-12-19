@@ -175,7 +175,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             }
 
             /** @var PageDocument $document */
-            $document = $this->documentManager->create('pages');
+            $document = $this->documentManager->create('page');
             $document->setTitle($data['title']);
             $document->getStructure()->bind($data);
             $document->setStructureType($template);
@@ -242,7 +242,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     public function datasourceProvider()
     {
         /** @var PageDocument $news */
-        $news = $this->documentManager->create('pages');
+        $news = $this->documentManager->create('page');
         $news->setTitle('News');
         $news->setResourceSegment('/news');
         $news->setStructureType('simple');
@@ -252,7 +252,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->flush();
 
         /** @var PageDocument $products */
-        $products = $this->documentManager->create('pages');
+        $products = $this->documentManager->create('page');
         $products->setTitle('Products');
         $products->setResourceSegment('/products');
         $products->setStructureType('simple');
@@ -265,7 +265,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $max = 15;
         for ($i = 0; $i < $max; ++$i) {
             /** @var PageDocument $document */
-            $document = $this->documentManager->create('pages');
+            $document = $this->documentManager->create('page');
             $document->setTitle('News ' . $i);
             $document->setResourceSegment('/news/news-' . $i);
             $document->setStructureType('simple');
@@ -359,7 +359,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->getContainer()->get('request_stack')->push($request);
 
         /** @var PageDocument $familyDocument */
-        $familyDocument = $this->documentManager->create('pages');
+        $familyDocument = $this->documentManager->create('page');
         $familyDocument->setTitle('Family');
         $familyDocument->setResourceSegment('/family');
         $familyDocument->setExtensionsData(
@@ -372,7 +372,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($familyDocument, 'en');
 
-        $singleDocument = $this->documentManager->create('pages');
+        $singleDocument = $this->documentManager->create('page');
         $singleDocument->setTitle('Single');
         $singleDocument->setResourceSegment('/single');
         $singleDocument->setExtensionsData(
@@ -443,7 +443,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->getContainer()->get('request_stack')->push($request);
 
         /** @var PageDocument $familyDocument */
-        $familyDocument = $this->documentManager->create('pages');
+        $familyDocument = $this->documentManager->create('page');
         $familyDocument->setTitle('Family');
         $familyDocument->setResourceSegment('/family');
         $familyDocument->setExtensionsData(
@@ -456,7 +456,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($familyDocument, 'en');
 
-        $singleDocument = $this->documentManager->create('pages');
+        $singleDocument = $this->documentManager->create('page');
         $singleDocument->setTitle('Single');
         $singleDocument->setResourceSegment('/single');
         $singleDocument->setExtensionsData(
@@ -527,7 +527,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->getContainer()->get('request_stack')->push($request);
 
         /** @var PageDocument $familyDocument */
-        $familyDocument = $this->documentManager->create('pages');
+        $familyDocument = $this->documentManager->create('page');
         $familyDocument->setTitle('Family');
         $familyDocument->setResourceSegment('/family');
         $familyDocument->setExtensionsData(
@@ -540,7 +540,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->persist($familyDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($familyDocument, 'en');
 
-        $singleDocument = $this->documentManager->create('pages');
+        $singleDocument = $this->documentManager->create('page');
         $singleDocument->setTitle('Single');
         $singleDocument->setResourceSegment('/single');
         $singleDocument->setExtensionsData(
@@ -597,7 +597,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             }
 
             /** @var PageDocument $document */
-            $document = $this->documentManager->create('pages');
+            $document = $this->documentManager->create('page');
             $document->setTitle('News ' . rand(1, 100));
             $document->setResourceSegment('/news/news-' . $i);
             $document->setExtensionsData(
@@ -839,7 +839,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $documents = [];
         foreach ($data as $item) {
             /** @var PageDocument $document */
-            $document = $this->documentManager->create('pages');
+            $document = $this->documentManager->create('page');
             $document->setTitle($item['title']);
             $document->setResourceSegment($item['url']);
             $document->setExtensionsData($item['ext']);
@@ -945,7 +945,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     public function orderByProvider()
     {
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('A');
         $document->setResourceSegment('/a');
         $document->setStructureType('simple');
@@ -955,7 +955,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('Z');
         $document->setResourceSegment('/z');
         $document->setStructureType('simple');
@@ -965,7 +965,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('y');
         $document->setResourceSegment('/y');
         $document->setStructureType('simple');
@@ -975,7 +975,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('b');
         $document->setResourceSegment('/b');
         $document->setStructureType('simple');
@@ -1291,7 +1291,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             try {
                 $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $e) {
-                $document = $this->documentManager->create('pages');
+                $document = $this->documentManager->create('page');
             }
             $document->getStructure()->bind($data);
             $document->setTitle($data['title']);

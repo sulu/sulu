@@ -142,7 +142,7 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function testRemoveSnippetWithReferences()
     {
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('Hello');
         $document->getStructure()->bind([
             'animals' => [$this->snippet1->getUuid()],
@@ -176,7 +176,7 @@ class ContentMapperSnippetTest extends SuluTestCase
      */
     public function testRemoveSnippetWithReferencesDereference($multiple = false)
     {
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setTitle('test');
         $document->setResourceSegment('/url/foo');
 
@@ -251,6 +251,6 @@ class ContentMapperSnippetTest extends SuluTestCase
      */
     private function createSnippetDocument()
     {
-        return $this->documentManager->create('snippets');
+        return $this->documentManager->create('snippet');
     }
 }

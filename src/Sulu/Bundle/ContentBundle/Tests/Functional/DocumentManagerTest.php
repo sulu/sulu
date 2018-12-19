@@ -142,7 +142,7 @@ class DocumentManagerTest extends SuluTestCase
     private function createSimplePage($title, $url)
     {
         /** @var PageDocument $page */
-        $page = $this->documentManager->create('pages');
+        $page = $this->documentManager->create('page');
         $page->setTitle($title);
         $page->setResourceSegment($url);
         $page->setLocale('en');

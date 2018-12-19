@@ -183,7 +183,7 @@ class Configuration implements ConfigurationInterface
                                         ->example('%kernel.project_dir%/config/templates')
                                     ->end()
                                     ->scalarNode('type')
-                                        ->defaultValue('pages')
+                                        ->defaultValue('page')
                                     ->end()
                                 ->end()
                             ->end()

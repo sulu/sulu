@@ -37,7 +37,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         $structureMetaData2 = $this->createStructureMetaData('hotel');
 
         $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-        $this->structureFactory->getStructures('snippets')->willReturn([
+        $this->structureFactory->getStructures('snippet')->willReturn([
             $structureMetaData1->reveal(),
             $structureMetaData2->reveal(),
         ]);
@@ -92,7 +92,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         $structureMetaData2 = $this->createStructureMetaData('hotel');
 
         $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-        $this->structureFactory->getStructures('snippets')->willReturn([
+        $this->structureFactory->getStructures('snippet')->willReturn([
             $structureMetaData1->reveal(),
             $structureMetaData2->reveal(),
         ]);

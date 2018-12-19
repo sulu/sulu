@@ -65,7 +65,7 @@ class ValidatePagesCommandTest extends SuluTestCase
 
         $testIoHomeDocument = $this->documentManager->find('/cmf/test_io/contents', 'de');
 
-        $page1 = $this->documentManager->create('pages');
+        $page1 = $this->documentManager->create('page');
         $page1->setStructureType('default');
         $page1->setTitle('Node1');
         $page1->setResourceSegment('/node1');
@@ -78,7 +78,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page1_1 = $this->documentManager->create('pages');
+        $page1_1 = $this->documentManager->create('page');
         $page1_1->setStructureType('default');
         $page1_1->setTitle('Node1-1');
         $page1_1->getStructure()->bind(['article' => 'This is a perfect description.']);
@@ -92,7 +92,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page1_1_1 = $this->documentManager->create('pages');
+        $page1_1_1 = $this->documentManager->create('page');
         $page1_1_1->setStructureType('default');
         $page1_1_1->setTitle('Node1-1-1');
         $page1_1_1->getStructure()->bind(['article' => 'This is a perfect description.']);
@@ -106,7 +106,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page2 = $this->documentManager->create('pages');
+        $page2 = $this->documentManager->create('page');
         $page2->setStructureType('smartcontent');
         $page2->setTitle('Node2');
         $page2->getStructure()->bind(
@@ -127,7 +127,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page2_1 = $this->documentManager->create('pages');
+        $page2_1 = $this->documentManager->create('page');
         $page2_1->setStructureType('internallinks');
         $page2_1->setTitle('Node2-1');
         $page2_1->getStructure()->bind(
@@ -150,7 +150,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page2_1_1 = $this->documentManager->create('pages');
+        $page2_1_1 = $this->documentManager->create('page');
         $page2_1_1->setStructureType('default');
         $page2_1_1->setTitle('Node2-1-1');
         $page2_1_1->getStructure()->bind(['article' => 'This is a perfect description.']);
@@ -164,7 +164,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page3 = $this->documentManager->create('pages');
+        $page3 = $this->documentManager->create('page');
         $page3->setStructureType('smartcontent');
         $page3->setTitle('Node3');
         $page3->getStructure()->bind(
@@ -185,7 +185,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         );
         $this->documentManager->flush();
 
-        $page4 = $this->documentManager->create('pages');
+        $page4 = $this->documentManager->create('page');
         $page4->setStructureType('block');
         $page4->setTitle('Node4');
         $page4->getStructure()->bind(

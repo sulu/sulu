@@ -1042,7 +1042,7 @@ class ContentRepositoryTest extends SuluTestCase
     private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [])
     {
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
 
         if (!$parentDocument) {
             $parentDocument = $this->homeDocument;
@@ -1111,7 +1111,7 @@ class ContentRepositoryTest extends SuluTestCase
         $data['url'] = '/' . $title;
 
         /** @var PageDocument $document */
-        $document = $this->documentManager->create('pages');
+        $document = $this->documentManager->create('page');
         $document->setStructureType('simple');
         $document->setTitle($title);
         $document->setResourceSegment($data['url']);

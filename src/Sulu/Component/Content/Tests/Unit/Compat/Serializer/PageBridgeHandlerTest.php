@@ -90,7 +90,7 @@ class PageBridgeHandlerTest extends TestCase
         $context = $this->prophesize(Context::class);
 
         $context->accept('serialized document', ['name' => PageDocument::class])->willReturn($document->reveal());
-        $structureFactory->getStructureMetadata('pages', 'test')->willReturn($structureMetadata->reveal());
+        $structureFactory->getStructureMetadata('page', 'test')->willReturn($structureMetadata->reveal());
 
         $navigator = new GraphNavigator(
             $this->prophesize(MetadataFactoryInterface::class)->reveal(),

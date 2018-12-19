@@ -52,7 +52,7 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
     {
         $this->initPhpcr();
 
-        $snippet = $this->documentManager->create('snippets');
+        $snippet = $this->documentManager->create('snippet');
         $snippet->setStructureType('car');
         $snippet->setTitle('Hallo');
         $snippet->getStructure()->bind(['description' => 'This is a perfect description.']);

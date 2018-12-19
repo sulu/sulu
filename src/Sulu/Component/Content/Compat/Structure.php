@@ -43,12 +43,12 @@ abstract class Structure implements StructureInterface
     /**
      * Structure type page.
      */
-    const TYPE_PAGE = 'pages';
+    const TYPE_PAGE = 'page';
 
     /**
      * Structure type page.
      */
-    const TYPE_SNIPPET = 'snippets';
+    const TYPE_SNIPPET = 'snippet';
 
     /**
      * webspaceKey of node.
