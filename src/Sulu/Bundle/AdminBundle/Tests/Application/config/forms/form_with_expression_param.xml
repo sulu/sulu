@@ -7,7 +7,7 @@
     <properties>
         <property name="name" type="text_line">
             <params>
-                <param name="id" expression="service('test').getId()" />
+                <param name="id" type="expression" value="service('test').getId()" />
             </params>
         </property>
     </properties>

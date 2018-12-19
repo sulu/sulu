@@ -43,7 +43,11 @@
                 <title>sulu_security.system_language</title>
             </meta>
             <params>
-                <param name="values" expression="service('sulu_security.system_language_select_helper').getValues()"/>
+                <param
+                    name="values"
+                    type="expression"
+                    value="service('sulu_security.system_language_select_helper').getValues()"
+                />
             </params>
         </property>
 

@@ -14,7 +14,11 @@
                                 <info_text>sulu_contact.upload_logo_info_text</info_text>
                             </meta>
                         </param>
-                        <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"/>
+                        <param
+                            name="collection_id"
+                            type="expression"
+                            value="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"
+                        />
                         <param name="empty_icon" value="su-house"/>
                         <param name="image_size" value="sulu-400x400-inset" />
                     </params>

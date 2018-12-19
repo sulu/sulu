@@ -328,14 +328,6 @@ class PropertiesXmlParser
             'meta' => $this->loadMeta($xpath, $node),
         ];
 
-        $expression = $this->getValueFromXPath('@expression', $xpath, $node);
-        if ($expression) {
-            $result['type'] = 'expression';
-            $result['value'] = $expression;
-
-            return $result;
-        }
-
         switch ($result['type']) {
             case 'collection':
                 $result['value'] = $this->loadParams('x:param', $xpath, $node);

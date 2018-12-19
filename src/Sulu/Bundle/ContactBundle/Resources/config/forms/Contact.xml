@@ -16,7 +16,11 @@
                         </param>
                         <param name="skin" value="round"/>
                         <param name="empty_icon" value="su-user"/>
-                        <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.contact')"/>
+                        <param
+                            name="collection_id"
+                            type="expression"
+                            value="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.contact')"
+                        />
                     </params>
                 </property>
             </properties>
