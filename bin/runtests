@@ -57,7 +57,6 @@ $definition->addOption(new InputOption('initialize', 'i', InputOption::VALUE_NON
 $definition->addOption(new InputOption('flags', 'f', InputOption::VALUE_REQUIRED));
 $definition->addOption(new InputOption('target', 't', InputOption::VALUE_REQUIRED));
 $definition->addOption(new InputOption('all', 'a', InputOption::VALUE_NONE));
-$definition->addOption(new InputOption('jackrabbit-restart', 'r', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('help', 'h', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('no-component-tests', 'C', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('no-bundle-tests', 'B', InputOption::VALUE_NONE));
@@ -73,22 +72,6 @@ global $output, $input, $failedTests, $termWidth, $verbose;
 
 // Utility methods
 // ===============
-
-function write_logo()
-{
-    writeln(<<<'EOT'
-   _____       _        _____ __  __ ______
-  / ____|     | |      / ____|  \/  |  ____|
- | (___  _   _| |_   _| |    | \  / | |__
-  \___ \| | | | | | | | |    | |\/| |  __|
-  ____) | |_| | | |_| | |____| |  | | |
- |_____/ \__,_|_|\__,_|\_____|_|  |_|_|
-
-             * Test Runner *
-
-EOT
-    );
-}
 
 function write_break($style = 'info')
 {
@@ -117,12 +100,6 @@ function write_error($error)
 function writeln($line)
 {
     write($line . PHP_EOL);
-}
-
-function write_formatted_field_value($line)
-{
-    preg_match('{^\s*(.+?)\s+(.*?)\s*$}', $line, $matches);
-    writeln(sprintf("   %-'.40s%s", $matches[1], $matches[2]));
 }
 
 function write($line)
@@ -189,7 +166,6 @@ function show_help()
   -f, --flags                 Pass flags to PHPUnit.
   -t, --target                Specify a target bundle.
   -a, --all                   Run all tests.
-  -r, --restart-jackrabbit    Restart jackrabbit between bundle tests.
   -h, --help                  Show this help.
   -C, --no-component-tests    Do not run the component tests.
   -B, --no-bundle-tests       Do not run the bundle tests.
@@ -234,85 +210,6 @@ function get_kernel_dir($phpunitPath)
     return $xpath->evaluate('string(./php/server[@name="KERNEL_DIR"]/@value)');
 }
 
-// Jackrabbit functions
-// ====================
-
-function jackrabbit_restart()
-{
-    $pid = jackrabbit_pid();
-
-    write_info('Restarting Jackrabbit');
-    write('   ');
-    if (false !== $pid) {
-        exec_cmd('kill '  . $pid);
-
-        while ($pid = jackrabbit_pid()) {
-            write('<red>.</>');
-            sleep(1);
-        }
-    }
-
-    $jackrabbitJar = jackrabbit_get_path();
-
-    $process = new Process(sprintf(
-        'java -jar %s --repo %s/jackrabbit > jackrabbit_process.log &',
-        $jackrabbitJar->getPathname(), dirname(dirname($jackrabbitJar->getPathname()))
-    ));
-    $process->start();
-    while (false === jackrabbit_is_up()) {
-        write('<info>.</>');
-        sleep(1);
-    }
-    write(PHP_EOL);
-}
-
-function jackrabbit_is_up()
-{
-    $process = exec_cmd('curl -s http://localhost:8080', false, false);
-
-    return $process->getExitCode() === 0;
-}
-
-function jackrabbit_pid()
-{
-    $jackrabbitJar = jackrabbit_get_path();
-    $process = exec_cmd('pgrep -f -n "java \-jar .*' . basename($jackrabbitJar) . '"', false, false);
-
-    // no process found
-    if ($process->getExitCode() == 1) {
-        return false;
-    }
-
-    return trim($process->getOutput());
-}
-
-function jackrabbit_get_path()
-{
-    static $jackrabbit = null;
-    $jackrabbitPath = realpath(__DIR__ . '/../downloads');
-
-    if (!$jackrabbit) {
-        $finder = Finder::create()
-            ->in($jackrabbitPath)
-            ->name('jackrabbit-standalone*.jar')
-            ->depth('== 0');
-        $jackrabbit = null;
-        foreach ($finder as $jackrabbit) {
-            break;
-        }
-    }
-
-    if (null === $jackrabbit) {
-        write_error(sprintf(
-            'Could not find jackrabbit-standalone executable in "%s"',
-            $jackrabbitPath
-        ));
-        exit(1);
-    }
-
-    return $jackrabbit;
-}
-
 // Tasks
 // =====
 
@@ -343,7 +240,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     $bundleName = basename($phpunitFile->getPath());
     $bundleDir = $phpunitFile->getPath();
 
-    write_header('Testing: ' . $bundleName);
+    write_header($bundleName);
 
     $cacheDir = getcwd() . '/Tests/app/cache';
     if ($input->getOption('cache-clear')) {
@@ -359,8 +256,6 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
 
-    write_info('Running tests');
-
     $flags = $input->getOption('flags');
 
     $process = exec_cmd(sprintf(
@@ -374,12 +269,6 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         $failedTests[] = $bundleName;
     }
 
-    if ($input->getOption('jackrabbit-restart')) {
-        // TODO: Not all bundles use Jackrabbit, so it would be nice to only
-        //       restart jackrabbit for those bundles which DO use it, however
-        //       the PHPCR stuff is currently registered by default.
-        jackrabbit_restart();
-    }
     writeln('');
 }
 
@@ -455,8 +344,6 @@ function is_everything_ok()
 // Main
 // ====
 
-write_logo();
-
 // if help option is given or no options or arguments are given, then show the help.
 if (!isset($argv[1]) || $input->getOption('help')) {
     show_help();
@@ -491,7 +378,7 @@ foreach ($bundles as $bundle) {
 }
 
 if (false === $input->getOption('no-component-tests') || $input->getOption('all')) {
-    write_header('Component Tests');
+    write_header('Components');
 
     $process = exec_cmd(
         sprintf('%s -c phpunit.xml.dist ' . $input->getOption('flags'), get_phpunit_path()),
