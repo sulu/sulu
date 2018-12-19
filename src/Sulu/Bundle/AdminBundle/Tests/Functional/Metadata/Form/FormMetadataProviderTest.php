@@ -58,11 +58,11 @@ class FormMetadataProviderTest extends KernelTestCase
 
         $this->assertEquals(
             'lastName == \'block_property\'',
-            $form->getItems()['block']->getTypes()['test']->getForm()->getItems()['name']->getDisabledCondition()
+            $form->getItems()['block']->getTypes()['test']->getItems()['name']->getDisabledCondition()
         );
         $this->assertEquals(
             'firstName == \'block_property\'',
-            $form->getItems()['block']->getTypes()['test']->getForm()->getItems()['name']->getVisibleCondition()
+            $form->getItems()['block']->getTypes()['test']->getItems()['name']->getVisibleCondition()
         );
 
         $this->assertEquals(

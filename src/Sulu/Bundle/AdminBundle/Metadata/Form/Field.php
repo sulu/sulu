@@ -19,7 +19,7 @@ class Field extends Item
     protected $options = [];
 
     /**
-     * @var FieldType[]
+     * @var Form[]
      */
     protected $types = [];
 
@@ -54,14 +54,14 @@ class Field extends Item
     }
 
     /**
-     * @return FieldType[]
+     * @return Form[]
      */
     public function getTypes(): array
     {
         return $this->types;
     }
 
-    public function addType(FieldType $type): void
+    public function addType(Form $type): void
     {
         $this->types[$type->getName()] = $type;
     }

@@ -122,7 +122,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
             if ($item instanceof Field) {
                 foreach ($item->getTypes() as $type) {
-                    $this->evaluateFormItemExpressions($type->getForm()->getItems());
+                    $this->evaluateFormItemExpressions($type->getItems());
                 }
 
                 foreach ($item->getOptions() as $option) {
@@ -289,20 +289,18 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $field = $this->mapProperty($property, $locale);
 
         foreach ($property->getComponents() as $component) {
-            $fieldType = new FieldType($component->getName());
-            $fieldType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
-
-            $componentForm = new Form();
+            $blockType = new Form();
+            $blockType->setName($component->getName());
+            $blockType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
 
             foreach ($component->getChildren() as $componentProperty) {
                 if ($componentProperty instanceof PropertyMetadata) {
-                    $componentField = $this->mapProperty($componentProperty, $locale);
-                    $componentForm->addItem($componentField);
+                    $blockTypeField = $this->mapProperty($componentProperty, $locale);
+                    $blockType->addItem($blockTypeField);
                 }
             }
 
-            $fieldType->setForm($componentForm);
-            $field->addType($fieldType);
+            $field->addType($blockType);
         }
 
         return $field;
