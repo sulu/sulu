@@ -107,11 +107,11 @@ class SuluNodeHelper
     {
         $mixinTypes = $node->getPropertyValueWithDefault('jcr:mixinTypes', []);
 
-        if (in_array('sulu:page', $mixinTypes)) {
+        if (in_array('sulu:' . Structure::TYPE_PAGE, $mixinTypes)) {
             return Structure::TYPE_PAGE;
         }
 
-        if (in_array('sulu:snippet', $mixinTypes)) {
+        if (in_array('sulu:' . Structure::TYPE_SNIPPET, $mixinTypes)) {
             return Structure::TYPE_SNIPPET;
         }
 
