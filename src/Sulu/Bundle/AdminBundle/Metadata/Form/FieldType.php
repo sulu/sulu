@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Form;
+namespace Sulu\Bundle\AdminBundle\Metadata\Form;
 
 class FieldType
 {

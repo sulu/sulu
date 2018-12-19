@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\Form\Option;
+use Sulu\Bundle\AdminBundle\Metadata\Form\Section;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Field as DatagridField;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Option;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Section;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
