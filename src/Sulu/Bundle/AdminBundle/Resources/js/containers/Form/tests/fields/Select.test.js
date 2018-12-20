@@ -12,7 +12,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass props correctly to Select', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
             value: [
@@ -50,7 +50,7 @@ test('Pass props correctly to Select', () => {
 });
 
 test('Should throw an exception if defaultValue is of wrong type', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_values: {
             value: {},
@@ -79,7 +79,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
 });
 
 test('Should throw an exception if value is of wrong type', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
             value: [
@@ -105,7 +105,7 @@ test('Should throw an exception if value is of wrong type', () => {
 });
 
 test('Should call onFinish callback on every onChange', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
     const schemaOptions = {
         values: {
@@ -137,7 +137,7 @@ test('Should call onFinish callback on every onChange', () => {
 });
 
 test('Set default value of null should not call onChange', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -169,7 +169,7 @@ test('Set default value of null should not call onChange', () => {
 });
 
 test('Set default value if no value is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -201,7 +201,7 @@ test('Set default value if no value is passed', () => {
 });
 
 test('Set default value to a number of 0 should work', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_values: {
@@ -233,7 +233,7 @@ test('Set default value to a number of 0 should work', () => {
 });
 
 test('Throw error if no schemaOptions are passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <Select
             {...fieldTypeDefaultProps}
@@ -243,7 +243,7 @@ test('Throw error if no schemaOptions are passed', () => {
 });
 
 test('Throw error if no value option is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <Select
             {...fieldTypeDefaultProps}

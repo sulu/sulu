@@ -8,6 +8,11 @@ sulu_admin.config:
     defaults:
         _controller: sulu_admin.admin_controller:configAction
 
+sulu_admin.metadata:
+    path: /metadata/{type}/{key}
+    defaults:
+        _controller: sulu_admin.admin_controller:metadataAction
+
 sulu_admin.translation:
     path: /translations
     defaults:

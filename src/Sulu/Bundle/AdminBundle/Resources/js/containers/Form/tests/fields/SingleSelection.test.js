@@ -3,7 +3,6 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import resourceMetadataStore from '../../../../stores/ResourceMetadataStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import FormStore from '../../stores/FormStore';
@@ -26,16 +25,12 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.locale = formStore.locale;
 }));
 
-jest.mock('../../../../stores/ResourceMetadataStore', () => ({
-    isSameEndpoint: jest.fn(),
-}));
-
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
 test('Pass correct props to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = {
         test: 'value',
     };
@@ -71,7 +66,7 @@ test('Pass correct props to SingleAutoComplete', () => {
 });
 
 test('Pass correct props with schema-options type to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = {
         test: 'value',
     };
@@ -122,7 +117,7 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
 });
 
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -159,7 +154,7 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {
         default_type: 'auto_complete',
         types: {},
@@ -177,7 +172,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
 });
 
 test('Pass correct props to SingleItemSelection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -218,7 +213,7 @@ test('Pass correct props to SingleItemSelection', () => {
 });
 
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -271,7 +266,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -307,7 +302,7 @@ test('Throw an error if a none string was passed to schema-options', () => {
 });
 
 test('Throw an error if a none string was passed to field-type-options', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -336,10 +331,8 @@ test('Throw an error if a none string was passed to field-type-options', () => {
 
 test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     const locale = observable.box('en');
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('accounts', 5, locale)));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('accounts', 5, locale), 'test'));
     const value = 3;
-
-    resourceMetadataStore.isSameEndpoint.mockReturnValue(true);
 
     const fieldTypeOptions = {
         default_type: 'datagrid_overlay',
@@ -364,7 +357,6 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
         />
     );
 
-    expect(resourceMetadataStore.isSameEndpoint).toBeCalledWith('accounts', 'accounts');
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         disabledIds: [5],
         locale,
@@ -372,7 +364,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
 });
 
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 

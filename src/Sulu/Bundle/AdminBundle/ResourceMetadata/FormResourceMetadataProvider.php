@@ -11,12 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 class FormResourceMetadataProvider implements ResourceMetadataProviderInterface, CacheWarmerInterface
 {
@@ -24,11 +20,6 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
      * @var array
      */
     private $resources;
-
-    /**
-     * @var FormXmlLoader
-     */
-    private $formXmlLoader;
 
     /**
      * @var ResourceMetadataMapper
@@ -39,11 +30,6 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
      * @var array
      */
     private $locales;
-
-    /**
-     * @var FileLocator
-     */
-    private $fileLocator;
 
     /**
      * @var string
@@ -62,18 +48,14 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
 
     public function __construct(
         array $resources,
-        FormXmlLoader $formXmlLoader,
         ResourceMetadataMapper $resourceMetadataMapper,
         array $locales,
-        FileLocator $fileLocator,
         string $cacheDir,
         bool $debug
     ) {
         $this->resources = $resources;
-        $this->formXmlLoader = $formXmlLoader;
         $this->resourceMetadataMapper = $resourceMetadataMapper;
         $this->locales = $locales;
-        $this->fileLocator = $fileLocator;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
     }
@@ -127,47 +109,15 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
         foreach ($this->resources as $resourceKey => $resource) {
             $this->writeResourceMetadataCache(
                 $resourceKey,
-                $resource['form'],
                 array_key_exists('datagrid', $resource) ? $resource['datagrid'] : null,
                 $resource['endpoint']
             );
         }
     }
 
-    private function writeResourceMetadataCache(string $resourceKey, array $forms, ?string $list, string $endpoint): void
+    private function writeResourceMetadataCache(string $resourceKey, ?string $list, string $endpoint): void
     {
         $fileResources = [];
-
-        $children = [];
-        $properties = [];
-        $fileSchema = null;
-
-        // load and merge all given forms
-        foreach ($forms as $form) {
-            $formFile = $this->fileLocator->locate($form);
-            /** @var FormMetadata $formStructure */
-            $formStructure = $this->formXmlLoader->load($formFile, $resourceKey);
-            $newChildren = $formStructure->getChildren();
-            $newProperties = $formStructure->getProperties();
-            $newSchema = $formStructure->getSchema();
-
-            if ($newChildren) {
-                $children = array_merge($children, $newChildren);
-            }
-            if ($newProperties) {
-                $properties = array_merge($properties, $newProperties);
-            }
-            if ($newSchema) {
-                if ($fileSchema) {
-                    $fileSchema = $fileSchema->merge($newSchema);
-                } else {
-                    $fileSchema = $newSchema;
-                }
-            }
-
-            // create a new file resource for the cache
-            $fileResources = [new FileResource($formFile)];
-        }
 
         // generate resource metadata for each locale and write it to the cache
         foreach ($this->locales as $locale) {
@@ -176,15 +126,6 @@ class FormResourceMetadataProvider implements ResourceMetadataProviderInterface,
             $resourceMetadata = new ResourceMetadata();
             $resourceMetadata->setKey($resourceKey);
             $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
-            $resourceMetadata->setForm($this->resourceMetadataMapper->mapForm($children, $locale));
-            $formSchema = $this->resourceMetadataMapper->mapSchema($properties);
-            $schema = null;
-            if ($fileSchema) {
-                $schema = $fileSchema->merge($formSchema);
-            } else {
-                $schema = $formSchema;
-            }
-            $resourceMetadata->setSchema($schema);
             $resourceMetadata->setEndpoint($endpoint);
 
             $cache->write(

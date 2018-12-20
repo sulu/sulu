@@ -2,7 +2,7 @@
 import {Requester} from 'sulu-admin-bundle/services';
 import PreviewStore from '../../stores/PreviewStore';
 
-PreviewStore.routes = {
+PreviewStore.endpoints = {
     start: '/start',
     render: '/render',
     update: '/update',

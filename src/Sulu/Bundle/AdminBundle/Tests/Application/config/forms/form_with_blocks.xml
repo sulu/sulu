@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>form_with_blocks</key>
+
+    <properties>
+        <block name="blocks" default-type="editor" minOccurs="0">
+            <meta>
+                <title lang="de">Inhalte</title>
+                <title lang="en">Content</title>
+            </meta>
+            <types>
+                <type name="editor">
+                    <meta>
+                        <title lang="de">Editor</title>
+                        <title lang="en">Editor</title>
+                    </meta>
+                    <properties>
+                        <property name="article" type="text_editor">
+                            <meta>
+                                <title lang="de">Artikel</title>
+                                <title lang="en">Article</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+                <type name="editor_image">
+                    <meta>
+                        <title lang="de">Editor mit Bild</title>
+                        <title lang="en">Editor with image</title>
+                    </meta>
+                    <properties>
+                        <property name="images" type="media_selection" colspan="3">
+                            <meta>
+                                <title lang="de">Bilder</title>
+                                <title lang="en">Images</title>
+                            </meta>
+                            <params>
+                                <param name="type" value="image"/>
+                                <param name="displayOptions" type="collection">
+                                    <param name="leftTop" value="false"/>
+                                    <param name="top" value="true"/>
+                                    <param name="rightTop" value="false"/>
+                                    <param name="left" value="true"/>
+                                    <param name="middle" value="false"/>
+                                    <param name="right" value="true"/>
+                                    <param name="leftBottom" value="false"/>
+                                    <param name="bottom" value="true"/>
+                                    <param name="rightBottom" value="false"/>
+                                </param>
+                            </params>
+                        </property>
+                        <property name="article" type="text_editor" colspan="9">
+                            <meta>
+                                <title lang="de">Artikel</title>
+                                <title lang="en">Article</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</form>

@@ -22,7 +22,6 @@ use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -65,11 +64,6 @@ class StructureMetadataFactoryTest extends TestCase
     private $defaultStructure;
 
     /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -99,7 +93,6 @@ class StructureMetadataFactoryTest extends TestCase
         $this->overriddenDefaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
 
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->apostropheStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
         $this->somethingStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
         $this->defaultStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
@@ -167,6 +160,11 @@ class StructureMetadataFactoryTest extends TestCase
         $this->factory->getStructureMetadata('page');
     }
 
+    public function testGetStructureTypes()
+    {
+        $this->assertEquals(['page', 'snoopet'], $this->factory->getStructureTypes());
+    }
+
     /**
      * It should cache the result.
      */
@@ -195,11 +193,10 @@ class StructureMetadataFactoryTest extends TestCase
             ->willReturn(true);
 
         $propertiesXmlLoader = new PropertiesXmlParser(
-            $this->expressionLanguage->reveal(),
             $this->translator->reveal(),
             []
         );
-        $schemaXmlLoader = new SchemaXmlParser($this->expressionLanguage->reveal());
+        $schemaXmlLoader = new SchemaXmlParser();
 
         $xmlLoader = new StructureXmlLoader(
             $cacheLifeTimeResolver->reveal(),

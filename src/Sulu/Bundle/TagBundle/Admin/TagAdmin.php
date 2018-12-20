@@ -68,6 +68,7 @@ class TagAdmin extends Admin
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
+                ->addOption('formKey', 'tags')
                 ->addOption('backRoute', 'sulu_tag.datagrid')
                 ->addOption('editRoute', 'sulu_tag.edit_form.detail')
                 ->setParent('sulu_tag.add_form'),
@@ -76,6 +77,7 @@ class TagAdmin extends Admin
                 ->addOption('toolbarActions', $formToolbarActions),
             (new Route('sulu_tag.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_tag.details')
+                ->addOption('formKey', 'tags')
                 ->addOption('backRoute', 'sulu_tag.datagrid')
                 ->setParent('sulu_tag.edit_form'),
         ];

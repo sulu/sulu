@@ -20,9 +20,24 @@ use Sulu\Component\Content\Metadata\PropertiesMetadata;
 class FormMetadata extends PropertiesMetadata
 {
     /**
+     * @var string
+     */
+    private $key;
+
+    /**
      * @var Schema
      */
     private $schema;
+
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 
     public function setSchema(Schema $schema)
     {

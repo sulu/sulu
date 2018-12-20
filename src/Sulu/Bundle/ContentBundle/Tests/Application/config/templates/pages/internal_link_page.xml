@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 
 <template xmlns="http://schemas.sulu.io/template/template"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
-          >
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
+>
 
-    <key>default</key>
+    <key>internal_link_page</key>
 
     <view>ClientWebsiteBundle:templates:animals</view>
     <controller>SuluWebsiteBundle:Default:index</controller>

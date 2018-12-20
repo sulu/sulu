@@ -154,6 +154,11 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         return $structures;
     }
 
+    public function getStructureTypes(): array
+    {
+        return array_keys($this->typePaths);
+    }
+
     /**
      * {@inheritdoc}
      */

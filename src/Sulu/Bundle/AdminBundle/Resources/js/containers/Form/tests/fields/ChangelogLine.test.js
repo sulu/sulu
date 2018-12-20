@@ -27,13 +27,13 @@ beforeEach(() => {
 });
 
 test('Render loader if changer and creator are not loaded yet', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     expect(render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />)).toMatchSnapshot();
 });
 
 test('Render with loaded changer and creator', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
@@ -89,7 +89,7 @@ test('Render with loaded changer and creator', () => {
 });
 
 test('Render with no changer and creator', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
 
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {

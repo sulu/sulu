@@ -19,15 +19,12 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\FormInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\SchemaInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -76,6 +73,11 @@ class AdminController
      * @var TranslatorBagInterface
      */
     private $translatorBag;
+
+    /**
+     * @var MetadataProviderRegistry
+     */
+    private $metadataProviderRegistry;
 
     /**
      * @var ResourceMetadataPool
@@ -150,6 +152,7 @@ class AdminController
         ViewHandlerInterface $viewHandler,
         EngineInterface $engine,
         TranslatorBagInterface $translatorBag,
+        MetadataProviderRegistry $metadataProviderRegistry,
         ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
@@ -171,6 +174,7 @@ class AdminController
         $this->viewHandler = $viewHandler;
         $this->engine = $engine;
         $this->translatorBag = $translatorBag;
+        $this->metadataProviderRegistry = $metadataProviderRegistry;
         $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
@@ -228,6 +232,12 @@ class AdminController
 
         $view = View::create([
             'sulu_admin' => [
+                'endpoints' => [
+                    'metadata' => $this->urlGenerator->generate(
+                        'sulu_admin.metadata',
+                        ['type' => ':type', 'key' => ':key']
+                    ),
+                ],
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
@@ -239,12 +249,12 @@ class AdminController
                 'contact' => $contact,
             ],
             'sulu_content' => [
-                'routes' => [
+                'endpoints' => [
                     'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
                 ],
             ],
             'sulu_preview' => [
-                'routes' => [
+                'endpoints' => [
                     'start' => $this->urlGenerator->generate('sulu_preview.start'),
                     'render' => $this->urlGenerator->generate('sulu_preview.render'),
                     'update' => $this->urlGenerator->generate('sulu_preview.update'),
@@ -255,7 +265,7 @@ class AdminController
                 'mode' => $this->previewMode,
             ],
             'sulu_security' => [
-                'routes' => [
+                'endpoints' => [
                     'contexts' => $this->urlGenerator->generate('cget_contexts'),
                 ],
             ],
@@ -283,6 +293,21 @@ class AdminController
         return new JsonResponse($translations);
     }
 
+    public function metadataAction(string $type, string $key): Response
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $view = View::create(
+            $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale())
+        );
+        $view->setFormat('json');
+
+        return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * @deprecated use metadataAction instead
+     */
     public function resourcesAction($resource): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -295,24 +320,6 @@ class AdminController
 
         $resourceMetadataArray = [];
 
-        if ($resourceMetadata instanceof TypesInterface) {
-            foreach ($resourceMetadata->getTypes() as $typeName => $type) {
-                $typeSchema = $type->getSchema()->toJsonSchema();
-                $resourceMetadataArray['types'][$typeName] = [
-                    'name' => $type->getName(),
-                    'title' => $type->getTitle(),
-                    'form' => $type->getForm(),
-                    'schema' => !empty($typeSchema) ? $typeSchema : new \stdClass(),
-                ];
-            }
-        }
-        if ($resourceMetadata instanceof FormInterface) {
-            $resourceMetadataArray['form'] = $resourceMetadata->getForm();
-        }
-        if ($resourceMetadata instanceof SchemaInterface) {
-            $resourceSchema = $resourceMetadata->getSchema()->toJsonSchema();
-            $resourceMetadataArray['schema'] = !empty($resourceSchema) ? $resourceSchema : new \stdClass();
-        }
         if ($resourceMetadata instanceof DatagridInterface) {
             $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();
         }
@@ -321,30 +328,5 @@ class AdminController
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-    }
-
-    /**
-     * Will transform the different representations of permission types to the same representation and adds it to the
-     * passed array.
-     *
-     * @param array $mappedContexts
-     * @param string $system
-     * @param string $section
-     * @param mixed $context
-     * @param mixed $permissionTypes
-     */
-    private function addContext(array &$mappedContexts, $system, $section, $context, $permissionTypes)
-    {
-        if (is_array($permissionTypes)) {
-            $mappedContexts[$system][$section][$context] = $permissionTypes;
-        } else {
-            $mappedContexts[$system][$section][$permissionTypes] = [
-                PermissionTypes::VIEW,
-                PermissionTypes::ADD,
-                PermissionTypes::EDIT,
-                PermissionTypes::DELETE,
-                PermissionTypes::SECURITY,
-            ];
-        }
     }
 }

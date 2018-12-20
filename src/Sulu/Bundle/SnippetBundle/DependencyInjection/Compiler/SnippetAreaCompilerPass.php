@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler;
 
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,7 +27,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $structureFactory = $container->get('sulu_content.structure.factory');
-        $structures = $structureFactory->getStructures('snippet');
+        $structures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
 
         $locales = $container->getParameter('sulu_core.locales');
 

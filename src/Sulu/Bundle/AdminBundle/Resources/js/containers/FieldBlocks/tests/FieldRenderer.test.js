@@ -27,7 +27,7 @@ test('Should pass props correctly to Renderer', () => {
     const schema = {
         text: {label: 'Label', type: 'text_line', visible: true},
     };
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const formRenderer = shallow(
         <FieldRenderer
@@ -56,7 +56,7 @@ test('Should pass props correctly to Renderer', () => {
 });
 
 test('Should pass showAllErrors prop to Renderer', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const formRenderer = shallow(
         <FieldRenderer
@@ -77,7 +77,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
 
 test('Should call onChange callback with correct index', () => {
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const formRenderer = shallow(
         <FieldRenderer
@@ -99,7 +99,7 @@ test('Should call onChange callback with correct index', () => {
 
 test('Should call onFieldFinish when some subfield finishes editing', () => {
     const fieldFinishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
 
     const formRenderer = shallow(
         <FieldRenderer

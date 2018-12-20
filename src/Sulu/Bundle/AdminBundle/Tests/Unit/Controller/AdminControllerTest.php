@@ -22,14 +22,13 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
+use Sulu\Bundle\AdminBundle\Metadata\Form\Form;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Form\Form;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\TypesInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -89,6 +88,11 @@ class AdminControllerTest extends TestCase
      * @var TranslatorBagInterface
      */
     private $translatorBag;
+
+    /**
+     * @var MetadataProviderRegistry
+     */
+    private $metadataProviderRegistry;
 
     /**
      * @var ResourceMetadataPool
@@ -173,6 +177,7 @@ class AdminControllerTest extends TestCase
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
+        $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
         $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
@@ -191,6 +196,7 @@ class AdminControllerTest extends TestCase
             $this->viewHandler->reveal(),
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
+            $this->metadataProviderRegistry->reveal(),
             $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
@@ -228,6 +234,8 @@ class AdminControllerTest extends TestCase
 
         $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
         $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
+        $this->urlGenerator->generate('sulu_admin.metadata', ['type' => ':type', 'key' => ':key'])
+            ->willReturn('/admin/metadata');
         $this->urlGenerator->generate('sulu_preview.start')->willReturn('/preview/start');
         $this->urlGenerator->generate('sulu_preview.render')->willReturn('/preview/render');
         $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
@@ -269,110 +277,21 @@ class AdminControllerTest extends TestCase
         $this->adminController->configAction();
     }
 
-    public function testResourcesActionWithSchema()
+    public function testMetadataAction()
     {
+        $form = new Form();
+
         $this->user->getLocale()->willReturn('en');
 
-        $form = new Form();
-        $schema = new Schema([new Property('test', true)]);
-        $resourceMetadata = $this->prophesize(ResourceMetadata::class);
-        $resourceMetadata->getSchema()->willReturn($schema);
-        $resourceMetadata->getForm()->willReturn($form);
-        $resourceMetadata->getDatagrid()->willReturn(null);
-        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
+        $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $metadataProvider->getMetadata('pages', 'en')->willReturn($form);
+        $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
 
-        $responseData = '[]';
-        $this->serializer->serialize(
-            Argument::that(function($resourceMetadata) {
-                return $resourceMetadata['schema']['required'] === ['test'];
-            }),
-            'json'
-        )->willReturn($responseData);
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
+            return $form === $view->getData();
+        }))->shouldBeCalled()->willReturn(new Response());
 
-        $response = $this->adminController->resourcesAction('pages');
-
-        $this->assertSame($responseData, $response->getContent());
-    }
-
-    public function testResourcesActionWithEmptySchema()
-    {
-        $this->user->getLocale()->willReturn('en');
-
-        $form = new Form();
-        $schema = new Schema();
-        $resourceMetadata = $this->prophesize(ResourceMetadata::class);
-        $resourceMetadata->getSchema()->willReturn($schema);
-        $resourceMetadata->getForm()->willReturn($form);
-        $resourceMetadata->getDatagrid()->willReturn(null);
-        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
-
-        $responseData = '[]';
-        $this->serializer->serialize(
-            Argument::that(function($resourceMetadata) {
-                return $resourceMetadata['schema'] instanceof \stdClass;
-            }),
-            'json'
-        )->willReturn($responseData);
-
-        $response = $this->adminController->resourcesAction('pages');
-
-        $this->assertSame($responseData, $response->getContent());
-    }
-
-    public function testResourcesActionWithTypeSchema()
-    {
-        $this->user->getLocale()->willReturn('en');
-
-        $form = new Form();
-        $schema = new Schema();
-        $type = $this->prophesize(Type::class);
-        $type->getName()->willReturn('test');
-        $type->getTitle()->willReturn('Test');
-        $type->getSchema()->willReturn($schema);
-        $type->getForm()->willReturn($form);
-        $resourceMetadata = $this->prophesize(TypesInterface::class);
-        $resourceMetadata->getTypes()->willReturn([$type]);
-        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
-
-        $responseData = '[]';
-        $this->serializer->serialize(
-            Argument::that(function($resourceMetadata) {
-                return $resourceMetadata['types'][0]['schema'] instanceof \stdClass;
-            }),
-            'json'
-        )->willReturn($responseData);
-
-        $response = $this->adminController->resourcesAction('pages');
-
-        $this->assertSame($responseData, $response->getContent());
-    }
-
-    public function testResourcesActionWithEmptyTypeSchema()
-    {
-        $this->user->getLocale()->willReturn('en');
-
-        $form = new Form();
-        $schema = new Schema([new Property('test', true)]);
-        $type = $this->prophesize(Type::class);
-        $type->getName()->willReturn('test');
-        $type->getTitle()->willReturn('Test');
-        $type->getSchema()->willReturn($schema);
-        $type->getForm()->willReturn($form);
-        $resourceMetadata = $this->prophesize(TypesInterface::class);
-        $resourceMetadata->getTypes()->willReturn([$type]);
-        $this->resourceMetadataPool->getResourceMetadata('pages', 'en')->willReturn($resourceMetadata);
-
-        $responseData = '[]';
-        $this->serializer->serialize(
-            Argument::that(function($resourceMetadata) {
-                return $resourceMetadata['types'][0]['schema']['required'] === ['test'];
-            }),
-            'json'
-        )->willReturn($responseData);
-
-        $response = $this->adminController->resourcesAction('pages');
-
-        $this->assertSame($responseData, $response->getContent());
+        $this->adminController->metadataAction('form', 'pages');
     }
 
     public function provideTranslationsAction()

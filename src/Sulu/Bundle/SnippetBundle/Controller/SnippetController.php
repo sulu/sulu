@@ -20,6 +20,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -216,7 +217,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     public function postAction(Request $request)
     {
-        $document = $this->documentManager->create('snippet');
+        $document = $this->documentManager->create(Structure::TYPE_SNIPPET);
         $form = $this->processForm($request, $document);
 
         return $this->handleView($form->getData());
@@ -457,7 +458,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = $request->request->all();
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
-        $formType = $this->metadataFactory->getMetadataForAlias('snippet')->getFormType();
+        $formType = $this->metadataFactory->getMetadataForAlias(Structure::TYPE_SNIPPET)->getFormType();
         $form = $this->formFactory->create($formType, $document, [
             'csrf_protection' => false,
         ]);

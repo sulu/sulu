@@ -10,6 +10,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
+import metadataStore from './stores/MetadataStore';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
 import {bundleReady, Config} from './services';
 import initializer from './services/Initializer';
@@ -175,6 +176,7 @@ function processConfig(config: Object) {
     resourceMetadataStore.clear();
 
     routeRegistry.addCollection(config.routes);
+    metadataStore.endpoint = config.endpoints.metadata;
     navigationRegistry.set(config.navigation);
     resourceMetadataStore.setEndpoints(config.resourceMetadataEndpoints);
     smartContentConfigStore.setConfig(config.smartContent);

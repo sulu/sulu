@@ -52,10 +52,6 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
-    isSameEndpoint: jest.fn(),
-}));
-
 jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn().mockReturnValue({
         then: jest.fn(),
@@ -239,36 +235,6 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     const formResourceStore = form.instance().resourceStore;
 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
-});
-
-test('Should clone the resourceStore if the passed resourceKey differs but the endpoint is the same', () => {
-    const Form = require('../Form').default;
-    const resourceMetadataStore = require('../../../stores/ResourceMetadataStore');
-    const ResourceRequester = require('../../../services/ResourceRequester');
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('pages', 10);
-
-    const route = {
-        options: {
-            resourceKey: 'page-settings',
-            toolbarActions: [],
-        },
-    };
-    const router = {
-        attributes: {},
-        route,
-    };
-
-    resourceMetadataStore.isSameEndpoint.mockReturnValue(true);
-
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const formResourceStore = form.instance().resourceStore;
-
-    expect(resourceMetadataStore.isSameEndpoint).toBeCalledWith('page-settings', 'pages');
-    expect(ResourceRequester.get).toHaveBeenCalledTimes(1);
-    expect(ResourceRequester.get).toBeCalledWith('pages', 10, {});
-    expect(resourceStore.resourceKey).toEqual('pages');
-    expect(formResourceStore.resourceKey).toEqual('page-settings');
 });
 
 test('Should add items defined in ToolbarActions to Toolbar', () => {

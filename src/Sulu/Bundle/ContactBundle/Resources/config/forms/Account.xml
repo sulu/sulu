@@ -1,7 +1,10 @@
 <?xml version="1.0" ?>
 <form xmlns="http://schemas.sulu.io/template/template"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>accounts</key>
+
     <properties>
         <section name="logo" colspan="4">
             <properties>
@@ -12,7 +15,11 @@
                                 <info_text>sulu_contact.upload_logo_info_text</info_text>
                             </meta>
                         </param>
-                        <param name="collection_id" expression="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"/>
+                        <param
+                            name="collection_id"
+                            type="expression"
+                            value="service('sulu_media.system_collections.manager').getSystemCollection('sulu_contact.account')"
+                        />
                         <param name="empty_icon" value="su-house"/>
                         <param name="image_size" value="sulu-400x400-inset" />
                     </params>

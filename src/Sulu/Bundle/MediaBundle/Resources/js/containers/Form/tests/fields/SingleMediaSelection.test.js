@@ -32,7 +32,8 @@ jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
 
@@ -55,7 +56,8 @@ test('Pass correct props to SingleMediaSelection component', () => {
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {})
+            new ResourceStore('test', undefined, {}),
+            'test'
         )
     );
 
@@ -77,7 +79,8 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     const formInspector = new FormInspector(
         new FormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')})
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
         )
     );
 

@@ -18,16 +18,10 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class StructureXmlLoaderTest extends TestCase
 {
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
-
     /**
      * @var TranslatorInterface
      */
@@ -50,10 +44,8 @@ class StructureXmlLoaderTest extends TestCase
 
     public function setUp()
     {
-        $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $propertiesXmlParser = new PropertiesXmlParser(
-            $this->expressionLanguage->reveal(),
             $this->translator->reveal(),
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
         );

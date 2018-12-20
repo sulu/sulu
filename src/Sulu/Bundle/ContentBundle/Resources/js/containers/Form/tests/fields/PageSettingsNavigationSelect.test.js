@@ -11,7 +11,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     FormInspector: jest.fn(function(formStore) {
         this.options = formStore.options;
     }),
-    FormStore: jest.fn(function(resourceStore, options) {
+    FormStore: jest.fn(function(resourceStore, formKey, options) {
         this.options = options;
     }),
 }));
@@ -29,7 +29,7 @@ jest.mock('../../../../stores/WebspaceStore', () => ({
 }));
 
 test('Pass correct props to MultiSelect', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'sulu_io'}));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test', {webspace: 'sulu_io'}));
 
     const webspacePromise = Promise.resolve({
         navigations: [
@@ -64,7 +64,7 @@ test('Call onChange an onBlur if the value is changed', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), {webspace: 'sulu_io'}));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test', {webspace: 'sulu_io'}));
 
     const webspacePromise = Promise.resolve({
         navigations: [

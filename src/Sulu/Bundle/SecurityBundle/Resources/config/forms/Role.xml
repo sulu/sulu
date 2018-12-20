@@ -1,7 +1,10 @@
 <?xml version="1.0" ?>
 <form xmlns="http://schemas.sulu.io/template/template"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>roles</key>
+
     <properties>
         <property name="name" type="text_line" mandatory="true">
             <meta>
@@ -17,8 +20,16 @@
                 <title>sulu_security.system</title>
             </meta>
             <params>
-                <param name="values" expression="service('sulu_security.security_systems_select_helper').getValues()"/>
-                <param name="default_value" expression="service('sulu_security.security_systems_select_helper').getDefaultValue()"/>
+                <param
+                    name="values"
+                    type="expression"
+                    value="service('sulu_security.security_systems_select_helper').getValues()"
+                />
+                <param
+                    name="default_value"
+                    type="expression"
+                    value="service('sulu_security.security_systems_select_helper').getDefaultValue()"
+                />
             </params>
         </property>
 

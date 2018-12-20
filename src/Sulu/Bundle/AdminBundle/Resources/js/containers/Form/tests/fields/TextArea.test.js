@@ -13,7 +13,7 @@ jest.mock('../../stores/FormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass error correctly to TextArea component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const error = {keyword: 'minLength', parameters: {}};
 
     const inputInvalid = shallow(
@@ -29,7 +29,7 @@ test('Pass error correctly to TextArea component', () => {
 });
 
 test('Pass props correctly to TextArea component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const inputValid = shallow(
         <TextArea
             {...fieldTypeDefaultProps}
@@ -50,7 +50,7 @@ test('Pass props correctly including max_characters to TextArea component', () =
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test')));
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const inputValid = shallow(
         <TextArea
             {...fieldTypeDefaultProps}

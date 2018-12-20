@@ -34,6 +34,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'internal_links' => [
@@ -68,15 +73,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'resources' => [
                         'pages_seo' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageSeo.xml'],
                             'endpoint' => 'get_page-seos',
                         ],
                         'pages_excerpt' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageExcerpt.xml'],
                             'endpoint' => 'get_page-excerpts',
                         ],
                         'pages_settings' => [
-                            'form' => ['@SuluContentBundle/Resources/config/forms/PageSettings.xml'],
                             'endpoint' => 'get_pages',
                         ],
                     ],
@@ -117,7 +119,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             'resources' => [
                                 'pages' => [
                                     'datagrid' => BasePageDocument::class,
-                                    'types' => ['page', 'home'],
                                     'endpoint' => 'get_pages',
                                 ],
                             ],
@@ -199,7 +200,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 [
                     'resources' => [
                         'webspaces' => [
-                            'form' => [],
                             'endpoint' => 'get_webspaces',
                         ],
                     ],

@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
+use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
@@ -22,11 +24,6 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
     /**
@@ -80,12 +77,25 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            MetadataNotFoundException::class => 404,
+                            MetadataProviderNotFoundException::class => 404,
+                        ],
+                    ],
+                ]
+            );
+        }
+
         $container->prependExtensionConfig(
             'sulu_admin',
             [
                 'resources' => [
                     'localizations' => [
-                        'form' => [],
                         'endpoint' => 'get_localizations',
                     ],
                 ],
@@ -106,12 +116,14 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
         $container->setParameter($this->getAlias() . '.resources', $config['resources']);
 
+        $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->registerForAutoconfiguration(Admin::class)
-                  ->addTag(AddAdminPass::ADMIN_TAG)
-                  ->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, ['context' => SuluKernel::CONTEXT_ADMIN]);
+            ->addTag(AddAdminPass::ADMIN_TAG)
+            ->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, ['context' => SuluKernel::CONTEXT_ADMIN]);
 
         $this->loadFieldTypeOptions(
             $config['field_type_options'],

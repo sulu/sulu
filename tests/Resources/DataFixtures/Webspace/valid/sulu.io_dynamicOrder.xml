@@ -41,7 +41,7 @@
     <resource-locator>
         <strategy>short</strategy>
     </resource-locator>
-    
+
     <portals>
         <portal>
             <name>Sulu CMF AT</name>

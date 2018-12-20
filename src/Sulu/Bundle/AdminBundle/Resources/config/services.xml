@@ -16,6 +16,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="templating"/>
             <argument type="service" id="translator.default"/>
+            <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
@@ -35,20 +36,38 @@
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
 
+        <service
+            id="sulu_admin.metadata_provider_registry"
+            class="Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry"
+        />
+
+        <service
+            id="sulu_admin.form_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider"
+        >
+            <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_core.expression_language" />
+            <argument>%sulu_core.locales%</argument>
+            <argument>%sulu_admin.forms.directories%</argument>
+            <argument>%sulu.cache_dir%/forms</argument>
+            <argument>%kernel.debug%</argument>
+            <tag name="sulu_admin.metadata_provider" type="form" />
+        </service>
+
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
 
         <service id="sulu_admin.metadata.resource_metadata_provider.form"
                  class="Sulu\Bundle\AdminBundle\ResourceMetadata\FormResourceMetadataProvider"
         >
             <argument type="string">%sulu_admin.resources%</argument>
-            <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
             <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>
-            <argument type="service" id="file_locator"/>
             <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
             <argument>%kernel.debug%</argument>
 
             <tag name="sulu.resource_metadata_provider"/>
+            <tag name="kernel.cache_warmer"/>
         </service>
 
         <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
@@ -75,5 +94,9 @@
             id="sulu_admin.field_type_option_registry"
             class="Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry"
         />
+
+        <service id="sulu_admin.schema_handler" class="Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler">
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
     </services>
 </container>

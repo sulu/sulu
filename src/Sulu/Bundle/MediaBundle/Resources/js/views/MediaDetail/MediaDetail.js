@@ -15,6 +15,7 @@ import mediaDetailStyles from './mediaDetail.scss';
 import FocusPointOverlay from './FocusPointOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
+const FORM_KEY = 'media';
 
 type Props = ViewProps & {
     resourceStore: ResourceStore,
@@ -36,7 +37,7 @@ class MediaDetail extends React.Component<Props> {
             resourceStore,
         } = this.props;
 
-        this.formStore = new FormStore(resourceStore);
+        this.formStore = new FormStore(resourceStore, FORM_KEY);
         const locale = resourceStore.locale;
 
         if (!locale) {

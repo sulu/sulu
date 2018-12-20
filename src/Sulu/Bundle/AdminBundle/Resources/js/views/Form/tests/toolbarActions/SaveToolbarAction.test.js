@@ -36,7 +36,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createSaveToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore);
+    const formStore = new FormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],

@@ -116,6 +116,7 @@ class SnippetAdmin extends Admin
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.add_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
+                ->addOption('formKey', 'snippets')
                 ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->addOption('editRoute', 'sulu_snippet.edit_form.detail')
                 ->setParent('sulu_snippet.add_form'),
@@ -125,6 +126,7 @@ class SnippetAdmin extends Admin
                 ->addOption('locales', $snippetLocales),
             (new Route('sulu_snippet.edit_form.detail', '/details', 'sulu_admin.form'))
                 ->addOption('tabTitle', 'sulu_snippet.details')
+                ->addOption('formKey', 'snippets')
                 ->addOption('backRoute', 'sulu_snippet.datagrid')
                 ->setParent('sulu_snippet.edit_form'),
         ];
