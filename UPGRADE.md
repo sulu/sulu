@@ -125,6 +125,14 @@ Parameters in form XMLs using expression are written a bit different now. The `t
 
 This will make it easier to add more similar features in the future.
 
+### RouteBuilder
+
+Instead of creating all the Routes in the `Admin::getRoutes` method completely on your own there is now the possibility
+to use the `RouteBuilderFactory`. It offers methods to create Form, Datagrid and ResourceTabs routes in a typed way,
+which means auto completion in the IDE should work as well.
+
+Apart from that the `Route::addOption` was renamed to `Route::setOption`, since it overrides existing option values.
+
 ### MediaBundle storage configuration
 
 Configuration tree for local storage has changed:
