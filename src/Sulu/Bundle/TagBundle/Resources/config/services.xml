@@ -6,7 +6,6 @@
         <parameter key="sulu_tag.admin.class">Sulu\Bundle\TagBundle\Admin\TagAdmin</parameter>
         <parameter key="sulu_tag.tag_manager.class">Sulu\Bundle\TagBundle\Tag\TagManager</parameter>
         <parameter key="sulu_tag.tag_repository.class">Sulu\Bundle\TagBundle\Entity\TagRepository</parameter>
-        <parameter key="sulu_tag.content.type.tag_list.class">Sulu\Bundle\TagBundle\Content\Types\TagList</parameter>
         <parameter key="sulu_tag.tag_request_handler.class">Sulu\Component\Tag\Request\TagRequestHandler</parameter>
         <parameter key="sulu_tag.twig_extension.class">Sulu\Bundle\TagBundle\Twig\TagTwigExtension</parameter>
         <parameter key="sulu_tag.entity.tag">SuluTagBundle:Tag</parameter>
@@ -29,8 +28,8 @@
             <argument type="service" id="event_dispatcher"/>
             <argument>%sulu.model.tag.class%</argument>
         </service>
-        <service id="sulu_tag.content.type.tag_list" class="%sulu_tag.content.type.tag_list.class%">
-            <tag name="sulu.content.type" alias="tag_list"/>
+        <service id="sulu_tag.content.type.tag_selection" class="Sulu\Bundle\TagBundle\Content\Types\TagSelection">
+            <tag name="sulu.content.type" alias="tag_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu_tag.tag_manager"/>
         </service>

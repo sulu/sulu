@@ -55,7 +55,7 @@
             </meta>
         </property>
 
-        <property name="tags" type="tag_list">
+        <property name="tags" type="tag_selection">
             <meta>
                 <title lang="de">Tags</title>
                 <title lang="en">Tags</title>

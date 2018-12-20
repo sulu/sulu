@@ -17,10 +17,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 
-/**
- * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
- */
-class TagList extends ComplexContentType implements ContentTypeExportInterface
+class TagSelection extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for saving the tags in the database.

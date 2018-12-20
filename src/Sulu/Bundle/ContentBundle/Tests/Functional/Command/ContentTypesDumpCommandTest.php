@@ -71,6 +71,6 @@ class ContentTypesDumpCommandTest extends SuluTestCase
         $this->assertContains('media_selection', $output);
         $this->assertContains('route', $output);
         $this->assertContains('snippet', $output);
-        $this->assertContains('tag_list', $output);
+        $this->assertContains('tag_selection', $output);
     }
 }

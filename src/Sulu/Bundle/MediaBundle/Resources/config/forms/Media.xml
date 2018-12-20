@@ -44,7 +44,7 @@
                         <title>sulu_category.categories</title>
                     </meta>
                 </property>
-                <property name="tags" type="tag_list">
+                <property name="tags" type="tag_selection">
                     <meta>
                         <title>sulu_tag.tags</title>
                     </meta>

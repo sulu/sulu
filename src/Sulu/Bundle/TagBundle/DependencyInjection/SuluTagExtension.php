@@ -38,7 +38,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                     ],
                     'field_type_options' => [
                         'selection' => [
-                            'tag_list' => [
+                            'tag_selection' => [
                                 'default_type' => 'auto_complete',
                                 'resource_key' => 'tags',
                                 'types' => [
