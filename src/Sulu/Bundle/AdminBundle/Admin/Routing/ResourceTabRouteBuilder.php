@@ -41,7 +41,7 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
         return $this;
     }
 
-    public function setBackroute(string $backRoute): ResourceTabRouteBuilderInterface
+    public function setBackRoute(string $backRoute): ResourceTabRouteBuilderInterface
     {
         $this->route->setOption('backRoute', $backRoute);
 
