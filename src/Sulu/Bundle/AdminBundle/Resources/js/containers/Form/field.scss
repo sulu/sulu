@@ -5,6 +5,16 @@ $exceptionBackgroundColor: $roman;
 $exceptionBorderColor: $persianRed;
 $exceptionBorderColor: $persianRed;
 
+.field-container {
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.field {
+    flex: 1;
+}
+
 .field-exception {
     color: $exceptionColor;
     background: $exceptionBackgroundColor;

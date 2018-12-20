@@ -25,6 +25,10 @@ $errorLabelHeight: 20px;
     line-height: 19px;
     margin-bottom: 10px;
     text-align: left;
+
+    &::after {
+        content: '\200B';
+    }
 }
 
 .description-label,
