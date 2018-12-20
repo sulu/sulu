@@ -13,15 +13,13 @@ namespace Sulu\Bundle\TagBundle\Entity;
 
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Represents single tag in the system.
  */
-class Tag extends ApiEntity implements AuditableInterface, TagInterface
+class Tag implements TagInterface
 {
     /**
      * @var string

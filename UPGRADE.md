@@ -2,6 +2,18 @@
 
 ## dev-develop
 
+### TagBundle services changed
+
+Following Services changed:
+
+ - `sulu_tag.tag_repository` removed use `sulu.repository.tag`
+
+Following Function removed:
+
+ - `TagManagerInterface::getFieldDescriptors` and `TagManagerInterface::getFieldDescriptor` removed use `FieldDescriptorFactory::getFieldDescriptorForClass` instead
+
+The `TagManager` doesn't longer depend on FieldDescriptorFactory, TagEntityName and UserRepository so its constructor changed.
+
 ### Change tag_list to tag_selection
 
 The tag_list content and field type was changed to `tag_selection`

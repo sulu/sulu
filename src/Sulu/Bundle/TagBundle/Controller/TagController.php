@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -30,6 +29,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes tag available through.
@@ -57,7 +57,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -78,9 +78,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
     /**
      * returns all tags.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -93,7 +93,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
             $tagEntityName = $this->getParameter('sulu.model.tag.class');
 
-            $fieldDescriptors = $this->getManager()->getFieldDescriptors();
+            $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+                ->getFieldDescriptorForClass($tagEntityName);
             $listBuilder = $factory->create($tagEntityName);
 
             $ids = array_filter(explode(',', $request->get('ids', '')));
@@ -222,7 +223,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -244,9 +245,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
      *
      * @Post("/tags/merge")
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postMergeAction(Request $request)
     {
@@ -256,7 +257,13 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
             $destTag = $this->getManager()->merge($srcTagIds, $destTagId);
 
-            $view = $this->view(null, 303, ['location' => $destTag->getLinks()['self']]);
+            $view = $this->view(
+                null,
+                303,
+                [
+                    'location' => $this->get('router')->generate('get_tag', ['id' => $destTag->getId()]),
+                ]
+            );
         } catch (TagNotFoundException $exc) {
             $entityNotFoundException = new EntityNotFoundException(self::$entityName, $exc->getId());
             $view = $this->view($entityNotFoundException->toArray(), 404);
@@ -272,9 +279,9 @@ class TagController extends RestController implements ClassResourceInterface, Se
      * @Route("/tags", name="tags")
      * updates an array of tags
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patchAction(Request $request)
     {
