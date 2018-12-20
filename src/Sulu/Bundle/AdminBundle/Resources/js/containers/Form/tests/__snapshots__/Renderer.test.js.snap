@@ -13,9 +13,17 @@ exports[`Should not render fields when the schema contains a visible flag of fal
       <div
         class="field"
       >
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -34,9 +42,17 @@ exports[`Should not render fields when the schema contains a visible flag of fal
       >
         Text
       </label>
-      <input
-        type="text"
-      />
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="text"
+          />
+        </div>
+      </div>
       <label
         class="errorLabel"
       />
@@ -61,9 +77,17 @@ exports[`Should render field types based on schema 1`] = `
       >
         Text
       </label>
-      <input
-        type="text"
-      />
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="text"
+          />
+        </div>
+      </div>
       <label
         class="errorLabel"
       />
@@ -81,9 +105,17 @@ exports[`Should render field types based on schema 1`] = `
       >
         Datetime
       </label>
-      <input
-        type="datetime"
-      />
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="datetime"
+          />
+        </div>
+      </div>
       <label
         class="errorLabel"
       />
@@ -120,9 +152,17 @@ exports[`Should render nested sections 1`] = `
         >
           Item 1.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -166,9 +206,17 @@ exports[`Should render nested sections 1`] = `
         >
           Item 2.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -206,9 +254,17 @@ exports[`Should render sections with size 1`] = `
         >
           Item 1.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -239,9 +295,17 @@ exports[`Should render sections with size 1`] = `
         >
           Item 2.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -270,9 +334,17 @@ exports[`Should render sections without label 1`] = `
         >
           Item 1.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />
@@ -303,9 +375,17 @@ exports[`Should render sections without label 1`] = `
         >
           Item 2.1
         </label>
-        <input
-          type="text"
-        />
+        <div
+          class="fieldContainer"
+        >
+          <div
+            class="field"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
         <label
           class="errorLabel"
         />

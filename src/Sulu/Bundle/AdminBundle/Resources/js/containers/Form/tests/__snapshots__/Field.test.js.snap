@@ -13,9 +13,17 @@ exports[`Render a field with a description 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="descriptionLabel"
     >
@@ -41,9 +49,17 @@ exports[`Render a field with a error collection 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     >
@@ -66,9 +82,17 @@ exports[`Render a field with an error 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     >
@@ -91,9 +115,17 @@ exports[`Render a field without a const error 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />
@@ -108,9 +140,17 @@ exports[`Render a field without a label 1`] = `
   <div
     class="field"
   >
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />
@@ -131,9 +171,17 @@ exports[`Render a required field with correct field type 1`] = `
     >
       label1 *
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />
@@ -154,9 +202,17 @@ exports[`Render correct label with correct field type 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />
@@ -177,9 +233,17 @@ exports[`Render correct label with correct field type 2`] = `
     >
       label2
     </label>
-    <input
-      type="date"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="date"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />
@@ -200,9 +264,17 @@ exports[`Render field with correct values for grid 1`] = `
     >
       label1
     </label>
-    <input
-      type="text"
-    />
+    <div
+      class="fieldContainer"
+    >
+      <div
+        class="field"
+      >
+        <input
+          type="text"
+        />
+      </div>
+    </div>
     <label
       class="errorLabel"
     />

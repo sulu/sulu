@@ -98,12 +98,16 @@ export default class Field extends React.Component<Props> {
                     size={schema.size}
                     spaceAfter={schema.spaceAfter}
                 >
-                    <div className={fieldStyles.fieldException}>
-                        <h4>Error while rendering field!</h4>
-                        <p>
-                            <b>Name:</b> {name}<br />
-                            <b>Exception:</b> {e.toString()}
-                        </p>
+                    <div className={fieldStyles.fieldContainer}>
+                        <div className={fieldStyles.field}>
+                            <div className={fieldStyles.fieldException}>
+                                <h4>Error while rendering field!</h4>
+                                <p>
+                                    <b>Name:</b> {name}<br />
+                                    <b>Exception:</b> {e.toString()}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </FieldComponent>
             );
@@ -122,23 +126,27 @@ export default class Field extends React.Component<Props> {
                 size={schema.size}
                 spaceAfter={schema.spaceAfter}
             >
-                <FieldType
-                    dataPath={dataPath}
-                    disabled={disabled}
-                    error={error}
-                    fieldTypeOptions={fieldTypeOptions}
-                    formInspector={formInspector}
-                    label={label || name}
-                    maxOccurs={maxOccurs}
-                    minOccurs={minOccurs}
-                    onChange={this.handleChange}
-                    onFinish={this.handleFinish}
-                    schemaOptions={schemaOptions}
-                    schemaPath={schemaPath}
-                    showAllErrors={showAllErrors}
-                    types={types}
-                    value={value}
-                />
+                <div className={fieldStyles.fieldContainer}>
+                    <div className={fieldStyles.field}>
+                        <FieldType
+                            dataPath={dataPath}
+                            disabled={disabled}
+                            error={error}
+                            fieldTypeOptions={fieldTypeOptions}
+                            formInspector={formInspector}
+                            label={label || name}
+                            maxOccurs={maxOccurs}
+                            minOccurs={minOccurs}
+                            onChange={this.handleChange}
+                            onFinish={this.handleFinish}
+                            schemaOptions={schemaOptions}
+                            schemaPath={schemaPath}
+                            showAllErrors={showAllErrors}
+                            types={types}
+                            value={value}
+                        />
+                    </div>
+                </div>
             </FieldComponent>
         );
     }
