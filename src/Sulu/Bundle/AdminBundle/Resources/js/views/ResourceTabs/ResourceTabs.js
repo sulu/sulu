@@ -30,6 +30,10 @@ export default class ResourceTabs extends React.Component<Props> {
             },
         } = route;
 
+        if (!resourceKey) {
+            throw new Error('The route does not define the mandatory "resourceKey" option');
+        }
+
         const options = {};
         if (this.locales) {
             options.locale = observable.box();

@@ -56,11 +56,11 @@ class Datagrid extends React.Component<ViewProps> {
         } = router;
 
         if (!resourceKey) {
-            throw new Error('The route does not define the mandatory resourceKey option');
+            throw new Error('The route does not define the mandatory "resourceKey" option');
         }
 
         if (!adapters) {
-            throw new Error('The route does not define the mandatory adapters option');
+            throw new Error('The route does not define the mandatory "adapters" option');
         }
 
         const observableOptions = {};
