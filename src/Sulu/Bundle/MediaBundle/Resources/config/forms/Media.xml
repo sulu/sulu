@@ -39,7 +39,7 @@
                 <title>sulu_media.taxonomies</title>
             </meta>
             <properties>
-                <property name="categories" type="category_list">
+                <property name="categories" type="category_selection">
                     <meta>
                         <title>sulu_category.categories</title>
                     </meta>

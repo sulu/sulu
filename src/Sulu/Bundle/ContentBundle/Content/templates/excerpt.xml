@@ -39,7 +39,7 @@
             <tag name="sulu.search.field"/>
         </property>
 
-        <property name="categories" type="category_list">
+        <property name="categories" type="category_selection">
             <meta>
                 <title lang="de">Kategorien</title>
                 <title lang="en">Categories</title>

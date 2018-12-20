@@ -2,6 +2,26 @@
 
 ## dev-develop
 
+### Change category_list to category_selection
+
+The `category_list` content and field type was changed to `category_selection`
+
+**Before**
+
+```xml
+<property name="yourname" type="category_list">
+    <!-- ... --->
+</property>
+```
+
+**After**
+
+```xml
+<property name="yourname" type="category_selection">
+    <!-- ... --->
+</property>
+```
+
 ### Metadata refactoring
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

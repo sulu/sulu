@@ -17,10 +17,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 
-/**
- * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
- */
-class CategoryList extends ComplexContentType implements ContentTypeExportInterface
+class CategorySelection extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for persisting the categories in the database.

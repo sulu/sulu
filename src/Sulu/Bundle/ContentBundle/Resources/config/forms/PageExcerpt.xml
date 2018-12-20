@@ -21,7 +21,7 @@
                 <title>sulu_admin.description</title>
             </meta>
         </property>
-        <property name="categories" type="category_list">
+        <property name="categories" type="category_selection">
             <meta>
                 <title>sulu_category.categories</title>
             </meta>

@@ -9,17 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Content\Types;
+namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Content\Types;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Content\Types\CategorySelection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class CategoryListTest extends TestCase
+class CategorySelectionTest extends TestCase
 {
     public function testGetContentData()
     {
@@ -43,7 +44,7 @@ class CategoryListTest extends TestCase
         $categoryManager->findByIds([1, 2])->willReturn([$entity1, $entity2]);
         $categoryManager->getApiObjects([$entity1, $entity2], 'de')->willReturn([$category1, $category2]);
 
-        $categoryList = new CategoryList($categoryManager->reveal(), '');
+        $categoryList = new CategorySelection($categoryManager->reveal());
 
         $result = $categoryList->getContentData($property->reveal());
 
@@ -58,7 +59,7 @@ class CategoryListTest extends TestCase
         $categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $categoryManager->findByIds(Argument::any())->shouldNotBeCalled();
 
-        $categoryList = new CategoryList($categoryManager->reveal(), '');
+        $categoryList = new CategorySelection($categoryManager->reveal());
 
         $result = $categoryList->getContentData($property->reveal());
 
