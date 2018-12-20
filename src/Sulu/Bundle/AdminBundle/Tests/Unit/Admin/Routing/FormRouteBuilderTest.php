@@ -19,7 +19,8 @@ class FormRouteBuilderTest extends TestCase
     public function testBuildFormRouteWithClone()
     {
         $routeBuilder = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles');
+            ->setResourceKey('roles')
+            ->setFormKey('roles');
 
         $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
     }
