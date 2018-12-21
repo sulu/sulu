@@ -473,7 +473,7 @@ class WebspaceExportTest extends SuluTestCase
                     ),
                     'categories' => $this->createItemArray(
                         'categories',
-                        'category_list',
+                        'category_selection',
                         false,
                         !empty($extensionData['excerpt']['categories']) ? json_encode(
                             $extensionData['excerpt']['categories']

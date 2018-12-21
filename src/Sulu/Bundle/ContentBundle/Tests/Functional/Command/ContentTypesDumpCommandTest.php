@@ -63,7 +63,7 @@ class ContentTypesDumpCommandTest extends SuluTestCase
         $this->assertContains('time', $output);
         $this->assertContains('url', $output);
         $this->assertContains('audience_targeting_groups', $output);
-        $this->assertContains('category_list', $output);
+        $this->assertContains('category_selection', $output);
         $this->assertContains('contact', $output);
         $this->assertContains('smart_content', $output);
         $this->assertContains('teaser_selection', $output);

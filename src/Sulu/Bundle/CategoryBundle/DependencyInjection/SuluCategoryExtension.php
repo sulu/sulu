@@ -105,7 +105,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     ],
                     'field_type_options' => [
                         'selection' => [
-                            'category_list' => [
+                            'category_selection' => [
                                 'default_type' => 'datagrid',
                                 'resource_key' => 'categories',
                                 'types' => [
