@@ -2,6 +2,88 @@
 
 ## dev-develop
 
+### Metadata refactoring
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `ResourceMetadata` got rid of the form metadata. So the form metadata is not available in the response of the
+`/admin/resources/{resource}` action anymore, but under `/admin/metadata/form/{formKey}`. The reason for that is that
+we want to have multiple different forms for each resource.
+
+The form XML file has changed, because it needs a separate key now, which identifies the form unrelated to the resource
+it is using.
+
+```xml
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>categories</key>
+    <properties>
+        <!-- the same properties as before -->
+    </properties>
+</form>
+```
+
+The frontend routes for forms defined in the `Admin` classes now need this `formKey` in addition to the `resourceKey`.
+This allows to have the same endpoint for multiple forms, and solves a bunch of issues we were having.
+
+```php
+return [
+    (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
+        ->addOption('tabTitle', 'sulu_category.details')
+        ->addOption('resourceKey', 'categories')
+        ->addOption('formKey', 'categories')
+        ->addOption('backRoute', 'sulu_category.datagrid')
+];
+```
+
+Of course the `resourceKey` can still often be passed from a parent route and therefore omitted in the form route
+definition, which is often the case when making use of the `sulu_admin.resource_tabs` view.
+
+Adding additional fields works a little bit different now. Previously you had to define a separate form XML file, and
+add it in the configuration:
+
+```yml
+sulu_admin:
+    resources:
+        categories:
+            form:
+                - "@MyCategoryBundle/Resources/config/forms/Category.xml"
+```
+
+Now the forms are merged based on the key from the form XML file. The sulu-minimal edition already comes with a
+`config/forms` folder, in which form XML files can be put. These will extend existing forms if the same form key already
+exists. In case the files should be stored in a different folder it can still be configured in the configuration:
+
+```yml
+sulu_admin:
+    forms:
+        directories:
+            - "%kernel.project_dir%/config/forms"
+```
+
+Also the representations in the cache have changed, so the cache should be cleared:
+
+```bash
+bin/adminconsole cache:clear
+bin/websiteconsole cache:clear
+```
+
+### Expressions in Form XML
+
+Parameters in form XMLs using expression are written a bit different now. The `type` attribute can now take the value
+`expression` and the expression itself goes into `value`.
+
+```xml
+<!-- before -->
+<param name="something" expression="service('some_service').getValue()"/>
+<!-- after -->
+<param name="something" type="expression" value="service('some_service').getValue()"/>
+```
+
+This will make it easier to add more similar features in the future.
+
 ### MediaBundle storage configuration
 
 Configuration tree for local storage has changed:
