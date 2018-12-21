@@ -16,7 +16,7 @@ interface ResourceTabRouteBuilderInterface
     public function setResourceKey(string $resourceKey): self;
 
     /**
-     * @param array $locales
+     * @param string[] $locales
      */
     public function addLocales(array $locales): self;
 

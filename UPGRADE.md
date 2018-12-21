@@ -131,7 +131,8 @@ Instead of creating all the Routes in the `Admin::getRoutes` method completely o
 to use the `RouteBuilderFactory`. It offers methods to create Form, Datagrid and ResourceTabs routes in a typed way,
 which means auto completion in the IDE should work as well.
 
-Apart from that the `Route::addOption` was renamed to `Route::setOption`, since it overrides existing option values.
+Apart from that the `Route::addOption` and `Route::addAttributeDefault` were renamed to `Route::setOption` and
+`Route::setAttributeDefault`, since they overrides existing values.
 
 ### MediaBundle storage configuration
 
