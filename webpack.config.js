@@ -2,9 +2,9 @@
 /* eslint-disable import/no-nodejs-modules*/
 const path = require('path');
 const glob = require('glob');
-const rimraf = require('rimraf');
 const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
@@ -29,9 +29,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         throw new Error(errorMessage);
     }
 
-    // Remove old build files
-    rimraf.sync(path.resolve(publicDir, basePath));
-
     const entries = glob.sync(
         path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
     );
@@ -54,6 +51,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
+            new CleanWebpackPlugin([path.resolve(publicDir, basePath)]),
             new webpack.DefinePlugin({
                 BUNDLE_ENTRIES_COUNT: entriesCount,
             }),
