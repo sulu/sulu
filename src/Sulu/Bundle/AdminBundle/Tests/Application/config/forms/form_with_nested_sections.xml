@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>form_with_nested_sections</key>
+
+    <properties>
+        <section name="test1" colspan="4">
+            <properties>
+                <property name="test11" type="text_line" />
+            </properties>
+        </section>
+        <section name="test2" colspan="8">
+            <properties>
+                <property name="test21" type="text_line" />
+                <section name="test22">
+                    <properties>
+                        <property name="test221" type="text_line" />
+                    </properties>
+                </section>
+            </properties>
+        </section>
+    </properties>
+</form>

@@ -274,6 +274,8 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 $item = $this->mapBlock($component, $locale);
             } elseif ($component instanceof PropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
+            } elseif ($component instanceof SectionMetadata) {
+                $item = $this->mapSection($component, $locale);
             } else {
                 throw new \Exception('Unsupported property given "' . get_class($property) . '"');
             }
@@ -382,19 +384,29 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param PropertyMetadata[] $propertyMetadata
+     * @param ItemMetadata[] $itemsMetadata
      */
-    private function mapSchema(array $propertyMetadata): Schema
+    private function mapSchema(array $itemsMetadata): Schema
     {
-        $schemaProperties = array_filter(array_map(function(PropertyMetadata $propertyMetadata) {
-            if (!$propertyMetadata->isRequired()) {
+        return new Schema($this->mapSchemaProperties($itemsMetadata));
+    }
+
+    /**
+     * @param ItemMetadata[] $itemsMetadata
+     */
+    private function mapSchemaProperties(array $itemsMetadata)
+    {
+        return array_filter(array_map(function(ItemMetadata $itemMetadata) {
+            if ($itemMetadata instanceof SectionMetadata) {
+                return $this->mapSchemaProperties($itemMetadata->getChildren());
+            }
+
+            if (!$itemMetadata->isRequired()) {
                 return;
             }
 
-            return new Property($propertyMetadata->getName(), $propertyMetadata->isRequired());
-        }, $propertyMetadata));
-
-        return new Schema($schemaProperties);
+            return new Property($itemMetadata->getName(), $itemMetadata->isRequired());
+        }, $itemsMetadata));
     }
 
     private function getConfigCache(string $key, string $locale): ConfigCache

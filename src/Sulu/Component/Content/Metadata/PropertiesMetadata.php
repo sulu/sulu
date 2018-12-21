@@ -92,10 +92,18 @@ abstract class PropertiesMetadata extends ItemMetadata
      */
     public function burnProperties()
     {
+        $this->properties = $this->removeSectionProperties($this->children);
+    }
+
+    /**
+     * @param ItemMetadata[] $children
+     */
+    private function removeSectionProperties(array $children)
+    {
         $properties = [];
-        foreach ($this->children as $child) {
+        foreach ($children as $child) {
             if ($child instanceof SectionMetadata) {
-                $properties = array_merge($properties, $child->getChildren());
+                $properties = array_merge($properties, $this->removeSectionProperties($child->getChildren()));
 
                 continue;
             }
@@ -103,7 +111,7 @@ abstract class PropertiesMetadata extends ItemMetadata
             $properties[$child->getName()] = $child;
         }
 
-        $this->properties = $properties;
+        return $properties;
     }
 
     /**

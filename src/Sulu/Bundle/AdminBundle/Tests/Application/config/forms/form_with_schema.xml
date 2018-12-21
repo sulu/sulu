@@ -30,5 +30,12 @@
     <properties>
         <property name="first" type="text_line" colspan="6" mandatory="true"/>
         <property name="second" type="text_line" colspan="6"/>
+
+        <section name="test">
+            <properties>
+                <property name="third" type="text_line" mandatory="true" />
+                <property name="fourth" type="text_line" />
+            </properties>
+        </section>
     </properties>
 </form>

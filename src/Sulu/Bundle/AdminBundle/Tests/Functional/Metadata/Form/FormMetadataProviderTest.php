@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\Form;
 
 use Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\Form\Section;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 class FormMetadataProviderTest extends KernelTestCase
@@ -32,6 +33,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(1, array_keys($schema));
         $this->assertCount(2, $schema['allOf']);
+        $this->assertEquals(['first', 'third'], $schema['allOf'][0]['required']);
     }
 
     public function testGetMetadataWithEvaluations()
@@ -89,5 +91,22 @@ class FormMetadataProviderTest extends KernelTestCase
 
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(2, $schema['allOf']);
+    }
+
+    public function testGetMetadataWithNestedSections()
+    {
+        $form = $this->formMetadataProvider->getMetadata('form_with_nested_sections', 'en');
+
+        $section1 = $form->getItems()['test1'];
+        $section2 = $form->getItems()['test2'];
+        $section22 = $section2->getItems()['test22'];
+
+        $this->assertInstanceOf(Section::class, $section1);
+        $this->assertInstanceOf(Section::class, $section2);
+        $this->assertInstanceOf(Section::class, $section22);
+
+        $this->assertEquals('test11', $section1->getItems()['test11']->getName());
+        $this->assertEquals('test21', $section2->getItems()['test21']->getName());
+        $this->assertEquals('test221', $section22->getItems()['test221']->getName());
     }
 }
