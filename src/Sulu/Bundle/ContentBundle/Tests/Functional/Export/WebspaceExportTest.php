@@ -481,7 +481,7 @@ class WebspaceExportTest extends SuluTestCase
                     ),
                     'tags' => $this->createItemArray(
                         'tags',
-                        'tag_list',
+                        'tag_selection',
                         false,
                         !empty($extensionData['excerpt']['tags']) ? json_encode($extensionData['excerpt']['tags']) : ''
                     ),

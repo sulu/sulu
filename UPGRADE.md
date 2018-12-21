@@ -2,6 +2,27 @@
 
 ## dev-develop
 
+
+### Change tag_list to tag_selection
+
+The tag_list content and field type was changed to `tag_selection`
+
+**Before**
+
+```xml
+<property name="yourname" type="tag_list">
+    <!-- ... --->
+</property>
+```
+
+**After**
+
+```xml
+<property name="yourname" type="tag_selection">
+    <!-- ... --->
+</property>
+```
+
 ### Change category_list to category_selection
 
 The `category_list` content and field type was changed to `category_selection`

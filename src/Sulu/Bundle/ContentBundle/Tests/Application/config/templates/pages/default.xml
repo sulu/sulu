@@ -17,7 +17,7 @@
         <property name="title" type="text_line" mandatory="true">
             <tag name="sulu.rlp.part" priority="1"/>
         </property>
-        <property name="tags" type="tag_list"/>
+        <property name="tags" type="tag_selection"/>
         <property name="url" type="resource_locator" mandatory="false">
             <tag name="sulu.rlp"/>
         </property>
