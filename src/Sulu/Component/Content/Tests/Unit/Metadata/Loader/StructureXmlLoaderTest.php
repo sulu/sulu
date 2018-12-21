@@ -165,6 +165,13 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertCount(1, $result->getProperty('block1')->getComponents());
     }
 
+    public function testLoadNestedSections()
+    {
+        $result = $this->load('template_with_nested_sections.xml');
+
+        $this->assertEquals(['title', 'test21', 'test221'], array_keys($result->getProperties()));
+    }
+
     public function testLoadInvalidIgnore()
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);

@@ -10,7 +10,7 @@
     -->
     <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
 
-    <xs:element name="properties" type="rootPropertiesType"/>
+    <xs:element name="properties" type="propertiesType"/>
 
     <!--
     Attribute group for attributes that are allowed for all elements
@@ -55,7 +55,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="rootPropertiesType">
+    <xs:complexType name="propertiesType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element type="propertyType" name="property" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
@@ -75,14 +75,6 @@
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
-        <xs:attributeGroup ref="defaultAttributes"/>
-    </xs:complexType>
-
-    <xs:complexType name="propertiesType">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element type="propertyType" name="property"/>
-            <xs:element type="blockType" name="block"/>
-        </xs:choice>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 

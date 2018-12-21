@@ -26,7 +26,7 @@
             <xs:element type="cacheLifetimeType" name="cacheLifetime" minOccurs="1" maxOccurs="1"/>
             <xs:element type="areasType" name="areas"/>
             <xs:element type="schemaType" name="schema" minOccurs="1" maxOccurs="1"/>
-            <xs:element type="rootPropertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="propertiesType" name="properties" minOccurs="1" maxOccurs="1"/>
 
             <xs:element name="meta">
                 <xs:complexType>
