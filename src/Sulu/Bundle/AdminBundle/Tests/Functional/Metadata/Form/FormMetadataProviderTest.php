@@ -33,6 +33,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(1, array_keys($schema));
         $this->assertCount(2, $schema['allOf']);
+        $this->assertEquals(['first', 'third'], $schema['allOf'][0]['required']);
     }
 
     public function testGetMetadataWithEvaluations()
@@ -98,7 +99,7 @@ class FormMetadataProviderTest extends KernelTestCase
 
         $section1 = $form->getItems()['test1'];
         $section2 = $form->getItems()['test2'];
-        $section22 =$section2->getItems()['test22'];
+        $section22 = $section2->getItems()['test22'];
 
         $this->assertInstanceOf(Section::class, $section1);
         $this->assertInstanceOf(Section::class, $section2);

@@ -388,10 +388,17 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
      */
     private function mapSchema(array $itemsMetadata): Schema
     {
-        $schemaProperties = array_filter(array_map(function(ItemMetadata $itemMetadata) {
+        return new Schema($this->mapSchemaProperties($itemsMetadata));
+    }
+
+    /**
+     * @param ItemMetadata[] $itemsMetadata
+     */
+    private function mapSchemaProperties(array $itemsMetadata)
+    {
+        return array_filter(array_map(function(ItemMetadata $itemMetadata) {
             if ($itemMetadata instanceof SectionMetadata) {
-                // TODO get required fields from sections as well
-                return;
+                return $this->mapSchemaProperties($itemMetadata->getChildren());
             }
 
             if (!$itemMetadata->isRequired()) {
@@ -400,8 +407,6 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
             return new Property($itemMetadata->getName(), $itemMetadata->isRequired());
         }, $itemsMetadata));
-
-        return new Schema($schemaProperties);
     }
 
     private function getConfigCache(string $key, string $locale): ConfigCache
