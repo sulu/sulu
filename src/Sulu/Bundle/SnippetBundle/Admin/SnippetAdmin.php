@@ -131,7 +131,7 @@ class SnippetAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.detail', '/details')
                 ->setResourceKey('snippets')
-                ->setFormKey('snippets')
+                ->setFormKey('snippet')
                 ->setTabTitle('sulu_snippet.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
@@ -144,7 +144,7 @@ class SnippetAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.detail', '/details')
                 ->setResourceKey('snippets')
-                ->setFormKey('snippets')
+                ->setFormKey('snippet')
                 ->setTabTitle('sulu_snippet.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)

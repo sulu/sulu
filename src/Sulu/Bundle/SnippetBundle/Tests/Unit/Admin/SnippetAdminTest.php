@@ -94,7 +94,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_snippet.details',
-            'formKey' => 'snippets',
+            'formKey' => 'snippet',
             'editRoute' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
                 'sulu_admin.save',
@@ -113,7 +113,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_snippet.details',
-            'formKey' => 'snippets',
+            'formKey' => 'snippet',
             'toolbarActions' => [
                 'sulu_admin.save',
                 'sulu_admin.type',

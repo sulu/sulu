@@ -123,7 +123,7 @@ class ContentAdmin extends Admin
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_add_form.detail', '/details')
                 ->setResourceKey('pages')
-                ->setFormKey('pages')
+                ->setFormKey('page')
                 ->setTabTitle('sulu_content.page_form_detail')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addRouterAttributesToEditRoute(['webspace'])
@@ -136,7 +136,7 @@ class ContentAdmin extends Admin
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.detail', '/details')
                 ->setResourceKey('pages')
-                ->setFormKey('pages')
+                ->setFormKey('page')
                 ->setTabTitle('sulu_content.page_form_detail')
                 ->addToolbarActions($formToolbarActionsWithType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
@@ -144,8 +144,8 @@ class ContentAdmin extends Admin
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.seo', '/seo')
-                ->setFormKey('pages_seo')
                 ->setResourceKey('pages_seo')
+                ->setFormKey('page_seo')
                 ->setTabTitle('sulu_content.page_form_seo')
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
@@ -153,7 +153,7 @@ class ContentAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.excerpt', '/excerpt')
                 ->setResourceKey('pages_excerpt')
-                ->setFormKey('pages_excerpt')
+                ->setFormKey('page_excerpt')
                 ->setBackRoute(static::WEBSPACES_ROUTE)
                 ->setTabTitle('sulu_content.page_form_excerpt')
                 ->addToolbarActions($formToolbarActionsWithoutType)
@@ -162,7 +162,7 @@ class ContentAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_content.page_edit_form.settings', '/settings')
                 ->setResourceKey('pages_settings')
-                ->setFormKey('pages_settings')
+                ->setFormKey('page_settings')
                 ->setBackRoute(static::WEBSPACES_ROUTE)
                 ->setTabTitle('sulu_content.page_form_settings')
                 ->addToolbarActions($formToolbarActionsWithoutType)

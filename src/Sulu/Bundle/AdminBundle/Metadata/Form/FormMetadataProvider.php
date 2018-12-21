@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\Form;
 
-use Doctrine\Common\Inflector\Inflector;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
@@ -154,7 +153,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                     continue;
                 }
 
-                $structuresMetadataByTypes[Inflector::pluralize($structureType)][] = $structureMetadata;
+                $structuresMetadataByTypes[$structureType][] = $structureMetadata;
             }
         }
 

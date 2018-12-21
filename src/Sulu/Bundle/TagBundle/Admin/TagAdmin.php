@@ -84,7 +84,7 @@ class TagAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.detail', '/details')
                 ->setResourceKey('tags')
-                ->setFormkey('tags')
+                ->setFormKey('tag_details')
                 ->setTabTitle('sulu_tag.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
@@ -96,7 +96,7 @@ class TagAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.detail', '/details')
                 ->setResourceKey('tags')
-                ->setFormKey('tags')
+                ->setFormKey('tag_details')
                 ->setTabTitle('sulu_tag.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)

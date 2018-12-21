@@ -108,7 +108,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_add_form.detail', '/details')
                 ->setResourceKey('contacts')
-                ->setFormKey('contacts')
+                ->setFormKey('contact_details')
                 ->setTabTitle('sulu_contact.details')
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActionsWithDelete)
@@ -120,7 +120,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.detail', '/details')
                 ->setResourceKey('contacts')
-                ->setFormKey('contacts')
+                ->setFormKey('contact_details')
                 ->setTabTitle('sulu_contact.details')
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
@@ -138,7 +138,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_add_form.detail', '/details')
                 ->setResourceKey('accounts')
-                ->setFormKey('accounts')
+                ->setFormKey('account_details')
                 ->setTabTitle('sulu_contact.details')
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActionsWithDelete)
@@ -150,7 +150,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.detail', '/details')
                 ->setResourceKey('accounts')
-                ->setFormKey('accounts')
+                ->setFormKey('account_details')
                 ->setTabTitle('sulu_contact.details')
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)

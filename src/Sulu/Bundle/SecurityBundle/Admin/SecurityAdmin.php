@@ -112,7 +112,7 @@ class SecurityAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_add_form.detail', '/details')
                 ->setResourceKey('roles')
-                ->setFormKey('roles')
+                ->setFormKey('role_details')
                 ->setTabTitle('sulu_security.role_form_detail')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
@@ -124,14 +124,14 @@ class SecurityAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_edit_form.detail', '/details')
                 ->setResourceKey('roles')
-                ->setFormKey('roles')
+                ->setFormKey('role_details')
                 ->setTabTitle('sulu_security.role_form_detail')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.form.permissions', '/permissions')
                 ->setResourceKey('users')
-                ->setFormKey('users')
+                ->setFormKey('user_details')
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->setIdQueryParameter('contactId')

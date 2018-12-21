@@ -106,7 +106,7 @@ class CategoryAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.detail', '/details')
                 ->setResourceKey('categories')
-                ->setFormKey('categories')
+                ->setFormKey('category_details')
                 ->setTabTitle('sulu_category.details')
                 ->addToolbarActions($formToolbarActions)
                 ->addRouterAttributesToFormStore(['parentId'])
@@ -120,7 +120,7 @@ class CategoryAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.detail', '/details')
                 ->setResourceKey('categories')
-                ->setFormKey('categories')
+                ->setFormKey('category_details')
                 ->setTabTitle('sulu_category.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
