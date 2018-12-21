@@ -12,21 +12,36 @@
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SecurityAdmin extends Admin
 {
+    const DATAGRID_ROUTE = 'sulu_security.roles_datagrid';
+
+    const ADD_FORM_ROUTE = 'sulu_security.role_add_form';
+
+    const EDIT_FORM_ROUTE = 'sulu_security.role_edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var SecurityCheckerInterface
      */
     private $securityChecker;
 
-    public function __construct(SecurityCheckerInterface $securityChecker)
-    {
+    public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
+        SecurityCheckerInterface $securityChecker
+    ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
     }
 
@@ -39,7 +54,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
             $roles = new NavigationItem('sulu_security.roles', $settings);
             $roles->setPosition(10);
-            $roles->setMainRoute('sulu_security.roles_datagrid');
+            $roles->setMainRoute(static::DATAGRID_ROUTE);
         }
 
         if ($settings->hasChildren()) {
@@ -84,39 +99,44 @@ class SecurityAdmin extends Admin
         ];
 
         return [
-            (new Route('sulu_security.roles_datagrid', '/roles', 'sulu_admin.datagrid'))
-                ->addOption('title', 'sulu_security.roles')
-                ->addOption('adapters', ['table'])
-                ->addOption('resourceKey', 'roles')
-                ->addOption('addRoute', 'sulu_security.role_add_form.detail')
-                ->addOption('editRoute', 'sulu_security.role_edit_form.detail'),
-            (new Route('sulu_security.role_add_form', '/roles/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'roles')
-                ->addOption('backRoute', 'sulu_security.roles_datagrid')
-                ->addOption('toolbarActions', $formToolbarActions),
-            (new Route('sulu_security.role_add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_security.role_form_detail')
-                ->addOption('formKey', 'roles')
-                ->addOption('editRoute', 'sulu_security.role_edit_form.detail')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent('sulu_security.role_add_form'),
-            (new Route('sulu_security.role_edit_form', '/roles/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'roles')
-                ->addOption('toolbarActions', $formToolbarActions),
-            (new Route('sulu_security.role_edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_security.role_form_detail')
-                ->addOption('formKey', 'roles')
-                ->addOption('backRoute', 'sulu_security.roles_datagrid')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->setParent('sulu_security.role_edit_form'),
-            (new Route('sulu_security.form.permissions', '/permissions', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_security.permissions')
-                ->addOption('backRoute', 'sulu_contact.contacts_datagrid')
-                ->addOption('resourceKey', 'users')
-                ->addOption('formKey', 'users')
-                ->addOption('idQueryParameter', 'contactId')
-                ->addOption('toolbarActions', ['sulu_admin.save'])
-                ->setParent('sulu_contact.contact_edit_form'),
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/roles')
+                ->setResourceKey('roles')
+                ->setTitle('sulu_security.roles')
+                ->addDatagridAdapters(['table'])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
+                ->setResourceKey('roles')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_add_form.detail', '/details')
+                ->setResourceKey('roles')
+                ->setFormKey('role_details')
+                ->setTabTitle('sulu_security.role_form_detail')
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
+                ->setResourceKey('roles')
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_edit_form.detail', '/details')
+                ->setResourceKey('roles')
+                ->setFormKey('role_details')
+                ->setTabTitle('sulu_security.role_form_detail')
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.form.permissions', '/permissions')
+                ->setResourceKey('users')
+                ->setFormKey('user_details')
+                ->setTabTitle('sulu_security.permissions')
+                ->addToolbarActions(['sulu_admin.save'])
+                ->setIdQueryParameter('contactId')
+                ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 }

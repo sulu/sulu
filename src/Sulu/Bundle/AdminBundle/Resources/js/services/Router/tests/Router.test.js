@@ -36,6 +36,41 @@ test('Navigate to route using state', () => {
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.entries.some((entry) => entry.pathname === '/')).toEqual(true);
+    expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
+});
+
+test('Redirect to route using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        test: {
+            name: 'test',
+            view: 'test',
+            path: '/test',
+            attributeDefaults: {},
+        },
+        page: {
+            name: 'page',
+            view: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    router.navigate('test', {uuid: 'some-uuid'});
+    router.redirect('page', {uuid: 'some-uuid'});
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.view).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.entries.some((entry) => entry.pathname === '/test')).toEqual(false);
+    expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
 });
 
 test('Navigate to route with search parameters using state', () => {

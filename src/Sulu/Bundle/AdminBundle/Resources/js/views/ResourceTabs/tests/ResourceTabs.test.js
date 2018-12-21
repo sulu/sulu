@@ -87,6 +87,86 @@ test('Should mark the currently active child route as selected tab', () => {
         .toMatchSnapshot();
 });
 
+test('Should redirect to first child route if no tab is active', () => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    expect(router.redirect).toBeCalledWith('route1', attributes);
+});
+
+test('Should not redirect to first child route if a tab is already active', () => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    expect(router.redirect).not.toBeCalled();
+});
+
 test('Should navigate to child route if tab is clicked', () => {
     const childRoute1 = {
         name: 'route1',
@@ -112,7 +192,7 @@ test('Should navigate to child route if tab is clicked', () => {
 
     const router = {
         navigate: jest.fn(),
-        route,
+        route: childRoute1,
         attributes,
     };
 

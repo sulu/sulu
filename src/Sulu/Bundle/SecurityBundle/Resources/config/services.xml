@@ -40,6 +40,7 @@
 
     <services>
         <service id="sulu_security.admin" class="%sulu_security.admin.class%">
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

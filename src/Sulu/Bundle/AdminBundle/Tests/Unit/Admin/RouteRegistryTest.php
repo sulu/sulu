@@ -55,11 +55,11 @@ class RouteRegistryTest extends TestCase
     public function testFindRouteByName()
     {
         $route1 = new Route('test1', '/test1', 'test1');
-        $route1->addOption('value', 'test1');
+        $route1->setOption('value', 'test1');
         $route2 = new Route('test2', '/test2', 'test2');
-        $route2->addOption('value', 'test2');
+        $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
-        $route3->addOption('value', 'test3');
+        $route3->setOption('value', 'test3');
         $this->admin1->getRoutes()->willReturn([$route1]);
         $this->admin2->getRoutes()->willReturn([$route2, $route3]);
 
@@ -80,11 +80,11 @@ class RouteRegistryTest extends TestCase
     public function testGetRoutes()
     {
         $route1 = new Route('test1', '/test1', 'test1');
-        $route1->addOption('value', 'test1');
+        $route1->setOption('value', 'test1');
         $route2 = new Route('test2', '/test2', 'test2');
-        $route2->addOption('value', 'test2');
+        $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
-        $route3->addOption('value', 'test3');
+        $route3->setOption('value', 'test3');
         $this->admin1->getRoutes()->willReturn([$route1]);
         $this->admin2->getRoutes()->willReturn([$route2, $route3]);
 
@@ -98,11 +98,11 @@ class RouteRegistryTest extends TestCase
     public function testGetRoutesMemoryCache()
     {
         $route1 = new Route('test1', '/test1', 'test1');
-        $route1->addOption('value', 'test1');
+        $route1->setOption('value', 'test1');
         $route2 = new Route('test2', '/test2', 'test2');
-        $route2->addOption('value', 'test2');
+        $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
-        $route3->addOption('value', 'test3');
+        $route3->setOption('value', 'test3');
         $this->admin1->getRoutes()->willReturn([$route1])->shouldBeCalledTimes(1);
         $this->admin2->getRoutes()->willReturn([$route2, $route3])->shouldBeCalledTimes(1);
 
@@ -127,17 +127,17 @@ class RouteRegistryTest extends TestCase
     public function testRoutesMergeOptions()
     {
         $route1 = new Route('test1', '/test1', 'test1');
-        $route1->addOption('route1', 'test1');
-        $route1->addOption('override', 'override');
+        $route1->setOption('route1', 'test1');
+        $route1->setOption('override', 'override');
         $route1_1 = new Route('test1_1', '/test1_1', 'test1_1');
-        $route1_1->addOption('route1_1', 'test1_1');
+        $route1_1->setOption('route1_1', 'test1_1');
         $route1_1->setParent('test1');
         $route1_1_1 = new Route('test1_1_1', '/test1_1_1', 'test1_1_1');
-        $route1_1_1->addOption('override', 'overriden-value');
-        $route1_1_1->addOption('route1_1_1', 'test1_1_1');
+        $route1_1_1->setOption('override', 'overriden-value');
+        $route1_1_1->setOption('route1_1_1', 'test1_1_1');
         $route1_1_1->setParent('test1_1');
         $route2 = new Route('test2', '/test2', 'test2');
-        $route2->addOption('value', 'test');
+        $route2->setOption('value', 'test');
 
         $this->admin1->getRoutes()->willReturn([$route1, $route1_1, $route1_1_1, $route2]);
         $this->admin2->getRoutes()->willReturn([]);

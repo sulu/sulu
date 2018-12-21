@@ -15,12 +15,13 @@ export default class Router {
     bindingDefaults: Map<string, ?string | number | boolean> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
+    redirectFlag: boolean = false;
 
     constructor(history: Object) {
         this.history = history;
 
         this.history.listen((location) => {
-            log.info('URL was changed to ' + location.pathname + location.search);
+            log.info('URL was changed to "' + location.pathname + location.search + '"');
             this.match(location.pathname, location.search);
         });
 
@@ -31,8 +32,9 @@ export default class Router {
             if (currentUrl !== historyUrl) {
                 // have to use the historyUrl as a fallback, because currentUrl could be undefined and break the routing
                 const url = currentUrl || historyUrl;
-                log.info('Router changes URL to ' + url);
-                this.history.push(url);
+                log.info('Router changes URL to "' + url + '"' + (this.redirectFlag ? ' replacing history' : ''));
+                this.redirectFlag ? this.history.replace(url) : this.history.push(url);
+                this.redirectFlag = false;
             }
         });
     }
@@ -104,6 +106,11 @@ export default class Router {
     navigate(name: string, attributes: Object = {}) {
         this.clearBindings();
         this.handleNavigation(name, attributes);
+    }
+
+    redirect(name: string, attributes: Object = {}) {
+        this.redirectFlag = true;
+        this.navigate(name, attributes);
     }
 
     restore(name: string, attributes: Object = {}) {

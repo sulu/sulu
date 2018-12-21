@@ -38,6 +38,14 @@ export default class ResourceTabs extends React.Component<Props> {
         this.resourceStore = new ResourceStore(resourceKey, id, options);
     }
 
+    componentDidMount() {
+        const {route, router} = this.props;
+
+        if (route === router.route && route.children.length !== 0) {
+            router.redirect(route.children[0].name, router.attributes);
+        }
+    }
+
     componentWillUnmount() {
         this.resourceStore.destroy();
     }

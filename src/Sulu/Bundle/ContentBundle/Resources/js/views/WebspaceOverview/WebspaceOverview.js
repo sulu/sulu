@@ -155,7 +155,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     handleEditClick = (id: string | number) => {
         const {router} = this.props;
         router.navigate(
-            'sulu_content.page_edit_form.detail',
+            'sulu_content.page_edit_form',
             {
                 id,
                 locale: this.locale.get(),

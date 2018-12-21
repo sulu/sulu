@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Localization;
@@ -22,6 +22,17 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
 {
+    const DATAGRID_ROUTE = 'sulu_category.datagrid';
+
+    const ADD_FORM_ROUTE = 'sulu_category.add_form';
+
+    const EDIT_FORM_ROUTE = 'sulu_category.edit_form';
+
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
     /**
      * @var SecurityCheckerInterface
      */
@@ -33,15 +44,13 @@ class CategoryAdmin extends Admin
     private $localizationManager;
 
     public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManagerInterface $localizationManager
     ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
-
-        if (!$this->securityChecker) {
-            return;
-        }
     }
 
     public function getNavigation(): Navigation
@@ -52,7 +61,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
             $categoryItem = new NavigationItem('sulu_category.categories', $settings);
             $categoryItem->setPosition(20);
-            $categoryItem->setMainRoute('sulu_category.datagrid');
+            $categoryItem->setMainRoute(static::DATAGRID_ROUTE);
         }
 
         if ($settings->hasChildren()) {
@@ -79,36 +88,43 @@ class CategoryAdmin extends Admin
         ];
 
         return [
-            (new Route('sulu_category.datagrid', '/categories/:locale', 'sulu_admin.datagrid'))
-                ->addOption('locales', $locales)
-                ->addAttributeDefault('locale', $locales[0])
-                ->addOption('title', 'sulu_category.categories')
-                ->addOption('resourceKey', 'categories')
-                ->addOption('adapters', ['tree_table'])
-                ->addOption('addRoute', 'sulu_category.add_form.detail')
-                ->addOption('editRoute', 'sulu_category.edit_form.detail')
-                ->addOption('searchable', false)
-                ->addOption('movable', true),
-            (new Route('sulu_category.add_form', '/categories/:locale/add', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'categories')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('routerAttributesToFormStore', ['parentId'])
-                ->addOption('locales', $locales),
-            (new Route('sulu_category.add_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_category.details')
-                ->addOption('formKey', 'categories')
-                ->addOption('backRoute', 'sulu_category.datagrid')
-                ->addOption('editRoute', 'sulu_category.edit_form.detail')
-                ->setParent('sulu_category.add_form'),
-            (new Route('sulu_category.edit_form', '/categories/:locale/:id', 'sulu_admin.resource_tabs'))
-                ->addOption('resourceKey', 'categories')
-                ->addOption('toolbarActions', $formToolbarActions)
-                ->addOption('locales', $locales),
-            (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
-                ->addOption('tabTitle', 'sulu_category.details')
-                ->addOption('formKey', 'categories')
-                ->addOption('backRoute', 'sulu_category.datagrid')
-                ->setParent('sulu_category.edit_form'),
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/categories/:locale')
+                ->setResourceKey('categories')
+                ->setTitle('sulu_category.categories')
+                ->addDatagridAdapters(['tree_table'])
+                ->addLocales($locales)
+                ->setDefaultLocale($locales[0])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->enableSearching()
+                ->enableMoving()
+                ->getRoute(),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+                ->setResourceKey('categories')
+                ->addLocales($locales)
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.detail', '/details')
+                ->setResourceKey('categories')
+                ->setFormKey('category_details')
+                ->setTabTitle('sulu_category.details')
+                ->addToolbarActions($formToolbarActions)
+                ->addRouterAttributesToFormStore(['parentId'])
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->setParent(static::ADD_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+                ->setResourceKey('categories')
+                ->addLocales($locales)
+                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.detail', '/details')
+                ->setResourceKey('categories')
+                ->setFormKey('category_details')
+                ->setTabTitle('sulu_category.details')
+                ->addToolbarActions($formToolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

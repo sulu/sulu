@@ -15,7 +15,7 @@ import mediaDetailStyles from './mediaDetail.scss';
 import FocusPointOverlay from './FocusPointOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const FORM_KEY = 'media';
+const FORM_KEY = 'media_details';
 
 type Props = ViewProps & {
     resourceStore: ResourceStore,

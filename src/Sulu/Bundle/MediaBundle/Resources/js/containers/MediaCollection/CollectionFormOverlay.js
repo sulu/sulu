@@ -17,7 +17,7 @@ type Props = {
     overlayType: OverlayType,
 };
 
-const FORM_KEY = 'collections';
+const FORM_KEY = 'collection_details';
 
 @observer
 export default class CollectionFormOverlay extends React.Component<Props> {

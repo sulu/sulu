@@ -3,24 +3,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_tag.admin.class">Sulu\Bundle\TagBundle\Admin\TagAdmin</parameter>
-        <parameter key="sulu_tag.tag_manager.class">Sulu\Bundle\TagBundle\Tag\TagManager</parameter>
-        <parameter key="sulu_tag.tag_repository.class">Sulu\Bundle\TagBundle\Entity\TagRepository</parameter>
-        <parameter key="sulu_tag.tag_request_handler.class">Sulu\Component\Tag\Request\TagRequestHandler</parameter>
-        <parameter key="sulu_tag.twig_extension.class">Sulu\Bundle\TagBundle\Twig\TagTwigExtension</parameter>
         <parameter key="sulu_tag.entity.tag">SuluTagBundle:Tag</parameter>
     </parameters>
     <services>
-        <service id="sulu_tag.admin" class="%sulu_tag.admin.class%">
+        <service id="sulu_tag.admin" class="Sulu\Bundle\TagBundle\Admin\TagAdmin">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
         </service>
-        <service id="sulu_tag.tag_repository" class="%sulu_tag.tag_repository.class%">
+        <service id="sulu_tag.tag_repository" class="Sulu\Bundle\TagBundle\Entity\TagRepository">
             <factory method="getRepository" service="doctrine.orm.entity_manager"/>
             <argument>%sulu_tag.entity.tag%</argument>
         </service>
-        <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%" public="true">
+        <service id="sulu_tag.tag_manager" class="Sulu\Bundle\TagBundle\Tag\TagManager" public="true">
             <argument type="service" id="sulu.repository.tag"/>
             <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
@@ -34,11 +30,11 @@
             <argument type="service" id="sulu_tag.tag_manager"/>
         </service>
 
-        <service id="sulu_tag.tag_request_handler" class="%sulu_tag.tag_request_handler.class%">
+        <service id="sulu_tag.tag_request_handler" class="Sulu\Component\Tag\Request\TagRequestHandler">
             <argument type="service" id="request_stack"/>
         </service>
 
-        <service id="sulu_tag.twig_extension" class="%sulu_tag.twig_extension.class%">
+        <service id="sulu_tag.twig_extension" class="Sulu\Bundle\TagBundle\Twig\TagTwigExtension">
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_tag.tag_request_handler"/>
             <argument type="service" id="jms_serializer"/>

@@ -2,30 +2,18 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_contact.admin.class">Sulu\Bundle\ContactBundle\Admin\ContactAdmin</parameter>
-        <parameter key="sulu_contact.account_listener.class">Sulu\Bundle\ContactBundle\EventListener\AccountListener</parameter>
-        <parameter key="sulu_contact.contact_manager.class">Sulu\Bundle\ContactBundle\Contact\ContactManager</parameter>
-        <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
-        <parameter key="sulu_contact.customer_manager.class">Sulu\Bundle\ContactBundle\Contact\CustomerManager</parameter>
-        <parameter key="sulu_contact.twig.class">Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension</parameter>
-        <parameter key="sulu_contact.twig.cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
         <parameter key="sulu_contact.country.entity">SuluContactBundle:Country</parameter>
-        <parameter key="sulu_contact.account_factory.class">Sulu\Bundle\ContactBundle\Contact\AccountFactory</parameter>
         <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
-        <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>
-        <parameter key="sulu_contact.smart_content.data_provider.contact.class">Sulu\Component\Contact\SmartContent\ContactDataProvider</parameter>
-        <parameter key="sulu_contact.smart_content.data_provider.account.class">Sulu\Component\Contact\SmartContent\AccountDataProvider</parameter>
-        <parameter key="sulu_contact.util.index_comparator.class">Sulu\Bundle\ContactBundle\Util\IndexComparator</parameter>
-        <parameter key="sulu_contact.util.id_converter.class">Sulu\Bundle\ContactBundle\Util\CustomerIdConverter</parameter>
     </parameters>
     <services>
-        <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
+        <service id="sulu_contact.admin" class="Sulu\Bundle\ContactBundle\Admin\ContactAdmin">
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker" />
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_contact.contact_title_repository" class="%sulu_contact.contact_title_repository.class%">
+        <service id="sulu_contact.contact_title_repository" class="Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository">
             <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.contact_title.entity%</argument>
         </service>
@@ -33,10 +21,10 @@
             <factory service="doctrine" method="getRepository"/>
             <argument>%sulu_contact.country.entity%</argument>
         </service>
-        <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">
+        <service id="sulu_contact.account_listener" class="Sulu\Bundle\ContactBundle\EventListener\AccountListener">
             <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
-        <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%" public="true">
+        <service id="sulu_contact.account_manager" class="Sulu\Bundle\ContactBundle\Contact\AccountManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
@@ -46,7 +34,7 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%" public="true">
+        <service id="sulu_contact.contact_manager" class="Sulu\Bundle\ContactBundle\Contact\ContactManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
@@ -56,33 +44,33 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%" public="true">
+        <service id="sulu_contact.customer_manager" class="Sulu\Bundle\ContactBundle\Contact\CustomerManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_contact.util.id_converter"/>
             <argument type="service" id="sulu_contact.util.index_comparator"/>
             <argument type="string">%sulu.model.contact.class%</argument>
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.twig.cache" class="%sulu_contact.twig.cache.class%"/>
-        <service id="sulu_contact.twig" class="%sulu_contact.twig.class%">
+        <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\ArrayCache"/>
+        <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
             <argument type="service" id="sulu_contact.twig.cache"/>
             <argument type="service" id="sulu.repository.contact"/>
 
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%" public="true">
+        <service id="sulu_contact.account_factory" class="Sulu\Bundle\ContactBundle\Contact\AccountFactory" public="true">
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
 
-        <service id="sulu_contact.smart_content.data_provider.contact" class="%sulu_contact.smart_content.data_provider.contact.class%">
+        <service id="sulu_contact.smart_content.data_provider.contact" class="Sulu\Component\Contact\SmartContent\ContactDataProvider">
             <argument type="service" id="sulu_contact.contact_manager"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.contact"/>
 
             <tag name="sulu.smart_content.data_provider" alias="contacts"/>
         </service>
-        <service id="sulu_contact.smart_content.data_provider.account" class="%sulu_contact.smart_content.data_provider.account.class%">
+        <service id="sulu_contact.smart_content.data_provider.account" class="Sulu\Component\Contact\SmartContent\AccountDataProvider">
             <argument type="service" id="sulu_contact.account_manager"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.account"/>
@@ -90,8 +78,8 @@
             <tag name="sulu.smart_content.data_provider" alias="accounts"/>
         </service>
 
-        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="true"/>
-        <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
+        <service id="sulu_contact.util.index_comparator" class="Sulu\Bundle\ContactBundle\Util\IndexComparator" public="true"/>
+        <service id="sulu_contact.util.id_converter" class="Sulu\Bundle\ContactBundle\Util\CustomerIdConverter" public="false"/>
 
         <service id="sulu_contact.js_config" class="Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection">
             <argument type="service" id="sulu_media.system_collections.manager"/>
