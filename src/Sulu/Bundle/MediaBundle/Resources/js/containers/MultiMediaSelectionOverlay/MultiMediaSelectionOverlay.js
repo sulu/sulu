@@ -42,11 +42,11 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     }
 
     @action componentDidUpdate() {
-        const newExcludedIdString = this.props.excludedIds.sort().join(',');
+        const newExcludedIdString = this.props.excludedIds.concat().sort().join(',');
 
         if (this.excludedIdString.get() !== newExcludedIdString) {
             this.mediaDatagridStore.clear();
-            this.excludedIdString.set(this.props.excludedIds.sort().join(','));
+            this.excludedIdString.set(this.props.excludedIds.concat().sort().join(','));
         }
     }
 
