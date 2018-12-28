@@ -14,12 +14,12 @@ namespace Sulu\Bundle\SearchBundle\Tests\Unit\Controller;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,9 +41,14 @@ class WebsiteSearchControllerTest extends TestCase
     private $parameterResolver;
 
     /**
-     * @var EngineInterface
+     * @var \Twig_Environment
      */
-    private $engine;
+    private $twig;
+
+    /**
+     * @var \Twig_LoaderInterface
+     */
+    private $twigLoader;
 
     /**
      * @var WebsiteSearchController
@@ -55,13 +60,15 @@ class WebsiteSearchControllerTest extends TestCase
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);
-        $this->engine = $this->prophesize(EngineInterface::class);
+        $this->twig = $this->prophesize(\Twig_Environment::class);
+        $this->twigLoader = $this->prophesize(\Twig_LoaderInterface::class);
+        $this->twig->getLoader()->willReturn($this->twigLoader->reveal());
 
         $this->websiteSearchController = new WebsiteSearchController(
             $this->searchManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
-            $this->engine->reveal()
+            $this->twig->reveal()
         );
     }
 
@@ -74,7 +81,7 @@ class WebsiteSearchControllerTest extends TestCase
 
         $webspace = new Webspace();
         $webspace->setKey('sulu');
-        $webspace->addTemplate('search', 'search.html.twig');
+        $webspace->addTemplate('search', 'search');
 
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -92,7 +99,9 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal()
         )->willReturn(['query' => 'Test', 'hits' => []]);
 
-        $this->engine->renderResponse(
+        $this->twigLoader->exists(Argument::any())->willReturn(true);
+
+        $this->twig->render(
             'search.html.twig',
             ['query' => 'Test', 'hits' => []]
         )->willReturn(new Response());

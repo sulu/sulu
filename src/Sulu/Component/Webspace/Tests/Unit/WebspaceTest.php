@@ -243,7 +243,7 @@ class WebspaceTest extends TestCase
         $webspace = new Webspace();
         $webspace->addTemplate('error-404', 'template404');
 
-        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
+        $this->assertEquals('template404.html.twig', $webspace->getTemplate('error-404'));
         $this->assertEquals($templates, $webspace->getTemplates());
         $data = $webspace->toArray();
         $this->assertEquals($templates, $data['templates']);
@@ -257,8 +257,8 @@ class WebspaceTest extends TestCase
         $webspace->addTemplate('error', 'template');
         $webspace->addTemplate('error-404', 'template404');
 
-        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
-        $this->assertEquals('template', $webspace->getTemplate('error'));
+        $this->assertEquals('template404.html.twig', $webspace->getTemplate('error-404'));
+        $this->assertEquals('template.html.twig', $webspace->getTemplate('error'));
         $this->assertEquals($templates, $webspace->getTemplates());
         $data = $webspace->toArray();
         $this->assertEquals($templates, $data['templates']);
@@ -277,5 +277,18 @@ class WebspaceTest extends TestCase
         $this->assertNull($webspace->getDefaultTemplate('other-type'));
         $data = $webspace->toArray();
         $this->assertEquals($defaultTemplates, $data['defaultTemplates']);
+    }
+
+    public function testGetTemplateFormat()
+    {
+        $templates = ['error' => 'template'];
+
+        $webspace = new Webspace();
+        $webspace->addTemplate('error', 'template');
+
+        $this->assertEquals('template.json.twig', $webspace->getTemplate('error', 'json'));
+        $this->assertEquals($templates, $webspace->getTemplates());
+        $data = $webspace->toArray();
+        $this->assertEquals($templates, $data['templates']);
     }
 }

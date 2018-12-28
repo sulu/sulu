@@ -3,7 +3,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
-    <route id="sulu_search.website_search" path="/search">
+    <route id="sulu_search.website_search" path="/search.{_format}">
         <default key="_controller">sulu_search.controller.website_search:queryAction</default>
+        <default key="_format">html</default>
     </route>
 </routes>
