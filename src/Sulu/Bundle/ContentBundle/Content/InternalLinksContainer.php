@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Content;
 
 use JMS\Serializer\Annotation\Exclude;
-use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -49,13 +48,6 @@ class InternalLinksContainer implements ArrayableInterface
      * @var array
      */
     private $params;
-
-    /**
-     * @Exclude
-     *
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * The key of the webspace.
@@ -97,7 +89,6 @@ class InternalLinksContainer implements ArrayableInterface
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         $params,
-        LoggerInterface $logger,
         $webspaceKey,
         $languageCode,
         $showDrafts
@@ -105,7 +96,6 @@ class InternalLinksContainer implements ArrayableInterface
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
-        $this->logger = $logger;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
         $this->params = $params;

@@ -64,7 +64,6 @@ class InternalLinksTest extends TestCase
         $internalLinks = new InternalLinks(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
-            $this->logger->reveal(),
             false
         );
 
@@ -93,7 +92,6 @@ class InternalLinksTest extends TestCase
         $internalLinks = new InternalLinks(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
-            $this->logger->reveal(),
             false
         );
 
@@ -117,7 +115,6 @@ class InternalLinksTest extends TestCase
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(),
             $this->referenceStore->reveal(),
-            $this->logger->reveal(),
             false
         );
 

@@ -8,7 +8,10 @@
             <argument>%sulu_media.media.storage.local.path%</argument>
             <argument>%sulu_media.media.storage.local.segments%</argument>
             <argument type="service" id="sulu_media.storage.local.file_system"/>
-            <argument type="service" id="logger"/>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
         </service>
     </services>
 </container>

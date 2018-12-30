@@ -2,6 +2,20 @@
 
 ## dev-develop
 
+### Logger is optional
+
+As the logger is know optional in the following services the constructor changed and logger is injected
+over the `Psr/Log/LoggerAwareTrait::setLogger`:
+
+ - `sulu.content.type.internal_links`
+ - `sulu_content.compat.structure.legacy_property_factory`
+ - `sulu_content.node_repository`
+ - `sulu_media.search.subscriber.media`
+ - `sulu_media.format_manager`
+ - `sulu_media.storage.local`
+ - `sulu_snippet.import.snippet`
+ - `sulu_website.twig.content`
+
 ### TagBundle services changed
 
 Following Services changed:

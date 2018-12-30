@@ -12,7 +12,7 @@
                 <argument key="timeout">%sulu_media.ffmpeg.binary_timeout%</argument>
                 <argument key="ffmpeg.threads">%sulu_media.ffmpeg.threads_count%</argument>
             </argument>
-            <argument id="logger" type="service"/>
+            <argument id="logger" type="service" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.ffprobe" class="FFMpeg\FFProbe" lazy="true">
@@ -21,7 +21,7 @@
                 <argument key="ffmpeg.binaries">%sulu_media.ffmpeg.binary%</argument>
                 <argument key="ffprobe.binaries">%sulu_media.ffmpeg.binary%</argument>
             </argument>
-            <argument id="logger" type="service"/>
+            <argument id="logger" type="service" on-invalid="null"/>
         </service>
     </services>
 </container>

@@ -11,7 +11,8 @@
 
 namespace Sulu\Component\Snippet\Import;
 
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -33,10 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetImport extends Import implements SnippetImportInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    use LoggerAwareTrait;
 
     /**
      * @var DocumentManagerInterface
@@ -59,7 +57,6 @@ class SnippetImport extends Import implements SnippetImportInterface
         DocumentRegistry $documentRegistry,
         ImportManagerInterface $importManager,
         LegacyPropertyFactory $legacyPropertyFactory,
-        LoggerInterface $logger,
         FormatImportInterface $xliff12
     ) {
         parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
@@ -67,7 +64,7 @@ class SnippetImport extends Import implements SnippetImportInterface
         $this->documentManager = $documentManager;
         $this->documentRegistry = $documentRegistry;
         $this->structureManager = $structureManager;
-        $this->logger = $logger;
+        $this->logger = new NullLogger();
     }
 
     /**

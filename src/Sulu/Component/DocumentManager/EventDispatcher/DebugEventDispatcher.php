@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\EventDispatcher;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -37,10 +38,10 @@ class DebugEventDispatcher extends EventDispatcher
      */
     public function __construct(
         Stopwatch $stopwatch,
-        LoggerInterface $logger
+        LoggerInterface $logger = null
     ) {
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

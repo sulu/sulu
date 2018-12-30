@@ -20,10 +20,13 @@
         <service id="sulu_media.search.subscriber.media" class="%sulu_media.search.subscriber.media.class%" >
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="massive_search.factory" />
-            <argument type="service" id="logger" />
             <argument>%sulu_media.format_manager.mime_types%</argument>
             <argument>%sulu_media.search.default_image_format%</argument>
             <tag name="kernel.event_subscriber" />
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
         </service>
     </services>
 </container>

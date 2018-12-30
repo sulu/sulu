@@ -54,7 +54,10 @@
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument type="service" id="logger"/>
+
+            <call method="setLogger">
+                <argument type="service" id="logger" on-invalid="ignore"/>
+            </call>
         </service>
 
         <!-- resource locator -->

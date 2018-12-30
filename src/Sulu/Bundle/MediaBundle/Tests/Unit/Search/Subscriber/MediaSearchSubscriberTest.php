@@ -62,7 +62,6 @@ class MediaSearchSubscriberTest extends TestCase
         $this->subscriber = new MediaSearchSubscriber(
             $this->mediaManager->reveal(),
             $this->factory->reveal(),
-            $this->logger->reveal(),
             ['image/jpeg'],
             'test_format'
         );
