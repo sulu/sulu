@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * BUGFIX      #4343 [MediaBundle]           Fixed format manager types configuration cannot be changed
+
 * 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
