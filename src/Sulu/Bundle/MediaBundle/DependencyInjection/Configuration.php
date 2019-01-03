@@ -118,7 +118,14 @@ class Configuration implements ConfigurationInterface
                         ])
                     ->end()
                     ->arrayNode('types')
-                        ->prototype('scalar')->end()->defaultValue([
+                        ->arrayPrototype()
+                            ->children()
+                                ->enumNode('type')->values(['document', 'image', 'video', 'audio'])->isRequired()->end()
+                                ->arrayNode('mimeTypes')->cannotBeEmpty()
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()->defaultValue([
                             [
                                 'type' => 'document',
                                 'mimeTypes' => ['*'],
