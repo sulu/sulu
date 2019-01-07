@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
+
 * 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata

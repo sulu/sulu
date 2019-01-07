@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Form;
 
 use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
+use Sulu\Bundle\ContentBundle\Form\Type\UnstructuredType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +37,7 @@ class SnippetType extends AbstractStructureBehaviorType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $builder->add('extensions', TextType::class, ['property_path' => 'extensionsData']);
+        $builder->add('extensions', UnstructuredType::class, ['property_path' => 'extensionsData']);
         $builder->add('workflowStage');
 
         // TODO: Fix the admin interface to not send this junk (not required for snippets)
