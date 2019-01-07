@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, toJS, observable, untracked} from 'mobx';
+import {action, reaction, toJS, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
@@ -29,8 +29,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
     };
 
     mediaSelectionStore: MultiMediaSelectionStore;
-    changeDisposer: () => void;
-    changeAutorunInitialized: boolean = false;
+    changeDisposer: () => mixed;
 
     @observable overlayOpen: boolean = false;
 
@@ -40,21 +39,18 @@ export default class MultiMediaSelection extends React.Component<Props> {
         const {locale, value} = this.props;
 
         this.mediaSelectionStore = new MultiMediaSelectionStore(value.ids, locale);
-        this.changeDisposer = autorun(() => {
-            const {onChange, value} = untracked(() => this.props);
-            const loadedMediaIds = this.mediaSelectionStore.selectedMediaIds;
+        this.changeDisposer = reaction(
+            () => toJS(this.mediaSelectionStore.selectedMediaIds),
+            (loadedMediaIds) => {
+                const {onChange, value} = this.props;
 
-            if (!this.changeAutorunInitialized) {
-                this.changeAutorunInitialized = true;
-                return;
+                if (equals(toJS(value.ids), toJS(loadedMediaIds))) {
+                    return;
+                }
+
+                onChange({ids: loadedMediaIds});
             }
-
-            if (equals(toJS(value.ids), toJS(loadedMediaIds))) {
-                return;
-            }
-
-            onChange({ids: loadedMediaIds});
-        });
+        );
     }
 
     componentDidUpdate() {
