@@ -17,6 +17,7 @@ use FOS\HttpCache\SymfonyCache\CustomTtlListener;
 use FOS\HttpCache\SymfonyCache\DebugListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Sulu\Component\HttpKernel\SuluKernel;
