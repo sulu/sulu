@@ -44,6 +44,7 @@ class FormRouteBuilderTest extends TestCase
                 'categories',
                 'Details',
                 'name == "Test"',
+                100,
                 'sulu_category.edit_form',
                 'sulu_category.datagrid',
             ],
@@ -52,6 +53,7 @@ class FormRouteBuilderTest extends TestCase
                 '/tags/:id',
                 'tags',
                 'tags',
+                null,
                 null,
                 null,
                 null,
@@ -70,6 +72,7 @@ class FormRouteBuilderTest extends TestCase
         string $formKey,
         ?string $tabTitle,
         ?string $tabCondition,
+        ?string $tabOrder,
         ?string $editRoute,
         ?string $backRoute
     ) {
@@ -83,6 +86,10 @@ class FormRouteBuilderTest extends TestCase
 
         if ($tabCondition) {
             $routeBuilder->setTabCondition($tabCondition);
+        }
+
+        if ($tabOrder) {
+            $routeBuilder->setTabOrder($tabOrder);
         }
 
         if ($editRoute) {
@@ -101,6 +108,7 @@ class FormRouteBuilderTest extends TestCase
         $this->assertEquals($formKey, $route->getOption('formKey'));
         $this->assertEquals($tabTitle, $route->getOption('tabTitle'));
         $this->assertEquals($tabCondition, $route->getOption('tabCondition'));
+        $this->assertEquals($tabOrder, $route->getOption('tabOrder'));
         $this->assertEquals($editRoute, $route->getOption('editRoute'));
         $this->assertEquals($backRoute, $route->getOption('backRoute'));
         $this->assertNull($route->getParent());

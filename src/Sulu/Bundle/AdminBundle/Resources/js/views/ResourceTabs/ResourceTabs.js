@@ -16,7 +16,7 @@ type Props = ViewProps & {
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
 
-    @observable visibleTabIndices: Array<?number> = [];
+    @observable visibleTabIndices: Array<number> = [];
     visibleTabIndicesDisposer: () => void;
 
     constructor(props: Props) {
@@ -81,20 +81,28 @@ export default class ResourceTabs extends React.Component<Props> {
         }
 
         const {route} = this.props;
-        const tabConditionPromises = route.children.map((childRoute) => {
-            const {tabCondition} = childRoute.options;
 
-            if (!tabCondition) {
-                return Promise.resolve(true);
-            }
+        const tabConditionPromises = route.children
+            .map((childRoute) => {
+                const {tabCondition} = childRoute.options;
 
-            return jexl.eval(childRoute.options.tabCondition, data);
-        });
+                if (!tabCondition) {
+                    return Promise.resolve(true);
+                }
+
+                return jexl.eval(childRoute.options.tabCondition, data);
+            });
 
         Promise.all(tabConditionPromises).then(action((tabConditionResults) => {
             this.visibleTabIndices = tabConditionResults
                 .map((tabConditionResult, index) => tabConditionResult ? index : undefined)
-                .filter((tabConditionIndex) => tabConditionIndex !== undefined);
+                .filter((tabConditionIndex) => tabConditionIndex !== undefined)
+                .sort((index1, index2) => {
+                    const {tabOrder: tabOrder1 = 0} = route.children[index1].options;
+                    const {tabOrder: tabOrder2 = 0} = route.children[index2].options;
+
+                    return tabOrder1 - tabOrder2;
+                });
         }));
     };
 
@@ -115,19 +123,15 @@ export default class ResourceTabs extends React.Component<Props> {
         return (
             <Fragment>
                 <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                    {route.children
-                        .map((childRoute, index) => {
-                            if (!this.visibleTabIndices.includes(index)) {
-                                return false;
-                            }
-                            const tabTitle = childRoute.options.tabTitle;
-                            return (
-                                <Tabs.Tab key={childRoute.name}>
-                                    {tabTitle ? translate(tabTitle) : childRoute.name}
-                                </Tabs.Tab>
-                            );
-                        })
-                    }
+                    {route.children && this.visibleTabIndices.map((index) => {
+                        const childRoute = route.children[index];
+                        const tabTitle = childRoute.options.tabTitle;
+                        return (
+                            <Tabs.Tab key={childRoute.name}>
+                                {tabTitle ? translate(tabTitle) : childRoute.name}
+                            </Tabs.Tab>
+                        );
+                    })}
                 </Tabs>
                 {ChildComponent}
             </Fragment>

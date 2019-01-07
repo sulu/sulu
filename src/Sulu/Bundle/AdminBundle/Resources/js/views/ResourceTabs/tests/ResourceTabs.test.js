@@ -12,6 +12,10 @@ jest.mock('../../../utils/Translator', () => ({
                 return 'Tab Titel 1';
             case 'tabTitle2':
                 return 'Tab Titel 2';
+            case 'tabTitle3':
+                return 'Tab Titel 3';
+            case 'tabTitle4':
+                return 'Tab Titel 4';
         }
     },
 }));
@@ -99,6 +103,70 @@ test('Should mark the currently active child route as selected tab', (done) => {
     setTimeout(() => {
         expect(resourceTabs.find('ResourceTabs > Tabs').render()).toMatchSnapshot();
         expect(resourceTabs.find('ResourceTabs > Child').render()).toMatchSnapshot();
+        done();
+    });
+});
+
+test('Should consider the tabOrder option of the route', (done) => {
+    const childRoute1 = {
+        name: 'Tab 1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'Tab 2',
+        options: {
+            tabOrder: 40,
+            tabTitle: 'tabTitle2',
+        },
+    };
+    const childRoute3 = {
+        name: 'Tab 3',
+        options: {
+            tabTitle: 'tabTitle3',
+        },
+    };
+    const childRoute4 = {
+        name: 'Tab 4',
+        options: {
+            tabOrder: -10,
+            tabTitle: 'tabTitle4',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+            childRoute3,
+            childRoute4,
+        ],
+    };
+
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[1],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(
+        <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
+    );
+
+    setTimeout(() => {
+        resourceTabs.update();
+        expect(resourceTabs.find('ResourceTabs Tab')).toHaveLength(4);
+        expect(resourceTabs.find('ResourceTabs Tab').at(0).text()).toEqual('Tab Titel 4');
+        expect(resourceTabs.find('ResourceTabs Tab').at(1).text()).toEqual('Tab Titel 1');
+        expect(resourceTabs.find('ResourceTabs Tab').at(2).text()).toEqual('Tab Titel 3');
+        expect(resourceTabs.find('ResourceTabs Tab').at(3).text()).toEqual('Tab Titel 2');
         done();
     });
 });

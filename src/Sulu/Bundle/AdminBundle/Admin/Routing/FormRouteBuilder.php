@@ -55,9 +55,16 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function setTabCondition($tabCondition): FormRouteBuilderInterface
+    public function setTabCondition(string $tabCondition): FormRouteBuilderInterface
     {
         $this->route->setOption('tabCondition', $tabCondition);
+
+        return $this;
+    }
+
+    public function setTabOrder(int $tabOrder): FormRouteBuilderInterface
+    {
+        $this->route->setOption('tabOrder', $tabOrder);
 
         return $this;
     }
