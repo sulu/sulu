@@ -13,3 +13,4 @@ jobs:
       - run: npm run flow
       - run: npm run styleguide:build
       - run: npm test -- --maxWorkers=4
+      - run: npm run build  
