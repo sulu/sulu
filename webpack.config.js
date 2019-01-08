@@ -2,9 +2,9 @@
 /* eslint-disable import/no-nodejs-modules*/
 const path = require('path');
 const glob = require('glob');
-const rimraf = require('rimraf');
 const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
@@ -12,25 +12,12 @@ const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-lin
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
     const basePath = env && env.base_path ? env.base_path : 'build/admin';
+    const rootPath = env && env.root_path ? env.root_path : __dirname; // eslint-disable-line no-undef
 
     const composerConfig = require(path.resolve('composer.json')); // eslint-disable-line import/no-dynamic-require
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
     }
-
-    if (publicDir.startsWith('/')) {
-        const errorMessage = [
-            '\x1b[31mUsing absolute path for \x1b[0m"public-dir"\x1b[31m detected',
-            '       This can end up in accidentally remove of files outside your project dir.',
-            '       Build was cancelled!\x1b[0m',
-            '',
-        ].join('\n');
-
-        throw new Error(errorMessage);
-    }
-
-    // Remove old build files
-    rimraf.sync(path.resolve(publicDir, basePath));
 
     const entries = glob.sync(
         path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
@@ -54,6 +41,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
+            new CleanWebpackPlugin([path.resolve(publicDir, basePath)], {root: rootPath}),
             new webpack.DefinePlugin({
                 BUNDLE_ENTRIES_COUNT: entriesCount,
             }),
