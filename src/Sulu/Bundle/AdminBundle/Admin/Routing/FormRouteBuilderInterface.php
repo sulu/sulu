@@ -28,6 +28,8 @@ interface FormRouteBuilderInterface
 
     public function setTabOrder(int $tabOrder): self;
 
+    public function setTabPriority(int $tabPriority): self;
+
     /**
      * @param string[] $toolbarActions
      */

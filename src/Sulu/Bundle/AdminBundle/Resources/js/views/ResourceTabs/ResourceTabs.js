@@ -3,10 +3,12 @@ import React, {Fragment} from 'react';
 import {action, autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
+import Loader from '../../components/Loader';
 import Tabs from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
+import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {
     locales?: Array<string>,
@@ -17,6 +19,7 @@ export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
 
     @observable visibleTabIndices: Array<number> = [];
+    redirectToRouteWithHighestPriorityDisposer: () => void;
     visibleTabIndicesDisposer: () => void;
 
     constructor(props: Props) {
@@ -41,23 +44,18 @@ export default class ResourceTabs extends React.Component<Props> {
         const options = {};
         if (this.locales) {
             options.locale = observable.box();
+            router.bind('locale', options.locale);
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
 
         this.visibleTabIndicesDisposer = autorun(this.updateVisibleTabIndices);
-    }
-
-    componentDidMount() {
-        const {route, router} = this.props;
-
-        if (route === router.route && route.children.length !== 0) {
-            router.redirect(route.children[0].name, router.attributes);
-        }
+        this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }
 
     componentWillUnmount() {
         this.visibleTabIndicesDisposer();
+        this.redirectToRouteWithHighestPriorityDisposer();
         this.resourceStore.destroy();
     }
 
@@ -73,6 +71,62 @@ export default class ResourceTabs extends React.Component<Props> {
 
         return routeLocales ? routeLocales : propsLocales;
     }
+
+    @computed get visibleTabRoutes(): Array<Object> {
+        const {route} = this.props;
+
+        return this.visibleTabIndices.map((index) => {
+            return route.children[index];
+        });
+    }
+
+    @computed get visibleTabRouteWithHighestPriority(): Object {
+        return this.visibleTabRoutes.reduce((prioritizedRoute, route) => {
+            if (!prioritizedRoute) {
+                return route;
+            }
+
+            const {
+                options: {
+                    tabPriority: highestTabPriority = 0,
+                },
+            } = prioritizedRoute;
+
+            const {
+                options: {
+                    tabPriority = 0,
+                },
+            } = route;
+
+            if (highestTabPriority >= tabPriority) {
+                return prioritizedRoute;
+            }
+
+            return route;
+        }, undefined);
+    }
+
+    redirectToRouteWithHighestPriority = (): void => {
+        const {route, router} = this.props;
+
+        if (!this.resourceStore.initialized || this.resourceStore.loading) {
+            return;
+        }
+
+        if (!route.children.includes(router.route) && router.route !== route) {
+            return;
+        }
+
+        if (this.visibleTabRoutes.includes(router.route)) {
+            return;
+        }
+
+        if (!this.visibleTabRouteWithHighestPriority) {
+            return;
+        }
+
+        router.redirect(this.visibleTabRouteWithHighestPriority.name, router.attributes);
+    };
 
     updateVisibleTabIndices = () => {
         const data = toJS(this.resourceStore.data);
@@ -107,34 +161,42 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     handleSelect = (index: number) => {
-        const {router, route} = this.props;
-        router.navigate(route.children[index].name, router.attributes);
+        const {router} = this.props;
+        router.navigate(this.visibleTabRoutes[index].name, router.attributes);
+
+        // TODO replace by asking for confirmation when changing tabs and reload only if dirty data should be deleted
+        this.resourceStore.load();
     };
 
     render() {
-        const {children, route} = this.props;
+        const {children} = this.props;
 
         const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
         const selectedRouteIndex = ChildComponent
-            ? route.children.findIndex((childRoute) => childRoute === ChildComponent.props.route)
+            ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === ChildComponent.props.route)
             : undefined;
 
-        return (
-            <Fragment>
-                <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                    {route.children && this.visibleTabIndices.map((index) => {
-                        const childRoute = route.children[index];
-                        const tabTitle = childRoute.options.tabTitle;
-                        return (
-                            <Tabs.Tab key={childRoute.name}>
-                                {tabTitle ? translate(tabTitle) : childRoute.name}
-                            </Tabs.Tab>
-                        );
-                    })}
-                </Tabs>
-                {ChildComponent}
-            </Fragment>
-        );
+        return this.resourceStore.initialized
+            ? (
+                <Fragment>
+                    <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
+                        {this.visibleTabRoutes.map((tabRoute) => {
+                            const tabTitle = tabRoute.options.tabTitle;
+                            return (
+                                <Tabs.Tab key={tabRoute.name}>
+                                    {tabTitle ? translate(tabTitle) : tabRoute.name}
+                                </Tabs.Tab>
+                            );
+                        })}
+                    </Tabs>
+                    {ChildComponent}
+                </Fragment>
+            )
+            : (
+                <div className={resourceTabsStyles.loader}>
+                    <Loader />
+                </div>
+            );
     }
 }

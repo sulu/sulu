@@ -107,13 +107,6 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        if (Object.keys(this.resourceStore.data).length > 0) {
-            // data should be reloaded if ResourceTabs ResourceStore is used and user comes back from another tab
-            // the above check assumes that loading the data from the backend takes longer than calling this method
-            // the very unlikely worst case scenario if this assumption is not met, is that the data is loaded twice
-            this.resourceStore.load();
-        }
-
         this.formStore = new FormStore(this.resourceStore, formKey, formStoreOptions);
 
         if (this.resourceStore.locale) {

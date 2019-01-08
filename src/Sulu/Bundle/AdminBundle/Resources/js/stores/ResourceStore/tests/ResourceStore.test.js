@@ -11,6 +11,23 @@ jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
 }));
 
+test('Should be marked as initialized after loading the data', () => {
+    const promise = Promise.resolve({});
+    ResourceRequester.get.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', '1');
+
+    expect(resourceStore.initialized).toBe(false);
+
+    return promise.then(() => {
+        expect(resourceStore.initialized).toBe(true);
+    });
+});
+
+test('Should be marked as initialized immediately if a new resource is created', () => {
+    const resourceStore = new ResourceStore('snippets');
+    expect(resourceStore.initialized).toBe(true);
+});
+
 test('Should not be marked dirty when value is set', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve({}));
 

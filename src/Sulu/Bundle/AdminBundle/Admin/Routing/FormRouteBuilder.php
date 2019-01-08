@@ -69,6 +69,13 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
+    public function setTabPriority(int $tabPriority): FormRouteBuilderInterface
+    {
+        $this->route->setOption('tabPriority', $tabPriority);
+
+        return $this;
+    }
+
     public function addToolbarActions(array $toolbarActions): FormRouteBuilderInterface
     {
         $oldToolbarActions = $this->route->getOption('toolbarActions');

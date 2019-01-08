@@ -103,12 +103,12 @@ export default class Router {
         this.update(name, attributes);
     }
 
-    navigate(name: string, attributes: Object = {}) {
+    @action navigate(name: string, attributes: Object = {}) {
         this.clearBindings();
         this.handleNavigation(name, attributes);
     }
 
-    redirect(name: string, attributes: Object = {}) {
+    @action redirect(name: string, attributes: Object = {}) {
         this.redirectFlag = true;
         this.navigate(name, attributes);
     }

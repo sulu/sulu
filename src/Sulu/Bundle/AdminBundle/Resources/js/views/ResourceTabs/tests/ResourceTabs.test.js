@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount} from 'enzyme';
+import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
@@ -22,6 +22,8 @@ jest.mock('../../../utils/Translator', () => ({
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function() {
     this.destroy = jest.fn();
+    this.initialized = true;
+    this.load = jest.fn();
     mockExtendObservable(this, {data: {}});
 }));
 
@@ -57,8 +59,49 @@ test('Should render the child components after the tabs', (done) => {
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     setTimeout(() => {
+        expect(resourceTabs.find('Loader')).toHaveLength(0);
         expect(resourceTabs.find('ResourceTabs > Tabs').render()).toMatchSnapshot();
         expect(resourceTabs.find('ResourceTabs > Child').render()).toMatchSnapshot();
+        done();
+    });
+});
+
+test('Should render a loader if resourceStore was not initialized yet', (done) => {
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            {
+                name: 'Tab 1',
+                options: {
+                    tabTitle: 'tabTitle1',
+                },
+            },
+            {
+                name: 'Tab 2',
+                options: {
+                    tabTitle: 'tabTitle2',
+                },
+            },
+        ],
+    };
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[0],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.initialized = false;
+
+    setTimeout(() => {
+        resourceTabs.update();
+        expect(resourceTabs.find('Loader')).toHaveLength(1);
+        expect(resourceTabs.find('Child')).toHaveLength(0);
         done();
     });
 });
@@ -201,6 +244,7 @@ test('Should hide tabs which do not match the tab condition', (done) => {
         attributes: {
             id: 1,
         },
+        redirect: jest.fn(),
         route: route.children[1],
     };
 
@@ -227,7 +271,7 @@ test('Should hide tabs which do not match the tab condition', (done) => {
     });
 });
 
-test('Should redirect to first child route if no tab is active', () => {
+test('Should redirect to first child route if no tab is active by default', (done) => {
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -264,10 +308,244 @@ test('Should redirect to first child route if no tab is active', () => {
     const Child = () => (<h1>Child</h1>);
     mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    expect(router.redirect).toBeCalledWith('route1', attributes);
+    setTimeout(() => {
+        expect(router.redirect).toBeCalledWith('route1', attributes);
+        done();
+    });
 });
 
-test('Should not redirect to first child route if a tab is already active', () => {
+test('Should redirect to first visible child route if no tab is active', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabCondition: 'test == 1',
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabCondition: 'test == 2',
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.data = {test: 2};
+
+    setTimeout(() => {
+        expect(router.redirect).toBeCalledWith('route2', attributes);
+        done();
+    });
+});
+
+test('Should redirect to first visible child route if invisible tab is active', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabCondition: 'test == 1',
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabCondition: 'test == 2',
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.data = {test: 2};
+
+    setTimeout(() => {
+        expect(router.redirect).toBeCalledWith('route2', attributes);
+        done();
+    });
+});
+
+test('Should redirect to highest prioritized tab if no tab is active', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+            tabPriority: 100,
+        },
+    };
+    const childRoute3 = {
+        name: 'route3',
+        options: {
+            tabTitle: 'tabTitle3',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+            childRoute3,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    setTimeout(() => {
+        expect(router.redirect).toBeCalledWith('route2', attributes);
+        done();
+    });
+});
+
+test('Should not redirect to first child route if resourceStore is not initialized', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.initialized = false;
+
+    setTimeout(() => {
+        expect(router.redirect).not.toBeCalledWith('route1', attributes);
+        done();
+    });
+});
+
+test('Should not redirect to first child route if resourceStore is currently loading', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+    };
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    const router = {
+        attributes,
+        redirect: jest.fn(),
+        route,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.loading = true;
+
+    setTimeout(() => {
+        expect(router.redirect).not.toBeCalledWith('route1', attributes);
+        done();
+    });
+});
+
+test('Should not redirect if a tab is already active', () => {
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -307,7 +585,7 @@ test('Should not redirect to first child route if a tab is already active', () =
     expect(router.redirect).not.toBeCalled();
 });
 
-test('Should navigate to child route if tab is clicked', (done) => {
+test('Should navigate and reload ResourceStore to child route if tab is clicked', (done) => {
     const childRoute1 = {
         name: 'route1',
         options: {},
@@ -331,9 +609,9 @@ test('Should navigate to child route if tab is clicked', (done) => {
     };
 
     const router = {
+        attributes,
         navigate: jest.fn(),
         route: childRoute1,
-        attributes,
     };
 
     const Child = () => (<h1>Child</h1>);
@@ -343,6 +621,57 @@ test('Should navigate to child route if tab is clicked', (done) => {
         resourceTabs.update();
         resourceTabs.find('Tab button').at(1).simulate('click');
         expect(router.navigate).toBeCalledWith('route2', attributes);
+        expect(resourceTabs.instance().resourceStore.load).toBeCalledWith();
+        done();
+    });
+});
+
+test('Should navigate to child route if tab is clicked with hidden tabs', (done) => {
+    const childRoute1 = {
+        name: 'route1',
+        options: {
+            tabCondition: 'test == 2',
+        },
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {},
+    };
+    const childRoute3 = {
+        name: 'route3',
+        options: {},
+    };
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+            childRoute3,
+        ],
+    };
+
+    const attributes = {
+        attribute: 'value',
+    };
+
+    const router = {
+        attributes,
+        navigate: jest.fn(),
+        redirect: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    resourceTabs.instance().resourceStore.data = {test: 1};
+
+    setTimeout(() => {
+        resourceTabs.update();
+        resourceTabs.find('Tab button').at(0).simulate('click');
+        expect(router.navigate).toBeCalledWith('route2', attributes);
+        expect(resourceTabs.instance().resourceStore.load).toBeCalledWith();
         done();
     });
 });
@@ -380,10 +709,11 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
     const router = {
-        route,
         attributes: {
             id: 5,
         },
+        bind: jest.fn(),
+        route,
     };
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
@@ -405,14 +735,16 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
     const router = {
-        route,
         attributes: {
             id: 5,
         },
+        bind: jest.fn(),
+        route,
     };
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
+    expect(router.bind).toBeCalled();
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
     expect(resourceStoreConstructorCall[0][1]).toEqual(5);
     expect(resourceStoreConstructorCall[0][2].locale).toBeDefined();
@@ -431,10 +763,11 @@ test('Should pass the ResourceStore and locales to child components', () => {
         },
     };
     const router = {
-        route,
         attributes: {
             id: 5,
         },
+        bind: jest.fn(),
+        route,
     };
 
     const ChildComponent = jest.fn(() => null);
@@ -461,10 +794,11 @@ test('Should pass locales from route options instead of props to child component
         },
     };
     const router = {
-        route,
         attributes: {
             id: 5,
         },
+        bind: jest.fn(),
+        route,
     };
 
     const ChildComponent = jest.fn(() => null);
