@@ -72,10 +72,10 @@ This allows to have the same endpoint for multiple forms, and solves a bunch of 
 ```php
 return [
     (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
-        ->addOption('tabTitle', 'sulu_category.details')
-        ->addOption('resourceKey', 'categories')
-        ->addOption('formKey', 'categories')
-        ->addOption('backRoute', 'sulu_category.datagrid')
+        ->setOption('tabTitle', 'sulu_category.details')
+        ->setOption('resourceKey', 'categories')
+        ->setOption('formKey', 'categories')
+        ->setOption('backRoute', 'sulu_category.datagrid')
 ];
 ```
 
