@@ -268,6 +268,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.20 (2019-01-09)
+    * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
+
 * 1.5.19 (2018-12-03)
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
     * HOTFIX      #4263 [Content]               Fix param default value
