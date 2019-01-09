@@ -76,18 +76,16 @@ export default class ResourceStore {
             )
             : ResourceRequester.get(this.resourceKey, id, {...options, ...this.loadOptions});
 
-        promise.then(this.handleResponse);
-    };
+        promise.then(action((response: Object) => {
+            if (this.idQueryParameter) {
+                this.handleIdQueryParameterResponse(response);
+                this.setMultiple(response);
+            } else {
+                this.setMultiple(response);
+            }
 
-    @action handleResponse = (response: Object) => {
-        if (this.idQueryParameter) {
-            this.handleIdQueryParameterResponse(response);
-            this.data = {...this.data, ...response};
-        } else {
-            this.data = response;
-        }
-
-        this.setLoading(false);
+            this.setLoading(false);
+        }));
     };
 
     @action setLoading(loading: boolean) {
@@ -131,7 +129,7 @@ export default class ResourceStore {
         return ResourceRequester.post(this.resourceKey, this.data, requestOptions)
             .then(action((response) => {
                 this.handleIdQueryParameterResponse(response);
-                this.data = response;
+                this.setMultiple(response);
                 this.saving = false;
                 this.dirty = false;
 
@@ -152,7 +150,7 @@ export default class ResourceStore {
 
         return ResourceRequester.put(this.resourceKey, this.id, this.data, options)
             .then(action((response) => {
-                this.data = response;
+                this.setMultiple(response);
                 this.saving = false;
                 this.dirty = false;
 
@@ -181,7 +179,7 @@ export default class ResourceStore {
         return ResourceRequester.delete(this.resourceKey, this.data.id, requestOptions)
             .then(action((response) => {
                 this.id = undefined;
-                this.data = response;
+                this.setMultiple(response);
                 this.deleting = false;
                 this.dirty = false;
 
@@ -232,7 +230,7 @@ export default class ResourceStore {
                 {},
                 {action: 'copy-locale', locale: locale, dest: this.locale.get(), ...options}
             ).then(action((response) => {
-                this.data = response;
+                this.setMultiple(response);
                 return response;
             }));
     }
@@ -250,7 +248,7 @@ export default class ResourceStore {
             this.id = data.id;
         }
 
-        this.data = {...this.data, ...data};
+        Object.assign(this.data, data);
     }
 
     @action change(name: string, value: mixed) {
