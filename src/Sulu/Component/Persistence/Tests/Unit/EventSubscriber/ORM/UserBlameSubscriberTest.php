@@ -101,6 +101,7 @@ class UserBlameSubscriberTest extends TestCase
         $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
         $this->subscriber = new UserBlameSubscriber($this->tokenStorage->reveal(), User::class);
+        $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
@@ -265,6 +266,7 @@ class UserBlameSubscriberTest extends TestCase
         $subscriber = new UserBlameSubscriber($tokenStorage->reveal(), User::class);
 
         $entity = $this->userBlameObject->reveal();
+
         $this->unitOfWork->method('getScheduledEntityInsertions')->willReturn([$entity]);
         $this->unitOfWork->method('getScheduledEntityUpdates')->willReturn([]);
         $this->unitOfWork->method('getEntityChangeSet')
@@ -280,7 +282,6 @@ class UserBlameSubscriberTest extends TestCase
                 $symfonyUser->reveal()
             )->shouldNotBeCalled();
         }
-
         $subscriber->onFlush($this->onFlushEvent->reveal());
     }
 }

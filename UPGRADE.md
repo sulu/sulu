@@ -2,7 +2,6 @@
 
 ## dev-develop
 
-
 ### Change tag_list to tag_selection
 
 The tag_list content and field type was changed to `tag_selection`
@@ -864,6 +863,14 @@ sulu_security:
     checker:
         enabled: true
 ```
+
+## 1.6.24
+
+### Collection Repository count function changed
+
+For the php 7.3 compatibility we needed to upgrade doctrine/orm for this we needed to rename the following method:
+
+ * Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::count => Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface::countCollections
 
 ## 1.6.17
 
