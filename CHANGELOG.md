@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.5.20 (2019-01-09)
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
 
 * 1.5.19 (2018-12-03)
