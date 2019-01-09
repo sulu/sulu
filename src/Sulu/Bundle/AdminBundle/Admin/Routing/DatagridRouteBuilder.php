@@ -92,6 +92,24 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
         return $this;
     }
 
+    public function addToolbarActions(array $toolbarActions): DatagridRouteBuilderInterface
+    {
+        $oldToolbarActions = $this->route->getOption('toolbarActions');
+        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
+        $this->route->setOption('toolbarActions', $newToolbarActions);
+
+        return $this;
+    }
+
+    public function removeToolbarAction(string $toolbarAction): DatagridRouteBuilderInterface
+    {
+        $toolbarActions = $this->route->getOption('toolbarActions');
+        unset($toolbarActions[array_search($toolbarAction, $toolbarActions)]);
+        $this->route->setOption('toolbarActions', $toolbarActions);
+
+        return $this;
+    }
+
     public function setAddRoute(string $addRoute): DatagridRouteBuilderInterface
     {
         $this->route->setOption('addRoute', $addRoute);

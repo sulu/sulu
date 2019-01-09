@@ -98,6 +98,10 @@ class SecurityAdmin extends Admin
             'sulu_admin.save',
         ];
 
+        $listToolbarActions = [
+            'sulu_admin.delete',
+        ];
+
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/roles')
                 ->setResourceKey('roles')
@@ -106,6 +110,7 @@ class SecurityAdmin extends Admin
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
                 ->setResourceKey('roles')

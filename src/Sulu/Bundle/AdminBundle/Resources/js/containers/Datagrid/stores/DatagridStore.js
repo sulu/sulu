@@ -25,6 +25,7 @@ export default class DatagridStore {
     @observable pageCount: ?number = 0;
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
+    @observable deleting: boolean = false;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
@@ -365,6 +366,7 @@ export default class DatagridStore {
 
     @action deleteSelection = () => {
         const deletePromises = [];
+        this.deleting = true;
         this.selectionIds.forEach((id) => {
             deletePromises.push(ResourceRequester.delete(this.resourceKey, id, this.queryOptions).catch((error) => {
                 if (error.status !== 404) {
@@ -376,6 +378,7 @@ export default class DatagridStore {
         return Promise.all(deletePromises).then(action(() => {
             this.selectionIds.forEach(this.remove);
             this.clearSelection();
+            this.deleting = false;
         }));
     };
 

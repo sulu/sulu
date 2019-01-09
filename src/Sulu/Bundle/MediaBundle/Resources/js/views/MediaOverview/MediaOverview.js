@@ -243,7 +243,7 @@ export default withToolbar(MediaOverview, function() {
                 disabled: this.mediaDatagridStore.selectionIds.length === 0,
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete'),
-                loading: this.mediaDatagridStore.selectionDeleting,
+                loading: this.mediaDatagridStore.deleting,
                 onClick: this.mediaDatagrid.requestSelectionDelete,
                 type: 'button',
             },

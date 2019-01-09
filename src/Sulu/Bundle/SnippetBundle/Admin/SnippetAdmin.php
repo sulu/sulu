@@ -114,6 +114,10 @@ class SnippetAdmin extends Admin
             'sulu_admin.delete',
         ];
 
+        $listToolbarActions = [
+            'sulu_admin.delete',
+        ];
+
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/snippets/:locale')
                 ->setResourceKey('snippets')
@@ -124,6 +128,7 @@ class SnippetAdmin extends Admin
                 ->setDefaultLocale($snippetLocales[0])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
                 ->setResourceKey('snippets')

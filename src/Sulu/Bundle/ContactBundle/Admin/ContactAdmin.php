@@ -89,8 +89,12 @@ class ContactAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $formToolbarActionsWithDelete = [
+        $formToolbarActions = [
             'sulu_admin.save',
+            'sulu_admin.delete',
+        ];
+
+        $listToolbarActions = [
             'sulu_admin.delete',
         ];
 
@@ -102,6 +106,7 @@ class ContactAdmin extends Admin
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
                 ->setResourceKey('contacts')
@@ -112,7 +117,7 @@ class ContactAdmin extends Admin
                 ->setFormKey('contact_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActionsWithDelete)
+                ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
@@ -124,7 +129,7 @@ class ContactAdmin extends Admin
                 ->setResourceKey('contacts')
                 ->setFormKey('contact_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActionsWithDelete)
+                ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::ACCOUNT_DATAGRID_ROUTE, '/accounts')
@@ -134,6 +139,7 @@ class ContactAdmin extends Admin
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
                 ->setResourceKey('accounts')
@@ -144,7 +150,7 @@ class ContactAdmin extends Admin
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActionsWithDelete)
+                ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ACCOUNT_ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
@@ -156,7 +162,7 @@ class ContactAdmin extends Admin
                 ->setResourceKey('accounts')
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActionsWithDelete)
+                ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

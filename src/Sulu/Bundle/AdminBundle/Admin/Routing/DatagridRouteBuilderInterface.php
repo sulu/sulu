@@ -35,6 +35,13 @@ interface DatagridRouteBuilderInterface
      */
     public function addLocales(array $locales): self;
 
+    /**
+     * @param string[] $toolbarActions
+     */
+    public function addToolbarActions(array $toolbarActions): self;
+
+    public function removeToolbarAction(string $toolbarAction): self;
+
     public function setDefaultLocale(string $locale): self;
 
     public function setAddRoute(string $addRoute): self;

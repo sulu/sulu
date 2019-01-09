@@ -70,6 +70,10 @@ class TagAdmin extends Admin
             'sulu_admin.delete',
         ];
 
+        $listToolbarActions = [
+            'sulu_admin.delete',
+        ];
+
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/tags')
                 ->setResourceKey('tags')
@@ -78,6 +82,7 @@ class TagAdmin extends Admin
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
                 ->setResourceKey('tags')

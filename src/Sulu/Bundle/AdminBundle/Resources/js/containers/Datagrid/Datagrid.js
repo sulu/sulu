@@ -63,7 +63,6 @@ export default class Datagrid extends React.Component<Props> {
     @observable deleting: boolean = false;
     @observable moving: boolean = false;
     @observable ordering: boolean = false;
-    @observable selectionDeleting: boolean = false;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
@@ -138,10 +137,8 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     @action handleSelectionDeleteDialogConfirmClick = () => {
-        this.selectionDeleting = true;
         this.props.store.deleteSelection().then(action(() => {
             this.showDeleteSelectionDialog = false;
-            this.selectionDeleting = false;
         }));
     };
 
@@ -501,7 +498,7 @@ export default class Datagrid extends React.Component<Props> {
                 </div>
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
-                    confirmLoading={this.selectionDeleting}
+                    confirmLoading={this.props.store.deleting}
                     confirmText={translate('sulu_admin.ok')}
                     onCancel={this.handleSelectionDeleteDialogCancelClick}
                     onConfirm={this.handleSelectionDeleteDialogConfirmClick}

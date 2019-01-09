@@ -87,6 +87,10 @@ class CategoryAdmin extends Admin
             'sulu_admin.delete',
         ];
 
+        $listToolbarActions = [
+            'sulu_admin.delete',
+        ];
+
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/categories/:locale')
                 ->setResourceKey('categories')
@@ -99,6 +103,7 @@ class CategoryAdmin extends Admin
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->enableSearching()
                 ->enableMoving()
+                ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
                 ->setResourceKey('categories')

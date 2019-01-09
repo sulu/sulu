@@ -4,13 +4,14 @@ import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
-import {default as DatagridContainer} from '../../containers/Datagrid';
+import equals from 'fast-deep-equal';
+import {default as DatagridContainer, DatagridStore} from '../../containers/Datagrid';
 import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
-import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
+import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import datagridStyles from './datagrid.scss';
 
 const USER_SETTINGS_KEY = 'datagrid';
@@ -24,6 +25,7 @@ class Datagrid extends React.Component<ViewProps> {
     @observable deleting: boolean = false;
     @observable moving: boolean = false;
     @observable showMoveOverlay: boolean = false;
+    @observable toolbarActions = [];
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -119,6 +121,53 @@ class Datagrid extends React.Component<ViewProps> {
         return datagridStoreOptions;
     }
 
+    @action componentDidMount() {
+        const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    locales,
+                    toolbarActions,
+                },
+            },
+        } = router;
+
+        if (!toolbarActions) {
+            return;
+        }
+
+        this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
+            this.datagridStore,
+            this,
+            router,
+            locales
+        ));
+    }
+
+    componentDidUpdate(prevProps: ViewProps) {
+        const {
+            route: {
+                options: {
+                    locales,
+                },
+            },
+        } = this.props.router;
+
+        const {
+            route: {
+                options: {
+                    prevLocales,
+                },
+            },
+        } = prevProps.router;
+
+        if (!equals(locales, prevLocales)) {
+            this.toolbarActions.forEach((toolbarAction) => {
+                toolbarAction.setLocales(this.props.route.options.locales);
+            });
+        }
+    }
+
     componentWillUnmount() {
         this.datagridStore.destroy();
     }
@@ -134,6 +183,14 @@ class Datagrid extends React.Component<ViewProps> {
         } = router;
 
         router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
+    };
+
+    handleDelete = () => {
+        if (!this.datagrid) {
+            throw new Error('Datagrid not created yet.');
+        }
+
+        this.datagrid.requestSelectionDelete();
     };
 
     handleEditClick = (rowId: string | number) => {
@@ -201,6 +258,7 @@ class Datagrid extends React.Component<ViewProps> {
                         title={translate('sulu_admin.move_items')}
                     />
                 }
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
         );
     }
@@ -244,25 +302,18 @@ export default withToolbar(Datagrid, function() {
         }
         : undefined;
 
-    const items = [];
+    const items = this.toolbarActions
+        .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+        .filter((item) => item !== undefined);
 
     if (addRoute) {
-        items.push({
+        items.unshift({
             icon: 'su-plus-circle',
             label: translate('sulu_admin.add'),
             onClick: this.handleItemAdd,
             type: 'button',
         });
     }
-
-    items.push({
-        disabled: this.datagridStore.selectionIds.length === 0,
-        icon: 'su-trash-alt',
-        label: translate('sulu_admin.delete'),
-        loading: this.datagridStore.selectionDeleting,
-        onClick: this.datagrid.requestSelectionDelete,
-        type: 'button',
-    });
 
     if (movable) {
         items.push({
