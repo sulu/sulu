@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, toJS, when} from 'mobx';
+import {action, autorun, observable, set, toJS, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import log from 'loglevel';
 import ResourceRequester from '../../services/ResourceRequester';
@@ -240,7 +240,7 @@ export default class ResourceStore {
             this.id = value;
         }
 
-        this.data[name] = value;
+        set(this.data, name, value);
     }
 
     @action setMultiple(data: Object) {
@@ -248,7 +248,12 @@ export default class ResourceStore {
             this.id = data.id;
         }
 
-        Object.assign(this.data, data);
+        set(this.data, data);
+
+        log.info(
+            'ResourceStore changed "' + this.resourceKey + '" data with the ID "' + (this.id || 'undefined') + '"',
+            this.data
+        );
     }
 
     @action change(name: string, value: mixed) {
