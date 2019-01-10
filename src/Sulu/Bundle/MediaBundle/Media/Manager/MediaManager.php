@@ -314,7 +314,7 @@ class MediaManager implements MediaManagerInterface
 
                 // Dimensions
                 try {
-                    $dimensions = $this->ffprobe->streams( $uploadedFile->getPathname() )->videos()->first()->getDimensions();
+                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
                     $properties['width'] = $dimensions->getWidth();
                     $properties['height'] = $dimensions->getHeight();
                 } catch (InvalidArgumentException $e) {
