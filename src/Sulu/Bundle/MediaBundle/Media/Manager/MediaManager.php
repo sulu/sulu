@@ -307,12 +307,24 @@ class MediaManager implements MediaManagerInterface
         $properties = [];
 
         try {
-            // if the file is a video we add the duration
+            // if the file is a video we add the properties related to it
             if (fnmatch('video/*', $mimeType)) {
+                // Duration
                 $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+
+                // Dimensions
+                try {
+                    $dimensions = $this->ffprobe->streams( $uploadedFile->getPathname() )->videos()->first()->getDimensions();
+                    $properties['width'] = $dimensions->getWidth();
+                    $properties['height'] = $dimensions->getHeight();
+                } catch (InvalidArgumentException $e) {
+                    // Exception is thrown if the video stream could not be obtained
+                } catch (RuntimeException $e) {
+                    // Exception is thrown if the dimension could not be extracted
+                }
             }
         } catch (ExecutableNotFoundException $e) {
-            // Exception is thrown if ffmpeg is not installed -> duration is not set
+            // Exception is thrown if ffmpeg is not installed -> video properties are not set
         }
 
         return $properties;
