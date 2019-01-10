@@ -146,13 +146,13 @@ export default class Application extends React.Component<Props> {
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation
+                                appVersion={appVersion}
                                 onLogout={this.handleLogout}
                                 onNavigate={this.handleNavigate}
                                 onPinToggle={this.handlePinToggle}
                                 pinned={this.navigationPinned}
                                 router={router}
                                 suluVersion={suluVersion}
-                                appVersion={appVersion}
                             />
                         </nav>
                         <div className={contentClass}>

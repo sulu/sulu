@@ -110,7 +110,6 @@ test('Should render navigation without appVersion', () => {
     expect(navigation).toMatchSnapshot();
 });
 
-
 test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
     router.route = {
