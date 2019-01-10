@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Interface for tag.
  */
-interface TagInterface
+interface TagInterface extends AuditableInterface
 {
     /**
      * Set name.
@@ -49,50 +49,4 @@ interface TagInterface
      * @return TagInterface
      */
     public function setId($id);
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated();
-
-    /**
-     * Get changed.
-     *
-     * @return \DateTime
-     */
-    public function getChanged();
-
-    /**
-     * Set changer.
-     *
-     * @param UserInterface $changer
-     *
-     * @return TagInterface
-     */
-    public function setChanger(UserInterface $changer = null);
-
-    /**
-     * Get changer.
-     *
-     * @return UserInterface
-     */
-    public function getChanger();
-
-    /**
-     * Set creator.
-     *
-     * @param UserInterface $creator
-     *
-     * @return TagInterface
-     */
-    public function setCreator(UserInterface $creator = null);
-
-    /**
-     * Get creator.
-     *
-     * @return UserInterface
-     */
-    public function getCreator();
 }

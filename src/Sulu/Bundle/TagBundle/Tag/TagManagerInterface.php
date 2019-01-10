@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Tag;
 
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-
 /**
  * Defines the operations of the TagManager.
  * The TagManager is responsible for the centralized management of our tags.
@@ -102,20 +100,4 @@ interface TagManagerInterface
      * @return array
      */
     public function resolveTagNames($tagNames);
-
-    /**
-     * Returns the FieldDescriptors for the products.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    public function getFieldDescriptors();
-
-    /**
-     * Returns the FieldDescriptor for the given key.
-     *
-     * @param string $key The key of the FieldDescriptor to return
-     *
-     * @return FieldDescriptorInterface
-     */
-    public function getFieldDescriptor($key);
 }

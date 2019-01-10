@@ -19,9 +19,6 @@ use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -29,26 +26,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class TagManager implements TagManagerInterface
 {
-    protected static $userEntityName = 'Sulu\Component\Security\Authentication\UserInterface';
-
-    protected static $contactEntityName = 'Sulu\Bundle\ContactBundle\Entity\ContactInterface';
-
     /**
      * The repository for communication with the database.
      *
      * @var TagRepository
      */
     private $tagRepository;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
 
     /**
      * @var ObjectManager
@@ -60,50 +43,14 @@ class TagManager implements TagManagerInterface
      */
     private $eventDispatcher;
 
-    /**
-     * @var string
-     */
-    private $tagEntityName;
-
-    /**
-     * Describes the fields, which are handled by this controller.
-     *
-     * @var DoctrineFieldDescriptor[]
-     */
-    protected $fieldDescriptors = [];
-
     public function __construct(
         TagRepositoryInterface $tagRepository,
-        UserRepositoryInterface $userRepository,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher,
-        string $tagEntityName
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->tagRepository = $tagRepository;
-        $this->userRepository = $userRepository;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
-        $this->tagEntityName = $tagEntityName;
-
-        $this->fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptorForClass($this->tagEntityName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFieldDescriptors()
-    {
-        return $this->fieldDescriptors;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFieldDescriptor($key)
-    {
-        return $this->fieldDescriptors[$key];
     }
 
     /**
@@ -172,16 +119,13 @@ class TagManager implements TagManagerInterface
                 $tag = $this->tagRepository->createNew();
             }
 
-            $user = $this->userRepository->findUserById($userId);
-
             // update data
             $tag->setName($name);
-            $tag->setChanger($user);
 
             if (!$id) {
-                $tag->setCreator($user);
                 $this->em->persist($tag);
             }
+
             $this->em->flush();
 
             return $tag;

@@ -65,13 +65,6 @@ class TagManagerTest extends TestCase
             ['findTagByName']
         );
 
-        $this->userRepository = $this->getMockForAbstractClass(
-            'Sulu\Component\Security\Authentication\UserRepositoryInterface',
-            [],
-            '',
-            false
-        );
-
         $this->fieldDescriptorFactory = $this->getMockForAbstractClass(
             'Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface',
             [],
@@ -113,11 +106,8 @@ class TagManagerTest extends TestCase
 
         $this->tagManager = new TagManager(
             $this->tagRepository,
-            $this->userRepository,
-            $this->fieldDescriptorFactory,
             $this->em,
-            $this->eventDispatcher,
-            Tag::class
+            $this->eventDispatcher
         );
     }
 

@@ -321,7 +321,7 @@ class TagControllerTest extends SuluTestCase
             ]), 'dest' => $this->tag1->getId()]
         );
         $this->assertHttpStatusCode(303, $client->getResponse());
-        $this->assertEquals('/admin/api/tags/' . $this->tag1->getId(), $client->getResponse()->headers->get('location'));
+        $this->assertEquals('/api/tags/' . $this->tag1->getId(), $client->getResponse()->headers->get('location'));
 
         $client->request(
             'GET',
