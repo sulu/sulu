@@ -67,7 +67,7 @@ class SuluVersionPass implements CompilerPassInterface
      */
     private function getAppVersion($dir)
     {
-        $version = '_._._';
+        $version = null;
 
         /** @var SplFileInfo $composerFile */
         $composerFile = new SplFileInfo($dir . '/composer.json', '', '');
@@ -77,7 +77,7 @@ class SuluVersionPass implements CompilerPassInterface
 
         $composerJson = json_decode($composerFile->getContents(), true);
         if (!array_key_exists('version', $composerJson)) {
-            return;
+            return $version;
         }
 
         return $composerJson['version'];

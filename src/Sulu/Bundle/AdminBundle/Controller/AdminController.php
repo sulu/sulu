@@ -120,6 +120,11 @@ class AdminController
     private $suluVersion;
 
     /**
+     * @var string|null
+     */
+    private $appVersion;
+
+    /**
      * @var array
      */
     private $locales;
@@ -161,6 +166,7 @@ class AdminController
         DataProviderPoolInterface $dataProviderPool,
         string $environment,
         string $suluVersion,
+        ?string $appVersion,
         array $locales,
         array $translations,
         string $fallbackLocale,
@@ -183,6 +189,7 @@ class AdminController
         $this->dataProviderPool = $dataProviderPool;
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
+        $this->appVersion = $appVersion;
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
@@ -211,6 +218,7 @@ class AdminController
                 'fallback_locale' => $this->fallbackLocale,
                 'endpoints' => $endpoints,
                 'sulu_version' => $this->suluVersion,
+                'app_version' => $this->appVersion,
             ]
         );
     }

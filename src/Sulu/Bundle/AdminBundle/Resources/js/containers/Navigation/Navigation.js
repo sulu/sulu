@@ -14,6 +14,7 @@ type Props = {
     onNavigate: (route: string) => void,
     onLogout: () => void,
     onPinToggle: () => void,
+    appVersion: string,
     suluVersion: string,
 };
 
@@ -65,10 +66,12 @@ export default class Navigation extends React.Component<Props> {
 
     render() {
         const {suluVersion} = this.props;
+        const {appVersion} = this.props;
         const navigationItems = navigationRegistry.getAll();
 
         return (
             <NavigationComponent
+                appVersion={appVersion}
                 onLogoutClick={this.props.onLogout}
                 onPinToggle={this.handlePinToggle}
                 onProfileClick={this.handleProfileEditClick}
