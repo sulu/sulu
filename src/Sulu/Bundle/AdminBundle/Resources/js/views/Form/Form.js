@@ -81,6 +81,10 @@ class Form extends React.Component<Props> {
             );
         }
 
+        if (!formKey) {
+            throw new Error('The route does not define the mandatory "formKey" option');
+        }
+
         const formStoreOptions = apiOptions ? apiOptions : {};
         if (routerAttributesToFormStore) {
             routerAttributesToFormStore.forEach((routerAttribute) => {

@@ -334,3 +334,18 @@ test('Should pass locales from route options instead of props to child component
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
     expect(ChildComponent.mock.calls[0][0].locales).toEqual(['de', 'en']);
 });
+
+test('Should throw an error when no resourceKey is defined in the route options', () => {
+    const route = {
+        options: {},
+    };
+
+    const router = {
+        route,
+        attributes: {
+            id: 5,
+        },
+    };
+
+    expect(() => render(<ResourceTabs route={route} router={router} />)).toThrow(/mandatory "resourceKey" option/);
+});

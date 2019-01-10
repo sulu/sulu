@@ -76,6 +76,7 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
     const resourceStore = new ResourceStore('snippets', 10);
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'snippets',
             toolbarActions: [],
         },
@@ -97,6 +98,7 @@ test('Should reload the passed resourceStore if some data has been there before 
     const resourceStore = new ResourceStore('snippets', 10);
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'snippets',
             toolbarActions: [],
         },
@@ -118,6 +120,7 @@ test('Should create a new resourceStore if the passed resourceKey differs', () =
     const resourceStore = new ResourceStore('snippets', 10);
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'pages',
             toolbarActions: [],
         },
@@ -143,6 +146,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with l
     const resourceStore = new ResourceStore('snippets', 10, {locale});
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'pages',
             toolbarActions: [],
         },
@@ -168,6 +172,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     const resourceStore = new ResourceStore('snippets', 10, {});
     const route = {
         options: {
+            formKey: 'snippets',
             locales: ['de', 'en'],
             resourceKey: 'pages',
             toolbarActions: [],
@@ -195,6 +200,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
     const resourceStore = new ResourceStore('snippets', 10, {locale});
     const route = {
         options: {
+            formKey: 'snippets',
             locales: ['de', 'en'],
             resourceKey: 'pages',
             toolbarActions: [],
@@ -221,6 +227,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     const resourceStore = new ResourceStore('snippets', 10);
     const route = {
         options: {
+            formKey: 'snippets',
             idQueryParameter: 'contactId',
             resourceKey: 'pages',
             toolbarActions: [],
@@ -278,6 +285,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: ['save', 'delete'],
         },
     };
@@ -307,8 +315,9 @@ test('Should initialize preview sidebar', () => {
 
     const route = {
         options: {
-            toolbarActions: [],
+            formKey: 'snippets',
             preview: 'nodeType == 1',
+            toolbarActions: [],
         },
     };
     const router = {
@@ -340,6 +349,7 @@ test('Should not initialize preview sidebar when expression evaluates to false',
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: [],
             preview: 'nodeType == 2',
         },
@@ -370,6 +380,7 @@ test('Should not initialize preview sidebar when option is not set', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -398,6 +409,7 @@ test('Should not add PublishIndicator if no publish status is available', () => 
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -429,6 +441,7 @@ test('Should add PublishIndicator if publish status is available showing draft',
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -466,6 +479,7 @@ test('Should add PublishIndicator if publish status is available showing publish
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -503,6 +517,7 @@ test('Should add PublishIndicator if publish status is available showing publish
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -551,6 +566,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: ['save'],
         },
     };
@@ -577,6 +593,7 @@ test('Should navigate to defined route on back button click', () => {
     const route = {
         options: {
             backRoute: 'test_route',
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -605,6 +622,7 @@ test('Should navigate to defined route on back button click without locale', () 
     const route = {
         options: {
             backRoute: 'test_route',
+            formKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -630,6 +648,7 @@ test('Should not render back button when no editLink is configured', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -655,6 +674,7 @@ test('Should change locale in form store via locale chooser', () => {
     const route = {
         options: {
             backRoute: 'test_route',
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -682,6 +702,7 @@ test('Should show locales from router options in toolbar', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: ['en', 'de'],
             toolbarActions: [],
         },
@@ -710,6 +731,7 @@ test('Should show locales from props in toolbar if route has no locales', () => 
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -737,6 +759,7 @@ test('Should not show a locale chooser if no locales are passed in router option
 
     const route = {
         options: {
+            formKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -760,6 +783,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -814,6 +838,7 @@ test('Should save form when submitted', (done) => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -872,6 +897,7 @@ test('Should save form when submitted with mapped router attributes', (done) => 
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             routerAttributesToFormStore: ['parentId', 'webspace'],
             toolbarActions: [],
@@ -929,6 +955,7 @@ test('Should save form when submitted with given apiOptions', (done) => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             apiOptions: {apiKey: 'api-option-value'},
             toolbarActions: [],
@@ -984,6 +1011,7 @@ test('Should save form when submitted with mapped router attributes and given ap
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             apiOptions: {apiKey: 'api-option-value'},
             routerAttributesToFormStore: ['parentId'],
@@ -1039,6 +1067,7 @@ test('Should set showSuccess flag after form submission', (done) => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -1088,6 +1117,7 @@ test('Should keep errors after form submission has failed', (done) => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -1138,6 +1168,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     const route = {
         options: {
             editRoute: 'editRoute',
+            formKey: 'snippets',
             locales: [],
             routerAttributesToEditRoute: ['webspace'],
             toolbarActions: [],
@@ -1180,6 +1211,7 @@ test('Should pass store and schema handler to FormContainer', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             locales: [],
             toolbarActions: [],
         },
@@ -1205,8 +1237,9 @@ test('Should destroy the store on unmount', () => {
     resourceStore.destroy = jest.fn();
     const route = {
         options: {
-            resourceKey: 'snippets',
+            formKey: 'snippets',
             locales: [],
+            resourceKey: 'snippets',
             toolbarActions: [],
         },
     };
@@ -1237,6 +1270,7 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
 
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'pages',
             toolbarActions: [],
         },
@@ -1260,6 +1294,7 @@ test('Should not bind the locale if no locales have been passed via options', ()
     const resourceStore = new ResourceStore('snippets', 12);
     const route = {
         options: {
+            formKey: 'snippets',
             resourceKey: 'snippets',
             toolbarActions: [],
         },
@@ -1279,7 +1314,7 @@ test('Should not bind the locale if no locales have been passed via options', ()
     expect(router.unbind).not.toBeCalled();
 });
 
-test('Should throw an error if the resourceStore is not passed for some reason', () => {
+test('Should throw an error if the resourceStore is not passed', () => {
     const router = {
         attributes: {},
         route: {
@@ -1290,4 +1325,20 @@ test('Should throw an error if the resourceStore is not passed for some reason',
     };
     const Form = require('../Form').default;
     expect(() => shallow(<Form router={router} />)).toThrow(/"ResourceTabs"/);
+});
+
+test('Should throw an error if no formKey is passed', () => {
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
+
+    const router = {
+        attributes: {},
+        route: {
+            options: {
+                toolbarActions: [],
+            },
+        },
+    };
+    const Form = require('../Form').default;
+    expect(() => shallow(<Form resourceStore={resourceStore} router={router} />)).toThrow(/"formKey"/);
 });

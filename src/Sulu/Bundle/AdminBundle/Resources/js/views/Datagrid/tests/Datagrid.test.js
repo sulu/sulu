@@ -278,7 +278,7 @@ test('Should throw an error when no resourceKey is defined in the route options'
         },
     };
 
-    expect(() => render(<Datagrid router={router} />)).toThrow(/mandatory resourceKey option/);
+    expect(() => render(<Datagrid router={router} />)).toThrow(/mandatory "resourceKey" option/);
 });
 
 test('Should destroy the store on unmount', () => {
