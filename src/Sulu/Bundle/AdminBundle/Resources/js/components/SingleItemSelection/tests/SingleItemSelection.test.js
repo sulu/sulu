@@ -34,6 +34,17 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render in loading state with no children', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection leftButton={leftButton} loading={true} />
+    )).toMatchSnapshot();
+});
+
 test('Render in invalid state', () => {
     const leftButton = {
         icon: 'su-document',
