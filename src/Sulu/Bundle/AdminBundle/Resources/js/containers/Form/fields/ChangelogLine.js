@@ -27,29 +27,23 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
     }
 
     loadChanger = () => {
-        const {formInspector} = this.props;
-        const changer = formInspector.getValueByPath('/changer');
-
-        if (typeof changer !== 'number') {
+        if (typeof this.changerId !== 'number') {
             this.setChanger(undefined);
             return;
         }
 
-        ResourceRequester.get('users', changer).then(action((changer) => {
+        ResourceRequester.get('users', this.changerId).then(action((changer) => {
             this.setChanger(changer);
         }));
     };
 
     loadCreator = () => {
-        const {formInspector} = this.props;
-        const creator = formInspector.getValueByPath('/creator');
-
-        if (typeof creator !== 'number') {
+        if (typeof this.creatorId !== 'number') {
             this.setCreator(undefined);
             return;
         }
 
-        ResourceRequester.get('users', creator).then(action((creator) => {
+        ResourceRequester.get('users', this.creatorId).then(action((creator) => {
             this.setCreator(creator);
         }));
     };
@@ -62,6 +56,14 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
     @action setCreator(creator: ?Object) {
         this.creator = creator;
         this.creatorLoaded = true;
+    }
+
+    @computed get changerId() {
+        return this.props.formInspector.getValueByPath('/changer');
+    }
+
+    @computed get creatorId() {
+        return this.props.formInspector.getValueByPath('/creator');
     }
 
     @computed get changerFullName() {

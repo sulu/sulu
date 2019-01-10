@@ -299,7 +299,7 @@ export default class FormStore {
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     };
 
-    @computed get schema(): Schema {
+    @computed.struct get schema(): Schema {
         return transformRawSchema(this.rawSchema, this.disabledFieldPaths, this.hiddenFieldPaths);
     }
 

@@ -48,9 +48,11 @@ test('Should load without locale the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '3');
+    const oldData = resourceStore.data;
     expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -58,6 +60,7 @@ test('Should load with the idQueryParameter and reset after successful load', ()
     const promise = Promise.resolve({id: 5, value: 'test'});
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
+    const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
     expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
 
@@ -65,6 +68,7 @@ test('Should load with the idQueryParameter and reset after successful load', ()
         expect(resourceStore.data).toEqual({id: 5, value: 'test'});
         expect(resourceStore.idQueryParameter).toEqual(undefined);
         expect(resourceStore.id).toEqual(5);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -83,7 +87,7 @@ test('Should not load the data with the ResourceRequester if locale should be pr
 });
 
 test('Loading flag should be set to true when loading', () => {
-    ResourceRequester.get.mockReturnValue(Promise.resolve());
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.loading = false;
     resourceStore.setLocale('en');
@@ -96,12 +100,14 @@ test('Loading flag should be set to false when loading has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const oldData = resourceStore.data;
     resourceStore.setLocale('en');
     resourceStore.loading = true;
 
     resourceStore.load();
     return promise.then(() => {
         expect(resourceStore.loading).toBe(false);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -233,6 +239,7 @@ test('Deleting flag and id should be reset to false when deleting has finished',
     ResourceRequester.delete.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
+    const oldData = resourceStore.data;
     resourceStore.setLocale('en');
     resourceStore.deleting = false;
 
@@ -242,6 +249,7 @@ test('Deleting flag and id should be reset to false when deleting has finished',
     return promise.then(() => {
         expect(resourceStore.deleting).toBe(false);
         expect(resourceStore.id).toBe(undefined);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -282,6 +290,7 @@ test('Moving flag and id should be reset to false when moving has finished', () 
     ResourceRequester.postWithId.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
+    const oldData = resourceStore.data;
     resourceStore.setLocale('en');
     resourceStore.moving = false;
 
@@ -291,6 +300,7 @@ test('Moving flag and id should be reset to false when moving has finished', () 
     return promise.then(() => {
         expect(resourceStore.moving).toBe(false);
         expect(ResourceRequester.get).toBeCalledWith('snippets', '1', {locale: 'en'});
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -335,10 +345,12 @@ test('Response should be returned when updating', () => {
     const promise = Promise.resolve(data);
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const oldData = resourceStore.data;
     resourceStore.saving = false;
 
     return resourceStore.save().then((responseData) => {
         expect(responseData).toBe(data);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -347,10 +359,12 @@ test('Response should be returned when creating', () => {
     const promise = Promise.resolve(data);
     ResourceRequester.post.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+    const oldData = resourceStore.data;
     resourceStore.saving = false;
 
     return resourceStore.save().then((responseData) => {
         expect(responseData).toBe(data);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -359,6 +373,7 @@ test('Saving and dirty flag should be set and data should be updated to false wh
     const promise = Promise.resolve(data);
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const oldData = resourceStore.data;
     resourceStore.saving = true;
     resourceStore.dirty = true;
 
@@ -368,6 +383,7 @@ test('Saving and dirty flag should be set and data should be updated to false wh
         expect(resourceStore.saving).toBe(false);
         expect(resourceStore.dirty).toBe(false);
         expect(resourceStore.data).toEqual(data);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -407,6 +423,7 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
     ResourceRequester.get.mockReturnValue(Promise.resolve({}));
     ResourceRequester.post.mockReturnValue(promise);
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
+    const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
     expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
 
@@ -416,6 +433,7 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
         expect(resourceStore.data).toEqual({id: 3});
         expect(resourceStore.idQueryParameter).toEqual(undefined);
         expect(resourceStore.id).toEqual(3);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 
@@ -423,6 +441,7 @@ test('Copy the content from different locale', () => {
     const resourceStore = new ResourceStore('pages', 4, {locale: observable.box('en')}, {webspace: 'sulu_io'});
     resourceStore.set('content', 'old content');
     expect(resourceStore.data).toEqual({content: 'old content'});
+    const oldData = resourceStore.data;
 
     const germanContent = {id: 3, content: 'new content'};
     const promise = Promise.resolve(germanContent);
@@ -435,6 +454,7 @@ test('Copy the content from different locale', () => {
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual(germanContent);
+        expect(resourceStore.data).toBe(oldData);
     });
 });
 

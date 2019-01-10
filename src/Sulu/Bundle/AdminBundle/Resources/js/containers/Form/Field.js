@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import log from 'loglevel';
 import {translate} from '../../utils';
 import type {Error, ErrorCollection} from '../../types';
@@ -22,6 +24,7 @@ type Props = {|
     value?: *,
 |};
 
+@observer
 export default class Field extends React.Component<Props> {
     static defaultProps = {
         showAllErrors: false,
@@ -72,6 +75,10 @@ export default class Field extends React.Component<Props> {
         }
     }
 
+    @computed.struct get types() {
+        return this.props.schema.types;
+    }
+
     render() {
         const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
         const {
@@ -83,7 +90,6 @@ export default class Field extends React.Component<Props> {
             options: schemaOptions,
             required,
             type,
-            types,
         } = schema;
 
         let FieldType;
@@ -142,7 +148,7 @@ export default class Field extends React.Component<Props> {
                             schemaOptions={schemaOptions}
                             schemaPath={schemaPath}
                             showAllErrors={showAllErrors}
-                            types={types}
+                            types={this.types}
                             value={value}
                         />
                     </div>
