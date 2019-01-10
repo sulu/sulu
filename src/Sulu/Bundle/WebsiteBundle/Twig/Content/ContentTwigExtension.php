@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
@@ -25,8 +26,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * @var ContentMapperInterface
      */
@@ -48,19 +47,25 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     private $sessionManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Constructor.
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        LoggerInterface $logger = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -30,10 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Sulu format manager for media.
  */
-class FormatManager implements FormatManagerInterface, LoggerAwareInterface
+class FormatManager implements FormatManagerInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * The repository for communication with the database.
      *
@@ -77,6 +76,11 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     private $supportedMimeTypes;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
@@ -84,6 +88,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
      * @param array $responseHeaders
      * @param array $formats
      * @param array $supportedMimeTypes
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
@@ -92,7 +97,8 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         $saveImage,
         $responseHeaders,
         $formats,
-        array $supportedMimeTypes
+        array $supportedMimeTypes,
+        LoggerInterface $logger = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->formatCache = $formatCache;
@@ -102,7 +108,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
         $this->supportedMimeTypes = $supportedMimeTypes;
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

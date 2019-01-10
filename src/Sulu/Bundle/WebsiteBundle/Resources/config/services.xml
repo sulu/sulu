@@ -108,10 +108,7 @@
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-
-            <call method="setLogger">
-                <argument type="service" id="logger" on-invalid="ignore"/>
-            </call>
+            <argument type="service" id="logger" on-invalid="null"/>
         </service>
         <service id="sulu_website.twig.content.memoized" class="%sulu_website.twig.content.memoized.class%">
             <argument type="service" id="sulu_website.twig.content"/>

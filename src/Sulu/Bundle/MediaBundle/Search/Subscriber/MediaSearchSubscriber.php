@@ -28,8 +28,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class MediaSearchSubscriber implements EventSubscriberInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * @var MediaManagerInterface
      */
@@ -53,6 +51,11 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $thumbnailMimeTypes;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param MediaManagerInterface $mediaManager
      * @param Factory               $factory      Massive search factory
      * @param LoggerInterface       $logger
@@ -63,13 +66,14 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         MediaManagerInterface $mediaManager,
         Factory $factory,
         $thumbnailMimeTypes,
-        $searchImageFormat
+        $searchImageFormat,
+        LoggerInterface $logger = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->factory = $factory;
         $this->searchImageFormat = $searchImageFormat;
         $this->thumbnailMimeTypes = $thumbnailMimeTypes;
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

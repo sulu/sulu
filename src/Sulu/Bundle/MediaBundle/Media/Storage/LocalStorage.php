@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -19,8 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class LocalStorage implements StorageInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * @var string
      */
@@ -36,15 +35,21 @@ class LocalStorage implements StorageInterface
      */
     private $filesystem;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         string $uploadPath,
         string $segments,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        LoggerInterface $logger = null
     ) {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
         $this->filesystem = $filesystem;
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array

@@ -22,11 +22,9 @@
             <argument type="service" id="massive_search.factory" />
             <argument>%sulu_media.format_manager.mime_types%</argument>
             <argument>%sulu_media.search.default_image_format%</argument>
-            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="logger" on-invalid="null"/>
 
-            <call method="setLogger">
-                <argument type="service" id="logger" on-invalid="ignore"/>
-            </call>
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
 </container>

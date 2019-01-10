@@ -11,10 +11,7 @@
             <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument type="service" id="sulu_snippet.import.webspace.xliff12" />
-
-            <call method="setLogger">
-                <argument type="service" id="logger" on-invalid="ignore"/>
-            </call>
+            <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
         <service id="sulu_snippet.import.webspace.xliff12" class="Sulu\Component\Import\Format\Xliff12">

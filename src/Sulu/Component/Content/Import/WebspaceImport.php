@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -39,8 +40,6 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 class WebspaceImport extends Import implements WebspaceImportInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * @var DocumentManagerInterface
      */
@@ -72,6 +71,11 @@ class WebspaceImport extends Import implements WebspaceImportInterface
     protected $rlpStrategy;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var array
      */
     protected static $excludedSettings = [
@@ -93,7 +97,8 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ImportManagerInterface $importManager,
-        FormatImportInterface $xliff12
+        FormatImportInterface $xliff12,
+        LoggerInterface $logger = null
     ) {
         parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
 
@@ -103,7 +108,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
-        $this->logger = new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
