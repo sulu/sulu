@@ -87,12 +87,10 @@ class AccountRepositoryTest extends SuluTestCase
         foreach ($this->tagData as $name) {
             $this->tags[] = $this->createTag($name);
         }
-        $this->em->flush();
 
         foreach ($this->categoryData as $key) {
             $this->categories[] = $this->createCategory($key);
         }
-        $this->em->flush();
 
         foreach ($this->accountData as $data) {
             $this->accounts[] = $this->createAccount($data[0], $data[1], $data[2]);
