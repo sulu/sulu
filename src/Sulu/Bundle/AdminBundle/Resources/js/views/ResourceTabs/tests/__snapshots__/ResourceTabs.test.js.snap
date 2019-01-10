@@ -1,62 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should mark the currently active child route as selected tab 1`] = `
-Array [
-  <ul
-    class="tabs"
+<ul
+  class="tabs"
+>
+  <li
+    class="tab"
   >
-    <li
-      class="tab"
+    <button
+      title="Tab Titel 1"
     >
-      <button
-        title="Tab Titel 1"
-      >
-        Tab Titel 1
-      </button>
-    </li>
-    <li
-      class="tab selected"
+      Tab Titel 1
+    </button>
+  </li>
+  <li
+    class="tab selected"
+  >
+    <button
+      disabled=""
+      title="Tab Titel 2"
     >
-      <button
-        disabled=""
-        title="Tab Titel 2"
-      >
-        Tab Titel 2
-      </button>
-    </li>
-  </ul>,
-  <h1>
-    Child
-  </h1>,
-]
+      Tab Titel 2
+    </button>
+  </li>
+</ul>
+`;
+
+exports[`Should mark the currently active child route as selected tab 2`] = `
+<h1>
+  Child
+</h1>
 `;
 
 exports[`Should render the child components after the tabs 1`] = `
-Array [
-  <ul
-    class="tabs"
+<ul
+  class="tabs"
+>
+  <li
+    class="tab"
   >
-    <li
-      class="tab"
+    <button
+      title="Tab Titel 1"
     >
-      <button
-        title="Tab Titel 1"
-      >
-        Tab Titel 1
-      </button>
-    </li>
-    <li
-      class="tab"
+      Tab Titel 1
+    </button>
+  </li>
+  <li
+    class="tab"
+  >
+    <button
+      title="Tab Titel 2"
     >
-      <button
-        title="Tab Titel 2"
-      >
-        Tab Titel 2
-      </button>
-    </li>
-  </ul>,
-  <h1>
-    Child
-  </h1>,
-]
+      Tab Titel 2
+    </button>
+  </li>
+</ul>
+`;
+
+exports[`Should render the child components after the tabs 2`] = `
+<h1>
+  Child
+</h1>
 `;

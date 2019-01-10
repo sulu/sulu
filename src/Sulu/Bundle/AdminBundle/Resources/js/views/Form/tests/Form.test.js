@@ -91,29 +91,6 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
     expect(resourceStore).toBe(form.instance().resourceStore);
 });
 
-test('Should reload the passed resourceStore if some data has been there before showing the form', () => {
-    const Form = require('../Form').default;
-    const ResourceRequester = require('../../../services/ResourceRequester');
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const resourceStore = new ResourceStore('snippets', 10);
-    const route = {
-        options: {
-            formKey: 'snippets',
-            resourceKey: 'snippets',
-            toolbarActions: [],
-        },
-    };
-    const router = {
-        attributes: {},
-        route,
-    };
-
-    resourceStore.data = {value: 'something'};
-    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-
-    expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
-});
-
 test('Should create a new resourceStore if the passed resourceKey differs', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;

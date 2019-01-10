@@ -10,6 +10,7 @@ export default class ResourceStore {
     @observable id: ?string | number;
     observableOptions: ObservableOptions;
     disposer: () => void;
+    @observable initialized: boolean = false;
     @observable loading: boolean = false;
     @observable saving: boolean = false;
     @observable deleting: boolean = false;
@@ -38,8 +39,6 @@ export default class ResourceStore {
     }
 
     load = () => {
-        this.setLoading(true);
-
         const {
             id,
             observableOptions: {
@@ -57,7 +56,7 @@ export default class ResourceStore {
         }
 
         if (!id) {
-            this.setLoading(false);
+            this.initialized = true;
             return;
         }
 
@@ -68,6 +67,7 @@ export default class ResourceStore {
 
         log.info('ResourceStore loads "' + this.resourceKey + '" data with the ID "' + id + '"');
 
+        this.setLoading(true);
         const promise = this.idQueryParameter
             ? ResourceRequester.get(
                 this.resourceKey,
@@ -84,6 +84,7 @@ export default class ResourceStore {
                 this.setMultiple(response);
             }
 
+            this.initialized = true;
             this.setLoading(false);
         }));
     };
