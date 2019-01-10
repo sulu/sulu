@@ -19,9 +19,9 @@ import applicationStyles from './application.scss';
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
 type Props = {
+    appVersion: ?string,
     router: Router,
     suluVersion: string,
-    appVersion: string,
 };
 
 type NavigationState = 'pinned' | 'hidden' | 'visible';

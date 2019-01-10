@@ -9,12 +9,12 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
+    appVersion: ?string,
     pinned: boolean,
     router: Router,
     onNavigate: (route: string) => void,
     onLogout: () => void,
     onPinToggle: () => void,
-    appVersion: string,
     suluVersion: string,
 };
 

@@ -327,6 +327,177 @@ exports[`Application should render based on current route 1`] = `
 </div>
 `;
 
+exports[`Application should render based on current route with app version 1`] = `
+<div
+  class="root visible"
+>
+  <nav
+    class="navigation"
+  >
+    <div
+      class="navigation"
+    >
+      <div
+        class="header"
+      >
+        <div
+          class="headerContent"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu headerIcon"
+          />
+          <span
+            class="headerTitle"
+          >
+            Sulu
+          </span>
+        </div>
+      </div>
+      <div
+        class="user"
+      >
+        <div
+          class="userContent"
+        >
+          <div
+            class="noUserImage"
+          >
+            <span
+              aria-label="fa-user"
+              class="fa fa-user"
+            />
+          </div>
+          <div
+            class="userProfile"
+          >
+            <span>
+              Hikaru Sulu
+            </span>
+            <button>
+              <span
+                aria-label="su-exit"
+                class="su-exit"
+              />
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="items"
+      />
+      <div
+        class="footer"
+      >
+        <button
+          class="button icon pin"
+          type="button"
+        >
+          <span
+            aria-label="fa-thumb-tack"
+            class="fa fa-thumb-tack buttonIcon pinIcon"
+          />
+        </button>
+        <div
+          class="versions"
+        >
+          <div>
+            Sulu (666)
+          </div>
+          <div>
+            Sulu (
+            <a
+              href="https://github.com/sulu/sulu/releases"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              2.0.0-RC1
+            </a>
+            )
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div
+    class="content"
+  >
+    <main
+      class="main"
+    >
+      <header
+        class="header"
+      >
+        <nav
+          class="toolbar light"
+        >
+          <div
+            class="snackbar error"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+              <button
+                class="closeButton"
+              >
+                sulu_admin.close
+                <span
+                  aria-label="su-times"
+                  class="su-times closeButtonIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="snackbar success clickable"
+          >
+            <span
+              aria-label="su-check"
+              class="su-check icon"
+            />
+          </div>
+          <div
+            class="controls light grow"
+          >
+            <button
+              class="button light primary"
+            >
+              <span
+                aria-label="su-bars"
+                class="su-bars icon"
+              />
+            </button>
+          </div>
+          <div
+            class="controls light"
+          />
+        </nav>
+      </header>
+      <div
+        class="viewContainer"
+      >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+`;
+
 exports[`Application should render login when user is not logged in 1`] = `
 <div
   class="login"
@@ -493,6 +664,7 @@ exports[`Application should render login with loader 1`] = `
 
 exports[`Application should render opened navigation 1`] = `
 <Application
+  appVersion={null}
   router={
     Object {
       "route": Object {
@@ -516,6 +688,7 @@ exports[`Application should render opened navigation 1`] = `
       className="navigation"
     >
       <Navigation
+        appVersion={null}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
@@ -537,6 +710,7 @@ exports[`Application should render opened navigation 1`] = `
         suluVersion="2.0.0-RC1"
       >
         <Navigation
+          appVersion={null}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
@@ -857,6 +1031,7 @@ exports[`Application should render opened navigation 1`] = `
 
 exports[`Application should render pinned navigation 1`] = `
 <Application
+  appVersion={null}
   router={
     Object {
       "route": Object {
@@ -880,6 +1055,7 @@ exports[`Application should render pinned navigation 1`] = `
       className="navigation"
     >
       <Navigation
+        appVersion={null}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
@@ -901,6 +1077,7 @@ exports[`Application should render pinned navigation 1`] = `
         suluVersion="2.0.0-RC1"
       >
         <Navigation
+          appVersion={null}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
@@ -1185,6 +1362,7 @@ exports[`Application should render pinned navigation 1`] = `
 
 exports[`Application should render pinned navigation from beginning 1`] = `
 <Application
+  appVersion={null}
   router={
     Object {
       "route": Object {
@@ -1208,6 +1386,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
       className="navigation"
     >
       <Navigation
+        appVersion={null}
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
@@ -1229,6 +1408,7 @@ exports[`Application should render pinned navigation from beginning 1`] = `
         suluVersion="2.0.0-RC1"
       >
         <Navigation
+          appVersion={null}
           onLogoutClick={[Function]}
           onPinToggle={[Function]}
           onProfileClick={[Function]}
