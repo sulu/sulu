@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;

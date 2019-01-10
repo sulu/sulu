@@ -12,9 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 use PHPCR\RepositoryException;
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -86,11 +83,6 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $tokenStorage;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
@@ -99,8 +91,7 @@ class NodeRepository implements NodeRepositoryInterface
         ContentQueryBuilderInterface $queryBuilder,
         ContentQueryExecutorInterface $queryExecutor,
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage = null,
-        LoggerInterface $logger = null
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
@@ -110,7 +101,6 @@ class NodeRepository implements NodeRepositoryInterface
         $this->queryExecutor = $queryExecutor;
         $this->accessControlManager = $accessControlManager;
         $this->tokenStorage = $tokenStorage;
-        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

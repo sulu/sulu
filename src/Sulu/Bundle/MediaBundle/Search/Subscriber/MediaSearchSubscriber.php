@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Api\Media;

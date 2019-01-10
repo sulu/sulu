@@ -63,7 +63,8 @@ class MediaSearchSubscriberTest extends TestCase
             $this->mediaManager->reveal(),
             $this->factory->reveal(),
             ['image/jpeg'],
-            'test_format'
+            'test_format',
+            $this->logger->reveal()
         );
 
         $this->indexMetadata = $this->prophesize(IndexMetadata::class);

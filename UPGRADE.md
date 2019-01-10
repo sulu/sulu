@@ -4,8 +4,7 @@
 
 ### Logger is optional
 
-As the logger is know optional in the following services the constructor changed and logger is injected
-over the `Psr/Log/LoggerAwareTrait::setLogger`:
+As the logger is now optional in the following services the constructor changed:
 
  - `sulu.content.type.internal_links`
  - `sulu_content.compat.structure.legacy_property_factory`

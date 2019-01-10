@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
