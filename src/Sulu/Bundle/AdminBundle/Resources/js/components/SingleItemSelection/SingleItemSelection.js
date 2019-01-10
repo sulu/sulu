@@ -51,7 +51,7 @@ export default class SingleItemSelection extends React.Component<Props> {
                         {children
                             ? children
                             : <div className={singleItemSelectionStyles.empty}>
-                                {emptyText}
+                                {loading ? '…' : emptyText}
                             </div>
                         }
                     </div>
