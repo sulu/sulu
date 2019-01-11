@@ -1,6 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:list="http://schemas.sulu.io/class/list"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <properties>
         <property name="id" list:translation="sulu_admin.id" visibility="no" list:type="string">
             <orm:field-name>id</orm:field-name>
@@ -17,4 +18,4 @@
             <orm:entity-name>SuluMediaBundle:Collection</orm:entity-name>
         </property>
     </properties>
-</class>
+</datagrid>

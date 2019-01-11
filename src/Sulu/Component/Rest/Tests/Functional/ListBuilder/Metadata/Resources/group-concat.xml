@@ -1,5 +1,6 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <properties>
         <group-concat-property name="tags" orm:glue=",">
             <orm:field-name>name</orm:field-name>
@@ -13,4 +14,5 @@
             </orm:joins>
         </group-concat-property>
     </properties>
-</class>
+</datagrid>
+

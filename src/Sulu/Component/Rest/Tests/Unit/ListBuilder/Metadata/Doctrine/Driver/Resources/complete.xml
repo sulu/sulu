@@ -1,6 +1,6 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
-
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <orm:joins name="address">
         <orm:join>
             <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
@@ -57,4 +57,5 @@
             <orm:joins ref="address"/>
         </property>
     </properties>
-</class>
+</datagrid>
+

@@ -1,7 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:list="http://schemas.sulu.io/class/list"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
-
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <orm:joins name="address">
         <orm:join>
             <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
@@ -32,7 +32,7 @@
         </property>
 
         <property name="avatar" list:translation="public.avatar" visibility="always" list:type="thumbnails"
-                  list:sortable="false">
+            list:sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
 
@@ -45,8 +45,8 @@
         </property>
 
         <concatenation-property name="fullName" orm:glue=" " list:translation="public.name" list:type="string"
-                                list:sortable="false" list:width="100px" list:min-width="50px" list:editable="false"
-                                list:css-class="test-class">
+            list:sortable="false" list:width="100px" list:min-width="50px" list:editable="false"
+            list:css-class="test-class">
             <orm:field name="firstName">
                 <orm:field-name>firstName</orm:field-name>
                 <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
@@ -54,4 +54,4 @@
             <orm:field property-ref="lastName"/>
         </concatenation-property>
     </properties>
-</class>
+</datagrid>

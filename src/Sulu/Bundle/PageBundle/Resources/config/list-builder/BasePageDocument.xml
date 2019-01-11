@@ -1,6 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine"
-       xmlns:list="http://schemas.sulu.io/class/list">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+    xmlns:list="http://schemas.sulu.io/class/list"
+>
     <properties>
         <property
             name="id"
@@ -25,4 +26,4 @@
             list:translation="sulu_page.published"
         />
     </properties>
-</class>
+</datagrid>

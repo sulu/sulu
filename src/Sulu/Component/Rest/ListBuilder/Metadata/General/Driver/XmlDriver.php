@@ -54,7 +54,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/class/general');
         $xpath->registerNamespace('list', 'http://schemas.sulu.io/class/list');
 
-        foreach ($xpath->query('/x:class/x:properties/x:*') as $propertyNode) {
+        foreach ($xpath->query('/x:datagrid/x:properties/x:*') as $propertyNode) {
             $classMetadata->addPropertyMetadata($this->getPropertyMetadata($xpath, $propertyNode, $class->getName()));
         }
 

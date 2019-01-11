@@ -1,5 +1,6 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <properties>
         <case-property name="tag">
             <orm:field>
@@ -26,4 +27,5 @@
             </orm:field>
         </case-property>
     </properties>
-</class>
+</datagrid>
+

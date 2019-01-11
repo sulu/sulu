@@ -61,7 +61,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/class/general');
         $xpath->registerNamespace('orm', 'http://schemas.sulu.io/class/doctrine');
 
-        foreach ($xpath->query('/x:class/x:properties/x:*') as $propertyNode) {
+        foreach ($xpath->query('/x:datagrid/x:properties/x:*') as $propertyNode) {
             $propertyMetadata = $this->getPropertyMetadata($xpath, $propertyNode, $class->getName());
             if (null !== $propertyMetadata) {
                 $classMetadata->addPropertyMetadata($propertyMetadata);
@@ -244,7 +244,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) {
-            $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
+            $nodeList = $xpath->query(sprintf('/x:datagrid/x:properties/x:*[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
                 throw new \Exception(sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
@@ -281,7 +281,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) {
-            $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
+            $nodeList = $xpath->query(sprintf('/x:datagrid/orm:joins[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
                 throw new \Exception(sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));

@@ -1,4 +1,4 @@
-<class
+<datagrid
     xmlns="http://schemas.sulu.io/class/general"
     xmlns:list="http://schemas.sulu.io/class/list"
 >
@@ -18,4 +18,4 @@
             list:translation="sulu_admin.title"
         />
     </properties>
-</class>
+</datagrid>

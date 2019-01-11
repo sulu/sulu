@@ -1,6 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:list="http://schemas.sulu.io/class/list"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
     <orm:joins name="type">
         <orm:join>
             <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
@@ -63,8 +64,13 @@
             <orm:joins ref="collection"/>
         </property>
 
-        <property name="thumbnails" list:translation="sulu_media.thumbnail" visibility="always" list:type="thumbnails"
-                  list:sortable="false"/>
+        <property
+            name="thumbnails"
+            list:translation="sulu_media.thumbnail"
+            list:type="thumbnails"
+            list:sortable="false"
+            visibility="always"
+        />
         <property name="url" visibility="never"/>
 
         <property name="type" list:translation="sulu_media.type" visibility="always">
@@ -167,4 +173,4 @@
             <orm:joins ref="collection"/>
         </property>
     </properties>
-</class>
+</datagrid>

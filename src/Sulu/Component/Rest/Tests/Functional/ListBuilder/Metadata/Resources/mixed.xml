@@ -1,5 +1,5 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
         <property name="id">
             <orm:field-name>id</orm:field-name>
@@ -8,4 +8,5 @@
 
         <property name="name"/>
     </properties>
-</class>
+</datagrid>
+

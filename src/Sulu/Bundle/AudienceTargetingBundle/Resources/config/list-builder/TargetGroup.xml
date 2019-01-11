@@ -1,6 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine"
-       xmlns:list="http://schemas.sulu.io/class/list">
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+    xmlns:list="http://schemas.sulu.io/class/list"
+>
     <properties>
         <property name="id" filter-type="integer" list:translation="public.id" list:type="string">
             <orm:field-name>id</orm:field-name>
@@ -41,4 +42,4 @@
             </orm:joins>
         </group-concat-property>
     </properties>
-</class>
+</datagrid>

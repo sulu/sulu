@@ -1,5 +1,4 @@
-<class
-    xmlns="http://schemas.sulu.io/class/general"
+<datagrid xmlns="http://schemas.sulu.io/class/general"
     xmlns:orm="http://schemas.sulu.io/class/doctrine"
     xmlns:list="http://schemas.sulu.io/class/list"
 >
@@ -102,7 +101,7 @@
         </property>
 
         <identity-property name="accountId" visibility="never" filter-type="auto-complete"
-                  list:translation="sulu_contact.organization">
+            list:translation="sulu_contact.organization">
             <orm:field-name>account</orm:field-name>
             <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
 
@@ -118,8 +117,7 @@
             </filter-type-parameters>
         </identity-property>
 
-        <property name="city" visibility="always" filter-type="string"
-                  list:translation="sulu_contact.city">
+        <property name="city" visibility="always" filter-type="string" list:translation="sulu_contact.city">
             <orm:field-name>city</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
@@ -322,4 +320,4 @@
             </orm:joins>
         </property>
     </properties>
-</class>
+</datagrid>

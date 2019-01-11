@@ -1,7 +1,7 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine"
-       xmlns:list="http://schemas.sulu.io/class/list">
-
+<datagrid xmlns="http://schemas.sulu.io/class/general"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+    xmlns:list="http://schemas.sulu.io/class/list"
+>
     <orm:joins name="address">
         <orm:join>
             <orm:entity-name>SuluContactBundle:AccountAddress</orm:entity-name>
@@ -24,7 +24,10 @@
 
     <properties>
         <property name="logo" visibility="always"
-                  list:translation="sulu_contact.logo" list:type="thumbnails" list:sortable="false">
+            list:translation="sulu_contact.logo"
+            list:type="thumbnails"
+            list:sortable="false"
+        >
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
 
@@ -162,7 +165,7 @@
                 <parameter key="valueKey">name</parameter>
             </filter-type-parameters>
         </identity-property>
-        
+
         <concatenation-property
             name="mainContact"
             filter-type="string"
@@ -270,4 +273,4 @@
             </orm:joins>
         </group-concat-property>
     </properties>
-</class>
+</datagrid>

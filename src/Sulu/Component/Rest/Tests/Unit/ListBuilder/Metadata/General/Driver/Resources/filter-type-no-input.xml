@@ -1,4 +1,4 @@
-<class xmlns="http://schemas.sulu.io/class/general">
+<datagrid xmlns="http://schemas.sulu.io/class/general">
     <properties>
         <property name="tags">
             <filter-type-parameters>
@@ -7,4 +7,4 @@
             </filter-type-parameters>
         </property>
     </properties>
-</class>
+</datagrid>
