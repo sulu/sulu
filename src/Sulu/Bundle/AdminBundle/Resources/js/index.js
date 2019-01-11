@@ -197,7 +197,10 @@ function startApplication() {
         throw new Error('DOM element with ID "id" was not found!');
     }
 
-    render(<Application router={router} suluVersion={Config.suluVersion} />, applicationElement);
+    render(
+        <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} />,
+        applicationElement
+    );
 }
 
 startApplication();

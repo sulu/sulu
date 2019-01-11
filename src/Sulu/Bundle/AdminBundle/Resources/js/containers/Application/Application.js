@@ -19,6 +19,7 @@ import applicationStyles from './application.scss';
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
 type Props = {
+    appVersion: ?string,
     router: Router,
     suluVersion: string,
 };
@@ -105,7 +106,7 @@ export default class Application extends React.Component<Props> {
     };
 
     render() {
-        const {router, suluVersion} = this.props;
+        const {router, suluVersion, appVersion} = this.props;
         const {loggedIn} = userStore;
 
         const rootClass = classNames(
@@ -145,6 +146,7 @@ export default class Application extends React.Component<Props> {
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation
+                                appVersion={appVersion}
                                 onLogout={this.handleLogout}
                                 onNavigate={this.handleNavigate}
                                 onPinToggle={this.handlePinToggle}

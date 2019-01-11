@@ -9,6 +9,7 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
+    appVersion: ?string,
     pinned: boolean,
     router: Router,
     onNavigate: (route: string) => void,
@@ -65,10 +66,12 @@ export default class Navigation extends React.Component<Props> {
 
     render() {
         const {suluVersion} = this.props;
+        const {appVersion} = this.props;
         const navigationItems = navigationRegistry.getAll();
 
         return (
             <NavigationComponent
+                appVersion={appVersion}
                 onLogoutClick={this.props.onLogout}
                 onPinToggle={this.handlePinToggle}
                 onProfileClick={this.handleProfileEditClick}

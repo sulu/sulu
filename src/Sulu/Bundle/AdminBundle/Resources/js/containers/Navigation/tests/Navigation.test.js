@@ -69,6 +69,35 @@ test('Should render navigation', () => {
 
     const navigation = render(
         <Navigation
+            appVersion="666"
+            onLogout={jest.fn()}
+            onNavigate={jest.fn()}
+            onPinToggle={jest.fn()}
+            pinned={false}
+            router={router}
+            suluVersion="2.0.0-RC1"
+        />
+    );
+
+    expect(navigation).toMatchSnapshot();
+});
+
+test('Should render navigation without appVersion', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'sulu_admin.form_tab',
+        view: 'form_tab',
+        attributeDefaults: {},
+        children: [],
+        options: {},
+        parent: undefined,
+        path: '/form',
+        rerenderAttributes: [],
+    };
+
+    const navigation = render(
+        <Navigation
+            appVersion={null}
             onLogout={jest.fn()}
             onNavigate={jest.fn()}
             onPinToggle={jest.fn()}
@@ -98,6 +127,7 @@ test('Should call the navigation callback, pin callback and router navigate', ()
 
     const navigation = mount(
         <Navigation
+            appVersion={null}
             onLogout={jest.fn()}
             onNavigate={handleNavigate}
             onPinToggle={handlePin}

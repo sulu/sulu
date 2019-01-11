@@ -135,6 +135,11 @@ class AdminControllerTest extends TestCase
     private $suluVersion = '2.0.0-RC1';
 
     /**
+     * @var string
+     */
+    private $appVersion = '666';
+
+    /**
      * @var array
      */
     private $locales = ['de', 'en'];
@@ -205,6 +210,7 @@ class AdminControllerTest extends TestCase
             $this->dataProviderPool->reveal(),
             $this->environment,
             $this->suluVersion,
+            $this->appVersion,
             $this->locales,
             $this->translations,
             $this->fallbackLocale,
