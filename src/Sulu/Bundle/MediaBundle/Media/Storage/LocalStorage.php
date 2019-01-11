@@ -16,7 +16,6 @@ use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Tests\Logger;
 
 class LocalStorage implements StorageInterface
 {
@@ -36,9 +35,9 @@ class LocalStorage implements StorageInterface
     private $filesystem;
 
     /**
-     * @var NullLogger|Logger
+     * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     public function __construct(
         string $uploadPath,

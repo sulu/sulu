@@ -10,8 +10,8 @@
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
-            <argument type="service" id="logger" />
             <argument type="service" id="sulu_snippet.import.webspace.xliff12" />
+            <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
         <service id="sulu_snippet.import.webspace.xliff12" class="Sulu\Component\Import\Format\Xliff12">

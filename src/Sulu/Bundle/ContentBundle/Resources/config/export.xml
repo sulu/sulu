@@ -34,8 +34,8 @@
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_content.import.manager" />
-            <argument type="service" id="logger" />
             <argument type="service" id="sulu_content.import.webspace.xliff12" />
+            <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
         <service id="sulu_content.import.webspace.xliff12" class="Sulu\Component\Import\Format\Xliff12">

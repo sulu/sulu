@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
-use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -41,11 +40,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     private $contentQueryBuilder;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var ReferenceStoreInterface
      */
     private $referenceStore;
@@ -59,13 +53,11 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
-        LoggerInterface $logger,
         $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
-        $this->logger = $logger;
         $this->showDrafts = $showDrafts;
     }
 
@@ -156,7 +148,6 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
             $this->contentQueryExecutor,
             $this->contentQueryBuilder,
             array_merge($this->getDefaultParams(), $property->getParams()),
-            $this->logger,
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
             $this->showDrafts

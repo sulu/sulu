@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -44,14 +45,14 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $factory;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var array
      */
     protected $thumbnailMimeTypes;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @param MediaManagerInterface $mediaManager
@@ -63,15 +64,15 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     public function __construct(
         MediaManagerInterface $mediaManager,
         Factory $factory,
-        LoggerInterface $logger,
         $thumbnailMimeTypes,
-        $searchImageFormat
+        $searchImageFormat,
+        LoggerInterface $logger = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->factory = $factory;
         $this->searchImageFormat = $searchImageFormat;
         $this->thumbnailMimeTypes = $thumbnailMimeTypes;
-        $this->logger = $logger;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**

@@ -163,9 +163,7 @@
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
             <argument>%sulu_media.format_manager.mime_types%</argument>
-            <call method="setLogger">
-                <argument type="service" id="logger"/>
-            </call>
+            <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">

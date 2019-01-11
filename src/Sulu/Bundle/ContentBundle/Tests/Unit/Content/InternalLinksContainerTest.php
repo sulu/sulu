@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
@@ -47,7 +46,6 @@ class InternalLinksContainerTest extends TestCase
             $this->executor->reveal(),
             $this->builder->reveal(),
             [],
-            new NullLogger(),
             'default',
             'en',
             true
@@ -68,7 +66,6 @@ class InternalLinksContainerTest extends TestCase
             $this->executor->reveal(),
             $this->builder->reveal(),
             [],
-            new NullLogger(),
             'default',
             'en',
             false
@@ -93,7 +90,6 @@ class InternalLinksContainerTest extends TestCase
             $this->executor->reveal(),
             $this->builder->reveal(),
             [],
-            new NullLogger(),
             'default',
             'en',
             false

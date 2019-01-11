@@ -2,6 +2,19 @@
 
 ## dev-develop
 
+### Logger is optional
+
+As the logger is now optional in the following services the constructor changed:
+
+ - `sulu.content.type.internal_links`
+ - `sulu_content.compat.structure.legacy_property_factory`
+ - `sulu_content.node_repository`
+ - `sulu_media.search.subscriber.media`
+ - `sulu_media.format_manager`
+ - `sulu_media.storage.local`
+ - `sulu_snippet.import.snippet`
+ - `sulu_website.twig.content`
+
 ### TagBundle services changed
 
 Following Services changed:

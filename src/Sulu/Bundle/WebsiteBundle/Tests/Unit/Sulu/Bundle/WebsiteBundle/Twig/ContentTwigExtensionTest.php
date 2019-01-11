@@ -103,6 +103,11 @@ class ContentTwigExtensionTest extends TestCase
      */
     private $logger;
 
+    /**
+     * @var ContentTwigExtension
+     */
+    private $extension;
+
     protected function setUp()
     {
         parent::setUp();
@@ -149,6 +154,13 @@ class ContentTwigExtensionTest extends TestCase
             $this->contentTypeManager->reveal(),
             $this->extensionManager->reveal()
         );
+
+        $this->extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver,
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
     }
 
     public function testLoad()
@@ -158,15 +170,7 @@ class ContentTwigExtensionTest extends TestCase
             ->load('123-123-123', 'sulu_test', 'en_us')
             ->willReturn(new TestStructure('123-123-123', 'test', 1));
 
-        $extension = new ContentTwigExtension(
-            $this->contentMapper->reveal(),
-            $this->structureResolver,
-            $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->logger->reveal()
-        );
-
-        $result = $extension->load('123-123-123');
+        $result = $this->extension->load('123-123-123');
 
         // uuid
         $this->assertEquals('123-123-123', $result['uuid']);
@@ -187,15 +191,7 @@ class ContentTwigExtensionTest extends TestCase
             ->load(Argument::cetera())
             ->shouldNotBeCalled();
 
-        $extension = new ContentTwigExtension(
-            $this->contentMapper->reveal(),
-            $this->structureResolver,
-            $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->logger->reveal()
-        );
-
-        $this->assertNull($extension->load(null));
+        $this->assertNull($this->extension->load(null));
     }
 
     public function testLoadNotExistingDocument()
@@ -208,15 +204,7 @@ class ContentTwigExtensionTest extends TestCase
             ->load(Argument::cetera())
             ->willThrow($documentNotFoundException->reveal());
 
-        $extension = new ContentTwigExtension(
-            $this->contentMapper->reveal(),
-            $this->structureResolver,
-            $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->logger->reveal()
-        );
-
-        $this->assertNull($extension->load('999-999-999'));
+        $this->assertNull($this->extension->load('999-999-999'));
     }
 
     public function testLoadParent()
@@ -226,15 +214,7 @@ class ContentTwigExtensionTest extends TestCase
             ->load('321-321-321', 'sulu_test', 'en_us')
             ->willReturn(new TestStructure('321-321-321', 'test', 1));
 
-        $extension = new ContentTwigExtension(
-            $this->contentMapper->reveal(),
-            $this->structureResolver,
-            $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->logger->reveal()
-        );
-
-        $result = $extension->loadParent('123-123-123');
+        $result = $this->extension->loadParent('123-123-123');
 
         // uuid
         $this->assertEquals('321-321-321', $result['uuid']);
@@ -255,14 +235,6 @@ class ContentTwigExtensionTest extends TestCase
             'Parent for "321-321-321" not found (perhaps it is the startpage?)'
         );
 
-        $extension = new ContentTwigExtension(
-            $this->contentMapper->reveal(),
-            $this->structureResolver,
-            $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->logger->reveal()
-        );
-
-        $extension->loadParent('321-321-321');
+        $this->extension->loadParent('321-321-321');
     }
 }
