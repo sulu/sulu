@@ -192,13 +192,12 @@ class PreviewRenderer implements PreviewRendererInterface
         try {
             $response = $this->handle($request);
         } catch (\Twig_Error $e) {
-            
             // dev/test only: display also the file and line which was causing the error 
             // for better debugging and faster development
             if (in_array($this->environment, ['dev', 'test'])) {
                 $e->appendMessage(' (' . $e->getFile() . ' line ' . $e->getLine() . ')');
             }
-            
+
             throw new TwigException($e, $object, $id, $webspace, $locale);
         } catch (\InvalidArgumentException $e) {
             throw new TemplateNotFoundException($e, $object, $id, $webspace, $locale);
