@@ -22,6 +22,7 @@ type Props = {
     appVersion: ?string,
     router: Router,
     suluVersion: string,
+    title: ?string,
 };
 
 type NavigationState = 'pinned' | 'hidden' | 'visible';
@@ -106,7 +107,7 @@ export default class Application extends React.Component<Props> {
     };
 
     render() {
-        const {router, suluVersion, appVersion} = this.props;
+        const {appVersion, router, suluVersion, title} = this.props;
         const {loggedIn} = userStore;
 
         const rootClass = classNames(
@@ -153,6 +154,7 @@ export default class Application extends React.Component<Props> {
                                 pinned={this.navigationPinned}
                                 router={router}
                                 suluVersion={suluVersion}
+                                title={title}
                             />
                         </nav>
                         <div className={contentClass}>

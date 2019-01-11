@@ -21,6 +21,7 @@ type Props = {
     suluVersionLink: string,
     appVersion: ?string,
     appVersionLink?: string,
+    title?: string,
 };
 
 @observer

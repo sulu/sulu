@@ -125,6 +125,11 @@ class AdminController
     private $appVersion;
 
     /**
+     * @var string|null
+     */
+    private $title;
+
+    /**
      * @var array
      */
     private $locales;
@@ -167,6 +172,7 @@ class AdminController
         string $environment,
         string $suluVersion,
         ?string $appVersion,
+        ?string $title,
         array $locales,
         array $translations,
         string $fallbackLocale,
@@ -190,6 +196,7 @@ class AdminController
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
         $this->appVersion = $appVersion;
+        $this->title = $title;
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
@@ -214,11 +221,12 @@ class AdminController
         return $this->engine->renderResponse(
             'SuluAdminBundle:Admin:main.html.twig',
             [
-                'translations' => $this->translations,
-                'fallback_locale' => $this->fallbackLocale,
-                'endpoints' => $endpoints,
-                'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
+                'endpoints' => $endpoints,
+                'fallback_locale' => $this->fallbackLocale,
+                'sulu_version' => $this->suluVersion,
+                'title' => $this->title,
+                'translations' => $this->translations,
             ]
         );
     }

@@ -7,19 +7,20 @@
         <link rel="stylesheet" href="{{ preload(asset('main.css', 'sulu_admin'), {as: 'style'}) }}">
     </head>
     <body>
-        <div id="application">
-        </div>
+    <div id="application">
         <script type="text/javascript">
             {% autoescape false %}
             const SULU_CONFIG = Object.freeze({
-                translations: {{ translations|json_encode }},
-                fallbackLocale: '{{ fallback_locale }}',
+                appVersion: '{{ app_version }}',
                 endpoints: {{ endpoints|json_encode }},
+                fallbackLocale: '{{ fallback_locale }}',
                 suluVersion: '{{ sulu_version }}',
-                appVersion: '{{ app_version }}'
+                title: '{{ title }}',
+                translations: {{ translations|json_encode }},
             });
             {% endautoescape %}
         </script>
+    </div>
         <script src="{{ preload(asset('main.js', 'sulu_admin'), {as: 'script'})}}"></script>
     </body>
 </html>

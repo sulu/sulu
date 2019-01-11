@@ -27,8 +27,9 @@ class SuluVersionPass implements CompilerPassInterface
     {
         $dir = realpath($container->getParameter('kernel.project_dir'));
 
-        $container->setParameter('sulu.version', $this->getSuluVersion($dir));
         $container->setParameter('app.version', $this->getAppVersion($dir));
+        $container->setParameter('sulu.version', $this->getSuluVersion($dir));
+        $container->setParameter('title', $this->getTitle($dir));
     }
 
     /**
@@ -59,13 +60,39 @@ class SuluVersionPass implements CompilerPassInterface
     }
 
     /**
-     * Read composer.json file and return version of app.
+     * Get version from composer file.
      *
      * @param string $dir
      *
-     * @return string
+     * @return string|null
      */
     private function getAppVersion($dir)
+    {
+        $key = 'version';
+        return $this->getValueByKeyFromComposerJson($dir, $key);
+    }
+
+    /**
+     * Get title from composer file.
+     *
+     * @param string $dir
+     *
+     * @return string|null
+     */
+    private function getTitle($dir)
+    {
+        $key = 'title';
+        return $this->getValueByKeyFromComposerJson($dir, $key);
+    }
+
+    /**
+     * Read composer.json file and return version of app.
+     *
+     * @param $dir
+     * @param string $key
+     * @return string|null
+     */
+    private function getValueByKeyFromComposerJson($dir, string $key)
     {
         $version = null;
 
@@ -76,10 +103,10 @@ class SuluVersionPass implements CompilerPassInterface
         }
 
         $composerJson = json_decode($composerFile->getContents(), true);
-        if (!array_key_exists('version', $composerJson)) {
+        if (!array_key_exists($key, $composerJson)) {
             return $version;
         }
 
-        return $composerJson['version'];
+        return $composerJson[$key];
     }
 }

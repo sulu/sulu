@@ -198,7 +198,7 @@ function startApplication() {
     }
 
     render(
-        <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} />,
+        <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} title={Config.title} />,
         applicationElement
     );
 }

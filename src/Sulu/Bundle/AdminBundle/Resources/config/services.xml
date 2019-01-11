@@ -26,6 +26,7 @@
             <argument>%kernel.environment%</argument>
             <argument>%sulu.version%</argument>
             <argument>%app.version%</argument>
+            <argument>%title%</argument>
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>
