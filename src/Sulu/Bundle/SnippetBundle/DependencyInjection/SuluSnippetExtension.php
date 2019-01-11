@@ -31,6 +31,11 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'snippet' => [

@@ -90,6 +90,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'resources' => [
                         'media' => [
                             'datagrid' => '%sulu.model.media.class%',

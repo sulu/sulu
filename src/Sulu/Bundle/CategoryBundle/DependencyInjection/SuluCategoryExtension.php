@@ -97,6 +97,11 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'resources' => [
                         'categories' => [
                             'datagrid' => '%sulu.model.category.class%',

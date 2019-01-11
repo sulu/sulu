@@ -81,6 +81,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'resources' => [
                         'contacts' => [
                             'datagrid' => '%sulu.model.contact.class%',

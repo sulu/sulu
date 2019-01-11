@@ -385,6 +385,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      *
      * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
+     *
+     * TODO remove
      */
     private function initListBuilder(ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {

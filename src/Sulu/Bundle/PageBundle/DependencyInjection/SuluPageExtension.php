@@ -39,6 +39,11 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'internal_links' => [

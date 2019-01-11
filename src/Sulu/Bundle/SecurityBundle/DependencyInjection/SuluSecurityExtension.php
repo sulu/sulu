@@ -91,6 +91,11 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'resources' => [
                         'roles' => [
                             'datagrid' => '%sulu.model.role.class%',
