@@ -117,6 +117,7 @@ class CategoryAdmin extends Admin
                 ->setResourceKey('categories')
                 ->addLocales($locales)
                 ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
                 ->setResourceKey('categories')

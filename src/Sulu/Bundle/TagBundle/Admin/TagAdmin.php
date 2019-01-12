@@ -93,6 +93,7 @@ class TagAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
                 ->setResourceKey('tags')
                 ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.details', '/details')
                 ->setResourceKey('tags')

@@ -141,6 +141,7 @@ class SnippetAdmin extends Admin
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
                 ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setTitleProperty('title')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.details', '/details')
                 ->setResourceKey('snippets')

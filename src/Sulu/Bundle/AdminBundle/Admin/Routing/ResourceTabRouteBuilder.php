@@ -48,6 +48,13 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
         return $this;
     }
 
+    public function setTitleProperty(string $titleProperty): ResourceTabRouteBuilderInterface
+    {
+        $this->route->setOption('titleProperty', $titleProperty);
+
+        return $this;
+    }
+
     public function getRoute(): Route
     {
         if (!$this->route->getOption('resourceKey')) {

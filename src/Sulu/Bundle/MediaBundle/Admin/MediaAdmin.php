@@ -102,6 +102,7 @@ class MediaAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
                 ->setResourceKey('media')
                 ->addLocales($mediaLocales)
+                ->setTitleProperty('title')
                 ->getRoute(),
             (new Route(static::EDIT_FORM_DETAILS_ROUTE, '/details', 'sulu_media.details'))
                 ->setOption('tabTitle', 'sulu_media.information_taxonomy')
