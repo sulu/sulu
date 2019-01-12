@@ -12,6 +12,7 @@ import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {
     locales?: Array<string>,
+    titleProperty?: string,
 };
 
 @observer
@@ -70,6 +71,19 @@ export default class ResourceTabs extends React.Component<Props> {
         } = this.props;
 
         return routeLocales ? routeLocales : propsLocales;
+    }
+
+    @computed get title() {
+        const {
+            route: {
+                options: {
+                    titleProperty: routeTitleProperty,
+                },
+            },
+            titleProperty,
+        } = this.props;
+
+        return this.resourceStore.data[titleProperty || routeTitleProperty];
     }
 
     @computed get visibleTabRoutes(): Array<Object> {
@@ -190,6 +204,7 @@ export default class ResourceTabs extends React.Component<Props> {
                             );
                         })}
                     </Tabs>
+                    {selectedRouteIndex !== 0 && <h2>{this.title}</h2>}
                     {ChildComponent}
                 </Fragment>
             )

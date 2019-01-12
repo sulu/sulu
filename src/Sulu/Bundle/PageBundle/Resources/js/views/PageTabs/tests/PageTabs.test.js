@@ -13,7 +13,7 @@ jest.mock('sulu-admin-bundle/views', () => ({
     ResourceTabs: jest.fn(() => null),
 }));
 
-test('Load webspace and pass locales to ResourceTabs component', () => {
+test('Pass locales from webspace and titleProperty to ResourceTabs component', () => {
     const webspace = {
         allLocalizations: [
             {name: 'en'},
@@ -43,5 +43,6 @@ test('Load webspace and pass locales to ResourceTabs component', () => {
     return webspacePromise.then(() => {
         pageTabs.update();
         expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual(['en', 'de']);
+        expect(pageTabs.find(ResourceTabs).prop('titleProperty')).toEqual('title');
     });
 });
