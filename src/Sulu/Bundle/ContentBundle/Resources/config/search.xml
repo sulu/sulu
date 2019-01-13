@@ -20,10 +20,12 @@
             <tag name="massive_search.metadata.provider" />
         </service>
 
-        <!-- Blame and Timestamp subscriber -->
         <service id="sulu_content.search.event_subscriber.blame_timestamp" class="%sulu_content.search.event_subscriber.blame_timestamp.class%">
             <argument type="service" id="massive_search.factory" />
-            <argument type="service" id="doctrine.orm.entity_manager" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_content.search.event_subscriber.author" class="Sulu\Bundle\ContentBundle\Search\EventSubscriber\AuthorSubscriber">
             <tag name="kernel.event_subscriber" />
         </service>
 
