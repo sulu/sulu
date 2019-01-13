@@ -22,7 +22,7 @@ type Props = {|
     skin: 'default' | 'round',
     uploadText?: ?string,
     hasError ?: ?boolean,
-    errorMessage?: ?string,    
+    errorMessage?: ?string,
 |};
 
 @observer
@@ -30,12 +30,12 @@ export default class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         emptyIcon: 'su-image',
+        errorMessage: '',
+        hasError: false,
         mimeType: '',
         progress: 0,
         skin: 'default',
         uploading: false,
-        hasError: false,
-        errorMessage: '',    
     };
 
     @observable uploadIndicatorVisibility: boolean;
@@ -124,10 +124,10 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                                     <div className={singleMediaDropzoneStyles.errorInfoText}>{errorMessage}</div>
                                 }
                             </div>
-                        </div>                    
+                        </div>
                     </div>
                 }
-                
+
                 {!uploading
                     ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>

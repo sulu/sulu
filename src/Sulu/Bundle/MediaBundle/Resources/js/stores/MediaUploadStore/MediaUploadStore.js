@@ -3,9 +3,8 @@ import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import {buildQueryString} from 'sulu-admin-bundle/utils';
+import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
 import type {Media} from '../../types';
-import {translate} from 'sulu-admin-bundle/utils';
 
 const RESOURCE_KEY = 'media';
 
@@ -133,9 +132,9 @@ export default class MediaUploadStore {
 
     /**
      * Handle upload errors
-     * 
+     *
      * Trigger an error message and reset upload indicators
-     * 
+     *
      * @param  error Exception from XHR promise
      * @throws Error Including translated error message based on status code
      */
@@ -143,10 +142,10 @@ export default class MediaUploadStore {
         this.setUploading(false);
         this.setProgress(0);
 
-        let statusCode = error.status;
+        const statusCode = error.status;
         throw new Error(translate('sulu_media.error_' + statusCode));
     };
-  
+
     upload(file: File, url: string): Promise<*> {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -155,24 +154,24 @@ export default class MediaUploadStore {
             xhr.open('POST', url);
 
             xhr.onload = (event: any) => {
-                let uploadStatus = parseInt(event.target.status);
+                const uploadStatus = parseInt(event.target.status);
                 if (uploadStatus >= 200 && uploadStatus < 300) {
                     resolve(JSON.parse(event.target.response));
                 } else {
-                    // reject if HTTP status isn't 2xx  
+                    // reject if HTTP status isn't 2xx
                     reject({
                         status: uploadStatus,
-                        statusText: event.target.response
+                        statusText: event.target.response,
                     });
                 }
             };
-          
-            xhr.onerror = (event: any) => {
+
+            xhr.onerror = () => {
                 reject({
                     status: 'general',
-                    statusText: 'Unknown error'
+                    statusText: 'Unknown error',
                 });
-            }
+            };
 
             if (xhr.upload) {
                 xhr.upload.onprogress = (event) => this.setProgress(event.loaded / event.total * 100);

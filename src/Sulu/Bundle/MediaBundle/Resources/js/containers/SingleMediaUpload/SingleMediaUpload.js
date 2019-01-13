@@ -36,6 +36,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
     @observable hasError: boolean = false;
     @observable errorMessage: string = '';
 
+
     constructor(props: Props) {
         super(props);
 
@@ -94,16 +95,16 @@ export default class SingleMediaUpload extends React.Component<Props> {
     @action showErrorMessage = (error: any) => {
         this.hasError = true;
         this.errorMessage = error.toString();
-    }
+    };
 
     @action callUploadComplete = (media: Object) => {
-        const { onUploadComplete } = this.props;
-        
+        const {onUploadComplete} = this.props;
+
         if (onUploadComplete) {
             // reset error message if present
             this.hasError = false;
             this.errorMessage = '';
-          
+
             onUploadComplete(media);
         }
     };
@@ -131,6 +132,8 @@ export default class SingleMediaUpload extends React.Component<Props> {
                 <SingleMediaDropzone
                     disabled={disabled}
                     emptyIcon={emptyIcon}
+                    errorMessage={this.errorMessage}
+                    hasError={this.hasError}
                     image={mediaUploadStore.getThumbnail(imageSize)}
                     mimeType={mimeType}
                     onDrop={this.handleMediaDrop}
@@ -138,8 +141,6 @@ export default class SingleMediaUpload extends React.Component<Props> {
                     skin={skin}
                     uploading={uploading}
                     uploadText={uploadText}
-                    hasError={this.hasError}
-                    errorMessage={this.errorMessage}
                 />
                 {mediaUploadStore.id && !disabled &&
                     <div className={singleMediaUploadStyles.buttons}>
