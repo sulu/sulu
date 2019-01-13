@@ -29,10 +29,12 @@ $errorIndicatorBackgroundColor: $persianRed;
             opacity: 1;
             transform: scale(1);
         }
+
         .error-indicator {
             opacity: 0;
             transform: scale(1);
-        }          
+        }
+
     }
 
     &::after {
