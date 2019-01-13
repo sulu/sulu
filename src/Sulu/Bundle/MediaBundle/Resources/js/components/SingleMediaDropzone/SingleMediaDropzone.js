@@ -9,6 +9,7 @@ import MimeTypeIndicator from '../MimeTypeIndicator';
 import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
 const UPLOAD_ICON = 'fa-cloud-upload';
+const ERROR_ICON = 'su-exclamation-triangle';
 
 type Props = {|
     disabled: boolean,
@@ -20,6 +21,8 @@ type Props = {|
     onDrop: (data: File) => void,
     skin: 'default' | 'round',
     uploadText?: ?string,
+    hasError ?: ?boolean,
+    errorMessage?: ?string,    
 |};
 
 @observer
@@ -31,12 +34,19 @@ export default class SingleMediaDropzone extends React.Component<Props> {
         progress: 0,
         skin: 'default',
         uploading: false,
+        hasError: false,
+        errorMessage: '',    
     };
 
     @observable uploadIndicatorVisibility: boolean;
+    @observable errorMessageVisibility: boolean;
 
     @action setUploadIndicatorVisibility(visibility: boolean) {
         this.uploadIndicatorVisibility = visibility;
+    }
+
+    @action setErrorMessageVisibility(visibility: boolean) {
+        this.errorMessageVisibility = visibility;
     }
 
     handleDrop = (files: Array<File>) => {
@@ -44,14 +54,17 @@ export default class SingleMediaDropzone extends React.Component<Props> {
 
         this.props.onDrop(file);
         this.setUploadIndicatorVisibility(false);
+        this.setErrorMessageVisibility(false);
     };
 
     handleDragEnter = () => {
         this.setUploadIndicatorVisibility(true);
+        this.setErrorMessageVisibility(false);
     };
 
     handleDragLeave = () => {
         this.setUploadIndicatorVisibility(false);
+        this.setErrorMessageVisibility(false);
     };
 
     render() {
@@ -64,6 +77,8 @@ export default class SingleMediaDropzone extends React.Component<Props> {
             skin,
             uploading,
             uploadText,
+            hasError,
+            errorMessage,
         } = this.props;
 
         const mediaContainerClass = classNames(
@@ -71,6 +86,7 @@ export default class SingleMediaDropzone extends React.Component<Props> {
             singleMediaDropzoneStyles[skin],
             {
                 [singleMediaDropzoneStyles.showUploadIndicator]: this.uploadIndicatorVisibility,
+                [singleMediaDropzoneStyles.showErrorIndicator]: this.errorMessageVisibility,
                 [singleMediaDropzoneStyles.disabled]: disabled,
             }
         );
@@ -99,6 +115,19 @@ export default class SingleMediaDropzone extends React.Component<Props> {
                     </div>
                 }
 
+                {hasError && !uploading &&
+                    <div className={singleMediaDropzoneStyles.errorIndicatorContainer}>
+                        <div className={singleMediaDropzoneStyles.errorIndicator}>
+                            <div>
+                                <Icon className={singleMediaDropzoneStyles.errorIcon} name={ERROR_ICON} />
+                                {errorMessage &&
+                                    <div className={singleMediaDropzoneStyles.errorInfoText}>{errorMessage}</div>
+                                }
+                            </div>
+                        </div>                    
+                    </div>
+                }
+                
                 {!uploading
                     ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
                         <div className={singleMediaDropzoneStyles.uploadIndicator}>

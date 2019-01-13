@@ -33,6 +33,8 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
     @observable showDeleteDialog: boolean = false;
     @observable deleting: boolean = false;
+    @observable hasError: boolean = false;
+    @observable errorMessage: string = '';
 
     constructor(props: Props) {
         super(props);
@@ -55,10 +57,12 @@ export default class SingleMediaUpload extends React.Component<Props> {
 
         if (mediaUploadStore.id) {
             mediaUploadStore.update(file)
-                .then(this.callUploadComplete);
+                .then(this.callUploadComplete)
+                .catch(this.showErrorMessage);
         } else if (collectionId) {
             mediaUploadStore.create(collectionId, file)
-                .then(this.callUploadComplete);
+                .then(this.callUploadComplete)
+                .catch(this.showErrorMessage);
         }
     };
 
@@ -84,10 +88,22 @@ export default class SingleMediaUpload extends React.Component<Props> {
             }));
     };
 
-    callUploadComplete = (media: Object) => {
-        const {onUploadComplete} = this.props;
+    /**
+     * Set Dropzone to error-mode if upload fails
+     */
+    @action showErrorMessage = (error: any) => {
+        this.hasError = true;
+        this.errorMessage = error.toString();
+    }
 
+    @action callUploadComplete = (media: Object) => {
+        const { onUploadComplete } = this.props;
+        
         if (onUploadComplete) {
+            // reset error message if present
+            this.hasError = false;
+            this.errorMessage = '';
+          
             onUploadComplete(media);
         }
     };
@@ -122,6 +138,8 @@ export default class SingleMediaUpload extends React.Component<Props> {
                     skin={skin}
                     uploading={uploading}
                     uploadText={uploadText}
+                    hasError={this.hasError}
+                    errorMessage={this.errorMessage}
                 />
                 {mediaUploadStore.id && !disabled &&
                     <div className={singleMediaUploadStyles.buttons}>

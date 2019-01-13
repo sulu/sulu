@@ -1,5 +1,7 @@
 CHANGELOG for Sulu
 ==================
+* 2.0.0-alpha4
+    * BUGFIX      #4297 [MediaBundle]           Fix unhandled server errors on media upload for SingleMediaDropzone
 
 * 1.6.24 (2019-01-09)
     * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2

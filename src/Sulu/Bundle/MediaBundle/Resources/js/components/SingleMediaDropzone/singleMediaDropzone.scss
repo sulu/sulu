@@ -7,6 +7,8 @@ $mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because ca
 $imageBorderColor: $silver;
 $emptyBackgroundColor: $white;
 $emptyColor: $alto;
+$errorColor: $white;
+$errorIndicatorBackgroundColor: $persianRed;
 
 .media-container {
     position: relative;
@@ -27,6 +29,10 @@ $emptyColor: $alto;
             opacity: 1;
             transform: scale(1);
         }
+        .error-indicator {
+            opacity: 0;
+            transform: scale(1);
+        }          
     }
 
     &::after {
@@ -50,7 +56,8 @@ $emptyColor: $alto;
 }
 
 .progressbar,
-.upload-indicator-container {
+.upload-indicator-container,
+.error-indicator-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -61,7 +68,8 @@ $emptyColor: $alto;
     align-items: center;
 }
 
-.upload-indicator {
+.upload-indicator,
+.error-indicator {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,6 +81,12 @@ $emptyColor: $alto;
     opacity: 0;
     transform: scale(.5);
     transition: all .25s cubic-bezier(.68, -.55, .265, 1.55);
+}
+
+.error-indicator {
+    opacity: 1;
+    transform: scale(1);
+    background-color: $errorIndicatorBackgroundColor;
 }
 
 .mime-type-indicator,
@@ -93,16 +107,31 @@ $emptyColor: $alto;
     font-size: 120px;
 }
 
+.error-indicator {
+    color: $errorColor;
+}
+
 .upload-icon {
     font-size: 45px;
     color: $uploadIconColor;
 }
 
-.upload-info-text {
+.error-icon {
+    font-size: 65px;
+    color: $errorColor;
+}
+
+.upload-info-text,
+.error-info-text {
     color: $uploadInfoTextColor;
     font-size: 14px;
     margin-top: 20px;
     padding: 0 20px;
+}
+
+.error-info-text {
+    color: $errorColor;
+    text-align: center;
 }
 
 .thumbnail {
