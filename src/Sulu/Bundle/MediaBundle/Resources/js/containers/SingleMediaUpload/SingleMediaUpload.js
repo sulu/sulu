@@ -36,7 +36,6 @@ export default class SingleMediaUpload extends React.Component<Props> {
     @observable hasError: boolean = false;
     @observable errorMessage: string = '';
 
-
     constructor(props: Props) {
         super(props);
 
