@@ -7,6 +7,7 @@ import MediaUploadStore from '../MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     buildQueryString: jest.fn(),
+    translate: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/services', () => ({
