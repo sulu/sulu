@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\Form;
 
-use Sulu\Bundle\ContentBundle\Form\Type\AbstractStructureBehaviorType;
-use Sulu\Bundle\ContentBundle\Form\Type\UnstructuredType;
+use Sulu\Bundle\PageBundle\Form\Type\UnstructuredType;
+use Sulu\Bundle\PageBundle\Form\Type\AbstractStructureBehaviorType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

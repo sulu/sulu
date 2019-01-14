@@ -19,7 +19,7 @@ use JMS\Serializer\VisitorInterface;
 use Metadata\MetadataFactoryInterface;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Serializer\PageBridgeHandler;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;

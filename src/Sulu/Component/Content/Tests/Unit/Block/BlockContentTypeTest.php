@@ -15,7 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\PageBundle\Content\Types\SingleInternalLink;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;

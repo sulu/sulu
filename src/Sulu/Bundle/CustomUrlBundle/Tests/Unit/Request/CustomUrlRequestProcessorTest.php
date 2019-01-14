@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Request;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;

@@ -15,7 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\Util\PathHelper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;

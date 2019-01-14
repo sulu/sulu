@@ -184,7 +184,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithPreviewCondition()
     {
-        $route = (new FormRouteBuilder('sulu_content.page_edit_form.detail', '/pages/:id/details'))
+        $route = (new FormRouteBuilder('sulu_page.page_edit_form.detail', '/pages/:id/details'))
             ->setResourceKey('pages')
             ->setFormKey('pages')
             ->setPreviewCondition('nodeType == 1')

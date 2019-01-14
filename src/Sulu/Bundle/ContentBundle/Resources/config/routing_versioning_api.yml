@@ -1,4 +1,0 @@
-sulu_content.node.versions:
-    type: rest
-    parent: sulu_content.node
-    resource: Sulu\Bundle\ContentBundle\Controller\VersionController

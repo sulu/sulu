@@ -1,4 +1,4 @@
 sulu_custom_urls:
     type: rest
-    parent: sulu_content.webspace
+    parent: sulu_page.webspace
     resource: Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlController

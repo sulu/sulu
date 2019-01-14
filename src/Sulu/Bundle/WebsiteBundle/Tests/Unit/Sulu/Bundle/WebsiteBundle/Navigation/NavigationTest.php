@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -77,7 +77,7 @@ class NavigationTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
-        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
+        $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->languageNamespace = 'i18n';
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');

@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_snippet.export.snippet.formats" type="collection">
-            <parameter key="1.2.xliff">SuluContentBundle:Export:Snippet/1.2.xliff.twig</parameter>
+            <parameter key="1.2.xliff">SuluPageBundle:Export:Snippet/1.2.xliff.twig</parameter>
         </parameter>
     </parameters>
 
@@ -14,7 +14,7 @@
             <argument type="service" id="sulu_snippet.repository" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu_content.export.manager" />
+            <argument type="service" id="sulu_page.export.manager" />
             <argument>%sulu_snippet.export.snippet.formats%</argument>
         </service>
     </services>

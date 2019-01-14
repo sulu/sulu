@@ -15,7 +15,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
-use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Repository\Content;
@@ -87,7 +87,7 @@ class SecuritySubscriber implements EventSubscriberInterface
             '_permissions',
             $this->accessControlManager->getUserPermissionByArray(
                 $document->getLocale(),
-                ContentAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
+                PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
                 $document->getPermissions(),
                 $this->tokenStorage->getToken()->getUser()
             )

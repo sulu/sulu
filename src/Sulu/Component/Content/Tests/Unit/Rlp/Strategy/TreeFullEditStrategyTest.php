@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;

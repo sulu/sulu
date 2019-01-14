@@ -14,8 +14,8 @@
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
-        "sulu-content-bundle": "file:src/Sulu/Bundle/ContentBundle/Resources/js",
         "sulu-media-bundle": "file:src/Sulu/Bundle/MediaBundle/Resources/js",
+        "sulu-page-bundle": "file:src/Sulu/Bundle/PageBundle/Resources/js",
         "sulu-preview-bundle": "file:src/Sulu/Bundle/PreviewBundle/Resources/js",
         "sulu-security-bundle": "file:src/Sulu/Bundle/SecurityBundle/Resources/js"
     },

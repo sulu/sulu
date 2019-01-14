@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Webspace\Document\Initializer;
 
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;

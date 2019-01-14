@@ -11,7 +11,7 @@
         <property name="changer" type="integer" groups="defaultCustomUrl"/>
         <property name="baseDomain" type="string" groups="defaultCustomUrl"/>
         <property name="domainParts" type="array" groups="defaultCustomUrl"/>
-        <property name="targetDocument" type="Sulu\Bundle\ContentBundle\Document\BasePageDocument" groups="defaultCustomUrl"/>
+        <property name="targetDocument" type="Sulu\Bundle\PageBundle\Document\BasePageDocument" groups="defaultCustomUrl"/>
         <property name="locale" type="string" groups="defaultCustomUrl"/>
         <property name="targetLocale" type="string" groups="defaultCustomUrl"/>
         <property name="canonical" type="boolean" groups="defaultCustomUrl"/>

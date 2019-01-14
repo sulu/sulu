@@ -1,5 +1,5 @@
-sulu_content:		
-    resource: "@SuluContentBundle/Resources/config/routing_api.yml"		
+sulu_page:
+    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     type: rest		
     prefix: /api
 

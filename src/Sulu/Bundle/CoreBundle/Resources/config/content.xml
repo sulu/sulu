@@ -48,7 +48,7 @@
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_content.extension.manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
@@ -63,9 +63,9 @@
 
         <!-- structure manager -->
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%" public="true">
-            <argument type="service" id="sulu_content.structure.factory" />
+            <argument type="service" id="sulu_page.structure.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument type="service" id="sulu_page.compat.structure.legacy_property_factory" />
             <argument>%sulu.content.structure.type_map%</argument>
         </service>
 
@@ -180,7 +180,7 @@
                 <argument key="route">%sulu.content.node_names.route%</argument>
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
-            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_page.structure.factory"/>
         </service>
 
         <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder" public="true">

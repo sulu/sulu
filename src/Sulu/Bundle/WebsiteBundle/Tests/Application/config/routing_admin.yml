@@ -2,9 +2,9 @@ sulu_website:
     resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
     prefix: /sulu_website
 
-sulu_content_api:
+sulu_page_api:
     type: rest
-    resource: "@SuluContentBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     prefix: /api
 
 sulu_website_api:

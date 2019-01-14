@@ -12,7 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;

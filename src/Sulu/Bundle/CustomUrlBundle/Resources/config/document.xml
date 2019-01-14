@@ -6,7 +6,7 @@
     <services>
         <service id="sulu_custom_urls.repository" class="Sulu\Component\CustomUrl\Repository\CustomUrlRepository">
             <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu_content.content_repository"/>
+            <argument type="service" id="sulu_page.content_repository"/>
             <argument type="service" id="sulu_custom_urls.domain_generator"/>
             <argument type="service" id="sulu_security.user_manager"/>
         </service>

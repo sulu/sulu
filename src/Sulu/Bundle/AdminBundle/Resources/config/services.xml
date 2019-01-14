@@ -22,7 +22,7 @@
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
-            <argument type="service" id="sulu_content.smart_content.data_provider_pool" />
+            <argument type="service" id="sulu_page.smart_content.data_provider_pool" />
             <argument>%kernel.environment%</argument>
             <argument>%sulu.version%</argument>
             <argument>%app.version%</argument>
@@ -47,7 +47,7 @@
             class="Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider"
         >
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
-            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_page.structure.factory"/>
             <argument type="service" id="sulu_core.expression_language" />
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu_admin.forms.directories%</argument>
@@ -83,8 +83,8 @@
         </service>
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
-            <argument type="service" id="sulu_content.structure.properties_xml_parser"/>
-            <argument type="service" id="sulu_content.structure.schema_xml_parser"/>
+            <argument type="service" id="sulu_page.structure.properties_xml_parser"/>
+            <argument type="service" id="sulu_page.structure.schema_xml_parser"/>
         </service>
 
         <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\RouteRegistry">

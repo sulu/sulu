@@ -1,5 +1,5 @@
 The `ArrowMenu` is a component to stylize a list. Usage example of the `ArrowMenu` is the [`WebspaceSelect`](#webspaceselect) in the
-SuluContentBundle.
+SuluPageBundle.
 
 Possible Children of this component are `Section`, for custom sections and the default `SingleSingleItemSection`.
 The component `SingleSingleItemSection` can receive `Item` as children.

@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Renamed ContentBundle to PageBundle
+
+Following things have changed:
+
+* The bundle name changed from `SuluContentBundle` to `SuluPageBundle`
+* All services or parameters prefixed with `sulu_content` will now use the prefix `sulu_page`
+* The config tree for `sulu_content` was renamed to `sulu_page`
+* All the Classes from the namespace `Sulu\Bundle\ContentBundle` moved to `Sulu\Bundle\PageBundle`
+
 ### Logger is optional
 
 As the logger is now optional in the following services the constructor changed:

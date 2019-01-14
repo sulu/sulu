@@ -12,7 +12,7 @@
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
 use PHPCR\Util\PathHelper;
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -31,7 +31,7 @@ class CustomUrlAdmin extends Admin
      */
     public static function getCustomUrlSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', ContentAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
+        return sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
     }
 
     /**

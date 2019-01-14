@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;

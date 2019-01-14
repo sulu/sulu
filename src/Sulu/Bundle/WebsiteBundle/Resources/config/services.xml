@@ -40,7 +40,7 @@
         <!-- navigation mapper -->
         <service id="sulu_website.navigation_mapper.query_builder" class="%sulu_website.navigation_mapper.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_content.extension.manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_website.navigation_mapper" class="%sulu_website.navigation_mapper.class%">
@@ -54,7 +54,7 @@
         <!-- sitemap generator -->
         <service id="sulu_website.sitemap.query_builder" class="%sulu_website.sitemap.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_content.extension.manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
         <service id="sulu_website.sitemap" class="%sulu_website.sitemap.class%">
@@ -146,7 +146,7 @@
 
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%" public="true">
             <argument type="service" id="sulu.content.type_manager" />
-            <argument type="service" id="sulu_content.extension.manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">

@@ -12,7 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;

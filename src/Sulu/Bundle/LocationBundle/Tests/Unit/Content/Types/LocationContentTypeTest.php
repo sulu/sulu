@@ -25,7 +25,7 @@ class LocationContentTypeTest extends TestCase
 
     public function setUp()
     {
-        $this->nodeRepository = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface')->getMock();
+        $this->nodeRepository = $this->getMockBuilder('Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface')->getMock();
         $this->phpcrNode = $this->getMockBuilder('PHPCR\NodeInterface')->getMock();
         $this->suluProperty = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')->getMock();
         $this->mapManager = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Map\MapManager')->getMock();

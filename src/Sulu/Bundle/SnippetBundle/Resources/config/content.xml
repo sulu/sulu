@@ -34,7 +34,7 @@
         <service id="sulu_snippet.smart_content.data_provider.query_builder"
                  class="Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_content.extension.manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu.content.language.namespace%</argument>
         </service>
@@ -43,7 +43,7 @@
             <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="sulu_snippet.smart_content.data_provider.query_builder"/>
             <argument type="service" id="sulu.util.node_helper"/>
-            <argument type="service" id="sulu_content.smart_content.data_provider.content.proxy_factory"/>
+            <argument type="service" id="sulu_page.smart_content.data_provider.content.proxy_factory"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
 

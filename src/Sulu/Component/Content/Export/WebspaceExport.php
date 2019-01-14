@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Content\Export;
 
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
@@ -150,7 +150,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $extensionData = [];
 
         foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
-            /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
+            /** @var \Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension $extension */
             $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
 
             if ($extension instanceof ExportExtensionInterface) {

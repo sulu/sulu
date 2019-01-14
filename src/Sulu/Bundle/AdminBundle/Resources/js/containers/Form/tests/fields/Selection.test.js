@@ -194,7 +194,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
         types: {
             datagrid_overlay: {
                 adapter: 'column_list',
-                label: 'sulu_content.selection_label',
+                label: 'sulu_page.selection_label',
             },
         },
     };
@@ -209,7 +209,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
         />
     );
 
-    expect(translate).toBeCalledWith('sulu_content.selection_label', {count: 0});
+    expect(translate).toBeCalledWith('sulu_page.selection_label', {count: 0});
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'column_list',
         resourceKey: 'pages',
@@ -227,7 +227,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
         types: {
             datagrid_overlay: {
                 adapter: 'column_list',
-                label: 'sulu_content.selection_label',
+                label: 'sulu_page.selection_label',
             },
         },
     };

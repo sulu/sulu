@@ -1,0 +1,43 @@
+sulu_page.rl:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\NodeResourcelocatorController
+
+sulu_page.resource_locator:
+    type: rest
+    resource: sulu_page.resource_locator_controller
+
+sulu_page.node:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\NodeController
+
+sulu_page.page:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\PageController
+
+sulu_page.page_seo:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\SeoController
+
+sulu_page.page_excerpt:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\ExcerptController
+
+sulu_page.webspace.localization:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController
+
+sulu_page.smart_content:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\SmartContentItemController
+
+sulu_page.webspace:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\WebspaceController
+
+sulu_page.teaser:
+    type: rest
+    resource: Sulu\Bundle\PageBundle\Controller\TeaserController
+
+sulu_page.node.versioning:
+    type: versioning_rest
+    resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yml"

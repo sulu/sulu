@@ -6,7 +6,7 @@
     <key>template_lifetime_0</key>
 
     <view>page.html.twig</view>
-    <controller>SuluContentBundle:Default:index</controller>
+    <controller>SuluPageBundle:Default:index</controller>
     <cacheLifetime>0</cacheLifetime>
     <index name="foo_index" />
 

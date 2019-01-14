@@ -34,7 +34,7 @@ class InternalLink implements RuleTypeInterface
         return '<div class="grid-12">
                 <div data-condition-name="' . $this->name . '"
                     data-rule-type="internal_link"
-                    data-aura-component="single-internal-link@sulucontent"
+                    data-aura-component="single-internal-link@sulupage"
                     data-aura-instance-name="page-rule"
                     data-aura-url="/admin/api/nodes{/uuid}?depth=1&language=<%= locale %>&webspace-node=true"
                     data-aura-selected-url="/admin/api/nodes/{uuid}?tree=true&language=<%= locale %>&fields=title,order,published&webspace-nodes=all"

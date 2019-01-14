@@ -1,8 +1,8 @@
 massive_search:
     adapter: test
 
-sulu_content:
+sulu_page:
     search:
         mapping:
-            Sulu\Bundle\ContentBundle\Document\PageDocument:
+            Sulu\Bundle\PageBundle\Document\PageDocument:
                 index: page

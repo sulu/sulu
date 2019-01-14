@@ -55,7 +55,7 @@ class SuluTestKernel extends SuluKernel
             // Sulu
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
-            new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
+            new \Sulu\Bundle\PageBundle\SuluPageBundle(),
             new \Sulu\Bundle\ContactBundle\SuluContactBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
             new \Sulu\Bundle\WebsiteBundle\SuluWebsiteBundle(),

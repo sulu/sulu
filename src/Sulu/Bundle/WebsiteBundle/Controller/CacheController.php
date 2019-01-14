@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,7 +48,7 @@ class CacheController extends Controller
     private function checkLivePermissionForAllWebspaces()
     {
         foreach ($this->get('sulu_core.webspace.webspace_manager')->getWebspaceCollection() as $webspace) {
-            $context = ContentAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
+            $context = PageAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
             if (!$this->get('sulu_security.security_checker')->hasPermission($context, PermissionTypes::LIVE)) {
                 return false;
             }

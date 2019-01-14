@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Import;
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
