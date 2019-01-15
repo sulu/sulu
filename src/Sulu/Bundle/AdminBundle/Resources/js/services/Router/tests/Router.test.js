@@ -846,13 +846,13 @@ test('Navigate to child route using state', () => {
         children: [],
     });
 
-    const detailRoute = extendObservable({}, {
-        name: 'sulu_snippet.form.detail',
+    const detailsRoute = extendObservable({}, {
+        name: 'sulu_snippet.form.details',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/snippets/:uuid/detail',
+        path: '/snippets/:uuid/details',
         options: {
-            tabTitle: 'Detail',
+            tabTitle: 'Details',
         },
         attributeDefaults: {},
     });
@@ -868,23 +868,23 @@ test('Navigate to child route using state', () => {
         attributeDefaults: {},
     });
 
-    formRoute.children = [detailRoute, taxonomyRoute];
+    formRoute.children = [detailsRoute, taxonomyRoute];
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,
-        'sulu_snippet.form.detail': detailRoute,
+        'sulu_snippet.form.details': detailsRoute,
         'sulu_snippet.form.taxonomy': taxonomyRoute,
     });
 
     const history = createHistory();
     const router = new Router(history);
 
-    router.navigate('sulu_snippet.form.detail', {uuid: 'some-uuid'});
+    router.navigate('sulu_snippet.form.details', {uuid: 'some-uuid'});
 
     expect(router.route.view).toBe('sulu_admin.form');
-    expect(router.route.options.tabTitle).toBe('Detail');
+    expect(router.route.options.tabTitle).toBe('Details');
     expect(router.attributes.uuid).toBe('some-uuid');
-    expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
+    expect(history.location.pathname).toBe('/snippets/some-uuid/details');
 
     const parent = router.route.parent;
     if (!parent) {
@@ -909,13 +909,13 @@ test('Navigate to child route using URL', () => {
         children: [],
     });
 
-    const detailRoute = extendObservable({}, {
-        name: 'sulu_snippet.form.detail',
+    const detailsRoute = extendObservable({}, {
+        name: 'sulu_snippet.form.details',
         parent: formRoute,
         view: 'sulu_admin.form',
-        path: '/snippets/:uuid/detail',
+        path: '/snippets/:uuid/details',
         options: {
-            tabTitle: 'Detail',
+            tabTitle: 'Details',
         },
         attributeDefaults: {},
     });
@@ -931,23 +931,23 @@ test('Navigate to child route using URL', () => {
         attributeDefaults: {},
     });
 
-    formRoute.children = [detailRoute, taxonomyRoute];
+    formRoute.children = [detailsRoute, taxonomyRoute];
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,
-        'sulu_snippet.form.detail': detailRoute,
+        'sulu_snippet.form.details': detailsRoute,
         'sulu_snippet.form.taxonomy': taxonomyRoute,
     });
 
     const history = createHistory();
     const router = new Router(history);
 
-    history.push('/snippets/some-uuid/detail');
+    history.push('/snippets/some-uuid/details');
 
     expect(router.route.view).toBe('sulu_admin.form');
-    expect(router.route.options.tabTitle).toBe('Detail');
+    expect(router.route.options.tabTitle).toBe('Details');
     expect(router.attributes.uuid).toBe('some-uuid');
-    expect(history.location.pathname).toBe('/snippets/some-uuid/detail');
+    expect(history.location.pathname).toBe('/snippets/some-uuid/details');
 
     const parent = router.route.parent;
     if (!parent) {

@@ -11,7 +11,7 @@
         <property
             name="title"
             visibility="always"
-            list:translation="sulu_page.title"
+            list:translation="sulu_admin.title"
         />
         <property
             name="order"

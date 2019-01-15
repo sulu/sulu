@@ -247,7 +247,7 @@
             name="titleId"
             visibility="never"
             filter-type="auto-complete"
-            list:translation="sulu_contact.title"
+            list:translation="sulu_admin.title"
         >
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>

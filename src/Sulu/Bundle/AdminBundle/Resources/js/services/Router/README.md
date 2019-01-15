@@ -24,9 +24,9 @@ routeRegistry.addCollection([
         },
     },
     {
-        name: 'sulu_contact.form.detail',
+        name: 'sulu_contact.form.details',
         parent: 'sulu_contact.form',
-        path: '/detail',
+        path: '/details',
         view: 'sulu_admin.form',
         options: {
             tabTitle: 'Contacts',
@@ -76,7 +76,7 @@ The service also allows to navigate using the `navigate` method. This is where t
 // route to a standard route
 router.navigate('sulu_contact.form', {id: 7, admin: true}); // redirects to #/contacts/7?admin=true
 // route to a child route (mind that there is no knowledge of the parent necessary)
-router.navigate('sulu_contact.form.detail', {id: 2, admin: true}); // redirects to #/contacts/2/detail?admin=true
+router.navigate('sulu_contact.form.details', {id: 2, admin: true}); // redirects to #/contacts/2/detail?admin=true
 ```
 
 Instead of `navigate` you can also use the `restore` function. `restore` takes the same parameters, but the difference
@@ -89,10 +89,10 @@ of a paginated list.
 router.navigate('sulu_contact.datagrid', {page: 3, locale: 'en'});
 
 // navigates to #/contacts/7/detail?locale=en
-router.navigate('sulu_contact.form.detail', {id: 7, locale: 'en'});
+router.navigate('sulu_contact.form.details', {id: 7, locale: 'en'});
 
 // navigates to #/contacts/7/detail?locale=de
-router.navigate('sulu_contact.form.detail', {id: 7, locale: 'de'});
+router.navigate('sulu_contact.form.details', {id: 7, locale: 'de'});
 
 // navigates to #/contacts?page=3&locale=de
 router.restore('sulu_contact.datagrid', locale: 'de'});

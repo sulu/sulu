@@ -4,12 +4,12 @@ import {datagridAdapterRegistry, fieldRegistry, viewRegistry} from 'sulu-admin-b
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/Datagrid';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import MediaOverview from './views/MediaOverview';
-import MediaDetail from './views/MediaDetail';
+import MediaDetails from './views/MediaDetails';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 
 viewRegistry.add('sulu_media.overview', MediaOverview);
-viewRegistry.add('sulu_media.detail', MediaDetail);
+viewRegistry.add('sulu_media.details', MediaDetails);
 viewRegistry.add('sulu_media.formats', MediaFormats);
 viewRegistry.add('sulu_media.history', MediaHistory);
 

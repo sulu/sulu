@@ -28,7 +28,7 @@ class MediaAdmin extends Admin
 
     const EDIT_FORM_ROUTE = 'sulu_media.form';
 
-    const EDIT_FORM_DETAIL_ROUTE = 'sulu_media.form.detail';
+    const EDIT_FORM_DETAILS_ROUTE = 'sulu_media.form.details';
 
     const EDIT_FORM_FORMATS_ROUTE = 'sulu_media.form.formats';
 
@@ -69,7 +69,7 @@ class MediaAdmin extends Admin
             $media->setIcon('su-image');
             $media->setMainRoute(static::MEDIA_OVERVIEW_ROUTE);
             $media->addChildRoute(static::EDIT_FORM_ROUTE);
-            $media->addChildRoute(static::EDIT_FORM_DETAIL_ROUTE);
+            $media->addChildRoute(static::EDIT_FORM_DETAILS_ROUTE);
             $media->addChildRoute(static::EDIT_FORM_FORMATS_ROUTE);
             $media->addChildRoute(static::EDIT_FORM_HISTORY_ROUTE);
 
@@ -103,7 +103,7 @@ class MediaAdmin extends Admin
                 ->setResourceKey('media')
                 ->addLocales($mediaLocales)
                 ->getRoute(),
-            (new Route(static::EDIT_FORM_DETAIL_ROUTE, '/details', 'sulu_media.detail'))
+            (new Route(static::EDIT_FORM_DETAILS_ROUTE, '/details', 'sulu_media.details'))
                 ->setOption('tabTitle', 'sulu_media.information_taxonomy')
                 ->setOption('locales', $mediaLocales)
                 ->setOption('toolbarActions', $toolbarActions)

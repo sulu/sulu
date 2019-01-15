@@ -107,9 +107,9 @@ class NavigationRegistryTest extends TestCase
         $route2Child2->getPath()->willReturn('/route2-child2');
         $route2Child2->getName()->willReturn('route2_child2');
 
-        $route2Child2Detail = $this->prophesize(Route::class);
-        $route2Child2Detail->getPath()->willReturn('/route2-child2/detail');
-        $route2Child2Detail->getName()->willReturn('route2_child2_detail');
+        $route2Child2Details = $this->prophesize(Route::class);
+        $route2Child2Details->getPath()->willReturn('/route2-child2/details');
+        $route2Child2Details->getName()->willReturn('route2_child2_details');
 
         $this->routeRegistry->getRoutes()->willReturn(
             [

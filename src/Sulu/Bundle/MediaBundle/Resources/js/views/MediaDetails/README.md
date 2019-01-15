@@ -1,4 +1,4 @@
-The `MediaDetail` view is registered with the key `sulu_media.detail`. It shows a thumbnail of the recent version of the
+The `MediaDetails` view is registered with the key `sulu_media.details`. It shows a thumbnail of the recent version of the
 uploaded media. Besides that a form is rendered to edit information about the media.
 
 | Option        | Description                                                                                         |

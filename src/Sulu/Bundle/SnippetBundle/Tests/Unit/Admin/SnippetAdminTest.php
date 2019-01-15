@@ -108,7 +108,7 @@ class SnippetAdminTest extends TestCase
             'backRoute' => 'sulu_snippet.datagrid',
             'locales' => array_keys($locales),
         ], 'options', $editFormRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form.detail', 'name', $editDetailRoute);
+        $this->assertAttributeEquals('sulu_snippet.edit_form.details', 'name', $editDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
