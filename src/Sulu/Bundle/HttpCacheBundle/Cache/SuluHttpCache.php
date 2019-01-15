@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\HttpCacheBundle\Cache;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
-use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\CustomTtlListener;
 use FOS\HttpCache\SymfonyCache\DebugListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
