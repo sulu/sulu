@@ -6,7 +6,7 @@
     {% for entry in entries %}
         {% set location = sulu_content_path(entry.loc, webspaceKey, entry.locale, null, scheme) %}
         {% if sulu_util_domain_info(location).registrableDomain == registrableDomain %}
-            {% include 'SuluWebsiteBundle:Sitemap:sitemap-url.xml.twig' %}
+            {% include entry.template %}
         {% endif %}
     {% endfor %}
 </urlset>
