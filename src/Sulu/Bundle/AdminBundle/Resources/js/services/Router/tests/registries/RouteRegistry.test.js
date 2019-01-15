@@ -154,10 +154,10 @@ test('Set parent and children routes based on passed RouteConfig', () => {
             rerenderAttributes: [],
         },
         {
-            name: 'sulu_snippet.form.detail',
+            name: 'sulu_snippet.form.details',
             parent: 'sulu_snippet.form',
             view: 'sulu_admin.form',
-            path: '/detail',
+            path: '/details',
             options: {},
             attributeDefaults: {},
             rerenderAttributes: [],
@@ -174,14 +174,14 @@ test('Set parent and children routes based on passed RouteConfig', () => {
     ]);
 
     const formRoute = routeRegistry.get('sulu_snippet.form');
-    const detailRoute = routeRegistry.get('sulu_snippet.form.detail');
+    const detailRoute = routeRegistry.get('sulu_snippet.form.details');
     const taxonomyRoute = routeRegistry.get('sulu_snippet.form.taxonomy');
 
     expect(formRoute.name).toBe('sulu_snippet.form');
     expect(formRoute.children).toHaveLength(2);
     expect(formRoute.children[0]).toBe(detailRoute);
     expect(formRoute.children[1]).toBe(taxonomyRoute);
-    expect(detailRoute.name).toBe('sulu_snippet.form.detail');
+    expect(detailRoute.name).toBe('sulu_snippet.form.details');
     expect(detailRoute.parent).toBe(formRoute);
     expect(taxonomyRoute.name).toBe('sulu_snippet.form.taxonomy');
     expect(taxonomyRoute.parent).toBe(formRoute);

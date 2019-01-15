@@ -104,10 +104,10 @@ class CategoryAdmin extends Admin
                 ->addLocales($locales)
                 ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.details', '/details')
                 ->setResourceKey('categories')
                 ->setFormKey('category_details')
-                ->setTabTitle('sulu_category.details')
+                ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
                 ->addRouterAttributesToFormStore(['parentId'])
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
@@ -118,10 +118,10 @@ class CategoryAdmin extends Admin
                 ->addLocales($locales)
                 ->setBackRoute(static::DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
                 ->setResourceKey('categories')
                 ->setFormKey('category_details')
-                ->setTabTitle('sulu_category.details')
+                ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a loading MediaDetail view 1`] = `
+exports[`Render a loading MediaDetails view 1`] = `
 <div
   class="mediaDetail"
 >

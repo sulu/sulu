@@ -30,7 +30,7 @@ class FormRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
-        $route = (new FormRouteBuilder('sulu_category.edit_form.detail', '/details'))
+        $route = (new FormRouteBuilder('sulu_category.edit_form.details', '/details'))
             ->getRoute();
     }
 
@@ -184,7 +184,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithPreviewCondition()
     {
-        $route = (new FormRouteBuilder('sulu_page.page_edit_form.detail', '/pages/:id/details'))
+        $route = (new FormRouteBuilder('sulu_page.page_edit_form.details', '/pages/:id/details'))
             ->setResourceKey('pages')
             ->setFormKey('pages')
             ->setPreviewCondition('nodeType == 1')

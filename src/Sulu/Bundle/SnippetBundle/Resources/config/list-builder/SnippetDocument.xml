@@ -15,7 +15,7 @@
             visibility="always"
             searchability="yes"
             filter-type="string"
-            list:translation="sulu_snippet.title"
+            list:translation="sulu_admin.title"
         />
     </properties>
 </class>

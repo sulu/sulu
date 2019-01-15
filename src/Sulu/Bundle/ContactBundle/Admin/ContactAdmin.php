@@ -106,10 +106,10 @@ class ContactAdmin extends Admin
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_add_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
                 ->setResourceKey('contacts')
                 ->setFormKey('contact_details')
-                ->setTabTitle('sulu_contact.details')
+                ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::CONTACT_ADD_FORM_ROUTE)
@@ -118,10 +118,10 @@ class ContactAdmin extends Admin
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
                 ->setResourceKey('contacts')
                 ->setFormKey('contact_details')
-                ->setTabTitle('sulu_contact.details')
+                ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
@@ -136,10 +136,10 @@ class ContactAdmin extends Admin
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_add_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_add_form.details', '/details')
                 ->setResourceKey('accounts')
                 ->setFormKey('account_details')
-                ->setTabTitle('sulu_contact.details')
+                ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::ACCOUNT_ADD_FORM_ROUTE)
@@ -148,10 +148,10 @@ class ContactAdmin extends Admin
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_DATAGRID_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
                 ->setResourceKey('accounts')
                 ->setFormKey('account_details')
-                ->setTabTitle('sulu_contact.details')
+                ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActionsWithDelete)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),

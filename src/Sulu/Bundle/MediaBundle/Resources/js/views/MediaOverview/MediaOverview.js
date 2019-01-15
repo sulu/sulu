@@ -12,7 +12,7 @@ import CollectionStore from '../../stores/CollectionStore';
 import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const MEDIA_ROUTE = 'sulu_media.form.detail';
+const MEDIA_ROUTE = 'sulu_media.form.details';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 const MEDIA_RESOURCE_KEY = 'media';

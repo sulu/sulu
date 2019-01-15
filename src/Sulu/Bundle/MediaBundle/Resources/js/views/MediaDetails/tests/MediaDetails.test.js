@@ -58,8 +58,8 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('Render a loading MediaDetail view', () => {
-    const MediaDetail = require('../MediaDetail').default;
+test('Render a loading MediaDetails view', () => {
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const router = {
         bind: jest.fn(),
@@ -74,15 +74,15 @@ test('Render a loading MediaDetail view', () => {
     resourceStore.loading = true;
 
     expect(render(
-        <MediaDetail resourceStore={resourceStore} router={router} />
+        <MediaDetails resourceStore={resourceStore} router={router} />
     )).toMatchSnapshot();
 });
 
 test('Should change locale via locale chooser', () => {
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
 
     const router = {
@@ -95,19 +95,19 @@ test('Should change locale via locale chooser', () => {
             },
         },
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
     resourceStore.locale.set('de');
 
-    const toolbarConfig = toolbarFunction.call(mediaDetail);
+    const toolbarConfig = toolbarFunction.call(mediaDetails);
     toolbarConfig.locale.onChange('en');
     expect(resourceStore.locale.get()).toBe('en');
 });
 
 test('Should navigate to defined route on back button click', () => {
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
 
     const router = {
@@ -120,19 +120,19 @@ test('Should navigate to defined route on back button click', () => {
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
     resourceStore.setLocale('de');
 
-    const toolbarConfig = toolbarFunction.call(mediaDetail);
+    const toolbarConfig = toolbarFunction.call(mediaDetails);
     toolbarConfig.backButton.onClick();
     expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
 });
 
 test('Should show locales from router options in toolbar', () => {
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     const resourceStore = new ResourceStore('media', 1, {locale: observable.box()});
 
     const router = {
@@ -145,9 +145,9 @@ test('Should show locales from router options in toolbar', () => {
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
 
-    const toolbarConfig = toolbarFunction.call(mediaDetail);
+    const toolbarConfig = toolbarFunction.call(mediaDetails);
     expect(toolbarConfig.locale.options).toEqual([
         {value: 'en', label: 'en'},
         {value: 'de', label: 'de'},
@@ -157,7 +157,7 @@ test('Should show locales from router options in toolbar', () => {
 test('Should call update method of MediaUploadStore if a file was dropped', (done) => {
     const testId = 1;
     const testFile = {name: 'test.jpg'};
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
@@ -187,14 +187,14 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.update();
-            mediaDetail.instance().mediaUploadStore.update.mockReturnValue(promise);
-            mediaDetail.find('SingleMediaDropzone').prop('onDrop')(testFile);
-            expect(mediaDetail.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
+            mediaDetails.update();
+            mediaDetails.instance().mediaUploadStore.update.mockReturnValue(promise);
+            mediaDetails.find('SingleMediaDropzone').prop('onDrop')(testFile);
+            expect(mediaDetails.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
             done();
         });
     });
@@ -204,7 +204,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', (don
 
 test('Should update resourceStore after SingleMediaUpload has completed upload', (done) => {
     const testFile = {name: 'test.jpg'};
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('test', 1, {locale: observable.box()});
@@ -231,12 +231,12 @@ test('Should update resourceStore after SingleMediaUpload has completed upload',
         },
         attributes: {},
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.update();
-            mediaDetail.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
+            mediaDetails.update();
+            mediaDetails.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
             expect(resourceStore.data).toEqual(testFile);
             done();
         });
@@ -246,7 +246,7 @@ test('Should update resourceStore after SingleMediaUpload has completed upload',
 });
 
 test('Should initialize the ResourceStore with a schema', () => {
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
@@ -271,7 +271,7 @@ test('Should initialize the ResourceStore with a schema', () => {
         description: {},
     });
     metadataStore.getSchema.mockReturnValue(metadataPromise);
-    mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(resourceStore.resourceKey).toBe('media');
@@ -289,9 +289,9 @@ test('Should render save button disabled only if form is not dirty', () => {
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     const resourceStore = new ResourceStore('snippets', 12, {locale: observable.box()});
 
     const router = {
@@ -302,7 +302,7 @@ test('Should render save button disabled only if form is not dirty', () => {
         },
         attributes: {},
     };
-    const form = mount(<MediaDetail resourceStore={resourceStore} router={router} />).get(0);
+    const form = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
 
     expect(getSaveItem().disabled).toBe(true);
 
@@ -313,13 +313,13 @@ test('Should render save button disabled only if form is not dirty', () => {
 test('Should save form when submitted', (done) => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const Form = require('sulu-admin-bundle/containers').Form;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
@@ -347,17 +347,17 @@ test('Should save form when submitted', (done) => {
             id: 4,
         },
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.update();
-            expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(false);
+            mediaDetails.update();
+            expect(toolbarFunction.call(mediaDetails.instance()).showSuccess.get()).toEqual(false);
 
-            mediaDetail.find(Form).instance().submit().then(() => {
-                mediaDetail.update();
+            mediaDetails.find(Form).instance().submit().then(() => {
+                mediaDetails.update();
                 expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
-                expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(true);
+                expect(toolbarFunction.call(mediaDetails.instance()).showSuccess.get()).toEqual(true);
                 done();
             });
         });
@@ -367,7 +367,7 @@ test('Should save form when submitted', (done) => {
 });
 
 test('Should destroy the store on unmount', () => {
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 12, {locale: observable.box()});
     const router = {
@@ -381,19 +381,19 @@ test('Should destroy the store on unmount', () => {
         attributes: {},
     };
 
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
-    const formStore = mediaDetail.instance().formStore;
+    const formStore = mediaDetails.instance().formStore;
     formStore.destroy = jest.fn();
 
-    mediaDetail.unmount();
+    mediaDetails.unmount();
     expect(formStore.destroy).toBeCalled();
 });
 
 test('Should open and close focus point overlay', (done) => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
@@ -422,20 +422,20 @@ test('Should open and close focus point overlay', (done) => {
             id: 4,
         },
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.update();
-            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+            mediaDetails.update();
+            expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(false);
 
-            mediaDetail.find('Button[icon="su-focus"]').prop('onClick')();
-            mediaDetail.update();
-            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(true);
+            mediaDetails.find('Button[icon="su-focus"]').prop('onClick')();
+            mediaDetails.update();
+            expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(true);
 
-            mediaDetail.find('FocusPointOverlay').prop('onClose')();
-            mediaDetail.update();
-            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+            mediaDetails.find('FocusPointOverlay').prop('onClose')();
+            mediaDetails.update();
+            expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(false);
             done();
         });
     });
@@ -446,12 +446,12 @@ test('Should open and close focus point overlay', (done) => {
 test('Should save focus point overlay', (done) => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetails = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetail);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
     resourceStore.loading = false;
 
     const schemaTypesPromise = Promise.resolve({});
@@ -477,18 +477,18 @@ test('Should save focus point overlay', (done) => {
             id: 4,
         },
     };
-    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+    const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />);
 
     Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
         jsonSchemaPromise.then(() => {
-            mediaDetail.update();
-            mediaDetail.find('Button[icon="su-focus"]').prop('onClick')();
+            mediaDetails.update();
+            mediaDetails.find('Button[icon="su-focus"]').prop('onClick')();
 
-            mediaDetail.update();
-            expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(true);
+            mediaDetails.update();
+            expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(true);
 
-            mediaDetail.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
-            mediaDetail.find('Overlay').prop('onConfirm')();
+            mediaDetails.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
+            mediaDetails.find('Overlay').prop('onConfirm')();
 
             expect(ResourceRequester.put).toBeCalledWith(
                 'media',
@@ -498,9 +498,9 @@ test('Should save focus point overlay', (done) => {
             );
 
             setTimeout(() => {
-                mediaDetail.update();
-                expect(toolbarFunction.call(mediaDetail.instance()).showSuccess.get()).toEqual(true);
-                expect(mediaDetail.find('FocusPointOverlay').prop('open')).toEqual(false);
+                mediaDetails.update();
+                expect(toolbarFunction.call(mediaDetails.instance()).showSuccess.get()).toEqual(true);
+                expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(false);
                 done();
             });
         });

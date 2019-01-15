@@ -11,7 +11,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
-import mediaDetailStyles from './mediaDetail.scss';
+import mediaDetailsStyles from './mediaDetails.scss';
 import FocusPointOverlay from './FocusPointOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -22,7 +22,7 @@ type Props = ViewProps & {
 };
 
 @observer
-class MediaDetail extends React.Component<Props> {
+class MediaDetails extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
     formStore: FormStore;
@@ -93,11 +93,11 @@ class MediaDetail extends React.Component<Props> {
         const {resourceStore} = this.props;
 
         return (
-            <div className={mediaDetailStyles.mediaDetail}>
+            <div className={mediaDetailsStyles.mediaDetail}>
                 {this.formStore.loading
                     ? <Loader />
                     : <Grid>
-                        <Grid.Section className={mediaDetailStyles.imageSection} size={4}>
+                        <Grid.Section className={mediaDetailsStyles.imageSection} size={4}>
                             <Grid.Item>
                                 <SingleMediaUpload
                                     deletable={false}
@@ -107,7 +107,7 @@ class MediaDetail extends React.Component<Props> {
                                     onUploadComplete={this.handleUploadComplete}
                                     uploadText={translate('sulu_media.upload_or_replace')}
                                 />
-                                <div className={mediaDetailStyles.buttons}>
+                                <div className={mediaDetailsStyles.buttons}>
                                     <Button
                                         icon="su-focus"
                                         onClick={this.handleFocusPointButtonClick}
@@ -119,7 +119,7 @@ class MediaDetail extends React.Component<Props> {
                             </Grid.Item>
                         </Grid.Section>
                         <Grid.Section size={8}>
-                            <Grid.Item className={mediaDetailStyles.form}>
+                            <Grid.Item className={mediaDetailsStyles.form}>
                                 <Form
                                     onSubmit={this.handleSubmit}
                                     ref={this.setFormRef}
@@ -140,7 +140,7 @@ class MediaDetail extends React.Component<Props> {
     }
 }
 
-export default withToolbar(MediaDetail, function() {
+export default withToolbar(MediaDetails, function() {
     const {showSuccess} = this;
     const {
         router,

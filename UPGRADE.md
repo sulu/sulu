@@ -92,7 +92,7 @@ it is using.
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
 >
-    <key>categories</key>
+    <key>category_details</key>
     <properties>
         <!-- the same properties as before -->
     </properties>
@@ -104,10 +104,10 @@ This allows to have the same endpoint for multiple forms, and solves a bunch of 
 
 ```php
 return [
-    (new Route('sulu_category.edit_form.detail', '/details', 'sulu_admin.form'))
+    (new Route('sulu_category.edit_form.details', '/details', 'sulu_admin.form'))
         ->setOption('tabTitle', 'sulu_category.details')
         ->setOption('resourceKey', 'categories')
-        ->setOption('formKey', 'categories')
+        ->setOption('formKey', 'category_details')
         ->setOption('backRoute', 'sulu_category.datagrid')
 ];
 ```
