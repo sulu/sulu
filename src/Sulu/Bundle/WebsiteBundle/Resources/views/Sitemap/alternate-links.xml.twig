@@ -1,0 +1,19 @@
+{% set amount = 0 %}
+{% set defaultHref = null %}
+{% if entry.alternateLinks|length > 1 %}
+    {% for alternateLink in entry.alternateLinks %}
+        {% set href = sulu_content_path(alternateLink.href, webspaceKey, alternateLink.locale, null, scheme, false) %}
+        {% if href is not empty and href != alternateLink.href and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
+<xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
+
+            {% set amount = amount + 1 %}
+            {% if defaultLocale == alternateLink.locale and entry.alternateLinks|length > 1 %}
+                {% set defaultHref = href %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if defaultHref and amount > 0 %}
+<xhtml:link rel="alternate" hreflang="x-default" href="{{ defaultHref }}"/>
+{% endif %}
