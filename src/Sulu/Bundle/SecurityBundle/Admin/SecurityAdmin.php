@@ -132,7 +132,7 @@ class SecurityAdmin extends Admin
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.form.permissions', '/permissions')
                 ->setResourceKey('users')
                 ->setFormKey('user_details')
-                ->setTabTitle('sulu_admin.details')
+                ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->setIdQueryParameter('contactId')
                 ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE)

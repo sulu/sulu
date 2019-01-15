@@ -134,10 +134,10 @@ class PageAdmin extends Admin
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::WEBSPACES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.detail', '/details')
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')
                 ->setFormKey('page')
-                ->setTabTitle('sulu_page.page_form_detail')
+                ->setTabTitle('sulu_admin.details')
                 ->setTabPriority(1024)
                 ->setTabCondition('nodeType == 1 && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithType)
