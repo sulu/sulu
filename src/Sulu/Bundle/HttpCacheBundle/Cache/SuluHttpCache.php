@@ -45,7 +45,6 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 
         $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
         $this->addSubscriber(new PurgeListener());
-        $this->addSubscriber(new CleanupCacheTagsListener());
         $this->addSubscriber(new PurgeTagsListener());
 
         if ($kernel->isDebug()) {
