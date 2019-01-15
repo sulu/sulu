@@ -92,7 +92,7 @@ it is using.
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
 >
-    <key>categories</key>
+    <key>category_details</key>
     <properties>
         <!-- the same properties as before -->
     </properties>
