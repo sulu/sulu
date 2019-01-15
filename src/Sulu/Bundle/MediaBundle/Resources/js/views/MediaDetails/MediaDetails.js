@@ -11,7 +11,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
-import mediasDetailStyles from './mediaDetails.scss';
+import mediaDetailsStyles from './mediaDetails.scss';
 import FocusPointOverlay from './FocusPointOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
@@ -93,11 +93,11 @@ class MediaDetails extends React.Component<Props> {
         const {resourceStore} = this.props;
 
         return (
-            <div className={mediasDetailStyles.mediaDetail}>
+            <div className={mediaDetailsStyles.mediaDetail}>
                 {this.formStore.loading
                     ? <Loader />
                     : <Grid>
-                        <Grid.Section className={mediasDetailStyles.imageSection} size={4}>
+                        <Grid.Section className={mediaDetailsStyles.imageSection} size={4}>
                             <Grid.Item>
                                 <SingleMediaUpload
                                     deletable={false}
@@ -107,7 +107,7 @@ class MediaDetails extends React.Component<Props> {
                                     onUploadComplete={this.handleUploadComplete}
                                     uploadText={translate('sulu_media.upload_or_replace')}
                                 />
-                                <div className={mediasDetailStyles.buttons}>
+                                <div className={mediaDetailsStyles.buttons}>
                                     <Button
                                         icon="su-focus"
                                         onClick={this.handleFocusPointButtonClick}
@@ -119,7 +119,7 @@ class MediaDetails extends React.Component<Props> {
                             </Grid.Item>
                         </Grid.Section>
                         <Grid.Section size={8}>
-                            <Grid.Item className={mediasDetailStyles.form}>
+                            <Grid.Item className={mediaDetailsStyles.form}>
                                 <Form
                                     onSubmit={this.handleSubmit}
                                     ref={this.setFormRef}
