@@ -1,64 +1,63 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general"
-    xmlns:list="http://schemas.sulu.io/class/list"
-    xmlns:orm="http://schemas.sulu.io/class/doctrine"
->
-    <orm:joins name="address">
-        <orm:join>
-            <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
-            <orm:field-name>%sulu.model.contact.class%.contactAddresses</orm:field-name>
-            <orm:method>LEFT</orm:method>
-            <orm:condition>SuluContactBundle:ContactAddress.main = TRUE</orm:condition>
-        </orm:join>
-        <orm:join>
-            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
-            <orm:field-name>SuluContactBundle:ContactAddress.address</orm:field-name>
-        </orm:join>
-    </orm:joins>
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>complete</key>
+
+    <joins name="address">
+        <join>
+            <entity-name>SuluContactBundle:ContactAddress</entity-name>
+            <field-name>%sulu.model.contact.class%.contactAddresses</field-name>
+            <method>LEFT</method>
+            <condition>SuluContactBundle:ContactAddress.main = TRUE</condition>
+        </join>
+        <join>
+            <entity-name>SuluContactBundle:Address</entity-name>
+            <field-name>SuluContactBundle:ContactAddress.address</field-name>
+        </join>
+    </joins>
 
     <properties>
-        <property name="id" list:translation="public.id" list:type="integer">
-            <orm:field-name>id</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="id" translation="public.id" type="integer">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="firstName" list:translation="contact.contacts.firstName" visibility="always">
-            <orm:field-name>firstName</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="firstName" translation="contact.contacts.firstName" visibility="always">
+            <field-name>firstName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="lastName" list:translation="contact.contacts.lastName" visibility="always">
-            <orm:field-name>lastName</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="lastName" translation="contact.contacts.lastName" visibility="always">
+            <field-name>lastName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="avatar" list:translation="public.avatar" visibility="always" list:type="thumbnails"
-            list:sortable="false">
-            <orm:field-name>id</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+        <property name="avatar" translation="public.avatar" visibility="always" type="thumbnails"
+            sortable="false">
+            <field-name>id</field-name>
+            <entity-name>SuluMediaBundle:Media</entity-name>
 
-            <orm:joins>
-                <orm:join>
-                    <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
-                    <orm:field-name>%sulu.model.contact.class%.avatar</orm:field-name>
-                </orm:join>
-            </orm:joins>
+            <joins>
+                <join>
+                    <entity-name>SuluMediaBundle:Media</entity-name>
+                    <field-name>%sulu.model.contact.class%.avatar</field-name>
+                </join>
+            </joins>
         </property>
 
-        <concatenation-property name="fullName" orm:glue=" " list:translation="public.name" list:type="string"
-            list:sortable="false" list:width="100px" list:min-width="50px" list:editable="false"
-            list:css-class="test-class">
-            <orm:field name="firstName">
-                <orm:field-name>firstName</orm:field-name>
-                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
-            </orm:field>
-            <orm:field property-ref="lastName"/>
+        <concatenation-property name="fullName" glue=" " translation="public.name" type="string"
+            sortable="false" width="100px" min-width="50px" editable="false"
+            css-class="test-class">
+            <field name="firstName">
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+            </field>
+            <field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="city" list:translation="contact.address.city" visibility="always">
-            <orm:field-name>city</orm:field-name>
-            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+        <property name="city" translation="contact.address.city" visibility="always">
+            <field-name>city</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
 
-            <orm:joins ref="address"/>
+            <joins ref="address"/>
         </property>
     </properties>
 </datagrid>

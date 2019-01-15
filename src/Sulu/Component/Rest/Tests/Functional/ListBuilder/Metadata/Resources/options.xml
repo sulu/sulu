@@ -1,20 +1,18 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general"
-    xmlns:list="http://schemas.sulu.io/class/list"
-    xmlns:orm="http://schemas.sulu.io/class/doctrine"
->
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>options</key>
     <properties>
         <property name="city">
-            <orm:field-name>city</orm:field-name>
-            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+            <field-name>city</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
 
-            <orm:joins>
-                <orm:join>
-                    <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
-                    <orm:field-name>%sulu.model.contact.class%.contactAddresses</orm:field-name>
-                    <orm:method>LEFT</orm:method>
-                    <orm:condition>SuluContactBundle:ContactAddress.locale = ':locale'</orm:condition>
-                </orm:join>
-            </orm:joins>
+            <joins>
+                <join>
+                    <entity-name>SuluContactBundle:ContactAddress</entity-name>
+                    <field-name>%sulu.model.contact.class%.contactAddresses</field-name>
+                    <method>LEFT</method>
+                    <condition>SuluContactBundle:ContactAddress.locale = :locale</condition>
+                </join>
+            </joins>
         </property>
     </properties>
 </datagrid>

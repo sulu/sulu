@@ -133,6 +133,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->securedEntityName = $entityName;
     }
 
+    public function setSelectFields($fieldDescriptors)
+    {
+        parent::setSelectFields($fieldDescriptors);
+        $this->selectFields = array_filter(
+            $this->selectFields,
+            function (FieldDescriptorInterface $fieldDescriptor) {
+                return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
+            }
+        );
+    }
+
+    public function addSelectField(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if ($fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return parent::addSelectField($fieldDescriptor);
+        }
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -158,6 +178,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
 
+        $this->assignParameters($subQueryBuilder);
+
         $result = $subQueryBuilder->getQuery()->getScalarResult();
         $numResults = count($result);
         if ($numResults > 1) {
@@ -182,7 +204,10 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
         if (!$this->limit && empty($this->expressions)) {
-            return $this->createFullQueryBuilder($this->createQueryBuilder())->getQuery()->getArrayResult();
+            $queryBuilder = $this->createFullQueryBuilder($this->createQueryBuilder());
+            $this->assignParameters($queryBuilder);
+
+            return $queryBuilder->getQuery()->getArrayResult();
         }
 
         // first create simplified id query
@@ -204,6 +229,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
+
+        $this->assignParameters($this->queryBuilder);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
     }
@@ -251,6 +278,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $this->assignSortFields($subQueryBuilder);
+        $this->assignParameters($this->queryBuilder);
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
 
         // if no results are found - return
@@ -266,6 +294,17 @@ class DoctrineListBuilder extends AbstractListBuilder
         );
 
         return $ids;
+    }
+
+    private function assignParameters(QueryBuilder $queryBuilder)
+    {
+        $dql = $queryBuilder->getDQL();
+
+        foreach ($this->parameters as $key => $parameter) {
+            if (false !== strpos($dql, ':' . $key)) {
+                $queryBuilder->setParameter($key, $parameter);
+            }
+        }
     }
 
     /**
@@ -335,7 +374,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * Returns all FieldDescriptors that were passed to list builder.
+     * Returns all DoctrineFieldDescriptors that were passed to list builder.
      *
      * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
      *
@@ -353,7 +392,9 @@ class DoctrineListBuilder extends AbstractListBuilder
             $fields = array_merge($fields, $this->selectFields);
         }
 
-        return $fields;
+        return array_filter($fields, function(FieldDescriptorInterface $fieldDescriptor) {
+            return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
+        });
     }
 
     /**

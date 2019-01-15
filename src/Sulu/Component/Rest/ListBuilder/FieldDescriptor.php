@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
-use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Base class for all field-descriptor.
@@ -40,7 +40,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * Defines the visibility of the field.
      *
-     * @var bool
+     * @var string
      * @Expose
      */
     private $visibility;

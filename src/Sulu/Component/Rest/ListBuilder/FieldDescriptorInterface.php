@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Interface for all field-descriptors.

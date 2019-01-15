@@ -15,7 +15,25 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testPagesMetadataAction()
+    public function testPagesDatagridMetadataAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/admin/metadata/datagrid/pages');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertObjectHasAttribute('id', $response);
+        $this->assertObjectHasAttribute('title', $response);
+        $this->assertObjectHasAttribute('order', $response);
+        $this->assertObjectHasAttribute('published', $response);
+
+        $this->assertEquals('ID', $response->id->label);
+        $this->assertEquals('string', $response->id->type);
+    }
+
+    public function testPagesFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -58,7 +76,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertNull($overviewType->schema);
     }
 
-    public function testPageSeoMetadataAction()
+    public function testPageSeoFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -78,7 +96,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertNull($schema);
     }
 
-    public function testPageExcerptMetadataAction()
+    public function testPageExcerptFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -98,7 +116,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertNull($schema);
     }
 
-    public function testPageSettingMetadataAction()
+    public function testPageSettingFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 

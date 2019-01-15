@@ -11,11 +11,17 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 
-use Metadata\ClassMetadata;
-use Metadata\Driver\FileLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\DatagridMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -23,20 +29,19 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class XmlDriverTest extends TestCase
 {
     /**
-     * @var FileLocatorInterface
-     */
-    private $locator;
-
-    /**
      * @var ParameterBagInterface
      */
     private $parameterBag;
+
+    /**
+     * @var XmlDriver
+     */
+    private $xmlDriver;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->locator = $this->prophesize(FileLocatorInterface::class);
         $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
 
         $this->parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
@@ -51,57 +56,64 @@ class XmlDriverTest extends TestCase
         );
         $this->parameterBag->resolveValue('%test-parameter%')->willReturn('test-value');
         $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
+
+        $this->xmlDriver = new XmlDriver($this->parameterBag->reveal());
     }
 
     public function testLoadMetadataFromFileComplete()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'complete');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/complete.xml');
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('complete', $result->getKey());
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(5, $result->propertyMetadata);
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(6, $propertiesMetadata);
 
-        $this->assertEquals(
-            ['id', 'firstName', 'lastName', 'avatar', 'fullName'],
-            array_keys($result->propertyMetadata)
-        );
-
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'id',
+                'entityName' => 'SuluContactBundle:Contact',
                 'translation' => 'public.id',
                 'type' => 'integer',
             ],
-            $result->propertyMetadata['id']
+            $propertiesMetadata[0]
         );
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'firstName',
+                'entityName' => 'SuluContactBundle:Contact',
                 'translation' => 'contact.contacts.firstName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
-            $result->propertyMetadata['firstName']
+            $propertiesMetadata[1]
         );
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'lastName',
+                'entityName' => 'SuluContactBundle:Contact',
                 'translation' => 'contact.contacts.lastName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
             ],
-            $result->propertyMetadata['lastName']
+            $propertiesMetadata[2]
         );
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'avatar',
+                'entityName' => 'SuluMediaBundle:Media',
                 'translation' => 'public.avatar',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
                 'type' => 'thumbnails',
                 'sortable' => false,
+                'joins' => [
+                    [
+                        'entityName' => 'SuluMediaBundle:Media',
+                        'entityField' => 'SuluContactBundle:Contact.avatar',
+                    ],
+                ],
             ],
-            $result->propertyMetadata['avatar']
+            $propertiesMetadata[3]
         );
-        $this->assertMetadata(
+        $this->assertConcatenationMetadata(
             [
                 'name' => 'fullName',
                 'translation' => 'public.name',
@@ -109,99 +121,103 @@ class XmlDriverTest extends TestCase
                 'minWidth' => '50px',
                 'sortable' => false,
                 'class' => 'test-class',
+                'glue' => ' ',
+                'fields' => [
+                    [
+                        'name' => 'firstName',
+                        'entityName' => 'SuluContactBundle:Contact',
+                    ],
+                    [
+                        'name' => 'lastName',
+                        'entityName' => 'SuluContactBundle:Contact',
+                    ],
+                ],
             ],
-            $result->propertyMetadata['fullName']
+            $propertiesMetadata[4]
         );
     }
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'empty');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/empty.xml');
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(0, $result->propertyMetadata);
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('empty', $result->getKey());
+        $this->assertCount(0, $result->getPropertiesMetadata());
     }
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'minimal');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/minimal.xml');
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(3, $result->propertyMetadata);
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('minimal', $result->getKey());
 
-        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(3, $propertiesMetadata);
 
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'id',
                 'translation' => 'public.id',
                 'type' => 'integer',
+                'entityName' => 'SuluContactBundle:Contact',
             ],
-            $result->propertyMetadata['id']
+            $propertiesMetadata[0]
         );
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
                 'searchability' => FieldDescriptorInterface::SEARCHABILITY_YES,
+                'entityName' => 'SuluContactBundle:Contact',
             ],
-            $result->propertyMetadata['firstName']
+            $propertiesMetadata[1]
         );
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
                 'searchability' => FieldDescriptorInterface::SEARCHABILITY_NO,
+                'entityName' => 'SuluContactBundle:Contact',
             ],
-            $result->propertyMetadata['lastName']
+            $propertiesMetadata[2]
         );
     }
 
     public function testLoadMetadataFromFileInputType()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'filter-type');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type.xml');
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(1, $result->propertyMetadata);
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('filter-type', $result->getKey());
 
-        $this->assertEquals(
-            ['tags'],
-            array_keys($result->propertyMetadata)
-        );
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
 
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'tags',
                 'translation' => 'Tags',
                 'filter-type' => 'test-input',
             ],
-            $result->propertyMetadata['tags']
+            $propertiesMetadata[0]
         );
     }
 
     public function testLoadMetadataFromFileParameters()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'filter-type-parameters');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type-parameters.xml');
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(1, $result->propertyMetadata);
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('filter-type-parameters', $result->getKey());
 
-        $this->assertEquals(
-            ['tags'],
-            array_keys($result->propertyMetadata)
-        );
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
 
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'tags',
                 'translation' => 'Tags',
@@ -211,25 +227,21 @@ class XmlDriverTest extends TestCase
                     'test2' => 'test',
                 ],
             ],
-            $result->propertyMetadata['tags']
+            $propertiesMetadata[0]
         );
     }
 
     public function testLoadMetadataFromFileNoInputType()
     {
-        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
-        $result = $this->loadMetadataFromFile($driver, 'filter-type-no-input');
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type-no-input.xml');
 
-        $this->assertInstanceOf(ClassMetadata::class, $result);
-        $this->assertEquals('stdClass', $result->name);
-        $this->assertCount(1, $result->propertyMetadata);
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('filter-type-no-input', $result->getKey());
 
-        $this->assertEquals(
-            ['tags'],
-            array_keys($result->propertyMetadata)
-        );
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
 
-        $this->assertMetadata(
+        $this->assertSingleMetadata(
             [
                 'name' => 'tags',
                 'translation' => 'Tags',
@@ -239,11 +251,101 @@ class XmlDriverTest extends TestCase
                     'test2' => 'test',
                 ],
             ],
-            $result->propertyMetadata['tags']
+            $propertiesMetadata[0]
         );
     }
 
-    private function assertMetadata($expected, PropertyMetadata $metadata)
+    public function testLoadMetadataFromFileGroupConcat()
+    {
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/group-concat.xml');
+
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('group-concat', $result->getKey());
+
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
+
+        $this->assertGroupConcatMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'entityName' => 'SuluTagBundle:Tag',
+                'joins' => [
+                    [
+                        'entityName' => 'SuluTagBundle:Tag',
+                        'entityField' => 'SuluContactBundle:Contact.tags',
+                    ],
+                ],
+            ],
+            $propertiesMetadata[0]
+        );
+    }
+
+    public function testLoadMetadataFromFileIdentity()
+    {
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/identity.xml');
+
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('identity', $result->getKey());
+
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
+
+        $this->assertIdentityMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'entityName' => 'SuluContactBundle:Contact',
+            ],
+            $propertiesMetadata[0]
+        );
+    }
+
+    public function testLoadMetadataFromFileCount()
+    {
+        $result = $this->xmlDriver->load(__DIR__ . '/Resources/count.xml');
+
+        $this->assertInstanceOf(DatagridMetadata::class, $result);
+        $this->assertEquals('count', $result->getKey());
+
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
+
+        $this->assertCountMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'entityName' => 'SuluContactBundle:Contact',
+            ],
+            $propertiesMetadata[0]
+        );
+    }
+
+    private function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(SingleTypeMetadata::class, $metadata);
+        $this->assertPropertyMetadata($expected, $metadata);
+    }
+
+    private function assertGroupConcatMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(GroupConcatTypeMetadata::class, $metadata);
+        $this->assertPropertyMetadata($expected, $metadata);
+    }
+
+    private function assertIdentityMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(IdentityTypeMetadata::class, $metadata);
+        $this->assertPropertyMetadata($expected, $metadata);
+    }
+
+    private function assertCountMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(CountTypeMetadata::class, $metadata);
+        $this->assertPropertyMetadata($expected, $metadata);
+    }
+
+    private function assertPropertyMetadata(array $expected, PropertyMetadata $metadata)
     {
         $expected = array_merge(
             [
@@ -260,11 +362,12 @@ class XmlDriverTest extends TestCase
                 'class' => '',
                 'filter-type' => null,
                 'filter-type-parameters' => [],
+                'entityName' => null,
+                'joins' => [],
             ],
             $expected
         );
 
-        $this->assertInstanceOf($expected['instance'], $metadata);
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
         $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
@@ -278,16 +381,70 @@ class XmlDriverTest extends TestCase
         $this->assertEquals($expected['sortable'], $metadata->isSortable());
         $this->assertEquals($expected['editable'], $metadata->isEditable());
         $this->assertEquals($expected['class'], $metadata->getCssClass());
+
+        if ($metadata->getField()) {
+            $this->assertFieldMetadata($expected, $metadata->getField());
+        }
     }
 
-    private function loadMetadataFromFile(XmlDriver $driver, $file)
+    private function assertFieldMetadata(array $expected, FieldMetadata $fieldMetadata)
     {
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
+        $expected = array_merge(
+            [
+                'joins' => [],
+            ],
+            $expected
         );
+
+        $this->assertEquals($expected['entityName'], $fieldMetadata->getEntityName());
+        $this->assertCount(count($expected['joins']), $fieldMetadata->getJoins());
+
+        $i = 0;
+        foreach ($expected['joins'] as $joinExpected) {
+            $this->assertJoin($joinExpected, $fieldMetadata->getJoins()[$i]);
+            ++$i;
+        }
+    }
+
+    private function assertJoin(array $expected, JoinMetadata $metadata)
+    {
+        $expected = array_merge(
+            [
+                'entityName' => null,
+                'entityField' => null,
+                'condition' => null,
+                'conditionMethod' => 'WITH',
+                'method' => 'LEFT',
+            ],
+            $expected
+        );
+
+        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
+        $this->assertEquals($expected['entityField'], $metadata->getEntityField());
+        $this->assertEquals($expected['condition'], $metadata->getCondition());
+        $this->assertEquals($expected['conditionMethod'], $metadata->getConditionMethod());
+        $this->assertEquals($expected['method'], $metadata->getMethod());
+    }
+
+    private function assertConcatenationMetadata($expected, PropertyMetadata $metadata)
+    {
+        $expected = array_merge(
+            [
+                'glue' => null,
+                'fields' => [],
+            ],
+            $expected
+        );
+
+        $this->assertInstanceOf(ConcatenationTypeMetadata::class, $metadata);
+
+        $this->assertEquals($expected['glue'], $metadata->getGlue());
+        $this->assertCount(count($expected['fields']), $metadata->getFields());
+
+        $i = 0;
+        foreach ($expected['fields'] as $fieldExpected) {
+            $this->assertFieldMetadata($fieldExpected, $metadata->getFields()[$i]);
+            ++$i;
+        }
     }
 }

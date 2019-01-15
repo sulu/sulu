@@ -12,28 +12,24 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
 
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Describes a normal field.
  */
-class SingleTypeMetadata
+class SingleTypeMetadata extends PropertyMetadata
 {
     /**
-     * @var FieldMetadata
+     * @var ?FieldMetadata
      */
     private $field;
 
-    public function __construct(FieldMetadata $field)
+    public function setField(?FieldMetadata $field)
     {
         $this->field = $field;
     }
 
-    /**
-     * Returns metadata for field.
-     *
-     * @return FieldMetadata
-     */
-    public function getField()
+    public function getField(): ?FieldMetadata
     {
         return $this->field;
     }

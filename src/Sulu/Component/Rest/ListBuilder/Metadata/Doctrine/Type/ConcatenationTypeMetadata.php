@@ -12,11 +12,12 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
 
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Describes a field which is concatenated from other fields.
  */
-class ConcatenationTypeMetadata
+class ConcatenationTypeMetadata extends PropertyMetadata
 {
     /**
      * @var FieldMetadata[]
@@ -28,36 +29,21 @@ class ConcatenationTypeMetadata
      */
     private $glue;
 
-    public function __construct($glue = ' ')
+    public function setGlue(string $glue)
     {
         $this->glue = $glue;
     }
 
-    /**
-     * Returns glue to combine the field values.
-     *
-     * @return string
-     */
-    public function getGlue()
+    public function getGlue(): string
     {
         return $this->glue;
     }
 
-    /**
-     * Returns all fields which should be combined.
-     *
-     * @return FieldMetadata[]
-     */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
-    /**
-     * Add a field which should be combined with the other fields.
-     *
-     * @param FieldMetadata $field
-     */
     public function addField(FieldMetadata $field)
     {
         $this->fields[] = $field;

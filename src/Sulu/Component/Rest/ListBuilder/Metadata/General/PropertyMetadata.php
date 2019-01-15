@@ -11,14 +11,18 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata\General;
 
-use Metadata\PropertyMetadata as BasePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * Container for property-metadata.
  */
-class PropertyMetadata extends BasePropertyMetadata
+class PropertyMetadata
 {
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
@@ -74,9 +78,8 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     private $filterTypeParameters = [];
 
-    public function __construct($class, $name)
+    public function __construct($name)
     {
-        $this->class = $class;
         $this->name = $name;
         // default for translation can be overwritten by setter
         $this->translation = ucfirst($name);
@@ -155,7 +158,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getWidth()
     {
@@ -163,7 +166,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param int $width
+     * @param string $width
      */
     public function setWidth($width)
     {
@@ -171,7 +174,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getMinWidth()
     {
@@ -179,7 +182,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param int $minWidth
+     * @param string $minWidth
      */
     public function setMinWidth($minWidth)
     {
@@ -268,50 +271,5 @@ class PropertyMetadata extends BasePropertyMetadata
     public function setFilterTypeParameters($parameters)
     {
         $this->filterTypeParameters = $parameters;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                $this->class,
-                $this->name,
-                $this->translation,
-                $this->visibility,
-                $this->searchability,
-                $this->type,
-                $this->width,
-                $this->minWidth,
-                $this->sortable,
-                $this->editable,
-                $this->cssClass,
-                $this->filterType,
-                $this->filterTypeParameters,
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($str)
-    {
-        list(
-            $this->class,
-            $this->name,
-            $this->translation,
-            $this->visibility,
-            $this->searchability,
-            $this->type,
-            $this->width,
-            $this->minWidth,
-            $this->sortable,
-            $this->editable,
-            $this->cssClass,
-            $this->filterType,
-            $this->filterTypeParameters) = unserialize($str);
     }
 }

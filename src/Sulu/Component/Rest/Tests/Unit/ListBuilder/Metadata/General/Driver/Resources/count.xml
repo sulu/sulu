@@ -1,0 +1,11 @@
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>count</key>
+
+    <properties>
+        <count-property name="tags">
+            <field-name>tags</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </count-property>
+    </properties>
+</datagrid>
+

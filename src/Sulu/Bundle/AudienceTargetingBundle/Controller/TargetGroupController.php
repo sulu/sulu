@@ -243,9 +243,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     private function getFieldDescriptors()
     {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
-            $this->getTargetGroupRepository()->getClassName()
-        );
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptors('target_groups');
     }
 
     /**

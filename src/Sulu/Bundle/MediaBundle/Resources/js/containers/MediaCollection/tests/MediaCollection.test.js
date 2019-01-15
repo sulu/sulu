@@ -2,7 +2,6 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import ResourceMetadataStore from 'sulu-admin-bundle/stores/ResourceMetadataStore';
 import MediaCollection from '../MediaCollection';
 import MediaCardOverviewAdapter from '../../Datagrid/adapters/MediaCardOverviewAdapter';
 
@@ -138,10 +137,6 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegis
         has: jest.fn(),
     };
 });
-
-jest.mock('sulu-admin-bundle/stores/ResourceMetadataStore', () => ({
-    loadConfiguration: jest.fn(),
-}));
 
 jest.mock('sulu-admin-bundle/stores', () => {
     const ResourceStoreMock = jest.fn(function(resourceKey) {
@@ -383,8 +378,6 @@ test('Should send a request to add a new collection via the overlay', () => {
     collectionStore.resourceStore.data = {
         title: 'Title',
     };
-
-    ResourceMetadataStore.loadConfiguration.mockReturnValue({form: {}});
 
     const mediaCollection = mount(
         <MediaCollection

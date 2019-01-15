@@ -231,9 +231,8 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function getFieldDescriptors()
     {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
-            $this->getParameter('sulu.model.keyword.class')
-        );
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')
+        ->getFieldDescriptors('keywords');
     }
 
     /**

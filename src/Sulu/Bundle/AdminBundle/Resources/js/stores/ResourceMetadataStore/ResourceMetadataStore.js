@@ -1,6 +1,4 @@
 // @flow
-import {Config, Requester} from '../../services';
-
 class ResourceMetadataStore {
     endpoints: {[string]: string} = {};
 
@@ -20,14 +18,6 @@ class ResourceMetadataStore {
             throw new Error('There is no endpoint for the resourceKey "' + key + '"');
         }
         return this.endpoints[key];
-    }
-
-    loadConfiguration(key: string): Promise<Object> {
-        if (!(key in this.configurationPromises)) {
-            this.configurationPromises[key] = Requester.get(Config.endpoints.resources.replace(':resource', key));
-        }
-
-        return this.configurationPromises[key];
     }
 }
 

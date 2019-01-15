@@ -42,7 +42,37 @@ class AdminControllerTest extends SuluTestCase
         $em->flush();
     }
 
-    public function testContactMetadataAction()
+    public function testContactsDatagridMetadataAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/admin/metadata/datagrid/contacts');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertObjectHasAttribute('id', $response);
+        $this->assertObjectHasAttribute('title', $response);
+        $this->assertObjectHasAttribute('account', $response);
+        $this->assertObjectHasAttribute('firstName', $response);
+    }
+
+    public function testAccountsDatagridMetadataAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/admin/metadata/datagrid/accounts');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertObjectHasAttribute('id', $response);
+        $this->assertObjectHasAttribute('name', $response);
+        $this->assertObjectHasAttribute('zip', $response);
+        $this->assertObjectHasAttribute('city', $response);
+    }
+
+    public function testContactFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -61,7 +91,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['firstName', 'lastName', 'formOfAddress'], $schema->required);
     }
 
-    public function testAccountMetadataAction()
+    public function testAccountFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 

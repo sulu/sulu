@@ -12,14 +12,15 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
 
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Describes a field which is grouped and concatenated.
  */
-class GroupConcatTypeMetadata
+class GroupConcatTypeMetadata extends PropertyMetadata
 {
     /**
-     * @var FieldMetadata
+     * @var ?FieldMetadata
      */
     private $field;
 
@@ -33,44 +34,32 @@ class GroupConcatTypeMetadata
      */
     private $distinct;
 
-    /**
-     * @param FieldMetadata $field
-     * @param string $glue
-     * @param bool $distinct
-     */
-    public function __construct(FieldMetadata $field, $glue, $distinct)
+    public function setField(?FieldMetadata $field)
     {
         $this->field = $field;
-        $this->glue = $glue;
-        $this->distinct = $distinct;
     }
 
-    /**
-     * Returns metadata for field.
-     *
-     * @return FieldMetadata
-     */
-    public function getField()
+    public function getField(): ?FieldMetadata
     {
         return $this->field;
     }
 
-    /**
-     * Returns glue to combine the field values.
-     *
-     * @return string
-     */
-    public function getGlue()
+    public function setGlue(string $glue)
+    {
+        $this->glue = $glue;
+    }
+
+    public function getGlue(): string
     {
         return $this->glue;
     }
 
-    /**
-     * Returns bool if distinct should be used or not.
-     *
-     * @return bool
-     */
-    public function getDistinct()
+    public function setDistinct(bool $distinct)
+    {
+        $this->distinct = $distinct;
+    }
+
+    public function getDistinct(): bool
     {
         return $this->distinct;
     }

@@ -16,6 +16,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\DQL\Cast;
 use Sulu\Component\Rest\Exception\InvalidHashException;
@@ -25,7 +26,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -390,92 +390,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initListBuilder(ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        $loader->load('list_builder.xml');
-
-        $metadataPaths = $this->getMappingPaths($container, 'list-builder');
-
-        $fileLocator = $container->getDefinition('sulu_core.list_builder.metadata.file_locator');
-        $fileLocator->replaceArgument(0, $metadataPaths);
-
-        $generalMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/general', $container);
-        $doctrineMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/doctrine', $container);
-
-        $container->setParameter(
-            'sulu_core.list_builder.metadata.provider.general.cache_dir',
-            $generalMetadataCacheFolder
-        );
-        $container->setParameter(
-            'sulu_core.list_builder.metadata.provider.doctrine.cache_dir',
-            $doctrineMetadataCacheFolder
-        );
-    }
-
-    /**
-     * Create and return directory.
-     *
-     * @param string $directory
-     * @param ContainerBuilder $container
-     *
-     * @return string
-     */
-    protected function createOrGetFolder($directory, ContainerBuilder $container)
-    {
-        $filesystem = new Filesystem();
-
-        $directory = $container->getParameterBag()->resolveValue($directory);
-        if (!$filesystem->exists($directory)) {
-            $filesystem->mkdir($directory);
+        if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')) {
+            $loader->load('list_builder.xml');
         }
-
-        return $directory;
-    }
-
-    /**
-     * Returns list of bundle config paths.
-     *
-     * @param string[] $bundles
-     * @param string $dir
-     *
-     * @return array
-     */
-    private function getMappingPaths(ContainerBuilder $container, $dir)
-    {
-        $metadataPaths = [];
-        foreach ($container->getParameter('kernel.bundles') as $bundle) {
-            $refl = new \ReflectionClass($bundle);
-            $path = dirname($refl->getFilename());
-
-            foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
-                if (!file_exists($path . '/' . $entityNamespace)) {
-                    continue;
-                }
-
-                $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $finalPath = implode('/', [$path, 'Resources', 'config', $dir]);
-                if (!file_exists($finalPath)) {
-                    continue;
-                }
-
-                $metadataPaths[$namespace] = $finalPath;
-            }
-        }
-
-        $projectFolder = $container->getParameter('kernel.project_dir') . '/config/' . $dir;
-
-        if (file_exists($projectFolder)) {
-            $path = $container->getParameter('kernel.project_dir') . '/src';
-
-            foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
-                if (!file_exists($path . '/' . $entityNamespace)) {
-                    continue;
-                }
-
-                $namespace = 'App\\' . $entityNamespace;
-
-                $metadataPaths[$namespace] = $projectFolder;
-            }
-        }
-
-        return $metadataPaths;
     }
 }

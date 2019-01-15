@@ -94,7 +94,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $tagEntityName = $this->getParameter('sulu.model.tag.class');
 
             $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
-                ->getFieldDescriptorForClass($tagEntityName);
+                ->getFieldDescriptors('tags');
             $listBuilder = $factory->create($tagEntityName);
 
             $ids = array_filter(explode(',', $request->get('ids', '')));

@@ -103,9 +103,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get(
-            'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass($this->getParameter('sulu.model.contact.class'));
+        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+             ->getFieldDescriptors('contacts');
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];

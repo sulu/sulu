@@ -24,7 +24,6 @@ use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -117,6 +116,7 @@ class MediaController extends AbstractMediaController implements
         $excluded = array_filter(explode(',', $request->get('excluded')));
         $types = array_filter(explode(',', $request->get('types')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids, $excluded, $types);
+        $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
         $count = $listBuilder->count();
 
@@ -519,10 +519,6 @@ class MediaController extends AbstractMediaController implements
     protected function getFieldDescriptors($locale, $all = true)
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptorForClass(
-                $this->getParameter('sulu.model.media.class'),
-                ['locale' => $locale],
-                $all ? null : DoctrineFieldDescriptorInterface::class
-            );
+            ->getFieldDescriptors('media');
     }
 }

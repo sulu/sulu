@@ -109,9 +109,10 @@ The `category_list` content and field type was changed to `category_selection`
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
 
-The `ResourceMetadata` got rid of the form metadata. So the form metadata is not available in the response of the
-`/admin/resources/{resource}` action anymore, but under `/admin/metadata/form/{formKey}`. The reason for that is that
-we want to have multiple different forms for each resource.
+The `ResourceMetadata` got rid of the form and datagrid metadata. So the metadata is not available in the response of
+the `/admin/resources/{resource}` action anymore, but under `/admin/metadata/form/{formKey}` and
+`/admin/metadata/datagrid/{datagridKey}`. The reason for that is that we want to have multiple different forms and
+datagrids for each resource.
 
 The form XML file has changed, because it needs a separate key now, which identifies the form unrelated to the resource
 it is using.
@@ -127,6 +128,71 @@ it is using.
     </properties>
 </form>
 ```
+
+The files located in the `Resources/config/list-builder` folder have moved to `Resources/config/datagrids`. In addition
+to that a `key` tag was added the same way as in the forms. The root tag was changed from `class` to `datagrid`, and the
+`orm:` namespace was moved to the same as all the other tags.
+
+```xml
+<!-- before -->
+<class xmlns="http://schemas.sulu.io/class/general"
+    xmlns:list="http://schemas.sulu.io/class/list"
+    xmlns:orm="http://schemas.sulu.io/class/doctrine"
+>
+    <orm:joins name="translation">
+        <orm:join>
+            <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.category.class%.translations</orm:field-name>
+            <orm:condition>%sulu.model.category_translation.class%.locale = ':locale'</orm:condition>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <case-property name="name" list:translation="sulu_category.name" visibility="always" searchability="yes">
+            <orm:field>
+                <orm:field-name>translation</orm:field-name>
+                <orm:entity-name>%sulu.model.category_translation.class%</orm:entity-name>
+                <orm:joins ref="translation"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>translation</orm:field-name>
+                <orm:entity-name>%sulu.model.category_translation.class%Default</orm:entity-name>
+                <orm:joins ref="defaultTranslation"/>
+            </orm:field>
+        </case-property>
+    </properties>
+</class>
+
+<!-- after -->
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>categories</key>
+    <joins name="translation">
+        <join>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+            <field-name>%sulu.model.category.class%.translations</field-name>
+            <condition>%sulu.model.category_translation.class%.locale = ':locale'</condition>
+        </join>
+    </joins>
+    <properties>
+        <case-property name="name" translation="sulu_category.name" visibility="always" searchability="yes">
+            <field>
+                <field-name>translation</field-name>
+                <entity-name>%sulu.model.category_translation.class%</entity-name>
+                <joins ref="translation"/>
+            </field>
+            <field>
+                <field-name>translation</field-name>
+                <entity-name>%sulu.model.category_translation.class%Default</entity-name>
+                <joins ref="defaultTranslation"/>
+            </field>
+        </case-property>
+    </properties>
+</datagrid>
+```
+
+Also the `FieldDescriptorFactory` holding all the above information now uses the `key` tag from the above example to
+load these values. Therefore the name has also be renamed from `FieldDescriptorFactory::getFieldDescriptorForClass` to
+`FieldDescriptorFactory::getFieldDescriptors`.
 
 The frontend routes for forms defined in the `Admin` classes now need this `formKey` in addition to the `resourceKey`.
 This allows to have the same endpoint for multiple forms, and solves a bunch of issues we were having.

@@ -1,21 +1,20 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general"
-    xmlns:orm="http://schemas.sulu.io/class/doctrine"
-    xmlns:list="http://schemas.sulu.io/class/list"
->
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>minimal</key>
+
     <properties>
-        <property name="id" list:translation="public.id" list:type="integer">
-            <orm:field-name>id</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="id" translation="public.id" type="integer">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="firstName" list:translation="contact.contacts.firstName" searchability="yes" visibility="always">
-            <orm:field-name>firstName</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="firstName" translation="contact.contacts.firstName" searchability="yes" visibility="always">
+            <field-name>firstName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="lastName" list:translation="contact.contacts.lastName" searchability="no" visibility="always">
-            <orm:field-name>lastName</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        <property name="lastName" translation="contact.contacts.lastName" searchability="no" visibility="always">
+            <field-name>lastName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
     </properties>
 </datagrid>

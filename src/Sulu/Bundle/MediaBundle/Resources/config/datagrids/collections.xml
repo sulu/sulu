@@ -1,0 +1,20 @@
+<datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>collections</key>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" visibility="no" type="string">
+            <field-name>id</field-name>
+            <entity-name>SuluMediaBundle:Collection</entity-name>
+        </property>
+
+        <property name="title" translation="sulu_admin.title" visibility="yes" type="string">
+            <field-name>title</field-name>
+            <entity-name>SuluMediaBundle:Collection</entity-name>
+        </property>
+
+        <property name="objectCount" visibility="yes" type="number">
+            <field-name>objectCount</field-name>
+            <entity-name>SuluMediaBundle:Collection</entity-name>
+        </property>
+    </properties>
+</datagrid>

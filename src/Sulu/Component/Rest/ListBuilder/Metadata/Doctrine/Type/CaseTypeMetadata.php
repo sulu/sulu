@@ -12,11 +12,12 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
 
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Describes a field which decide between two descriptors.
  */
-class CaseTypeMetadata
+class CaseTypeMetadata extends PropertyMetadata
 {
     /**
      * @var FieldMetadata[]

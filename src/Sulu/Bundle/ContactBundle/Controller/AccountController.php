@@ -1221,9 +1221,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get(
-            'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass($this->getAccountEntityName());
+        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+             ->getFieldDescriptors('accounts');
     }
 
     /**

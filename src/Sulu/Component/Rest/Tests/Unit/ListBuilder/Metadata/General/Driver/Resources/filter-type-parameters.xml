@@ -1,4 +1,5 @@
 <datagrid xmlns="http://schemas.sulu.io/class/general">
+    <key>filter-type-parameters</key>
     <properties>
         <property name="tags" filter-type="test-input">
             <filter-type-parameters>
