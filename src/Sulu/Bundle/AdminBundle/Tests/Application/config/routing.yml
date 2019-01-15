@@ -20,9 +20,9 @@ sulu_security_api:
     resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
     prefix: /admin/api
 
-sulu_content_api:
+sulu_page_api:
     type: rest
-    resource: "@SuluContentBundle/Resources/config/routing_api.yml"
+    resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_media:

@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Structure\Snippet;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase

@@ -12,7 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;

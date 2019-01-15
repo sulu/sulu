@@ -26,7 +26,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $structureFactory = $container->get('sulu_content.structure.factory');
+        $structureFactory = $container->get('sulu_page.structure.factory');
         $structures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
 
         $locales = $container->getParameter('sulu_core.locales');

@@ -256,7 +256,7 @@ class AdminController
                 'user' => $user,
                 'contact' => $contact,
             ],
-            'sulu_content' => [
+            'sulu_page' => [
                 'endpoints' => [
                     'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
                 ],

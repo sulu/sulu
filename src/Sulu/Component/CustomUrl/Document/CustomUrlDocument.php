@@ -12,7 +12,7 @@
 namespace Sulu\Component\CustomUrl\Document;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;

@@ -1,0 +1,12 @@
+massive_search:
+    adapter: test
+    #adapter: zend_lucene
+    #adapters:
+        #zend_lucene:
+            #hide_index_exception: true
+
+sulu_page:
+    search:
+        mapping:
+            Sulu\Bundle\PageBundle\Document\PageDocument:
+                index: page

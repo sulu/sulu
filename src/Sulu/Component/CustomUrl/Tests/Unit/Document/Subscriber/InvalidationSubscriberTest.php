@@ -13,7 +13,7 @@ namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;

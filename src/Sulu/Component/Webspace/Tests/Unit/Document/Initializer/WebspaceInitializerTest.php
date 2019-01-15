@@ -13,8 +13,8 @@ namespace Sulu\Component\Webspace\Document\Initializer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
-use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
+use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;

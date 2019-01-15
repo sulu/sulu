@@ -43,7 +43,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         ]);
 
         $this->container = $this->prophesize(ContainerBuilder::class);
-        $this->container->get('sulu_content.structure.factory')->willReturn(
+        $this->container->get('sulu_page.structure.factory')->willReturn(
             $this->structureFactory->reveal()
         );
         $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
@@ -98,7 +98,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         ]);
 
         $this->container = $this->prophesize(ContainerBuilder::class);
-        $this->container->get('sulu_content.structure.factory')->willReturn(
+        $this->container->get('sulu_page.structure.factory')->willReturn(
             $this->structureFactory->reveal()
         );
         $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);

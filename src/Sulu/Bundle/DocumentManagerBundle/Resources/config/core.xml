@@ -77,7 +77,7 @@
             <argument type="service" id="sulu_document_manager.namespace_registry" />
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
-            <argument type="service" id="sulu_content.structure.factory" />
+            <argument type="service" id="sulu_page.structure.factory" />
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
         </service>

@@ -33,7 +33,7 @@ return [
     Sulu\Bundle\SecurityBundle\SuluSecurityBundle::class => ['all' => true],
     Sulu\Bundle\CategoryBundle\SuluCategoryBundle::class => ['all' => true],
     Sulu\Bundle\SnippetBundle\SuluSnippetBundle::class => ['all' => true],
-    Sulu\Bundle\ContentBundle\SuluContentBundle::class => ['all' => true],
+    Sulu\Bundle\PageBundle\SuluPageBundle::class => ['all' => true],
     Sulu\Bundle\TagBundle\SuluTagBundle::class => ['all' => true],
     Sulu\Bundle\WebsiteBundle\SuluWebsiteBundle::class => ['all' => true],
     Sulu\Bundle\LocationBundle\SuluLocationBundle::class => ['all' => true],

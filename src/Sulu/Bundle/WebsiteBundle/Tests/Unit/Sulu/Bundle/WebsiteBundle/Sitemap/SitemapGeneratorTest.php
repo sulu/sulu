@@ -13,8 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -100,7 +100,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
-        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
+        $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 

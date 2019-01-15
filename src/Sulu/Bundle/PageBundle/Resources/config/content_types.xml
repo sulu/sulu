@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu.content.type.internal_links.class">Sulu\Bundle\PageBundle\Content\Types\InternalLinks</parameter>
+        <parameter key="sulu.content.type.single_internal_link.class">Sulu\Bundle\PageBundle\Content\Types\SingleInternalLink</parameter>
+        <parameter key="sulu.content.type.phone.class">Sulu\Bundle\PageBundle\Content\Types\Phone</parameter>
+        <parameter key="sulu.content.type.password.class">Sulu\Bundle\PageBundle\Content\Types\Password</parameter>
+        <parameter key="sulu.content.type.url.class">Sulu\Bundle\PageBundle\Content\Types\Url</parameter>
+        <parameter key="sulu.content.type.email.class">Sulu\Bundle\PageBundle\Content\Types\Email</parameter>
+        <parameter key="sulu.content.type.date.class">Sulu\Bundle\PageBundle\Content\Types\Date</parameter>
+        <parameter key="sulu.content.type.time.class">Sulu\Bundle\PageBundle\Content\Types\Time</parameter>
+        <parameter key="sulu.content.type.color.class">Sulu\Bundle\PageBundle\Content\Types\Color</parameter>
+        <parameter key="sulu.content.type.checkbox.class">Sulu\Bundle\PageBundle\Content\Types\Checkbox</parameter>
+    </parameters>
+    <services>
+        <!-- content-types -->
+        <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
+            <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_page.smart_content.data_provider.content.query_builder"/>
+            <argument type="service" id="sulu_page.reference_store.content"/>
+            <argument>%sulu_document_manager.show_drafts%</argument>
+            <tag name="sulu.content.type" alias="internal_links"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
+        <service id="sulu.content.type.single_internal_link" class="%sulu.content.type.single_internal_link.class%">
+            <argument type="service" id="sulu_page.reference_store.content"/>
+
+            <tag name="sulu.content.type" alias="single_internal_link"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
+        <service id="sulu.content.type.phone" class="%sulu.content.type.phone.class%">
+            <tag name="sulu.content.type" alias="phone"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.password" class="%sulu.content.type.password.class%">
+            <tag name="sulu.content.type" alias="password"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.url" class="%sulu.content.type.url.class%">
+            <tag name="sulu.content.type" alias="url"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.email" class="%sulu.content.type.email.class%">
+            <tag name="sulu.content.type" alias="email"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.date" class="%sulu.content.type.date.class%">
+            <tag name="sulu.content.type" alias="date"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.time" class="%sulu.content.type.time.class%">
+            <tag name="sulu.content.type" alias="time"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.color" class="%sulu.content.type.color.class%">
+            <tag name="sulu.content.type" alias="color"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.checkbox" class="%sulu.content.type.checkbox.class%">
+            <tag name="sulu.content.type" alias="checkbox"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.select" class="Sulu\Bundle\PageBundle\Content\Types\Select">
+            <tag name="sulu.content.type" alias="select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+        <service id="sulu.content.type.single_select" class="Sulu\Bundle\PageBundle\Content\Types\SingleSelect">
+            <tag name="sulu.content.type" alias="single_select"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+    </services>
+</container>

@@ -1,0 +1,4 @@
+sulu_page.node.versions:
+    type: rest
+    parent: sulu_page.node
+    resource: Sulu\Bundle\PageBundle\Controller\VersionController

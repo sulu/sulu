@@ -137,9 +137,9 @@ See the following example for a better understanding.
 ```javascript static
 routeRegistry.addCollection([
     {
-        name: 'sulu_webspace.webspace_overview',
+        name: 'sulu_page.webspace_overview',
         path: '/webspace/:webspace/:locale',
-        view: 'sulu_content.webspace_overview',
+        view: 'sulu_page.webspace_overview',
         attributeDefaults: {
             webspace: 'example',
             locale: 'en',
@@ -154,5 +154,5 @@ router.addUpdateAttributesHooks((route) => ({
 }));
 
 // navigates to #/webspace/sulu_io/de?utf=true&test=true
-router.navigate('sulu_webspace.webspace_overview', {webspace: 'sulu_io', test: true})
+router.navigate('sulu_page.webspace_overview', {webspace: 'sulu_io', test: true})
 ```

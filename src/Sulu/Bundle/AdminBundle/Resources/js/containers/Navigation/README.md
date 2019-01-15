@@ -11,15 +11,15 @@ const items = [
     {
         "label": "Webspaces",
         "icon": "su-webspace",
-        "mainRoute": "sulu_content.webspaces",
+        "mainRoute": "sulu_page.webspaces",
         "disabled": false,
         "id": "5aba0a9d7a5e3174614828",
         "childRoutes": [
-          "sulu_content.webspaces",
-          "sulu_content.page_add_form",
-          "sulu_content.page_add_form.detail",
-          "sulu_content.page_edit_form",
-          "sulu_content.page_edit_form.detail"
+          "sulu_page.webspaces",
+          "sulu_page.page_add_form",
+          "sulu_page.page_add_form.detail",
+          "sulu_page.page_edit_form",
+          "sulu_page.page_edit_form.detail"
         ]
       },
       {

@@ -87,9 +87,9 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
-        if ($container->hasExtension('sulu_content')) {
+        if ($container->hasExtension('sulu_page')) {
             $container->prependExtensionConfig(
-                'sulu_content',
+                'sulu_page',
                 [
                     'search' => [
                         'mapping' => [

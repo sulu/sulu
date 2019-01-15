@@ -15,7 +15,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
-use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
@@ -95,7 +95,7 @@ class SerializerEventListener implements EventSubscriberInterface
             '_permissions',
             $this->accessControlManager->getUserPermissionByArray(
                 $content->getLocale(),
-                ContentAdmin::SECURITY_CONTEXT_PREFIX . $content->getWebspaceKey(),
+                PageAdmin::SECURITY_CONTEXT_PREFIX . $content->getWebspaceKey(),
                 $content->getPermissions(),
                 $this->tokenStorage->getToken()->getUser()
             )

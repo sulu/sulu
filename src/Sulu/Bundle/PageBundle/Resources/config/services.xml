@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_page.admin.class">Sulu\Bundle\PageBundle\Admin\PageAdmin</parameter>
+        <parameter key="sulu_page.node_repository.class">Sulu\Bundle\PageBundle\Repository\NodeRepository</parameter>
+        <parameter key="sulu_page.rl_repository.class">Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository</parameter>
+        <parameter key="sulu_page.extension.seo.class">Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension</parameter>
+        <parameter key="sulu_page.extension.excerpt.class">Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension</parameter>
+    </parameters>
+    <services>
+        <!-- admin class -->
+        <service id="sulu_page.admin" class="%sulu_page.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+        </service>
+        <service id="sulu_page.js_config.webspace_input_types"
+                 class="Sulu\Bundle\PageBundle\Admin\WebspaceInputTypesJsConfig">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+
+            <tag name="sulu.js_config"/>
+        </service>
+
+        <!-- content -->
+        <service id="sulu_page.permission_listener" class="Sulu\Bundle\PageBundle\Search\EventListener\PermissionListener">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+        </service>
+
+        <!-- webspace settings -->
+        <service id="sulu_page.webspace.serializer.event_subscriber"
+                 class="Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_core.webspace.url_provider"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- nodes -->
+        <service id="sulu_page.node_repository" class="%sulu_page.node_repository.class%" public="true">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_security.user_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_page.smart_content.data_provider.content.query_builder"/>
+            <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+        </service>
+
+        <!-- resource locator -->
+        <service id="sulu_page.rl_repository" class="%sulu_page.rl_repository.class%" public="true">
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+        </service>
+        <service
+            id="sulu_page.resource_locator_controller"
+            class="Sulu\Bundle\PageBundle\Controller\ResourcelocatorController"
+            public="true"
+        >
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- structure extension -->
+        <service id="sulu_page.extension.seo" class="%sulu_page.extension.seo.class%">
+            <tag name="sulu.structure.extension"/>
+        </service>
+
+        <!-- structure extension -->
+        <service id="sulu_page.extension.excerpt" class="%sulu_page.extension.excerpt.class%">
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu_page.export.manager" />
+            <argument type="service" id="sulu_page.import.manager" />
+            <argument type="service" id="massive_search.factory" />
+
+            <tag name="sulu.structure.extension"/>
+        </service>
+
+        <!-- JsConfig -->
+        <service id="sulu_page.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument type="string">sulu-weebspace</argument>
+            <argument type="collection">
+                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
+                <argument key="versioning" type="collection">
+                    <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
+                </argument>
+                <argument key="default_author">%sulu_page.default_author%</argument>
+                <argument key="seo">%sulu_page.seo%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+        <service id="sulu_page.jsconfig.texteditor_toolbar" class="Sulu\Bundle\PageBundle\Admin\TextEditorJsConfig">
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- Content Repository -->
+        <service id="sulu_page.content_repository" class="Sulu\Component\Content\Repository\ContentRepository" public="true">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+        </service>
+        <service id="sulu_page.content_repository.event_subscriber"
+                 class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_page.preview.object_provider" class="Sulu\Bundle\PageBundle\Preview\PageObjectProvider">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="jms_serializer"/>
+
+            <tag name="sulu_preview.object_provider" provider-key="pages"/>
+        </service>
+        <service id="sulu_page.preview.defaults_provider"
+                 class="Sulu\Bundle\PageBundle\Preview\PageRouteDefaultsProvider">
+            <argument type="service" id="sulu_page.structure.factory"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+
+            <tag name="sulu_route.defaults_provider"/>
+        </service>
+
+        <!-- builder -->
+        <service id="sulu_core.build.builder.node_order" class="Sulu\Bundle\PageBundle\Build\NodeOrderBuilder">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="massive_build.builder" />
+        </service>
+
+        <!-- reference-store -->
+        <service id="sulu_page.reference_store.content"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="content"/>
+        </service>
+    </services>
+</container>

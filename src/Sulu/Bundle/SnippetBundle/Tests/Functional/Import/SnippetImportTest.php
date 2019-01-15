@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Import;
 
-use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Snippet\Import\SnippetImportInterface;

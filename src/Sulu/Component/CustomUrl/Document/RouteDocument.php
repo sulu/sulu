@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Document;
 
-use Sulu\Bundle\ContentBundle\Document\RouteDocument as BaseRouteDocument;
+use Sulu\Bundle\PageBundle\Document\RouteDocument as BaseRouteDocument;
 
 class RouteDocument extends BaseRouteDocument
 {

@@ -139,8 +139,7 @@
         "sulu/contact-bundle": "self.version",
         "sulu/snippet-bundle": "self.version",
         "sulu/location-bundle": "self.version",
-        "sulu/translate-bundle": "self.version",
-        "sulu/content-bundle": "self.version"
+        "sulu/translate-bundle": "self.version"
     },
     "suggest": {
         "league/flysystem": "^1.0 - Needed for remote media-storages",
