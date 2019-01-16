@@ -79,17 +79,11 @@ class SitemapUrl
     private $attributes;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @param string $loc
      * @param \DateTime $lastmod
      * @param string $changefreq
      * @param float $priority
      * @param array $attributes
-     * @param string $template
      */
     public function __construct(
         $loc,
@@ -97,8 +91,7 @@ class SitemapUrl
         \DateTime $lastmod = null,
         $changefreq = null,
         $priority = null,
-        $attributes = [],
-        $template = 'SuluWebsiteBundle:Sitemap:sitemap-url.xml.twig'
+        $attributes = []
     ) {
         $this->loc = $loc;
         $this->locale = $locale;
@@ -106,7 +99,6 @@ class SitemapUrl
         $this->changefreq = $changefreq;
         $this->priority = $priority;
         $this->attributes = $attributes;
-        $this->template = $template;
 
         $this->addAlternateLink(new SitemapAlternateLink($loc, $locale));
     }
@@ -193,15 +185,5 @@ class SitemapUrl
     public function getAttributes()
     {
         return $this->attributes;
-    }
-
-    /**
-     * Template used to render sitemap-url.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 }

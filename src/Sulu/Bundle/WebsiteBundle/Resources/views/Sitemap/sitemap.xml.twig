@@ -1,12 +1,44 @@
 {% spaceless %}
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" {% block namespaces %}xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"{% endblock %}>
     {% set registrableDomain = sulu_util_domain_info(domain).registrableDomain %}
 
     {% for entry in entries %}
         {% set location = sulu_content_path(entry.loc, webspaceKey, entry.locale, null, scheme) %}
         {% if sulu_util_domain_info(location).registrableDomain == registrableDomain %}
-            {% include entry.template %}
+            <url>
+                {% block url %}
+                    <loc>{{ location }}</loc>
+                    {% if entry.lastmod %}
+                        <lastmod>{{ entry.lastmod|date('Y-m-d') }}</lastmod>
+                    {% endif %}
+                    {% if entry.changefreq %}
+                        <changefreq>{{ entry.changefreq }}</changefreq>
+                    {% endif %}
+                    {% if entry.priority %}
+                        <priority>{{ entry.priority }}</priority>
+                    {% endif %}
+
+                    {% set amount = 0 %}
+                    {% set defaultHref = null %}
+                    {% if entry.alternateLinks|length > 1 %}
+                        {% for alternateLink in entry.alternateLinks %}
+                            {% set href = sulu_content_path(alternateLink.href, webspaceKey, alternateLink.locale, null, scheme, false) %}
+                            {% if href is not empty and href != alternateLink.href and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
+                                <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
+                                {% set amount = amount + 1 %}
+                                {% if defaultLocale == alternateLink.locale and entry.alternateLinks|length > 1 %}
+                                    {% set defaultHref = href %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if defaultHref and amount > 0 %}
+                        <xhtml:link rel="alternate" hreflang="x-default" href="{{ defaultHref }}"/>
+                    {% endif %}
+                {% endblock %}
+            </url>
         {% endif %}
     {% endfor %}
 </urlset>
