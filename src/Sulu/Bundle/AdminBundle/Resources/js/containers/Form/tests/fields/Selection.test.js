@@ -13,8 +13,9 @@ import FormStore from '../../stores/FormStore';
 jest.mock('../../../Datagrid', () => jest.fn(() => null));
 
 jest.mock('../../../Datagrid/stores/DatagridStore',
-    () => function(resourceKey, userSettingsKey, observableOptions = {}, options, initialSelectionIds) {
+    () => function(resourceKey, datagridKey, userSettingsKey, observableOptions = {}, options, initialSelectionIds) {
         this.resourceKey = resourceKey;
+        this.datagridKey = datagridKey;
         this.userSettingsKey = userSettingsKey;
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;

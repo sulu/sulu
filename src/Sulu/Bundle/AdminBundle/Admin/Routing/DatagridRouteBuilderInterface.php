@@ -15,6 +15,8 @@ interface DatagridRouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
+    public function setDatagridKey(string $datagridKey): self;
+
     public function setTitle(string $title): self;
 
     /**

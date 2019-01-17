@@ -73,6 +73,7 @@ class TagAdmin extends Admin
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/tags')
                 ->setResourceKey('tags')
+                ->setDatagridKey('tags')
                 ->setTitle('sulu_tag.tags')
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)

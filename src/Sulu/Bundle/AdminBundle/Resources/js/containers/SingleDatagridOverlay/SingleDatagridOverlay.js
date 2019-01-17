@@ -53,6 +53,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
         }
         this.datagridStore = new DatagridStore(
             resourceKey,
+            resourceKey,
             USER_SETTINGS_KEY,
             observableOptions,
             options,

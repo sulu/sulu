@@ -15,7 +15,7 @@ jest.mock('../../../containers/DatagridOverlay', () => jest.fn(function Datagrid
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
-    function(resourceKey, userSettingsKey, observableOptions, options) {
+    function(resourceKey, datagridKey, userSettingsKey, observableOptions, options) {
         this.userSettingsKey = userSettingsKey;
         this.options = options;
         this.observableOptions = observableOptions;
@@ -211,7 +211,7 @@ test('Should call onConfirm with the current selection', () => {
     expect(confirmSpy).toBeCalledWith({id: 1});
 });
 
-test('Should pass the id froms the preSelectedItems to the DatagridStore', () => {
+test('Should pass the id from the preSelectedItems to the DatagridStore', () => {
     shallow(
         <SingleDatagridOverlay
             adapter="table"
@@ -224,7 +224,14 @@ test('Should pass the id froms the preSelectedItems to the DatagridStore', () =>
         />
     );
 
-    expect(DatagridStore).toBeCalledWith('snippets', 'single_datagrid_overlay', expect.anything(), undefined, [1]);
+    expect(DatagridStore).toBeCalledWith(
+        'snippets',
+        'snippets',
+        'single_datagrid_overlay',
+        expect.anything(),
+        undefined,
+        [1]
+    );
 });
 
 test('Should not fail when preSelectedItem is undefined', () => {

@@ -19,8 +19,9 @@ jest.mock('../../../stores/UserStore', () => ({
 
 jest.mock(
     '../../../containers/Datagrid/stores/DatagridStore',
-    () => jest.fn(function(resourceKey, userSettingsKey, observableOptions, options) {
+    () => jest.fn(function(resourceKey, datagridKey, userSettingsKey, observableOptions, options) {
         this.resourceKey = resourceKey;
+        this.datagridKey = datagridKey;
         this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;
@@ -136,8 +137,9 @@ test('Should render the datagrid with the correct resourceKey', () => {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 adapters: ['table'],
+                datagridKey: 'snippets',
+                resourceKey: 'snippets',
             },
         },
     };
@@ -153,9 +155,10 @@ test('Should render the datagrid with a title', () => {
         bind: jest.fn(),
         route: {
             options: {
+                adapters: ['table'],
+                datagridKey: 'snippets',
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
-                adapters: ['table'],
             },
         },
     };
@@ -172,9 +175,10 @@ test('Should pass correct props to move datagrid overlay', () => {
         route: {
             options: {
                 adapters: ['table'],
+                movable: true,
+                datagridKey: 'snippets',
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
-                movable: true,
             },
         },
     };
@@ -193,9 +197,10 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
-                editRoute: 'editRoute',
                 adapters: ['table'],
+                datagridKey: 'snippets',
+                editRoute: 'editRoute',
+                resourceKey: 'snippets',
             },
         },
     };
@@ -210,8 +215,9 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 adapters: ['table'],
+                datagridKey: 'snippets',
+                resourceKey: 'snippets',
             },
         },
     };
@@ -226,9 +232,10 @@ test('Should render the datagrid with the add icon if a addRoute has been passed
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
-                addRoute: 'addRoute',
                 adapters: ['tree_table'],
+                addRoute: 'addRoute',
+                datagridKey: 'snippets',
+                resourceKey: 'snippets',
             },
         },
     };
@@ -243,8 +250,9 @@ test('Should render the datagrid without the add icon if a addRoute has been pas
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 adapters: ['tree_table'],
+                datagridKey: 'snippets',
+                resourceKey: 'snippets',
             },
         },
     };
@@ -259,8 +267,9 @@ test('Should render the datagrid non-searchable if the searchable option has bee
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
                 adapters: ['tree_table'],
+                datagridKey: 'snippets',
+                resourceKey: 'snippets',
                 searchable: false,
             },
         },
@@ -281,15 +290,29 @@ test('Should throw an error when no resourceKey is defined in the route options'
     expect(() => render(<Datagrid router={router} />)).toThrow(/mandatory "resourceKey" option/);
 });
 
+test('Should throw an error when no datagridKey is defined in the route options', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        route: {
+            options: {
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    expect(() => render(<Datagrid router={router} />)).toThrow(/mandatory "datagridKey" option/);
+});
+
 test('Should destroy the store on unmount', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'snippets',
-                locales: ['de', 'en'],
                 adapters: ['table'],
+                datagridKey: 'snippets',
+                locales: ['de', 'en'],
+                resourceKey: 'snippets',
             },
         },
     };
@@ -324,6 +347,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
             options: {
                 adapters: ['table'],
                 addRoute: 'addRoute',
+                datagridKey: 'test',
                 resourceKey: 'test',
             },
         },
@@ -350,10 +374,11 @@ test('Should navigate when add button is clicked and locales have been passed in
         bind: jest.fn(),
         route: {
             options: {
-                addRoute: 'addRoute',
-                resourceKey: 'test',
-                locales: ['de', 'en'],
                 adapters: ['table'],
+                addRoute: 'addRoute',
+                locales: ['de', 'en'],
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -380,9 +405,10 @@ test('Should navigate without locale when pencil button is clicked', () => {
         bind: jest.fn(),
         route: {
             options: {
-                addRoute: 'addRoute',
-                resourceKey: 'test',
                 adapters: ['table'],
+                addRoute: 'addRoute',
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -402,10 +428,11 @@ test('Should navigate when pencil button is clicked and locales have been passed
         bind: jest.fn(),
         route: {
             options: {
-                editRoute: 'editRoute',
-                resourceKey: 'test',
-                locales: ['de', 'en'],
                 adapters: ['table'],
+                editRoute: 'editRoute',
+                locales: ['de', 'en'],
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -427,9 +454,10 @@ test('Should navigate without locale when pencil button is clicked', () => {
         bind: jest.fn(),
         route: {
             options: {
-                editRoute: 'editRoute',
-                resourceKey: 'test',
                 adapters: ['table'],
+                editRoute: 'editRoute',
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -455,6 +483,7 @@ test('Should load the route attributes from the DatagridStore', () => {
     expect(Datagrid.getDerivedRouteAttributes({
         options: {
             resourceKey: 'test',
+            datagridKey: 'datagrid_test',
         },
     })).toEqual({
         active: 'some-uuid',
@@ -472,8 +501,9 @@ test('Should render the delete item enabled only if something is selected', () =
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
                 adapters: ['table'],
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -500,9 +530,10 @@ test('Should render the locale dropdown with the options from router', () => {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
-                locales: ['en', 'de'],
                 adapters: ['table'],
+                datagridKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
             },
         },
     };
@@ -528,12 +559,13 @@ test('Should pass apiOptions from router to the DatagridStore', () => {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
-                locales: ['en', 'de'],
                 adapters: ['table'],
                 apiOptions: {
                     webspace: 'example',
                 },
+                datagridKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
             },
         },
     };
@@ -550,9 +582,10 @@ test('Should pass locale and page observables to the DatagridStore', () => {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
-                locales: ['en', 'de'],
                 adapters: ['table'],
+                datagridKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
             },
         },
     };
@@ -570,8 +603,9 @@ test('Should not pass the locale observable to the DatagridStore if no locales a
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
                 adapters: ['table'],
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -595,8 +629,9 @@ test('Should delete selected items when delete button is clicked', () => {
         bind: jest.fn(),
         route: {
             options: {
-                resourceKey: 'test',
                 adapters: ['table'],
+                datagridKey: 'test',
+                resourceKey: 'test',
             },
         },
     };
@@ -626,8 +661,9 @@ test('Should make move overlay disappear if cancel is clicked', () => {
         route: {
             options: {
                 adapters: ['table'],
-                resourceKey: 'test',
+                datagridKey: 'test',
                 movable: true,
+                resourceKey: 'test',
             },
         },
     };
@@ -661,8 +697,9 @@ test('Should move items after move overlay was confirmed', () => {
         route: {
             options: {
                 adapters: ['table'],
-                resourceKey: 'test',
+                datagridKey: 'test',
                 movable: true,
+                resourceKey: 'test',
             },
         },
     };

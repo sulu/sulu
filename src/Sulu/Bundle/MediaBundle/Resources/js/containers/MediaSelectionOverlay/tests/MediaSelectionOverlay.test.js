@@ -77,7 +77,7 @@ let mediaDatagridStoreMock: DatagridStore;
 beforeEach(() => {
     jest.clearAllMocks();
 
-    collectionDatagridStoreMock = new DatagridStore('collections', 'media_selection_overlay', {
+    collectionDatagridStoreMock = new DatagridStore('collections', 'collections', 'media_selection_overlay', {
         page: observable.box(),
     }, {});
     collectionDatagridStoreMock.data.push({
@@ -93,7 +93,7 @@ beforeEach(() => {
         description: 'Description 2',
     });
 
-    mediaDatagridStoreMock = new DatagridStore('media', 'media_selection_overlay', {
+    mediaDatagridStoreMock = new DatagridStore('media', 'media', 'media_selection_overlay', {
         page: observable.box(),
     }, {});
     mediaDatagridStoreMock.data.push(

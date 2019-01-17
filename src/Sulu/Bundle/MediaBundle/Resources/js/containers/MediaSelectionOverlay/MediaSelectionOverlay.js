@@ -35,6 +35,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     ) {
         return new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
+            COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
                 page: observable.box(),
@@ -64,6 +65,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         ].join(',');
 
         return new DatagridStore(
+            MEDIA_RESOURCE_KEY,
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {

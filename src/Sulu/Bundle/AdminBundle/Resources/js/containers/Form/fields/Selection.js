@@ -46,6 +46,7 @@ export default class Selection extends React.Component<Props> {
 
             this.datagridStore = new DatagridStore(
                 resourceKey,
+                resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: formInspector.locale, page: observable.box()},
                 {},

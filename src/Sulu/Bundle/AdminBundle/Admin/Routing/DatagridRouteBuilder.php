@@ -32,6 +32,13 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
         return $this;
     }
 
+    public function setDatagridkey(string $datagridKey): DatagridRouteBuilderInterface
+    {
+        $this->route->setOption('datagridKey', $datagridKey);
+
+        return $this;
+    }
+
     public function setTitle(string $title): DatagridRouteBuilderInterface
     {
         $this->route->setOption('title', $title);
@@ -112,6 +119,13 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
             throw new \DomainException(
                 'A route for a datagrid view needs a "resourceKey" option.'
                 . ' You have likely forgotten to call the "setResourceKey" method.'
+            );
+        }
+
+        if (!$this->route->getOption('datagridKey')) {
+            throw new \DomainException(
+                'A route for a datagrid view needs a "datagridKey" option.'
+                . ' You have likely forgotten to call the "setDatagridKey" method.'
             );
         }
 
