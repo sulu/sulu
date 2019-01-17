@@ -34,14 +34,22 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
-                    'datagrids' => [
-                        'directories' => [
-                            __DIR__ . '/../Resources/config/datagrids',
+                    'resources' => [
+                        'pages_seo' => [
+                            'endpoint' => 'get_page-seos',
+                        ],
+                        'pages_excerpt' => [
+                            'endpoint' => 'get_page-excerpts',
                         ],
                     ],
                     'field_type_options' => [
@@ -74,14 +82,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                    'resources' => [
-                        'pages_seo' => [
-                            'endpoint' => 'get_page-seos',
-                        ],
-                        'pages_excerpt' => [
-                            'endpoint' => 'get_page-excerpts',
                         ],
                     ],
                 ]

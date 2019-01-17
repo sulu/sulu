@@ -85,14 +85,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
-                    'forms' => [
-                        'directories' => [
-                            __DIR__ . '/../Resources/config/forms',
-                        ],
-                    ],
                     'datagrids' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
                         ],
                     ],
                     'resources' => [

@@ -26,6 +26,11 @@ The React components registered as views in the `ViewRegistry` had to add the pa
 `$viewPadding` scss variable on their own. That is not neccessary anymore, since it is added in a
 central place.
 
+### DatagridStore
+
+A new constructor argument has been added to the `DatagridStore` JavaScript class, to allowhaving different
+representations on the same resource. The new parameter comes on second place and is called `datagridKey`.
+
 ### Renamed ContentBundle to PageBundle
 
 Following things have changed:
