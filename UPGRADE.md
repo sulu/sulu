@@ -36,6 +36,11 @@ Following Function removed:
 
 The `TagManager` doesn't longer depend on FieldDescriptorFactory, TagEntityName and UserRepository so its constructor changed.
 
+Following Functions changed as the `$userId` is not longer needed:
+
+ - `TagManagerInterface::findOrCreateByName($name, $userId);` -> `TagManagerInterface::findOrCreateByName($name);`
+ - `TagManagerInterface::save($name, $userId, $id);` -> `TagManagerInterface::save($name, $id);`
+
 ### Change tag_list to tag_selection
 
 The tag_list content and field type was changed to `tag_selection`

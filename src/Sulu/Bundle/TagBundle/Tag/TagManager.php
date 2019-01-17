@@ -90,12 +90,12 @@ class TagManager implements TagManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOrCreateByName($name, $userId)
+    public function findOrCreateByName($name)
     {
         $tag = $this->findByName($name);
 
         if (!$tag) {
-            $tag = $this->save(['name' => $name], $userId);
+            $tag = $this->save(['name' => $name]);
         }
 
         return $tag;
@@ -104,7 +104,7 @@ class TagManager implements TagManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save($data, $userId, $id = null)
+    public function save($data, $id = null)
     {
         $name = $data['name'];
 

@@ -157,7 +157,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId());
+            $tag = $this->getManager()->save($this->getData($request));
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -196,7 +196,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save($this->getData($request), $this->getUser()->getId(), $id);
+            $tag = $this->getManager()->save($this->getData($request), $id);
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -273,17 +273,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * TODO: find out why pluralization does not work for this patch action
-     * ISSUE: https://github.com/sulu-cmf/SuluTagBundle/issues/6.
-     *
-     * @Route("/tags", name="tags")
-     * updates an array of tags
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function patchAction(Request $request)
+    public function cpatchAction(Request $request)
     {
         try {
             $tags = [];
@@ -293,7 +287,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 if (isset($item['id'])) {
                     $tags[] = $this->getManager()->save($item, $item['id']);
                 } else {
-                    $tags[] = $this->getManager()->save($item, null);
+                    $tags[] = $this->getManager()->save($item);
                 }
                 ++$i;
             }
