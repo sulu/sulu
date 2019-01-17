@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+### SuluKernel::construct changed
+
+The `suluContext` is optional now to support extending from Symfony `KernelTestCase` of Symfony:
+
+**Before**:
+
+```php
+public function __construct($environment, $debug, $suluContext) {}
+```
+
+**After**:
+
+```php
+public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN) {}
+```
+
 ### Renamed ContentBundle to PageBundle
 
 Following things have changed:

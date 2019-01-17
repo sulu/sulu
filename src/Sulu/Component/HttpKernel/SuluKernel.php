@@ -49,7 +49,7 @@ abstract class SuluKernel extends Kernel
      * @param bool   $debug
      * @param string $suluContext The Sulu context (self::CONTEXT_ADMIN, self::CONTEXT_WEBSITE)
      */
-    public function __construct($environment, $debug, $suluContext)
+    public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
         $this->name = $suluContext;
         $this->context = $suluContext;
