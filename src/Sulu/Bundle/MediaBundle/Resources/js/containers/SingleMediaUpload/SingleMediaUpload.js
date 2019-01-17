@@ -93,7 +93,7 @@ export default class SingleMediaUpload extends React.Component<Props> {
      */
     @action showErrorMessage = (error: any) => {
         this.hasError = true;
-        this.errorMessage = error.toString();
+        this.errorMessage = translate(error.message);
     };
 
     @action callUploadComplete = (media: Object) => {

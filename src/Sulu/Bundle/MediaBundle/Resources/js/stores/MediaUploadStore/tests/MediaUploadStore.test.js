@@ -113,6 +113,13 @@ test('After the request was successful the progress will be reset', (done) => {
         {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
+
+    // Assume upload to be successful
+    // $FlowFixMe
+    mediaUploadStore.upload = jest.fn(() => {
+        return Promise.resolve({});
+    });
+
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
@@ -128,8 +135,32 @@ test('After the request was successful the progress will be reset', (done) => {
             done();
         }
     );
+});
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{}'}});
+test('When the uploaded media is too big for the upload, an exception shall be thrown', () => {
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+
+    const fileData = new File([''], 'fileName');
+
+    // Assume upload to fail with status code 413
+    // $FlowFixMe
+    mediaUploadStore.upload = jest.fn(() => {
+        return Promise.reject({status: 413});
+    });
+
+    mediaUploadStore.update(fileData).catch((e) => {
+        expect(e.message).toEqual('sulu_media.error_413');
+    });
 });
 
 test('Should return thumbnail path if available', () => {
