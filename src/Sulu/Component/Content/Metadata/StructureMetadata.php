@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 
 /**
  * Represents metadata for a structure.

@@ -15,7 +15,7 @@ use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 
 class SchemaHandler implements SubscribingHandlerInterface
 {

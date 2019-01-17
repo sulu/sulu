@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProvider;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 

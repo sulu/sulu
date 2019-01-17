@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\ResourceMetadata\Schema;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\Schema;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Property;
 
 class PropertyTest extends TestCase
 {

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\ResourceMetadata\Schema;
+namespace Sulu\Bundle\AdminBundle\Metadata\Schema;
 
 class Property
 {

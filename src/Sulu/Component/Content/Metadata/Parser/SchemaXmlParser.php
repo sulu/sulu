@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Content\Metadata\Parser;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Property;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Property;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
 
 class SchemaXmlParser
