@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 
 /**
  * Base class for all field-descriptor.
@@ -102,7 +102,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $class;
 
     /**
-     * @var PropertyMetadata
+     * @var AbstractPropertyMetadata
      * @Exclude
      */
     private $metadata;
@@ -248,7 +248,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * Sets metadata for property.
      *
-     * @param PropertyMetadata $metadata
+     * @param AbstractPropertyMetadata $metadata
      */
     public function setMetadata($metadata)
     {

@@ -9,19 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\General\Driver;
+namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\DatagridMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CaseTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -29,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * Parses data from xml and returns general list-builder metadata.
  */
-class XmlDriver
+class DatagridXmlLoader
 {
     const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-general-1.0.xsd';
 
@@ -69,7 +59,7 @@ class XmlDriver
      * @param \DOMXPath $xpath
      * @param \DOMNode $propertyNode
      *
-     * @return PropertyMetadata
+     * @return AbstractPropertyMetadata
      */
     private function loadPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode)
     {
@@ -152,7 +142,7 @@ class XmlDriver
     {
         $field = $this->getField($xpath, $propertyNode);
 
-        $propertyMetadata = new IdentityTypeMetadata(
+        $propertyMetadata = new IdentityPropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
@@ -163,7 +153,7 @@ class XmlDriver
 
     private function loadCasePropertyMetadata(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
-        $propertyMetadata = new CaseTypeMetadata(
+        $propertyMetadata = new CasePropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
@@ -182,7 +172,7 @@ class XmlDriver
     {
         $field = $this->getField($xpath, $propertyNode);
 
-        $propertyMetadata = new GroupConcatTypeMetadata(
+        $propertyMetadata = new GroupConcatPropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
@@ -197,7 +187,7 @@ class XmlDriver
     {
         $field = $this->getField($xpath, $propertyNode);
 
-        $propertyMetadata = new SingleTypeMetadata(
+        $propertyMetadata = new SinglePropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
@@ -210,7 +200,7 @@ class XmlDriver
     {
         $field = $this->getField($xpath, $propertyNode);
 
-        $propertyMetadata = new CountTypeMetadata(
+        $propertyMetadata = new CountPropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
@@ -221,7 +211,7 @@ class XmlDriver
 
     private function loadConcatenationPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode)
     {
-        $propertyMetadata = new ConcatenationTypeMetadata(
+        $propertyMetadata = new ConcatenationPropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 

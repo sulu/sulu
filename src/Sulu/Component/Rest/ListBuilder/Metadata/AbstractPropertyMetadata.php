@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\General;
+namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * Container for property-metadata.
  */
-class PropertyMetadata
+abstract class AbstractPropertyMetadata
 {
     /**
      * @var string

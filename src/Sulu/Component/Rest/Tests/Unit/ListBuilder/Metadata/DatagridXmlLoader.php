@@ -15,18 +15,18 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\DatagridMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\DatagridXmlLoader;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractAbstractPropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class XmlDriverTest extends TestCase
+class DatagridXmlLoaderTest extends TestCase
 {
     /**
      * @var ParameterBagInterface
@@ -34,9 +34,9 @@ class XmlDriverTest extends TestCase
     private $parameterBag;
 
     /**
-     * @var XmlDriver
+     * @var DatagridXmlLoader
      */
-    private $xmlDriver;
+    private $datagridXmlLoader;
 
     protected function setUp()
     {
@@ -57,12 +57,12 @@ class XmlDriverTest extends TestCase
         $this->parameterBag->resolveValue('%test-parameter%')->willReturn('test-value');
         $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
-        $this->xmlDriver = new XmlDriver($this->parameterBag->reveal());
+        $this->datagridXmlLoader = new XmlDriver($this->parameterBag->reveal());
     }
 
     public function testLoadMetadataFromFileComplete()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/complete.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/complete.xml');
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('complete', $result->getKey());
 
@@ -139,7 +139,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/empty.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/empty.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('empty', $result->getKey());
@@ -148,7 +148,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/minimal.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/minimal.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('minimal', $result->getKey());
@@ -189,7 +189,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileInputType()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/filter-type.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('filter-type', $result->getKey());
@@ -209,7 +209,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileParameters()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type-parameters.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/filter-type-parameters.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('filter-type-parameters', $result->getKey());
@@ -233,7 +233,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileNoInputType()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/filter-type-no-input.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/filter-type-no-input.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('filter-type-no-input', $result->getKey());
@@ -257,7 +257,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileGroupConcat()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/group-concat.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/group-concat.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('group-concat', $result->getKey());
@@ -283,7 +283,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileIdentity()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/identity.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/identity.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('identity', $result->getKey());
@@ -303,7 +303,7 @@ class XmlDriverTest extends TestCase
 
     public function testLoadMetadataFromFileCount()
     {
-        $result = $this->xmlDriver->load(__DIR__ . '/Resources/count.xml');
+        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/count.xml');
 
         $this->assertInstanceOf(DatagridMetadata::class, $result);
         $this->assertEquals('count', $result->getKey());
@@ -321,35 +321,35 @@ class XmlDriverTest extends TestCase
         );
     }
 
-    private function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
+    private function assertSingleMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
         $this->assertInstanceOf(SingleTypeMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
-    private function assertGroupConcatMetadata(array $expected, PropertyMetadata $metadata)
+    private function assertGroupConcatMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
         $this->assertInstanceOf(GroupConcatTypeMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
-    private function assertIdentityMetadata(array $expected, PropertyMetadata $metadata)
+    private function assertIdentityMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
         $this->assertInstanceOf(IdentityTypeMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
-    private function assertCountMetadata(array $expected, PropertyMetadata $metadata)
+    private function assertCountMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
         $this->assertInstanceOf(CountTypeMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
-    private function assertPropertyMetadata(array $expected, PropertyMetadata $metadata)
+    private function assertPropertyMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
         $expected = array_merge(
             [
-                'instance' => PropertyMetadata::class,
+                'instance' => AbstractPropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
                 'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
@@ -426,7 +426,7 @@ class XmlDriverTest extends TestCase
         $this->assertEquals($expected['method'], $metadata->getMethod());
     }
 
-    private function assertConcatenationMetadata($expected, PropertyMetadata $metadata)
+    private function assertConcatenationMetadata($expected, AbstractPropertyMetadata $metadata)
     {
         $expected = array_merge(
             [

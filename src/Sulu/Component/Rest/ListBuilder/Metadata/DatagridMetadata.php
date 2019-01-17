@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
-
 class DatagridMetadata
 {
     /**
@@ -26,7 +24,7 @@ class DatagridMetadata
     private $key;
 
     /**
-     * @var PropertyMetadata[]
+     * @var AbstractPropertyMetadata[]
      */
     private $propertiesMetadata = [];
 
@@ -55,7 +53,7 @@ class DatagridMetadata
         return $this->propertiesMetadata;
     }
 
-    public function addPropertyMetadata(PropertyMetadata $propertyMetadata)
+    public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata)
     {
         $this->propertiesMetadata[] = $propertyMetadata;
     }

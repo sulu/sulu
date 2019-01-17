@@ -23,7 +23,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
+use Sulu\Component\Rest\ListBuilder\Metadata\DatagridXmlLoader;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -67,7 +67,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $filesystem->mkdir($this->configCachePath);
 
         $this->fieldDescriptorFactory = new FieldDescriptorFactory(
-            new GeneralXmlDriver($parameterBag->reveal()),
+            new DatagridXmlLoader($parameterBag->reveal()),
             [__DIR__ . '/Resources'],
             $this->configCachePath,
             $this->debug

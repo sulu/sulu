@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
+namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 /**
  * Container for field-metadata.

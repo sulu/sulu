@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
@@ -112,7 +112,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
                     return true;
                 }
 
-                /** @var PropertyMetadata $propertyMetadata */
+                /** @var AbstractPropertyMetadata $propertyMetadata */
                 $propertyMetadata = $fieldDescriptor->getMetadata();
 
                 return FieldDescriptorInterface::VISIBILITY_NEVER !== $propertyMetadata->getVisibility();

@@ -9,15 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
-
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 /**
  * Describes a field which is concatenated from other fields.
  */
-class ConcatenationTypeMetadata extends PropertyMetadata
+class ConcatenationPropertyMetadata extends AbstractPropertyMetadata
 {
     /**
      * @var FieldMetadata[]

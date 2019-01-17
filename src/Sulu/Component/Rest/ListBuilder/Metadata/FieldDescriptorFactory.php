@@ -20,15 +20,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CaseTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
@@ -40,9 +33,9 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWarmerInterface
 {
     /**
-     * @var XmlDriver
+     * @var DatagridXmlLoader
      */
-    private $xmlDriver;
+    private $datagridXmlLoader;
 
     /**
      * @var string[]
@@ -60,12 +53,12 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     private $debug;
 
     public function __construct(
-        XmlDriver $xmlDriver,
+        DatagridXmlLoader $datagridXmlLoader,
         array $datagridDirectories,
         string $cachePath,
         bool $debug
     ) {
-        $this->xmlDriver = $xmlDriver;
+        $this->datagridXmlLoader = $datagridXmlLoader;
         $this->datagridDirectories = $datagridDirectories;
         $this->cachePath = $cachePath;
         $this->debug = $debug;
@@ -77,45 +70,45 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
 
         $datagridFinder = (new Finder())->in($this->datagridDirectories)->name('*.xml');
         foreach ($datagridFinder as $datagridFile) {
-            $datagridMetadata = $this->xmlDriver->load($datagridFile->getPathName());
+            $datagridMetadata = $this->datagridXmlLoader->load($datagridFile->getPathName());
             $datagridKey = $datagridMetadata->getKey();
             if (!array_key_exists($datagridKey, $datagridsMetadataByKey)) {
                 $datagridsMetadataByKey[$datagridKey][] = $datagridMetadata;
             }
         }
 
-        /** @var PropertyMetadata $propertyMetadata */
+        /** @var AbstractPropertyMetadata $propertyMetadata */
         foreach ($datagridsMetadataByKey as $datagridKey => $datagridsMetadata) {
             $fieldDescriptors = [];
             foreach ($datagridsMetadata as $datagridMetadata) {
                 foreach ($datagridMetadata->getPropertiesMetadata() as $propertyMetadata) {
                     $fieldDescriptor = null;
                     $options = [];
-                    if ($propertyMetadata instanceof ConcatenationTypeMetadata) {
+                    if ($propertyMetadata instanceof ConcatenationPropertyMetadata) {
                         $fieldDescriptor = $this->getConcatenationFieldDescriptor(
                             $propertyMetadata,
                             $options
                         );
-                    } elseif ($propertyMetadata instanceof GroupConcatTypeMetadata) {
+                    } elseif ($propertyMetadata instanceof GroupConcatPropertyMetadata) {
                         $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
                             $propertyMetadata,
                             $options
                         );
-                    } elseif ($propertyMetadata instanceof IdentityTypeMetadata) {
+                    } elseif ($propertyMetadata instanceof IdentityPropertyMetadata) {
                         $fieldDescriptor = $this->getIdentityFieldDescriptor(
                             $propertyMetadata,
                             $options
                         );
-                    } elseif ($propertyMetadata instanceof SingleTypeMetadata) {
+                    } elseif ($propertyMetadata instanceof SinglePropertyMetadata) {
                         $fieldDescriptor = $this->getSingleFieldDescriptor(
                             $propertyMetadata,
                             $options
                         );
-                    } elseif ($propertyMetadata instanceof CountTypeMetadata) {
+                    } elseif ($propertyMetadata instanceof CountPropertyMetadata) {
                         $fieldDescriptor = $this->getCountFieldDescriptor(
                             $propertyMetadata
                         );
-                    } elseif ($propertyMetadata instanceof CaseTypeMetadata) {
+                    } elseif ($propertyMetadata instanceof CasePropertyMetadata) {
                         $fieldDescriptor = $this->getCaseFieldDescriptor(
                             $propertyMetadata,
                             $options
@@ -155,13 +148,13 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         return unserialize(file_get_contents($configCache->getPath()));
     }
 
-    private function getSingleFieldDescriptor(PropertyMetadata $propertyMetadata, $options)
+    private function getSingleFieldDescriptor(AbstractPropertyMetadata $propertyMetadata, $options)
     {
         return $this->getFieldDescriptor($propertyMetadata, $propertyMetadata->getField(), $options);
     }
 
     private function getFieldDescriptor(
-        PropertyMetadata $propertyMetadata,
+        AbstractPropertyMetadata $propertyMetadata,
         ?FieldMetadata $fieldMetadata,
         $options
     ): FieldDescriptor {
@@ -209,7 +202,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         );
     }
 
-    private function getCountFieldDescriptor(PropertyMetadata $propertyMetadata)
+    private function getCountFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
     {
         $joins = [];
         foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
@@ -240,7 +233,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     }
 
     private function getConcatenationFieldDescriptor(
-        ConcatenationTypeMetadata $propertyMetadata,
+        ConcatenationPropertyMetadata $propertyMetadata,
         $options
     ): DoctrineConcatenationFieldDescriptor {
         return new DoctrineConcatenationFieldDescriptor(
@@ -265,7 +258,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     }
 
     private function getGroupConcatenationFieldDescriptor(
-        GroupConcatTypeMetadata $propertyMetadata,
+        GroupConcatPropertyMetadata $propertyMetadata,
         $options
     ): DoctrineGroupConcatFieldDescriptor {
         return new DoctrineGroupConcatFieldDescriptor(
@@ -286,7 +279,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     }
 
     private function getIdentityFieldDescriptor(
-        IdentityTypeMetadata $propertyMetadata,
+        IdentityPropertyMetadata $propertyMetadata,
         $options
     ) {
         $fieldMetadata = $propertyMetadata->getField();
@@ -309,7 +302,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     }
 
     private function getCaseFieldDescriptor(
-        CaseTypeMetadata $propertyMetadata,
+        CasePropertyMetadata $propertyMetadata,
         $options
     ): DoctrineCaseFieldDescriptor {
         $case1 = $propertyMetadata->getCase(0);
@@ -339,7 +332,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         );
     }
 
-    private function getGeneralFieldDescriptor(PropertyMetadata $generalMetadata, $options)
+    private function getGeneralFieldDescriptor(AbstractPropertyMetadata $generalMetadata, $options)
     {
         return new FieldDescriptor(
             $this->resolveOptions($generalMetadata->getName(), $options),
