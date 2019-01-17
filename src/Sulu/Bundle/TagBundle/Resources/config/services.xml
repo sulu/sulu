@@ -9,11 +9,14 @@
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
         </service>
+
         <service id="sulu_tag.tag_manager" class="Sulu\Bundle\TagBundle\Tag\TagManager" public="true">
             <argument type="service" id="sulu.repository.tag"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
+        <service id="Sulu\Bundle\TagBundle\Tag\TagManagerInterface" alias="sulu_tag.tag_manager"/>
+
         <service id="sulu_tag.content.type.tag_selection" class="Sulu\Bundle\TagBundle\Content\Types\TagSelection">
             <tag name="sulu.content.type" alias="tag_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
