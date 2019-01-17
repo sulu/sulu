@@ -46,22 +46,20 @@ interface TagManagerInterface
      * Loads the tag with the given name, or creates it, if it does not exist.
      *
      * @param string $name The name to find or create
-     * @param int $userId The id of the user who tries to find a tag
      *
      * @return TagInterface
      */
-    public function findOrCreateByName($name, $userId);
+    public function findOrCreateByName($name);
 
     /**
      * Saves the given Tag.
      *
      * @param array       $data   The data of the tag to save
-     * @param int         $userId The id of the user, who is doing this change
      * @param number|null $id     The id for saving the tag (optional)
      *
      * @return
      */
-    public function save($data, $userId, $id = null);
+    public function save($data, $id = null);
 
     /**
      * Deletes the given Tag.
