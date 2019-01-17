@@ -1,4 +1,4 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
     <key>complete</key>
 
     <joins name="address">
@@ -43,17 +43,21 @@
             </joins>
         </property>
 
-        <concatenation-property name="fullName" glue=" " translation="public.name" type="string"
-            sortable="false" width="100px" min-width="50px" editable="false"
-            css-class="test-class">
-            <field name="firstName">
+        <concatenation-property
+            name="fullName"
+            glue=" "
+            translation="public.name"
+            type="string"
+            sortable="false"
+        >
+            <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
             </field>
             <field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="city" translation="contact.address.city" visibility="true" type="string">
+        <property name="city" translation="contact.address.city" visibility="yes" type="string">
             <field-name>city</field-name>
             <entity-name>SuluContactBundle:Address</entity-name>
 

@@ -58,8 +58,6 @@ class DatagridMetadataProviderTest extends TestCase
                     FieldDescriptorInterface::VISIBILITY_YES,
                     FieldDescriptorInterface::SEARCHABILITY_NEVER,
                     'string',
-                    '',
-                    '',
                     true
                 ),
                 new FieldDescriptor(
@@ -68,8 +66,6 @@ class DatagridMetadataProviderTest extends TestCase
                     FieldDescriptorInterface::VISIBILITY_NO,
                     FieldDescriptorInterface::SEARCHABILITY_NEVER,
                     'string',
-                    '',
-                    '',
                     false
                 ),
             ]
@@ -82,8 +78,6 @@ class DatagridMetadataProviderTest extends TestCase
                     FieldDescriptorInterface::VISIBILITY_YES,
                     FieldDescriptorInterface::SEARCHABILITY_NEVER,
                     'string',
-                    '',
-                    '',
                     true
                 ),
             ]

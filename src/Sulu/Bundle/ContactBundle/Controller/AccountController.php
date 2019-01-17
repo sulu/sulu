@@ -971,8 +971,6 @@ class AccountController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
-            '',
-            '',
             false
         );
 
@@ -984,8 +982,6 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
-            '',
-            '',
             '',
             false
         );
@@ -1012,8 +1008,6 @@ class AccountController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             '',
-            '',
-            '',
             false
         );
 
@@ -1025,8 +1019,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $contactJoin,
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
-            '',
-            '',
             '',
             false
         );
@@ -1054,8 +1046,6 @@ class AccountController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_YES,
             '',
-            '',
-            '160px',
             false
         );
 
@@ -1073,8 +1063,6 @@ class AccountController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             '',
-            '',
-            '',
             false
         );
 
@@ -1088,8 +1076,6 @@ class AccountController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'radio',
-            '',
-            '',
             false
         );
     }
@@ -1134,8 +1120,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $addressJoin,
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NO,
-            '',
-            '',
             '',
             false
         );
@@ -1209,10 +1193,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.address',
             ', ',
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
-            FieldDescriptorInterface::SEARCHABILITY_NO,
-            '',
-            '',
-            '300px'
+            FieldDescriptorInterface::SEARCHABILITY_NO
         );
     }
 

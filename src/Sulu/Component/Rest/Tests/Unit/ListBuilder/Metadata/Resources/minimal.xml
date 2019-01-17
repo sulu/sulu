@@ -1,4 +1,4 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
     <key>minimal</key>
 
     <properties>

@@ -276,8 +276,6 @@ abstract class AbstractMediaController extends RestController
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'thumbnails',
-            '',
-            '',
             false
         );
 

@@ -61,13 +61,6 @@ interface FieldDescriptorInterface
     public function getType();
 
     /**
-     * Returns the width of the field.
-     *
-     * @return string
-     */
-    public function getWidth();
-
-    /**
      * @return bool
      */
     public function getDefault();
@@ -78,11 +71,6 @@ interface FieldDescriptorInterface
     public function getSortable();
 
     /**
-     * @return bool
-     */
-    public function getEditable();
-
-    /**
      * @return string
      */
     public function getVisibility();
@@ -91,16 +79,6 @@ interface FieldDescriptorInterface
      * @return string
      */
     public function getSearchability();
-
-    /**
-     * @return string
-     */
-    public function getMinWidth();
-
-    /**
-     * @return string
-     */
-    public function getClass();
 
     /**
      * @return AbstractPropertyMetadata

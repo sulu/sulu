@@ -22,8 +22,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFie
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
 use Sulu\Component\Rest\ListBuilder\Metadata\DatagridXmlLoader;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -227,13 +227,6 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsEmpty()
-    {
-        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('empty');
-
-        $this->assertEmpty($fieldDescriptor);
-    }
-
     public function testGetFieldDescriptorsMixed()
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('mixed');
@@ -266,11 +259,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'disabled' => false,
                 'default' => false,
                 'type' => 'string',
-                'width' => '',
-                'minWidth' => '',
                 'sortable' => true,
-                'editable' => false,
-                'class' => '',
             ],
             $expected
         );
@@ -281,11 +270,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertEquals($expected['disabled'], $fieldDescriptor->getDisabled());
         $this->assertEquals($expected['default'], $fieldDescriptor->getDefault());
         $this->assertEquals($expected['type'], $fieldDescriptor->getType());
-        $this->assertEquals($expected['width'], $fieldDescriptor->getWidth());
-        $this->assertEquals($expected['minWidth'], $fieldDescriptor->getMinWidth());
         $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
-        $this->assertEquals($expected['editable'], $fieldDescriptor->getEditable());
-        $this->assertEquals($expected['class'], $fieldDescriptor->getClass());
 
         if (array_key_exists('joins', $expected)) {
             foreach ($expected['joins'] as $name => $joinExpected) {

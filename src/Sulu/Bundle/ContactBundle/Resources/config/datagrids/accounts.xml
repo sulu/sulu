@@ -1,4 +1,5 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general">
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
     <key>accounts</key>
 
     <joins name="address">
@@ -42,7 +43,6 @@
             name="number"
             filter-type="string"
             translation="sulu_contact.number"
-            width="90px"
         >
             <field-name>number</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
@@ -54,7 +54,6 @@
             searchability="yes"
             filter-type="string"
             translation="sulu_contact.name"
-            width="300px"
         >
             <field-name>name</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
@@ -170,7 +169,6 @@
             filter-type="string"
             translation="sulu_contact.main_contact"
             sortable="false"
-            width="200px"
             glue=" "
         >
             <field>

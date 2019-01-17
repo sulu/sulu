@@ -44,29 +44,9 @@ abstract class AbstractPropertyMetadata
     private $type = 'string';
 
     /**
-     * @var string
-     */
-    private $width = '';
-
-    /**
-     * @var string
-     */
-    private $minWidth = '';
-
-    /**
      * @var bool
      */
     private $sortable = true;
-
-    /**
-     * @var bool
-     */
-    private $editable = false;
-
-    /**
-     * @var string
-     */
-    private $cssClass = '';
 
     /**
      * @var string
@@ -158,38 +138,6 @@ abstract class AbstractPropertyMetadata
     }
 
     /**
-     * @return string
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * @param string $width
-     */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMinWidth()
-    {
-        return $this->minWidth;
-    }
-
-    /**
-     * @param string $minWidth
-     */
-    public function setMinWidth($minWidth)
-    {
-        $this->minWidth = $minWidth;
-    }
-
-    /**
      * @return bool
      * @return bool
      */
@@ -205,40 +153,6 @@ abstract class AbstractPropertyMetadata
     public function setSortable($sortable)
     {
         $this->sortable = $sortable;
-    }
-
-    /**
-     * @return bool
-     * @return bool
-     */
-    public function isEditable()
-    {
-        return $this->editable;
-    }
-
-    /**
-     * @param bool $editable
-     * @param bool $editable
-     */
-    public function setEditable($editable)
-    {
-        $this->editable = $editable;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCssClass()
-    {
-        return $this->cssClass;
-    }
-
-    /**
-     * @param string $cssClass
-     */
-    public function setCssClass($cssClass)
-    {
-        $this->cssClass = $cssClass;
     }
 
     /**

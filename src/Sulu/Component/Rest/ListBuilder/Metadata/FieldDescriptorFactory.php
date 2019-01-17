@@ -20,8 +20,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
@@ -179,11 +177,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                 $propertyMetadata->getVisibility(),
                 $propertyMetadata->getSearchability(),
                 $propertyMetadata->getType(),
-                $propertyMetadata->getWidth(),
-                $propertyMetadata->getMinWidth(),
-                $propertyMetadata->isSortable(),
-                $propertyMetadata->isEditable(),
-                $propertyMetadata->getCssClass()
+                $propertyMetadata->isSortable()
             );
         }
 
@@ -194,11 +188,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
-            $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass()
+            $propertyMetadata->isSortable()
         );
     }
 
@@ -224,11 +214,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
-            $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass()
+            $propertyMetadata->isSortable()
         );
     }
 
@@ -249,11 +235,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
-            $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass()
+            $propertyMetadata->isSortable()
         );
     }
 
@@ -269,11 +251,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
             $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass(),
             $this->resolveOptions($propertyMetadata->getDistinct(), $options)
         );
     }
@@ -293,11 +271,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
-            $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass()
+            $propertyMetadata->isSortable()
         );
     }
 
@@ -324,11 +298,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->getWidth(),
-            $propertyMetadata->getMinWidth(),
-            $propertyMetadata->isSortable(),
-            $propertyMetadata->isEditable(),
-            $propertyMetadata->getCssClass()
+            $propertyMetadata->isSortable()
         );
     }
 
@@ -340,11 +310,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $generalMetadata->getVisibility(),
             $generalMetadata->getSearchability(),
             $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $generalMetadata->isSortable()
         );
     }
 

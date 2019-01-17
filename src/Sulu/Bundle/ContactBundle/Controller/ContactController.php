@@ -128,8 +128,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_YES,
             'string',
-            '',
-            '',
             false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -150,8 +148,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'string',
-            '',
-            '',
             false
         );
 
@@ -170,8 +166,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'radio',
-            '',
-            '',
             false
         );
     }

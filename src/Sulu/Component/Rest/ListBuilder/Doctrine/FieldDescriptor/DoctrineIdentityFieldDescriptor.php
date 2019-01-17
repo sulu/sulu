@@ -54,11 +54,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
-        string $width = '',
-        string $minWidth = '',
-        bool $sortable = true,
-        bool $editable = false,
-        string $cssClass = ''
+        bool $sortable = true
     ) {
         parent::__construct(
             $name,
@@ -66,11 +62,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $visibility,
             $searchability,
             $type,
-            $width,
-            $minWidth,
-            $sortable,
-            $editable,
-            $cssClass
+            $sortable
         );
 
         $this->fieldName = $fieldName;

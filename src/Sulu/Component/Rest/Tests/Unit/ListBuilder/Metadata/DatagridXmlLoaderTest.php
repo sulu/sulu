@@ -14,16 +14,16 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\ConcatenationPropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\CountPropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\DatagridMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\JoinMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\DatagridXmlLoader;
-use Sulu\Component\Rest\ListBuilder\Metadata\AbstractAbstractPropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\GroupConcatPropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\IdentityPropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\JoinMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\SinglePropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class DatagridXmlLoaderTest extends TestCase
@@ -57,7 +57,7 @@ class DatagridXmlLoaderTest extends TestCase
         $this->parameterBag->resolveValue('%test-parameter%')->willReturn('test-value');
         $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
-        $this->datagridXmlLoader = new XmlDriver($this->parameterBag->reveal());
+        $this->datagridXmlLoader = new DatagridXmlLoader($this->parameterBag->reveal());
     }
 
     public function testLoadMetadataFromFileComplete()
@@ -135,15 +135,6 @@ class DatagridXmlLoaderTest extends TestCase
             ],
             $propertiesMetadata[4]
         );
-    }
-
-    public function testLoadMetadataFromFileEmpty()
-    {
-        $result = $this->datagridXmlLoader->load(__DIR__ . '/Resources/empty.xml');
-
-        $this->assertInstanceOf(DatagridMetadata::class, $result);
-        $this->assertEquals('empty', $result->getKey());
-        $this->assertCount(0, $result->getPropertiesMetadata());
     }
 
     public function testLoadMetadataFromFileMinimal()
@@ -323,25 +314,25 @@ class DatagridXmlLoaderTest extends TestCase
 
     private function assertSingleMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
-        $this->assertInstanceOf(SingleTypeMetadata::class, $metadata);
+        $this->assertInstanceOf(SinglePropertyMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
     private function assertGroupConcatMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
-        $this->assertInstanceOf(GroupConcatTypeMetadata::class, $metadata);
+        $this->assertInstanceOf(GroupConcatPropertyMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
     private function assertIdentityMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
-        $this->assertInstanceOf(IdentityTypeMetadata::class, $metadata);
+        $this->assertInstanceOf(IdentityPropertyMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
     private function assertCountMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
-        $this->assertInstanceOf(CountTypeMetadata::class, $metadata);
+        $this->assertInstanceOf(CountPropertyMetadata::class, $metadata);
         $this->assertPropertyMetadata($expected, $metadata);
     }
 
@@ -355,11 +346,7 @@ class DatagridXmlLoaderTest extends TestCase
                 'visibility' => FieldDescriptorInterface::VISIBILITY_NO,
                 'searchability' => FieldDescriptorInterface::SEARCHABILITY_NEVER,
                 'type' => 'string',
-                'width' => '',
-                'minWidth' => '',
                 'sortable' => true,
-                'editable' => false,
-                'class' => '',
                 'filter-type' => null,
                 'filter-type-parameters' => [],
                 'entityName' => null,
@@ -376,11 +363,7 @@ class DatagridXmlLoaderTest extends TestCase
         $this->assertEquals($expected['searchability'], $metadata->getSearchability());
 
         $this->assertEquals($expected['type'], $metadata->getType());
-        $this->assertEquals($expected['width'], $metadata->getWidth());
-        $this->assertEquals($expected['minWidth'], $metadata->getMinWidth());
         $this->assertEquals($expected['sortable'], $metadata->isSortable());
-        $this->assertEquals($expected['editable'], $metadata->isEditable());
-        $this->assertEquals($expected['class'], $metadata->getCssClass());
 
         if ($metadata->getField()) {
             $this->assertFieldMetadata($expected, $metadata->getField());
@@ -436,7 +419,7 @@ class DatagridXmlLoaderTest extends TestCase
             $expected
         );
 
-        $this->assertInstanceOf(ConcatenationTypeMetadata::class, $metadata);
+        $this->assertInstanceOf(ConcatenationPropertyMetadata::class, $metadata);
 
         $this->assertEquals($expected['glue'], $metadata->getGlue());
         $this->assertCount(count($expected['fields']), $metadata->getFields());

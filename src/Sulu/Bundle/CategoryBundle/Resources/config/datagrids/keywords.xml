@@ -1,4 +1,5 @@
-<datagrid xmlns="http://schemas.sulu.io/class/general">
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
     <key>keywords</key>
 
     <properties>
@@ -7,7 +8,7 @@
             <entity-name>%sulu.model.keyword.class%</entity-name>
         </property>
 
-        <property name="keyword" translation="sulu_category.keyword" visibility="always" editable="true">
+        <property name="keyword" translation="sulu_category.keyword" visibility="always">
             <field-name>keyword</field-name>
             <entity-name>%sulu.model.keyword.class%</entity-name>
         </property>

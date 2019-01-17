@@ -21,8 +21,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class DatagridXmlLoader
 {
-    const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-general-1.0.xsd';
-
     /**
      * @var ParameterBagInterface
      */
@@ -37,11 +35,25 @@ class DatagridXmlLoader
     {
         $datagridMetadata = new DatagridMetadata();
 
-        // load xml file
-        // TODO xsd validation
-        $xmlDoc = XmlUtils::loadFile($resource);
-        $xpath = new \DOMXPath($xmlDoc);
-        $xpath->registerNamespace('x', 'http://schemas.sulu.io/class/general');
+        $cwd = getcwd();
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
+        @chdir(dirname($resource));
+
+        $xmlDocument = XmlUtils::loadFile(
+            $resource,
+            function (\DOMDocument $dom) use ($resource) {
+                $dom->documentURI = $resource;
+                $dom->xinclude();
+
+                return @$dom->schemaValidate(__DIR__ . '/Resources/schema/list-builder-2.0.xsd');
+            }
+        );
+
+        // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
+        @chdir($cwd);
+
+        $xpath = new \DOMXPath($xmlDocument);
+        $xpath->registerNamespace('x', 'http://schemas.sulu.io/list-builder/datagrid');
 
         $datagridMetadata->setResource($resource);
         $datagridMetadata->setKey($xpath->query('/x:datagrid/x:key')->item(0)->nodeValue);
@@ -98,18 +110,6 @@ class DatagridXmlLoader
             $propertyMetadata->setType($type);
         }
 
-        if (null !== $width = XmlUtil::getValueFromXPath('@width', $xpath, $propertyNode)) {
-            $propertyMetadata->setWidth($width);
-        }
-
-        if (null !== $minWidth = XmlUtil::getValueFromXPath('@min-width', $xpath, $propertyNode)) {
-            $propertyMetadata->setMinWidth($minWidth);
-        }
-
-        if (null !== $cssClass = XmlUtil::getValueFromXPath('@css-class', $xpath, $propertyNode)) {
-            $propertyMetadata->setCssClass($cssClass);
-        }
-
         $propertyMetadata->setVisibility(
             XmlUtil::getValueFromXPath(
                 '@visibility',
@@ -128,9 +128,6 @@ class DatagridXmlLoader
         );
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
-        );
-        $propertyMetadata->setEditable(
-            XmlUtil::getBooleanValueFromXPath('@editable', $xpath, $propertyNode, false)
         );
         $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('@filter-type', $xpath, $propertyNode));
         $propertyMetadata->setFilterTypeParameters($this->getFilterTypeParameters($xpath, $propertyNode));

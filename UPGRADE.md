@@ -194,6 +194,9 @@ Also the `FieldDescriptorFactory` holding all the above information now uses the
 load these values. Therefore the name has also be renamed from `FieldDescriptorFactory::getFieldDescriptorForClass` to
 `FieldDescriptorFactory::getFieldDescriptors`.
 
+The `FieldDescriptorInterface` has remove the functions for `width`, `minWidth`, `class` and `editable`. The constructor
+of the `FieldDescriptor` has also lost these arguments.
+
 The frontend routes for forms defined in the `Admin` classes now need this `formKey` in addition to the `resourceKey`.
 This allows to have the same endpoint for multiple forms, and solves a bunch of issues we were having.
 
