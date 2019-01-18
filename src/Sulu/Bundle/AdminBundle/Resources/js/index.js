@@ -12,7 +12,7 @@ import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import metadataStore from './stores/MetadataStore';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
-import {bundleReady, Config} from './services';
+import {bundleReady, Config, resourceEndpointRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
@@ -64,7 +64,6 @@ import Form, {
     TypeToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
-import resourceMetadataStore from './stores/ResourceMetadataStore';
 import {smartContentConfigStore} from './containers/SmartContent';
 
 // $FlowFixMe
@@ -173,12 +172,12 @@ function registerToolbarActions() {
 function processConfig(config: Object) {
     routeRegistry.clear();
     navigationRegistry.clear();
-    resourceMetadataStore.clear();
+    resourceEndpointRegistry.clear();
 
     routeRegistry.addCollection(config.routes);
     metadataStore.endpoint = config.endpoints.metadata;
     navigationRegistry.set(config.navigation);
-    resourceMetadataStore.setEndpoints(config.resourceMetadataEndpoints);
+    resourceEndpointRegistry.setEndpoints(config.resourceMetadataEndpoints);
     smartContentConfigStore.setConfig(config.smartContent);
 }
 

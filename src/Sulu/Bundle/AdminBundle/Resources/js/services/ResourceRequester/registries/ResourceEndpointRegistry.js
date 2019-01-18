@@ -1,5 +1,5 @@
 // @flow
-class ResourceMetadataStore {
+class ResourceEndpointRegistry {
     endpoints: {[string]: string} = {};
 
     configurationPromises: {[string]: Promise<Object>} = {};
@@ -21,4 +21,4 @@ class ResourceMetadataStore {
     }
 }
 
-export default new ResourceMetadataStore();
+export default new ResourceEndpointRegistry();
