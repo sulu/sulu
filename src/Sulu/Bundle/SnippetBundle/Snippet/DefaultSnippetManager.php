@@ -59,7 +59,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
-        $this->areas = new FrozenParameterBag(array_change_key_case($areas));
+        $this->areas = new FrozenParameterBag($areas);
     }
 
     /**
@@ -158,8 +158,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     public function loadIdentifier($webspaceKey, $type)
     {
-        // TODO remove strtolower as soon as lowest Symfony version is 3.4
-        $area = $this->areas->get(strtolower($type));
+        $area = $this->areas->get($type);
 
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
@@ -174,8 +173,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     private function checkTemplate($document, $type)
     {
-        // TODO remove strtolower as soon as lowest Symfony version is 3.4
-        $area = $this->areas->get(strtolower($type));
+        $area = $this->areas->get($type);
 
         return $document->getStructureType() === $area['template'];
     }
