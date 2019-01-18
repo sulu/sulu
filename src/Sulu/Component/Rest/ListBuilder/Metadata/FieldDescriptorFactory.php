@@ -71,8 +71,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $datagridMetadata = $this->datagridXmlLoader->load($datagridFile->getPathName());
             $datagridKey = $datagridMetadata->getKey();
             if (!array_key_exists($datagridKey, $datagridsMetadataByKey)) {
-                $datagridsMetadataByKey[$datagridKey][] = $datagridMetadata;
+                $datagridsMetadataByKey[$datagridKey] = [];
             }
+
+            $datagridsMetadataByKey[$datagridKey][] = $datagridMetadata;
         }
 
         /** @var AbstractPropertyMetadata $propertyMetadata */

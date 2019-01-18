@@ -79,7 +79,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
         $this->assertEquals(
-            ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
+            ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
             array_keys($fieldDescriptor)
         );
 
@@ -105,6 +105,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'width' => '100px',
             ],
             'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
+            'extension' => ['name' => 'extension', 'translation' => 'extension.extension', 'default' => true],
         ];
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
