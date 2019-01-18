@@ -1,6 +1,11 @@
 @import '../../components/Toolbar/variables.scss';
 @import '../../components/Tabs/variables.scss';
+@import '../../containers/Application/variables.scss';
 
 .loader {
     margin-top: calc($toolbarHeight + $tabMenuHeight);
+}
+
+.tabs-container {
+    margin: -$viewPadding -$viewPadding $viewPadding;
 }

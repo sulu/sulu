@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Do not render Loader instead of Adapter if no page count is given 1`] = `
-Array [
+<div
+  class="datagridContainer"
+>
   <div
     class="headerContainer"
   >
@@ -27,19 +29,21 @@ Array [
         />
       </label>
     </div>
-  </div>,
+  </div>
   <div
     class="datagrid"
   >
     <div>
       Test Adapter
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
-Array [
+<div
+  class="datagridContainer"
+>
   <div
     class="headerContainer"
   >
@@ -65,7 +69,7 @@ Array [
         />
       </label>
     </div>
-  </div>,
+  </div>
   <div
     class="datagrid"
   >
@@ -80,12 +84,14 @@ Array [
         class="doubleBounce2"
       />
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render the adapter in disabled state 1`] = `
-Array [
+<div
+  class="datagridContainer"
+>
   <div
     class="headerContainer"
   >
@@ -114,19 +120,21 @@ Array [
         />
       </label>
     </div>
-  </div>,
+  </div>
   <div
     class="datagrid disabled"
   >
     <div>
       Test Adapter
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render the adapter in non-searchable mode 1`] = `
-Array [
+<div
+  class="datagridContainer"
+>
   <div
     class="headerContainer"
   >
@@ -136,13 +144,13 @@ Array [
     <div
       class="toolbar"
     />
-  </div>,
+  </div>
   <div
     class="datagrid"
   >
     <div>
       Test Adapter
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;

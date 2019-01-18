@@ -194,17 +194,19 @@ export default class ResourceTabs extends React.Component<Props> {
         return this.resourceStore.initialized
             ? (
                 <Fragment>
-                    <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                        {this.visibleTabRoutes.map((tabRoute) => {
-                            const tabTitle = tabRoute.options.tabTitle;
-                            return (
-                                <Tabs.Tab key={tabRoute.name}>
-                                    {tabTitle ? translate(tabTitle) : tabRoute.name}
-                                </Tabs.Tab>
-                            );
-                        })}
-                    </Tabs>
-                    {selectedRouteIndex !== 0 && <h2>{this.title}</h2>}
+                    <div className={resourceTabsStyles.tabsContainer}>
+                        <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
+                            {this.visibleTabRoutes.map((tabRoute) => {
+                                const tabTitle = tabRoute.options.tabTitle;
+                                return (
+                                    <Tabs.Tab key={tabRoute.name}>
+                                        {tabTitle ? translate(tabTitle) : tabRoute.name}
+                                    </Tabs.Tab>
+                                );
+                            })}
+                        </Tabs>
+                    </div>
+                    {selectedRouteIndex !== 0 && <h1>{this.title}</h1>}
                     {ChildComponent}
                 </Fragment>
             )

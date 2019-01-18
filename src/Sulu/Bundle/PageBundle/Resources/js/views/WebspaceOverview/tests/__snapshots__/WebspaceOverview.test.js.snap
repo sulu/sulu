@@ -5,126 +5,130 @@ exports[`Render WebspaceOverview 1`] = `
   class="webspaceOverview"
 >
   <div
-    class="headerContainer"
+    class="datagridContainer"
   >
     <div
-      class="webspaceSelect"
-    >
-      <button
-        class="button"
-      >
-        <span
-          aria-label="su-webspace"
-          class="su-webspace buttonIcon"
-        />
-        <span
-          class="buttonValue"
-        />
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down buttonIcon"
-        />
-      </button>
-    </div>
-    <div
-      class="toolbar"
-    >
-      <div>
-        <button
-          class="button icon active button"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            <span
-              aria-label="su-columns"
-              class="su-columns"
-            />
-          </span>
-        </button>
-        <button
-          class="button icon button"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            <span
-              aria-label="su-columns"
-              class="su-columns"
-            />
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div
-    class="datagrid"
-  >
-    <div
-      class="columnListAdapter"
+      class="headerContainer"
     >
       <div
-        class="columnListToolbarContainer"
+        class="webspaceSelect"
+      >
+        <button
+          class="button"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace buttonIcon"
+          />
+          <span
+            class="buttonValue"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="toolbar"
+      >
+        <div>
+          <button
+            class="button icon active button"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              <span
+                aria-label="su-columns"
+                class="su-columns"
+              />
+            </span>
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              <span
+                aria-label="su-columns"
+                class="su-columns"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="datagrid"
+    >
+      <div
+        class="columnListAdapter"
       >
         <div
-          class="toolbarContainer"
-          style="margin-left: 0px;"
+          class="columnListToolbarContainer"
         >
           <div
-            class="toolbar"
+            class="toolbarContainer"
+            style="margin-left: 0px;"
           >
             <div
-              class="item primary"
-            >
-              <span
-                aria-label="su-plus-circle"
-                class="su-plus-circle"
-              />
-            </div>
-            <div
-              class="item primary"
-            >
-              <span
-                aria-label="su-cog"
-                class="su-cog"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
-        >
-          <div
-            class="columnList"
-          >
-            <div
-              class="column"
+              class="toolbar"
             >
               <div
-                class="item"
-                role="button"
+                class="item primary"
               >
                 <span
-                  class="buttons"
+                  aria-label="su-plus-circle"
+                  class="su-plus-circle"
+                />
+              </div>
+              <div
+                class="item primary"
+              >
+                <span
+                  aria-label="su-cog"
+                  class="su-cog"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+          >
+            <div
+              class="columnList"
+            >
+              <div
+                class="column"
+              >
+                <div
+                  class="item"
+                  role="button"
                 >
                   <span
-                    aria-label="su-pen"
-                    class="su-pen clickable button"
-                    role="button"
-                    tabindex="0"
+                    class="buttons"
+                  >
+                    <span
+                      aria-label="su-pen"
+                      class="su-pen clickable button"
+                      role="button"
+                      tabindex="0"
+                    />
+                  </span>
+                  <span
+                    class="text"
                   />
-                </span>
-                <span
-                  class="text"
-                />
-                <span
-                  class="indicator"
-                />
-                <span
-                  class="children"
-                />
+                  <span
+                    class="indicator"
+                  />
+                  <span
+                    class="children"
+                  />
+                </div>
               </div>
             </div>
           </div>
