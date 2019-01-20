@@ -89,6 +89,7 @@
     "require-dev": {
         "jackalope/jackalope-doctrine-dbal": "^1.2.5",
         "league/flysystem": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0.1",
         "matthiasnoback/symfony-config-test": "^3.0 || ^4.0",
         "matthiasnoback/symfony-dependency-injection-test": "^2.0 || ^3.0",
         "php-ffmpeg/php-ffmpeg": "^0.13",
@@ -143,6 +144,7 @@
     },
     "suggest": {
         "league/flysystem": "^1.0 - Needed for remote media-storages",
+        "league/flysystem-aws-s3-v3": "^1.0.1 - Needed for AWS S3 compatible storages (aws s3 or minio)",
         "superbalist/flysystem-google-storage": "^7.1 - Needed for Google-Bucket media-storage implementation",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "symfony/monolog-bundle": "^3.1",

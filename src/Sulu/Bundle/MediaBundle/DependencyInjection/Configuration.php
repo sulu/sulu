@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use FFMpeg\FFMpeg;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -19,6 +20,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const STORAGE_GOOGLE_CLOUD = 'google_cloud';
+
+    const STORAGE_AWS_S3 = 'aws_s3';
+
     /**
      * {@inheritdoc}
      */
@@ -191,15 +196,35 @@ class Configuration implements ConfigurationInterface
                     ->end();
 
         if (class_exists(GoogleStorageAdapter::class)) {
-            $storages[] = 'google_cloud';
+            $storages[] = self::STORAGE_GOOGLE_CLOUD;
 
             $storagesNode
-                ->arrayNode('google_cloud')
+                ->arrayNode(self::STORAGE_GOOGLE_CLOUD)
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('key_file_path')->isRequired()->end()
                         ->scalarNode('bucket_name')->isRequired()->end()
                         ->scalarNode('segments')->defaultValue(10)->end()
+                    ->end()
+                ->end();
+        }
+
+        if (class_exists(AwsS3Adapter::class)) {
+            $storages[] = self::STORAGE_AWS_S3;
+            $storagesNode
+                ->arrayNode(self::STORAGE_AWS_S3)
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('key')->isRequired()->end()
+                        ->scalarNode('secret')->isRequired()->end()
+                        ->scalarNode('region')->isRequired()->end()
+                        ->scalarNode('bucket_name')->isRequired()->end()
+                        ->scalarNode('version')->defaultValue('latest')->end()
+                        ->scalarNode('endpoint')->defaultNull()->end()
+                        ->scalarNode('segments')->defaultValue(10)->end()
+                        ->arrayNode('arguments')
+                            ->scalarPrototype()->end()
+                        ->end()
                     ->end()
                 ->end();
         }
@@ -224,10 +249,12 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('media')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\MediaBundle\Entity\Media')->end()
-                                ->scalarNode('repository')->defaultValue(
-                                    'Sulu\Bundle\MediaBundle\Entity\MediaRepository'
-                                )->end()
+                                ->scalarNode('model')
+                                    ->defaultValue('Sulu\Bundle\MediaBundle\Entity\Media')
+                                ->end()
+                                ->scalarNode('repository')
+                                    ->defaultValue('Sulu\Bundle\MediaBundle\Entity\MediaRepository')
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
