@@ -250,6 +250,13 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
     {
         $storage = $config['storage'];
         $container->setParameter('sulu_media.media.storage', $storage);
+
+        if (Configuration::STORAGE_CUSTOM === $storage) {
+            $container->setAlias('sulu_media.storage', $config['storages'][$storage]['id'])->setPublic(true);
+
+            return;
+        }
+
         foreach ($config['storages'][$storage] as $key => $value) {
             $container->setParameter('sulu_media.media.storage.' . $storage . '.' . $key, $value);
         }
