@@ -65,6 +65,43 @@ test('Should render the tab title from the ResourceStore as configured in the ro
     expect(resourceTabs.find('ResourceTabs > h1').text()).toEqual('value1');
 });
 
+test('Should not render the tab title from the ResourceStore if no titleProperty is set', () => {
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            {
+                name: 'Tab 1',
+                options: {
+                    tabTitle: 'tabTitle1',
+                },
+            },
+            {
+                name: 'Tab 2',
+                options: {
+                    tabTitle: 'tabTitle2',
+                },
+            },
+        ],
+    };
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[1],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
+    resourceTabs.update();
+
+    expect(resourceTabs.find('ResourceTabs > h1')).toHaveLength(0);
+});
+
 test('Should render the tab title from the resourceStore as configured in the props', () => {
     const route = {
         options: {
@@ -147,6 +184,51 @@ test('Should not render the tab title on the first tab', () => {
     setTimeout(() => {
         resourceTabs.update();
         expect(resourceTabs.find('ResourceTabs > h1')).toHaveLength(0);
+    });
+});
+
+test('Should render the tab title on the first visible tab if the first tab is not visible', (done) => {
+    const route = {
+        options: {
+            resourceKey: 'test',
+            titleProperty: 'test1',
+        },
+        children: [
+            {
+                name: 'Tab 1',
+                options: {
+                    tabCondition: 'test == 1',
+                    tabTitle: 'tabTitle1',
+                },
+            },
+            {
+                name: 'Tab 2',
+                options: {
+                    tabTitle: 'tabTitle2',
+                },
+            },
+        ],
+    };
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[1],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(
+        <ResourceTabs route={route} router={router}>
+            {() => (<Child route={route.children[1]} />)}
+        </ResourceTabs>
+    );
+
+    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
+    setTimeout(() => {
+        resourceTabs.update();
+        expect(resourceTabs.find('ResourceTabs > h1').text()).toEqual('value1');
+        done();
     });
 });
 
