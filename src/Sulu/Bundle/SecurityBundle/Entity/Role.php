@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
 
 /**
@@ -23,6 +24,7 @@ class Role extends BaseRole
 {
     /**
      * @var Collection
+     * @Groups({"fullRole"})
      */
     private $permissions;
 
