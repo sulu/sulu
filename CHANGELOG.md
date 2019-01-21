@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * release/1.5
     * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
+    * BUGFIX      #4376 [SecurityBundle]        Exclude role permissions in user API to improve performance
 
 * 1.5.20 (2019-01-09)
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
