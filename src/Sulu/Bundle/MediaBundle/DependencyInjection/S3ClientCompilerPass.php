@@ -15,13 +15,13 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Prepares arguments for AWS-S3-Client.
+ * Prepares arguments for S3-Client.
  */
 class S3ClientCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (Configuration::STORAGE_AWS_S3 !== $container->getParameter('sulu_media.media.storage')) {
+        if (Configuration::STORAGE_S3 !== $container->getParameter('sulu_media.media.storage')) {
             return;
         }
 

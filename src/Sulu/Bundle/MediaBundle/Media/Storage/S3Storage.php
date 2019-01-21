@@ -32,7 +32,7 @@ class S3Storage extends FlysystemStorage
         parent::__construct($filesystem, $segments);
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AwsS3Adapter) {
-            throw new \RuntimeException();
+            throw new \RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
         }
 
         /** @var AwsS3Adapter $adapter */

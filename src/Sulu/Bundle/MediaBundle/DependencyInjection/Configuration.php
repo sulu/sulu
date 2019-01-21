@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
 {
     const STORAGE_GOOGLE_CLOUD = 'google_cloud';
 
-    const STORAGE_AWS_S3 = 'aws_s3';
+    const STORAGE_S3 = 's3';
 
     /**
      * {@inheritdoc}
@@ -210,9 +210,9 @@ class Configuration implements ConfigurationInterface
         }
 
         if (class_exists(AwsS3Adapter::class)) {
-            $storages[] = self::STORAGE_AWS_S3;
+            $storages[] = self::STORAGE_S3;
             $storagesNode
-                ->arrayNode(self::STORAGE_AWS_S3)
+                ->arrayNode(self::STORAGE_S3)
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('key')->isRequired()->end()
