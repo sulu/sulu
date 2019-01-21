@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * FEATURE    #4357  [MediaBundle]           Added dimension properties to video media
+
 * 1.6.24 (2019-01-09)
     * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
