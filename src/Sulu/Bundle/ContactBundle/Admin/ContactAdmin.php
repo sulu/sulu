@@ -117,6 +117,7 @@ class ContactAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_DATAGRID_ROUTE)
+                ->setTitleProperty('fullName')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
                 ->setResourceKey('contacts')
@@ -147,6 +148,7 @@ class ContactAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_DATAGRID_ROUTE)
+                ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
                 ->setResourceKey('accounts')

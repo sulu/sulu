@@ -18,6 +18,14 @@ public function __construct($environment, $debug, $suluContext) {}
 public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN) {}
 ```
 
+### Styling of View components
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The React components registered as views in the `ViewRegistry` had to add the padding using the
+`$viewPadding` scss variable on their own. That is not neccessary anymore, since it is added in a
+central place.
+
 ### Renamed ContentBundle to PageBundle
 
 Following things have changed:

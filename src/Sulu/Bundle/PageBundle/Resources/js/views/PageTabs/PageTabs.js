@@ -27,6 +27,6 @@ export default class PageTabs extends React.Component<ViewProps> {
             ? this.webspace.allLocalizations.map((localization) => localization.name)
             : [];
 
-        return <ResourceTabs {...props} locales={locales} />;
+        return <ResourceTabs {...props} locales={locales} titleProperty="title" />;
     }
 }

@@ -2,7 +2,6 @@
 @import 'sulu-admin-bundle/components/Toolbar/variables.scss';
 
 .mediaOverview {
-    padding: $viewPadding $viewPadding 30px;
     min-height: calc(100vh - $toolbarHeight);
     display: flex;
 }

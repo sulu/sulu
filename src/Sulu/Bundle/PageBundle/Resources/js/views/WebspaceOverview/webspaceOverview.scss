@@ -2,16 +2,4 @@
 
 .webspace-overview {
     height: 100%;
-    padding: $viewPadding;
-    display: flex;
-    flex-direction: column;
-
-    > :not(.webspace-select) {
-        flex-grow: 1;
-    }
-}
-
-.webspace-select {
-    flex-grow: unset;
-    margin-bottom: 30px;
 }

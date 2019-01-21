@@ -449,7 +449,7 @@ export default class Datagrid extends React.Component<Props> {
         );
 
         return (
-            <Fragment>
+            <div className={datagridStyles.datagridContainer}>
                 {(header || searchable || adapters.length > 1) &&
                     <div className={datagridStyles.headerContainer}>
                         {header}
@@ -568,7 +568,7 @@ export default class Datagrid extends React.Component<Props> {
                         {translate('sulu_admin.order_warning_text')}
                     </Dialog>
                 }
-            </Fragment>
+            </div>
         );
     }
 }

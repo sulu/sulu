@@ -12,6 +12,7 @@ import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {
     locales?: Array<string>,
+    titleProperty?: string,
 };
 
 @observer
@@ -70,6 +71,19 @@ export default class ResourceTabs extends React.Component<Props> {
         } = this.props;
 
         return routeLocales ? routeLocales : propsLocales;
+    }
+
+    @computed get title() {
+        const {
+            route: {
+                options: {
+                    titleProperty: routeTitleProperty,
+                },
+            },
+            titleProperty,
+        } = this.props;
+
+        return this.resourceStore.data[titleProperty || routeTitleProperty];
     }
 
     @computed get visibleTabRoutes(): Array<Object> {
@@ -169,7 +183,7 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     render() {
-        const {children} = this.props;
+        const {children, route} = this.props;
 
         const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
@@ -177,19 +191,26 @@ export default class ResourceTabs extends React.Component<Props> {
             ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === ChildComponent.props.route)
             : undefined;
 
+        const selectedRoute = selectedRouteIndex !== undefined ? this.visibleTabRoutes[selectedRouteIndex] : undefined;
+
         return this.resourceStore.initialized
             ? (
                 <Fragment>
-                    <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                        {this.visibleTabRoutes.map((tabRoute) => {
-                            const tabTitle = tabRoute.options.tabTitle;
-                            return (
-                                <Tabs.Tab key={tabRoute.name}>
-                                    {tabTitle ? translate(tabTitle) : tabRoute.name}
-                                </Tabs.Tab>
-                            );
-                        })}
-                    </Tabs>
+                    <div className={resourceTabsStyles.tabsContainer}>
+                        <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
+                            {this.visibleTabRoutes.map((tabRoute) => {
+                                const tabTitle = tabRoute.options.tabTitle;
+                                return (
+                                    <Tabs.Tab key={tabRoute.name}>
+                                        {tabTitle ? translate(tabTitle) : tabRoute.name}
+                                    </Tabs.Tab>
+                                );
+                            })}
+                        </Tabs>
+                    </div>
+                    {route.children[0] !== selectedRoute && this.title &&
+                        <h1>{this.title}</h1>
+                    }
                     {ChildComponent}
                 </Fragment>
             )

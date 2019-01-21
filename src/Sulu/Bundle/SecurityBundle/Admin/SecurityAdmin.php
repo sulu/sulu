@@ -121,6 +121,7 @@ class SecurityAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
                 ->setResourceKey('roles')
                 ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_edit_form.details', '/details')
                 ->setResourceKey('roles')

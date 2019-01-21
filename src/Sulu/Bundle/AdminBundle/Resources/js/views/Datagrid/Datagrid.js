@@ -136,7 +136,7 @@ class Datagrid extends React.Component<ViewProps> {
         } = this.props.router;
 
         return (
-            <div className={datagridStyles.datagrid}>
+            <div>
                 <DatagridContainer
                     adapters={adapters}
                     header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
