@@ -140,6 +140,8 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         $container->setParameter('sulu_http_cache.handler.public.shared_max_age', $config['public']['shared_max_age']);
         $container->setParameter('sulu_http_cache.handler.public.use_page_ttl', $config['public']['use_page_ttl']);
 
+        $container->setParameter('sulu_http_cache.handler.tags.tags_header_name', $config['tags']['tags_header_name']);
+
         $container->setParameter('sulu_http_cache.handler.aggregate.handlers', $enabledHandlers);
     }
 }

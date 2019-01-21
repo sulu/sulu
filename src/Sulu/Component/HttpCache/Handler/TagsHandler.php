@@ -40,6 +40,11 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     private $referenceStorePool;
 
     /**
+     * @var string
+     */
+    private $tagsHeader;
+
+    /**
      * @var array
      */
     private $referencesToInvalidate = [];
@@ -47,11 +52,16 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     /**
      * @param ProxyClientInterface $proxyClient
      * @param ReferenceStorePoolInterface $referenceStorePool
+     * @param string $tagsHeader
      */
-    public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStorePool)
-    {
+    public function __construct(
+        ProxyClientInterface $proxyClient,
+        ReferenceStorePoolInterface $referenceStorePool,
+        $tagsHeader
+    ) {
         $this->proxyClient = $proxyClient;
         $this->referenceStorePool = $referenceStorePool;
+        $this->tagsHeader = $tagsHeader;
     }
 
     /**
@@ -86,7 +96,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     {
         $tags = array_merge([$structure->getUuid()], $this->getTags());
 
-        $response->headers->set(self::TAGS_HEADER, implode(',', $tags));
+        $response->headers->set($this->tagsHeader, implode(',', $tags));
     }
 
     /**
@@ -101,7 +111,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
         foreach ($this->referencesToInvalidate as $reference) {
             $this->proxyClient->ban(
                 [
-                    self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($reference)),
+                    $this->tagsHeader => sprintf('(%s)(,.+)?$', preg_quote($reference)),
                 ]
             );
         }

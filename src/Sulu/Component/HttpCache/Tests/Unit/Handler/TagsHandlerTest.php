@@ -63,7 +63,9 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->referenceStorePool = $this->prophesize(ReferenceStorePoolInterface::class);
 
         $this->handler = new TagsHandler(
-            $this->proxyCache->reveal(), $this->referenceStorePool->reveal()
+            $this->proxyCache->reveal(),
+            $this->referenceStorePool->reveal(),
+            TagsHandler::TAGS_HEADER
         );
     }
 

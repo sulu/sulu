@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 
+use Sulu\Component\HttpCache\Handler\TagsHandler;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -47,6 +48,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('tags')
                             ->canBeEnabled()
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('tags_header_name')->defaultValue(TagsHandler::TAGS_HEADER)->end()
+                            ->end()
                         ->end()
                         ->arrayNode('debug')
                             ->canBeDisabled()

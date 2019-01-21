@@ -13,6 +13,7 @@
         <service id="sulu_http_cache.handler.tags" class="Sulu\Component\HttpCache\Handler\TagsHandler" public="true">
             <argument type="service" id="sulu_http_cache.proxy_client"/>
             <argument type="service" id="sulu_website.reference_store_pool"/>
+            <argument>%sulu_http_cache.handler.tags.tags_header_name%</argument>
             <tag name="sulu_http_cache.handler" alias="tags" />
         </service>
 
