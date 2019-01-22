@@ -322,7 +322,7 @@ class ContactControllerTest extends SuluTestCase
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Musterfirma');
-        $category = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
+        $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
 
@@ -431,7 +431,7 @@ class ContactControllerTest extends SuluTestCase
                 ],
                 'categories' => [
                     [
-                        'id' => $category->getId(),
+                        'id' => $category1->getId(),
                     ],
                     [
                         'id' => $category2->getId(),
@@ -480,6 +480,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
 
         $this->assertEquals(2, count($response->categories));
+        $this->assertEquals($category1->getId(), $response->categories[0]->id);
+        $this->assertEquals($category2->getId(), $response->categories[1]->id);
     }
 
     public function testPostEmptyLatitude()
@@ -759,6 +761,10 @@ class ContactControllerTest extends SuluTestCase
         $collection = $this->createCollection($collectionType);
         $mediaType = $this->createMediaType('image', 'This is an image');
         $media = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
+        $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
+        $category3 = $this->createCategory('third-category-key', 'en', 'Third Category', 'Description of third Category');
+
         $contact = $this->createContact(
             'Max',
             'Mustermann',
@@ -772,11 +778,11 @@ class ContactControllerTest extends SuluTestCase
             $phone,
             $fax,
             $address,
-            $note
+            $note,
+            null,
+            [$category1, $category2]
         );
 
-        $category = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
-        $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
 
         $this->em->flush();
 
@@ -887,10 +893,7 @@ class ContactControllerTest extends SuluTestCase
                 ],
                 'categories' => [
                     [
-                        'id' => $category->getId(),
-                    ],
-                    [
-                        'id' => $category2->getId(),
+                        'id' => $category3->getId(),
                     ],
                 ],
             ]
@@ -932,7 +935,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
         $this->assertTrue(is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
-        $this->assertEquals(2, count($response->categories));
+        $this->assertEquals(1, count($response->categories));
+        $this->assertEquals($category3->getId(), $response->categories[0]->id);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -971,7 +975,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
         $this->assertTrue(is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
-        $this->assertEquals(2, count($response->categories));
+        $this->assertEquals(1, count($response->categories));
+        $this->assertEquals($category3->getId(), $response->categories[0]->id);
     }
 
     public function testPutDeleteAndAddWithoutId()
@@ -2294,7 +2299,8 @@ class ContactControllerTest extends SuluTestCase
         ?Fax $fax = null,
         ?Address $address = null,
         ?Note $note = null,
-        ?Media $media = null
+        ?Media $media = null,
+        ?array $categories = null
     ) {
         $contact = new Contact();
         $contact->setFirstName($firstName);
@@ -2332,6 +2338,12 @@ class ContactControllerTest extends SuluTestCase
 
         if ($media) {
             $contact->setAvatar($media);
+        }
+
+        if ($categories) {
+            foreach ($categories as $category) {
+                $contact->addCategory($category);
+            }
         }
 
         $this->em->persist($contact);
