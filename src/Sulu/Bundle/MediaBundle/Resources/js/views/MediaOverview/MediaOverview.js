@@ -2,7 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import {action, autorun, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Datagrid, DatagridStore, SingleDatagridOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
