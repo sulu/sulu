@@ -243,6 +243,11 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
+    public function testGetFieldDescriptorsNotExisting()
+    {
+        $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
+    }
+
     private function assertFieldDescriptors(array $expected, array $fieldDescriptors)
     {
         foreach ($expected as $name => $expectedData) {

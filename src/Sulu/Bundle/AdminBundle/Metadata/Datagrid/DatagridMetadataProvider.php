@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\Datagrid;
 
+use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,8 +38,14 @@ class DatagridMetadataProvider implements MetadataProviderInterface
 
     public function getMetadata(string $key, string $locale)
     {
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($key);
+
+        if (!$fieldDescriptors) {
+            throw new MetadataNotFoundException('datagrid', $key);
+        }
+
         $datagrid = new Datagrid();
-        foreach ($this->fieldDescriptorFactory->getFieldDescriptors($key) as $fieldDescriptor) {
+        foreach ($fieldDescriptors as $fieldDescriptor) {
             $field = new Field($fieldDescriptor->getName());
 
             $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin', $locale));

@@ -137,12 +137,16 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptors(string $datagridKey): array
+    public function getFieldDescriptors(string $datagridKey): ?array
     {
         $configCache = $this->getConfigCache($datagridKey);
 
         if (!$configCache->isFresh()) {
             $this->warmUp($this->cachePath);
+        }
+
+        if (!file_exists($configCache->getPath())) {
+            return null;
         }
 
         return unserialize(file_get_contents($configCache->getPath()));

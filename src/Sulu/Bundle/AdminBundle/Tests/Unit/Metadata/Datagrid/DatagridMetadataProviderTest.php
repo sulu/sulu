@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\Datagrid;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\Datagrid\DatagridMetadataProvider;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -114,5 +115,12 @@ class DatagridMetadataProviderTest extends TestCase
             FieldDescriptorInterface::VISIBILITY_YES,
             $accountDatagridFields['name']->getVisibility()
         );
+    }
+
+    public function testGetMetadataNotExisting()
+    {
+        $this->expectException(MetadataNotFoundException::class);
+
+        $this->datagridMetadataProvider->getMetadata('not-existing', 'de');
     }
 }
