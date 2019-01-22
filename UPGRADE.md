@@ -169,7 +169,7 @@ to that a `key` tag was added the same way as in the forms. The root tag was cha
 </class>
 
 <!-- after -->
-<datagrid xmlns="http://schemas.sulu.io/class/general">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
     <key>categories</key>
     <joins name="translation">
         <join>
