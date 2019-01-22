@@ -1163,6 +1163,58 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, count($response->addresses));
     }
 
+    public function testPutWithNullLogo()
+    {
+        $urlType = $this->createUrlType('Private');
+        $url = $this->createUrl('http://www.company.example', $urlType);
+        $emailType = $this->createEmailType('Private');
+        $email = $this->createEmail('info@muster.at', $emailType);
+        $phoneType = $this->createPhoneType('Private');
+        $phone = $this->createPhone('123456789', $phoneType);
+        $faxType = $this->createFaxType('Private');
+        $fax = $this->createFax('123456789', $faxType);
+        $country = $this->createCountry('Musterland', 'ML');
+        $addressType = $this->createAddressType('Private');
+        $address = $this->createAddress(
+            $addressType,
+            'Musterstraße',
+            '1',
+            '0000',
+            'Musterstadt',
+            'Musterland',
+            $country,
+            true,
+            true,
+            false,
+            'Dornbirn',
+            '6850',
+            '4711',
+            'note',
+            47.4048346,
+            9.7602198
+        );
+        $note = $this->createNote('Note');
+        $account = $this->createAccount('Company', null, $url, $address, $email, $phone, $fax, $note);
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/' . $account->getId(),
+            [
+                'name' => 'ExampleCompany',
+                'logo' => null,
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('ExampleCompany', $response->name);
+    }
+
+
     public function testPutNotExisting()
     {
         $client = $this->createAuthenticatedClient();
