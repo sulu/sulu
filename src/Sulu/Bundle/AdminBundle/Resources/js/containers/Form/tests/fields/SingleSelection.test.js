@@ -181,6 +181,7 @@ test('Pass correct props to SingleItemSelection', () => {
         types: {
             datagrid_overlay: {
                 adapter: 'table',
+                datagrid_key: 'accounts_datagrid',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
                 icon: 'su-account',
@@ -201,6 +202,7 @@ test('Pass correct props to SingleItemSelection', () => {
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        datagridKey: 'accounts_datagrid',
         disabled: true,
         disabledIds: [],
         displayProperties: ['name'],

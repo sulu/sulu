@@ -108,6 +108,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     ],
                                     'datagrid_overlay' => [
                                         'adapter' => 'table',
+                                        'datagrid_key' => 'accounts',
                                         'display_properties' => ['name'],
                                         'empty_text' => 'sulu_contact.no_account_selected',
                                         'icon' => 'su-house',
@@ -121,6 +122,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'table',
+                                        'datagrid_key' => 'contacts',
                                         'display_properties' => ['fullName'],
                                         'empty_text' => 'sulu_contact.no_contact_selected',
                                         'icon' => 'su-user',

@@ -74,6 +74,7 @@ export default class SingleSelection extends React.Component<Props>
                 types: {
                     datagrid_overlay: {
                         adapter,
+                        datagrid_key: datagridKey,
                         display_properties: displayProperties,
                         empty_text: emptyText,
                         icon,
@@ -94,6 +95,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                datagridKey={datagridKey}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}

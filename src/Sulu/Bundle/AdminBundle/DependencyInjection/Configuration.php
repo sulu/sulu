@@ -146,6 +146,8 @@ class Configuration implements ConfigurationInterface
                                             ->arrayNode('datagrid_overlay')
                                                 ->children()
                                                     ->scalarNode('adapter')->isRequired()->end()
+                                                    // TODO make optional
+                                                    ->scalarNode('datagrid_key')->isRequired()->end()
                                                     ->arrayNode('display_properties')
                                                         ->isRequired()
                                                         ->requiresAtLeastOneElement()

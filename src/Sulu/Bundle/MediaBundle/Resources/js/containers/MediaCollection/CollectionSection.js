@@ -221,6 +221,7 @@ export default class CollectionSection extends React.Component<Props> {
                     allowActivateForDisabledItems={false}
                     clearSelectionOnClose={true}
                     confirmLoading={resourceStore.moving}
+                    datagridKey={COLLECTIONS_RESOURCE_KEY}
                     disabledIds={resourceStore.id ? [resourceStore.id] : []}
                     locale={locale}
                     onClose={this.handleMoveCollectionClose}

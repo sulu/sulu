@@ -76,6 +76,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'column_list',
+                                        'datagrid_key' => 'pages',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_page.no_page_selected',
                                         'icon' => 'su-document',

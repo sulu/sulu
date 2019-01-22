@@ -17,6 +17,7 @@ import filterOverlayStyles from './filterOverlay.scss';
 
 type Props = {
     dataSourceAdapter: ?string,
+    dataSourceDatagridKey: ?string,
     dataSourceResourceKey: ?string,
     onClose: () => void,
     open: boolean,
@@ -199,6 +200,7 @@ export default class FilterOverlay extends React.Component<Props> {
     render() {
         const {
             dataSourceAdapter,
+            dataSourceDatagridKey,
             dataSourceResourceKey,
             onClose,
             open,
@@ -372,10 +374,12 @@ export default class FilterOverlay extends React.Component<Props> {
                         }
                     </div>
                 </Overlay>
-                {!smartContentStore.loading && dataSourceAdapter && dataSourceResourceKey &&
+                {!smartContentStore.loading && dataSourceAdapter && dataSourceResourceKey && dataSourceDatagridKey &&
                     <SingleDatagridOverlay
                         adapter={dataSourceAdapter}
                         clearSelectionOnClose={false}
+                        // TODO make optional
+                        datagridKey={dataSourceDatagridKey}
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseDataSourceDialog}
                         onConfirm={this.handleConfirmDataSourceDialog}

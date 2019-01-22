@@ -181,6 +181,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     adapter="column_list"
                     clearSelectionOnClose={true}
                     confirmLoading={this.mediaMoving}
+                    datagridKey={COLLECTIONS_RESOURCE_KEY}
                     disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
                     locale={this.locale}
                     onClose={this.handleMoveMediaOverlayClose}

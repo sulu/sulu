@@ -529,6 +529,7 @@ export default class Datagrid extends React.Component<Props> {
                         allowActivateForDisabledItems={false}
                         clearSelectionOnClose={true}
                         confirmLoading={this.moving}
+                        datagridKey={store.datagridKey}
                         disabledIds={this.moveId ? [this.moveId] : []}
                         locale={store.observableOptions.locale}
                         onClose={this.handleMoveOverlayClose}
@@ -545,6 +546,7 @@ export default class Datagrid extends React.Component<Props> {
                         adapter={adapters[0]}
                         clearSelectionOnClose={true}
                         confirmLoading={this.copying}
+                        datagridKey={store.datagridKey}
                         locale={store.observableOptions.locale}
                         onClose={this.handleCopyOverlayClose}
                         onConfirm={this.handleCopyOverlayConfirmClick}

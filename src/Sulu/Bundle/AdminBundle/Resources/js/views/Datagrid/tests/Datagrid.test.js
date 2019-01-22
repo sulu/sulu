@@ -176,7 +176,7 @@ test('Should pass correct props to move datagrid overlay', () => {
             options: {
                 adapters: ['table'],
                 movable: true,
-                datagridKey: 'snippets',
+                datagridKey: 'snippets_datagrid',
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
             },
@@ -186,8 +186,10 @@ test('Should pass correct props to move datagrid overlay', () => {
     const datagrid = shallow(<Datagrid router={router} />);
 
     expect(datagrid.find('SingleDatagridOverlay').props()).toEqual(expect.objectContaining({
+        datagridKey: 'snippets_datagrid',
         options: {includeRoot: true},
         reloadOnOpen: true,
+        resourceKey: 'snippets',
     }));
 });
 

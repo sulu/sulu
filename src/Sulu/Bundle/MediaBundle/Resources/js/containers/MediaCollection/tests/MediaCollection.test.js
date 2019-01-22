@@ -345,6 +345,8 @@ test('Pass correct options to SingleDatagridOverlay', () => {
         />
     );
 
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('datagridKey')).toEqual('collections');
+    expect(mediaCollection.find(SingleDatagridOverlay).prop('resourceKey')).toEqual('collections');
     expect(mediaCollection.find(SingleDatagridOverlay).prop('reloadOnOpen')).toEqual(true);
 });
 

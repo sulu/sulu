@@ -118,7 +118,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             ->enablePagination()
             ->enablePresentAs()
             ->enableAudienceTargeting()
-            ->enableDatasource('pages', 'column_list')
+            ->enableDatasource('pages', 'pages', 'column_list')
             ->enableSorting(
                 [
                     ['column' => 'title', 'title' => 'sulu_admin.title'],

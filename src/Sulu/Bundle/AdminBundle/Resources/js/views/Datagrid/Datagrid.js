@@ -163,6 +163,7 @@ class Datagrid extends React.Component<ViewProps> {
                         allowActivateForDisabledItems={false}
                         clearSelectionOnClose={true}
                         confirmLoading={this.moving}
+                        datagridKey={this.datagridStore.datagridKey}
                         disabledIds={this.datagridStore.selectionIds}
                         locale={this.locale}
                         onClose={this.handleMoveOverlayClose}

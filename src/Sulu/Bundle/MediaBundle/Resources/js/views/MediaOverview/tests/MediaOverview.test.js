@@ -370,6 +370,7 @@ test('Move overlay should disappear when overlay is closed', () => {
     expect(toolbarConfig.items[1].label).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[1].onClick();
     mediaOverview.update();
+    expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('datagridKey')).toEqual('collections');
     expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('collections');
     expect(mediaOverview.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
 

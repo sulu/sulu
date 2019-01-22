@@ -15,7 +15,9 @@ import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer'
 
 let mockStructureStrategyData;
 
-jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions = {}) {
+jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, datagridKey, observableOptions = {}) {
+    this.resourceKey = resourceKey;
+    this.datagridKey = datagridKey;
     this.observableOptions = observableOptions;
     this.setPage = jest.fn();
     this.setActive = jest.fn();
@@ -478,7 +480,7 @@ test('DatagridStore should be updated with current active element', () => {
 
 test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test_datagrid', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -491,6 +493,8 @@ test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is 
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
+    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('test');
+    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('datagridKey')).toEqual('test_datagrid');
 
     datagrid.find(SingleDatagridOverlay).at(1).prop('onClose')();
     return requestCopyPromise.then(() => {
@@ -535,7 +539,7 @@ test('DatagridStore should copy item when onRequestItemCopy callback is called a
 
 test('SingleDatagridOverlay should disappear when onRequestItemMove callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test_datagrid', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -547,6 +551,8 @@ test('SingleDatagridOverlay should disappear when onRequestItemMove callback is 
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
+    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('resourceKey')).toEqual('test');
+    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('datagridKey')).toEqual('test_datagrid');
 
     datagrid.find(SingleDatagridOverlay).at(0).prop('onClose')();
 

@@ -13,6 +13,7 @@ type Props = {|
     allowActivateForDisabledItems?: boolean,
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
+    datagridKey: string,
     disabledIds?: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
@@ -39,7 +40,7 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, options, preSelectedItem, resourceKey} = this.props;
+        const {datagridKey, locale, options, preSelectedItem, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
 
@@ -53,7 +54,8 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
         }
         this.datagridStore = new DatagridStore(
             resourceKey,
-            resourceKey,
+            // TODO make optional
+            datagridKey,
             USER_SETTINGS_KEY,
             observableOptions,
             options,
