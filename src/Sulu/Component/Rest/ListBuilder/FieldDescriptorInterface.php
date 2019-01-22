@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 
 /**
  * Interface for all field-descriptors.
@@ -61,13 +61,6 @@ interface FieldDescriptorInterface
     public function getType();
 
     /**
-     * Returns the width of the field.
-     *
-     * @return string
-     */
-    public function getWidth();
-
-    /**
      * @return bool
      */
     public function getDefault();
@@ -76,11 +69,6 @@ interface FieldDescriptorInterface
      * @return bool
      */
     public function getSortable();
-
-    /**
-     * @return bool
-     */
-    public function getEditable();
 
     /**
      * @return string
@@ -93,17 +81,7 @@ interface FieldDescriptorInterface
     public function getSearchability();
 
     /**
-     * @return string
-     */
-    public function getMinWidth();
-
-    /**
-     * @return string
-     */
-    public function getClass();
-
-    /**
-     * @return PropertyMetadata
+     * @return AbstractPropertyMetadata
      */
     public function getMetadata();
 

@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
-use Metadata\Driver\FileLocatorInterface;
-use Metadata\MetadataFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
@@ -24,11 +22,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFie
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
+use Sulu\Component\Rest\ListBuilder\Metadata\DatagridXmlLoader;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
-use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
-use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -46,11 +41,6 @@ class FieldDescriptorFactoryTest extends TestCase
     private $debug = false;
 
     /**
-     * @var FileLocatorInterface
-     */
-    private $locator;
-
-    /**
      * @var ProviderInterface[]
      */
     private $chain;
@@ -58,8 +48,6 @@ class FieldDescriptorFactoryTest extends TestCase
     public function setup()
     {
         parent::setUp();
-
-        $this->locator = $this->prophesize(FileLocatorInterface::class);
 
         $parameterBag = $this->prophesize(ParameterBagInterface::class);
         $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
@@ -78,27 +66,20 @@ class FieldDescriptorFactoryTest extends TestCase
         }
         $filesystem->mkdir($this->configCachePath);
 
-        $this->chain = [
-            new MetadataProvider(
-                new MetadataFactory(new DoctrineXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
-            ),
-            new MetadataProvider(
-                new MetadataFactory(new GeneralXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
-            ),
-        ];
+        $this->fieldDescriptorFactory = new FieldDescriptorFactory(
+            new DatagridXmlLoader($parameterBag->reveal()),
+            [__DIR__ . '/Resources'],
+            $this->configCachePath,
+            $this->debug
+        );
     }
 
-    public function testGetFieldDescriptorForClassComplete()
+    public function testGetFieldDescriptors()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/complete.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
         $this->assertEquals(
-            ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
+            ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
             array_keys($fieldDescriptor)
         );
 
@@ -124,19 +105,15 @@ class FieldDescriptorFactoryTest extends TestCase
                 'width' => '100px',
             ],
             'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
+            'extension' => ['name' => 'extension', 'translation' => 'extension.extension', 'default' => true],
         ];
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassMinimal()
+    public function testGetFieldDescriptorsMinimal()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/minimal.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('minimal');
 
         $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
 
@@ -149,14 +126,9 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassGroupConcat()
+    public function testGetFieldDescriptorsGroupConcat()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/group-concat.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('group-concat');
 
         $this->assertEquals(['tags'], array_keys($fieldDescriptor));
 
@@ -172,14 +144,9 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassCase()
+    public function testGetFieldDescriptorsCase()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/case.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('case');
 
         $this->assertEquals(['tag'], array_keys($fieldDescriptor));
 
@@ -200,14 +167,9 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
-    public function testGetFieldDescriptorForClassIdentity()
+    public function testGetFieldDescriptorsIdentity()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/identity.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('identity');
 
         $this->assertEquals(['tags'], array_keys($fieldDescriptor));
 
@@ -223,14 +185,9 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassOptions()
+    public function testGetFieldDescriptorsOptions()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/options.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class, ['locale' => 'de']);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('options');
 
         $this->assertEquals(['city'], array_keys($fieldDescriptor));
 
@@ -244,7 +201,7 @@ class FieldDescriptorFactoryTest extends TestCase
                         'entity-name' => 'SuluContactBundle:ContactAddress',
                         'field-name' => 'SuluContactBundle_Contact.contactAddresses',
                         'method' => 'LEFT',
-                        'condition' => 'SuluContactBundle_ContactAddress.locale = \'de\'',
+                        'condition' => 'SuluContactBundle_ContactAddress.locale = :locale',
                     ],
                 ],
             ],
@@ -253,14 +210,9 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassCount()
+    public function testGetFieldDescriptorsCount()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/count.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('count');
 
         $this->assertEquals(['tags'], array_keys($fieldDescriptor));
 
@@ -276,26 +228,9 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorForClassEmpty()
+    public function testGetFieldDescriptorsMixed()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/empty.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
-
-        $this->assertEmpty($fieldDescriptor);
-    }
-
-    public function testGetFieldDescriptorForClassMixed()
-    {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/mixed.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('mixed');
 
         $this->assertCount(2, $fieldDescriptor);
         $this->assertFieldDescriptor(
@@ -308,20 +243,9 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
-    public function testGetFieldDescriptorForClassMixedByType()
+    public function testGetFieldDescriptorsNotExisting()
     {
-        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/mixed.xml');
-
-        $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
-        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class, [], DoctrineFieldDescriptor::class);
-
-        $this->assertCount(1, $fieldDescriptor);
-        $this->assertFieldDescriptor(
-            ['name' => 'id', 'translation' => 'Id', 'disabled' => true],
-            $fieldDescriptor['id']
-        );
+        $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
     }
 
     private function assertFieldDescriptors(array $expected, array $fieldDescriptors)
@@ -341,11 +265,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'disabled' => false,
                 'default' => false,
                 'type' => 'string',
-                'width' => '',
-                'minWidth' => '',
                 'sortable' => true,
-                'editable' => false,
-                'class' => '',
             ],
             $expected
         );
@@ -356,11 +276,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertEquals($expected['disabled'], $fieldDescriptor->getDisabled());
         $this->assertEquals($expected['default'], $fieldDescriptor->getDefault());
         $this->assertEquals($expected['type'], $fieldDescriptor->getType());
-        $this->assertEquals($expected['width'], $fieldDescriptor->getWidth());
-        $this->assertEquals($expected['minWidth'], $fieldDescriptor->getMinWidth());
         $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
-        $this->assertEquals($expected['editable'], $fieldDescriptor->getEditable());
-        $this->assertEquals($expected['class'], $fieldDescriptor->getClass());
 
         if (array_key_exists('joins', $expected)) {
             foreach ($expected['joins'] as $name => $joinExpected) {

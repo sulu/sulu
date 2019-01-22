@@ -86,6 +86,11 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',

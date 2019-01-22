@@ -51,7 +51,7 @@ class MediaDataProvider extends BaseDataProvider
             ->enablePagination()
             ->enablePresentAs()
             ->enableAudienceTargeting()
-            ->enableDatasource('collections', 'column_list')
+            ->enableDatasource('collections', 'collections', 'column_list')
             ->enableSorting(
                 [
                     ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],

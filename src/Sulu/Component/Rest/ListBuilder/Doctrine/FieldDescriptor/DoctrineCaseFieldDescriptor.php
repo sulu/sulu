@@ -39,11 +39,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
-        string $width = '',
-        string $minWidth = '',
-        bool $sortable = true,
-        bool $editable = false,
-        string $cssClass = ''
+        bool $sortable = true
     ) {
         parent::__construct(
             $name,
@@ -51,11 +47,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $visibility,
             $searchability,
             $type,
-            $width,
-            $minWidth,
-            $sortable,
-            $editable,
-            $cssClass
+            $sortable
         );
 
         $this->case1 = $case1;

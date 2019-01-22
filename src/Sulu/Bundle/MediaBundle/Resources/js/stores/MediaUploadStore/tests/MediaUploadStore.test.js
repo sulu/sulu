@@ -13,10 +13,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
         delete: jest.fn(),
     },
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceMetadataStore: {
+    resourceEndpointRegistry: {
         getEndpoint: jest.fn((resourceKey) => {
             switch (resourceKey) {
                 case 'media':
@@ -24,6 +21,9 @@ jest.mock('sulu-admin-bundle/stores', () => ({
             }
         }),
     },
+}));
+
+jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function(resourceKey, id, observableOptions) {
         this.resourceKey = resourceKey;
         this.id = id;

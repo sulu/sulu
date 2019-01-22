@@ -84,6 +84,7 @@ class MediaOverview extends React.Component<ViewProps> {
     createCollectionDatagridStore = () => {
         this.collectionDatagridStore = new DatagridStore(
             COLLECTIONS_RESOURCE_KEY,
+            COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
                 page: this.collectionPage,
@@ -108,6 +109,7 @@ class MediaOverview extends React.Component<ViewProps> {
         ].join(',');
 
         this.mediaDatagridStore = new DatagridStore(
+            MEDIA_RESOURCE_KEY,
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
@@ -179,6 +181,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     adapter="column_list"
                     clearSelectionOnClose={true}
                     confirmLoading={this.mediaMoving}
+                    datagridKey={COLLECTIONS_RESOURCE_KEY}
                     disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
                     locale={this.locale}
                     onClose={this.handleMoveMediaOverlayClose}

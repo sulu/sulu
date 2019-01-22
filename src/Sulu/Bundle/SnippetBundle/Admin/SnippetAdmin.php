@@ -117,6 +117,7 @@ class SnippetAdmin extends Admin
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/snippets/:locale')
                 ->setResourceKey('snippets')
+                ->setDatagridKey('snippets')
                 ->setTitle('sulu_snippet.snippets')
                 ->addDatagridAdapters(['table'])
                 ->addLocales($snippetLocales)

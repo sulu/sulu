@@ -1,0 +1,10 @@
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>complete</key>
+
+    <properties>
+        <property name="extension" translation="extension.extension" visibility="always">
+            <field-name>extension</field-name>
+            <entity-name>SuluExtensionBundle:Extension</entity-name>
+        </property>
+    </properties>
+</datagrid>

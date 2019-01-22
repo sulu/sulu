@@ -10,7 +10,7 @@ jest.mock('../../Requester/Requester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('../../../stores/ResourceMetadataStore', () => ({
+jest.mock('../registries/ResourceEndpointRegistry', () => ({
     getEndpoint: jest.fn().mockImplementation((resourceKey) => {
         switch (resourceKey) {
             case 'snippets':

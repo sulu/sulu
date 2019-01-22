@@ -38,11 +38,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
-        string $width = '',
-        string $minWidth = '',
-        bool $sortable = true,
-        bool $editable = false,
-        string $cssClass = ''
+        bool $sortable = true
     ) {
         parent::__construct(
             $name,
@@ -50,11 +46,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
             $visibility,
             $searchability,
             $type,
-            $width,
-            $minWidth,
-            $sortable,
-            $editable,
-            $cssClass
+            $sortable
         );
         $this->fieldDescriptors = $fieldDescriptors;
         $this->glue = $glue;

@@ -22,6 +22,7 @@ test('Do not display if open is set to false', () => {
     const filterOverlay = shallow(
         <FilterOverlay
             dataSourceAdapter="table"
+            dataSourceDatagridKey="snippets"
             dataSourceResourceKey="snippets"
             onClose={jest.fn()}
             open={false}
@@ -44,6 +45,7 @@ test('Render with DatagridOverlays if smartContentStore is loaded', () => {
     const filterOverlay = shallow(
         <FilterOverlay
             dataSourceAdapter="table"
+            dataSourceDatagridKey="snippets"
             dataSourceResourceKey="snippets"
             onClose={jest.fn()}
             open={true}
@@ -67,6 +69,7 @@ test('Render without DatagridOverlays if smartContentStore is not loaded', () =>
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
+            dataSourceDatagridKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -86,6 +89,7 @@ test('Render with all fields', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
+            dataSourceDatagridKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -104,6 +108,7 @@ test('Render with no fields', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
+            dataSourceDatagridKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -124,6 +129,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
+            dataSourceDatagridKey="pages_datagrid"
             dataSourceResourceKey="pages"
             onClose={closeSpy}
             open={true}
@@ -141,12 +147,14 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
         />
     );
 
+    const pagesOptions = {datagridKey: 'pages_datagrid', resourceKey: 'pages'};
+
     filterOverlay.find('Button[children="sulu_admin.choose_data_source"]').prop('onClick')();
     filterOverlay.update();
-    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(true);
-    filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('onConfirm')({id: 2, title: 'Test'});
+    expect(filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('open')).toEqual(true);
+    filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('onConfirm')({id: 2, title: 'Test'});
     filterOverlay.update();
-    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('open')).toEqual(false);
+    expect(filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Test');
 
@@ -244,6 +252,7 @@ test('Prefill all fields with correct values', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
+            dataSourceDatagridKey="pages"
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}
@@ -261,6 +270,8 @@ test('Prefill all fields with correct values', () => {
         />
     );
 
+    const categoryOptions = {datagridKey: 'categories', resourceKey: 'categories'};
+
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Homepage');
     expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
@@ -269,7 +280,7 @@ test('Prefill all fields with correct values', () => {
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test3');
-    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('preSelectedItems'))
+    expect(filterOverlay.find(MultiDatagridOverlay).find(categoryOptions).prop('preSelectedItems'))
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
@@ -302,6 +313,7 @@ test('Reset all fields when reset action is clicked', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
+            dataSourceDatagridKey="pages"
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}

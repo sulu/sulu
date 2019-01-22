@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -99,6 +100,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->where(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
+        $this->queryBuilder->getDQL()->willReturn('');
 
         $this->queryBuilder->distinct(false)->should(function () {
         });
@@ -129,7 +131,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->setAccessible(true);
     }
 
-    public function testSetField()
+    public function testSetFields()
     {
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -140,6 +142,23 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetFieldsWithStandardFieldDescriptor()
+    {
+        $this->doctrineListBuilder->setSelectFields(
+            [
+                new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName),
+                new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName),
+                new FieldDescriptor('test', 'test_alias', self::$entityName),
+            ]
+        );
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.test AS test_alias')->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -276,6 +295,19 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testAddStandardField()
+    {
+        $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
+        $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
+        $this->doctrineListBuilder->addSelectField(new FieldDescriptor('test', 'test_alias', self::$entityName));
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.test AS test_alias')->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testAddFieldWithJoin()
     {
         $this->doctrineListBuilder->addSelectField(
@@ -297,6 +329,39 @@ class DoctrineListBuilderTest extends TestCase
         )->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
+    }
+
+    public function testAssignParametersForExecute()
+    {
+        $this->queryBuilder->getDQL()->willReturn('SELECT * FROM table WHERE locale = :locale AND parent = :parent');
+
+        $this->doctrineListBuilder->setParameter('locale', 'de');
+        $this->doctrineListBuilder->setParameter('parent', '7');
+        $this->doctrineListBuilder->setParameter('webspace', 'sulu');
+
+        $this->queryBuilder->setParameter('locale', 'de')->shouldBeCalled();
+        $this->queryBuilder->setParameter('parent', '7')->shouldBeCalled();
+        $this->queryBuilder->setParameter('webspace', Argument::any())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testAssignParametersForCount()
+    {
+        $this->queryBuilder->getDQL()->willReturn('SELECT * FROM table WHERE locale = :locale AND parent = :parent');
+
+        $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'alias', self::$entityName));
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->setParameter('locale', 'de');
+        $this->doctrineListBuilder->setParameter('parent', '7');
+        $this->doctrineListBuilder->setParameter('webspace', 'sulu');
+
+        $this->queryBuilder->setParameter('locale', 'de')->shouldBeCalled();
+        $this->queryBuilder->setParameter('parent', '7')->shouldBeCalled();
+        $this->queryBuilder->setParameter('webspace', Argument::any())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->count();
     }
 
     public function testSearchFieldWithJoin()

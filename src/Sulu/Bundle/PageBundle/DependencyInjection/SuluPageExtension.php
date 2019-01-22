@@ -34,9 +34,22 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'pages_seo' => [
+                            'endpoint' => 'get_page-seos',
+                        ],
+                        'pages_excerpt' => [
+                            'endpoint' => 'get_page-excerpts',
                         ],
                     ],
                     'field_type_options' => [
@@ -47,6 +60,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'column_list',
+                                        'datagrid_key' => 'pages',
                                         'display_properties' => ['title', 'url'],
                                         'icon' => 'su-document',
                                         'label' => 'sulu_page.selection_label',
@@ -62,6 +76,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'column_list',
+                                        'datagrid_key' => 'pages',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_page.no_page_selected',
                                         'icon' => 'su-document',
@@ -69,14 +84,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                    'resources' => [
-                        'pages_seo' => [
-                            'endpoint' => 'get_page-seos',
-                        ],
-                        'pages_excerpt' => [
-                            'endpoint' => 'get_page-excerpts',
                         ],
                     ],
                 ]

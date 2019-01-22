@@ -15,7 +15,9 @@ import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer'
 
 let mockStructureStrategyData;
 
-jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, observableOptions = {}) {
+jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, datagridKey, observableOptions = {}) {
+    this.resourceKey = resourceKey;
+    this.datagridKey = datagridKey;
     this.observableOptions = observableOptions;
     this.setPage = jest.fn();
     this.setActive = jest.fn();
@@ -142,7 +144,7 @@ beforeEach(() => {
 });
 
 test('Render Loader instead of Adapter if nothing was loaded yet', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.loading = true;
     datagridStore.pageCount = 0;
@@ -151,7 +153,7 @@ test('Render Loader instead of Adapter if nothing was loaded yet', () => {
 });
 
 test('Do not render Loader instead of Adapter if no page count is given', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.loading = true;
     datagridStore.pageCount = undefined;
@@ -168,7 +170,7 @@ test('Render TableAdapter with correct values', () => {
         },
     ];
 
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     datagridStore.active.get.mockReturnValue(3);
     datagridStore.selectionIds.push(1, 3);
     const editClickSpy = jest.fn();
@@ -197,7 +199,7 @@ test('Render TableAdapter with correct values', () => {
 });
 
 test('Render the adapter in non-selectable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} selectable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onItemSelectionChange')).toEqual(undefined);
@@ -205,42 +207,42 @@ test('Render the adapter in non-selectable mode', () => {
 });
 
 test('Render the adapter in non-deletable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} deletable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onRequestItemDelete')).toEqual(undefined);
 });
 
 test('Render the adapter in non-movable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} movable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onRequestItemMove')).toEqual(undefined);
 });
 
 test('Render the adapter in non-copyable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} copyable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onRequestItemCopy')).toEqual(undefined);
 });
 
 test('Render the adapter in non-orderable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} orderable={false} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('onRequestOrderItem')).toEqual(undefined);
 });
 
 test('Render the adapter in non-searchable mode', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     expect(
         render(<Datagrid adapters={['test']} header={<h1>Title</h1>} searchable={false} store={datagridStore} />)
     ).toMatchSnapshot();
 });
 
 test('Render the adapter in disabled state', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     expect(
         render(<Datagrid adapters={['test']} disabled={true} header={<h1>Title</h1>} store={datagridStore} />)
     ).toMatchSnapshot();
@@ -248,14 +250,14 @@ test('Render the adapter in disabled state', () => {
 
 test('Pass the ids to be disabled to the adapter', () => {
     const disabledIds = [1, 3];
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} disabledIds={disabledIds} store={datagridStore} />);
 
     expect(datagrid.find('TestAdapter').prop('disabledIds')).toBe(disabledIds);
 });
 
 test('Call activate on store if item is activated', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
 
     datagrid.find('TestAdapter').prop('onItemActivate')(5);
@@ -264,7 +266,7 @@ test('Call activate on store if item is activated', () => {
 });
 
 test('Do not call activate if item is activated but disabled and allowActivateForDisabledItems is false', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(
         <Datagrid adapters={['test']} allowActivateForDisabledItems={false} disabledIds={[5]} store={datagridStore} />
     );
@@ -277,7 +279,7 @@ test('Do not call activate if item is activated but disabled and allowActivateFo
 });
 
 test('Call deactivate on store if item is deactivated', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
 
     datagrid.find('TestAdapter').prop('onItemDeactivate')(5);
@@ -286,7 +288,7 @@ test('Call deactivate on store if item is deactivated', () => {
 });
 
 test('Pass sortColumn and sortOrder to adapter', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     datagridStore.sortColumn.get.mockReturnValue('title');
     datagridStore.sortOrder.get.mockReturnValue('asc');
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
@@ -298,7 +300,7 @@ test('Pass sortColumn and sortOrder to adapter', () => {
 });
 
 test('Pass options to adapter', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
 
     const datagridAdapterOptions = {test: 'value'};
     datagridAdapterRegistry.getOptions.mockReturnValue(datagridAdapterOptions);
@@ -311,7 +313,7 @@ test('Pass options to adapter', () => {
 });
 
 test('Pass correct options to SingleDatagridOverlays', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
 
     const datagrid = shallow(<Datagrid adapters={['test']} store={datagridStore} />);
 
@@ -321,7 +323,7 @@ test('Pass correct options to SingleDatagridOverlays', () => {
 
 test('Selecting and deselecting items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     datagridStore.structureStrategy.data.splice(0, datagridStore.structureStrategy.data.length);
     datagridStore.structureStrategy.data.push(
         {id: 1},
@@ -350,7 +352,7 @@ test('Selecting and deselecting items should update store', () => {
 
 test('Selecting and unselecting all visible items should update store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -369,7 +371,7 @@ test('Selecting and unselecting all visible items should update store', () => {
 
 test('Clicking a header cell should sort the table', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -384,7 +386,7 @@ test('Clicking a header cell should sort the table', () => {
 
 test('Trigger a search should call search on the store', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -398,7 +400,7 @@ test('Trigger a search should call search on the store', () => {
 });
 
 test('Switching the adapter should render the correct adapter', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -419,7 +421,7 @@ test('Switching the adapter should render the correct adapter', () => {
 });
 
 test('DatagridStore should be initialized correctly on init and update', () => {
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
 
     datagridAdapterRegistry.get.mockImplementation((adapter) => {
         switch (adapter) {
@@ -469,7 +471,7 @@ test('DatagridStore should be updated with current active element', () => {
             return null;
         }
     });
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     expect(datagridStore.active.get()).toBe(undefined);
     mount(<Datagrid adapters={['test']} store={datagridStore} />);
 
@@ -478,7 +480,7 @@ test('DatagridStore should be updated with current active element', () => {
 
 test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test_datagrid', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -491,6 +493,8 @@ test('SingleDatagridOverlay should disappear when onRequestItemCopy callback is 
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('clearSelectionOnClose')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(1).prop('disabledIds')).toEqual(undefined);
+    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('resourceKey')).toEqual('test');
+    expect(datagrid.find(SingleDatagridOverlay).at(1).prop('datagridKey')).toEqual('test_datagrid');
 
     datagrid.find(SingleDatagridOverlay).at(1).prop('onClose')();
     return requestCopyPromise.then(() => {
@@ -505,7 +509,7 @@ test('DatagridStore should copy item when onRequestItemCopy callback is called a
     const copyPromise = Promise.resolve({id: 9});
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.copy.mockReturnValue(copyPromise);
     mockStructureStrategyData = [
@@ -535,7 +539,7 @@ test('DatagridStore should copy item when onRequestItemCopy callback is called a
 
 test('SingleDatagridOverlay should disappear when onRequestItemMove callback is called and overlay is closed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test_datagrid', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -547,6 +551,8 @@ test('SingleDatagridOverlay should disappear when onRequestItemMove callback is 
     datagrid.update();
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(true);
     expect(datagrid.find(SingleDatagridOverlay).at(0).prop('disabledIds')).toEqual([5]);
+    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('resourceKey')).toEqual('test');
+    expect(datagrid.find(SingleDatagridOverlay).at(0).prop('datagridKey')).toEqual('test_datagrid');
 
     datagrid.find(SingleDatagridOverlay).at(0).prop('onClose')();
 
@@ -562,7 +568,7 @@ test('DatagridStore should move item when onRequestItemMove callback is called a
     const movePromise = Promise.resolve();
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.move.mockReturnValue(movePromise);
     mockStructureStrategyData = [
@@ -591,7 +597,7 @@ test('DatagridStore should move item when onRequestItemMove callback is called a
 
 test('Delete warning should disappear when deleting selection was requested and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     datagridStore.selections.push({}, {});
     mockStructureStrategyData = [
         {id: 1},
@@ -612,7 +618,7 @@ test('Delete warning should disappear when deleting selection was requested and 
 
 test('DatagridStore should delete selections when deleting selection was requested and overlay is confirmed', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     datagridStore.selections.push({}, {}, {});
     const deleteSelectionPromise = Promise.resolve();
     // $FlowFixMe
@@ -641,7 +647,7 @@ test('DatagridStore should delete selections when deleting selection was request
 
 test('Delete warning should disappear when onRequestItemDelete callback is called and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -666,7 +672,7 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
     const deletePromise = Promise.resolve();
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.delete.mockReturnValue(deletePromise);
     mockStructureStrategyData = [
@@ -695,7 +701,7 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
 
 test('Order warning should just disappear when onRequestItemOrder callback is called and overlay is cancelled', () => {
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -721,7 +727,7 @@ test('DatagridStore should order item when onRequestItemOrder callback is called
     const orderPromise = Promise.resolve();
 
     datagridAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const datagridStore = new DatagridStore('test', 'datagrid_test', {page: observable.box(1)});
+    const datagridStore = new DatagridStore('test', 'test', 'datagrid_test', {page: observable.box(1)});
     // $FlowFixMe
     datagridStore.order.mockReturnValue(orderPromise);
     mockStructureStrategyData = [

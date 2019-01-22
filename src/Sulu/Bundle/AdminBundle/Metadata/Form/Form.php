@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\Form;
 
 use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 
 class Form
 {

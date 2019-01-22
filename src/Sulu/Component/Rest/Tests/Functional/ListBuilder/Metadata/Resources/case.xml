@@ -1,29 +1,30 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>case</key>
     <properties>
         <case-property name="tag">
-            <orm:field>
-                <orm:field-name>name</orm:field-name>
-                <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+            <field>
+                <field-name>name</field-name>
+                <entity-name>SuluTagBundle:Tag</entity-name>
 
-                <orm:joins>
-                    <orm:join>
-                        <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
-                        <orm:field-name>%sulu.model.contact.class%.tag</orm:field-name>
-                    </orm:join>
-                </orm:joins>
-            </orm:field>
-            <orm:field>
-                <orm:field-name>name</orm:field-name>
-                <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+                <joins>
+                    <join>
+                        <entity-name>SuluTagBundle:Tag</entity-name>
+                        <field-name>%sulu.model.contact.class%.tag</field-name>
+                    </join>
+                </joins>
+            </field>
+            <field>
+                <field-name>name</field-name>
+                <entity-name>SuluTagBundle:Tag</entity-name>
 
-                <orm:joins>
-                    <orm:join>
-                        <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
-                        <orm:field-name>%sulu.model.contact.class%.defaultTag</orm:field-name>
-                    </orm:join>
-                </orm:joins>
-            </orm:field>
+                <joins>
+                    <join>
+                        <entity-name>SuluTagBundle:Tag</entity-name>
+                        <field-name>%sulu.model.contact.class%.defaultTag</field-name>
+                    </join>
+                </joins>
+            </field>
         </case-property>
     </properties>
-</class>
+</datagrid>
+

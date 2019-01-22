@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
@@ -86,6 +86,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $expressions = [];
 
     /**
+     * @var mixed[]
+     */
+    protected $parameters = [];
+
+    /**
      * @var UserInterface
      */
     protected $user;
@@ -103,14 +108,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
         $this->selectFields = array_filter(
             $fieldDescriptors,
             function (FieldDescriptorInterface $fieldDescriptor) {
-                if (null === $fieldDescriptor->getMetadata()
-                    || !$fieldDescriptor->getMetadata()->has(PropertyMetadata::class)
-                ) {
+                if (null === $fieldDescriptor->getMetadata()) {
                     return true;
                 }
 
-                /** @var PropertyMetadata $propertyMetadata */
-                $propertyMetadata = $fieldDescriptor->getMetadata()->get(PropertyMetadata::class);
+                /** @var AbstractPropertyMetadata $propertyMetadata */
+                $propertyMetadata = $fieldDescriptor->getMetadata();
 
                 return FieldDescriptorInterface::VISIBILITY_NEVER !== $propertyMetadata->getVisibility();
             }
@@ -345,6 +348,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function addExpression(ExpressionInterface $expression)
     {
         $this->expressions[] = $expression;
+    }
+
+    public function setParameter(string $key, $parameter)
+    {
+        $this->parameters[$key] = $parameter;
     }
 
     /**

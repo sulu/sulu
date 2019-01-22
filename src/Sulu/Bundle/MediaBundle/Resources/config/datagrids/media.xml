@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>media</key>
+
+    <joins name="type">
+        <join>
+            <entity-name>SuluMediaBundle:MediaType</entity-name>
+            <field-name>%sulu.model.media.class%.type</field-name>
+        </join>
+    </joins>
+    <joins name="file">
+        <join>
+            <entity-name>SuluMediaBundle:File</entity-name>
+            <field-name>%sulu.model.media.class%.files</field-name>
+        </join>
+    </joins>
+    <joins name="fileVersion" ref="file">
+        <join>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+            <field-name>SuluMediaBundle:File.fileVersions</field-name>
+            <condition>SuluMediaBundle:FileVersion.version = SuluMediaBundle:File.version</condition>
+        </join>
+    </joins>
+    <joins name="fileVersionMeta" ref="fileVersion">
+        <join>
+            <entity-name>SuluMediaBundle:FileVersionMeta</entity-name>
+            <field-name>SuluMediaBundle:FileVersion.meta</field-name>
+            <condition>SuluMediaBundle:FileVersionMeta.locale = :locale</condition>
+        </join>
+    </joins>
+    <joins name="defaultFileVersionMeta" ref="fileVersion">
+        <join>
+            <entity-name>SuluMediaBundle:DefaultFileVersionMeta</entity-name>
+            <field-name>SuluMediaBundle:FileVersion.defaultMeta</field-name>
+        </join>
+    </joins>
+    <joins name="collection">
+        <join>
+            <entity-name>%sulu.model.collection.class%</entity-name>
+            <field-name>%sulu.model.media.class%.collection</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" visibility="no" type="string">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+        </property>
+
+        <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
+            <field-name>changed</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+        </property>
+
+        <property name="created" translation="sulu_admin.created" visibility="no" type="datetime">
+            <field-name>created</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+        </property>
+
+        <property name="collection" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.collection.class%</entity-name>
+
+            <joins ref="collection"/>
+        </property>
+
+        <property
+            name="thumbnails"
+            translation="sulu_media.thumbnail"
+            type="thumbnails"
+            sortable="false"
+            visibility="always"
+        />
+        <property name="url" visibility="never"/>
+
+        <property name="type" translation="sulu_media.type" visibility="always">
+            <field-name>name</field-name>
+            <entity-name>SuluMediaBundle:MediaType</entity-name>
+
+            <joins ref="type"/>
+        </property>
+
+        <property name="version" translation="sulu_media.version">
+            <field-name>version</field-name>
+            <entity-name>SuluMediaBundle:File</entity-name>
+
+            <joins ref="file"/>
+        </property>
+
+        <property name="name" translation="sulu_admin.name" visibility="always" searchability="yes">
+            <field-name>name</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
+        <property name="subVersion" visibility="never">
+            <field-name>subVersion</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
+        <property name="size" translation="sulu_media.size" visibility="always" type="bytes">
+            <field-name>size</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
+        <property name="mimeType" translation="sulu_media.mime_type" visibility="always">
+            <field-name>mimeType</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
+        <property name="storageOptions" visibility="never">
+            <field-name>storageOptions</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
+        <case-property name="locale" visibility="never">
+            <field>
+                <field-name>locale</field-name>
+                <entity-name>SuluMediaBundle:FileVersionMeta</entity-name>
+
+                <joins ref="fileVersionMeta"/>
+            </field>
+            <field>
+                <field-name>locale</field-name>
+                <entity-name>SuluMediaBundle:DefaultFileVersionMeta</entity-name>
+
+                <joins ref="defaultFileVersionMeta"/>
+            </field>
+        </case-property>
+
+        <case-property name="title" translation="sulu_admin.title" visibility="always" type="title" searchability="yes">
+            <field>
+                <field-name>title</field-name>
+                <entity-name>SuluMediaBundle:FileVersionMeta</entity-name>
+
+                <joins ref="fileVersionMeta"/>
+            </field>
+            <field>
+                <field-name>title</field-name>
+                <entity-name>SuluMediaBundle:DefaultFileVersionMeta</entity-name>
+
+                <joins ref="defaultFileVersionMeta"/>
+            </field>
+        </case-property>
+
+        <property name="description" translation="sulu_admin.description" searchability="yes">
+            <field-name>description</field-name>
+            <entity-name>SuluMediaBundle:FileVersionMeta</entity-name>
+
+            <joins ref="fileVersionMeta"/>
+        </property>
+
+        <property name="lft" visibility="never">
+            <field-name>lft</field-name>
+            <entity-name>%sulu.model.collection.class%</entity-name>
+
+            <joins ref="collection"/>
+        </property>
+
+        <property name="rgt" visibility="never">
+            <field-name>rgt</field-name>
+            <entity-name>%sulu.model.collection.class%</entity-name>
+
+            <joins ref="collection"/>
+        </property>
+    </properties>
+</datagrid>

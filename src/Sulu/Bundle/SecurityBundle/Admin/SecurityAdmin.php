@@ -101,6 +101,7 @@ class SecurityAdmin extends Admin
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/roles')
                 ->setResourceKey('roles')
+                ->setDatagridKey('roles')
                 ->setTitle('sulu_security.roles')
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)

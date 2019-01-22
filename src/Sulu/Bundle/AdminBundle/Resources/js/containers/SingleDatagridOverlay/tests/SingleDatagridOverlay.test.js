@@ -15,7 +15,9 @@ jest.mock('../../../containers/DatagridOverlay', () => jest.fn(function Datagrid
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
-    function(resourceKey, userSettingsKey, observableOptions, options) {
+    function(resourceKey, datagridKey, userSettingsKey, observableOptions, options) {
+        this.resourceKey = resourceKey;
+        this.datagridKey = datagridKey;
         this.userSettingsKey = userSettingsKey;
         this.options = options;
         this.observableOptions = observableOptions;
@@ -37,6 +39,7 @@ test('Should instantiate the DatagridStore with locale and options', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets_datagrid"
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -47,6 +50,8 @@ test('Should instantiate the DatagridStore with locale and options', () => {
         />
     );
 
+    expect(singleDatagridOverlay.instance().datagridStore.datagridKey).toEqual('snippets_datagrid');
+    expect(singleDatagridOverlay.instance().datagridStore.resourceKey).toEqual('snippets');
     expect(singleDatagridOverlay.instance().datagridStore.observableOptions.locale.get()).toEqual('en');
     expect(singleDatagridOverlay.instance().datagridStore.options).toBe(options);
 });
@@ -55,6 +60,7 @@ test('Should instantiate the DatagridStore without locale and options', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -71,6 +77,7 @@ test('Should pass overlayType overlay by default', () => {
         <SingleDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -87,6 +94,7 @@ test('Should pass overlayType dialog if it is set via props', () => {
         <SingleDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -106,6 +114,7 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
         <SingleDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -124,6 +133,7 @@ test('Should pass reloadOnOpen to the DatagridOverlay', () => {
         <SingleDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={false}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -142,6 +152,7 @@ test('Should pass clearSelectionOnClose to the DatagridOverlay', () => {
             adapter="table"
             allowActivateForDisabledItems={false}
             clearSelectionOnClose={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -160,6 +171,7 @@ test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
         <SingleDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={false}
+            datagridKey="snippets"
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -178,6 +190,7 @@ test('Should pass confirmLoading flag to the Overlay', () => {
         <SingleDatagridOverlay
             adapter="table"
             confirmLoading={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -194,6 +207,7 @@ test('Should call onConfirm with the current selection', () => {
     const singleDatagridOverlay = mount(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
@@ -211,10 +225,11 @@ test('Should call onConfirm with the current selection', () => {
     expect(confirmSpy).toBeCalledWith({id: 1});
 });
 
-test('Should pass the id froms the preSelectedItems to the DatagridStore', () => {
+test('Should pass the id from the preSelectedItems to the DatagridStore', () => {
     shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -224,13 +239,21 @@ test('Should pass the id froms the preSelectedItems to the DatagridStore', () =>
         />
     );
 
-    expect(DatagridStore).toBeCalledWith('snippets', 'single_datagrid_overlay', expect.anything(), undefined, [1]);
+    expect(DatagridStore).toBeCalledWith(
+        'snippets',
+        'snippets',
+        'single_datagrid_overlay',
+        expect.anything(),
+        undefined,
+        [1]
+    );
 });
 
 test('Should not fail when preSelectedItem is undefined', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -248,6 +271,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     const singleDatagridOverlay1 = mount(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -260,6 +284,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     const singleDatagridOverlay2 = mount(
         <SingleDatagridOverlay
             adapter="column_list"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -274,6 +299,7 @@ test('Should only select a single item at a time', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -295,6 +321,7 @@ test('Should destroy datagridStore and autorun when unmounted', () => {
     const singleDatagridOverlay = shallow(
         <SingleDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}

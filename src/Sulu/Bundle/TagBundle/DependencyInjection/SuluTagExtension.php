@@ -31,9 +31,20 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'tags' => [
+                            'datagrid' => '%sulu.model.tag.class%',
+                            'endpoint' => 'get_tags',
                         ],
                     ],
                     'field_type_options' => [
@@ -51,12 +62,6 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                    'resources' => [
-                        'tags' => [
-                            'datagrid' => '%sulu.model.tag.class%',
-                            'endpoint' => 'get_tags',
                         ],
                     ],
                 ]

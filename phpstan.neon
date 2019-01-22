@@ -26,8 +26,6 @@ parameters:
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
     ignoreErrors:
-        # To be removed once we've removed the metadata dependency from the ListBuilder
-        - '#does not call parent constructor from Metadata\\PropertyMetadata.#'
         - '#Service "sulu_document_manager.node_manager" is private.#'
         - '#Service "sulu_test.doctrine_phpcr.session" is not registered in the container.#'
         - '#Service "sulu_test.doctrine_phpcr.live_session" is not registered in the container.#'

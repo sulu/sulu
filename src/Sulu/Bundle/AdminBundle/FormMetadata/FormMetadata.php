@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 use Sulu\Component\Content\Metadata\PropertiesMetadata;
 
 /**

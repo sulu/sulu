@@ -117,6 +117,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.resources', $config['resources']);
 
         $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
+        $container->setParameter($this->getAlias() . '.datagrids.directories', $config['datagrids']['directories'] ?? []);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

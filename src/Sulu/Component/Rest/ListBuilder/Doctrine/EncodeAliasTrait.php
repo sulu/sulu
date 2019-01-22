@@ -19,7 +19,7 @@ trait EncodeAliasTrait
     protected function encodeAlias($value)
     {
         return preg_replace_callback(
-            '/(?:"[^"]+")|([\\\:])/',
+            '/(?:"[^"]+")|([\\\])|(?<=\S)(:)/',
             function ($matches) {
                 if (false !== strpos($matches[0], '"')) {
                     return $matches[0];

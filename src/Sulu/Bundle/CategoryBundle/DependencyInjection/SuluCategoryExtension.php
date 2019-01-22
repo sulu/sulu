@@ -24,18 +24,10 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class SuluCategoryExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -48,9 +40,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $this->configurePersistence($config['objects'], $container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('fos_rest')) {
@@ -92,6 +81,11 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'forms' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/forms',
@@ -111,6 +105,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 'types' => [
                                     'datagrid' => [
                                         'adapter' => 'tree_table_slim',
+                                        'datagrid_key' => 'categories',
                                     ],
                                 ],
                             ],

@@ -38,7 +38,6 @@
                  class="Sulu\Bundle\PageBundle\ResourceMetadata\StructureResourceMetadataProvider"
         >
             <argument type="service" id="sulu_page.structure.factory"/>
-            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
             <argument type="string">%sulu.content.structure.resources%</argument>
 
             <tag name="sulu.resource_metadata_provider"/>

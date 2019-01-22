@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\ResourceMetadata;
 
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProviderInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 
@@ -25,22 +24,15 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
     private $structureMetadataFactory;
 
     /**
-     * @var ResourceMetadataMapper
-     */
-    private $resourceMetadataMapper;
-
-    /**
      * @var array
      */
     private $resources;
 
     public function __construct(
         StructureMetadataFactory $structureMetadataFactory,
-        ResourceMetadataMapper $resourceMetadataMapper,
         array $resources
     ) {
         $this->structureMetadataFactory = $structureMetadataFactory;
-        $this->resourceMetadataMapper = $resourceMetadataMapper;
         $this->resources = $resources;
     }
 
@@ -66,8 +58,6 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
 
         return $this->getResourceMetadataForStructure(
             $resourceKey,
-            $this->resources[$resourceKey]['datagrid'],
-            $this->resources[$resourceKey]['types'],
             $this->resources[$resourceKey]['endpoint'],
             $locale
         );
@@ -75,14 +65,11 @@ class StructureResourceMetadataProvider implements ResourceMetadataProviderInter
 
     private function getResourceMetadataForStructure(
         string $resourceKey,
-        string $list,
-        array $structureTypes,
         string $endpoint,
         string $locale
     ): ResourceMetadata {
         $resourceMetadata = new ResourceMetadata();
         $resourceMetadata->setKey($resourceKey);
-        $resourceMetadata->setDatagrid($this->resourceMetadataMapper->mapDatagrid($list, $locale));
         $resourceMetadata->setEndpoint($endpoint);
 
         return $resourceMetadata;

@@ -26,6 +26,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var string
      */
+    private $datasourceDatagridKey;
+
+    /**
+     * @var string
+     */
     private $datasourceAdapter;
 
     /**
@@ -76,6 +81,16 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setDatasourceResourceKey(string $datasourceResourceKey)
     {
         $this->datasourceResourceKey = $datasourceResourceKey;
+    }
+
+    public function setDatasourceDatagridKey(string $datasourceDatagridKey)
+    {
+        $this->datasourceDatagridKey = $datasourceDatagridKey;
+    }
+
+    public function getDatasourceDatagridKey(): string
+    {
+        return $this->datasourceDatagridKey;
     }
 
     public function getDatasourceAdapter(): ?string

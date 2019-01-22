@@ -97,6 +97,7 @@ class ContactAdmin extends Admin
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::CONTACT_DATAGRID_ROUTE, '/contacts')
                 ->setResourceKey('contacts')
+                ->setDatagridKey('contacts')
                 ->setTitle('sulu_contact.people')
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
@@ -128,6 +129,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::ACCOUNT_DATAGRID_ROUTE, '/accounts')
                 ->setResourceKey('accounts')
+                ->setDatagridKey('accounts')
                 ->setTitle('sulu_contact.organizations')
                 ->addDatagridAdapters(['table'])
                 ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)

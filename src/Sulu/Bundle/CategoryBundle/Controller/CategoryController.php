@@ -276,9 +276,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-        $fieldDescriptors = $this->getFieldDescriptors($locale);
+        $fieldDescriptors = $this->getFieldDescriptors();
 
         $listBuilder = $factory->create($this->getParameter('sulu.model.category.class'));
+        $listBuilder->setParameter('locale', $locale);
         // sort by depth before initializing listbuilder with request parameter to avoid wrong sorting in frontend
         $listBuilder->sort($fieldDescriptors['depth']);
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -303,12 +304,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->get('sulu_category.category_manager');
     }
 
-    private function getFieldDescriptors($locale)
+    private function getFieldDescriptors()
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptorForClass(
-                $this->getParameter('sulu.model.category.class'),
-                ['locale' => $locale]
-            );
+            ->getFieldDescriptors('categories');
     }
 }

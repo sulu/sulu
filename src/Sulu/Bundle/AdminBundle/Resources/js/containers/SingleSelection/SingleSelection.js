@@ -10,6 +10,7 @@ import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
+    datagridKey: string,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
@@ -101,6 +102,7 @@ export default class SingleSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            datagridKey,
             disabled,
             disabledIds,
             displayProperties,
@@ -141,6 +143,7 @@ export default class SingleSelection extends React.Component<Props> {
                 </SingleItemSelection>
                 <SingleDatagridOverlay
                     adapter={adapter}
+                    datagridKey={datagridKey}
                     disabledIds={disabledIds}
                     locale={locale}
                     onClose={this.handleOverlayClose}

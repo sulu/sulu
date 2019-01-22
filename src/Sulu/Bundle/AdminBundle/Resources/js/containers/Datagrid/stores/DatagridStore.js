@@ -36,6 +36,7 @@ export default class DatagridStore {
     searchTerm: IObservableValue<?string> = observable.box();
     limit: IObservableValue<number> = observable.box(10);
     resourceKey: string;
+    datagridKey: string;
     userSettingsKey: string;
     observableOptions: ObservableOptions;
     localeDisposer: ?() => void;
@@ -46,73 +47,75 @@ export default class DatagridStore {
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
 
-    static getActiveSetting(resourceKey: string, userSettingsKey: string): string {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
+    static getActiveSetting(datagridKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
 
         return userStore.getPersistentSetting(key);
     }
 
-    static setActiveSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
+    static setActiveSetting(datagridKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
 
-    static getSortColumnSetting(resourceKey: string, userSettingsKey: string): string {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SORT_COLUMN].join('.');
+    static getSortColumnSetting(datagridKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SORT_COLUMN].join('.');
 
         return userStore.getPersistentSetting(key);
     }
 
-    static setSortColumnSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SORT_COLUMN].join('.');
+    static setSortColumnSetting(datagridKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SORT_COLUMN].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
 
-    static getSortOrderSetting(resourceKey: string, userSettingsKey: string): string {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SORT_ORDER].join('.');
+    static getSortOrderSetting(datagridKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SORT_ORDER].join('.');
 
         return userStore.getPersistentSetting(key);
     }
 
-    static setSortOrderSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SORT_ORDER].join('.');
+    static setSortOrderSetting(datagridKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SORT_ORDER].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
 
-    static getLimitSetting(resourceKey: string, userSettingsKey: string): string {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_LIMIT].join('.');
+    static getLimitSetting(datagridKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_LIMIT].join('.');
 
         return userStore.getPersistentSetting(key);
     }
 
-    static setLimitSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_LIMIT].join('.');
+    static setLimitSetting(datagridKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_LIMIT].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
 
-    static getSchemaSetting(resourceKey: string, userSettingsKey: string): Array<Object> {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SCHEMA].join('.');
+    static getSchemaSetting(datagridKey: string, userSettingsKey: string): Array<Object> {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SCHEMA].join('.');
 
         return userStore.getPersistentSetting(key);
     }
 
-    static setSchemaSetting(resourceKey: string, userSettingsKey: string, value: *) {
-        const key = [USER_SETTING_PREFIX, resourceKey, userSettingsKey, USER_SETTING_SCHEMA].join('.');
+    static setSchemaSetting(datagridKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, datagridKey, userSettingsKey, USER_SETTING_SCHEMA].join('.');
         userStore.setPersistentSetting(key, value);
     }
 
     constructor(
         resourceKey: string,
+        datagridKey: string,
         userSettingsKey: string,
         observableOptions: ObservableOptions,
         options: Object = {},
         selectionIds: ?Array<string | number>
     ) {
         this.resourceKey = resourceKey;
+        this.datagridKey = datagridKey;
         this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;
@@ -136,7 +139,7 @@ export default class DatagridStore {
         this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
         this.limitDisposer = intercept(this.limit, '', callResetForChangedObservable);
 
-        metadataStore.getSchema(this.resourceKey)
+        metadataStore.getSchema(this.datagridKey)
             .then(action((schema) => {
                 this.schema = schema;
                 this.schemaLoading = false;
@@ -179,7 +182,7 @@ export default class DatagridStore {
             return {};
         }
 
-        const schemaSettings = DatagridStore.getSchemaSetting(this.resourceKey, this.userSettingsKey);
+        const schemaSettings = DatagridStore.getSchemaSetting(this.datagridKey, this.userSettingsKey);
         const schema = this.schema;
         if (!schemaSettings) {
             return schema;
@@ -211,7 +214,7 @@ export default class DatagridStore {
                 }
             );
         });
-        DatagridStore.setSchemaSetting(this.resourceKey, this.userSettingsKey, schemaSettings);
+        DatagridStore.setSchemaSetting(this.datagridKey, this.userSettingsKey, schemaSettings);
     };
 
     @computed get fields(): Array<string> {
@@ -460,7 +463,7 @@ export default class DatagridStore {
     @action setLimit(limit: number) {
         this.limit.set(limit);
 
-        DatagridStore.setLimitSetting(this.resourceKey, this.userSettingsKey, limit);
+        DatagridStore.setLimitSetting(this.datagridKey, this.userSettingsKey, limit);
     }
 
     @action setActive(active: ?string | number) {
@@ -476,7 +479,7 @@ export default class DatagridStore {
             this.structureStrategy.activate(id);
         }
 
-        DatagridStore.setActiveSetting(this.resourceKey, this.userSettingsKey, id);
+        DatagridStore.setActiveSetting(this.datagridKey, this.userSettingsKey, id);
     }
 
     @action deactivate(id: ?string | number) {
@@ -489,8 +492,8 @@ export default class DatagridStore {
         this.sortColumn.set(column);
         this.sortOrder.set(order);
 
-        DatagridStore.setSortColumnSetting(this.resourceKey, this.userSettingsKey, column);
-        DatagridStore.setSortOrderSetting(this.resourceKey, this.userSettingsKey, order);
+        DatagridStore.setSortColumnSetting(this.datagridKey, this.userSettingsKey, column);
+        DatagridStore.setSortOrderSetting(this.datagridKey, this.userSettingsKey, order);
     }
 
     @action order(id: string | number, order: number) {

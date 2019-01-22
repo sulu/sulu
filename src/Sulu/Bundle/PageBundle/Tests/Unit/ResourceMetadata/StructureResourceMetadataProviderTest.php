@@ -16,7 +16,6 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper;
 use Sulu\Bundle\PageBundle\ResourceMetadata\StructureResourceMetadataProvider;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -32,11 +31,6 @@ class StructureResourceMetadataProviderTest extends TestCase
      * @var StructureMetadataFactory
      */
     private $structureMetadataFactory;
-
-    /**
-     * @var ResourceMetadataMapper
-     */
-    private $resourceMetadataMapper;
 
     public function setUp()
     {
@@ -65,21 +59,16 @@ class StructureResourceMetadataProviderTest extends TestCase
         $formMetadataAccount->getProperties()->willReturn(['property_array_account']);
         $formMetadataAccount->getChildren()->willReturn(['children_array_account']);
 
-        $this->resourceMetadataMapper = $this->prophesize(ResourceMetadataMapper::class);
-
         $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactory::class);
 
         $this->structureResourceMetadataProvider = new StructureResourceMetadataProvider(
             $this->structureMetadataFactory->reveal(),
-            $this->resourceMetadataMapper->reveal(),
             $resourcesConfig
         );
     }
 
     public function testGetResourceMetadata()
     {
-        $this->resourceMetadataMapper->mapDatagrid('PageDocumentClass', 'de')->willReturn(new Datagrid());
-
         $structure1 = $this->prophesize(StructureMetadata::class);
         $structure1->getName()->willReturn('test1');
         $structure1->getTitle('de')->willReturn('de');
@@ -103,10 +92,7 @@ class StructureResourceMetadataProviderTest extends TestCase
         $this->structureMetadataFactory->getStructures('page')->willReturn($structures);
         $this->structureMetadataFactory->getStructures('home')->willReturn($structures);
 
-        $structureResourceMetadata = $this->structureResourceMetadataProvider->getResourceMetadata(
-            'pages',
-            'de'
-        );
+        $structureResourceMetadata = $this->structureResourceMetadataProvider->getResourceMetadata('pages', 'de');
 
         $this->assertNotNull($structureResourceMetadata);
         $this->assertInstanceOf(
@@ -125,9 +111,6 @@ class StructureResourceMetadataProviderTest extends TestCase
 
     public function testGetAll()
     {
-        $this->resourceMetadataMapper->mapDatagrid('PageDocumentClass', 'de')->willReturn(new Datagrid());
-        $this->resourceMetadataMapper->mapDatagrid('SnippetDocumentClass', 'de')->willReturn(new Datagrid());
-
         $structure1 = $this->prophesize(StructureMetadata::class);
         $structure1->getName()->willReturn('test1');
         $structure1->getTitle('de')->willReturn('de');

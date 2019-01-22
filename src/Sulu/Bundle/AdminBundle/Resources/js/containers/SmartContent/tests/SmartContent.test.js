@@ -68,6 +68,7 @@ test('Pass correct props to MultiItemSelection component', () => {
 
 test('Pass correct sections prop with other values', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
+        datasourceDatagridKey: 'pages_datagrid',
         datasourceResourceKey: 'pages',
         datasourceAdapter: 'table',
         tags: false,
@@ -87,6 +88,8 @@ test('Pass correct sections prop with other values', () => {
         <SmartContent fieldLabel="Test" presentations={presentations} store={smartContentStore} />
     );
 
+    expect(smartContent.find('FilterOverlay').prop('dataSourceDatagridKey')).toEqual('pages_datagrid');
+    expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
     expect(smartContent.find('FilterOverlay').prop('sections'))
         .toEqual(['datasource', 'categories', 'sorting', 'presentation']);
     expect(smartContent.find('FilterOverlay').prop('presentations'))

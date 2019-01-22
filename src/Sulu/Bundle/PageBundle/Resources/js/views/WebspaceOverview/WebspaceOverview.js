@@ -123,6 +123,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
         this.datagridStore = new DatagridStore(
             PAGES_RESOURCE_KEY,
+            PAGES_RESOURCE_KEY,
             getUserSettingsKeyForWebspace(this.webspace.get()),
             observableOptions,
             apiOptions

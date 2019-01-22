@@ -1,9 +1,10 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>count</key>
     <properties>
         <count-property name="tags">
-            <orm:field-name>tags</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            <field-name>tags</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </count-property>
     </properties>
-</class>
+</datagrid>
+

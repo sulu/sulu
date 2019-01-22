@@ -1,11 +1,13 @@
-<class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>mixed</key>
+
     <properties>
         <property name="id">
-            <orm:field-name>id</orm:field-name>
-            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
         <property name="name"/>
     </properties>
-</class>
+</datagrid>
+

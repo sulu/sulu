@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>snippets</key>
+
+    <properties>
+        <property
+            name="id"
+            visibility="no"
+            filter-type="string"
+            translation="sulu_admin.id"
+        />
+
+        <property
+            name="title"
+            visibility="always"
+            searchability="yes"
+            filter-type="string"
+            translation="sulu_admin.title"
+        />
+    </properties>
+</datagrid>

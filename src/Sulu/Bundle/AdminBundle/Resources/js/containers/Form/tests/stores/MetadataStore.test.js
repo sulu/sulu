@@ -6,7 +6,7 @@ jest.mock('../../../../stores/MetadataStore', () => ({
     loadMetadata: jest.fn(),
 }));
 
-test('Return form and schema fields for given resourceKey from ResourceMetadataStore', () => {
+test('Return form and schema fields for given resourceKey from MetadataStore', () => {
     const snippetMetadata = {
         form: {
             id: {},

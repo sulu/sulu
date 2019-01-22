@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
-use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 
 /**
  * Base class for all field-descriptor.
@@ -40,7 +40,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * Defines the visibility of the field.
      *
-     * @var bool
+     * @var string
      * @Expose
      */
     private $visibility;
@@ -70,39 +70,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $type;
 
     /**
-     * The width of the field in a table.
-     *
-     * @var string
-     * @Expose
-     */
-    private $width;
-
-    /**
-     * The minimal with of the field in the table.
-     *
-     * @var string
-     * @Expose
-     */
-    private $minWidth;
-
-    /**
-     * Defines whether the field is editable in the table or not.
-     *
-     * @var bool
-     * @Expose
-     */
-    private $editable;
-
-    /**
-     * The css class of the column.
-     *
-     * @var string
-     * @Expose
-     */
-    private $class;
-
-    /**
-     * @var PropertyMetadata
+     * @var AbstractPropertyMetadata
      * @Exclude
      */
     private $metadata;
@@ -113,22 +81,14 @@ class FieldDescriptor implements FieldDescriptorInterface
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
-        string $width = '',
-        string $minWidth = '',
-        bool $sortable = true,
-        bool $editable = false,
-        string $cssClass = ''
+        bool $sortable = true
     ) {
         $this->name = $name;
         $this->visibility = $visibility;
         $this->searchability = $searchability;
         $this->sortable = $sortable;
         $this->type = $type;
-        $this->width = $width;
-        $this->minWidth = $minWidth;
-        $this->editable = $editable;
         $this->translation = null == $translation ? $name : $translation;
-        $this->class = $cssClass;
     }
 
     /**
@@ -186,14 +146,6 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     /**
      * {@inheritdoc}
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * @Serializer\VirtualProperty()
      */
@@ -216,30 +168,6 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * {@inheritdoc}
      */
-    public function getEditable()
-    {
-        return $this->editable;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMinWidth()
-    {
-        return $this->minWidth;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata()
     {
         return $this->metadata;
@@ -248,7 +176,7 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * Sets metadata for property.
      *
-     * @param PropertyMetadata $metadata
+     * @param AbstractPropertyMetadata $metadata
      */
     public function setMetadata($metadata)
     {

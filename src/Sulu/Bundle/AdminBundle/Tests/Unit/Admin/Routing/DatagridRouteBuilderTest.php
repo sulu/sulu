@@ -20,6 +20,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $routeBuilder = (new DatagridRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['table']);
 
         $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
@@ -41,6 +42,7 @@ class DatagridRouteBuilderTest extends TestCase
 
         $route = (new DatagridRouteBuilder('sulu_category.datagrid', '/category'))
             ->setResourceKey('categories')
+            ->setDatagridKey('roles')
             ->getRoute();
     }
 
@@ -51,6 +53,7 @@ class DatagridRouteBuilderTest extends TestCase
                 'sulu_category.datagrid',
                 '/categories',
                 'categories',
+                'categories',
                 'Categories',
                 ['table', 'column_list'],
                 'sulu_category.add_form',
@@ -60,6 +63,7 @@ class DatagridRouteBuilderTest extends TestCase
                 'sulu_tag.datagrid',
                 '/tags',
                 'tags',
+                'other_tags',
                 'Tags',
                 ['table'],
                 'sulu_tag.add_form',
@@ -75,6 +79,7 @@ class DatagridRouteBuilderTest extends TestCase
         string $name,
         string $path,
         string $resourceKey,
+        string $datagridKey,
         string $title,
         array $datagridAdapters,
         string $addRoute,
@@ -82,6 +87,7 @@ class DatagridRouteBuilderTest extends TestCase
     ) {
         $route = (new DatagridRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
+            ->setDatagridKey($datagridKey)
             ->setTitle($title)
             ->addDatagridAdapters($datagridAdapters)
             ->setAddRoute($addRoute)
@@ -91,6 +97,7 @@ class DatagridRouteBuilderTest extends TestCase
         $this->assertEquals($name, $route->getName());
         $this->assertEquals($path, $route->getPath());
         $this->assertEquals($resourceKey, $route->getOption('resourceKey'));
+        $this->assertEquals($datagridKey, $route->getOption('datagridKey'));
         $this->assertEquals($title, $route->getOption('title'));
         $this->assertEquals($datagridAdapters, $route->getOption('adapters'));
         $this->assertEquals($addRoute, $route->getOption('addRoute'));
@@ -102,6 +109,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['table', 'column_list'])
             ->addDatagridAdapters(['tree'])
             ->getRoute();
@@ -113,6 +121,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles/:locale'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['table'])
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
@@ -130,6 +139,7 @@ class DatagridRouteBuilderTest extends TestCase
 
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['table'])
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
@@ -144,6 +154,18 @@ class DatagridRouteBuilderTest extends TestCase
 
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles/:locale'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['table'])
+            ->getRoute();
+    }
+
+    public function testBuildDatagridWithoutDatagridKey()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('"datagridKey"');
+
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles/:locale'))
+            ->setResourceKey('roles')
             ->addDatagridAdapters(['table'])
             ->getRoute();
     }
@@ -152,6 +174,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['tree'])
             ->disableSearching()
             ->enableSearching()
@@ -164,6 +187,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['tree'])
             ->enableSearching()
             ->disableSearching()
@@ -176,6 +200,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['tree'])
             ->disableMoving()
             ->enableMoving()
@@ -188,6 +213,7 @@ class DatagridRouteBuilderTest extends TestCase
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
+            ->setDatagridKey('roles')
             ->addDatagridAdapters(['tree'])
             ->enableMoving()
             ->disableMoving()

@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>categories</key>
+
+    <joins name="translation">
+        <join>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+            <field-name>%sulu.model.category.class%.translations</field-name>
+            <condition>%sulu.model.category_translation.class%.locale = :locale</condition>
+        </join>
+    </joins>
+    <joins name="defaultTranslation">
+        <join>
+            <entity-name>%sulu.model.category_translation.class%Default</entity-name>
+            <field-name>%sulu.model.category.class%.translations</field-name>
+            <condition>%sulu.model.category_translation.class%Default.locale = %sulu.model.category.class%.defaultLocale</condition>
+        </join>
+    </joins>
+    <joins name="parent">
+        <join>
+            <entity-name>%sulu.model.category.class%Parent</entity-name>
+            <field-name>%sulu.model.category.class%.parent</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" visibility="no">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <property name="lft" visibility="never">
+            <field-name>lft</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <property name="rgt" visibility="never">
+            <field-name>rgt</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <property name="key" translation="sulu_category.key" visibility="no">
+            <field-name>key</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <property name="depth" visibility="never">
+            <field-name>depth</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <property name="parent" visibility="never">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.category.class%Parent</entity-name>
+            <joins ref="parent"/>
+        </property>
+        <property name="defaultLocale" visibility="no">
+            <field-name>defaultLocale</field-name>
+            <entity-name>%sulu.model.category.class%</entity-name>
+        </property>
+        <case-property name="name" translation="sulu_category.name" visibility="always" searchability="yes">
+            <field>
+                <field-name>translation</field-name>
+                <entity-name>%sulu.model.category_translation.class%</entity-name>
+                <joins ref="translation"/>
+            </field>
+            <field>
+                <field-name>translation</field-name>
+                <entity-name>%sulu.model.category_translation.class%Default</entity-name>
+                <joins ref="defaultTranslation"/>
+            </field>
+        </case-property>
+        <case-property name="locale">
+            <field>
+                <field-name>locale</field-name>
+                <entity-name>%sulu.model.category_translation.class%</entity-name>
+                <joins ref="translation"/>
+            </field>
+            <field>
+                <field-name>defaultLocale</field-name>
+                <entity-name>%sulu.model.category.class%</entity-name>
+            </field>
+        </case-property>
+        <property name="created" translation="sulu_admin.created" visibility="no" type="datetime">
+            <field-name>created</field-name>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+            <joins ref="translation"/>
+        </property>
+        <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
+            <field-name>changed</field-name>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+            <joins ref="translation"/>
+        </property>
+    </properties>
+</datagrid>

@@ -36,6 +36,7 @@ test('Show with passed emptyText and icon', () => {
     expect(render(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Test"
@@ -53,6 +54,7 @@ test('Render with selected item', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={['name', 'value']}
             emptyText="Nothing"
@@ -83,6 +85,7 @@ test('Render with selected item in disabled state', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabled={true}
             disabledIds={[]}
             displayProperties={['name', 'value']}
@@ -111,6 +114,7 @@ test('Pass resourceKey and locale to SingleDatagridOverlay', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            datagridKey="test_datagrid"
             disabledIds={[]}
             displayProperties={['name', 'value']}
             emptyText="Nothing"
@@ -125,12 +129,14 @@ test('Pass resourceKey and locale to SingleDatagridOverlay', () => {
 
     expect(singleSelection.find(SingleDatagridOverlay).prop('locale')).toEqual(locale);
     expect(singleSelection.find(SingleDatagridOverlay).prop('resourceKey')).toEqual('test');
+    expect(singleSelection.find(SingleDatagridOverlay).prop('datagridKey')).toEqual('test_datagrid');
 });
 
 test('Pass disabledIds to SingleDatagridOverlay', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[1, 2, 3]}
             displayProperties={['name', 'value']}
             emptyText="Nothing"
@@ -149,6 +155,7 @@ test('Should open and close an overlay', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Nothing"
@@ -173,6 +180,7 @@ test('Should not open an overlay on button-click when disabled', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabled={true}
             disabledIds={[]}
             displayProperties={[]}
@@ -198,6 +206,7 @@ test('Should call the onChange callback if a new item was selected', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Nothing"
@@ -226,6 +235,7 @@ test('Should not call the onChange callback if the same item was selected', () =
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Nothing"
@@ -245,6 +255,7 @@ test('Should load the item if value prop changes', () => {
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="snippets"
             displayProperties={[]}
             emptyText="nothing"
             onChange={jest.fn()}
@@ -262,6 +273,7 @@ test('Should remove an item when the remove button is clicked', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            datagridKey="snippets"
             displayProperties={[]}
             emptyText="nothing"
             onChange={jest.fn()}
@@ -285,6 +297,7 @@ test('Should call the onChange callback if the value of the selection-store chan
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Nothing"
@@ -306,6 +319,7 @@ test('Should not call the onChange callback if the component props change', () =
     const singleSelection = mount(
         <SingleSelection
             adapter="table"
+            datagridKey="test"
             disabledIds={[]}
             displayProperties={[]}
             emptyText="Nothing"
@@ -325,6 +339,7 @@ test('Correct props should be passed to SingleItemSelection component', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            datagridKey="snippets"
             disabled={true}
             displayProperties={[]}
             emptyText="nothing"
@@ -343,6 +358,7 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            datagridKey="snippets"
             disabled={true}
             displayProperties={[]}
             emptyText="nothing"

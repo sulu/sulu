@@ -11,7 +11,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     DatagridStore: class {
         static getActiveSetting = jest.fn();
 
-        constructor(resourceKey, userSettingsKey, observableOptions) {
+        constructor(resourceKey, datagridKey, userSettingsKey, observableOptions) {
             this.resourceKey = resourceKey;
             this.observableOptions = observableOptions;
         }

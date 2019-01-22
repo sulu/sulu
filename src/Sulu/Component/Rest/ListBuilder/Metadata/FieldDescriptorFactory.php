@@ -20,28 +20,25 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CaseTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
  * Creates legacy field-descriptors for metadata.
  */
-class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
+class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWarmerInterface
 {
     /**
-     * @var ProviderInterface
+     * @var DatagridXmlLoader
      */
-    private $metadataProvider;
+    private $datagridXmlLoader;
+
+    /**
+     * @var string[]
+     */
+    private $datagridDirectories;
 
     /**
      * @var string
@@ -53,160 +50,158 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     private $debug;
 
-    public function __construct(ProviderInterface $metadataProvider, $cachePath, $debug)
-    {
-        $this->metadataProvider = $metadataProvider;
+    public function __construct(
+        DatagridXmlLoader $datagridXmlLoader,
+        array $datagridDirectories,
+        string $cachePath,
+        bool $debug
+    ) {
+        $this->datagridXmlLoader = $datagridXmlLoader;
+        $this->datagridDirectories = $datagridDirectories;
         $this->cachePath = $cachePath;
         $this->debug = $debug;
+    }
+
+    public function warmUp($cacheDir)
+    {
+        $datagridsMetadataByKey = [];
+
+        $datagridFinder = (new Finder())->in($this->datagridDirectories)->name('*.xml');
+        foreach ($datagridFinder as $datagridFile) {
+            $datagridMetadata = $this->datagridXmlLoader->load($datagridFile->getPathName());
+            $datagridKey = $datagridMetadata->getKey();
+            if (!array_key_exists($datagridKey, $datagridsMetadataByKey)) {
+                $datagridsMetadataByKey[$datagridKey] = [];
+            }
+
+            $datagridsMetadataByKey[$datagridKey][] = $datagridMetadata;
+        }
+
+        /** @var AbstractPropertyMetadata $propertyMetadata */
+        foreach ($datagridsMetadataByKey as $datagridKey => $datagridsMetadata) {
+            $fieldDescriptors = [];
+            foreach ($datagridsMetadata as $datagridMetadata) {
+                foreach ($datagridMetadata->getPropertiesMetadata() as $propertyMetadata) {
+                    $fieldDescriptor = null;
+                    $options = [];
+                    if ($propertyMetadata instanceof ConcatenationPropertyMetadata) {
+                        $fieldDescriptor = $this->getConcatenationFieldDescriptor(
+                            $propertyMetadata,
+                            $options
+                        );
+                    } elseif ($propertyMetadata instanceof GroupConcatPropertyMetadata) {
+                        $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
+                            $propertyMetadata,
+                            $options
+                        );
+                    } elseif ($propertyMetadata instanceof IdentityPropertyMetadata) {
+                        $fieldDescriptor = $this->getIdentityFieldDescriptor(
+                            $propertyMetadata,
+                            $options
+                        );
+                    } elseif ($propertyMetadata instanceof SinglePropertyMetadata) {
+                        $fieldDescriptor = $this->getSingleFieldDescriptor(
+                            $propertyMetadata,
+                            $options
+                        );
+                    } elseif ($propertyMetadata instanceof CountPropertyMetadata) {
+                        $fieldDescriptor = $this->getCountFieldDescriptor(
+                            $propertyMetadata
+                        );
+                    } elseif ($propertyMetadata instanceof CasePropertyMetadata) {
+                        $fieldDescriptor = $this->getCaseFieldDescriptor(
+                            $propertyMetadata,
+                            $options
+                        );
+                    }
+
+                    if (null !== $fieldDescriptor) {
+                        $fieldDescriptor->setMetadata($propertyMetadata);
+                        $fieldDescriptors[$propertyMetadata->getName()] = $fieldDescriptor;
+                    }
+                }
+            }
+
+            $configCache = $this->getConfigCache($datagridKey);
+            $configCache->write(serialize($fieldDescriptors), array_map(function(DatagridMetadata $datagridMetadata) {
+                return new FileResource($datagridMetadata->getResource());
+            }, $datagridsMetadata));
+        }
+    }
+
+    public function isOptional()
+    {
+        return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptorForClass($className, $options = [], $type = null)
+    public function getFieldDescriptors(string $datagridKey): ?array
     {
-        $cacheKey = md5(json_encode($options));
+        $configCache = $this->getConfigCache($datagridKey);
 
-        $cache = new ConfigCache(
-            sprintf(
-                '%s/%s-%s-%s.php',
-                $this->cachePath,
-                str_replace('\\', '-', $className),
-                str_replace('\\', '-', $type),
-                $cacheKey
-            ),
-            $this->debug
-        );
-
-        if ($cache->isFresh()) {
-            return require $cache->getPath();
+        if (!$configCache->isFresh()) {
+            $this->warmUp($this->cachePath);
         }
 
-        $metadata = $this->metadataProvider->getMetadataForClass($className);
-
-        $fieldDescriptors = [];
-        /** @var PropertyMetadata $propertyMetadata */
-        foreach ($metadata->propertyMetadata as $propertyMetadata) {
-            /** @var GeneralPropertyMetadata $generalMetadata */
-            $generalMetadata = $propertyMetadata->get(GeneralPropertyMetadata::class);
-
-            if (!$propertyMetadata->has(DoctrinePropertyMetadata::class)) {
-                $fieldDescriptor = $this->getGeneralFieldDescriptor($generalMetadata, $options);
-                if (!$type || is_a($fieldDescriptor, $type)) {
-                    $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
-                }
-
-                continue;
-            }
-
-            /** @var DoctrinePropertyMetadata $doctrineMetadata */
-            $doctrineMetadata = $propertyMetadata->get(DoctrinePropertyMetadata::class);
-
-            $fieldDescriptor = null;
-            if ($doctrineMetadata->getType() instanceof ConcatenationTypeMetadata) {
-                $fieldDescriptor = $this->getConcatenationFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType(),
-                    $options
-                );
-            } elseif ($doctrineMetadata->getType() instanceof GroupConcatTypeMetadata) {
-                $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType(),
-                    $options
-                );
-            } elseif ($doctrineMetadata->getType() instanceof IdentityTypeMetadata) {
-                $fieldDescriptor = $this->getIdentityFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType(),
-                    $options
-                );
-            } elseif ($doctrineMetadata->getType() instanceof SingleTypeMetadata) {
-                $fieldDescriptor = $this->getFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType()->getField(),
-                    $options
-                );
-            } elseif ($doctrineMetadata->getType() instanceof CountTypeMetadata) {
-                $fieldDescriptor = $this->getCountFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType()->getField()
-                );
-            } elseif ($doctrineMetadata->getType() instanceof CaseTypeMetadata) {
-                $fieldDescriptor = $this->getCaseFieldDescriptor(
-                    $generalMetadata,
-                    $doctrineMetadata->getType(),
-                    $options
-                );
-            }
-
-            if (null !== $fieldDescriptor
-                && (!$type || is_a($fieldDescriptor, $type))
-            ) {
-                $fieldDescriptor->setMetadata($propertyMetadata);
-                $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
-            }
+        if (!file_exists($configCache->getPath())) {
+            return null;
         }
 
-        $cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
-
-        return $fieldDescriptors;
+        return unserialize(file_get_contents($configCache->getPath()));
     }
 
-    /**
-     * Returns field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param FieldMetadata $fieldMetadata
-     * @param array $options
-     *
-     * @return DoctrineFieldDescriptor
-     */
-    protected function getFieldDescriptor(
-        GeneralPropertyMetadata $generalMetadata,
-        FieldMetadata $fieldMetadata,
+    private function getSingleFieldDescriptor(AbstractPropertyMetadata $propertyMetadata, $options)
+    {
+        return $this->getFieldDescriptor($propertyMetadata, $propertyMetadata->getField(), $options);
+    }
+
+    private function getFieldDescriptor(
+        AbstractPropertyMetadata $propertyMetadata,
+        ?FieldMetadata $fieldMetadata,
         $options
-    ) {
+    ): FieldDescriptor {
         $joins = [];
-        foreach ($fieldMetadata->getJoins() as $joinMetadata) {
-            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
-                $this->resolveOptions($joinMetadata->getEntityName(), $options),
-                $this->resolveOptions($joinMetadata->getEntityField(), $options),
-                $this->resolveOptions($joinMetadata->getCondition(), $options),
-                $joinMetadata->getMethod(),
-                $joinMetadata->getConditionMethod()
+        if ($fieldMetadata) {
+            foreach ($fieldMetadata->getJoins() as $joinMetadata) {
+                $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
+                    $this->resolveOptions($joinMetadata->getEntityName(), $options),
+                    $this->resolveOptions($joinMetadata->getEntityField(), $options),
+                    $this->resolveOptions($joinMetadata->getCondition(), $options),
+                    $joinMetadata->getMethod(),
+                    $joinMetadata->getConditionMethod()
+                );
+            }
+
+            return new DoctrineFieldDescriptor(
+                $this->resolveOptions($fieldMetadata->getName(), $options),
+                $this->resolveOptions($propertyMetadata->getName(), $options),
+                $this->resolveOptions($fieldMetadata->getEntityName(), $options),
+                $propertyMetadata->getTranslation(),
+                $joins,
+                $propertyMetadata->getVisibility(),
+                $propertyMetadata->getSearchability(),
+                $propertyMetadata->getType(),
+                $propertyMetadata->isSortable()
             );
         }
 
-        return new DoctrineFieldDescriptor(
-            $this->resolveOptions($fieldMetadata->getName(), $options),
-            $this->resolveOptions($generalMetadata->getName(), $options),
-            $this->resolveOptions($fieldMetadata->getEntityName(), $options),
-            $generalMetadata->getTranslation(),
-            $joins,
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+        // TODO handle this in a separate "display-property" tag?
+        return new FieldDescriptor(
+            $this->resolveOptions($propertyMetadata->getName(), $options),
+            $propertyMetadata->getTranslation(),
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
         );
     }
 
-    /**
-     * Returns count-field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param FieldMetadata $fieldMetadata
-     *
-     * @return DoctrineCountFieldDescriptor
-     */
-    protected function getCountFieldDescriptor(GeneralPropertyMetadata $generalMetadata, FieldMetadata $fieldMetadata)
+    private function getCountFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
     {
         $joins = [];
-        foreach ($fieldMetadata->getJoins() as $joinMetadata) {
+        foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
             $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
                 $joinMetadata->getEntityName(),
                 $joinMetadata->getEntityField(),
@@ -217,140 +212,84 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         }
 
         return new DoctrineCountFieldDescriptor(
-            $fieldMetadata->getName(),
-            $generalMetadata->getName(),
-            $fieldMetadata->getEntityName(),
-            $generalMetadata->getTranslation(),
+            $propertyMetadata->getField()->getName(),
+            $propertyMetadata->getName(),
+            $propertyMetadata->getField()->getEntityName(),
+            $propertyMetadata->getTranslation(),
             $joins,
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
         );
     }
 
-    /**
-     * Returns concatenation field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param ConcatenationTypeMetadata $type
-     * @param array $options
-     *
-     * @return DoctrineConcatenationFieldDescriptor
-     */
-    protected function getConcatenationFieldDescriptor(
-        GeneralPropertyMetadata $generalMetadata,
-        ConcatenationTypeMetadata $type,
+    private function getConcatenationFieldDescriptor(
+        ConcatenationPropertyMetadata $propertyMetadata,
         $options
-    ) {
+    ): DoctrineConcatenationFieldDescriptor {
         return new DoctrineConcatenationFieldDescriptor(
             array_map(
-                function (FieldMetadata $fieldMetadata) use ($generalMetadata, $options) {
-                    return $this->getFieldDescriptor($generalMetadata, $fieldMetadata, $options);
+                function (FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
+                    return $this->getFieldDescriptor($propertyMetadata, $fieldMetadata, $options);
                 },
-                $type->getFields()
+                $propertyMetadata->getFields()
             ),
-            $this->resolveOptions($generalMetadata->getName(), $options),
-            $generalMetadata->getTranslation(),
-            $this->resolveOptions($type->getGlue(), $options),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $this->resolveOptions($propertyMetadata->getName(), $options),
+            $propertyMetadata->getTranslation(),
+            $this->resolveOptions($propertyMetadata->getGlue(), $options),
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
         );
     }
 
-    /**
-     * Returns concatenation field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param GroupConcatTypeMetadata $type
-     * @param array $options
-     *
-     * @return DoctrineGroupConcatFieldDescriptor
-     */
-    protected function getGroupConcatenationFieldDescriptor(
-        GeneralPropertyMetadata $generalMetadata,
-        GroupConcatTypeMetadata $type,
+    private function getGroupConcatenationFieldDescriptor(
+        GroupConcatPropertyMetadata $propertyMetadata,
         $options
-    ) {
+    ): DoctrineGroupConcatFieldDescriptor {
         return new DoctrineGroupConcatFieldDescriptor(
-            $this->getFieldDescriptor($generalMetadata, $type->getField(), $options),
-            $this->resolveOptions($generalMetadata->getName(), $options),
-            $this->resolveOptions($generalMetadata->getTranslation(), $options),
-            $this->resolveOptions($type->getGlue(), $options),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass(),
-            $this->resolveOptions($type->getDistinct(), $options)
+            $this->getFieldDescriptor($propertyMetadata, $propertyMetadata->getField(), $options),
+            $this->resolveOptions($propertyMetadata->getName(), $options),
+            $this->resolveOptions($propertyMetadata->getTranslation(), $options),
+            $this->resolveOptions($propertyMetadata->getGlue(), $options),
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable(),
+            $this->resolveOptions($propertyMetadata->getDistinct(), $options)
         );
     }
 
-    /**
-     * Returns identity field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param IdentityTypeMetadata $type
-     * @param array $options
-     *
-     * @return DoctrineIdentityFieldDescriptor
-     */
     private function getIdentityFieldDescriptor(
-        GeneralPropertyMetadata $generalMetadata,
-        IdentityTypeMetadata $type,
+        IdentityPropertyMetadata $propertyMetadata,
         $options
     ) {
-        $fieldMetadata = $type->getField();
+        $fieldMetadata = $propertyMetadata->getField();
 
         return new DoctrineIdentityFieldDescriptor(
             $this->resolveOptions($fieldMetadata->getName(), $options),
-            $this->resolveOptions($generalMetadata->getName(), $options),
+            $this->resolveOptions($propertyMetadata->getName(), $options),
             $this->resolveOptions($fieldMetadata->getEntityName(), $options),
-            $generalMetadata->getTranslation(),
+            $propertyMetadata->getTranslation(),
             $this->getDoctrineJoins($fieldMetadata->getJoins(), $options),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
         );
     }
 
-    /**
-     * Returns case field-descriptor for given general metadata.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param CaseTypeMetadata $type
-     * @param array $options
-     *
-     * @return DoctrineCaseFieldDescriptor
-     */
     private function getCaseFieldDescriptor(
-        GeneralPropertyMetadata $generalMetadata,
-        CaseTypeMetadata $type,
+        CasePropertyMetadata $propertyMetadata,
         $options
-    ) {
-        $case1 = $type->getCase(0);
-        $case2 = $type->getCase(1);
+    ): DoctrineCaseFieldDescriptor {
+        $case1 = $propertyMetadata->getCase(0);
+        $case2 = $propertyMetadata->getCase(1);
 
         return new DoctrineCaseFieldDescriptor(
-            $this->resolveOptions($generalMetadata->getName(), $options),
+            $this->resolveOptions($propertyMetadata->getName(), $options),
             new DoctrineDescriptor(
                 $case1->getEntityName(),
                 $case1->getName(),
@@ -361,26 +300,15 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 $case2->getName(),
                 $this->getDoctrineJoins($case2->getJoins(), $options)
             ),
-            $generalMetadata->getTranslation(),
-            $generalMetadata->getVisibility(),
-            $generalMetadata->getSearchability(),
-            $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $propertyMetadata->getTranslation(),
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
         );
     }
 
-    /**
-     * Returns general field-descriptor.
-     *
-     * @param $generalMetadata
-     *
-     * @return FieldDescriptorInterface
-     */
-    private function getGeneralFieldDescriptor(GeneralPropertyMetadata $generalMetadata, $options)
+    private function getGeneralFieldDescriptor(AbstractPropertyMetadata $generalMetadata, $options)
     {
         return new FieldDescriptor(
             $this->resolveOptions($generalMetadata->getName(), $options),
@@ -388,11 +316,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getVisibility(),
             $generalMetadata->getSearchability(),
             $generalMetadata->getType(),
-            $generalMetadata->getWidth(),
-            $generalMetadata->getMinWidth(),
-            $generalMetadata->isSortable(),
-            $generalMetadata->isEditable(),
-            $generalMetadata->getCssClass()
+            $generalMetadata->isSortable()
         );
     }
 
@@ -413,14 +337,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         return $string;
     }
 
-    /**
-     * Creates doctrine-joins.
-     *
-     * @param JoinMetadata[] $joinMetadata
-     * @param array $options
-     *
-     * @return DoctrineFieldDescriptor[]
-     */
     private function getDoctrineJoins(array $joinMetadata, array $options)
     {
         $joins = [];
@@ -436,5 +352,18 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         }
 
         return $joins;
+    }
+
+    private function getConfigCache($datagridKey)
+    {
+        return new ConfigCache(
+            sprintf(
+                '%s%s%s',
+                $this->cachePath,
+                DIRECTORY_SEPARATOR,
+                $datagridKey
+            ),
+            $this->debug
+        );
     }
 }

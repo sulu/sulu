@@ -1,8 +1,7 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import {ResourceMetadataStore} from 'sulu-admin-bundle/stores';
-import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {ResourceRequester, resourceEndpointRegistry} from 'sulu-admin-bundle/services';
 import {buildQueryString} from 'sulu-admin-bundle/utils';
 import type {Media} from '../../types';
 
@@ -93,7 +92,7 @@ export default class MediaUploadStore {
             throw new Error('The "id" property must be available for updating a media');
         }
 
-        const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
+        const endpoint = resourceEndpointRegistry.getEndpoint(RESOURCE_KEY);
         const queryString = buildQueryString({
             action: 'new-version',
             locale: this.locale.get(),
@@ -107,7 +106,7 @@ export default class MediaUploadStore {
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
-        const endpoint = ResourceMetadataStore.getEndpoint(RESOURCE_KEY);
+        const endpoint = resourceEndpointRegistry.getEndpoint(RESOURCE_KEY);
         const queryString = buildQueryString({
             locale: this.locale.get(),
             collection: collectionId,

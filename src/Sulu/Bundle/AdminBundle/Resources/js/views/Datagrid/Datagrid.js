@@ -49,6 +49,7 @@ class Datagrid extends React.Component<ViewProps> {
                 options: {
                     adapters,
                     apiOptions,
+                    datagridKey,
                     locales,
                     resourceKey,
                 },
@@ -57,6 +58,10 @@ class Datagrid extends React.Component<ViewProps> {
 
         if (!resourceKey) {
             throw new Error('The route does not define the mandatory "resourceKey" option');
+        }
+
+        if (!datagridKey) {
+            throw new Error('The route does not define the mandatory "datagridKey" option');
         }
 
         if (!adapters) {
@@ -73,7 +78,13 @@ class Datagrid extends React.Component<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
-        this.datagridStore = new DatagridStore(resourceKey, USER_SETTINGS_KEY, observableOptions, apiOptions);
+        this.datagridStore = new DatagridStore(
+            resourceKey,
+            datagridKey,
+            USER_SETTINGS_KEY,
+            observableOptions,
+            apiOptions
+        );
 
         router.bind('active', this.datagridStore.active);
         router.bind('sortColumn', this.datagridStore.sortColumn);
@@ -152,6 +163,7 @@ class Datagrid extends React.Component<ViewProps> {
                         allowActivateForDisabledItems={false}
                         clearSelectionOnClose={true}
                         confirmLoading={this.moving}
+                        datagridKey={this.datagridStore.datagridKey}
                         disabledIds={this.datagridStore.selectionIds}
                         locale={this.locale}
                         onClose={this.handleMoveOverlayClose}

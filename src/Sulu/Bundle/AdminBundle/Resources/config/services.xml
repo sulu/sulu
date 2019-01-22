@@ -54,15 +54,24 @@
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
             <tag name="sulu_admin.metadata_provider" type="form" />
+            <tag name="kernel.cache_warmer" />
+        </service>
+
+        <service
+            id="sulu_admin.datagrid_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\Datagrid\DatagridMetadataProvider"
+        >
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument type="service" id="translator.default"/>
+            <tag name="sulu_admin.metadata_provider" type="datagrid" />
         </service>
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
 
-        <service id="sulu_admin.metadata.resource_metadata_provider.form"
-                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\FormResourceMetadataProvider"
+        <service id="sulu_admin.metadata.resource_metadata_provider"
+                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProvider"
         >
             <argument type="string">%sulu_admin.resources%</argument>
-            <argument type="service" id="sulu_admin.metadata.resource_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>
             <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
             <argument>%kernel.debug%</argument>
@@ -76,11 +85,6 @@
             id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"
             alias="sulu_admin.route_factory"
         />
-
-        <service id="sulu_admin.metadata.resource_metadata_mapper" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataMapper">
-            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
-            <argument type="service" id="translator.default"/>
-        </service>
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
             <argument type="service" id="sulu_page.structure.properties_xml_parser"/>

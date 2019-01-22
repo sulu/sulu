@@ -15,7 +15,9 @@ jest.mock('../../../containers/DatagridOverlay', () => jest.fn(function Datagrid
 }));
 
 jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(
-    function(resourceKey, userSettingsKey, observableOptions, options) {
+    function(resourceKey, datagridKey, userSettingsKey, observableOptions, options) {
+        this.resourceKey = resourceKey;
+        this.datagridKey = datagridKey;
         this.userSettingsKey = userSettingsKey;
         this.options = options;
         this.observableOptions = observableOptions;
@@ -31,6 +33,7 @@ test('Should instantiate the DatagridStore with locale and options', () => {
     const multiDatagridOverlay = shallow(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets_datagrid"
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -41,6 +44,8 @@ test('Should instantiate the DatagridStore with locale and options', () => {
         />
     );
 
+    expect(multiDatagridOverlay.instance().datagridStore.datagridKey).toEqual('snippets_datagrid');
+    expect(multiDatagridOverlay.instance().datagridStore.resourceKey).toEqual('snippets');
     expect(multiDatagridOverlay.instance().datagridStore.observableOptions.locale.get()).toEqual('en');
     expect(multiDatagridOverlay.instance().datagridStore.options).toBe(options);
 });
@@ -49,6 +54,7 @@ test('Should instantiate the DatagridStore without locale and options', () => {
     const multiDatagridOverlay = shallow(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -65,6 +71,7 @@ test('Should pass overlayType overlay by default', () => {
         <MultiDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -81,6 +88,7 @@ test('Should pass overlayType dialog if it is set via props', () => {
         <MultiDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -100,6 +108,7 @@ test('Should pass disabledIds to the DatagridOverlay', () => {
         <MultiDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={true}
+            datagridKey="snippets"
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -118,6 +127,7 @@ test('Should pass reloadOnOpen to the Datagrid', () => {
         <MultiDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={false}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -136,6 +146,7 @@ test('Should pass clearSelectionOnClose to the Datagrid', () => {
             adapter="table"
             allowActivateForDisabledItems={false}
             clearSelectionOnClose={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -154,6 +165,7 @@ test('Should pass allowActivateForDisabledItems to the Datagrid', () => {
         <MultiDatagridOverlay
             adapter="table"
             allowActivateForDisabledItems={false}
+            datagridKey="snippets"
             disabledIds={disabledIds}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -172,6 +184,7 @@ test('Should pass confirmLoading flag to the Overlay', () => {
         <MultiDatagridOverlay
             adapter="table"
             confirmLoading={true}
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -189,6 +202,7 @@ test('Should call onConfirm with the current selection', () => {
     const multiDatagridOverlay = mount(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
@@ -211,6 +225,7 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
     shallow(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -220,13 +235,21 @@ test('Should select the preSelectedItems in the DatagridStore', () => {
         />
     );
 
-    expect(DatagridStore).toBeCalledWith('snippets', 'multi_datagrid_overlay', expect.anything(), undefined, [1, 2, 3]);
+    expect(DatagridStore).toBeCalledWith(
+        'snippets',
+        'snippets',
+        'multi_datagrid_overlay',
+        expect.anything(),
+        undefined,
+        [1, 2, 3]
+    );
 });
 
 test('Should not fail when preSelectedItems is undefined', () => {
     const multiDatagridOverlay = shallow(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -244,6 +267,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     const multiDatagridOverlay1 = mount(
         <MultiDatagridOverlay
             adapter="table"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -256,6 +280,7 @@ test('Should instantiate the datagrid with the passed adapter', () => {
     const multiDatagridOverlay2 = mount(
         <MultiDatagridOverlay
             adapter="column_list"
+            datagridKey="snippets"
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}

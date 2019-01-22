@@ -90,6 +90,7 @@ class CategoryAdmin extends Admin
         return [
             $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/categories/:locale')
                 ->setResourceKey('categories')
+                ->setDatagridKey('categories')
                 ->setTitle('sulu_category.categories')
                 ->addDatagridAdapters(['tree_table'])
                 ->addLocales($locales)

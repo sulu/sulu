@@ -31,6 +31,11 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
+                    'datagrids' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/datagrids',
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'snippet' => [
@@ -39,6 +44,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'table',
+                                        'datagrid_key' => 'snippets',
                                         'display_properties' => ['title'],
                                         'icon' => 'su-snippet',
                                         'label' => 'sulu_snippet.selection_label',

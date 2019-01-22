@@ -18,11 +18,6 @@ sulu_admin.translation:
     defaults:
         _controller: sulu_admin.admin_controller:translationsAction
 
-sulu_admin.resources:
-    path: /resources/{resource}
-    defaults:
-        _controller: sulu_admin.admin_controller:resourcesAction
-
 sulu_admin.login_check:
     path: /login
 

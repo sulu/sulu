@@ -91,9 +91,10 @@ class Builder implements BuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableDatasource(string $resourceKey, string $datagridAdapter)
+    public function enableDatasource(string $resourceKey, string $datagridKey, string $datagridAdapter)
     {
         $this->configuration->setDatasourceResourceKey($resourceKey);
+        $this->configuration->setDatasourceDatagridKey($datagridKey);
         $this->configuration->setDatasourceAdapter($datagridAdapter);
 
         return $this;

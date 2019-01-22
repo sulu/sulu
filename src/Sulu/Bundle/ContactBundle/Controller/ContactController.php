@@ -103,9 +103,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get(
-            'sulu_core.list_builder.field_descriptor_factory'
-        )->getFieldDescriptorForClass($this->getParameter('sulu.model.contact.class'));
+        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+             ->getFieldDescriptors('contacts');
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];
@@ -129,8 +128,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_YES,
             'string',
-            '',
-            '',
             false
         );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -151,8 +148,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'string',
-            '',
-            '',
             false
         );
 
@@ -171,8 +166,6 @@ class ContactController extends RestController implements ClassResourceInterface
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
             FieldDescriptorInterface::SEARCHABILITY_NO,
             'radio',
-            '',
-            '',
             false
         );
     }

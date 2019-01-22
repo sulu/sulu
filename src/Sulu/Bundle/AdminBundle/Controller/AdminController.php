@@ -20,9 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -206,7 +204,6 @@ class AdminController
             'logout' => $this->urlGenerator->generate('sulu_admin.logout'),
             'reset' => $this->urlGenerator->generate('sulu_security.reset_password.email'),
             'resetResend' => $this->urlGenerator->generate('sulu_security.reset_password.email.resend'),
-            'resources' => $this->urlGenerator->generate('sulu_admin.resources', ['resource' => ':resource']),
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
             'generateUrl' => $this->urlGenerator->generate('post_resourcelocator', ['action' => 'generate']),
         ];
@@ -311,30 +308,5 @@ class AdminController
         $view->setFormat('json');
 
         return $this->viewHandler->handle($view);
-    }
-
-    /**
-     * @deprecated use metadataAction instead
-     */
-    public function resourcesAction($resource): Response
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        /** @var ResourceMetadataInterface $resourceMetadata */
-        $resourceMetadata = $this->resourceMetadataPool->getResourceMetadata(
-            $resource,
-            $user->getLocale()
-        );
-
-        $resourceMetadataArray = [];
-
-        if ($resourceMetadata instanceof DatagridInterface) {
-            $resourceMetadataArray['datagrid'] = $resourceMetadata->getDatagrid();
-        }
-
-        $response = new Response($this->serializer->serialize($resourceMetadataArray, 'json'));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
     }
 }

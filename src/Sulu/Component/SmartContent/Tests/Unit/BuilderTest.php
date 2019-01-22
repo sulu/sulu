@@ -156,7 +156,7 @@ class BuilderTest extends TestCase
     {
         $builder = Builder::create();
 
-        $this->assertEquals($builder, $builder->enableDatasource('collections', 'column_list'));
+        $this->assertEquals($builder, $builder->enableDatasource('collections', 'collections', 'column_list'));
 
         $configuration = $builder->getConfiguration();
 
@@ -169,6 +169,7 @@ class BuilderTest extends TestCase
         $this->assertFalse($configuration->hasPagination());
 
         $this->assertEquals('collections', $configuration->getDatasourceResourceKey());
+        $this->assertEquals('collections', $configuration->getDatasourceDatagridKey());
         $this->assertEquals('column_list', $configuration->getDatasourceAdapter());
     }
 }

@@ -1,0 +1,67 @@
+<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+    <key>complete</key>
+
+    <joins name="address">
+        <join>
+            <entity-name>SuluContactBundle:ContactAddress</entity-name>
+            <field-name>%sulu.model.contact.class%.contactAddresses</field-name>
+            <method>LEFT</method>
+            <condition>SuluContactBundle:ContactAddress.main = TRUE</condition>
+        </join>
+        <join>
+            <entity-name>SuluContactBundle:Address</entity-name>
+            <field-name>SuluContactBundle:ContactAddress.address</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property name="id" translation="public.id" searchability="never" type="integer">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="firstName" translation="contact.contacts.firstName" visibility="always">
+            <field-name>firstName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="lastName" translation="contact.contacts.lastName" visibility="always">
+            <field-name>lastName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="avatar" translation="public.avatar" visibility="always" type="thumbnails"
+            sortable="false">
+            <field-name>id</field-name>
+            <entity-name>SuluMediaBundle:Media</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluMediaBundle:Media</entity-name>
+                    <field-name>%sulu.model.contact.class%.avatar</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <concatenation-property
+            name="fullName"
+            glue=" "
+            translation="public.name"
+            type="string"
+            sortable="false"
+        >
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+            </field>
+            <field property-ref="lastName"/>
+        </concatenation-property>
+
+        <property name="city" translation="contact.address.city" visibility="yes" type="string">
+            <field-name>city</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+    </properties>
+</datagrid>

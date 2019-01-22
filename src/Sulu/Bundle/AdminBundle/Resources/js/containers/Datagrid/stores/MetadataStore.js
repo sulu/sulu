@@ -1,17 +1,12 @@
 // @flow
-import resourceMetadataStore from '../../../stores/ResourceMetadataStore';
+import metadataStore from '../../../stores/MetadataStore';
 import type {Schema} from '../types';
 
-class MetadataStore {
-    getSchema(resourceKey: string): Promise<Schema> {
-        return resourceMetadataStore.loadConfiguration(resourceKey)
-            .then((configuration) => {
-                if (!('datagrid' in configuration)) {
-                    throw new Error('There is no "datagrid" configuration for the resourceKey "' + resourceKey + '"');
-                }
+const DATAGRID_TYPE = 'datagrid';
 
-                return configuration.datagrid;
-            });
+class MetadataStore {
+    getSchema(datagridKey: string): Promise<Schema> {
+        return metadataStore.loadMetadata(DATAGRID_TYPE, datagridKey);
     }
 }
 

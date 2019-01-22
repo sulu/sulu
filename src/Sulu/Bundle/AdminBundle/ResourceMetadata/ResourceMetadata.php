@@ -11,21 +11,14 @@
 
 namespace Sulu\Bundle\AdminBundle\ResourceMetadata;
 
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\DatagridInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 
-class ResourceMetadata implements ResourceMetadataInterface, DatagridInterface, EndpointInterface
+class ResourceMetadata implements ResourceMetadataInterface, EndpointInterface
 {
     /**
      * @var string
      */
     private $key;
-
-    /**
-     * @var Datagrid
-     */
-    private $datagrid;
 
     /**
      * @var string
@@ -40,16 +33,6 @@ class ResourceMetadata implements ResourceMetadataInterface, DatagridInterface, 
     public function setKey(string $key): void
     {
         $this->key = $key;
-    }
-
-    public function getDatagrid(): ?Datagrid
-    {
-        return $this->datagrid;
-    }
-
-    public function setDatagrid(?Datagrid $datagrid): void
-    {
-        $this->datagrid = $datagrid;
     }
 
     public function getEndpoint(): string
