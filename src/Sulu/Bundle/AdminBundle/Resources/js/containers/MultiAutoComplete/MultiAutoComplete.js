@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun} from 'mobx';
+import {autorun, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -53,6 +53,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         this.selectionStore = new MultiSelectionStore(resourceKey, value || [], locale, filterParameter);
 
         this.changeDisposer = autorun(() => {
+            const {value} = this.props;
             const itemIds = this.selectionStore.items.map((item) => item[idProperty]);
 
             if (this.selectionStore.loading) {
@@ -61,6 +62,10 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
             if (!this.changeAutorunInitialized) {
                 this.changeAutorunInitialized = true;
+                return;
+            }
+
+            if (equals(itemIds, toJS(value))) {
                 return;
             }
 
