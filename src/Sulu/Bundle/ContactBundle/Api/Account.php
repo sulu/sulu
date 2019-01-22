@@ -1116,14 +1116,9 @@ class Account extends ApiWrapper
      */
     public function getCategories()
     {
-        $entities = [];
-        if ($this->entity->getCategories()) {
-            foreach ($this->entity->getCategories() as $category) {
-                $entities[] = new Category($category, $this->locale);
-            }
-        }
-
-        return $entities;
+        return array_map(function($category) {
+            return $category->getId();
+        }, $this->entity->getCategories()->toArray());
     }
 
     /**

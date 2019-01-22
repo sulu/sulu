@@ -430,12 +430,8 @@ class ContactControllerTest extends SuluTestCase
                     'id' => 0,
                 ],
                 'categories' => [
-                    [
-                        'id' => $category1->getId(),
-                    ],
-                    [
-                        'id' => $category2->getId(),
-                    ],
+                    $category1->getId(),
+                    $category2->getId(),
                 ],
             ]
         );
@@ -480,8 +476,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
 
         $this->assertEquals(2, count($response->categories));
-        $this->assertEquals($category1->getId(), $response->categories[0]->id);
-        $this->assertEquals($category2->getId(), $response->categories[1]->id);
+        $this->assertEquals($category1->getId(), $response->categories[0]);
+        $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
     public function testPostEmptyLatitude()
@@ -892,9 +888,7 @@ class ContactControllerTest extends SuluTestCase
                     'id' => 0,
                 ],
                 'categories' => [
-                    [
-                        'id' => $category3->getId(),
-                    ],
+                    $category3->getId(),
                 ],
             ]
         );
@@ -936,7 +930,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertTrue(is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, count($response->categories));
-        $this->assertEquals($category3->getId(), $response->categories[0]->id);
+        $this->assertEquals($category3->getId(), $response->categories[0]);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -976,7 +970,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertTrue(is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, count($response->categories));
-        $this->assertEquals($category3->getId(), $response->categories[0]->id);
+        $this->assertEquals($category3->getId(), $response->categories[0]);
     }
 
     public function testPutDeleteAndAddWithoutId()

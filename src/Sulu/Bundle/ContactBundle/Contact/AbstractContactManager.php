@@ -847,62 +847,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @return bool True if the processing was successful, otherwise false
      */
-    public function processCategories($contact, $categories)
+    public function processCategories($contact, $categoryIds)
     {
-        $get = function ($category) {
-            return $category->getId();
-        };
+        $contact->getCategories()->clear();
 
-        $delete = function ($category) use ($contact) {
-            return $contact->removeCategory($category);
-        };
+        foreach ($categoryIds as $categoryId) {
+            $category = $this->em->getRepository(self::$categoryEntityName)->find($categoryId);
 
-        $add = function ($category) use ($contact) {
-            return $this->addCategories($contact, $category);
-        };
+            if (!$category) {
+                throw new EntityNotFoundException(self::$categoryEntityName, $categoryId);
+            }
 
-        $entities = $contact->getCategories();
-
-        $result = $this->processSubEntities(
-            $entities,
-            $categories,
-            $get,
-            $add,
-            null,
-            $delete
-        );
-
-        $this->resetIndexOfSubentites($entities);
-
-        return $result;
-    }
-
-    /**
-     * Adds a new category to the given contact.
-     *
-     * @param $contact
-     * @param $data
-     *
-     * @return bool
-     *
-     * @throws EntityNotFoundException
-     * @throws EntityIdAlreadySetException
-     */
-    protected function addCategories($contact, $data)
-    {
-        $success = true;
-
-        $category = $this->em->getRepository(
-            self::$categoryEntityName
-        )->find($data['id']);
-
-        if (!$category) {
-            throw new EntityNotFoundException(self::$categoryEntityName, $data['id']);
-        } else {
             $contact->addCategory($category);
         }
 
-        return $success;
+        return true;
     }
 
     /**
