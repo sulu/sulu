@@ -779,7 +779,6 @@ class ContactControllerTest extends SuluTestCase
             [$category1, $category2]
         );
 
-
         $this->em->flush();
 
         $client = $this->createTestClient();

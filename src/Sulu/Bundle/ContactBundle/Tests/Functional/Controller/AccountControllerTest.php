@@ -1214,7 +1214,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
-
     public function testPutNotExisting()
     {
         $client = $this->createAuthenticatedClient();
