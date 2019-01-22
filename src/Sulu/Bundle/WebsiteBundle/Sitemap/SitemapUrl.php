@@ -74,18 +74,31 @@ class SitemapUrl
     private $alternateLinks;
 
     /**
+     * @var array
+     */
+    private $attributes;
+
+    /**
      * @param string $loc
      * @param \DateTime $lastmod
      * @param string $changefreq
      * @param float $priority
+     * @param array $attributes
      */
-    public function __construct($loc, $locale, \DateTime $lastmod = null, $changefreq = null, $priority = null)
-    {
+    public function __construct(
+        $loc,
+        $locale,
+        \DateTime $lastmod = null,
+        $changefreq = null,
+        $priority = null,
+        $attributes = []
+    ) {
         $this->loc = $loc;
         $this->locale = $locale;
         $this->lastmod = $lastmod;
         $this->changefreq = $changefreq;
         $this->priority = $priority;
+        $this->attributes = $attributes;
 
         $this->addAlternateLink(new SitemapAlternateLink($loc, $locale));
     }
@@ -162,5 +175,15 @@ class SitemapUrl
         $this->alternateLinks[$alternateLink->getLocale()] = $alternateLink;
 
         return $this;
+    }
+
+    /**
+     * Additional attributes to render template.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }
