@@ -44,6 +44,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 'types' => [
                                     'datagrid_overlay' => [
                                         'adapter' => 'table',
+                                        'datagrid_key' => 'snippets',
                                         'display_properties' => ['title'],
                                         'icon' => 'su-snippet',
                                         'label' => 'sulu_snippet.selection_label',

@@ -56,6 +56,7 @@ test('Should pass props correctly to selection component', () => {
         types: {
             datagrid_overlay: {
                 adapter: 'table',
+                datagrid_key: 'snippets_datagrid',
                 display_properties: ['id', 'title'],
                 icon: '',
                 label: 'sulu_snippet.selection_label',
@@ -88,6 +89,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        datagridKey: 'snippets_datagrid',
         disabled: true,
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
@@ -318,6 +320,7 @@ test('Should pass props correctly to datagrid component', () => {
         types: {
             datagrid: {
                 adapter: 'table',
+                datagrid_key: 'snippets_datagrid',
             },
         },
     };
@@ -341,6 +344,7 @@ test('Should pass props correctly to datagrid component', () => {
         />
     );
 
+    expect(selection.instance().datagridStore.datagridKey).toEqual('snippets_datagrid');
     expect(selection.instance().datagridStore.resourceKey).toEqual('snippets');
     expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
     expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({

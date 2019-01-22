@@ -40,13 +40,21 @@ export default class Selection extends React.Component<Props> {
 
         if (this.type === 'datagrid') {
             const {
+                fieldTypeOptions: {
+                    types: {
+                        datagrid: {
+                            datagrid_key: datagridKey,
+                        },
+                    },
+                },
                 formInspector,
                 value,
             } = this.props;
 
             this.datagridStore = new DatagridStore(
                 resourceKey,
-                resourceKey,
+                // TODO make optional
+                datagridKey,
                 USER_SETTINGS_KEY,
                 {locale: formInspector.locale, page: observable.box()},
                 {},
@@ -113,6 +121,7 @@ export default class Selection extends React.Component<Props> {
                 types: {
                     datagrid_overlay: {
                         adapter,
+                        datagrid_key: datagridKey,
                         display_properties: displayProperties,
                         icon,
                         label,
@@ -130,6 +139,8 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
+                // TODO make optional
+                datagridKey={datagridKey}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}

@@ -390,6 +390,7 @@ export default class FilterOverlay extends React.Component<Props> {
                     <MultiDatagridOverlay
                         adapter="tree_table"
                         clearSelectionOnClose={false}
+                        datagridKey="categories"
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseCategoryDialog}
                         onConfirm={this.handleConfirmCategoryDialog}

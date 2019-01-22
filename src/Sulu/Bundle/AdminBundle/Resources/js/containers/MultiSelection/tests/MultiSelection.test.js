@@ -14,10 +14,11 @@ jest.mock('../../../containers/Datagrid', () => function Datagrid() {
     return <div className="datagrid" />;
 });
 
-jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey) {
+jest.mock('../../../containers/Datagrid/stores/DatagridStore', () => jest.fn(function(resourceKey, datagridKey) {
     this.clearSelection = jest.fn();
     this.destroy = jest.fn();
     this.resourceKey = resourceKey;
+    this.datagridKey = datagridKey;
     this.select = jest.fn();
     this.setActive = jest.fn();
 }));
@@ -43,7 +44,13 @@ beforeEach(() => {
 
 test('Show with default plus icon', () => {
     expect(render(
-        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
+        <MultiSelection
+            adapter="table"
+            datagridKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
     )).toMatchSnapshot();
 });
 
@@ -51,6 +58,7 @@ test('Render in disabled state', () => {
     expect(render(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             disabled={true}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -63,6 +71,7 @@ test('Show with passed label', () => {
     expect(render(
         <MultiSelection
             adapter="column_list"
+            datagridKey="snippets"
             label="Select Snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -75,6 +84,7 @@ test('Show with passed icon', () => {
     expect(render(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             icon="su-document"
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -88,6 +98,7 @@ test('Pass locale to MultiDatagridOverlay', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             locale={locale}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -104,6 +115,7 @@ test('Pass disabledIds to MultiDatagridOverlay', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             disabledIds={disabledIds}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -125,6 +137,7 @@ test('Show with passed values as items in right locale', () => {
     expect(render(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             displayProperties={['id', 'title']}
             locale={locale}
             onChange={jest.fn()}
@@ -139,7 +152,13 @@ test('Show with passed values as items in right locale', () => {
 
 test('Should open an overlay', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
+        <MultiSelection
+            adapter="table"
+            datagridKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -152,6 +171,7 @@ test('Should not open an overlay on icon-click when disabled', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             disabled={true}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -168,6 +188,7 @@ test('Should close an overlay using the close button', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -187,7 +208,13 @@ test('Should close an overlay using the close button', () => {
 
 test('Should close an overlay using the confirm button', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="snippets" />
+        <MultiSelection
+            adapter="table"
+            datagridKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -204,7 +231,13 @@ test('Should close an overlay using the confirm button', () => {
 test('Should call the onChange callback when clicking the confirm button', () => {
     const changeSpy = jest.fn();
     const selection = mount(
-        <MultiSelection adapter="table" onChange={changeSpy} overlayTitle="Selection" resourceKey="snippets" />
+        <MultiSelection
+            adapter="table"
+            datagridKey="snippets"
+            onChange={changeSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
@@ -224,6 +257,7 @@ test('Should not call the onChange callback when items have not changed', () => 
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -243,6 +277,7 @@ test('Should load the items if value prop changes', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -256,12 +291,19 @@ test('Should load the items if value prop changes', () => {
 
 test('Should instantiate the DatagridStore with the correct resourceKey and destroy it on unmount', () => {
     const selection = mount(
-        <MultiSelection adapter="table" onChange={jest.fn()} overlayTitle="Selection" resourceKey="pages" />
+        <MultiSelection
+            adapter="table"
+            datagridKey="pages_datagrid"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+        />
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const datagridStore = selection.find('MultiDatagridOverlay').instance().datagridStore;
+    expect(datagridStore.datagridKey).toEqual('pages_datagrid');
     expect(datagridStore.resourceKey).toEqual('pages');
 
     selection.unmount();
@@ -277,6 +319,7 @@ test('Should instantiate the DatagridStore with the preselected ids', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="pages"
@@ -304,6 +347,7 @@ test('Should reinstantiate the DatagridStore with the preselected ids when new p
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             locale={locale}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -336,6 +380,7 @@ test('Should not reload items if none of the items changed', () => {
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             locale={locale}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -367,6 +412,7 @@ test('Should not reinstantiate the DatagridStore with the preselected ids when n
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             locale={locale}
             onChange={jest.fn()}
             overlayTitle="Selection"
@@ -386,6 +432,7 @@ test('Should remove an item when the remove button is clicked', () => {
     const selection = shallow(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -402,6 +449,7 @@ test('Should reorder the items on drag and drop', () => {
     const selection = shallow(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -420,6 +468,7 @@ test('Should call the onChange callback if the value of the selection-store chan
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"
@@ -437,6 +486,7 @@ test('Should not call the onChange callback if the component props change', () =
     const selection = mount(
         <MultiSelection
             adapter="table"
+            datagridKey="snippets"
             onChange={changeSpy}
             overlayTitle="Selection"
             resourceKey="snippets"

@@ -11,6 +11,7 @@ import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
+    datagridKey: string,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
@@ -109,6 +110,7 @@ export default class MultiSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            datagridKey,
             disabled,
             disabledIds,
             displayProperties,
@@ -153,6 +155,8 @@ export default class MultiSelection extends React.Component<Props> {
                 </MultiItemSelection>
                 <MultiDatagridOverlay
                     adapter={adapter}
+                    // TODO make optional
+                    datagridKey={datagridKey}
                     disabledIds={disabledIds}
                     locale={locale}
                     onClose={this.handleOverlayClose}

@@ -261,6 +261,8 @@ test('Prefill all fields with correct values', () => {
         />
     );
 
+    const categoryOptions = {datagridKey: 'categories', resourceKey: 'categories'};
+
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Homepage');
     expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
@@ -269,7 +271,7 @@ test('Prefill all fields with correct values', () => {
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test3');
-    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('preSelectedItems'))
+    expect(filterOverlay.find(MultiDatagridOverlay).find(categoryOptions).prop('preSelectedItems'))
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
