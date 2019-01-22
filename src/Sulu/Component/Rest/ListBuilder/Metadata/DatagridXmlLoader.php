@@ -45,7 +45,7 @@ class DatagridXmlLoader
                 $dom->documentURI = $resource;
                 $dom->xinclude();
 
-                return @$dom->schemaValidate(__DIR__ . '/Resources/schema/list-builder-2.0.xsd');
+                return @$dom->schemaValidate(__DIR__ . '/Resources/schema/datagrid-2.0.xsd');
             }
         );
 
