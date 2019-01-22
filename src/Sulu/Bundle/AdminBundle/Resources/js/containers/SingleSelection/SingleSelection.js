@@ -143,7 +143,6 @@ export default class SingleSelection extends React.Component<Props> {
                 </SingleItemSelection>
                 <SingleDatagridOverlay
                     adapter={adapter}
-                    // TODO make optional
                     datagridKey={datagridKey}
                     disabledIds={disabledIds}
                     locale={locale}

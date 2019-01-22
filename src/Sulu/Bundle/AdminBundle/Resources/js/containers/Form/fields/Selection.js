@@ -53,8 +53,7 @@ export default class Selection extends React.Component<Props> {
 
             this.datagridStore = new DatagridStore(
                 resourceKey,
-                // TODO make optional
-                datagridKey,
+                datagridKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: formInspector.locale, page: observable.box()},
                 {},
@@ -139,8 +138,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
-                // TODO make optional
-                datagridKey={datagridKey}
+                datagridKey={datagridKey || resourceKey}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}

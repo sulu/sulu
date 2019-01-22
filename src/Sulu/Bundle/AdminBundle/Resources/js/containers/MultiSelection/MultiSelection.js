@@ -155,7 +155,6 @@ export default class MultiSelection extends React.Component<Props> {
                 </MultiItemSelection>
                 <MultiDatagridOverlay
                     adapter={adapter}
-                    // TODO make optional
                     datagridKey={datagridKey}
                     disabledIds={disabledIds}
                     locale={locale}

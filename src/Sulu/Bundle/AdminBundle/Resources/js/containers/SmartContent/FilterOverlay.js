@@ -378,7 +378,6 @@ export default class FilterOverlay extends React.Component<Props> {
                     <SingleDatagridOverlay
                         adapter={dataSourceAdapter}
                         clearSelectionOnClose={false}
-                        // TODO make optional
                         datagridKey={dataSourceDatagridKey}
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseDataSourceDialog}

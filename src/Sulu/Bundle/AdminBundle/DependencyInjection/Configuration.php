@@ -92,15 +92,13 @@ class Configuration implements ConfigurationInterface
                                             ->arrayNode('datagrid')
                                                 ->children()
                                                     ->scalarNode('adapter')->isRequired()->end()
-                                                    // TODO make optional
-                                                    ->scalarNode('datagrid_key')->isRequired()->end()
+                                                    ->scalarNode('datagrid_key')->end()
                                                 ->end()
                                             ->end()
                                             ->arrayNode('datagrid_overlay')
                                                 ->children()
                                                     ->scalarNode('adapter')->isRequired()->end()
-                                                    // TODO make optional
-                                                    ->scalarNode('datagrid_key')->isRequired()->end()
+                                                    ->scalarNode('datagrid_key')->end()
                                                     ->arrayNode('display_properties')
                                                         ->isRequired()
                                                         ->requiresAtLeastOneElement()
@@ -146,8 +144,7 @@ class Configuration implements ConfigurationInterface
                                             ->arrayNode('datagrid_overlay')
                                                 ->children()
                                                     ->scalarNode('adapter')->isRequired()->end()
-                                                    // TODO make optional
-                                                    ->scalarNode('datagrid_key')->isRequired()->end()
+                                                    ->scalarNode('datagrid_key')->end()
                                                     ->arrayNode('display_properties')
                                                         ->isRequired()
                                                         ->requiresAtLeastOneElement()

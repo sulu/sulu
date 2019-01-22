@@ -54,7 +54,6 @@ export default class SingleDatagridOverlay extends React.Component<Props> {
         }
         this.datagridStore = new DatagridStore(
             resourceKey,
-            // TODO make optional
             datagridKey,
             USER_SETTINGS_KEY,
             observableOptions,

@@ -214,6 +214,37 @@ test('Pass correct props to SingleItemSelection', () => {
     }));
 });
 
+test('Pass resourceKey as datagridKey to SingleItemSelection if no datagridKey is given', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'accounts',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find(SingleSelectionComponent).prop('datagridKey')).toEqual('accounts');
+});
+
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
     const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
     const value = 3;

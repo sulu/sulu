@@ -100,6 +100,46 @@ test('Should pass props correctly to selection component', () => {
     }));
 });
 
+test('Should pass resourceKey as datagridKey to selection component if no datagridKey is given', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onFinish={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(selection.find('MultiSelection').prop('datagridKey')).toEqual('snippets');
+});
+
 test('Should pass props with schema-options type correctly to selection component', () => {
     const value = [1, 6, 8];
 
@@ -352,6 +392,41 @@ test('Should pass props correctly to datagrid component', () => {
         disabled: true,
         searchable: false,
     }));
+});
+
+test('Should pass resourceKey as datagridKey to datagrid component if no datagridKey is given', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(selection.instance().datagridStore.datagridKey).toEqual('snippets');
 });
 
 test('Should call onChange and onFinish prop when datagrid selection changes', () => {
