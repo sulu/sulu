@@ -90,6 +90,26 @@
                         <title>sulu_contact.note</title>
                     </meta>
                 </property>
+
+                <section name="taxonomies">
+                    <meta>
+                        <title>sulu_contact.taxonomies</title>
+                    </meta>
+
+                    <properties>
+                        <property name="tags" type="tag_selection">
+                            <meta>
+                                <title>sulu_tag.tags</title>
+                            </meta>
+                        </property>
+
+                        <property name="categories" type="category_selection">
+                            <meta>
+                                <title>sulu_category.categories</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
             </properties>
         </section>
     </properties>
