@@ -1,39 +1,35 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import Button from '../Button';
 import Card from '../Card';
 import cardCollectionStyles from './cardCollection.scss';
 
-type Props<T> = {|
-    onChange: (Array<T>) => void,
-    renderCardContent: (T) => Node,
-    value: Array<T>,
+type Props = {|
+    children?: ChildrenArray<Element<typeof Card>>,
+    onAdd?: () => void,
+    onEdit?: (index: ?number) => void,
+    onRemove?: (index: ?number) => void,
 |};
 
-export default class CardCollection<T> extends React.Component<Props<T>> {
-    handleRemove = (index: ?number) => {
-        const {onChange, value} = this.props;
-
-        onChange(value.filter((element, arrayIndex) => arrayIndex !== index));
-    };
+export default class CardCollection extends React.Component<Props> {
+    static Card = Card;
 
     render() {
-        const {renderCardContent, value} = this.props;
+        const {children, onAdd, onEdit, onRemove} = this.props;
 
         return (
             <Fragment>
                 <Button
                     className={cardCollectionStyles.addButton}
                     icon="su-plus"
+                    onClick={onAdd}
                     skin="icon"
                 />
                 <section>
-                    {value.map((cardData, index) => (
+                    {children && React.Children.map(children, (child, index) => (
                         <div className={cardCollectionStyles.card} key={index}>
-                            <Card id={index} onRemove={this.handleRemove}>
-                                {renderCardContent(cardData)}
-                            </Card>
+                            {React.cloneElement(child, {id: index, onEdit, onRemove})}
                         </div>
                     ))}
                 </section>

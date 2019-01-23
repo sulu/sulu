@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render passed values with renderCardContent callback 1`] = `
+exports[`Render empty CardCollection 1`] = `
+Array [
+  <button
+    class="button icon addButton"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+  </button>,
+  <section />,
+]
+`;
+
+exports[`Render passed card components 1`] = `
 Array [
   <button
     class="button icon addButton"
@@ -20,17 +35,10 @@ Array [
       >
         <div
           class="icons"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt clickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <span>
-          Test 1
-        </span>
+        />
+        <h1>
+          Content 1
+        </h1>
       </section>
     </div>
     <div
@@ -41,17 +49,10 @@ Array [
       >
         <div
           class="icons"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt clickable"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <span>
-          Test 2
-        </span>
+        />
+        <h2>
+          Content 2
+        </h2>
       </section>
     </div>
   </section>,

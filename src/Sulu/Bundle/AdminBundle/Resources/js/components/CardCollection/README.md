@@ -1,28 +1,44 @@
-A card collection allows to handle multiple cards. Cards can be easily removed by clicking their remove icon and added
-and edited using an overlay.
+A card collection allows to handle multiple cards. Cards are added by passing them as children to the component. The
+`onAdd`, `onEdit` and `onRemove` callbacks are called when the corresponding buttons are pressed.
 
 ```javascript
-initialState = {
-    value: [
-        {name: 'Harry Potter', title: 'Student'},
-        {name: 'Albus Dumbledore', title: 'Headmaster'},
-        {name: 'Severus Snape', title: 'Teacher'},
-        {name: 'Ron Weasley', title: 'Student'},
-        {name: 'Hermione Granger', title: 'Student'}
-    ],
+const onAdd = () => {
+    alert('Add new item');
 };
 
-const renderCardContent = (cardData) => (
-    <div>
-        <strong>{cardData.name}</strong>
+const onEdit = (id) => {
+    alert('Edit item at position ' + id);
+};
+
+const onRemove = (id) => {
+    alert('Remove item at position ' + id);
+};
+
+<CardCollection onAdd={onAdd} onEdit={onEdit} onRemove={onRemove}>
+    <CardCollection.Card>
+        <strong>Harry Potter</strong>
         <br />
-        <em>{cardData.title}</em>
-    </div>
-);
-
-const onChange = (value) => {
-    setState({value});
-};
-
-<CardCollection onChange={onChange} renderCardContent={renderCardContent} value={state.value} />
+        <em>Student</em>
+    </CardCollection.Card>
+    <CardCollection.Card>
+        <strong>Albus Dumbledore</strong>
+        <br />
+        <em>Headmaster</em>
+    </CardCollection.Card>
+    <CardCollection.Card>
+        <strong>Severus Snape</strong>
+        <br />
+        <em>Teacher</em>
+    </CardCollection.Card>
+    <CardCollection.Card>
+        <strong>Ron Weasley</strong>
+        <br />
+        <em>Student</em>
+    </CardCollection.Card>
+    <CardCollection.Card>
+        <strong>Hermione Granger</strong>
+        <br />
+        <em>Student</em>
+    </CardCollection.Card>
+</CardCollection>
 ```

@@ -3,46 +3,67 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import CardCollection from '../CardCollection';
 
-test('Render passed values with renderCardContent callback', () => {
-    const value = [
-        {
-            name: 'Test 1',
-        },
-        {
-            name: 'Test 2',
-        },
-    ];
+test('Render empty CardCollection', () => {
+    expect(render(<CardCollection />)).toMatchSnapshot();
+});
 
-    const renderCardContent = jest.fn((cardData) => (
-        <span>{cardData.name}</span>
-    ));
-
+test('Render passed card components', () => {
     expect(render(
-        <CardCollection onChange={jest.fn()} renderCardContent={renderCardContent} value={value} />
+        <CardCollection>
+            <CardCollection.Card>
+                <h1>Content 1</h1>
+            </CardCollection.Card>
+            <CardCollection.Card>
+                <h2>Content 2</h2>
+            </CardCollection.Card>
+        </CardCollection>
     )).toMatchSnapshot();
 });
 
-test('Removing a card should call the onChange callback', () => {
-    const changeSpy = jest.fn();
+test('Call onAdd callback when add button is clicked', () => {
+    const addSpy = jest.fn();
 
-    const value = [
-        {
-            name: 'Test 1',
-        },
-        {
-            name: 'Test 2',
-        },
-    ];
+    const cardCollection = shallow(<CardCollection onAdd={addSpy} />);
 
-    const renderCardContent = jest.fn((cardData) => (
-        <span>{cardData.name}</span>
-    ));
+    cardCollection.find('Button[icon="su-plus"]').simulate('click');
+
+    expect(addSpy).toBeCalledWith();
+});
+
+test('Call onEdit callback when edit icon is clicked', () => {
+    const editSpy = jest.fn();
 
     const cardCollection = shallow(
-        <CardCollection onChange={changeSpy} renderCardContent={renderCardContent} value={value} />
+        <CardCollection onEdit={editSpy}>
+            <CardCollection.Card>
+                <h1>Content 1</h1>
+            </CardCollection.Card>
+            <CardCollection.Card>
+                <h2>Content 2</h2>
+            </CardCollection.Card>
+        </CardCollection>
     );
 
-    cardCollection.find('Card').at(0).simulate('remove', 0);
+    cardCollection.find('Card').at(1).simulate('edit', 1);
 
-    expect(changeSpy).toBeCalledWith([{name: 'Test 2'}]);
+    expect(editSpy).toBeCalledWith(1);
+});
+
+test('Call onRemove callback when remove icon is clicked', () => {
+    const removeSpy = jest.fn();
+
+    const cardCollection = shallow(
+        <CardCollection onRemove={removeSpy}>
+            <CardCollection.Card>
+                <h1>Content 1</h1>
+            </CardCollection.Card>
+            <CardCollection.Card>
+                <h2>Content 2</h2>
+            </CardCollection.Card>
+        </CardCollection>
+    );
+
+    cardCollection.find('Card').at(1).simulate('remove', 1);
+
+    expect(removeSpy).toBeCalledWith(1);
 });
