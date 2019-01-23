@@ -331,6 +331,8 @@ class AccountControllerTest extends SuluTestCase
         $faxType = $this->createFaxType('Private');
         $addressType = $this->createAddressType('Private');
         $country = $this->createCountry('Musterland', 'ML');
+        $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
+        $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
 
         $client = $this->createAuthenticatedClient();
@@ -431,6 +433,10 @@ class AccountControllerTest extends SuluTestCase
                     ['value' => 'Note 1'],
                     ['value' => 'Note 2'],
                 ],
+                'categories' => [
+                    $category1->getId(),
+                    $category2->getId(),
+                ],
             ]
         );
 
@@ -470,6 +476,10 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
+
+        $this->assertEquals(2, count($response->categories));
+        $this->assertEquals($category1->getId(), $response->categories[0]);
+        $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
     public function testPostWithNullLogo()
@@ -870,7 +880,25 @@ class AccountControllerTest extends SuluTestCase
         $faxType = $this->createFaxType('Private');
         $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
-        $account = $this->createAccount('Company', null, $url);
+        $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
+        $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
+        $category3 = $this->createCategory('third-category-key', 'en', 'Third Category', 'Description of third Category');
+        $account = $this->createAccount(
+            'Company',
+            null,
+            $url,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [
+                $category1,
+                $category2,
+            ]
+        );
         $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
 
         $this->em->flush();
@@ -996,6 +1024,9 @@ class AccountControllerTest extends SuluTestCase
                     ['value' => 'Note1'],
                     ['value' => 'Note2'],
                 ],
+                'categories' => [
+                    $category3->getId(),
+                ],
             ]
         );
 
@@ -1038,6 +1069,9 @@ class AccountControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('thumbnails', $response->logo);
         $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
         $this->assertTrue(is_string($response->logo->thumbnails->{'sulu-100x100'}));
+
+        $this->assertEquals(1, count($response->categories));
+        $this->assertEquals($category3->getId(), $response->categories[0]);
 
         if ('Bahnhofstraße' === $response->addresses[0]->street) {
             $this->assertEquals(2, count($response->addresses));
@@ -2118,7 +2152,8 @@ class AccountControllerTest extends SuluTestCase
         ?Fax $fax = null,
         ?Note $note = null,
         ?string $placeOfJurisdiction = null,
-        ?Media $logo = null
+        ?Media $logo = null,
+        ?array $categories = null
     ) {
         $account = new Account();
         $account->setName($name);
@@ -2159,6 +2194,12 @@ class AccountControllerTest extends SuluTestCase
 
         if ($note) {
             $account->addNote($note);
+        }
+
+        if ($categories) {
+            foreach ($categories as $category) {
+                $account->addCategory($category);
+            }
         }
 
         $this->em->persist($account);
@@ -2420,5 +2461,33 @@ class AccountControllerTest extends SuluTestCase
         }
 
         return $accounts;
+    }
+
+    private function createCategory(string $key, string $locale, string $name, string $description)
+    {
+        $category = $this->getContainer()->get('sulu.repository.category')->createNew();
+        $category->setKey($name);
+        $category->setDefaultLocale($locale);
+
+        $this->category = $category;
+
+        // name for first category
+        $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
+        $categoryTrans->setLocale($locale);
+        $categoryTrans->setTranslation($name);
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        // meta for first category
+        $categoryMeta = $this->getContainer()->get('sulu.repository.category_meta')->createNew();
+        $categoryMeta->setLocale($locale);
+        $categoryMeta->setKey('description');
+        $categoryMeta->setValue($description);
+        $categoryMeta->setCategory($category);
+        $category->addMeta($categoryMeta);
+
+        $this->em->persist($category);
+
+        return $category;
     }
 }
