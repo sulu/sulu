@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render passed values with renderCardContent callback 1`] = `
+Array [
+  <button
+    class="button icon addButton"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+  </button>,
+  <section>
+    <div
+      class="card"
+    >
+      <section
+        class="card"
+      >
+        <div
+          class="icons"
+        />
+        <span>
+          Test 1
+        </span>
+      </section>
+    </div>
+    <div
+      class="card"
+    >
+      <section
+        class="card"
+      >
+        <div
+          class="icons"
+        />
+        <span>
+          Test 2
+        </span>
+      </section>
+    </div>
+  </section>,
+]
+`;
