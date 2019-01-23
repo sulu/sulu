@@ -2,6 +2,45 @@
 
 ## dev-develop
 
+### Webspace template file extension removed
+
+Sulu supports now also different format for static webspace templates like search and error.
+The following need to be changed in your webspace configuration:
+
+**Before**
+
+```xml
+<templates>
+	<template type="search">templates/search.html.twig</template>
+	<template type="error">templates/error.html.twig</template>
+</templates>
+```
+
+**After**
+
+```xml
+<templates>
+	<template type="search">templates/search</template>
+	<template type="error">templates/error</template>
+</templates>
+```
+
+If you have custom webspaces template you also need to change how you get to the template:
+
+The format is optional and will fallback to html if not given.
+
+**Before**
+
+```xml
+$webspace->getTemplate('search');
+```
+
+**After**
+
+```xml
+$webspace->getTemplate('search', $request->getRequestFormat());
+```
+
 ### SuluKernel::construct changed
 
 The `suluContext` is optional now to support extending from Symfony `KernelTestCase` of Symfony:

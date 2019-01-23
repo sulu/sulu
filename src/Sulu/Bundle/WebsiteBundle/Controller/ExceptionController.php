@@ -81,15 +81,15 @@ class ExceptionController
         $code = $exception->getStatusCode();
         $template = null;
         if ($webspace = $this->requestAnalyzer->getWebspace()) {
-            $template = $webspace->getTemplate('error-' . $code);
+            $template = $webspace->getTemplate('error-' . $code, $request->getRequestFormat());
 
             if (null === $template) {
-                $template = $webspace->getTemplate('error');
+                $template = $webspace->getTemplate('error', $request->getRequestFormat());
             }
         }
 
         $showException = $request->attributes->get('showException', $this->debug);
-        if ($showException || 'html' !== $request->getRequestFormat() || null === $template) {
+        if ($showException || null === $template || !$this->twig->getLoader()->exists($template)) {
             return $this->exceptionController->showAction($request, $exception, $logger);
         }
 

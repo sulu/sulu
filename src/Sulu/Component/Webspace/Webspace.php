@@ -462,13 +462,14 @@ class Webspace implements ArrayableInterface
      * Returns a template for the given type.
      *
      * @param string $type
+     * @param string $format
      *
      * @return string|null
      */
-    public function getTemplate($type)
+    public function getTemplate($type, $format = 'html')
     {
         if (array_key_exists($type, $this->templates)) {
-            return $this->templates[$type];
+            return $this->templates[$type] . '.' . $format . '.twig';
         }
 
         return;

@@ -39,6 +39,11 @@ class ExceptionControllerTest extends TestCase
     private $twig;
 
     /**
+     * @var \Twig_LoaderInterface
+     */
+    private $twigLoader;
+
+    /**
      * @var \Twig_ExistsLoaderInterface
      */
     private $loader;
@@ -89,7 +94,7 @@ class ExceptionControllerTest extends TestCase
         $exception = FlattenException::create(new \Exception(), 400);
 
         $webspace = new Webspace();
-        $webspace->addTemplate('error-400', 'error400.html.twig');
+        $webspace->addTemplate('error-400', 'error400');
         $webspace->setTheme('test');
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -97,7 +102,7 @@ class ExceptionControllerTest extends TestCase
         $this->twig->render(Argument::containingString($expectExceptionFormat), Argument::any())->shouldBeCalled();
         $this->loader->exists(Argument::any())->willReturn($templateAvailable);
 
-        if ('html' === $retrievedFormat) {
+        if ($templateAvailable) {
             $this->parameterResolver->resolve(Argument::cetera())->shouldBeCalled()->willReturn([]);
         } else {
             $this->parameterResolver->resolve(Argument::cetera())->shouldNotBeCalled();
@@ -114,26 +119,26 @@ class ExceptionControllerTest extends TestCase
         return [
             [
                 [
-                    'error-404' => 'error404.html.twig',
+                    'error-404' => 'error404',
                 ],
                 404,
-                'error404.html.twig',
+                'error404',
             ],
             [
                 [
-                    'error-404' => 'error404.html.twig',
-                    'error-500' => 'error500.html.twig',
+                    'error-404' => 'error404',
+                    'error-500' => 'error500',
                 ],
                 500,
-                'error500.html.twig',
+                'error500',
             ],
             [
                 [
-                    'error-404' => 'error404.html.twig',
-                    'error' => 'error.html.twig',
+                    'error-404' => 'error404',
+                    'error' => 'error',
                 ],
                 400,
-                'error.html.twig',
+                'error',
             ],
         ];
     }
@@ -154,7 +159,7 @@ class ExceptionControllerTest extends TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $this->twig->render($expectedTemplate, Argument::any())->shouldBeCalled();
+        $this->twig->render($expectedTemplate . '.html.twig', Argument::any())->shouldBeCalled();
         $this->loader->exists(Argument::any())->willReturn(true);
 
         $this->parameterResolver->resolve(Argument::cetera())->willReturn([]);
