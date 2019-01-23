@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
 import {autorun, computed, observable, toJS} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import Datagrid from '../../../containers/Datagrid';
 import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
+import userStore from '../../../stores/UserStore';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
 
@@ -47,7 +49,6 @@ export default class Selection extends React.Component<Props> {
                         },
                     },
                 },
-                formInspector,
                 value,
             } = this.props;
 
@@ -55,7 +56,7 @@ export default class Selection extends React.Component<Props> {
                 resourceKey,
                 datagridKey || resourceKey,
                 USER_SETTINGS_KEY,
-                {locale: formInspector.locale, page: observable.box()},
+                {locale: this.locale, page: observable.box()},
                 {},
                 value
             );
@@ -68,6 +69,12 @@ export default class Selection extends React.Component<Props> {
         if (this.changeDatagridDisposer) {
             this.changeDatagridDisposer();
         }
+    }
+
+    @computed get locale(): IObservableValue<string> {
+        const {formInspector} = this.props;
+
+        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
     }
 
     @computed get type() {
@@ -144,7 +151,7 @@ export default class Selection extends React.Component<Props> {
                 displayProperties={displayProperties}
                 icon={icon}
                 label={translate(label, {count: value ? value.length : 0})}
-                locale={formInspector.locale}
+                locale={this.locale}
                 onChange={this.handleSelectionChange}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
@@ -176,7 +183,6 @@ export default class Selection extends React.Component<Props> {
                     },
                 },
             },
-            formInspector,
             value,
         } = this.props;
 
@@ -196,7 +202,7 @@ export default class Selection extends React.Component<Props> {
                 filterParameter={filterParameter}
                 id={dataPath}
                 idProperty={idProperty}
-                locale={formInspector.locale}
+                locale={this.locale}
                 onChange={this.handleAutoCompleteChange}
                 resourceKey={resourceKey}
                 searchProperties={searchProperties}

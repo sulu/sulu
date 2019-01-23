@@ -42,5 +42,6 @@
     "sulu_contact.no_contact_selected": "Kein Kontakt ausgewählt",
     "sulu_contact.single_contact_selection_overlay_title": "Kontakt auswählen",
     "sulu_contact.no_account_selected": "Keine Organisation ausgewählt",
-    "sulu_contact.single_account_selection_overlay_title": "Organisation auswählen"
+    "sulu_contact.single_account_selection_overlay_title": "Organisation auswählen",
+    "sulu_contact.taxonomies": "Taxonomien"
 }

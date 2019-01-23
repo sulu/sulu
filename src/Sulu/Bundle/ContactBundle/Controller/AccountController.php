@@ -586,7 +586,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setNote($request->get('note'));
         }
 
-        if (array_key_exists('id', $request->get('logo', []))) {
+        $logo = $request->get('logo', []);
+        if ($logo && array_key_exists('id', $logo)) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 

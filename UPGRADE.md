@@ -41,6 +41,11 @@ $webspace->getTemplate('search');
 $webspace->getTemplate('search', $request->getRequestFormat());
 ```
 
+### Contact and Account API
+
+The APIs on `/admin/api/contacts` and `/admin/api/accounts` now use an array of IDS for their `categories` instead of
+returning resp. passing an entire object.
+
 ### SuluKernel::construct changed
 
 The `suluContext` is optional now to support extending from Symfony `KernelTestCase` of Symfony:

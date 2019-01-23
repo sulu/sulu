@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 import ResourceStore from '../../../../stores/ResourceStore';
+import userStore from '../../../../stores/UserStore';
 import Datagrid from '../../../Datagrid';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
@@ -26,6 +27,8 @@ jest.mock('../../../Datagrid/stores/DatagridStore',
         });
     }
 );
+
+jest.mock('../../../../stores/UserStore', () => ({}));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
@@ -138,6 +141,48 @@ test('Should pass resourceKey as datagridKey to selection component if no datagr
     );
 
     expect(selection.find('MultiSelection').prop('datagridKey')).toEqual('snippets');
+});
+
+test('Should pass locale from userStore to selection component if form has no locale', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid_overlay',
+        resource_key: 'snippets',
+        types: {
+            datagrid_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onFinish={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+
+    expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to selection component', () => {
@@ -429,6 +474,41 @@ test('Should pass resourceKey as datagridKey to datagrid component if no datagri
     expect(selection.instance().datagridStore.datagridKey).toEqual('snippets');
 });
 
+test('Should pass locale from userStore to datagridStore if form has no locale', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'en';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(toJS(selection.instance().datagridStore.locale)).toEqual('en');
+});
+
 test('Should call onChange and onFinish prop when datagrid selection changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -554,6 +634,44 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         searchProperties: ['name'],
         value,
     }));
+});
+
+test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new FormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(toJS(selection.find('MultiAutoComplete').prop('locale'))).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
