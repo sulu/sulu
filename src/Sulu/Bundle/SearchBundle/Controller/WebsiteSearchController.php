@@ -106,13 +106,13 @@ class WebsiteSearchController
             throw new NotFoundHttpException();
         }
 
-        return $this->twig->renderResponse(
+        return new Response($this->twig->render(
             $template,
             $this->parameterResolver->resolve(
                 ['query' => $query, 'hits' => $hits],
                 $this->requestAnalyzer
             )
-        );
+        ));
     }
 
     /**
