@@ -61,7 +61,7 @@ class WebsiteSearchControllerTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);
         $this->twig = $this->prophesize(\Twig_Environment::class);
-        $this->twigLoader = $this->prophesize(\Twig_LoaderInterface::class);
+        $this->twigLoader = $this->prophesize(\Twig_Loader_Filesystem::class);
         $this->twig->getLoader()->willReturn($this->twigLoader->reveal());
 
         $this->websiteSearchController = new WebsiteSearchController(
