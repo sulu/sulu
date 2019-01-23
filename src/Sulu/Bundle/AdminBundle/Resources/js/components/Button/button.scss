@@ -112,6 +112,7 @@ $iconColorActive: $white;
     color: $iconBorderColor;
     cursor: pointer;
     font-size: $iconFontSize;
+    padding: 0 5px;
 
     &:hover {
         background-color: $silver;
@@ -125,11 +126,10 @@ $iconColorActive: $white;
     .button-icon,
     .dropdown-icon {
         line-height: 28px;
-        margin-left: 5px;
     }
 
     .dropdown-icon {
-        margin-right: 5px;
+        margin-left: 5px;
     }
 }
 

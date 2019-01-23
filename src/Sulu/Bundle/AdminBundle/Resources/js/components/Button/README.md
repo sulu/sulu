@@ -39,6 +39,19 @@ const onClick = () => {
 </Button>
 ```
 
+```javascript
+const onClick = () => {
+    /* do click things */
+    alert('Clicked this nice button, congrats!');
+};
+
+<Button
+    skin="icon"
+    icon="su-plus"
+    onClick={onClick}
+/>
+```
+
 The buttons can also be used in combination with an icon.
 
 ```javascript

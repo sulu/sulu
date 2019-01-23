@@ -5,7 +5,7 @@ exports[`Render a card with its children 1`] = `
   class="card"
 >
   <div
-    class="icon"
+    class="icons"
   />
   <h1>
     Content!
@@ -18,7 +18,7 @@ exports[`Render a card with its children, edit and remove icon 1`] = `
   class="card"
 >
   <div
-    class="icon"
+    class="icons"
   >
     <span
       aria-label="su-pen"

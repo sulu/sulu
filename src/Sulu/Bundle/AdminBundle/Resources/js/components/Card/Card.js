@@ -16,7 +16,7 @@ export default class Card extends React.Component<Props> {
 
         return (
             <section className={cardStyles.card}>
-                <div className={cardStyles.icon}>
+                <div className={cardStyles.icons}>
                     {onEdit && <Icon name="su-pen" onClick={onEdit} />}
                     {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
                 </div>
