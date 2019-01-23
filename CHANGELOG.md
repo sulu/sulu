@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.5
+    * BUGFIX      #4385 [SuluHttpCacheBundle]   Fix usage of symfony cache with s-max-age 0
     * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
     * BUGFIX      #4376 [SecurityBundle]        Exclude role permissions in user API to improve performance
 

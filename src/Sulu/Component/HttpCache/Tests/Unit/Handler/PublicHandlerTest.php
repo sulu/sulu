@@ -88,6 +88,30 @@ class PublicHandlerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSharedMaxAgeZeroResponse()
+    {
+        $this->response->setPublic()->shouldBeCalled();
+        $this->response->setMaxAge($this->maxAge)->shouldBeCalled();
+        // setSharedMaxAge should not be called else symfony cache will not work on s-max-age 0
+        $this->response->setSharedMaxAge(0)->shouldNotBeCalled();
+        $this->structure->getCacheLifeTime()
+            ->willReturn(['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => 10]);
+        $this->cacheLifetimeResolver->resolve(CacheLifetimeResolverInterface::TYPE_SECONDS, 10)->willReturn(10);
+        $this->response->getAge()->willReturn(50);
+
+        $handler = new PublicHandler(
+            $this->cacheLifetimeResolver->reveal(),
+            $this->maxAge,
+            0,
+            true
+        );
+
+        $handler->updateResponse(
+            $this->response->reveal(),
+            $this->structure->reveal()
+        );
+    }
+
     public function testDisableCache()
     {
         // disable cache

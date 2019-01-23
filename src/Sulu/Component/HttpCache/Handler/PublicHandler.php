@@ -85,9 +85,13 @@ class PublicHandler implements HandlerUpdateResponseInterface
         // mark the response as either public or private
         $response->setPublic();
 
-        // set the private and shared max age
+        // set the private max age
         $response->setMaxAge($this->maxAge);
-        $response->setSharedMaxAge($this->sharedMaxAge);
+
+        // set shared max age only when not 0 else symfony cache will not work
+        if ($this->sharedMaxAge) {
+            $response->setSharedMaxAge($this->sharedMaxAge);
+        }
 
         $proxyTtl = $this->usePageTtl ?
             $response->getAge() + $cacheLifetime :
