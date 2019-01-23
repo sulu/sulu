@@ -20,5 +20,9 @@ const renderCardContent = (cardData) => (
     </div>
 );
 
-<CardCollection renderCardContent={renderCardContent} value={state.value} />
+const onChange = (value) => {
+    setState({value});
+};
+
+<CardCollection onChange={onChange} renderCardContent={renderCardContent} value={state.value} />
 ```

@@ -20,7 +20,14 @@ Array [
       >
         <div
           class="icons"
-        />
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
         <span>
           Test 1
         </span>
@@ -34,7 +41,14 @@ Array [
       >
         <div
           class="icons"
-        />
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
         <span>
           Test 2
         </span>
