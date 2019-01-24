@@ -44,7 +44,7 @@ class Schema
     {
         $jsonSchema = [];
 
-        $required = array_values(
+        $jsonSchema['required'] = array_values(
             array_filter(
                 array_map(function(Property $property) {
                     if ($property->isMandatory()) {
@@ -53,10 +53,6 @@ class Schema
                 }, $this->properties)
             )
         );
-
-        if (count($required) > 0) {
-            $jsonSchema['required'] = $required;
-        }
 
         $properties = [];
 

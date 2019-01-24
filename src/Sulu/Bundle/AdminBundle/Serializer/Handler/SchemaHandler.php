@@ -37,8 +37,6 @@ class SchemaHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $jsonSchema = $schema->toJsonSchema();
-
-        return $context->accept(count($jsonSchema) > 0 ? $jsonSchema : null);
+        return $context->accept($schema->toJsonSchema());
     }
 }

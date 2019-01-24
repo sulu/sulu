@@ -17,11 +17,15 @@ use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
 
 class SchemaTest extends TestCase
 {
-    public function testEmptyJsonSchema()
+    /**
+     * It is absolutely necessary that no empty array is returned, because an empty array would be serialized as array
+     * instead of an object in JSON, which would cause the JsonSchema library in the frontend to crash.
+     */
+    public function testEmptyJsonSchemaReturningNonEmptyArray()
     {
         $schema = new Schema();
 
-        $this->assertEquals([], $schema->toJsonSchema());
+        $this->assertEquals(['required' => []], $schema->toJsonSchema());
     }
 
     public function testNestedJsonSchema()
@@ -60,8 +64,10 @@ class SchemaTest extends TestCase
                 'required' => ['title'],
                 'allOf' => [
                     [
+                        'required' => [],
                         'anyOf' => [
                             [
+                                'required' => [],
                                 'properties' => [
                                     'nodeType' => [
                                         'name' => 'nodeType',
@@ -70,6 +76,7 @@ class SchemaTest extends TestCase
                                 ],
                             ],
                             [
+                                'required' => [],
                                 'properties' => [
                                     'nodeType' => [
                                         'name' => 'nodeType',

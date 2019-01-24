@@ -73,7 +73,8 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('url', $overviewType->form);
         $this->assertObjectHasAttribute('article', $overviewType->form);
         $this->assertObjectHasAttribute('schema', $overviewType);
-        $this->assertNull($overviewType->schema);
+
+        $this->assertEquals(['required' => []], (array) $overviewType->schema);
     }
 
     public function testPageSeoFormMetadataAction()
@@ -93,7 +94,7 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertNull($schema);
+        $this->assertEquals(['required' => []], (array) $schema);
     }
 
     public function testPageExcerptFormMetadataAction()
@@ -113,7 +114,7 @@ class AdminControllerTest extends SuluTestCase
 
         $schema = $response->schema;
 
-        $this->assertNull($schema);
+        $this->assertEquals(['required' => []], (array) $schema);
     }
 
     public function testPageSettingFormMetadataAction()
