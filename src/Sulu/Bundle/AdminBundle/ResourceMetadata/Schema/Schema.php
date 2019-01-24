@@ -46,11 +46,14 @@ class Schema
 
         $required = array_values(
             array_filter(
-                array_map(function(Property $property) {
-                    if ($property->isMandatory()) {
-                        return $property->getName();
-                    }
-                }, $this->properties)
+                array_map(
+                    function (Property $property) {
+                        if ($property->isMandatory()) {
+                            return $property->getName();
+                        }
+                    },
+                    $this->properties
+                )
             )
         );
 
@@ -74,15 +77,15 @@ class Schema
         }
 
         if (count($this->anyOfs) > 0) {
-            $jsonSchema['anyOf'] = array_map(function(Schema $schema) {
+            $jsonSchema['anyOf'] = array_filter(array_map(function(Schema $schema) {
                 return $schema->toJsonSchema();
-            }, $this->anyOfs);
+            }, $this->anyOfs));
         }
 
         if (count($this->allOfs) > 0) {
-            $jsonSchema['allOf'] = array_map(function(Schema $schema) {
+            $jsonSchema['allOf'] = array_filter(array_map(function(Schema $schema) {
                 return $schema->toJsonSchema();
-            }, $this->allOfs);
+            }, $this->allOfs));
         }
 
         return $jsonSchema;
