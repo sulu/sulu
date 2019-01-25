@@ -48,7 +48,7 @@ class ResourceMetadataMapper
         foreach ($fieldDescriptors as $fieldDescriptor) {
             $field = new DatagridField($fieldDescriptor->getName());
 
-            $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin'));
+            $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin', $locale));
             $field->setType($fieldDescriptor->getType());
             $field->setVisibility($fieldDescriptor->getVisibility());
             $field->setSortable($fieldDescriptor->getSortable());
