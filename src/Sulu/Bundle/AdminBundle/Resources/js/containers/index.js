@@ -13,7 +13,7 @@ import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
-import Form, {fieldRegistry, FormInspector, FormStore} from './Form';
+import Form, {CardCollection, fieldRegistry, FormInspector, FormStore} from './Form';
 import MultiSelect from './MultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
@@ -29,6 +29,7 @@ export type {
 
 export {
     AbstractAdapter,
+    CardCollection,
     Datagrid,
     DatagridStore,
     datagridAdapterRegistry,

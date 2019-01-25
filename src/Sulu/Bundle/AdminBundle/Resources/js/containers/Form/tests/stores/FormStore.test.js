@@ -1,5 +1,5 @@
 // @flow
-import {observable, toJS, when} from 'mobx';
+import {observable, observable as mockObservable, toJS, when} from 'mobx';
 import FormStore from '../../stores/FormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
@@ -13,7 +13,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.setMultiple = jest.fn();
     this.change = jest.fn();
     this.copyFromLocale = jest.fn();
-    this.data = {};
+    this.data = mockObservable({});
     this.loading = false;
 
     if (options) {
@@ -137,7 +137,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
         expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
         expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
-        resourceStore.data = {item1: 'item2'};
+        resourceStore.data = observable({item1: 'item2'});
         expect(formStore.schema.item2.disabled).toEqual(true);
         expect(formStore.schema.item2.visible).toEqual(false);
 
@@ -160,7 +160,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
             expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
             expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
-            resourceStore.data = {item1: 'item32'};
+            resourceStore.data = observable({item1: 'item32'});
             formStore.finishField('/item1').then(() => {
                 const sectionItems = formStore.schema.section.items;
                 if (!sectionItems) {
@@ -180,7 +180,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
                 expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
                 expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
-                resourceStore.data = {item1: 'section'};
+                resourceStore.data = observable({item1: 'section'});
                 formStore.finishField('/item1').then(() => {
                     const sectionItems = formStore.schema.section.items;
                     if (!sectionItems) {
@@ -200,7 +200,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
                     expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
                     expect(blockTypes.text_line.form.item41.visible).toEqual(false);
 
-                    resourceStore.data = {item1: 'item41'};
+                    resourceStore.data = observable({item1: 'item41'});
                     formStore.finishField('/item1').then(() => {
                         const sectionItems = formStore.schema.section.items;
                         if (!sectionItems) {
@@ -373,7 +373,7 @@ test('Set template property of ResourceStore from the loaded data', () => {
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {template: 'type2'};
+    resourceStore.data = observable({template: 'type2'});
     const formStore = new FormStore(resourceStore, 'snippets');
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
@@ -440,10 +440,10 @@ test('Change schema should keep data', () => {
     };
 
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Title',
         slogan: 'Slogan',
-    };
+    });
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -480,10 +480,10 @@ test('Change type should update schema and data', (done) => {
     const jsonSchemaPromise = Promise.resolve({});
 
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Title',
         slogan: 'Slogan',
-    };
+    });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
@@ -537,9 +537,9 @@ test('types property should be returning types from server', () => {
 
 test('Type should be set from response', () => {
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {
+    resourceStore.data = observable({
         template: 'sidebar',
-    };
+    });
 
     const schemaTypesPromise = Promise.resolve({
         sidebar: {},
@@ -554,9 +554,9 @@ test('Type should be set from response', () => {
 
 test('Type should not be set from response if types are not supported', () => {
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {
+    resourceStore.data = observable({
         template: 'sidebar',
-    };
+    });
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -569,9 +569,9 @@ test('Type should not be set from response if types are not supported', () => {
 
 test('Changing type should set the appropriate property in the ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = {
+    resourceStore.data = observable({
         template: 'sidebar',
-    };
+    });
 
     const schemaTypesPromise = Promise.resolve({
         sidebar: {},
@@ -667,7 +667,7 @@ test('Save the store should reject if request has failed', (done) => {
     resourceStore.save.mockReturnValue(Promise.reject(errorResponse));
     const formStore = new FormStore(resourceStore, 'snippets');
 
-    resourceStore.data = {
+    resourceStore.data = observable({
         blocks: [
             {
                 text: 'Test',
@@ -676,7 +676,7 @@ test('Save the store should reject if request has failed', (done) => {
                 text: 'T',
             },
         ],
-    };
+    });
 
     when(
         () => !formStore.schemaLoading,
@@ -719,7 +719,7 @@ test('Save the store should validate the current data', (done) => {
     const resourceStore = new ResourceStore('snippets', '3');
     const formStore = new FormStore(resourceStore, 'snippets');
 
-    resourceStore.data = {
+    resourceStore.data = observable({
         blocks: [
             {
                 text: 'Test',
@@ -728,7 +728,7 @@ test('Save the store should validate the current data', (done) => {
                 text: 'T',
             },
         ],
-    };
+    });
 
     when(
         () => !formStore.schemaLoading,
@@ -788,9 +788,9 @@ test('Delete should delegate the call to resourceStore with options', () => {
 
 test('Data attribute should return the data from the resourceStore', () => {
     const formStore = new FormStore(new ResourceStore('snippets', '3'), 'snippets');
-    formStore.resourceStore.data = {
+    formStore.resourceStore.data = observable({
         title: 'Title',
-    };
+    });
 
     expect(formStore.data).toBe(formStore.resourceStore.data);
     formStore.destroy();
@@ -839,7 +839,7 @@ test('Destroying the store should not fail if no disposers are available', () =>
 
 test('Should return value for property path', () => {
     const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {test: 'value'};
+    resourceStore.data = observable({test: 'value'});
 
     const formStore = new FormStore(resourceStore, 'snippets');
 
@@ -848,11 +848,11 @@ test('Should return value for property path', () => {
 
 test('Return all the values for a given tag', () => {
     const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Value 1',
         description: 'Value 2',
         flag: true,
-    };
+    });
 
     const formStore = new FormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
@@ -881,11 +881,11 @@ test('Return all the values for a given tag', () => {
 
 test('Return all the values for a given tag sorted by priority', () => {
     const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Value 1',
         description: 'Value 2',
         flag: true,
-    };
+    });
 
     const formStore = new FormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
@@ -911,12 +911,12 @@ test('Return all the values for a given tag sorted by priority', () => {
 
 test('Return all the values for a given tag within sections', () => {
     const resourceStore = new ResourceStore('test', 3);
-    resourceStore.data = {
+    resourceStore.data = observable({
         title: 'Value 1',
         description: 'Value 2',
         flag: true,
         article: 'Value 3',
-    };
+    });
 
     const formStore = new FormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
@@ -1117,7 +1117,7 @@ test('Set new type after copying from different locale', () => {
     const resourceStore = new ResourceStore('test', 5);
     const formStore = new FormStore(resourceStore, 'snippets');
 
-    resourceStore.copyFromLocale.mockReturnValue(Promise.resolve({template: 'sidebar'}));
+    resourceStore.copyFromLocale.mockReturnValue(Promise.resolve(observable({template: 'sidebar'})));
 
     return schemaTypesPromise.then(() => {
         formStore.setType('footer');

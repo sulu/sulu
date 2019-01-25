@@ -3,7 +3,9 @@ import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
 import FormStore from './stores/FormStore';
+import MemoryFormStore from './stores/MemoryFormStore';
 import ChangelogLine from './fields/ChangelogLine';
+import CardCollection from './fields/CardCollection';
 import Selection from './fields/Selection';
 import SingleSelection from './fields/SingleSelection';
 import Checkbox from './fields/Checkbox';
@@ -27,6 +29,7 @@ import type {Schema, Types} from './types';
 export {
     fieldRegistry,
     Selection,
+    CardCollection,
     Checkbox,
     ColorPicker,
     ChangelogLine,
@@ -35,12 +38,13 @@ export {
     Input,
     FormInspector,
     FormStore,
-    Select,
+    MemoryFormStore,
     Number,
     PasswordConfirmation,
     Phone,
     Renderer,
     ResourceLocator,
+    Select,
     SmartContent,
     SingleSelect,
     SingleSelection,

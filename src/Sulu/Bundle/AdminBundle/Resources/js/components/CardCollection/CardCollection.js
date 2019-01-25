@@ -6,10 +6,10 @@ import Card from '../Card';
 import cardCollectionStyles from './cardCollection.scss';
 
 type Props = {|
-    children?: ChildrenArray<Element<typeof Card>>,
+    children?: ChildrenArray<Element<typeof Card>> | false,
     onAdd?: () => void,
-    onEdit?: (index: ?number) => void,
-    onRemove?: (index: ?number) => void,
+    onEdit?: (index: number) => void,
+    onRemove?: (index: number) => void,
 |};
 
 export default class CardCollection extends React.Component<Props> {

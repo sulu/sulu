@@ -1,19 +1,18 @@
 // @flow
 import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import type {FinishFieldHandler} from './types';
-import FormStore from './stores/FormStore';
+import type {FinishFieldHandler, FormStoreInterface} from './types';
 
 export default class FormInspector {
-    formStore: FormStore;
+    formStore: FormStoreInterface;
 
     finishFieldHandlers: Array<FinishFieldHandler> = [];
 
-    constructor(formStore: FormStore) {
+    constructor(formStore: FormStoreInterface) {
         this.formStore = formStore;
     }
 
-    @computed get resourceKey(): string {
+    @computed get resourceKey(): ?string {
         return this.formStore.resourceKey;
     }
 
