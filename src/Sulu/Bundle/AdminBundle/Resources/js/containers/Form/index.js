@@ -2,7 +2,7 @@
 import Form from './Form';
 import FormInspector from './FormInspector';
 import fieldRegistry from './registries/FieldRegistry';
-import FormStore from './stores/FormStore';
+import ResourceFormStore from './stores/ResourceFormStore';
 import MemoryFormStore from './stores/MemoryFormStore';
 import ChangelogLine from './fields/ChangelogLine';
 import CardCollection from './fields/CardCollection';
@@ -37,7 +37,7 @@ export {
     Email,
     Input,
     FormInspector,
-    FormStore,
+    ResourceFormStore,
     MemoryFormStore,
     Number,
     PasswordConfirmation,

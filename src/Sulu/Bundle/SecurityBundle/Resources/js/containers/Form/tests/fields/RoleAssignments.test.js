@@ -2,7 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import RoleAssignments from '../../fields/RoleAssignments';
 
@@ -11,7 +11,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         this.getValueByPath = jest.fn();
         this.locale = formStore.locale;
     }),
-    FormStore: jest.fn(function(resourceStore) {
+    ResourceFormStore: jest.fn(function(resourceStore) {
         this.locale = resourceStore.locale;
     }),
 }));
@@ -23,7 +23,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass props correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const roleAssignments = shallow(
         <RoleAssignments
@@ -36,7 +36,7 @@ test('Pass props correctly to RoleAssignments', () => {
 });
 
 test('Pass props with value correctly to RoleAssignments', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value: Array<Object> = [
         {

@@ -1,6 +1,6 @@
 // @flow
 import {mount} from 'enzyme';
-import {FormStore} from 'sulu-admin-bundle/containers';
+import {ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import Form from 'sulu-admin-bundle/views/Form/Form';
@@ -17,7 +17,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers', () => ({
-    FormStore: class {
+    ResourceFormStore: class {
         resourceStore;
         options = {};
 
@@ -58,7 +58,7 @@ jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
 
 function createEditToolbarAction(locales) {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore, 'test');
+    const formStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],

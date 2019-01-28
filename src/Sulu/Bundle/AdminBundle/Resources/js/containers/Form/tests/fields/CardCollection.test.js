@@ -4,7 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import CardCollection from '../../fields/CardCollection';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -12,7 +12,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));
@@ -28,7 +28,7 @@ jest.mock('../../registries/FieldRegistry', () => ({
 }));
 
 test('Render a CardCollection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const fieldTypeOptions = {
         renderCardContent: jest.fn((card) => card.firstName + ' ' + card.lastName),
@@ -57,7 +57,7 @@ test('Render a CardCollection', () => {
 });
 
 test('Close the overlay when its close button is clicked', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
 
@@ -107,7 +107,7 @@ test('Close the overlay when its close button is clicked', () => {
 });
 
 test('Add a new card using the overlay', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
 
@@ -161,7 +161,7 @@ test('Add a new card using the overlay', () => {
 });
 
 test('Edit an existing card using the overlay', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
 
@@ -215,7 +215,7 @@ test('Edit an existing card using the overlay', () => {
 });
 
 test('Edit an existing card using the overlay', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
 
@@ -260,14 +260,14 @@ test('Edit an existing card using the overlay', () => {
 });
 
 test('Throw error when no renderCardContent function is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     expect(() => shallow(
         <CardCollection {...fieldTypeDefaultProps} formInspector={formInspector} />
     )).toThrow(/"renderCardContent"/);
 });
 
 test('Throw error when no schema function is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         renderCardContent: jest.fn(),
     };

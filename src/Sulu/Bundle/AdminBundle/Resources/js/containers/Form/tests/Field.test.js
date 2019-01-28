@@ -5,11 +5,11 @@ import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 import fieldRegistry from '../registries/FieldRegistry';
 import FormInspector from '../FormInspector';
-import FormStore from '../stores/FormStore';
+import ResourceFormStore from '../stores/ResourceFormStore';
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn());
-jest.mock('../stores/FormStore', () => jest.fn());
+jest.mock('../stores/ResourceFormStore', () => jest.fn());
 
 jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn(),
@@ -21,7 +21,7 @@ jest.mock('../../../utils', () => ({
 }));
 
 test('Render correct label with correct field type', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -55,7 +55,7 @@ test('Render correct label with correct field type', () => {
 });
 
 test('Render field with correct values for grid', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -74,7 +74,7 @@ test('Render field with correct values for grid', () => {
 });
 
 test('Render a required field with correct field type', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -93,7 +93,7 @@ test('Render a required field with correct field type', () => {
 });
 
 test('Render a field without a label', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     expect(render(
         <Field
@@ -109,7 +109,7 @@ test('Render a field without a label', () => {
 });
 
 test('Render a field with a description', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     expect(render(
         <Field
@@ -130,7 +130,7 @@ test('Render a field with a description', () => {
 });
 
 test('Render a field with an error', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -152,7 +152,7 @@ test('Render a field with an error', () => {
 });
 
 test('Render a field without a const error', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -174,7 +174,7 @@ test('Render a field without a const error', () => {
 });
 
 test('Render a field with a error collection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -202,7 +202,7 @@ test('Render a field with a error collection', () => {
 });
 
 test('Pass correct props to FieldType', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;
@@ -245,7 +245,7 @@ test('Pass correct props to FieldType', () => {
 });
 
 test('Pass disabled flag to disabled FieldType', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;
@@ -289,7 +289,7 @@ test('Pass disabled flag to disabled FieldType', () => {
 });
 
 test('Merge with options from fieldRegistry before passing props to FieldType', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -339,7 +339,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
 });
 
 test('Call onChange callback when value of Field changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -364,7 +364,7 @@ test('Call onChange callback when value of Field changes', () => {
 });
 
 test('Do not call onChange callback when value of disabled Field changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -389,7 +389,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
 });
 
 test('Call onFinish callback after editing the field has finished', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;

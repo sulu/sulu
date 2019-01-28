@@ -1,17 +1,17 @@
 // @flow
 import type {Node} from 'react';
-import {FormStore} from '../../../containers/Form';
+import {ResourceFormStore} from '../../../containers/Form';
 import type {ToolbarAction, ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import Router from '../../../services/Router';
 import Form from '../../../views/Form';
 
 export default class AbstractFormToolbarAction implements ToolbarAction {
-    formStore: FormStore;
+    formStore: ResourceFormStore;
     form: Form;
     router: Router;
     locales: ?Array<string>;
 
-    constructor(formStore: FormStore, form: Form, router: Router, locales?: Array<string>) {
+    constructor(formStore: ResourceFormStore, form: Form, router: Router, locales?: Array<string>) {
         this.formStore = formStore;
         this.form = form;
         this.router = router;

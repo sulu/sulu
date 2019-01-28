@@ -1,6 +1,6 @@
 // @flow
 import {observable, observable as mockObservable, toJS, when} from 'mobx';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
 
@@ -51,7 +51,7 @@ test('Create data object for schema', () => {
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const resourceStore = new ResourceStore('snippets', '1');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     expect(formStore.schemaLoading).toEqual(true);
 
     setTimeout(() => {
@@ -116,7 +116,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const resourceStore = new ResourceStore('snippets', '1');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
         const sectionItems = formStore.schema.section.items;
@@ -245,7 +245,7 @@ test('Evaluate disabledConditions and visibleConditions for schema with locale',
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
         expect(formStore.schema.item.disabled).toEqual(true);
@@ -271,7 +271,7 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
 
     const locale = observable.box('en');
     const resourceStore = new ResourceStore('snippets', '1', {locale});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
         expect(formStore.schema.item.disabled).toEqual(true);
@@ -288,21 +288,21 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
 
 test('Read resourceKey from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.resourceKey).toEqual('snippets');
 });
 
 test('Read locale from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.locale && formStore.locale.get()).toEqual('en');
 });
 
 test('Read id from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.id).toEqual('1');
 });
@@ -310,7 +310,7 @@ test('Read id from ResourceStore', () => {
 test('Read saving flag from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.saving = true;
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.saving).toEqual(true);
 });
@@ -318,7 +318,7 @@ test('Read saving flag from ResourceStore', () => {
 test('Read deleting flag from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.deleting = true;
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.deleting).toEqual(true);
 });
@@ -326,14 +326,14 @@ test('Read deleting flag from ResourceStore', () => {
 test('Read dirty flag from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.dirty = true;
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.dirty).toEqual(true);
 });
 
 test('Set dirty flag from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.dirty = true;
 
     expect(formStore.dirty).toEqual(true);
@@ -352,7 +352,7 @@ test('Set template property of ResourceStore to first type be default', () => {
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
     const resourceStore = new ResourceStore('snippets');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(resourceStore.set).toBeCalledWith('template', 'type1');
@@ -374,7 +374,7 @@ test('Set template property of ResourceStore from the loaded data', () => {
 
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({template: 'type2'});
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(resourceStore.set).toBeCalledWith('template', 'type2');
@@ -416,7 +416,7 @@ test('Create data object for schema with sections', () => {
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
-    const formStore = new FormStore(new ResourceStore('snippets', '1'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
         expect(formStore.data).toEqual({
@@ -451,7 +451,7 @@ test('Change schema should keep data', () => {
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
         expect(Object.keys(formStore.data)).toHaveLength(3);
@@ -488,7 +488,7 @@ test('Change type should update schema and data', (done) => {
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     const cachedPathsByTag = formStore.pathsByTag;
 
     setTimeout(() => {
@@ -509,7 +509,7 @@ test('Change type should throw an error if no types are available', () => {
     metadataStore.getSchema.mockReturnValue(promise);
 
     const resourceStore = new ResourceStore('snippets', '1');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return promise.then(() => {
         expect(() => formStore.changeType('test')).toThrow(/cannot handle types/);
@@ -524,7 +524,7 @@ test('types property should be returning types from server', () => {
     const promise = Promise.resolve(types);
     metadataStore.getSchemaTypes.mockReturnValue(promise);
 
-    const formStore = new FormStore(new ResourceStore('snippets', '1'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
     expect(toJS(formStore.types)).toEqual({});
     expect(formStore.typesLoading).toEqual(true);
 
@@ -545,7 +545,7 @@ test('Type should be set from response', () => {
         sidebar: {},
     });
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
         expect(formStore.type).toEqual('sidebar');
@@ -560,7 +560,7 @@ test('Type should not be set from response if types are not supported', () => {
 
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
         expect(formStore.type).toEqual(undefined);
@@ -582,7 +582,7 @@ test('Changing type should set the appropriate property in the ResourceStore', (
     const metadataPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return metadataPromise.then(() => {
         formStore.changeType('footer');
@@ -599,16 +599,16 @@ test('Changing type should throw an exception if types are not supported', () =>
     const schemaTypesPromise = Promise.resolve({});
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
         expect(() => formStore.changeType('sidebar'))
-            .toThrow(/"snippets" handled by this FormStore cannot handle types/);
+            .toThrow(/"snippets" handled by this ResourceFormStore cannot handle types/);
     });
 });
 
 test('Loading flag should be set to true as long as schema is loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
     formStore.resourceStore.loading = false;
 
     expect(formStore.loading).toBe(true);
@@ -616,7 +616,7 @@ test('Loading flag should be set to true as long as schema is loading', () => {
 });
 
 test('Loading flag should be set to true as long as data is loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
     formStore.resourceStore.loading = true;
     formStore.schemaLoading = false;
 
@@ -625,7 +625,7 @@ test('Loading flag should be set to true as long as data is loading', () => {
 });
 
 test('Loading flag should be set to false after data and schema have been loading', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '1', {locale: observable.box()}), 'snippets');
     formStore.resourceStore.loading = false;
     formStore.schemaLoading = false;
 
@@ -634,7 +634,7 @@ test('Loading flag should be set to false after data and schema have been loadin
 });
 
 test('Save the store should call the resourceStore save function', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '3', {locale: observable.box()}), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '3', {locale: observable.box()}), 'snippets');
 
     formStore.save();
     expect(formStore.resourceStore.save).toBeCalledWith({});
@@ -642,7 +642,7 @@ test('Save the store should call the resourceStore save function', () => {
 });
 
 test('Save the store should call the resourceStore save function with the passed options', () => {
-    const formStore = new FormStore(
+    const formStore = new ResourceFormStore(
         new ResourceStore('snippets', '3', {locale: observable.box()}),
         'snippets',
         {option1: 'value1', option2: 'value2'}
@@ -665,7 +665,7 @@ test('Save the store should reject if request has failed', (done) => {
         json: jest.fn().mockReturnValue(Promise.resolve(error)),
     };
     resourceStore.save.mockReturnValue(Promise.reject(errorResponse));
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     resourceStore.data = observable({
         blocks: [
@@ -717,7 +717,7 @@ test('Save the store should validate the current data', (done) => {
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const resourceStore = new ResourceStore('snippets', '3');
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     resourceStore.data = observable({
         blocks: [
@@ -767,7 +767,7 @@ test('Delete should delegate the call to resourceStore', () => {
     const resourceStore = new ResourceStore('snippets', 3);
     resourceStore.delete.mockReturnValue(deletePromise);
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     const returnedDeletePromise = formStore.delete();
 
     expect(resourceStore.delete).toBeCalledWith({});
@@ -779,7 +779,7 @@ test('Delete should delegate the call to resourceStore with options', () => {
     const resourceStore = new ResourceStore('snippets', 3);
     resourceStore.delete.mockReturnValue(deletePromise);
 
-    const formStore = new FormStore(resourceStore, 'snippets', {webspace: 'sulu_io'});
+    const formStore = new ResourceFormStore(resourceStore, 'snippets', {webspace: 'sulu_io'});
     const returnedDeletePromise = formStore.delete();
 
     expect(resourceStore.delete).toBeCalledWith({webspace: 'sulu_io'});
@@ -787,7 +787,7 @@ test('Delete should delegate the call to resourceStore with options', () => {
 });
 
 test('Data attribute should return the data from the resourceStore', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '3'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     formStore.resourceStore.data = observable({
         title: 'Title',
     });
@@ -797,7 +797,7 @@ test('Data attribute should return the data from the resourceStore', () => {
 });
 
 test('Set should be passed to resourceStore', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '3'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     formStore.set('title', 'Title');
 
     expect(formStore.resourceStore.set).toBeCalledWith('title', 'Title');
@@ -805,7 +805,7 @@ test('Set should be passed to resourceStore', () => {
 });
 
 test('SetMultiple should be passed to resourceStore', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '3'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
     const data = {
         title: 'Title',
         description: 'Description',
@@ -817,7 +817,7 @@ test('SetMultiple should be passed to resourceStore', () => {
 });
 
 test('Destroying the store should call all the disposers', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '2'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     formStore.schemaDisposer = jest.fn();
     formStore.typeDisposer = jest.fn();
     formStore.updateFieldPathEvaluationsDisposer = jest.fn();
@@ -830,7 +830,7 @@ test('Destroying the store should call all the disposers', () => {
 });
 
 test('Destroying the store should not fail if no disposers are available', () => {
-    const formStore = new FormStore(new ResourceStore('snippets', '2'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     formStore.schemaDisposer = undefined;
     formStore.typeDisposer = undefined;
 
@@ -841,7 +841,7 @@ test('Should return value for property path', () => {
     const resourceStore = new ResourceStore('test', 3);
     resourceStore.data = observable({test: 'value'});
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     expect(formStore.getValueByPath('/test')).toEqual('value');
 });
@@ -854,7 +854,7 @@ test('Return all the values for a given tag', () => {
         flag: true,
     });
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
         title: {
             tags: [
@@ -887,7 +887,7 @@ test('Return all the values for a given tag sorted by priority', () => {
         flag: true,
     });
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
         title: {
             tags: [
@@ -918,7 +918,7 @@ test('Return all the values for a given tag within sections', () => {
         article: 'Value 3',
     });
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
         highlight: {
             items: {
@@ -958,7 +958,7 @@ test('Return all the values for a given tag with empty blocks', () => {
         description: 'Value 2',
     });
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
         title: {
             tags: [
@@ -1005,7 +1005,7 @@ test('Return all the values for a given tag within blocks', () => {
         ],
     });
 
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
     formStore.rawSchema = {
         title: {
             tags: [
@@ -1049,7 +1049,7 @@ test('Return all the values for a given tag within blocks', () => {
 });
 
 test('Return SchemaEntry for given schemaPath', () => {
-    const formStore = new FormStore(new ResourceStore('test'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'snippets');
     formStore.rawSchema = {
         title: {
             tags: [
@@ -1090,7 +1090,7 @@ test('Return SchemaEntry for given schemaPath', () => {
 });
 
 test('Remember fields being finished as modified fields and forget about them after saving', () => {
-    const formStore = new FormStore(new ResourceStore('test'), 'snippets');
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'snippets');
     formStore.rawSchema = {};
     formStore.finishField('/block/0/text');
     formStore.finishField('/block/0/text');
@@ -1115,7 +1115,7 @@ test('Set new type after copying from different locale', () => {
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const resourceStore = new ResourceStore('test', 5);
-    const formStore = new FormStore(resourceStore, 'snippets');
+    const formStore = new ResourceFormStore(resourceStore, 'snippets');
 
     resourceStore.copyFromLocale.mockReturnValue(Promise.resolve(observable({template: 'sidebar'})));
 

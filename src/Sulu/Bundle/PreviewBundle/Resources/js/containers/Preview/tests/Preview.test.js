@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
-import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
+import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import Preview from '../Preview';
 
@@ -27,7 +27,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     post: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
 }));
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
@@ -46,7 +46,7 @@ beforeEach(() => {
 
 test('Render correct preview', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
     const component = shallow(<Preview formStore={formStore} router={router} />);
@@ -65,7 +65,7 @@ test('Render correct preview', () => {
 
 test('Render button to start preview', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
     expect(render(<Preview formStore={formStore} router={router} />)).toMatchSnapshot();
@@ -73,7 +73,7 @@ test('Render button to start preview', () => {
 
 test('React and update preview when data is changed', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
     formStore.data = observable.map({title: 'Test'});
@@ -106,7 +106,7 @@ test('React and update preview when data is changed', () => {
 
 test('Dont react or update preview when data is changed during formstore is loading', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
     formStore.data = observable.map({title: 'Test'});
@@ -139,7 +139,7 @@ test('Dont react or update preview when data is changed during formstore is load
 
 test('Dont react or update preview when data is changed during preview-store is starting', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
     formStore.data = observable.map({title: 'Test'});
@@ -172,7 +172,7 @@ test('Dont react or update preview when data is changed during preview-store is 
 
 test('React and update-context when type is changed', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
-    const formStore = new FormStore(resourceStore, 'pages');
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
     formStore.data = observable.map({title: 'Test'});

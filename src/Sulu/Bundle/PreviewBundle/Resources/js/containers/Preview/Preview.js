@@ -5,14 +5,14 @@ import {action, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {Router} from 'sulu-admin-bundle/services';
-import {FormStore, sidebarStore} from 'sulu-admin-bundle/containers';
+import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Loader, Toolbar} from 'sulu-admin-bundle/components';
 import previewStyles from './preview.scss';
 import PreviewStore from './stores/PreviewStore';
 import type {PreviewMode} from './types';
 
 type Props = {|
-    formStore: FormStore,
+    formStore: ResourceFormStore,
     router: Router,
 |};
 

@@ -2,7 +2,7 @@
 import {observable} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import FormInspector from '../FormInspector';
-import FormStore from '../stores/FormStore';
+import ResourceFormStore from '../stores/ResourceFormStore';
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.resourceKey = resourceKey;
@@ -13,7 +13,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, i
     }
 }));
 
-jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
@@ -27,15 +27,15 @@ jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
     this.isFieldModified = jest.fn();
 }));
 
-test('Should return the resourceKey from the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test'), 'test');
+test('Should return the resourceKey from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.resourceKey).toEqual('test');
 });
 
-test('Should return the locale from the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 1, {locale: observable.box('de')}), 'test');
+test('Should return the locale from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 1, {locale: observable.box('de')}), 'test');
     const formInspector = new FormInspector(formStore);
 
     if (!formInspector.locale) {
@@ -45,23 +45,23 @@ test('Should return the locale from the FormStore', () => {
     expect(formInspector.locale.get()).toEqual('de');
 });
 
-test('Should return the id from the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+test('Should return the id from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.id).toEqual(3);
 });
 
-test('Should return the errors from the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+test('Should return the errors from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     formStore.errors = {};
     const formInspector = new FormInspector(formStore);
 
     expect(formInspector.errors).toBe(formStore.errors);
 });
 
-test('Should return the options from the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 1), 'test');
+test('Should return the options from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 1), 'test');
     formStore.options = {
         webspace: 'example',
     };
@@ -72,9 +72,9 @@ test('Should return the options from the FormStore', () => {
     });
 });
 
-test('Should return the value for a path by using the FormStore', () => {
+test('Should return the value for a path by using the ResourceFormStore', () => {
     const data = [];
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     // $FlowFixMe
     formStore.getValueByPath.mockReturnValue(data);
     const formInspector = new FormInspector(formStore);
@@ -83,9 +83,9 @@ test('Should return the value for a path by using the FormStore', () => {
     expect(formStore.getValueByPath).toBeCalledWith('/test');
 });
 
-test('Should return the values for a given tag by using the FormStore', () => {
+test('Should return the values for a given tag by using the ResourceFormStore', () => {
     const data = [];
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     formStore.getValuesByTag.mockReturnValue(data);
     const formInspector = new FormInspector(formStore);
 
@@ -94,7 +94,7 @@ test('Should return the values for a given tag by using the FormStore', () => {
 });
 
 test('Should call finishField method from formStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     const formInspector = new FormInspector(formStore);
 
     formInspector.finishField('/block/0/test', '/test');
@@ -103,7 +103,7 @@ test('Should call finishField method from formStore', () => {
 });
 
 test('Should call registered onFinishField handlers', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 3), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 3), 'test'));
     const finishFieldHandler1 = jest.fn();
     const finishFieldHandler2 = jest.fn();
     formInspector.addFinishFieldHandler(finishFieldHandler1);
@@ -114,11 +114,11 @@ test('Should call registered onFinishField handlers', () => {
     expect(finishFieldHandler2).toBeCalledWith('/block/0/test', '/test');
 });
 
-test('Should return the SchemaEntry for a given path by using the FormStore', () => {
+test('Should return the SchemaEntry for a given path by using the ResourceFormStore', () => {
     const schemaEntry = {
         type: 'text_line',
     };
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     formStore.getSchemaEntryByPath.mockReturnValue(schemaEntry);
     const formInspector = new FormInspector(formStore);
 
@@ -126,8 +126,8 @@ test('Should return the SchemaEntry for a given path by using the FormStore', ()
     expect(formStore.getSchemaEntryByPath).toBeCalledWith('/test');
 });
 
-test('Should return if a field is modified by using the FormStore', () => {
-    const formStore = new FormStore(new ResourceStore('test', 3), 'test');
+test('Should return if a field is modified by using the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     formStore.isFieldModified.mockReturnValue(true);
     const formInspector = new FormInspector(formStore);
 

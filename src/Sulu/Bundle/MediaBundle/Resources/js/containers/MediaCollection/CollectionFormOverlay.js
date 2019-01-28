@@ -3,7 +3,7 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {Form, FormStore} from 'sulu-admin-bundle/containers';
+import {Form, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Dialog, Overlay} from 'sulu-admin-bundle/components';
 import type {OverlayType, OperationType} from './types';
@@ -24,13 +24,13 @@ export default class CollectionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     title: string;
     operationType: string;
-    @observable formStore: FormStore;
+    @observable formStore: ResourceFormStore;
 
     constructor(props: Props) {
         super(props);
 
         const {resourceStore} = this.props;
-        this.formStore = new FormStore(resourceStore, FORM_KEY);
+        this.formStore = new ResourceFormStore(resourceStore, FORM_KEY);
     }
 
     @action componentWillReceiveProps(nextProps: Props) {
@@ -43,7 +43,7 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         }
 
         if (this.props.resourceStore !== nextProps.resourceStore) {
-            this.formStore = new FormStore(nextProps.resourceStore, FORM_KEY);
+            this.formStore = new ResourceFormStore(nextProps.resourceStore, FORM_KEY);
         }
     }
 

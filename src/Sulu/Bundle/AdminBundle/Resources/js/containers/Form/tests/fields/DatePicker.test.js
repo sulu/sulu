@@ -5,12 +5,12 @@ import moment from 'moment-timezone';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import DatePicker from '../../fields/DatePicker';
 import DatePickerComponent from '../../../../components/DatePicker';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 
 beforeEach(() => {
@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test('Pass error correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const error = {};
     const fieldTypeOptions = {
         dateFormat: true,
@@ -38,7 +38,7 @@ test('Pass error correctly to component', () => {
 });
 
 test('Pass options for date picker to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: false,
@@ -56,7 +56,7 @@ test('Pass options for date picker to component', () => {
 });
 
 test('Pass options for time picker to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: false,
         timeFormat: true,
@@ -74,7 +74,7 @@ test('Pass options for time picker to component', () => {
 });
 
 test('Pass options for date time picker to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: true,
@@ -92,7 +92,7 @@ test('Pass options for date time picker to component', () => {
 });
 
 test('Pass invalid value correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: false,
@@ -111,7 +111,7 @@ test('Pass invalid value correctly to component', () => {
 });
 
 test('Pass disabled correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: false,
@@ -131,7 +131,7 @@ test('Pass disabled correctly to component', () => {
 });
 
 test('Convert value and pass it correctly to component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: false,
@@ -150,7 +150,7 @@ test('Convert value and pass it correctly to component', () => {
 });
 
 test('Should call onFinish callback on every onChange with correctly converted date value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: false,
@@ -176,7 +176,7 @@ test('Should call onFinish callback on every onChange with correctly converted d
 });
 
 test('Should call onFinish callback on every onChange with correctly converted time value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: false,
         timeFormat: true,
@@ -202,7 +202,7 @@ test('Should call onFinish callback on every onChange with correctly converted t
 });
 
 test('Should call onFinish callback on every onChange with correctly converted date time value', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const fieldTypeOptions = {
         dateFormat: true,
         timeFormat: true,

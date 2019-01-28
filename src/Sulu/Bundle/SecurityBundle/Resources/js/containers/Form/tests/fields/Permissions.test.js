@@ -2,7 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../../fields/Permissions';
 import type {ContextPermission} from '../../../Permissions';
@@ -12,7 +12,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         this.getValueByPath = jest.fn();
         this.locale = formStore.locale;
     }),
-    FormStore: jest.fn(function(resourceStore) {
+    ResourceFormStore: jest.fn(function(resourceStore) {
         this.locale = resourceStore.locale;
     }),
 }));
@@ -24,7 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass props correctly to Permissions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/system':
@@ -46,7 +46,7 @@ test('Pass props correctly to Permissions', () => {
 });
 
 test('Pass props with value correctly to Permissions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/system':

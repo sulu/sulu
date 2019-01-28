@@ -5,7 +5,7 @@ import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
 import SingleSelectionComponent from '../../../../containers/SingleSelection';
 
@@ -14,7 +14,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.id = id;
     this.locale = locale;
 }));
-jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
@@ -30,7 +30,7 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 test('Pass correct props to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = {
         test: 'value',
     };
@@ -66,7 +66,7 @@ test('Pass correct props to SingleAutoComplete', () => {
 });
 
 test('Pass correct props with schema-options type to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = {
         test: 'value',
     };
@@ -117,7 +117,7 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
 });
 
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -154,7 +154,7 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {
         default_type: 'auto_complete',
         types: {},
@@ -172,7 +172,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
 });
 
 test('Pass correct props to SingleItemSelection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -215,7 +215,7 @@ test('Pass correct props to SingleItemSelection', () => {
 });
 
 test('Pass resourceKey as datagridKey to SingleItemSelection if no datagridKey is given', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -246,7 +246,7 @@ test('Pass resourceKey as datagridKey to SingleItemSelection if no datagridKey i
 });
 
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -299,7 +299,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -335,7 +335,7 @@ test('Throw an error if a none string was passed to schema-options', () => {
 });
 
 test('Throw an error if a none string was passed to field-type-options', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -364,7 +364,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
 
 test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     const locale = observable.box('en');
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('accounts', 5, locale), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('accounts', 5, locale), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
@@ -397,7 +397,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
 });
 
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 

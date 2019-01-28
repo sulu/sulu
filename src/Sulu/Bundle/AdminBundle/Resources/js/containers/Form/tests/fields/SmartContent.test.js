@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import SmartContent from '../../fields/SmartContent';
 import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
 import smartContentConfigStore from '../../../SmartContent/stores/SmartContentConfigStore';
@@ -14,7 +14,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.id = id;
 }));
 
-jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
 }));
@@ -33,7 +33,7 @@ jest.mock('../../../SmartContent/stores/SmartContentConfigStore', () => ({
 }));
 
 test('Should correctly initialize SmartContentStore', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test', 1), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
     const value = {
@@ -70,7 +70,7 @@ test('Should correctly initialize SmartContentStore', () => {
 });
 
 test('Should pass id to SmartContentStore if resourceKeys match', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4), 'pages'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages', 4), 'pages'));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'pages'});
 
     const value = {
@@ -107,7 +107,7 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
 });
 
 test('Pass correct props to SmartContent component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {
@@ -142,7 +142,7 @@ test('Pass correct props to SmartContent component', () => {
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {
@@ -173,7 +173,7 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
 test('Should call the onChange and onFinish callbacks if SmartContentStore changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {
@@ -204,7 +204,7 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
 test('Should not call the onChange and onFinish callbacks if categories only differ in order', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = {
         audienceTargeting: undefined,
@@ -254,7 +254,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
 test('Should not call the onChange and onFinish callbacks if tags only differ in order', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = {
         audienceTargeting: undefined,
@@ -302,7 +302,7 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
 });
 
 test('Should call destroy on SmartContentStore when unmounted', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
         provider: {

@@ -7,7 +7,7 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
 import PublishIndicator from '../../components/PublishIndicator';
-import {default as FormContainer, FormStore} from '../../containers/Form';
+import {default as FormContainer, ResourceFormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -23,7 +23,7 @@ type Props = ViewProps & {
 @observer
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
-    formStore: FormStore;
+    formStore: ResourceFormStore;
     form: ?ElementRef<typeof FormContainer>;
     @observable errors = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
@@ -107,7 +107,7 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.formStore = new FormStore(this.resourceStore, formKey, formStoreOptions);
+        this.formStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions);
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);

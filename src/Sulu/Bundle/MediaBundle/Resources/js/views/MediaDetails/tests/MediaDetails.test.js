@@ -8,7 +8,7 @@ import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
     Form: require.requireActual('sulu-admin-bundle/containers').Form,
-    FormStore: require.requireActual('sulu-admin-bundle/containers').FormStore,
+    ResourceFormStore: require.requireActual('sulu-admin-bundle/containers').ResourceFormStore,
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({

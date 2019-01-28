@@ -13,8 +13,7 @@ const TYPE = 'template';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
 
-// TODO rename to ResourceFormStore
-export default class FormStore extends AbstractFormStore implements FormStoreInterface {
+export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;
     formKey: string;
     options: Object;
@@ -198,7 +197,7 @@ export default class FormStore extends AbstractFormStore implements FormStoreInt
     validateTypes() {
         if (Object.keys(this.types).length === 0) {
             throw new Error(
-                'The form "' + this.formKey + '" handled by this FormStore cannot handle types'
+                'The form "' + this.formKey + '" handled by this ResourceFormStore cannot handle types'
             );
         }
     }

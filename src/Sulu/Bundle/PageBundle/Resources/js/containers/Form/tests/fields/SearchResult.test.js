@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
-import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import SearchResult from '../../fields/SearchResult';
@@ -12,7 +12,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         this.getValueByPath = jest.fn();
         this.locale = formStore.locale;
     }),
-    FormStore: jest.fn(function(resourceStore) {
+    ResourceFormStore: jest.fn(function(resourceStore) {
         this.locale = resourceStore.locale;
     }),
 }));
@@ -24,7 +24,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Pass correct fields to SearchResult component', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
             case '/description':
@@ -50,7 +50,7 @@ test('Pass correct fields to SearchResult component', () => {
 
 test('Pass correct fields to SearchResult component', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )

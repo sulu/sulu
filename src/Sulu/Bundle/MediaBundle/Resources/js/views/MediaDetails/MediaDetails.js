@@ -5,7 +5,7 @@ import {action, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Grid, Loader} from 'sulu-admin-bundle/components';
-import {Form, FormStore, withToolbar} from 'sulu-admin-bundle/containers';
+import {Form, ResourceFormStore, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -25,7 +25,7 @@ type Props = ViewProps & {
 class MediaDetails extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     form: ?Form;
-    formStore: FormStore;
+    formStore: ResourceFormStore;
     @observable showFocusPointOverlay: boolean = false;
     showSuccess: IObservableValue<boolean> = observable.box(false);
 
@@ -37,7 +37,7 @@ class MediaDetails extends React.Component<Props> {
             resourceStore,
         } = this.props;
 
-        this.formStore = new FormStore(resourceStore, FORM_KEY);
+        this.formStore = new ResourceFormStore(resourceStore, FORM_KEY);
         const locale = resourceStore.locale;
 
         if (!locale) {

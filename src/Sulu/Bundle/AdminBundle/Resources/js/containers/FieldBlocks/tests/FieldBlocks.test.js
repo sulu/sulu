@@ -5,13 +5,13 @@ import pretty from 'pretty';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
-import FormStore from '../../Form/stores/FormStore';
+import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));
-jest.mock('../../Form/stores/FormStore', () => jest.fn());
+jest.mock('../../Form/stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../../Form/registries/FieldRegistry', () => ({
@@ -31,7 +31,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render block with schema', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
         default: {
@@ -78,7 +78,7 @@ test('Render block with schema', () => {
 });
 
 test('Render block with schema and error on fields already being modified', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
         default: {
@@ -145,7 +145,7 @@ test('Render block with schema and error on fields already being modified', () =
 });
 
 test('Render block with schema and error on fields already being modified', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
         default: {
@@ -210,7 +210,7 @@ test('Render block with schema and error on fields already being modified', () =
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
             title: 'Default',
@@ -253,7 +253,7 @@ test('Should correctly pass props to the BlockCollection', () => {
 });
 
 test('Should pass correct schemaPath to FieldRender', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
         default: {
@@ -287,7 +287,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
 });
 
 test('Should call onFinish when a field from the child renderer has finished editing', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
         default: {
@@ -324,7 +324,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
 });
 
 test('Should call onFinish when the order of the blocks has changed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
             title: 'Default',
@@ -356,7 +356,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
 });
 
 test('Throw error if no types are passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
@@ -366,7 +366,7 @@ test('Throw error if no types are passed', () => {
 });
 
 test('Throw error if empty type array is passed', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}

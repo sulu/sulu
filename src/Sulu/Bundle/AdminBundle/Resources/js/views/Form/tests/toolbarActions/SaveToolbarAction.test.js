@@ -1,6 +1,6 @@
 // @flow
 import SaveToolbarAction from '../../toolbarActions/SaveToolbarAction';
-import {FormStore} from '../../../../containers/Form';
+import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
@@ -12,7 +12,7 @@ jest.mock('../../../../utils/Translator', () => ({
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {}));
 
 jest.mock('../../../../containers/Form', () => ({
-    FormStore: class {
+    ResourceFormStore: class {
         resourceStore;
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -36,7 +36,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createSaveToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore, 'test');
+    const formStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
