@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\Cache;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\CustomTtlListener;
 use FOS\HttpCache\SymfonyCache\DebugListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
@@ -46,9 +47,13 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
 
-        if ($kernel->isDebug()) {
-            $this->addSubscriber(new DebugListener());
+        if (!$kernel->isDebug()) {
+            $this->addSubscriber(new CleanupCacheTagsListener());
+
+            return;
         }
+
+        $this->addSubscriber(new DebugListener());
     }
 
     /**

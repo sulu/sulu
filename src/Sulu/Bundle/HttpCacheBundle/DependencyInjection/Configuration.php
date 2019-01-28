@@ -40,7 +40,7 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->arrayNode('tags')
-                    ->canBeEnabled()
+                    ->canBeDisabled()
                 ->end()
                 ->arrayNode('cache')
                     ->addDefaultsIfNotSet()
