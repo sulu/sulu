@@ -495,6 +495,38 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(1, $response->addresses);
     }
 
+    public function testPostWithoutBankName()
+    {
+        $addressType = $this->createAddressType('Private');
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Max',
+                'lastName' => 'Mustermann',
+                'formOfAddress' => 1,
+                'bankAccounts' => [
+                    [
+                        'iban' => 'DE89370400440532013000',
+                        'bic' => 'DABAIE2D',
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, $response->bankAccounts);
+        $this->assertEquals('DE89370400440532013000', $response->bankAccounts[0]->iban);
+        $this->assertEquals('DABAIE2D', $response->bankAccounts[0]->bic);
+    }
+
     public function testPostEmptyLatitude()
     {
         $title = $this->createTitle('MSc');
