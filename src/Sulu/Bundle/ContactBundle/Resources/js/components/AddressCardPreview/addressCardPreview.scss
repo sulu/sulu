@@ -1,0 +1,22 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$addressCardPreviewColor: $scorpion;
+$addressCardPreviewTitleColor: $black;
+
+.address-card-preview {
+    color: $addressCardPreviewColor;
+    font-size: 14px;
+    line-height: 22px;
+    height: 180px;
+}
+
+.title {
+    color: $addressCardPreviewTitleColor;
+    margin-bottom: 5px;
+}
+
+.flags {
+    font-size: 12px;
+    line-height: 20px;
+    margin-bottom: 20px;
+}
