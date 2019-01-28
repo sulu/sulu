@@ -42,7 +42,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createSaveWithPublishingToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new ResourceFormStore(resourceStore, 'test');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
@@ -51,14 +51,14 @@ function createSaveWithPublishingToolbarAction() {
         router,
     });
 
-    return new SaveWithPublishingToolbarAction(formStore, form, router);
+    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
-    publishableSaveToolbarAction.formStore.resourceStore.saving = false;
-    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
-    publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = true;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.saving = false;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.data.publishedState = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         label: 'sulu_admin.save',
@@ -84,7 +84,7 @@ test('Return item config with correct disabled, loading, icon, type and value', 
 
 test('Return item config with enabled draft and save & publish option when dirty flag is set', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
-    publishableSaveToolbarAction.formStore.resourceStore.dirty = true;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.dirty = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         options: [
@@ -106,8 +106,8 @@ test('Return item config with enabled draft and save & publish option when dirty
 
 test('Return item config with publish option when not dirty but unpublished', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
-    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
-    publishableSaveToolbarAction.formStore.resourceStore.data.publishedState = false;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         options: [
@@ -129,8 +129,8 @@ test('Return item config with publish option when not dirty but unpublished', ()
 
 test('Return item config with all options disabled when not dirty and data was not loaded yet', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
-    publishableSaveToolbarAction.formStore.resourceStore.dirty = false;
-    publishableSaveToolbarAction.formStore.resourceStore.data = {};
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.dirty = false;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.data = {};
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         options: [
@@ -152,7 +152,7 @@ test('Return item config with all options disabled when not dirty and data was n
 
 test('Return item config with loading button when saving flag is set', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
-    publishableSaveToolbarAction.formStore.resourceStore.saving = true;
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.saving = true;
 
     expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         loading: true,

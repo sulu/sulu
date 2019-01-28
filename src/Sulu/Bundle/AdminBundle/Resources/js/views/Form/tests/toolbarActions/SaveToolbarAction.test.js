@@ -36,7 +36,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createSaveToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new ResourceFormStore(resourceStore, 'test');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
@@ -45,12 +45,12 @@ function createSaveToolbarAction() {
         router,
     });
 
-    return new SaveToolbarAction(formStore, form, router);
+    return new SaveToolbarAction(resourceFormStore, form, router);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
     const saveToolbarAction = createSaveToolbarAction();
-    saveToolbarAction.formStore.resourceStore.saving = false;
+    saveToolbarAction.resourceFormStore.resourceStore.saving = false;
 
     expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: true,
@@ -63,7 +63,7 @@ test('Return item config with correct disabled, loading, icon, type and value', 
 
 test('Return item config with enabled button when dirty flag is set', () => {
     const saveToolbarAction = createSaveToolbarAction();
-    saveToolbarAction.formStore.resourceStore.dirty = true;
+    saveToolbarAction.resourceFormStore.resourceStore.dirty = true;
 
     expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: false,
@@ -72,7 +72,7 @@ test('Return item config with enabled button when dirty flag is set', () => {
 
 test('Return item config with loading button when saving flag is set', () => {
     const saveToolbarAction = createSaveToolbarAction();
-    saveToolbarAction.formStore.resourceStore.saving = true;
+    saveToolbarAction.resourceFormStore.resourceStore.saving = true;
 
     expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         loading: true,

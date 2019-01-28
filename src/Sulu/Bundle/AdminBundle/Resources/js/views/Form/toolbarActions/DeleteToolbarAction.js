@@ -12,7 +12,7 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={this.formStore.deleting}
+                confirmLoading={this.resourceFormStore.deleting}
                 confirmText={translate('sulu_admin.ok')}
                 key="sulu_admin.delete"
                 onCancel={this.handleCancel}
@@ -27,7 +27,7 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
 
     getToolbarItemConfig() {
         return {
-            disabled: !this.formStore.id,
+            disabled: !this.resourceFormStore.id,
             icon: 'su-trash-alt',
             label: translate('sulu_admin.delete'),
             onClick: action(() => {
@@ -43,9 +43,9 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
 
     @action handleConfirm = () => {
         const {backRoute} = this.router.route.options;
-        const {locale} = this.formStore;
+        const {locale} = this.resourceFormStore;
 
-        this.formStore.delete()
+        this.resourceFormStore.delete()
             .then(action(() => {
                 this.showDialog = false;
                 this.router.navigate(backRoute, {locale: locale ? locale.get() : undefined});

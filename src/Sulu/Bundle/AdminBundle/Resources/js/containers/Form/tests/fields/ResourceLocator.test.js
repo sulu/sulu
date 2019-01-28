@@ -227,7 +227,13 @@ test('Should not request a new URL if URL was defined', () => {
 });
 
 test('Should request a new URL including the options from the ResourceFormStore if no URL was defined', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', {webspace: 'example'}));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test'),
+            'test',
+            {webspace: 'example'}
+        )
+    );
     const changeSpy = jest.fn();
 
     shallow(
@@ -373,7 +379,13 @@ test('Should not request a new URL if a field without any tags has finished edit
 });
 
 test('Should not request a new URL if the resource locator field has already been edited', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', {webspace: 'example'}));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test'),
+            'test',
+            {webspace: 'example'}
+        )
+    );
     const changeSpy = jest.fn();
 
     shallow(

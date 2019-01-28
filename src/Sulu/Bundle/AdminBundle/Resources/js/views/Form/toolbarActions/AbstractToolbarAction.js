@@ -6,13 +6,13 @@ import Router from '../../../services/Router';
 import Form from '../../../views/Form';
 
 export default class AbstractFormToolbarAction implements ToolbarAction {
-    formStore: ResourceFormStore;
+    resourceFormStore: ResourceFormStore;
     form: Form;
     router: Router;
     locales: ?Array<string>;
 
-    constructor(formStore: ResourceFormStore, form: Form, router: Router, locales?: Array<string>) {
-        this.formStore = formStore;
+    constructor(resourceFormStore: ResourceFormStore, form: Form, router: Router, locales?: Array<string>) {
+        this.resourceFormStore = resourceFormStore;
         this.form = form;
         this.router = router;
         this.locales = locales;
