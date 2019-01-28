@@ -976,7 +976,7 @@ class Account extends ApiWrapper
             foreach ($accountAddresses as $accountAddress) {
                 $address = $accountAddress->getAddress();
                 $address->setPrimaryAddress($accountAddress->getMain());
-                $addresses[] = $address;
+                $addresses[] = new Address($address, $this->locale);
             }
         }
 

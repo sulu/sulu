@@ -1250,26 +1250,39 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         $addressType = $this->em
             ->getRepository(self::$addressTypeEntityName)
-            ->find($addressData['addressType']['id']);
+            ->find($addressData['addressType']);
 
-        $country = $this->em->getRepository(
-            self::$countryEntityName
-        )->find($addressData['country']['id']);
+        $country = null;
+        if (isset($addressData['country'])) {
+            $country = $this->em->getRepository(
+                self::$countryEntityName
+            )->find($addressData['country']);
+        }
 
         if (isset($addressData['id'])) {
             throw new EntityIdAlreadySetException(self::$addressEntityName, $addressData['id']);
-        } elseif (!$country) {
-            throw new EntityNotFoundException(self::$countryEntityName, $addressData['country']['id']);
+        } elseif (isset($addressData['country']) && !$country) {
+            throw new EntityNotFoundException(self::$countryEntityName, $addressData['country']);
         } elseif (!$addressType) {
-            throw new EntityNotFoundException(self::$addressTypeEntityName, $addressData['addressType']['id']);
+            throw new EntityNotFoundException(self::$addressTypeEntityName, $addressData['addressType']);
         } else {
             $address = new Address();
-            $address->setStreet($addressData['street']);
-            $address->setNumber($addressData['number']);
-            $address->setZip($addressData['zip']);
-            $address->setCity($addressData['city']);
-            $address->setState($addressData['state']);
 
+            if (isset($addressData['street'])) {
+                $address->setStreet($addressData['street']);
+            }
+            if (isset($addressData['number'])) {
+                $address->setNumber($addressData['number']);
+            }
+            if (isset($addressData['zip'])) {
+                $address->setZip($addressData['zip']);
+            }
+            if (isset($addressData['city'])) {
+                $address->setCity($addressData['city']);
+            }
+            if (isset($addressData['state'])) {
+                $address->setState($addressData['state']);
+            }
             if (isset($addressData['latitude'])) {
                 $address->setLatitude('' !== $addressData['latitude'] ? $addressData['latitude'] : null);
             }
@@ -1334,26 +1347,42 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $addressType = $this->em
             ->getRepository(self::$addressTypeEntityName)
-            ->find($entry['addressType']['id']);
+            ->find($entry['addressType']);
 
-        $country = $this->em->getRepository(
-            self::$countryEntityName
-        )->find($entry['country']['id']);
+        $country = null;
+        if (isset($entry['country'])) {
+            $country = $this->em
+                ->getRepository(self::$countryEntityName)
+                ->find($entry['country']);
+        }
 
         if (!$addressType) {
-            throw new EntityNotFoundException(self::$addressTypeEntityName, $entry['addressType']['id']);
+            throw new EntityNotFoundException(self::$addressTypeEntityName, $entry['addressType']);
         } else {
-            if (!$country) {
-                throw new EntityNotFoundException(self::$countryEntityName, $entry['country']['id']);
+            if (isset($entry['country']) && !$country) {
+                throw new EntityNotFoundException(self::$countryEntityName, $entry['country']);
             } else {
-                $address->setStreet($entry['street']);
-                $address->setNumber($entry['number']);
-                $address->setZip($entry['zip']);
-                $address->setCity($entry['city']);
-                $address->setState($entry['state']);
-                $address->setCountry($country);
-                $address->setAddressType($addressType);
-
+                if (isset($entry['street'])) {
+                    $address->setStreet($entry['street']);
+                }
+                if (isset($entry['number'])) {
+                    $address->setNumber($entry['number']);
+                }
+                if (isset($entry['zip'])) {
+                    $address->setZip($entry['zip']);
+                }
+                if (isset($entry['city'])) {
+                    $address->setCity($entry['city']);
+                }
+                if (isset($entry['state'])) {
+                    $address->setState($entry['state']);
+                }
+                if ($country) {
+                    $address->setCountry($country);
+                }
+                if ($addressType) {
+                    $address->setAddressType($addressType);
+                }
                 if (isset($entry['latitude'])) {
                     $address->setLatitude($entry['latitude'] ?: null);
                 }

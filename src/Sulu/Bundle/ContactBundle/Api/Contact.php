@@ -895,7 +895,7 @@ class Contact extends ApiWrapper
             foreach ($contactAddresses as $contactAddress) {
                 $address = $contactAddress->getAddress();
                 $address->setPrimaryAddress($contactAddress->getMain());
-                $addresses[] = $address;
+                $addresses[] = new Address($address, $this->locale);
             }
         }
 

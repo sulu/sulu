@@ -44,7 +44,8 @@ $webspace->getTemplate('search', $request->getRequestFormat());
 ### Contact and Account API
 
 The APIs on `/admin/api/contacts` and `/admin/api/accounts` now use an array of IDS for their `categories` instead of
-returning resp. passing an entire object.
+returning resp. passing an entire object. In addition to that it also uses IDS instead of objects for the `country` and
+`addressType` property.
 
 ### SuluKernel::construct changed
 
