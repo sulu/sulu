@@ -63,8 +63,12 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 
     protected function createStore()
     {
+        if (!$this->kernel instanceof SuluKernel) {
+            throw new \RuntimeException('Unexpected kernel instance given');
+        }
+
         return new Psr6Store([
-            'cache_directory' => $this->kernel->getWebsiteCacheDir(),
+            'cache_directory' => $this->kernel->getHttpCacheDir(),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
         ]);
     }

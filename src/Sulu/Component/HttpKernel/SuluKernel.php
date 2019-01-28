@@ -135,12 +135,20 @@ abstract class SuluKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return $this->getCacheDirByContext($this->context);
+        return $this->getProjectDir() . DIRECTORY_SEPARATOR
+            . 'var' . DIRECTORY_SEPARATOR
+            . 'cache' . DIRECTORY_SEPARATOR
+            . $this->context . DIRECTORY_SEPARATOR
+            . $this->environment;
     }
 
-    public function getWebsiteCacheDir()
+    public function getHttpCacheDir()
     {
-        return $this->getCacheDirByContext(self::CONTEXT_WEBSITE);
+        return $this->getProjectDir() . DIRECTORY_SEPARATOR
+            . 'var' . DIRECTORY_SEPARATOR
+            . 'cache' . DIRECTORY_SEPARATOR
+            . 'http_cache' . DIRECTORY_SEPARATOR
+            . $this->environment;
     }
 
     /**
@@ -195,15 +203,6 @@ abstract class SuluKernel extends Kernel
                 'sulu.context' => $this->context,
             ]
         );
-    }
-
-    private function getCacheDirByContext(string $context)
-    {
-        return $this->getProjectDir() . DIRECTORY_SEPARATOR
-            . 'var' . DIRECTORY_SEPARATOR
-            . 'cache' . DIRECTORY_SEPARATOR
-            . $context . DIRECTORY_SEPARATOR
-            . $this->environment;
     }
 
     private function getReversedConfigExtensions()

@@ -124,14 +124,6 @@ class SuluTestKernel extends SuluKernel
 
     /**
      * {@inheritdoc}
-     */
-    public function getCacheDir()
-    {
-        return $this->getProjectDir() . '/var/cache/' . $this->getContext() . '/' . $this->environment;
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * Add the Sulu environment to the container name
      */
