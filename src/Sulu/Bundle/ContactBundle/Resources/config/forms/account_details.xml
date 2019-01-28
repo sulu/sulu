@@ -61,6 +61,24 @@
                     </meta>
                 </property>
 
+                <section name="addresses">
+                    <meta>
+                        <title>sulu_contact.addresses</title>
+                    </meta>
+                    <properties>
+                        <property name="addresses" type="addresses"/>
+                    </properties>
+                </section>
+
+                <section name="bankAccounts">
+                    <meta>
+                        <title>sulu_contact.bank_accounts</title>
+                    </meta>
+                    <properties>
+                        <property name="bankAccounts" type="bankAccounts"/>
+                    </properties>
+                </section>
+
                 <section name="taxonomies">
                     <meta>
                         <title>sulu_contact.taxonomies</title>

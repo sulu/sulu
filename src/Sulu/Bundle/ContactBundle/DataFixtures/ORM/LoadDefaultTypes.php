@@ -36,17 +36,17 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $phoneType1 = new PhoneType();
         $phoneType1->setId(1);
         $phoneType1 = $manager->merge($phoneType1);
-        $phoneType1->setName('phone.work');
+        $phoneType1->setName('sulu_contact.work');
 
         $phoneType2 = new PhoneType();
         $phoneType2->setId(2);
         $phoneType2 = $manager->merge($phoneType2);
-        $phoneType2->setName('phone.home');
+        $phoneType2->setName('sulu_contact.private');
 
         $phoneType3 = new PhoneType();
         $phoneType3->setId(3);
         $phoneType3 = $manager->merge($phoneType3);
-        $phoneType3->setName('phone.mobile');
+        $phoneType3->setName('sulu_contact.mobile');
 
         // Email types.
         $metadata = $manager->getClassMetaData(EmailType::class);
@@ -56,16 +56,16 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $emailType1 = new EmailType();
         $emailType1->setId(1);
         $emailType1 = $manager->merge($emailType1);
-        $emailType1->setName('email.work');
+        $emailType1->setName('sulu_contact.work');
 
         $this->addReference('email.type.work', $emailType1);
 
         $emailType2 = new EmailType();
         $emailType2->setId(2);
         $emailType2 = $manager->merge($emailType2);
-        $emailType2->setName('email.home');
+        $emailType2->setName('sulu_contact.private');
 
-        $this->addReference('email.type.home', $emailType2);
+        $this->addReference('email.type.private', $emailType2);
 
         // Address types.
         $metadata = $manager->getClassMetaData(AddressType::class);
@@ -75,12 +75,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $addressType1 = new AddressType();
         $addressType1->setId(1);
         $addressType1 = $manager->merge($addressType1);
-        $addressType1->setName('address.work');
+        $addressType1->setName('sulu_contact.work');
 
         $addressType2 = new AddressType();
         $addressType2->setId(2);
         $addressType2 = $manager->merge($addressType2);
-        $addressType2->setName('address.home');
+        $addressType2->setName('sulu_contact.private');
 
         // Url types.
         $metadata = $manager->getClassMetaData(UrlType::class);
@@ -90,12 +90,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $urlType1 = new UrlType();
         $urlType1->setId(1);
         $urlType1 = $manager->merge($urlType1);
-        $urlType1->setName('url.work');
+        $urlType1->setName('sulu_contact.work');
 
         $urlType2 = new UrlType();
         $urlType2->setId(2);
         $urlType2 = $manager->merge($urlType2);
-        $urlType2->setName('url.home');
+        $urlType2->setName('sulu_contact.private');
 
         // Fax types.
         $metadata = $manager->getClassMetaData(FaxType::class);
@@ -105,12 +105,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $faxType1 = new FaxType();
         $faxType1->setId(1);
         $faxType1 = $manager->merge($faxType1);
-        $faxType1->setName('fax.work');
+        $faxType1->setName('sulu_contact.work');
 
         $faxType2 = new FaxType();
         $faxType2->setId(2);
         $faxType2 = $manager->merge($faxType2);
-        $faxType2->setName('fax.home');
+        $faxType2->setName('sulu_contact.private');
 
         // Social media profile types.
         $metadata = $manager->getClassMetaData(SocialMediaProfileType::class);

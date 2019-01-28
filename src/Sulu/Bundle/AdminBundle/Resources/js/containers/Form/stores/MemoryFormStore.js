@@ -13,8 +13,8 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     options = {};
     resourceKey = undefined;
     @observable data: Object;
+    @observable dirty: boolean = false;
     updateFieldPathEvaluationsDisposer: ?() => void;
-    dirty: boolean = false;
 
     constructor(
         data: Object,
