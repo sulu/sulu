@@ -216,8 +216,10 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertEquals(
             [
+                'required' => [],
                 'anyOf' => [
                     [
+                        'required' => [],
                         'properties' => [
                             'first' => [
                                 'name' => 'first',
@@ -226,6 +228,7 @@ class FormXmlLoaderTest extends TestCase
                         ],
                     ],
                     [
+                        'required' => [],
                         'properties' => [
                             'second' => [
                                 'name' => 'second',
@@ -236,6 +239,7 @@ class FormXmlLoaderTest extends TestCase
                 ],
                 'allOf' => [
                     [
+                        'required' => [],
                         'properties' => [
                             'first' => [
                                 'name' => 'first',

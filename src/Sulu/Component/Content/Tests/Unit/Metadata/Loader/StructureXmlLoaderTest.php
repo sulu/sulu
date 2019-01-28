@@ -94,6 +94,7 @@ class StructureXmlLoaderTest extends TestCase
 
         $this->assertEquals(
             [
+                'required' => [],
                 'anyOf' => [
                     [
                         'required' => [
