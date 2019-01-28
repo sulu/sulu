@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -108,6 +109,11 @@ class AdminController
     private $dataProviderPool;
 
     /**
+     * @var ManagerRegistry
+     */
+    private $managerRegistry;
+
+    /**
      * @var string
      */
     private $environment;
@@ -162,6 +168,7 @@ class AdminController
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
+        ManagerRegistry $managerRegistry,
         string $environment,
         string $suluVersion,
         ?string $appVersion,
@@ -185,6 +192,7 @@ class AdminController
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
+        $this->managerRegistry = $managerRegistry;
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
         $this->appVersion = $appVersion;
@@ -252,6 +260,10 @@ class AdminController
                 }, $this->dataProviderPool->getAll()),
                 'user' => $user,
                 'contact' => $contact,
+            ],
+            'sulu_contact' => [
+                'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
+                'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
             ],
             'sulu_page' => [
                 'endpoints' => [

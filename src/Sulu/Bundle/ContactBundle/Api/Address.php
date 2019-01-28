@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\AddressType as AddressTypeEntity;
+use Sulu\Bundle\ContactBundle\Entity\Country as CountryEntity;
 use Sulu\Component\Rest\ApiWrapper;
 
 class Address extends ApiWrapper
@@ -137,7 +139,7 @@ class Address extends ApiWrapper
         return $this->entity->getId();
     }
 
-    public function setAddressType(AddressType $addressType): self
+    public function setAddressType(AddressTypeEntity $addressType): self
     {
         $this->entity->setAddressType($addressType);
 
@@ -154,7 +156,7 @@ class Address extends ApiWrapper
         return $this->entity->getAddressType()->getId();
     }
 
-    public function setCountry(Country $country = null): self
+    public function setCountry(CountryEntity $country = null): self
     {
         $this->entity->setCountry($country);
 

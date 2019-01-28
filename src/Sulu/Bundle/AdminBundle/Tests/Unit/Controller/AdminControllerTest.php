@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Controller;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -125,6 +127,11 @@ class AdminControllerTest extends TestCase
     private $dataProviderPool;
 
     /**
+     * @var ManagerRegistry
+     */
+    private $managerRegistry;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -189,6 +196,7 @@ class AdminControllerTest extends TestCase
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
+        $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
@@ -208,6 +216,7 @@ class AdminControllerTest extends TestCase
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
+            $this->managerRegistry->reveal(),
             $this->environment,
             $this->suluVersion,
             $this->appVersion,
@@ -265,6 +274,16 @@ class AdminControllerTest extends TestCase
 
         $dataProviders = [];
         $this->dataProviderPool->getAll()->willReturn($dataProviders);
+
+        $addressTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:AddressType')
+             ->willReturn($addressTypeRepository->reveal());
+
+        $countryRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:Country')
+             ->willReturn($countryRepository->reveal());
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($dataProviders, $fieldTypeOptions, $routes) {
             $data = $view->getData()['sulu_admin'];
