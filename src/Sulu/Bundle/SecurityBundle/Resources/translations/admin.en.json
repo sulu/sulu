@@ -7,7 +7,7 @@
     "sulu_security.system": "System",
     "sulu_security.system_language": "System language",
     "sulu_security.reset_mail_subject": "Reset your Sulu password",
-    "sulu_security.reset.mail_message": "To reset your Sulu password please click on the following link or copy/paste it to your browser:",
+    "sulu_security.reset_mail_message": "To reset your Sulu password please click on the following link or copy/paste it to your browser:",
     "sulu_security.view": "View",
     "sulu_security.add": "Add",
     "sulu_security.edit": "Edit",
