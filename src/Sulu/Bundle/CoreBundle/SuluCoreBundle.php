@@ -19,6 +19,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProv
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -30,7 +31,7 @@ class SuluCoreBundle extends Bundle
 
         $container->addCompilerPass(new RegisterContentTypesCompilerPass());
         $container->addCompilerPass(new RegisterLocalizationProvidersPass());
-        $container->addCompilerPass(new RemoveForeignContextServicesPass());
+        $container->addCompilerPass(new RemoveForeignContextServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1024);
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
         $container->addCompilerPass(
