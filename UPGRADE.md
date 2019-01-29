@@ -262,6 +262,19 @@ return [
 Of course the `resourceKey` can still often be passed from a parent route and therefore omitted in the form route
 definition, which is often the case when making use of the `sulu_admin.resource_tabs` view.
 
+The frontend routes for a datagrid defined in the `Admin` classes now need the `datagridKey` in addition to the 
+`resourceKey`. This allows to have the same endpoint for multiple datagrids, and solves a bunch of issues we were having.
+
+```php
+return [
+    (new Route('sulu_category.datagrid, '/categories', 'sulu_admin.datagrid'))
+        ->setOption('title', 'sulu_category.categories')
+        ->setOption('adapters', ['table'])
+        ->setOption('resourceKey', 'categories')
+        ->setOption('datagridKey', 'categories');
+];
+```
+
 Adding additional fields works a little bit different now. Previously you had to define a separate form XML file, and
 add it in the configuration:
 
@@ -282,6 +295,16 @@ sulu_admin:
     forms:
         directories:
             - "%kernel.project_dir%/config/forms"
+```
+
+The datagrids will be handled equally and the configuration inside `sulu_admin.resources.categories.datagird` will be
+replaced by:
+
+```yml
+sulu_admin:
+    datagrids:
+        directories:
+            - "%kernel.project_dir%/config/datagrids"
 ```
 
 Also the representations in the cache have changed, so the cache should be cleared:
