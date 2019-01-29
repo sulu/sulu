@@ -6,11 +6,15 @@ import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
+import Iban from './containers/Form/fields/Iban';
+import Bic from './containers/Form/fields/Bic';
+
+fieldRegistry.add('iban', Iban);
+fieldRegistry.add('bic', Bic);
 
 initializer.addUpdateConfigHook('sulu_contact', (config: Object) => {
     when(
-        () => !!initializer.initializedTranslationsLocale,
-        (): void => {
+        () => !!initializer.initializedTranslationsLocale, (): void => {
             fieldRegistry.add(
                 'addresses',
                 CardCollection,
@@ -199,13 +203,13 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object) => {
                             label: translate('sulu_contact.iban'),
                             required: true,
                             size: 8,
-                            type: 'text_line',
+                            type: 'iban',
                         },
                         bic: {
                             label: translate('sulu_contact.bic'),
                             required: true,
                             size: 4,
-                            type: 'text_line',
+                            type: 'bic',
                         },
                     },
                 }
