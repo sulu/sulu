@@ -22,7 +22,7 @@ export default class Section extends React.Component<Props> {
 
         return (
             <Grid.Section className={gridStyles.gridSection} size={size}>
-                {label &&
+                {(label || size === 12) &&
                     <Grid.Item size={12}>
                         <Divider>
                             {label}

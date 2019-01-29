@@ -13,8 +13,16 @@ test('Render section with given size', () => {
 
 test('Render section without label', () => {
     expect(render(
-        <Section>
+        <Section size={8}>
             <div>Test</div>
+        </Section>
+    )).toMatchSnapshot();
+});
+
+test('Render section without label but with divider', () => {
+    expect(render(
+        <Section>
+            <p>Test</p>
         </Section>
     )).toMatchSnapshot();
 });

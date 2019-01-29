@@ -8,6 +8,13 @@ exports[`Should not render fields when the schema contains a visible flag of fal
     class="section gridSection size size-12 space-before-0 space-after-0"
   >
     <div
+      class="item size size-12 space-before-0 space-after-0"
+    >
+      <div
+        class="divider"
+      />
+    </div>
+    <div
       class="item gridItem size size-12 space-before-0 space-after-0"
     >
       <div

@@ -45,108 +45,128 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object) => {
                             label: translate('sulu_admin.title'),
                             type: 'text_line',
                         },
-                        addressType: {
-                            options: {
-                                default_value: {
-                                    value: config.addressTypes[0].id,
+                        addresTypeInformation: {
+                            items: {
+                                addressType: {
+                                    options: {
+                                        default_value: {
+                                            value: config.addressTypes[0].id,
+                                        },
+                                        values: {
+                                            value: config.addressTypes.map((addressType) => ({
+                                                name: addressType.id,
+                                                title: translate(addressType.name),
+                                            })),
+                                        },
+                                    },
+                                    size: 6,
+                                    type: 'single_select',
                                 },
-                                values: {
-                                    value: config.addressTypes.map((addressType) => ({
-                                        name: addressType.id,
-                                        title: translate(addressType.name),
-                                    })),
+                                primaryAddress: {
+                                    options: {
+                                        label: {
+                                            title: translate('sulu_contact.primary_address'),
+                                        },
+                                    },
+                                    size: 6,
+                                    type: 'checkbox',
                                 },
-                            },
-                            size: 6,
-                            type: 'single_select',
-                        },
-                        primaryAddress: {
-                            options: {
-                                label: {
-                                    title: translate('sulu_contact.primary_address'),
+                                deliveryAddress: {
+                                    options: {
+                                        label: {
+                                            title: translate('sulu_contact.delivery_address'),
+                                        },
+                                    },
+                                    size: 6,
+                                    type: 'checkbox',
                                 },
-                            },
-                            size: 6,
-                            type: 'checkbox',
-                        },
-                        deliveryAddress: {
-                            options: {
-                                label: {
-                                    title: translate('sulu_contact.delivery_address'),
-                                },
-                            },
-                            size: 6,
-                            type: 'checkbox',
-                        },
-                        billingAddress: {
-                            options: {
-                                label: {
-                                    title: translate('sulu_contact.billing_address'),
-                                },
-                            },
-                            size: 6,
-                            type: 'checkbox',
-                        },
-                        street: {
-                            label: translate('sulu_contact.street'),
-                            size: 8,
-                            type: 'text_line',
-                        },
-                        number: {
-                            label: translate('sulu_contact.number'),
-                            size: 4,
-                            type: 'text_line',
-                        },
-                        addition: {
-                            label: translate('sulu_contact.address_line'),
-                            type: 'text_line',
-                        },
-                        zip: {
-                            label: translate('sulu_contact.zip'),
-                            size: 4,
-                            type: 'text_line',
-                        },
-                        city: {
-                            label: translate('sulu_contact.city'),
-                            size: 8,
-                            type: 'text_line',
-                        },
-                        state: {
-                            label: translate('sulu_contact.state'),
-                            type: 'text_line',
-                        },
-                        country: {
-                            label: translate('sulu_contact.country'),
-                            options: {
-                                default_value: {
-                                    value: config.countries[0].id,
-                                },
-                                values: {
-                                    value: config.countries.map((country) => ({
-                                        name: country.id,
-                                        title: country.name,
-                                    })),
+                                billingAddress: {
+                                    options: {
+                                        label: {
+                                            title: translate('sulu_contact.billing_address'),
+                                        },
+                                    },
+                                    size: 6,
+                                    type: 'checkbox',
                                 },
                             },
-                            type: 'single_select',
+                            type: 'section',
                         },
-                        postboxNumber: {
-                            label: translate('sulu_contact.postbox_number'),
-                            type: 'text_line',
+                        address: {
+                            items: {
+                                street: {
+                                    label: translate('sulu_contact.street'),
+                                    size: 8,
+                                    type: 'text_line',
+                                },
+                                number: {
+                                    label: translate('sulu_contact.number'),
+                                    size: 4,
+                                    type: 'text_line',
+                                },
+                                addition: {
+                                    label: translate('sulu_contact.address_line'),
+                                    type: 'text_line',
+                                },
+                                zip: {
+                                    label: translate('sulu_contact.zip'),
+                                    size: 4,
+                                    type: 'text_line',
+                                },
+                                city: {
+                                    label: translate('sulu_contact.city'),
+                                    size: 8,
+                                    type: 'text_line',
+                                },
+                                state: {
+                                    label: translate('sulu_contact.state'),
+                                    type: 'text_line',
+                                },
+                                country: {
+                                    label: translate('sulu_contact.country'),
+                                    options: {
+                                        default_value: {
+                                            value: config.countries[0].id,
+                                        },
+                                        values: {
+                                            value: config.countries.map((country) => ({
+                                                name: country.id,
+                                                title: country.name,
+                                            })),
+                                        },
+                                    },
+                                    type: 'single_select',
+                                },
+                            },
+                            type: 'section',
                         },
-                        postboxPostcode: {
-                            label: translate('sulu_contact.postbox_zip'),
-                            size: 4,
-                            type: 'text_line',
-                        },
-                        postboxCity: {
-                            label: translate('sulu_contact.postbox_city'),
-                            size: 8,
-                            type: 'text_line',
+                        postbox: {
+                            items: {
+                                postboxNumber: {
+                                    label: translate('sulu_contact.postbox_number'),
+                                    type: 'text_line',
+                                },
+                                postboxPostcode: {
+                                    label: translate('sulu_contact.postbox_zip'),
+                                    size: 4,
+                                    type: 'text_line',
+                                },
+                                postboxCity: {
+                                    label: translate('sulu_contact.postbox_city'),
+                                    size: 8,
+                                    type: 'text_line',
+                                },
+                            },
+                            type: 'section',
                         },
                         note: {
-                            label: translate('sulu_contact.note'),
-                            type: 'text_area',
+                            items: {
+                                note: {
+                                    label: translate('sulu_contact.note'),
+                                    type: 'text_area',
+                                },
+                            },
+                            type: 'section',
                         },
                     },
                 }
