@@ -69,4 +69,54 @@ class NavigationTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([], $extension->breadcrumbFunction('123-123-123'));
     }
+
+    public function testFlatNavigationFunctionDocumentNotFound()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal()
+        );
+
+        $webspace = $this->prophesize(\Sulu\Component\Webspace\Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
+        $localization = $this->prophesize(\Sulu\Component\Localization\Localization::class);
+        $localization->getLocale()->willReturn('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, true, null, false)
+            ->willThrow(new DocumentNotFoundException());
+
+        $this->assertEquals([], $extension->flatNavigationFunction('123-123-123'));
+    }
+
+    public function testTreeNavigationFunctionDocumentNotFound()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal()
+        );
+
+        $webspace = $this->prophesize(\Sulu\Component\Webspace\Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
+        $localization = $this->prophesize(\Sulu\Component\Localization\Localization::class);
+        $localization->getLocale()->willReturn('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, false, null, false)
+            ->willThrow(new DocumentNotFoundException());
+
+        $this->assertEquals([], $extension->treeNavigationFunction('123-123-123'));
+    }
 }

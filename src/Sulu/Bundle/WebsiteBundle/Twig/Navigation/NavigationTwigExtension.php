@@ -106,7 +106,11 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
-        return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
+        try {
+            return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
+        } catch (DocumentNotFoundException $exception) {
+            return [];
+        }
     }
 
     /**
@@ -132,7 +136,19 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             $uuid = $breadcrumb[$level]->getUuid();
         }
 
-        return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
+        try {
+            return $this->navigationMapper->getNavigation(
+                $uuid,
+                $webspaceKey,
+                $locale,
+                $depth,
+                false,
+                $context,
+                $loadExcerpt
+            );
+        } catch (DocumentNotFoundException $exception) {
+            return [];
+        }
     }
 
     /**
@@ -148,7 +164,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         } catch (DocumentNotFoundException $exception) {
             return [];
         }
-
     }
 
     /**
