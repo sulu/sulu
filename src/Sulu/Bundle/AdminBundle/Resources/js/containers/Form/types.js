@@ -78,7 +78,7 @@ export interface FormStoreInterface {
     isFieldModified(dataPath: string): boolean,
     finishField(dataPath: string): Promise<*>, // TODO remove promise once jexl is synchronous
     change(name: string, value: mixed): void,
-    validate(): void,
+    validate(): boolean,
     getValueByPath(path: string): mixed,
     getSchemaEntryByPath(schemaPath: string): SchemaEntry,
     getValuesByTag(tagName: string): Array<mixed>,

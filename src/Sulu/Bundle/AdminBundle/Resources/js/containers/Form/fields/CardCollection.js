@@ -42,17 +42,19 @@ export default class CardCollection extends React.Component<FieldTypeProps<Array
     @action handleAdd = () => {
         const {
             fieldTypeOptions: {
+                jsonSchema,
                 schema,
             },
         } = this.props;
 
         this.overlayIndex = undefined;
-        this.formStore = new MemoryFormStore({}, schema);
+        this.formStore = new MemoryFormStore({}, schema, jsonSchema);
     };
 
     @action handleEdit = (index: number) => {
         const {
             fieldTypeOptions: {
+                jsonSchema,
                 schema,
             },
             value,
@@ -63,7 +65,7 @@ export default class CardCollection extends React.Component<FieldTypeProps<Array
         }
 
         this.overlayIndex = index;
-        this.formStore = new MemoryFormStore(toJS(value[index]), schema);
+        this.formStore = new MemoryFormStore(toJS(value[index]), schema, jsonSchema);
     };
 
     @action handleRemove = (index: number) => {
@@ -131,8 +133,6 @@ export default class CardCollection extends React.Component<FieldTypeProps<Array
             },
             value,
         } = this.props;
-
-        // TODO throw error if renderCardContent or schema does not exist
 
         return (
             <Fragment>

@@ -605,3 +605,15 @@ test('Remember fields being finished as modified fields', () => {
     expect(memoryFormStore.isFieldModified('/block/1/text')).toEqual(true);
     expect(memoryFormStore.isFieldModified('/block/2/text')).toEqual(false);
 });
+
+test('Validate should return true if no errors occured', () => {
+    const memoryFormStore = new MemoryFormStore({title: 'Test'}, {}, {required: ['title']});
+
+    expect(memoryFormStore.validate()).toEqual(true);
+});
+
+test('Validate should return false if errors occured', () => {
+    const memoryFormStore = new MemoryFormStore({}, {}, {required: ['title']});
+
+    expect(memoryFormStore.validate()).toEqual(false);
+});

@@ -29,7 +29,7 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.data = resourceStore.data;
     this.locale = resourceStore.locale;
     this.loading = resourceStore.loading;
-    this.validate = jest.fn();
+    this.validate = jest.fn().mockReturnValue(true);
     this.schema = {};
     this.set = jest.fn();
     this.change = jest.fn();
@@ -61,15 +61,47 @@ test('Should render form using renderer', () => {
 });
 
 test('Should call onSubmit callback', () => {
+    const errorSpy = jest.fn();
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+
+    form.instance().submit();
+
+    expect(errorSpy).not.toBeCalled();
+    expect(submitSpy).toBeCalled();
+});
+
+test('Should call onError callback', () => {
+    const errorSpy = jest.fn();
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    store.validate.mockReturnValue(false);
+    store.errors = {error1: {}};
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+
+    form.instance().submit();
+
+    expect(errorSpy).toBeCalledWith(store.errors);
+    expect(submitSpy).not.toBeCalled();
+});
+
+test('Should work when errors occurs but no onError callback is given', () => {
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    store.validate.mockReturnValue(false);
+    store.errors = {error1: {}};
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
 
     form.instance().submit();
 
-    expect(submitSpy).toBeCalled();
+    expect(submitSpy).not.toBeCalled();
 });
 
 test('Should validate form when a field has finished being edited', () => {

@@ -112,9 +112,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @action save(options: Object = {}): Promise<Object> {
-        this.validate();
-
-        if (Object.keys(this.errors).length > 0) {
+        if (!this.validate()) {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
         }
 

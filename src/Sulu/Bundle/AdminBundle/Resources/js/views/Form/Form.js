@@ -23,7 +23,7 @@ type Props = ViewProps & {
 @observer
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
-    formStore: ResourceFormStore;
+    resourceFormStore: ResourceFormStore;
     form: ?ElementRef<typeof FormContainer>;
     @observable errors = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
@@ -107,7 +107,7 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.formStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions);
+        this.resourceFormStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions);
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
@@ -129,13 +129,13 @@ class Form extends React.Component<Props> {
         }
 
         this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
-            this.formStore,
+            this.resourceFormStore,
             this,
             router,
             locales
         ));
 
-        when(() => !this.formStore.loading, this.evaluatePreview);
+        when(() => !this.resourceFormStore.loading, this.evaluatePreview);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -147,7 +147,7 @@ class Form extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        this.formStore.destroy();
+        this.resourceFormStore.destroy();
 
         if (this.hasOwnResourceStore) {
             this.resourceStore.destroy();
@@ -220,7 +220,7 @@ class Form extends React.Component<Props> {
             )
             : {};
 
-        return this.formStore.save(saveOptions)
+        return this.resourceFormStore.save(saveOptions)
             .then((response) => {
                 this.showSuccessSnackbar();
                 this.evaluatePreview();
@@ -243,6 +243,10 @@ class Form extends React.Component<Props> {
             }));
     };
 
+    handleError = () => {
+        this.errors.push('Errors occured when trying to save the data from the FormStore');
+    };
+
     setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
         this.form = form;
     };
@@ -251,9 +255,10 @@ class Form extends React.Component<Props> {
         return (
             <div className={formStyles.form}>
                 <FormContainer
+                    onError={this.handleError}
                     onSubmit={this.handleSubmit}
                     ref={this.setFormRef}
-                    store={this.formStore}
+                    store={this.resourceFormStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
@@ -295,7 +300,7 @@ const FormWithToolbar = withToolbar(Form, function() {
         .filter((item) => item !== undefined);
 
     const icons = [];
-    const formData = this.formStore.data;
+    const formData = this.resourceFormStore.data;
 
     if (formData.hasOwnProperty('publishedState') || formData.hasOwnProperty('published')) {
         const {publishedState, published} = formData;
@@ -324,7 +329,7 @@ export default withSidebar(FormWithToolbar, function() {
         sizes: ['medium', 'large'],
         props: {
             router: this.props.router,
-            formStore: this.formStore,
+            formStore: this.resourceFormStore,
         },
     } : null;
 });

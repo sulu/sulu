@@ -113,6 +113,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
 
             this.data = resourceStore.data;
             this.isFieldModified = jest.fn();
+            this.validate = jest.fn().mockReturnValue(true);
         }),
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'

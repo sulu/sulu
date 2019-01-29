@@ -268,7 +268,10 @@ export default class AbstractFormStore
 
         if (Object.keys(this.errors).length > 0) {
             log.info('Form validation detected the following errors: ', toJS(this.errors));
+            return false;
         }
+
+        return true;
     }
 
     updateFieldPathEvaluations = (): Promise<*> => {

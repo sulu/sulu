@@ -37,8 +37,7 @@ test('Render a CardCollection', () => {
 
     const value = [
         {
-            firstName: 'Max',
-            lastName: 'Mustermann',
+            firstName: 'Max', lastName: 'Mustermann',
         },
         {
             firstName: 'Erika',
@@ -158,6 +157,53 @@ test('Add a new card using the overlay', () => {
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
 
     expect(changeSpy).toBeCalledWith([...value, {firstName: 'John', lastName: 'Doe'}]);
+});
+
+test('Add a new card using the overlay', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+
+    const changeSpy = jest.fn();
+
+    const fieldTypeOptions = {
+        jsonSchema: {
+            required: ['firstName', 'lastName'],
+        },
+        renderCardContent: jest.fn((card) => card.firstName + ' ' + card.lastName),
+        schema: {
+            firstName: {
+                name: 'firstName',
+                type: 'text_line',
+            },
+            lastName: {
+                name: 'lastName',
+                type: 'text_line',
+            },
+        },
+    };
+
+    const value = [];
+
+    const cardCollection = mount(
+        <CardCollection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            value={value}
+        />
+    );
+
+    expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
+    cardCollection.find('button.addButton').simulate('click');
+    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+
+    cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
+    cardCollection.find('Overlay').prop('onConfirm')();
+
+    cardCollection.update();
+    expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Edit an existing card using the overlay', () => {

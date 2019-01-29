@@ -10,8 +10,9 @@ import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
 
 type Props = {
-    store: FormStoreInterface,
+    onError?: (errors: Object) => void,
     onSubmit: (action: ?string) => ?Promise<Object>,
+    store: FormStoreInterface,
 };
 
 @observer
@@ -54,8 +55,17 @@ export default class Form extends React.Component<Props> {
 
     /** @public */
     @action submit = (action: ?string) => {
+        const {onError, onSubmit, store} = this.props;
+
         this.showAllErrors = true;
-        return this.props.onSubmit(action);
+
+        if (store.validate()) {
+            return onSubmit(action);
+        }
+
+        if (onError) {
+            return onError(store.errors);
+        }
     };
 
     handleChange = (name: string, value: mixed) => {
