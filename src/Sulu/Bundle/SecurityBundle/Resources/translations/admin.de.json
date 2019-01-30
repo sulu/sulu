@@ -7,6 +7,7 @@
     "sulu_security.system": "System",
     "sulu_security.system_language": "Systemsprache",
     "sulu_security.reset_mail_subject": "Sulu Password zurücksetzen",
+    "sulu_security.reset_mail_message": "Klicken Sie auf den folgenden Link oder kopieren Sie ihn in Ihren Browser um Ihr Sulu Passwort zurückzusetzen:",
     "sulu_security.view": "Ansehen",
     "sulu_security.add": "Hinzufügen",
     "sulu_security.edit": "Bearbeiten",
