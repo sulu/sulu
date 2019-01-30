@@ -41,6 +41,10 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
      */
     public function __construct(SuluKernel $kernel, $cacheDir = null)
     {
+        if (!$cacheDir) {
+            $cacheDir = $kernel->getCommonCacheDir();
+        }
+
         parent::__construct($kernel, $cacheDir);
 
         $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
@@ -68,12 +72,8 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 
     protected function createStore()
     {
-        if (!$this->kernel instanceof SuluKernel) {
-            throw new \RuntimeException('Unexpected kernel instance given');
-        }
-
         return new Psr6Store([
-            'cache_directory' => $this->kernel->getCommonCacheDir(),
+            'cache_directory' => $this->cacheDir,
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
         ]);
     }
