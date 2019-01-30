@@ -667,6 +667,18 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
+     * Get a position object.
+     *
+     * @param int $id The position id
+     *
+     * @return mixed
+     */
+    public function getPosition($id)
+    {
+        return $this->em->getRepository(self::$positionEntityName)->find($id);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])

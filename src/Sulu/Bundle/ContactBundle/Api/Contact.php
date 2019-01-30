@@ -186,7 +186,7 @@ class Contact extends ApiWrapper
     /**
      * Get title.
      *
-     * @return string
+     * @return int
      *
      * @VirtualProperty
      * @SerializedName("title")
@@ -194,7 +194,13 @@ class Contact extends ApiWrapper
      */
     public function getTitle()
     {
-        return $this->entity->getTitle();
+        $title = $this->entity->getTitle();
+
+        if (!$title) {
+            return null;
+        }
+
+        return $title->getId();
     }
 
     /**
@@ -232,7 +238,13 @@ class Contact extends ApiWrapper
      */
     public function getPosition()
     {
-        return $this->entity->getPosition();
+        $position = $this->entity->getPosition();
+
+        if (!$position) {
+            return null;
+        }
+
+        return $position->getId();
     }
 
     /**

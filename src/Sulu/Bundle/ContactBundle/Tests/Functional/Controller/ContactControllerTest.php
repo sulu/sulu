@@ -175,10 +175,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'account' => [
                     'id' => null,
                 ],
@@ -246,7 +243,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -276,7 +273,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -328,10 +325,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'avatar' => [
                     'id' => $media->getId(),
                 ],
@@ -428,8 +422,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
-        $this->assertEquals('Manager', $response->position->position);
+        $this->assertEquals($title->getId(), $response->title);
+        $this->assertEquals($position->getId(), $response->position);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -594,10 +588,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -609,7 +600,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
     }
 
     public function testPostWithoutFormOfAddress()
@@ -627,10 +618,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'salutation' => 'Sehr geehrte Frau Mustermann',
             ]
         );
@@ -659,10 +647,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'emails' => [],
                 'phones' => [],
                 'notes' => [],
@@ -676,7 +661,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
@@ -687,7 +672,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
@@ -830,10 +815,7 @@ class ContactControllerTest extends SuluTestCase
                 'lastName' => 'Doe',
                 'note' => 'A small notice',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'avatar' => [
                     'id' => $media->getId(),
                 ],
@@ -930,7 +912,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -969,7 +951,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1061,10 +1043,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'emails' => [
                     [
                         'email' => 'john.doe@muster.de',
@@ -1127,7 +1106,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals('john.doe@muster.de', $response->emails[0]->email);
         $this->assertEquals('789456123', $response->phones[0]->phone);
         $this->assertEquals('147258369-1', $response->faxes[0]->fax);
@@ -1206,10 +1185,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'emails' => [],
                 'phones' => [
                     [
@@ -1257,7 +1233,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
@@ -1326,10 +1302,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'emails' => [],
                 'phones' => [
                     [
@@ -1370,7 +1343,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertNotNull($response->addresses[0]->country);
@@ -1433,10 +1406,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'account' => [
                     'id' => $account->getId(),
                 ],
@@ -1480,7 +1450,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals(0, count($response->emails));
 
         $this->assertEquals($account->getId(), $response->account->id);
@@ -1699,10 +1669,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'account' => [
                     'id' => $account->getId(),
                 ],
@@ -1756,7 +1723,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals($account->getId(), $response->account->id);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1779,10 +1746,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'account' => [
                     'id' => null,
                 ],
@@ -1832,7 +1796,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertNull($response->account);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1853,7 +1817,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('MSc', $response->title->title);
+        $this->assertEquals($title->getId(), $response->title);
         $this->assertNull($response->account);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1972,10 +1936,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'account' => [
                     'id' => $account->getId(),
                 ],
@@ -2115,10 +2076,7 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $title->getId(),
-                'position' => [
-                    'id' => $position->getId(),
-                    'position' => $position->getPosition(),
-                ],
+                'position' => $position->getId(),
                 'emails' => [
                     [
                         'id' => $email->getId(),
