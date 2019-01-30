@@ -1,0 +1,164 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render in disabled state 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="displayValue default"
+    disabled=""
+    type="button"
+  >
+    <div
+      aria-label="sulu_admin.please_choose"
+      class="croppedText"
+      title="sulu_admin.please_choose"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        sulu_admin.p
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          lease_choose
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        sulu_admin.please_choose
+      </div>
+    </div>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render in loading state 1`] = `
+<div
+  class="spinner"
+  style="width:30px;height:30px"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render in value 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="displayValue default"
+    disabled=""
+    type="button"
+  >
+    <div
+      aria-label="Test 1"
+      class="croppedText"
+      title="Test 1"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Tes
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          t 1
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test 1
+      </div>
+    </div>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render with data 1`] = `
+<div
+  class="select"
+>
+  <button
+    class="displayValue default"
+    type="button"
+  >
+    <div
+      aria-label="sulu_admin.please_choose"
+      class="croppedText"
+      title="sulu_admin.please_choose"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        sulu_admin.p
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          lease_choose
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        sulu_admin.please_choose
+      </div>
+    </div>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render with data 2`] = `
+<ul
+  class="menu"
+  style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+>
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 10px;"
+    >
+      Test 1
+    </button>
+  </li>
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 10px;"
+    >
+      Test 2
+    </button>
+  </li>
+</ul>
+`;

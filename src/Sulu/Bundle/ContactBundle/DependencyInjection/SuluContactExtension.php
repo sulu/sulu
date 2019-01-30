@@ -136,6 +136,26 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     ],
                                 ],
                             ],
+                            'single_contact_title_selection' => [
+                                'default_type' => 'single_select',
+                                'resource_key' => 'contact_titles',
+                                'types' => [
+                                    'single_select' => [
+                                        'id_property' => 'id',
+                                        'display_property' => 'title',
+                                    ],
+                                ],
+                            ],
+                            'single_contact_position_selection' => [
+                                'default_type' => 'single_select',
+                                'resource_key' => 'contact_positions',
+                                'types' => [
+                                    'single_select' => [
+                                        'id_property' => 'id',
+                                        'display_property' => 'position',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ]
