@@ -142,12 +142,12 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    public function getHttpCacheDir()
+    public function getCommonCacheDir()
     {
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
             . 'var' . DIRECTORY_SEPARATOR
             . 'cache' . DIRECTORY_SEPARATOR
-            . 'http_cache' . DIRECTORY_SEPARATOR
+            . 'common' . DIRECTORY_SEPARATOR
             . $this->environment;
     }
 
@@ -201,6 +201,7 @@ abstract class SuluKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->context,
+                'sulu.common_cache_dir' => $this->getCommonCacheDir(),
             ]
         );
     }

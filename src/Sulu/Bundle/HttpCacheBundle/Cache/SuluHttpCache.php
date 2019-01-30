@@ -73,7 +73,7 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
         }
 
         return new Psr6Store([
-            'cache_directory' => $this->kernel->getHttpCacheDir(),
+            'cache_directory' => $this->kernel->getCommonCacheDir(),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
         ]);
     }
