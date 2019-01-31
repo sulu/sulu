@@ -15,9 +15,10 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
-class SingleContactSelection extends SimpleContentType
+class SingleContactSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
      * @var ContactRepositoryInterface

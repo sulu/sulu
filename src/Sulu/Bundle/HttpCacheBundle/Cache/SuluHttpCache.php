@@ -12,13 +12,18 @@
 namespace Sulu\Bundle\HttpCacheBundle\Cache;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\CustomTtlListener;
 use FOS\HttpCache\SymfonyCache\DebugListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
+use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 /**
  * Abstract class to extend from when using Symfony cache.
@@ -36,14 +41,23 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
      */
     public function __construct(HttpKernelInterface $kernel, $cacheDir = null)
     {
+        if (!$cacheDir && $kernel instanceof SuluKernel) {
+            $cacheDir = $kernel->getCommonCacheDir();
+        }
+
         parent::__construct($kernel, $cacheDir);
 
         $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
         $this->addSubscriber(new PurgeListener());
+        $this->addSubscriber(new PurgeTagsListener());
 
-        if ($kernel->isDebug()) {
-            $this->addSubscriber(new DebugListener());
+        if (!$kernel->isDebug()) {
+            $this->addSubscriber(new CleanupCacheTagsListener());
+
+            return;
         }
+
+        $this->addSubscriber(new DebugListener());
     }
 
     /**
@@ -54,5 +68,13 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
     public function fetch(Request $request, $catch = false)
     {
         return parent::fetch($request, $catch);
+    }
+
+    protected function createStore()
+    {
+        return new Psr6Store([
+            'cache_directory' => $this->cacheDir,
+            'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
+        ]);
     }
 }

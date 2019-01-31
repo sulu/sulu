@@ -142,6 +142,15 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
+    public function getCommonCacheDir()
+    {
+        return $this->getProjectDir() . DIRECTORY_SEPARATOR
+            . 'var' . DIRECTORY_SEPARATOR
+            . 'cache' . DIRECTORY_SEPARATOR
+            . 'common' . DIRECTORY_SEPARATOR
+            . $this->environment;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -151,13 +160,6 @@ abstract class SuluKernel extends Kernel
             . 'var' . DIRECTORY_SEPARATOR
             . 'log' . DIRECTORY_SEPARATOR
             . $this->context;
-    }
-
-    private function getReversedConfigExtensions()
-    {
-        $configExtensions = $this->getConfigExtensions();
-
-        return '_' . $this->reversedContext . $configExtensions;
     }
 
     protected function getConfigExtensions(): string
@@ -199,7 +201,15 @@ abstract class SuluKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->context,
+                'sulu.common_cache_dir' => $this->getCommonCacheDir(),
             ]
         );
+    }
+
+    private function getReversedConfigExtensions()
+    {
+        $configExtensions = $this->getConfigExtensions();
+
+        return '_' . $this->reversedContext . $configExtensions;
     }
 }

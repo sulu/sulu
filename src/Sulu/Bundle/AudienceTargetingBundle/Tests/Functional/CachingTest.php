@@ -29,7 +29,7 @@ class CachingTest extends SuluTestCase
     public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
-        $cacheKernel = new AppCache($this->getKernel(['sulu_context' => 'website']), true);
+        $cacheKernel = new AppCache($this->getKernel(['sulu_context' => 'website']));
         $cookieJar = new CookieJar();
         $client = new Client($cacheKernel, [], null, $cookieJar);
 
