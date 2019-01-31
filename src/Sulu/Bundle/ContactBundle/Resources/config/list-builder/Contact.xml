@@ -263,7 +263,7 @@
             </orm:joins>
         </group-concat-property>
 
-        <property name="user" visibility="no" searchability="yes" list:translation="sulu_security.user_name">
+        <property name="user" list:translation="sulu_security.user_name">
             <orm:field-name>username</orm:field-name>
             <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
 

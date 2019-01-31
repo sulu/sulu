@@ -728,6 +728,38 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testJoinWithoutFieldNameByGivenEntity()
+    {
+        $fieldDescriptors = [
+            'name' => new DoctrineFieldDescriptor(
+                'name',
+                'name',
+                self::$entityName,
+                '',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$translationEntityName,
+                        'alias.id = translation.id'
+                    ),
+                ]
+            ),
+        ];
+
+        $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name')->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(
+            self::$translationEntityName,
+            self::$translationEntityNameAlias,
+            'WITH',
+            'alias.id = translation.id'
+        )->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testJoinConditions()
     {
         $fieldDescriptors = [
