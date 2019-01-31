@@ -171,6 +171,41 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     ).toThrow(/"auto_complete"/);
 });
 
+test('Pass correct props to SingleItemSelection', () => {
+    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'single_select',
+        resource_key: 'accounts',
+        types: {
+            single_select: {
+                display_property: 'name',
+                id_property: 'id',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{editable: {value: true}}}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find('ResourceSingleSelect').props()).toEqual(expect.objectContaining({
+        displayProperty: 'name',
+        editable: true,
+        idProperty: 'id',
+        overlayTitle: 'sulu_contact.overlay_title',
+    }));
+});
+
 test('Call onChange and onFinish when SingleSelect changes', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();

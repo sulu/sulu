@@ -124,9 +124,15 @@ export default class SingleSelection extends React.Component<Props>
                     single_select: {
                         display_property: displayProperty,
                         id_property: idProperty,
+                        overlay_title: overlayTitle,
                     } = {},
                 },
             },
+            schemaOptions: {
+                editable: {
+                    value: editable,
+                } = {},
+            } = {},
             value,
         } = this.props;
 
@@ -151,8 +157,10 @@ export default class SingleSelection extends React.Component<Props>
             <ResourceSingleSelect
                 disabled={!!disabled}
                 displayProperty={displayProperty}
+                editable={!!editable}
                 idProperty={idProperty}
                 onChange={this.handleChange}
+                overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}
             />

@@ -83,16 +83,19 @@ export default class Select<T> extends React.Component<Props<T>> {
 
     cloneChildren(): SelectChildren<T> {
         return React.Children.map(this.props.children, (child: any) => {
-            switch (child.type) {
-                case Option:
-                    child = this.cloneOption(child);
-                    break;
-                case Action:
-                    child = this.cloneAction(child);
-                    break;
+            if (!child) {
+                return child;
             }
 
-            return child;
+            switch (child.type) {
+                case Option:
+                    // $FlowFixMe
+                    return this.cloneOption(child);
+                case Action:
+                    return this.cloneAction(child);
+                default:
+                    return child;
+            }
         });
     }
 

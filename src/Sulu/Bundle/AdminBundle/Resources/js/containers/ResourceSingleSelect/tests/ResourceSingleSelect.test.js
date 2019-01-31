@@ -80,6 +80,40 @@ test('Render with data', () => {
     expect(resourceSingleSelect.find('Menu').render()).toMatchSnapshot();
 });
 
+test('Render with data with editable option', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                id: 1,
+                name: 'Test 1',
+            },
+            {
+                id: 2,
+                name: 'Test 2',
+            },
+        ];
+    });
+
+    const resourceSingleSelect = mount(
+        <ResourceSingleSelect
+            displayProperty="name"
+            editable={true}
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={undefined}
+        />
+    );
+
+    resourceSingleSelect.find('DisplayValue').simulate('click');
+    resourceSingleSelect.update();
+
+    expect(resourceSingleSelect.render()).toMatchSnapshot();
+    expect(resourceSingleSelect.find('Menu').render()).toMatchSnapshot();
+});
+
 test('Render in value', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -122,7 +156,7 @@ test('Trigger the change callback when the selection changes', () => {
 
     const changeSpy = jest.fn();
 
-    const singleResourceSelect = shallow(
+    const resourceSingleSelect = shallow(
         <ResourceSingleSelect
             displayProperty="name"
             idProperty="id"
@@ -132,6 +166,83 @@ test('Trigger the change callback when the selection changes', () => {
         />
     );
 
-    singleResourceSelect.find('SingleSelect').prop('onChange')(2);
+    resourceSingleSelect.find('SingleSelect').prop('onChange')(2);
     expect(changeSpy).toHaveBeenCalledWith(2);
+});
+
+test('Updated data in EditOverlay should disappear when overlay is closed', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {id: 1, name: 'Test1'},
+            {id: 2, name: 'Test2'},
+        ];
+        this.deleteList = jest.fn();
+        this.patchList = jest.fn();
+    });
+
+    const resourceSingleSelect = mount(
+        <ResourceSingleSelect
+            displayProperty="name"
+            editable={true}
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    resourceSingleSelect.find('DisplayValue').simulate('click');
+    resourceSingleSelect.find('Action').prop('onClick')();
+
+    resourceSingleSelect.update();
+    resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');
+    resourceSingleSelect.find('EditLine Button').at(1).prop('onClick')();
+    resourceSingleSelect.find('EditOverlay Button[icon="su-plus"]').prop('onClick')();
+    resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
+    resourceSingleSelect.find('Icon[name="su-times"]').prop('onClick')();
+
+    expect(resourceSingleSelect.instance().resourceListStore.deleteList).not.toBeCalled();
+    expect(resourceSingleSelect.instance().resourceListStore.patchList).not.toBeCalled();
+});
+
+test('Updated data in EditOverlay should be displayed in Select when overlay is confirmed', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {id: 1, name: 'Test1'},
+            {id: 2, name: 'Test2'},
+        ];
+        this.deleteList = jest.fn();
+        this.patchList = jest.fn();
+    });
+
+    const resourceSingleSelect = mount(
+        <ResourceSingleSelect
+            displayProperty="name"
+            editable={true}
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    resourceSingleSelect.find('DisplayValue').simulate('click');
+    resourceSingleSelect.find('Action').prop('onClick')();
+
+    resourceSingleSelect.update();
+    resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');
+    resourceSingleSelect.find('EditLine Button').at(1).prop('onClick')();
+    resourceSingleSelect.find('EditOverlay Button[icon="su-plus"]').prop('onClick')();
+    resourceSingleSelect.find('EditLine Input').at(1).prop('onChange')('Test3 Update');
+    resourceSingleSelect.find('Button[skin="primary"]').prop('onClick')();
+
+    expect(resourceSingleSelect.instance().resourceListStore.deleteList).toBeCalledWith([2]);
+    expect(resourceSingleSelect.instance().resourceListStore.patchList).toBeCalledWith([
+        {name: 'Test3 Update'},
+        {id: 1, 'name': 'Test1 Update'},
+    ]);
 });

@@ -94,5 +94,6 @@
     "sulu_admin.changelog_line_creator": "Erstellt {creator, select, undefined{} other{von {creator}}} am {created}",
     "sulu_admin.settings": "Einstellungen",
     "sulu_admin.move_selected": "Ausgewählte verschieben",
-    "sulu_admin.details": "Details"
+    "sulu_admin.details": "Details",
+    "sulu_admin.edit_entries": "Einträge bearbeiten"
 }

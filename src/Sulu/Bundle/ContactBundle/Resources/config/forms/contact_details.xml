@@ -71,6 +71,9 @@
                     <meta>
                         <title>sulu_contact.title</title>
                     </meta>
+                    <params>
+                        <param name="editable" value="true" />
+                    </params>
                 </property>
 
                 <property name="birthday" type="date" colspan="6">
@@ -94,6 +97,9 @@
                     <meta>
                         <title>sulu_contact.position</title>
                     </meta>
+                    <params>
+                        <param name="editable" value="true" />
+                    </params>
                 </property>
 
                 <property name="salutation" type="text_line">

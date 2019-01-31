@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render an EditLine 1`] = `
+<div
+  class="editLine"
+>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="Test"
+    />
+  </label>
+  <button
+    class="button icon icon"
+    type="button"
+  >
+    <span
+      aria-label="su-trash-alt"
+      class="su-trash-alt buttonIcon"
+    />
+  </button>
+</div>
+`;

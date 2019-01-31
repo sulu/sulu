@@ -19,6 +19,28 @@ test('Should execute GET request and reject with response when the response cont
     });
 });
 
+test('Should execute GET request and reject if array is returned', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve([
+        {
+            test1: undefined,
+            test2: null,
+            test3: '',
+            test4: 'something',
+        },
+    ]));
+
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    return expect(Requester.get('/some-url')).rejects.toThrow('array');
+});
+
 test('Should execute GET request and replace null and empty string with undefined', () => {
     const response = {
         json: jest.fn(),
@@ -113,6 +135,39 @@ test('Should execute PUT request and return JSON', () => {
             description: 'Description',
             test: null,
         }),
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+    });
+
+    return requestPromise;
+});
+
+test('Should execute PATCH request and return JSON', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve([{test: '', value: 'test'}]));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const data = [
+        {
+            title: 'Titel',
+            description: 'Description',
+            test: undefined,
+        },
+    ];
+
+    const requestPromise = Requester.patch('/some-url', data).then((response) => {
+        expect(response).toEqual([{test: undefined, value: 'test'}]);
+    });
+
+    expect(window.fetch).toBeCalledWith('/some-url', {
+        method: 'PATCH',
+        body: JSON.stringify([{title: 'Titel', description: 'Description', test: null}]),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
     });

@@ -143,6 +143,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     'single_select' => [
                                         'id_property' => 'id',
                                         'display_property' => 'title',
+                                        'overlay_title' => 'sulu_contact.edit_title_overlay_title'
                                     ],
                                 ],
                             ],
@@ -153,6 +154,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                     'single_select' => [
                                         'id_property' => 'id',
                                         'display_property' => 'position',
+                                        'overlay_title' => 'sulu_contact.edit_position_overlay_title'
                                     ],
                                 ],
                             ],

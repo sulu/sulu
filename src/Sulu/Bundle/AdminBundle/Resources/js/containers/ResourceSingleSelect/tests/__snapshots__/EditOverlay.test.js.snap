@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render data in EditLines 1`] = `
+<header>
+  <h2>
+    Add something
+  </h2>
+  <span
+    aria-label="su-times"
+    class="su-times clickable icon"
+    role="button"
+    tabindex="0"
+  />
+</header>
+`;
+
+exports[`Render data in EditLines 2`] = `
+<div
+  class="overlay"
+>
+  <div
+    class="editLine"
+  >
+    <label
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Test 1"
+      />
+    </label>
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
+  </div>
+  <div
+    class="editLine"
+  >
+    <label
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Test 2"
+      />
+    </label>
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
+  </div>
+  <button
+    class="button icon"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render data in EditLines with other properties 1`] = `
+<header>
+  <h2>
+    Add something
+  </h2>
+  <span
+    aria-label="su-times"
+    class="su-times clickable icon"
+    role="button"
+    tabindex="0"
+  />
+</header>
+`;
+
+exports[`Render data in EditLines with other properties 2`] = `
+<div
+  class="overlay"
+>
+  <div
+    class="editLine"
+  >
+    <label
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Test 1"
+      />
+    </label>
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
+  </div>
+  <div
+    class="editLine"
+  >
+    <label
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Test 2"
+      />
+    </label>
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
+  </div>
+  <button
+    class="button icon"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+  </button>
+</div>
+`;

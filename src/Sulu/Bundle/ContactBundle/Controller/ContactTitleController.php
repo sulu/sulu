@@ -149,6 +149,35 @@ class ContactTitleController extends RestController implements ClassResourceInte
         return $this->handleView($view);
     }
 
+    public function cdeleteAction(Request $request)
+    {
+        $ids = array_filter(explode(',', $request->get('ids', '')));
+
+        try {
+            foreach ($ids as $id) {
+                /* @var ContactTitle $title */
+                $title = $this->getDoctrine()
+                    ->getRepository(self::$entityName)
+                    ->find($id);
+
+                if (!$title) {
+                    throw new EntityNotFoundException(self::$entityName, $id);
+                }
+
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($title);
+            }
+
+            $em->flush();
+
+            $view = $this->view();
+        } catch(EntityNotFoundException $e) {
+            $view = $this->view($enfe->toArray(), 404);
+        }
+
+        return $this->handleView($view);
+    }
+
     /**
      * Delete a contact title for the given id.
      *
@@ -189,7 +218,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction(Request $request)
+    public function cpatchAction(Request $request)
     {
         try {
             $data = [];

@@ -25,6 +25,11 @@ export default class ResourceRequester {
         return Requester.put(endpoint + '/' + id + buildQueryString(queryOptions), data);
     }
 
+    static patchList(resourceKey: string, data: Array<Object>) {
+        const endpoint = resourceEndpointRegistry.getEndpoint(resourceKey);
+        return Requester.patch(endpoint, data);
+    }
+
     static getList(resourceKey: string, options: ListOptions = {}) {
         const endpoint = resourceEndpointRegistry.getEndpoint(resourceKey);
         const queryOptions = {...options, flat: true};
@@ -35,5 +40,10 @@ export default class ResourceRequester {
     static delete(resourceKey: string, id: number | string, queryOptions: ?Object) {
         const endpoint = resourceEndpointRegistry.getEndpoint(resourceKey);
         return Requester.delete(endpoint + '/' + id + buildQueryString(queryOptions));
+    }
+
+    static deleteList(resourceKey: string, queryOptions: Object){
+        const endpoint = resourceEndpointRegistry.getEndpoint(resourceKey);
+        return Requester.delete(endpoint + buildQueryString(queryOptions));
     }
 }

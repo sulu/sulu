@@ -94,5 +94,6 @@
     "sulu_admin.changelog_line_creator": "Created {creator, select, undefined{} other{by {creator}}} at {created}",
     "sulu_admin.settings": "Settings",
     "sulu_admin.move_selected": "Move selected",
-    "sulu_admin.details": "Details"
+    "sulu_admin.details": "Details",
+    "sulu_admin.edit_entries": "Edit entries"
 }
