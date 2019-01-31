@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import MultiSelect from '../MultiSelect';
+import ResourceMultiSelect from '../ResourceMultiSelect';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
@@ -19,7 +19,7 @@ test('Render in loading state', () => {
     });
 
     expect(render(
-        <MultiSelect
+        <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -46,8 +46,8 @@ test('Render in disabled state', () => {
         ];
     });
 
-    const multiSelect = mount(
-        <MultiSelect
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
             disabled={true}
             displayProperty="name"
             onChange={jest.fn()}
@@ -57,7 +57,7 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(multiSelect.render()).toMatchSnapshot();
+    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
 test('Render with data', () => {
@@ -83,8 +83,8 @@ test('Render with data', () => {
         ];
     });
 
-    const multiSelect = mount(
-        <MultiSelect
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -93,7 +93,7 @@ test('Render with data', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(multiSelect.render()).toMatchSnapshot();
+    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
 test('Render with data and apiOptions', () => {
@@ -121,8 +121,8 @@ test('Render with data and apiOptions', () => {
 
     const apiOptions = {'testOption': 'testValue'};
 
-    const multiSelect = mount(
-        <MultiSelect
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
             apiOptions={apiOptions}
             displayProperty="name"
             onChange={jest.fn()}
@@ -132,7 +132,7 @@ test('Render with data and apiOptions', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', apiOptions);
-    expect(multiSelect.render()).toMatchSnapshot();
+    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
 test('Render with values', () => {
@@ -158,8 +158,8 @@ test('Render with values', () => {
         ];
     });
 
-    const multiSelect = mount(
-        <MultiSelect
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -168,7 +168,7 @@ test('Render with values', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(multiSelect.render()).toMatchSnapshot();
+    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
 test('The component should trigger the change callback', () => {
@@ -195,8 +195,8 @@ test('The component should trigger the change callback', () => {
     });
 
     const onChangeSpy = jest.fn();
-    const multiSelect = shallow(
-        <MultiSelect
+    const resourceMultiSelect = shallow(
+        <ResourceMultiSelect
             displayProperty="name"
             onChange={onChangeSpy}
             resourceKey="test"
@@ -217,6 +217,6 @@ test('The component should trigger the change callback', () => {
         },
     ];
 
-    multiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
+    resourceMultiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });

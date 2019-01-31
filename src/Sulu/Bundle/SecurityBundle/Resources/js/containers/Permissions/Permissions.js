@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
-import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import {userStore} from 'sulu-admin-bundle/stores';
 import securityContextStore from '../../stores/SecurityContextStore';
 import type {SecurityContextGroups, SecurityContexts} from '../../stores/SecurityContextStore/types';
@@ -168,7 +168,7 @@ export default class Permissions extends React.Component<Props> {
             <Fragment>
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
                 <div className={permissionsStyle.selectContainer}>
-                    <MultiSelect
+                    <ResourceMultiSelect
                         apiOptions={{checkForPermissions: 0, locale: userStore.user.locale}}
                         disabled={this.props.disabled}
                         displayProperty="name"

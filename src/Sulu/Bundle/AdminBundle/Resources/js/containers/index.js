@@ -14,7 +14,7 @@ import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore} from './Form';
-import MultiSelect from './MultiSelect';
+import ResourceMultiSelect from './ResourceMultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
@@ -37,12 +37,12 @@ export {
     FlatStructureStrategy,
     Form,
     FormInspector,
-    ResourceFormStore,
-    MultiSelect,
     MultiAutoComplete,
     MultiSelection,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
+    ResourceFormStore,
+    ResourceMultiSelect,
     SingleAutoComplete,
     SingleDatagridOverlay,
     Sidebar,

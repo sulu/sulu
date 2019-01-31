@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
-import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import RoleAssignments from '../RoleAssignments';
 import RoleAssignment from '../RoleAssignment';
 
@@ -257,7 +257,7 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
 
     return promise.then(() => {
         roleAssignments.update();
-        roleAssignments.find(MultiSelect).at(0).instance().props.onChange(
+        roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
             [2, 5, 23],
             [
                 {
