@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {action, autorun, observable, toJS, when} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
 import Overlay from '../../components/Overlay';
@@ -86,10 +86,7 @@ export default class EditOverlay extends React.Component<Props> {
             resourceListStore.patchList(patchEntries);
         }
 
-        when(
-            () => !resourceListStore.loading,
-            onClose
-        );
+        onClose();
     };
 
     render() {
