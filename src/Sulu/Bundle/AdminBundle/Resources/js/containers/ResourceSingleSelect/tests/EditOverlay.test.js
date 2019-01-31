@@ -187,6 +187,129 @@ test('Should update ResourceStoreList if data is changed and confirm button is c
     expect(resourceListStore.deleteList).toBeCalledWith([1]);
 });
 
+test('An empty field should not be added', () => {
+    const resourceListStore = new ResourceListStore('accounts');
+    resourceListStore.data = [
+        {
+            uuid: 1,
+            position: 'Test 1',
+        },
+        {
+            uuid: 2,
+            position: 'Test 2',
+        },
+    ];
+
+    const closeSpy = jest.fn();
+
+    const editOverlay = mount(
+        <EditOverlay
+            displayProperty="position"
+            idProperty="uuid"
+            onClose={closeSpy}
+            open={true}
+            resourceListStore={resourceListStore}
+            title="Add something"
+        />
+    );
+
+    expect(editOverlay.find('EditLine')).toHaveLength(2);
+    editOverlay.find('Button[icon="su-plus"]').simulate('click');
+    editOverlay.find('Button[icon="su-plus"]').simulate('click');
+    expect(editOverlay.find('EditLine')).toHaveLength(4);
+
+    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 3');
+
+    editOverlay.find('EditLine Button').at(0).prop('onClick')();
+
+    editOverlay.find('Button[skin="primary"]').simulate('click');
+
+    expect(resourceListStore.patchList).toBeCalledWith([
+        {position: 'Test 3'},
+    ]);
+
+    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+});
+
+test('Adding the same field as already existing should not add it', () => {
+    const resourceListStore = new ResourceListStore('accounts');
+    resourceListStore.data = [
+        {
+            uuid: 1,
+            position: 'Test 1',
+        },
+        {
+            uuid: 2,
+            position: 'Test 2',
+        },
+    ];
+
+    const closeSpy = jest.fn();
+
+    const editOverlay = mount(
+        <EditOverlay
+            displayProperty="position"
+            idProperty="uuid"
+            onClose={closeSpy}
+            open={true}
+            resourceListStore={resourceListStore}
+            title="Add something"
+        />
+    );
+
+    editOverlay.find('Button[icon="su-plus"]').simulate('click');
+    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 2');
+    editOverlay.find('EditLine Button').at(0).prop('onClick')();
+    editOverlay.find('Button[skin="primary"]').simulate('click');
+
+    expect(resourceListStore.patchList).not.toBeCalledWith();
+});
+
+test('Adding the same field twice should add it only once', () => {
+    const resourceListStore = new ResourceListStore('accounts');
+    resourceListStore.data = [
+        {
+            uuid: 1,
+            position: 'Test 1',
+        },
+        {
+            uuid: 2,
+            position: 'Test 2',
+        },
+    ];
+
+    const closeSpy = jest.fn();
+
+    const editOverlay = mount(
+        <EditOverlay
+            displayProperty="position"
+            idProperty="uuid"
+            onClose={closeSpy}
+            open={true}
+            resourceListStore={resourceListStore}
+            title="Add something"
+        />
+    );
+
+    expect(editOverlay.find('EditLine')).toHaveLength(2);
+    editOverlay.find('Button[icon="su-plus"]').simulate('click');
+    editOverlay.find('Button[icon="su-plus"]').simulate('click');
+    expect(editOverlay.find('EditLine')).toHaveLength(4);
+
+    editOverlay.find('EditLine Input').at(2).prop('onChange')('Test 3');
+    editOverlay.find('EditLine Input').at(3).prop('onChange')('Test 3');
+
+    editOverlay.find('EditLine Button').at(0).prop('onClick')();
+
+    editOverlay.find('Button[skin="primary"]').simulate('click');
+
+    expect(resourceListStore.patchList).toBeCalledWith([
+        {position: 'Test 3'},
+    ]);
+
+    expect(resourceListStore.deleteList).toBeCalledWith([1]);
+});
+
 test('Call disposer when component unmounts', () => {
     const resourceListStore = new ResourceListStore('accounts');
 

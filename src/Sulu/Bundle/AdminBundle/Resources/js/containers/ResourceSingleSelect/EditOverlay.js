@@ -53,13 +53,18 @@ export default class EditOverlay extends React.Component<Props> {
 
     @action handleConfirm = () => {
         const {displayProperty, idProperty, onClose, resourceListStore} = this.props;
+        const {data} = this;
 
-        const entriesToAdd = this.data.filter((dataEntry) => !dataEntry[idProperty]);
+        const entriesToAdd = data
+            .filter((entry, index) => {
+                return data.findIndex((dataEntry) => dataEntry[displayProperty] == entry[displayProperty]) === index;
+            })
+            .filter((entry) => !entry[idProperty]);
 
         const entriesToDelete = resourceListStore.data
-            .filter((entry) => !this.data.some((dataEntry) => dataEntry[idProperty] === entry[idProperty]));
+            .filter((entry) => !data.some((dataEntry) => dataEntry[idProperty] === entry[idProperty]));
 
-        const entriesToUpdate = this.data.filter((dataEntry) => {
+        const entriesToUpdate = data.filter((dataEntry) => {
             const entry = resourceListStore.data.find((entry) => dataEntry[idProperty] === entry[idProperty]);
 
             return entry && entry[displayProperty] !== dataEntry[displayProperty];
@@ -70,7 +75,8 @@ export default class EditOverlay extends React.Component<Props> {
         }
 
         if (entriesToAdd.length > 0 || entriesToUpdate.length > 0) {
-            resourceListStore.patchList([...entriesToAdd, ...entriesToUpdate]);
+            const patchEntries = [...entriesToAdd, ...entriesToUpdate].filter((entry) => entry[displayProperty]);
+            resourceListStore.patchList(patchEntries);
         }
 
         when(
