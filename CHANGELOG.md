@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * FEATURE     #4394  [WebsiteBundle]        Add exception handling for breadcrumb function
+    * FEATURE     #4400  [All]                  Fix FieldJoinDescriptor without a relation
     * ENHANCEMENT #4370  [WebsiteBundle]        Add attributes to sitemap-url
     * FEATURE     #4357  [MediaBundle]          Added dimension properties to video media
 
