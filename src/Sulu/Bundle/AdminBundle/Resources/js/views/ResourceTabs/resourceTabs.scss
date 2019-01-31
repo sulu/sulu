@@ -1,9 +1,8 @@
-@import '../../components/Toolbar/variables.scss';
 @import '../../components/Tabs/variables.scss';
 @import '../../containers/Application/variables.scss';
 
 .loader {
-    margin-top: calc($toolbarHeight + $tabMenuHeight);
+    margin-top: $tabMenuHeight;
 }
 
 .tabs-container {

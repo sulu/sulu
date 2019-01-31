@@ -171,8 +171,8 @@ class ContactTitleController extends RestController implements ClassResourceInte
             $em->flush();
 
             $view = $this->view();
-        } catch(EntityNotFoundException $e) {
-            $view = $this->view($enfe->toArray(), 404);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
         }
 
         return $this->handleView($view);
