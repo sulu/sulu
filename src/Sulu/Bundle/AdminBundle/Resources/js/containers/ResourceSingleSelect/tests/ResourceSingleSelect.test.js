@@ -138,6 +138,37 @@ test('Render in value', () => {
     )).toMatchSnapshot();
 });
 
+test('Pass apiOptions to ResourceListStore', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                id: 1,
+                name: 'Test 1',
+            },
+        ];
+    });
+
+    const apiOptions = {
+        flat: true,
+    };
+
+    mount(
+        <ResourceSingleSelect
+            apiOptions={apiOptions}
+            disabled={true}
+            displayProperty="name"
+            idProperty="id"
+            onChange={jest.fn()}
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledWith('test', apiOptions, 'id');
+});
+
 test('Trigger the change callback when the selection changes', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {

@@ -10,6 +10,7 @@ import {translate} from '../../utils/Translator';
 import EditOverlay from './EditOverlay';
 
 type Props<T> = {|
+    apiOptions: Object,
     disabled: boolean,
     displayProperty: string,
     editable: boolean,
@@ -23,6 +24,7 @@ type Props<T> = {|
 @observer
 export default class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
+        apiOptions: {},
         disabled: false,
         editable: false,
     };
@@ -40,11 +42,12 @@ export default class ResourceSingleSelect<T: string | number> extends React.Comp
         super(props);
 
         const {
+            apiOptions,
             idProperty,
             resourceKey,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey, {}, idProperty);
+        this.resourceListStore = new ResourceListStore(resourceKey, apiOptions, idProperty);
     }
 
     @action handleEdit = () => {
