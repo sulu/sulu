@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;

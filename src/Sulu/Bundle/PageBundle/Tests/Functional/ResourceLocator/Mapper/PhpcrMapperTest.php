@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator\Mapper;
 
 use PHPCR\SessionInterface;
-use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;

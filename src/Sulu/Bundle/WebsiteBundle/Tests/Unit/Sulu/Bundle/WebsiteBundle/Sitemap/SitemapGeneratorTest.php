@@ -13,8 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;

@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Export;
 
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;

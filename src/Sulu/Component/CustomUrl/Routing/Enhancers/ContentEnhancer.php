@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\CustomUrl\Routing\Enhancers;
 
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
