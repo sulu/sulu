@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, autorun, observable, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
@@ -28,6 +29,12 @@ export default class EditOverlay extends React.Component<Props> {
 
         this.updateDataDisposer = autorun(() => this.updateData(this.props.resourceListStore.data));
     }
+
+    setInputRef = (inputRef: ?ElementRef<'input'>) => {
+        if (inputRef) {
+            inputRef.focus();
+        }
+    };
 
     @action updateData = (data: Array<Object>) => {
         this.data = toJS(data);
@@ -102,6 +109,7 @@ export default class EditOverlay extends React.Component<Props> {
                     {this.data.map((object, index) => (
                         <EditLine
                             id={index}
+                            inputRef={this.setInputRef}
                             key={index}
                             onChange={this.handleEditLineChange}
                             onRemove={this.handleEditLineRemove}

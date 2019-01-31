@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import editLineStyles from './editLine.scss';
 
 type Props<T> = {|
     id: T,
+    inputRef?: (ref: ?ElementRef<'input'>) => void,
     onChange: (id: T, value: ?string) => void,
     onRemove: (id: T) => void,
     value: string,
@@ -24,11 +26,11 @@ export default class EditLine<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {value} = this.props;
+        const {inputRef, value} = this.props;
 
         return (
             <div className={editLineStyles.editLine}>
-                <Input onChange={this.handleChange} value={value} />
+                <Input inputRef={inputRef} onChange={this.handleChange} value={value} />
                 <Button className={editLineStyles.icon} icon="su-trash-alt" onClick={this.handleRemove} skin="icon" />
             </div>
         );
