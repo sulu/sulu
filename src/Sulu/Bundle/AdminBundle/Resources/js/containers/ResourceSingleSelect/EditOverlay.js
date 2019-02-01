@@ -116,8 +116,10 @@ export default class EditOverlay extends React.Component<Props> {
                     <Button
                         icon="su-plus"
                         onClick={this.handleEditLineAdd}
-                        skin="icon"
-                    />
+                        skin="secondary"
+                    >
+                        {translate('sulu_admin.add')}
+                    </Button>
                 </div>
             </Overlay>
         );

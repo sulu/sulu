@@ -61,13 +61,18 @@ exports[`Render data in EditLines 2`] = `
     </button>
   </div>
   <button
-    class="button icon"
+    class="button secondary"
     type="button"
   >
     <span
       aria-label="su-plus"
       class="su-plus buttonIcon"
     />
+    <span
+      class="text"
+    >
+      sulu_admin.add
+    </span>
   </button>
 </div>
 `;
@@ -133,13 +138,18 @@ exports[`Render data in EditLines with other properties 2`] = `
     </button>
   </div>
   <button
-    class="button icon"
+    class="button secondary"
     type="button"
   >
     <span
       aria-label="su-plus"
       class="su-plus buttonIcon"
     />
+    <span
+      class="text"
+    >
+      sulu_admin.add
+    </span>
   </button>
 </div>
 `;
