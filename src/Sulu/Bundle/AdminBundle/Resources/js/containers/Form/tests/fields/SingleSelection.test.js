@@ -172,7 +172,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
 });
 
 test('Pass correct props to SingleItemSelection', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {

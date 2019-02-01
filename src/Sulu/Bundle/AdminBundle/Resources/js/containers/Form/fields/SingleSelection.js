@@ -151,8 +151,6 @@ export default class SingleSelection extends React.Component<Props>
             throw new Error('The "id_property" field-type option must be a string!');
         }
 
-        // TODO Also check for editable schema option
-        // TODO Add possibility to filter response
         return (
             <ResourceSingleSelect
                 disabled={!!disabled}
