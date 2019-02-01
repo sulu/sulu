@@ -2,21 +2,9 @@
 
 exports[`Render a CardCollection 1`] = `
 Array [
-  <button
-    class="button secondary addButton"
-    type="button"
+  <section
+    class="cards"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
-    >
-      sulu_admin.add
-    </span>
-  </button>,
-  <section>
     <div
       class="card"
     >
@@ -68,5 +56,23 @@ Array [
       </section>
     </div>
   </section>,
+  <div
+    class="addButtonContainer"
+  >
+    <button
+      class="button secondary"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_admin.add
+      </span>
+    </button>
+  </div>,
 ]
 `;

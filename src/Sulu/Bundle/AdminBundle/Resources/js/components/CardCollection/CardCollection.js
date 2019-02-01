@@ -21,21 +21,22 @@ export default class CardCollection extends React.Component<Props> {
 
         return (
             <Fragment>
-                <Button
-                    className={cardCollectionStyles.addButton}
-                    icon="su-plus"
-                    onClick={onAdd}
-                    skin="secondary"
-                >
-                    {translate('sulu_admin.add')}
-                </Button>
-                <section>
+                <section className={cardCollectionStyles.cards}>
                     {children && React.Children.map(children, (child, index) => (
                         <div className={cardCollectionStyles.card} key={index}>
                             {React.cloneElement(child, {id: index, onEdit, onRemove})}
                         </div>
                     ))}
                 </section>
+                <div className={cardCollectionStyles.addButtonContainer}>
+                    <Button
+                        icon="su-plus"
+                        onClick={onAdd}
+                        skin="secondary"
+                    >
+                        {translate('sulu_admin.add')}
+                    </Button>
+                </div>
             </Fragment>
         );
     }

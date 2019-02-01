@@ -96,7 +96,7 @@ test('Close the overlay when its close button is clicked', () => {
     );
 
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('button.addButton').simulate('click');
+    cardCollection.find('.addButtonContainer button').simulate('click');
     expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
 
     cardCollection.find('Icon[name="su-times"]').simulate('click');
@@ -146,7 +146,7 @@ test('Add a new card using the overlay', () => {
     );
 
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('button.addButton').simulate('click');
+    cardCollection.find('.addButtonContainer button').simulate('click');
     expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
 
     cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
@@ -194,7 +194,7 @@ test('Add a new card using the overlay', () => {
     );
 
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
-    cardCollection.find('button.addButton').simulate('click');
+    cardCollection.find('.addButtonContainer button').simulate('click');
     expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
 
     cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');

@@ -2,41 +2,35 @@
 
 exports[`Render empty CardCollection 1`] = `
 Array [
-  <button
-    class="button secondary addButton"
-    type="button"
+  <section
+    class="cards"
+  />,
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
+    <button
+      class="button secondary"
+      type="button"
     >
-      sulu_admin.add
-    </span>
-  </button>,
-  <section />,
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_admin.add
+      </span>
+    </button>
+  </div>,
 ]
 `;
 
 exports[`Render passed card components 1`] = `
 Array [
-  <button
-    class="button secondary addButton"
-    type="button"
+  <section
+    class="cards"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
-    >
-      sulu_admin.add
-    </span>
-  </button>,
-  <section>
     <div
       class="card"
     >
@@ -66,5 +60,23 @@ Array [
       </section>
     </div>
   </section>,
+  <div
+    class="addButtonContainer"
+  >
+    <button
+      class="button secondary"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_admin.add
+      </span>
+    </button>
+  </div>,
 ]
 `;

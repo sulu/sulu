@@ -1,11 +1,17 @@
-.add-button {
-    margin-bottom: 30px;
+$cardCollectionPadding: 20px;
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -$cardCollectionPadding;
 }
 
 .card {
-    float: left;
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
     width: calc(100% / 3);
-    padding: 0 20px 20px 0;
+    padding: 0 $cardCollectionPadding $cardCollectionPadding 0;
 
     @media (max-width: 1280px) {
         width: 50%;
@@ -14,6 +20,10 @@
     @media (max-width: 1024px) {
         float: none;
         width: 100%;
-        padding: 0 0 20px;
+        padding: 0 0 $cardCollectionPadding;
     }
+}
+
+.add-button-container {
+    text-align: center;
 }
