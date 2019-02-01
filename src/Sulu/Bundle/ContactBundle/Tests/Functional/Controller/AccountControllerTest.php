@@ -151,9 +151,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterland', $response->addresses[0]->state);
-        $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-        $this->assertEquals('ML', $response->addresses[0]->country->code);
-        $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+        $this->assertEquals($country->getId(), $response->addresses[0]->country);
+        $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
         $this->assertEquals(47.4048346, $response->addresses[0]->latitude);
         $this->assertEquals(9.7602198, $response->addresses[0]->longitude);
         $this->assertEquals('Feldkirch', $response->placeOfJurisdiction);
@@ -409,15 +408,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -605,15 +597,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => 1,
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => 1,
                     ],
                 ],
             ]
@@ -749,15 +734,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => 1,
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => 2,
-                            'name' => 'Work',
-                        ],
+                        'country' => 1,
+                        'addressType' => 2,
                     ],
                 ],
             ]
@@ -808,15 +786,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => 12393,
-                            'name' => 'Österreich',
-                            'code' => 'AT',
-                        ],
-                        'addressType' => [
-                            'id' => 1,
-                            'name' => 'Private',
-                        ],
+                        'country' => 12393,
+                        'addressType' => 1,
                     ],
                 ],
             ]
@@ -983,15 +954,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1008,15 +972,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'note' => 'note1',
                     ],
                 ],
@@ -1081,9 +1038,8 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Dornbirn', $response->addresses[0]->city);
             $this->assertEquals('state1', $response->addresses[0]->state);
             $this->assertEquals('note', $response->addresses[0]->note);
-            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-            $this->assertEquals('ML', $response->addresses[0]->country->code);
-            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+            $this->assertEquals($country->getId(), $response->addresses[0]->country);
+            $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
 
             $this->assertEquals(true, $response->addresses[0]->billingAddress);
             $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -1101,9 +1057,8 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Dornbirn', $response->addresses[1]->city);
             $this->assertEquals('note1', $response->addresses[1]->note);
             $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-            $this->assertEquals('ML', $response->addresses[1]->country->code);
-            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+            $this->assertEquals($country->getId(), $response->addresses[1]->country);
+            $this->assertEquals($addressType->getId(), $response->addresses[1]->addressType);
         } else {
             $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
@@ -1112,9 +1067,8 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('0022', $response->addresses[1]->zip);
             $this->assertEquals('Dornbirn', $response->addresses[1]->city);
             $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals('Musterland', $response->addresses[1]->country->name);
-            $this->assertEquals('ML', $response->addresses[1]->country->code);
-            $this->assertEquals('Private', $response->addresses[1]->addressType->name);
+            $this->assertEquals($country->getId(), $response->addresses[1]->country);
+            $this->assertEquals($addressType->getId(), $response->addresses[1]->addressType);
 
             $this->assertEquals(true, $response->addresses[1]->billingAddress);
             $this->assertEquals(true, $response->addresses[1]->primaryAddress);
@@ -1128,10 +1082,9 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('2222', $response->addresses[0]->zip);
             $this->assertEquals('Dornbirn', $response->addresses[0]->city);
             $this->assertEquals('state1', $response->addresses[0]->state);
-            $this->assertEquals('Musterland', $response->addresses[0]->country->name);
-            $this->assertEquals('ML', $response->addresses[0]->country->code);
+            $this->assertEquals($country->getId(), $response->addresses[0]->country);
             $this->assertEquals('note1', $response->addresses[0]->note);
-            $this->assertEquals('Private', $response->addresses[0]->addressType->name);
+            $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
         }
     }
 
@@ -1663,15 +1616,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1764,15 +1710,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1851,15 +1790,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1873,15 +1805,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1955,15 +1880,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1977,15 +1895,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1999,15 +1910,8 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,

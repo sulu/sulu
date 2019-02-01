@@ -2,7 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {observable} from 'mobx';
-import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import PageSettingsShadowLocaleSelect from '../../fields/PageSettingsShadowLocaleSelect';
@@ -13,7 +13,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         this.getValueByPath = jest.fn();
         this.locale = formStore.locale;
     }),
-    FormStore: jest.fn(function(resourceStore, options) {
+    ResourceFormStore: jest.fn(function(resourceStore, options) {
         this.options = options;
         this.locale = resourceStore.locale;
     }),
@@ -27,7 +27,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 
 test('Pass correct props to SingleSelect', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -60,7 +60,7 @@ test('Call onChange and onFinish if the value is changed', () => {
     const finishSpy = jest.fn();
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('nl')}),
             'test'
         )

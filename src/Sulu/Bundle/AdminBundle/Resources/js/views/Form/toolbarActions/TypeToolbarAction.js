@@ -4,9 +4,9 @@ import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 
 export default class TypeToolbarAction extends AbstractToolbarAction {
     getToolbarItemConfig(): ToolbarItemConfig {
-        const formTypes = this.formStore.types;
+        const formTypes = this.resourceFormStore.types;
 
-        if (!this.formStore.typesLoading && Object.keys(formTypes).length === 0) {
+        if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');
         }
 
@@ -18,10 +18,10 @@ export default class TypeToolbarAction extends AbstractToolbarAction {
                     throw new Error('Only strings are valid as a form type!');
                 }
 
-                this.formStore.changeType(value);
+                this.resourceFormStore.changeType(value);
             },
-            loading: this.formStore.typesLoading,
-            value: this.formStore.type,
+            loading: this.resourceFormStore.typesLoading,
+            value: this.resourceFormStore.type,
             options: Object.keys(formTypes).map((key: string) => ({
                 value: formTypes[key].key,
                 label: formTypes[key].title,

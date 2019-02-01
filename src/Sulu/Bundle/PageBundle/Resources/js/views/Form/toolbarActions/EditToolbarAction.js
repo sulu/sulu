@@ -14,7 +14,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
 
     getNode() {
         const {
-            formStore: {
+            resourceFormStore: {
                 id,
                 data: {
                     availableLocales,
@@ -66,7 +66,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
     }
 
     getToolbarItemConfig() {
-        const {id, data} = this.formStore;
+        const {id, data} = this.resourceFormStore;
         const {published, publishedState} = data;
 
         return {
@@ -107,7 +107,7 @@ export default class EditToolbarAction extends AbstractToolbarAction {
             options: {
                 webspace,
             },
-        } = this.formStore;
+        } = this.resourceFormStore;
 
         if (!id) {
             throw new Error(
@@ -129,8 +129,8 @@ export default class EditToolbarAction extends AbstractToolbarAction {
         ).then(action((response) => {
             this.deletingDraft = false;
             this.showDeleteDraftDialog = false;
-            this.formStore.setMultiple(response);
-            this.formStore.dirty = false;
+            this.resourceFormStore.setMultiple(response);
+            this.resourceFormStore.dirty = false;
         }));
     };
 

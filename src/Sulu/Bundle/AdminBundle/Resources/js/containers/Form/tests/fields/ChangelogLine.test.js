@@ -5,12 +5,12 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ChangelogLine from '../../fields/ChangelogLine';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../../stores/FormStore', () => jest.fn());
+jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn(function() {
     this.getValueByPath = jest.fn();
 }));
@@ -27,13 +27,13 @@ beforeEach(() => {
 });
 
 test('Render loader if changer and creator are not loaded yet', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     expect(render(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />)).toMatchSnapshot();
 });
 
 test('Render with loaded changer and creator', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {
@@ -89,7 +89,7 @@ test('Render with loaded changer and creator', () => {
 });
 
 test('Render with no changer and creator', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     formInspector.getValueByPath.mockImplementation((path) => {
         switch (path) {

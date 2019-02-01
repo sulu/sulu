@@ -1,7 +1,7 @@
 // @flow
 import {shallow} from 'enzyme';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
-import {FormStore} from '../../../../containers/Form';
+import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
@@ -22,7 +22,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
 }));
 
 jest.mock('../../../../containers/Form', () => ({
-    FormStore: class {
+    ResourceFormStore: class {
         resourceStore;
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -53,7 +53,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createDeleteToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore, 'test');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
@@ -61,12 +61,12 @@ function createDeleteToolbarAction() {
         route: router.route,
         router,
     });
-    return new DeleteToolbarAction(formStore, form, router);
+    return new DeleteToolbarAction(resourceFormStore, form, router);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value and return closed dialog', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
-    deleteToolbarAction.formStore.resourceStore.id = 5;
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 5;
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: false,
@@ -87,7 +87,7 @@ test('Return item config with correct disabled, loading, icon, type and value an
 
 test('Return item config with disabled button if an add form is opened', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
-    deleteToolbarAction.formStore.resourceStore.id = undefined;
+    deleteToolbarAction.resourceFormStore.resourceStore.id = undefined;
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: true,
@@ -96,7 +96,7 @@ test('Return item config with disabled button if an add form is opened', () => {
 
 test('Open dialog on toolbar item click', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
-    deleteToolbarAction.formStore.resourceStore.id = 3;
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -109,7 +109,7 @@ test('Open dialog on toolbar item click', () => {
 
 test('Close dialog on cancel click', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
-    deleteToolbarAction.formStore.resourceStore.id = 3;
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -128,12 +128,12 @@ test('Close dialog on cancel click', () => {
 
 test('Call delete when dialog is confirmed', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
-    deleteToolbarAction.formStore.resourceStore.id = 3;
-    deleteToolbarAction.formStore.resourceStore.setLocale('en');
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.resourceFormStore.resourceStore.setLocale('en');
     deleteToolbarAction.router.route.options.backRoute = 'sulu_test.datagrid';
 
     const deletePromise = Promise.resolve();
-    deleteToolbarAction.formStore.delete.mockReturnValue(deletePromise);
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -144,7 +144,7 @@ test('Call delete when dialog is confirmed', () => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.formStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
 
     return deletePromise.then(() => {
         element = shallow(deleteToolbarAction.getNode());

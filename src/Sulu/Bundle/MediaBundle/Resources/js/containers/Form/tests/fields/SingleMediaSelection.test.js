@@ -3,7 +3,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
-import FormStore from 'sulu-admin-bundle/containers/Form/stores/FormStore';
+import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
 import SingleMediaSelectionComponent from '../../../SingleMediaSelection';
@@ -13,7 +13,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
     this.locale = observableOptions.locale;
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
 }));
 
@@ -31,7 +31,7 @@ jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
 
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -55,7 +55,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
 
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {}),
             'test'
         )
@@ -78,7 +78,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
     const finishSpy = jest.fn();
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )

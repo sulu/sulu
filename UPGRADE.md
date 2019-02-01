@@ -2,6 +2,26 @@
 
 ## dev-develop
 
+### Type information of contacts
+
+The contacts have different sub entities, which are assigned in combination with a type (e.g. phone numbers, fax number,
+...). The name of these types have been slightly renamed, and since this data is stored in the database, it has to be
+renamed there as well. The following sql snippet can be used for that:
+
+```sql
+UPDATE co_phone_types SET name="sulu_contact.work" WHERE name="phone.work";
+UPDATE co_phone_types SET name="sulu_contact.private" WHERE name="phone.home";
+UPDATE co_phone_types SET name="sulu_contact.mobile" WHERE name="phone.mobile";
+UPDATE co_email_types SET name="sulu_contact.work" WHERE name="email.work";
+UPDATE co_email_types SET name="sulu_contact.private" WHERE name="email.home";
+UPDATE co_address_types SET name="sulu_contact.work" WHERE name="address.work";
+UPDATE co_address_types SET name="sulu_contact.private" WHERE name="address.home";
+UPDATE co_url_types SET name="sulu_contact.work" WHERE name="url.work";
+UPDATE co_url_types SET name="sulu_contact.private" WHERE name="url.private";
+UPDATE co_fax_types SET name="sulu_contact.work" WHERE name="fax.work";
+UPDATE co_fax_types SET name="sulu_contact.private" WHERE name="fax.home";
+```
+
 ### Webspace template file extension removed
 
 Sulu supports now also different format for static webspace templates like search and error.
@@ -44,7 +64,8 @@ $webspace->getTemplate('search', $request->getRequestFormat());
 ### Contact and Account API
 
 The APIs on `/admin/api/contacts` and `/admin/api/accounts` now use an array of IDS for their `categories` instead of
-returning resp. passing an entire object.
+returning resp. passing an entire object. In addition to that it also uses IDS instead of objects for the `country` and
+`addressType` property.
 
 ### SuluKernel::construct changed
 

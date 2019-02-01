@@ -5,13 +5,14 @@ import React, {Fragment} from 'react';
 import log from 'loglevel';
 import Loader from '../../components/Loader';
 import Renderer from './Renderer';
-import FormStore from './stores/FormStore';
+import type {FormStoreInterface} from './types';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
 
 type Props = {
-    store: FormStore,
+    onError?: (errors: Object) => void,
     onSubmit: (action: ?string) => ?Promise<Object>,
+    store: FormStoreInterface,
 };
 
 @observer
@@ -54,8 +55,17 @@ export default class Form extends React.Component<Props> {
 
     /** @public */
     @action submit = (action: ?string) => {
+        const {onError, onSubmit, store} = this.props;
+
         this.showAllErrors = true;
-        return this.props.onSubmit(action);
+
+        if (store.validate()) {
+            return onSubmit(action);
+        }
+
+        if (onError) {
+            return onError(store.errors);
+        }
     };
 
     handleChange = (name: string, value: mixed) => {
@@ -75,7 +85,13 @@ export default class Form extends React.Component<Props> {
     };
 
     @action handleGhostDialogConfirm = (locale: string) => {
-        this.props.store.copyFromLocale(locale);
+        const {store} = this.props;
+
+        if (!store.copyFromLocale) {
+            return;
+        }
+
+        store.copyFromLocale(locale);
         this.hideGhostDialog();
     };
 

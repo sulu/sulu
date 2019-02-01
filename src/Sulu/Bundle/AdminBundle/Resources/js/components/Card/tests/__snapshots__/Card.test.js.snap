@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a card with its children 1`] = `
+<section
+  class="card"
+>
+  <div
+    class="icons"
+  />
+  <h1>
+    Content!
+  </h1>
+</section>
+`;
+
+exports[`Render a card with its children, edit and remove icon 1`] = `
+<section
+  class="card"
+>
+  <div
+    class="icons"
+  >
+    <span
+      aria-label="su-pen"
+      class="su-pen clickable"
+      role="button"
+      tabindex="0"
+    />
+    <span
+      aria-label="su-trash-alt"
+      class="su-trash-alt clickable"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+  Content
+</section>
+`;

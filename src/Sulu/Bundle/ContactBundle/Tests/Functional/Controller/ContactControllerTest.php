@@ -134,7 +134,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-        $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType->id);
+        $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
 
         $this->assertObjectHasAttribute('avatar', $response);
         $this->assertObjectHasAttribute('thumbnails', $response->avatar);
@@ -221,15 +221,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -401,15 +394,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -480,6 +466,66 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
+    public function testPostEmptyAddress()
+    {
+        $addressType = $this->createAddressType('Private');
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Max',
+                'lastName' => 'Mustermann',
+                'formOfAddress' => 1,
+                'addresses' => [
+                    [
+                        'addressType' => $addressType->getId(),
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, $response->addresses);
+    }
+
+    public function testPostWithoutBankNameAndBic()
+    {
+        $addressType = $this->createAddressType('Private');
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Max',
+                'lastName' => 'Mustermann',
+                'formOfAddress' => 1,
+                'bankAccounts' => [
+                    [
+                        'iban' => 'DE89370400440532013000',
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, $response->bankAccounts);
+        $this->assertEquals('DE89370400440532013000', $response->bankAccounts[0]->iban);
+        $this->assertNull($response->bankAccounts[0]->bic);
+    }
+
     public function testPostEmptyLatitude()
     {
         $title = $this->createTitle('MSc');
@@ -504,15 +550,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -858,15 +897,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1067,15 +1099,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1204,15 +1229,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -1331,14 +1349,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => '',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                     ],
                 ],
                 'notes' => [
@@ -1361,7 +1373,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
-        $this->assertNotNull($response->addresses[0]->country->id);
+        $this->assertNotNull($response->addresses[0]->country);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1447,14 +1459,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => '',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                     ],
                 ],
                 'notes' => [
@@ -1479,7 +1485,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals($account->getId(), $response->account->id);
 
-        $this->assertEquals($country->getId(), $response->addresses[0]->country->id);
+        $this->assertEquals($country->getId(), $response->addresses[0]->country);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1728,15 +1734,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'note' => 'note',
                     ],
                 ],
@@ -1815,15 +1814,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'note' => 'note1',
                     ],
                 ],
@@ -2003,15 +1995,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -2025,15 +2010,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -2159,15 +2137,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -2181,15 +2152,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,
@@ -2203,15 +2167,8 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => [
-                            'id' => $country->getId(),
-                            'name' => 'Musterland',
-                            'code' => 'ML',
-                        ],
-                        'addressType' => [
-                            'id' => $addressType->getId(),
-                            'name' => 'Private',
-                        ],
+                        'country' => $country->getId(),
+                        'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
                         'deliveryAddress' => false,

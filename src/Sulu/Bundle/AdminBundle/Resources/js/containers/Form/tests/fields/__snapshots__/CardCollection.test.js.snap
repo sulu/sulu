@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a CardCollection 1`] = `
+Array [
+  <section
+    class="cards"
+  >
+    <div
+      class="card"
+    >
+      <section
+        class="card"
+      >
+        <div
+          class="icons"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen clickable"
+            role="button"
+            tabindex="0"
+          />
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        Max Mustermann
+      </section>
+    </div>
+    <div
+      class="card"
+    >
+      <section
+        class="card"
+      >
+        <div
+          class="icons"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen clickable"
+            role="button"
+            tabindex="0"
+          />
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        Erika Mustermann
+      </section>
+    </div>
+  </section>,
+  <div
+    class="addButtonContainer"
+  >
+    <button
+      class="button secondary"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_admin.add
+      </span>
+    </button>
+  </div>,
+]
+`;

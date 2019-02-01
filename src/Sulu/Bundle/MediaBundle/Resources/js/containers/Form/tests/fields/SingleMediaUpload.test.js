@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
-import {FormInspector, FormStore} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {observable} from 'mobx';
@@ -13,7 +13,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
     this.locale = observableOptions.locale;
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
 }));
 
@@ -27,7 +27,7 @@ jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
 
 test('Pass correct props', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -65,7 +65,7 @@ test('Pass correct props', () => {
 
 test('Pass correct skin to props', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -92,7 +92,7 @@ test('Pass correct skin to props', () => {
 
 test('Throw if emptyIcon is set but not a valid value', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -119,7 +119,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
 
 test('Throw if skin is set but not a valid value', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -146,7 +146,7 @@ test('Throw if skin is set but not a valid value', () => {
 
 test('Throw if image_size is set but not a valid value', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -173,7 +173,7 @@ test('Throw if image_size is set but not a valid value', () => {
 
 test('Throw if collectionId is not set', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -193,7 +193,7 @@ test('Throw if collectionId is not set', () => {
 
 test('Call onChange and onFinish when upload has completed', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -225,7 +225,7 @@ test('Call onChange and onFinish when upload has completed', () => {
 
 test('Create a MediaUploadStore when constructed', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )
@@ -250,7 +250,7 @@ test('Create a MediaUploadStore when constructed', () => {
 
 test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {}),
             'test'
         )
@@ -274,7 +274,7 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
 
 test('Create a MediaUploadStore when constructed with data', () => {
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test'
         )

@@ -4,7 +4,7 @@ import {translate} from '../../../utils/Translator';
 
 export default class SaveWithPublishingToolbarAction extends AbstractToolbarAction {
     getToolbarItemConfig() {
-        const {dirty, data, saving} = this.formStore;
+        const {dirty, data, saving} = this.resourceFormStore;
         return {
             type: 'dropdown',
             label: translate('sulu_admin.save'),

@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Iban should render 1`] = `
+<label
+  class="input default left"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-credit-card"
+      class="su-credit-card icon default"
+    />
+  </div>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Iban should render error 1`] = `
+<label
+  class="input default left error"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-credit-card"
+      class="su-credit-card icon default"
+    />
+  </div>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Iban should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-credit-card"
+      class="su-credit-card icon default"
+    />
+  </div>
+  <input
+    disabled=""
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Iban should render with placeholder 1`] = `
+<label
+  class="input default left"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-credit-card"
+      class="su-credit-card icon default"
+    />
+  </div>
+  <input
+    placeholder="My placeholder"
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Iban should render with value 1`] = `
+<label
+  class="input default left"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-credit-card"
+      class="su-credit-card icon default"
+    />
+  </div>
+  <input
+    type="text"
+    value="AT61 1904 3002 3457 3201"
+  />
+</label>
+`;

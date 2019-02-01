@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Bundle\ContactBundle\Entity\AddressType;
+use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -40,6 +42,41 @@ class AdminControllerTest extends SuluTestCase
         $em->persist($collectionType1);
         $em->persist($collectionType2);
         $em->flush();
+    }
+
+    public function testContactsConfig()
+    {
+        $em = $this->getEntityManager();
+
+        $addressType1 = new AddressType();
+        $addressType1->setName('work');
+
+        $addressType2 = new AddressType();
+        $addressType2->setName('private');
+
+        $country = new Country();
+        $country->setName('Austria');
+        $country->setCode('AT');
+
+        $em->persist($addressType1);
+        $em->persist($addressType2);
+        $em->persist($country);
+        $em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $contactConfig = $response->sulu_contact;
+
+        $this->assertEquals($addressType1->getId(), $contactConfig->addressTypes[0]->id);
+        $this->assertEquals('work', $contactConfig->addressTypes[0]->name);
+        $this->assertEquals($addressType2->getId(), $contactConfig->addressTypes[1]->id);
+        $this->assertEquals('private', $contactConfig->addressTypes[1]->name);
+        $this->assertEquals($country->getId(), $contactConfig->countries[0]->id);
+        $this->assertEquals('Austria', $contactConfig->countries[0]->name);
     }
 
     public function testContactsDatagridMetadataAction()

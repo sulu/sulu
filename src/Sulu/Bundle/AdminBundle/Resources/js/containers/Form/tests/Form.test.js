@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
 import ResourceStore from '../../../stores/ResourceStore';
-import FormStore from '../stores/FormStore';
+import ResourceFormStore from '../stores/ResourceFormStore';
 import metadataStore from '../stores/MetadataStore';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -23,13 +23,13 @@ jest.mock('../registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
     this.data = resourceStore.data;
     this.locale = resourceStore.locale;
     this.loading = resourceStore.loading;
-    this.validate = jest.fn();
+    this.validate = jest.fn().mockReturnValue(true);
     this.schema = {};
     this.set = jest.fn();
     this.change = jest.fn();
@@ -54,26 +54,58 @@ jest.mock('../stores/MetadataStore', () => ({
 
 test('Should render form using renderer', () => {
     const submitSpy = jest.fn();
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
 
     const form = render(<Form onSubmit={submitSpy} store={store} />);
     expect(form).toMatchSnapshot();
 });
 
 test('Should call onSubmit callback', () => {
+    const errorSpy = jest.fn();
     const submitSpy = jest.fn();
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+
+    form.instance().submit();
+
+    expect(errorSpy).not.toBeCalled();
+    expect(submitSpy).toBeCalled();
+});
+
+test('Should call onError callback', () => {
+    const errorSpy = jest.fn();
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    store.validate.mockReturnValue(false);
+    store.errors = {error1: {}};
+    metadataStore.getSchema.mockReturnValue({});
+
+    const form = mount(<Form onError={errorSpy} onSubmit={submitSpy} store={store} />);
+
+    form.instance().submit();
+
+    expect(errorSpy).toBeCalledWith(store.errors);
+    expect(submitSpy).not.toBeCalled();
+});
+
+test('Should work when errors occurs but no onError callback is given', () => {
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    store.validate.mockReturnValue(false);
+    store.errors = {error1: {}};
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
 
     form.instance().submit();
 
-    expect(submitSpy).toBeCalled();
+    expect(submitSpy).not.toBeCalled();
 });
 
 test('Should validate form when a field has finished being edited', () => {
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
@@ -87,7 +119,7 @@ test('Should validate form before calling finish handlers when a field has finis
     const handler1 = jest.fn(() => {
         expect(validateCalled).toEqual(true);
     });
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     metadataStore.getSchema.mockReturnValue({});
 
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
@@ -102,7 +134,7 @@ test('Call finish handlers with dataPath and schemaPath when a section field has
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     // $FlowFixMe
     store.schema = {
         highlight: {
@@ -127,7 +159,7 @@ test('Call finish handlers with dataPath and schemaPath when a field has finishe
     const handler1 = jest.fn();
     const handler2 = jest.fn();
 
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     // $FlowFixMe
     store.schema = {
         article: {
@@ -157,7 +189,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
         ],
     };
 
-    const store = new FormStore(resourceStore, 'snippet');
+    const store = new ResourceFormStore(resourceStore, 'snippet');
     // $FlowFixMe
     store.schema = {
         block: {
@@ -186,7 +218,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     // $FlowFixMe
     store.schema = {};
     store.data.title = 'Title';
@@ -204,7 +236,7 @@ test('Should pass formInspector, schema, data and showAllErrors flag to Renderer
 });
 
 test('Should pass showAllErrors flag to Renderer when form has been submitted', () => {
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={store} />);
 
     expect(form.find('Renderer').prop('showAllErrors')).toEqual(false);
@@ -215,7 +247,7 @@ test('Should pass showAllErrors flag to Renderer when form has been submitted', 
 
 test('Should change data on store when changed', () => {
     const submitSpy = jest.fn();
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
     form.find('Renderer').simulate('change', 'field', 'value');
@@ -224,7 +256,7 @@ test('Should change data on store when changed', () => {
 
 test('Should change data on store without sections', () => {
     const submitSpy = jest.fn();
-    const store = new FormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     // $FlowFixMe
     store.schema = {
         section1: {
@@ -262,7 +294,7 @@ test('Should change data on store without sections', () => {
 test('Should show a GhostDialog if the current locale is not translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(true);
@@ -271,7 +303,7 @@ test('Should show a GhostDialog if the current locale is not translated', () => 
 test('Should not show a GhostDialog if the current locale is translated', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
@@ -280,7 +312,7 @@ test('Should not show a GhostDialog if the current locale is translated', () => 
 test('Should show a GhostDialog after the locale has been switched to a non-translated one', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
@@ -294,7 +326,7 @@ test('Should show a GhostDialog after the locale has been switched to a non-tran
 test('Should not show a GhostDialog if the entity does not exist yet', () => {
     const resourceStore = new ResourceStore('snippet', undefined, {locale: observable.box('en')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog')).toHaveLength(0);
@@ -302,7 +334,7 @@ test('Should not show a GhostDialog if the entity does not exist yet', () => {
 
 test('Should not show a GhostDialog if the entity is not translatable', () => {
     const resourceStore = new ResourceStore('snippet', '1');
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog')).toHaveLength(0);
@@ -311,7 +343,7 @@ test('Should not show a GhostDialog if the entity is not translatable', () => {
 test('Should show a GhostDialog and copy the content if the confirm button is clicked', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(true);
@@ -324,7 +356,7 @@ test('Should show a GhostDialog and copy the content if the confirm button is cl
 test('Should show a GhostDialog and do nothing if the cancel button is clicked', () => {
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.find('GhostDialog').prop('open')).toEqual(true);
@@ -338,7 +370,7 @@ test('Should not show a GhostDialog if the resourceStore is currently loading', 
     const resourceStore = new ResourceStore('snippet', '1', {locale: observable.box('de')});
     resourceStore.data.availableLocales = ['en'];
     resourceStore.loading = true;
-    const formStore = new FormStore(resourceStore, 'snippet');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.instance().displayGhostDialog).toEqual(false);

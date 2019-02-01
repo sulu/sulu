@@ -21,7 +21,7 @@ class Country implements \JsonSerializable
 {
     /**
      * @var string
-     * @Groups({"fullAccount", "partialAccount"})
+     * @Groups({"frontend", "fullAccount", "partialAccount"})
      */
     private $name;
 
@@ -33,7 +33,7 @@ class Country implements \JsonSerializable
 
     /**
      * @var int
-     * @Groups({"fullAccount", "partialAccount"})
+     * @Groups({"frontend", "fullAccount", "partialAccount"})
      */
     private $id;
 

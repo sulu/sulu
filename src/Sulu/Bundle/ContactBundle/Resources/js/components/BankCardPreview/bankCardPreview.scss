@@ -1,0 +1,15 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$bankCardPreviewColor: $scorpion;
+$bankCardPreviewNameColor: $black;
+
+.bank-card-preview {
+    color: $bankCardPreviewColor;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.bank-name {
+    color: $bankCardPreviewNameColor;
+    margin-bottom: 20px;
+}

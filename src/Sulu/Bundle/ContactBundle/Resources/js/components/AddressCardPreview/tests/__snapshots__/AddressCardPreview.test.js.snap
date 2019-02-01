@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render AddressCardPreview with every available information 1`] = `
+<section
+  class="addressCardPreview"
+>
+  <div
+    class="title"
+  >
+    <strong>
+      Headquarter
+    </strong>
+  </div>
+  <div
+    class="flags"
+  >
+    Home・sulu_contact.primary_address・sulu_contact.billing_address・sulu_contact.delivery_address
+  </div>
+  Steinebach 13a
+  <br />
+  6850 Dornbirn
+  <br />
+  Vorarlberg
+  <br />
+  Austria
+</section>
+`;
+
+exports[`Render AddressCardPreview with minimal information 1`] = `
+<section
+  class="addressCardPreview"
+>
+  <div
+    class="title"
+  >
+    <strong>
+       
+    </strong>
+  </div>
+  <div
+    class="flags"
+  >
+    Home
+  </div>
+</section>
+`;

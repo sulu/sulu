@@ -1,0 +1,21 @@
+@import '../../containers/Application/colors.scss';
+
+$cardBackgroundColor: $white;
+$cardBorderColor: $silver;
+
+.card {
+    background-color: $cardBackgroundColor;
+    border: 1px solid $cardBorderColor;
+    border-radius: 3px;
+    padding: 30px;
+    width: 100%;
+}
+
+.icons {
+    font-size: 16px;
+    float: right;
+
+    & > * {
+        margin-left: 20px;
+    }
+}

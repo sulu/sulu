@@ -15,6 +15,7 @@ import Form from './Form';
 import Grid from './Grid';
 import Icon from './Icon';
 import InfiniteScroller from './InfiniteScroller';
+import Input from './Input';
 import Loader from './Loader';
 import Masonry from './Masonry';
 import Matrix from './Matrix';
@@ -47,6 +48,7 @@ export {
     Grid,
     Icon,
     InfiniteScroller,
+    Input,
     Loader,
     Matrix,
     Menu,

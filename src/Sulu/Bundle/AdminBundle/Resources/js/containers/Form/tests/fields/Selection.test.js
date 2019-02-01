@@ -9,7 +9,7 @@ import userStore from '../../../../stores/UserStore';
 import Datagrid from '../../../Datagrid';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
-import FormStore from '../../stores/FormStore';
+import ResourceFormStore from '../../stores/ResourceFormStore';
 
 jest.mock('../../../Datagrid', () => jest.fn(() => null));
 
@@ -35,7 +35,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.locale = formStore.locale;
 }));
-jest.mock('../../stores/FormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
     this.locale = resourceStore.locale;
@@ -71,7 +71,7 @@ test('Should pass props correctly to selection component', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -123,7 +123,7 @@ test('Should pass resourceKey as datagridKey to selection component if no datagr
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -161,7 +161,7 @@ test('Should pass locale from userStore to selection component if form has no lo
     };
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1),
             'pages'
         )
@@ -218,7 +218,7 @@ test('Should pass props with schema-options type correctly to selection componen
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -261,7 +261,7 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
         },
     };
 
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('pages', 4), 'pages'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages', 4), 'pages'));
 
     const selection = shallow(
         <Selection
@@ -286,7 +286,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
             },
         },
     };
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'pages'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
     const selection = shallow(
         <Selection
@@ -319,7 +319,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
             },
         },
     };
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'pages'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
     const selection = shallow(
         <Selection
@@ -338,7 +338,7 @@ test('Should call onChange and onFinish callback when selection overlay is confi
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'pages'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
 
     expect(() => shallow(
         <Selection
@@ -350,7 +350,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
 });
 
 test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
         default_type: 'datagrid_overlay',
         resource_key: 'test',
@@ -369,7 +369,7 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
 });
 
 test('Should call the disposer for datagrid selections if unmounted', () => {
-    const formInspector = new FormInspector(new FormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
         default_type: 'datagrid',
         resource_key: 'test',
@@ -413,7 +413,7 @@ test('Should pass props correctly to datagrid component', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -455,7 +455,7 @@ test('Should pass resourceKey as datagridKey to datagrid component if no datagri
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -488,7 +488,7 @@ test('Should pass locale from userStore to datagridStore if form has no locale',
     };
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1),
             'pages'
         )
@@ -526,7 +526,7 @@ test('Should call onChange and onFinish prop when datagrid selection changes', (
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -566,7 +566,7 @@ test('Should not call onChange and onFinish prop while datagrid is still loading
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -607,7 +607,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -653,7 +653,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
     };
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1),
             'pages'
         )
@@ -700,7 +700,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -757,7 +757,7 @@ test('Throw an error if a none string was passed to schema-options', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -804,7 +804,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )
@@ -843,7 +843,7 @@ test('Should pass allowAdd prop to MultiAutoComplete component', () => {
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
-        new FormStore(
+        new ResourceFormStore(
             new ResourceStore('pages', 1, {locale}),
             'pages'
         )

@@ -69,7 +69,7 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () =>
     })
 );
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/FormStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
 
 let collectionDatagridStoreMock: DatagridStore;
 let mediaDatagridStoreMock: DatagridStore;

@@ -1,6 +1,6 @@
 // @flow
 import {mount} from 'enzyme';
-import {FormStore} from 'sulu-admin-bundle/containers';
+import {ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import Form from 'sulu-admin-bundle/views/Form/Form';
@@ -17,7 +17,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers', () => ({
-    FormStore: class {
+    ResourceFormStore: class {
         resourceStore;
         options = {};
 
@@ -58,7 +58,7 @@ jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
 
 function createEditToolbarAction(locales) {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore, 'test');
+    const formStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
@@ -72,9 +72,9 @@ function createEditToolbarAction(locales) {
 
 test('Return enabled item config', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 5;
-    editToolbarAction.formStore.resourceStore.data.published = true;
-    editToolbarAction.formStore.resourceStore.data.publishedState = false;
+    editToolbarAction.resourceFormStore.resourceStore.id = 5;
+    editToolbarAction.resourceFormStore.resourceStore.data.published = true;
+    editToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
 
     expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-pen',
@@ -95,9 +95,9 @@ test('Return enabled item config', () => {
 
 test('Return disabled delete draft item when page is not published', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 5;
-    editToolbarAction.formStore.resourceStore.data.published = false;
-    editToolbarAction.formStore.resourceStore.data.publishedState = false;
+    editToolbarAction.resourceFormStore.resourceStore.id = 5;
+    editToolbarAction.resourceFormStore.resourceStore.data.published = false;
+    editToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
 
     expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-pen',
@@ -118,9 +118,9 @@ test('Return disabled delete draft item when page is not published', () => {
 
 test('Return disabled delete draft item when page has no draft', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 5;
-    editToolbarAction.formStore.resourceStore.data.published = true;
-    editToolbarAction.formStore.resourceStore.data.publishedState = true;
+    editToolbarAction.resourceFormStore.resourceStore.id = 5;
+    editToolbarAction.resourceFormStore.resourceStore.data.published = true;
+    editToolbarAction.resourceFormStore.resourceStore.data.publishedState = true;
 
     expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-pen',
@@ -141,7 +141,7 @@ test('Return disabled delete draft item when page has no draft', () => {
 
 test('Return disabled item config', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = undefined;
+    editToolbarAction.resourceFormStore.resourceStore.id = undefined;
 
     expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-pen',
@@ -162,45 +162,45 @@ test('Return disabled item config', () => {
 
 test('Return no dialog if no id is set', () => {
     const editToolbarAction = createEditToolbarAction(['en']);
-    editToolbarAction.formStore.resourceStore.id = undefined;
+    editToolbarAction.resourceFormStore.resourceStore.id = undefined;
 
     expect(editToolbarAction.getNode()).toEqual(null);
 });
 
 test('Throw error if no locale is given', () => {
     const editToolbarAction = createEditToolbarAction(['en']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale = undefined;
+    editToolbarAction.resourceFormStore.resourceStore.locale = undefined;
 
     expect(() => editToolbarAction.getNode()).toThrow('locale');
 });
 
 test('Throw error if no available locales are given', () => {
     const editToolbarAction = createEditToolbarAction();
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
 
     expect(() => editToolbarAction.getNode()).toThrow('locales');
 });
 
 test('Throw error if no webspace is given', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
 
     expect(() => editToolbarAction.getNode()).toThrow('webspace');
 });
 
 test('Pass correct props to CopyLocaleDialog', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
-    editToolbarAction.formStore.resourceStore.data.availableLocales = ['en'];
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.data.availableLocales = ['en'];
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
-    editToolbarAction.formStore.options.webspace = 'sulu_io';
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[0].onClick;
@@ -221,10 +221,10 @@ test('Pass correct props to CopyLocaleDialog', () => {
 
 test('Close dialog when onClose from CopyLocaleDialog is called', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
-    editToolbarAction.formStore.options.webspace = 'sulu_io';
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[0].onClick;
@@ -253,10 +253,10 @@ test('Close dialog when onClose from CopyLocaleDialog is called', () => {
 
 test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
-    editToolbarAction.formStore.options.webspace = 'sulu_io';
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[0].onClick;
@@ -285,10 +285,10 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
 
 test('Close dialog when onClose from delete draft dialog is called', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
-    editToolbarAction.formStore.options.webspace = 'sulu_io';
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[1].onClick;
@@ -323,10 +323,10 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     ResourceRequester.postWithId.mockReturnValue(deleteDraftPromise);
 
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
-    editToolbarAction.formStore.resourceStore.id = 3;
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
-    editToolbarAction.formStore.resourceStore.locale.get.mockReturnValue('en');
-    editToolbarAction.formStore.options.webspace = 'sulu_io';
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[1].onClick;
@@ -345,13 +345,13 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
         'pages',
         3,
         undefined,
-        {action: 'remove-draft', locale: editToolbarAction.formStore.locale, webspace: 'sulu_io'}
+        {action: 'remove-draft', locale: editToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
     );
 
     return deleteDraftPromise.then(() => {
         element = mount(editToolbarAction.getNode()).at(1);
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(editToolbarAction.formStore.setMultiple).toBeCalledWith(data);
-        expect(editToolbarAction.formStore.dirty).toEqual(false);
+        expect(editToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
+        expect(editToolbarAction.resourceFormStore.dirty).toEqual(false);
     });
 });

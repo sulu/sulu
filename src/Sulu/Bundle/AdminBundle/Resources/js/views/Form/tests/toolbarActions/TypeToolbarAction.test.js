@@ -1,6 +1,6 @@
 // @flow
 import TypeToolbarAction from '../../toolbarActions/TypeToolbarAction';
-import {FormStore} from '../../../../containers/Form';
+import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
@@ -12,7 +12,7 @@ jest.mock('../../../../utils/Translator', () => ({
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {}));
 
 jest.mock('../../../../containers/Form', () => ({
-    FormStore: class {
+    ResourceFormStore: class {
         resourceStore;
         types = {};
         typesLoading = true;
@@ -33,7 +33,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 
 function createTypeToolbarAction() {
     const resourceStore = new ResourceStore('test');
-    const formStore = new FormStore(resourceStore, 'test');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
         locales: [],
@@ -42,14 +42,14 @@ function createTypeToolbarAction() {
         router,
     });
 
-    return new TypeToolbarAction(formStore, form, router);
+    return new TypeToolbarAction(resourceFormStore, form, router);
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {
     const typeToolbarAction = createTypeToolbarAction();
-    typeToolbarAction.formStore.typesLoading = false;
-    typeToolbarAction.formStore.type = 'default';
-    typeToolbarAction.formStore.types = {
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
             title: 'Default',
@@ -80,9 +80,9 @@ test('Return item config with correct disabled, loading, options, icon, type and
 
 test('Return item config with loading select', () => {
     const typeToolbarAction = createTypeToolbarAction();
-    typeToolbarAction.formStore.typesLoading = true;
-    typeToolbarAction.formStore.type = 'homepage';
-    typeToolbarAction.formStore.types = {};
+    typeToolbarAction.resourceFormStore.typesLoading = true;
+    typeToolbarAction.resourceFormStore.type = 'homepage';
+    typeToolbarAction.resourceFormStore.types = {};
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         loading: true,
@@ -93,9 +93,9 @@ test('Return item config with loading select', () => {
 
 test('Change the type of the FormStore when another type is selcted', () => {
     const typeToolbarAction = createTypeToolbarAction();
-    typeToolbarAction.formStore.typesLoading = false;
-    typeToolbarAction.formStore.type = 'default';
-    typeToolbarAction.formStore.types = {
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
             title: 'Default',
@@ -116,13 +116,13 @@ test('Change the type of the FormStore when another type is selcted', () => {
 
     toolbarItemConfig.onChange('homepage');
 
-    expect(typeToolbarAction.formStore.changeType).toBeCalledWith('homepage');
+    expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
 });
 
 test('Throw error if no types are available in FormStore', () => {
     const typeToolbarAction = createTypeToolbarAction();
-    typeToolbarAction.formStore.typesLoading = false;
-    typeToolbarAction.formStore.types = {};
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.types = {};
 
     expect(() => typeToolbarAction.getToolbarItemConfig()).toThrow(/actually supporting types/);
 });

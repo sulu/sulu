@@ -35,7 +35,7 @@ class Initializer {
     @observable initialized: boolean = false;
     @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
-    updateConfigHooks: { [string]: Array<UpdateConfigHook> } = {};
+    updateConfigHooks: {[string]: Array<UpdateConfigHook>} = {};
 
     @action clear() {
         this.initialized = false;

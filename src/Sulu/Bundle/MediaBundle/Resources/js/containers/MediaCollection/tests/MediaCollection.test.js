@@ -95,7 +95,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
         ).default,
         Form: require('sulu-admin-bundle/containers/Form').default,
-        FormStore: jest.fn(function(resourceStore) {
+        ResourceFormStore: jest.fn(function(resourceStore) {
             switch (resourceStore.resourceKey) {
                 case 'collections':
                     this.schema = {
@@ -113,6 +113,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
 
             this.data = resourceStore.data;
             this.isFieldModified = jest.fn();
+            this.validate = jest.fn().mockReturnValue(true);
         }),
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
