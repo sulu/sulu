@@ -1653,7 +1653,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
             throw new EntityIdAlreadySetException($entityName, $data['id']);
         } else {
             $entity = new BankAccount();
-            $entity->setBic($data['bic']);
+            if (isset($data['bic'])) {
+                $entity->setBic($data['bic']);
+            }
             $entity->setIban($data['iban']);
             $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
             if (isset($data['bankName'])) {
@@ -1679,7 +1681,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         $success = true;
 
-        $entity->setBic($data['bic']);
+        if (isset($data['bic'])) {
+            $entity->setBic($data['bic']);
+        }
         $entity->setIban($data['iban']);
         $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
         if (isset($data['bankName'])) {

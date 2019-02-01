@@ -495,7 +495,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(1, $response->addresses);
     }
 
-    public function testPostWithoutBankName()
+    public function testPostWithoutBankNameAndBic()
     {
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
@@ -512,7 +512,6 @@ class ContactControllerTest extends SuluTestCase
                 'bankAccounts' => [
                     [
                         'iban' => 'DE89370400440532013000',
-                        'bic' => 'DABAIE2D',
                     ],
                 ],
             ]
@@ -524,7 +523,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertCount(1, $response->bankAccounts);
         $this->assertEquals('DE89370400440532013000', $response->bankAccounts[0]->iban);
-        $this->assertEquals('DABAIE2D', $response->bankAccounts[0]->bic);
+        $this->assertNull($response->bankAccounts[0]->bic);
     }
 
     public function testPostEmptyLatitude()
