@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;

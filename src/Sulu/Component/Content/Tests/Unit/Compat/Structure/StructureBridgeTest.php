@@ -13,8 +13,8 @@ namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
