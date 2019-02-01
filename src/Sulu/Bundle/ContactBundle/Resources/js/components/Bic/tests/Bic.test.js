@@ -50,22 +50,29 @@ test('Bic should trigger callbacks correctly', () => {
     bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
     bic.find('Input').instance().props.onBlur();
     bic.update();
-    expect(onChange).toBeCalledWith(undefined);
+    expect(onChange).toHaveBeenLastCalledWith(undefined);
     expect(onBlur).toBeCalled();
 
     // provide one more invalid value
-    bic.find('Input').instance().props.onChange('abc', {target: {value: 'abc'}});
+    bic.find('Input').instance().props.onChange('BBBBCCLLX', {target: {value: 'BBBCCLLX'}});
     bic.find('Input').instance().props.onBlur();
     bic.update();
-    expect(onChange).toBeCalledWith(undefined);
+    expect(onChange).toHaveBeenLastCalledWith(undefined);
     expect(onBlur).toBeCalled();
 
     // now add a valid value
     bic.find('Input').instance().props.onChange('BBBBCCLLXXX', {target: {value: 'BBBBCCLLXXX'}});
     bic.find('Input').instance().props.onBlur();
     bic.update();
-    expect(onChange).toBeCalledWith('BBBBCCLLXXX');
+    expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLXXX');
     expect(onBlur).toBeCalled();
 
-    expect(onBlur).toHaveBeenCalledTimes(3);
+    // provide one more valid value
+    bic.find('Input').instance().props.onChange('BBBBCCLL', {target: {value: 'BBBBCCLL'}});
+    bic.find('Input').instance().props.onBlur();
+    bic.update();
+    expect(onChange).toHaveBeenLastCalledWith('BBBBCCLL');
+    expect(onBlur).toBeCalled();
+
+    expect(onBlur).toHaveBeenCalledTimes(4);
 });

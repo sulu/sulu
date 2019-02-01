@@ -39,7 +39,7 @@ export default class Bic extends React.Component<Props> {
             return true;
         }
 
-        return this.value.match(/[A-Z]{6}[A-Z0-9]{2}[A-Z0-9]{3}/) !== null;
+        return this.value.match(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/) !== null;
     }
 
     componentDidMount() {
