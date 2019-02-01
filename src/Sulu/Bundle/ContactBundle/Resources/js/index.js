@@ -129,9 +129,6 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object) => {
                                 country: {
                                     label: translate('sulu_contact.country'),
                                     options: {
-                                        default_value: {
-                                            value: config.countries[0].id,
-                                        },
                                         values: {
                                             value: config.countries.map((country) => ({
                                                 name: country.id,
