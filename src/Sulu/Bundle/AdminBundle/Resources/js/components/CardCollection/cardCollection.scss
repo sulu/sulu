@@ -10,12 +10,8 @@ $cardCollectionPadding: 20px;
     display: flex;
     align-items: stretch;
     flex-shrink: 0;
-    width: calc(100% / 3);
+    width: 50%;
     padding: 0 $cardCollectionPadding $cardCollectionPadding 0;
-
-    @media (max-width: 1280px) {
-        width: 50%;
-    }
 
     @media (max-width: 1024px) {
         float: none;
