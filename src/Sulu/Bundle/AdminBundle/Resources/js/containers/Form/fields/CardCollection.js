@@ -149,7 +149,7 @@ export default class CardCollection extends React.Component<FieldTypeProps<Array
                     onClose={this.handleCloseOverlay}
                     onConfirm={this.handleConfirm}
                     open={!!this.formStore}
-                    size="large"
+                    size="small"
                     title={this.overlayIndex !== null
                         ? translate(editOverlayTitle)
                         : translate(addOverlayTitle)
