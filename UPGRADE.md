@@ -263,7 +263,7 @@ Of course the `resourceKey` can still often be passed from a parent route and th
 definition, which is often the case when making use of the `sulu_admin.resource_tabs` view.
 
 The frontend routes for a datagrid defined in the `Admin` classes now need the `datagridKey` in addition to the 
-`resourceKey`. This allows to have the same endpoint for multiple datagrids, and solves a bunch of issues we were having.
+`resourceKey`. This allows to have the same endpoint for multiple datagrids.
 
 ```php
 return [
@@ -294,17 +294,7 @@ exists. In case the files should be stored in a different folder it can still be
 sulu_admin:
     forms:
         directories:
-            - "%kernel.project_dir%/config/forms"
-```
-
-The datagrids will be handled equally and the configuration inside `sulu_admin.resources.categories.datagird` will be
-replaced by:
-
-```yml
-sulu_admin:
-    datagrids:
-        directories:
-            - "%kernel.project_dir%/config/datagrids"
+            - "%kernel.project_dir%/config/my-forms"
 ```
 
 Also the representations in the cache have changed, so the cache should be cleared:
