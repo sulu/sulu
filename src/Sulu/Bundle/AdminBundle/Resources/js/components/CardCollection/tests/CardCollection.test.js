@@ -3,6 +3,10 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import CardCollection from '../CardCollection';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Render empty CardCollection', () => {
     expect(render(<CardCollection />)).toMatchSnapshot();
 });
