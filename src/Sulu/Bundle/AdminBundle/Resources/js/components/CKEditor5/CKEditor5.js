@@ -112,6 +112,12 @@ export default class CKEditor5 extends React.Component<Props> {
                             title: translate('sulu_admin.paragraph'),
                             class: 'ck-heading_paragraph',
                         },
+                        formats.includes('h1') ? {
+                            model: 'heading1',
+                            view: 'h1',
+                            title: translate('sulu_admin.heading1'),
+                            class: 'ck-heading_heading1',
+                        } : undefined,
                         formats.includes('h2') ? {
                             model: 'heading2',
                             view: 'h2',

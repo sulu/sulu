@@ -93,7 +93,7 @@ test('Create a CKEditor5 instance with given formats', () => {
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
-    mount(<CKEditor5 formats={['h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    mount(<CKEditor5 formats={['h1', 'h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
     expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
         heading: {
@@ -102,6 +102,12 @@ test('Create a CKEditor5 instance with given formats', () => {
                     class: 'ck-heading_paragraph',
                     model: 'paragraph',
                     title: 'sulu_admin.paragraph',
+                },
+                {
+                    class: 'ck-heading_heading1',
+                    model: 'heading1',
+                    title: 'sulu_admin.heading1',
+                    view: 'h1',
                 },
                 {
                     class: 'ck-heading_heading2',
