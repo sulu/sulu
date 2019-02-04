@@ -15,6 +15,7 @@ test('Pass props correctly to TextEditor', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    const options = {};
 
     const textEditor = shallow(
         <TextEditor
@@ -23,6 +24,7 @@ test('Pass props correctly to TextEditor', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
+            schemaOptions={options}
             value="xyz"
         />
     );
@@ -31,6 +33,7 @@ test('Pass props correctly to TextEditor', () => {
         adapter: 'ckeditor5',
         onBlur: finishSpy,
         onChange: changeSpy,
+        options,
         value: 'xyz',
         disabled: true,
     }));

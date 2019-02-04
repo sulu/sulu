@@ -8,6 +8,10 @@ jest.mock('@ckeditor/ckeditor5-editor-classic/src/classiceditor', () => ({
     create: jest.fn(),
 }));
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Create a CKEditor5 instance', () => {
     const editor = {
         editing: {
@@ -28,7 +32,92 @@ test('Create a CKEditor5 instance', () => {
 
     mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
-    expect(ClassicEditor.create).toBeCalled();
+    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+        heading: {
+            options: [
+                {
+                    class: 'ck-heading_paragraph',
+                    model: 'paragraph',
+                    title: 'sulu_admin.paragraph',
+                },
+                {
+                    class: 'ck-heading_heading2',
+                    model: 'heading2',
+                    title: 'sulu_admin.heading2',
+                    view: 'h2',
+                },
+                {
+                    class: 'ck-heading_heading3',
+                    model: 'heading3',
+                    title: 'sulu_admin.heading3',
+                    view: 'h3',
+                },
+                {
+                    class: 'ck-heading_heading4',
+                    model: 'heading4',
+                    title: 'sulu_admin.heading4',
+                    view: 'h4',
+                },
+                {
+                    class: 'ck-heading_heading5',
+                    model: 'heading5',
+                    title: 'sulu_admin.heading5',
+                    view: 'h5',
+                },
+                {
+                    class: 'ck-heading_heading6',
+                    model: 'heading6',
+                    title: 'sulu_admin.heading6',
+                    view: 'h6',
+                },
+            ],
+        },
+    }));
+});
+
+test('Create a CKEditor5 instance with given formats', () => {
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        setData: jest.fn(),
+    };
+    ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
+
+    mount(<CKEditor5 formats={['h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+        heading: {
+            options: [
+                {
+                    class: 'ck-heading_paragraph',
+                    model: 'paragraph',
+                    title: 'sulu_admin.paragraph',
+                },
+                {
+                    class: 'ck-heading_heading2',
+                    model: 'heading2',
+                    title: 'sulu_admin.heading2',
+                    view: 'h2',
+                },
+                {
+                    class: 'ck-heading_heading3',
+                    model: 'heading3',
+                    title: 'sulu_admin.heading3',
+                    view: 'h3',
+                },
+            ],
+        },
+    }));
 });
 
 test('Set data on editor when value is updated', () => {

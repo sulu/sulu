@@ -49,6 +49,8 @@ $textEditorPanelBackground: $white;
 
         /* list */
         --ck-color-list-button-hover-background: $textEditorWhiteHover;
+        --ck-color-list-button-on-background: $textEditorAccentColor;
+        --ck-color-list-button-on-background-focus: $textEditorAccentColor;
 
         /* toggle button */
         --ck-color-switch-button-off-background: $textEditorBackgroundColor;
@@ -70,6 +72,10 @@ $textEditorPanelBackground: $white;
             border-radius: $textEditorBorderRadius !important;
             padding: 5px 10px;
         }
+
+        .ck.ck-heading-dropdown .ck.ck-dropdown__button {
+            border: 1px solid $textEditorDarkBorderColor;
+        }
     }
 
     .ck.ck-editor {
@@ -81,6 +87,8 @@ $textEditorPanelBackground: $white;
         .ck.ck-content {
             border-radius: $textEditorBorderRadius !important;
             border-color: $textEditorBackgroundColor !important;
+            line-height: 20px;
+            min-height: 100px;
         }
 
         .ck-widget.table {

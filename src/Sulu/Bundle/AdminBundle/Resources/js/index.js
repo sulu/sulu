@@ -16,7 +16,7 @@ import {bundleReady, Config, resourceEndpointRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
 import Datagrid from './views/Datagrid';
-import CKEditor5 from './components/CKEditor5';
+import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {
     BoolFieldTransformer,
     BytesFieldTransformer,

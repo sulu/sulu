@@ -95,5 +95,11 @@
     "sulu_admin.settings": "Einstellungen",
     "sulu_admin.move_selected": "Ausgewählte verschieben",
     "sulu_admin.details": "Details",
-    "sulu_admin.edit_entries": "Einträge bearbeiten"
+    "sulu_admin.edit_entries": "Einträge bearbeiten",
+    "sulu_admin.paragraph": "Absatz",
+    "sulu_admin.heading2": "Überschrift 2",
+    "sulu_admin.heading3": "Überschrift 3",
+    "sulu_admin.heading4": "Überschrift 4",
+    "sulu_admin.heading5": "Überschrift 5",
+    "sulu_admin.heading6": "Überschrift 6"
 }

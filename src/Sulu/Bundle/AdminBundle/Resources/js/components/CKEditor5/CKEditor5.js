@@ -6,6 +6,7 @@ import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
@@ -13,10 +14,16 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+import {translate} from '../../utils/Translator';
 import './ckeditor5.scss';
-import type {TextEditorProps} from '../../containers/TextEditor/types';
 
-type Props = TextEditorProps;
+type Props = {|
+    disabled: boolean,
+    formats: Array<string>,
+    onBlur: () => void,
+    onChange: (value: ?string) => void,
+    value: ?string,
+|};
 
 /**
  * React component that renders a classic ck-editor.
@@ -30,6 +37,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
     static defaultProps = {
         disabled: false,
+        formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
         value: '',
     };
 
@@ -62,12 +70,15 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentDidMount() {
+        const {formats} = this.props;
+
         ClassicEditor
             .create(this.containerRef, {
                 plugins: [
                     AlignmentPlugin,
                     BoldPlugin,
                     EssentialsPlugin,
+                    HeadingPlugin,
                     ItalicPlugin,
                     ListPlugin,
                     ParagraphPlugin,
@@ -77,6 +88,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     TableToolbarPlugin,
                 ],
                 toolbar: [
+                    'heading',
+                    '|',
                     'bold',
                     'italic',
                     'underline',
@@ -92,6 +105,45 @@ export default class CKEditor5 extends React.Component<Props> {
                     '|',
                     'insertTable',
                 ],
+                heading: {
+                    options: [
+                        {
+                            model: 'paragraph',
+                            title: translate('sulu_admin.paragraph'),
+                            class: 'ck-heading_paragraph',
+                        },
+                        formats.includes('h2') ? {
+                            model: 'heading2',
+                            view: 'h2',
+                            title: translate('sulu_admin.heading2'),
+                            class: 'ck-heading_heading2',
+                        } : undefined,
+                        formats.includes('h3') ? {
+                            model: 'heading3',
+                            view: 'h3',
+                            title: translate('sulu_admin.heading3'),
+                            class: 'ck-heading_heading3',
+                        } : undefined,
+                        formats.includes('h4') ? {
+                            model: 'heading4',
+                            view: 'h4',
+                            title: translate('sulu_admin.heading4'),
+                            class: 'ck-heading_heading4',
+                        } : undefined,
+                        formats.includes('h5') ? {
+                            model: 'heading5',
+                            view: 'h5',
+                            title: translate('sulu_admin.heading5'),
+                            class: 'ck-heading_heading5',
+                        } : undefined,
+                        formats.includes('h6') ? {
+                            model: 'heading6',
+                            view: 'h6',
+                            title: translate('sulu_admin.heading6'),
+                            class: 'ck-heading_heading6',
+                        } : undefined,
+                    ].filter((entry) => entry !== undefined),
+                },
                 table: {
                     contentToolbar: [
                         'tableColumn',
