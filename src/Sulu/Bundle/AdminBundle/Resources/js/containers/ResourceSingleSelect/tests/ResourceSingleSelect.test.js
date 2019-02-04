@@ -201,6 +201,23 @@ test('Trigger the change callback when the selection changes', () => {
     expect(changeSpy).toHaveBeenCalledWith(2);
 });
 
+test('Trigger the change callback with undefined when the reset action is clicked', () => {
+    const changeSpy = jest.fn();
+
+    const resourceSingleSelect = shallow(
+        <ResourceSingleSelect
+            displayProperty="name"
+            idProperty="id"
+            onChange={changeSpy}
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    resourceSingleSelect.find('Action[children="sulu_admin.please_choose"]').prop('onClick')();
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
+});
+
 test('Updated data in EditOverlay should disappear when overlay is closed', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
@@ -225,7 +242,7 @@ test('Updated data in EditOverlay should disappear when overlay is closed', () =
     );
 
     resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.find('Action').prop('onClick')();
+    resourceSingleSelect.find('Action[children="sulu_admin.edit"]').prop('onClick')();
 
     resourceSingleSelect.update();
     resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');
@@ -262,7 +279,7 @@ test('Updated data in EditOverlay should be displayed in Select when overlay is 
     );
 
     resourceSingleSelect.find('DisplayValue').simulate('click');
-    resourceSingleSelect.find('Action').prop('onClick')();
+    resourceSingleSelect.find('Action[children="sulu_admin.edit"]').prop('onClick')();
 
     resourceSingleSelect.update();
     resourceSingleSelect.find('EditLine Input').at(0).prop('onChange')('Test1 Update');

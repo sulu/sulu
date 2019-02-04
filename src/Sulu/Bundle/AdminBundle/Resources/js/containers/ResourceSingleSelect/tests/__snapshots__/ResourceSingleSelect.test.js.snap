@@ -146,6 +146,13 @@ exports[`Render with data 2`] = `
 >
   <li>
     <button
+      class="action"
+    >
+      sulu_admin.please_choose
+    </button>
+  </li>
+  <li>
+    <button
       class="option icon"
       style="min-width: 10px;"
     >
@@ -209,6 +216,13 @@ exports[`Render with data with editable option 2`] = `
   class="menu"
   style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
 >
+  <li>
+    <button
+      class="action"
+    >
+      sulu_admin.please_choose
+    </button>
+  </li>
   <li>
     <button
       class="option icon"

@@ -15,7 +15,7 @@ type Props<T> = {|
     displayProperty: string,
     editable: boolean,
     idProperty: string,
-    onChange: (value: T) => void,
+    onChange: (value: ?T) => void,
     overlayTitle?: string,
     resourceKey: string,
     value: ?T,
@@ -50,6 +50,12 @@ export default class ResourceSingleSelect<T: string | number> extends React.Comp
         this.resourceListStore = new ResourceListStore(resourceKey, apiOptions, idProperty);
     }
 
+    handleReset = () => {
+        const {onChange} = this.props;
+
+        onChange(undefined);
+    };
+
     @action handleEdit = () => {
         this.showEditOverlay = true;
     };
@@ -68,6 +74,9 @@ export default class ResourceSingleSelect<T: string | number> extends React.Comp
         return (
             <Fragment>
                 <SingleSelect disabled={disabled} onChange={onChange} value={value}>
+                    <SingleSelect.Action onClick={this.handleReset}>
+                        {translate('sulu_admin.please_choose')}
+                    </SingleSelect.Action>
                     {this.data.map((object, index) => ((
                         <SingleSelect.Option key={index} value={object[idProperty]}>
                             {object[displayProperty]}
