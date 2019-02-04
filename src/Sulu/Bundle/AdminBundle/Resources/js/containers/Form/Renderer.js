@@ -3,10 +3,9 @@ import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Form from '../../components/Form';
-import type {ErrorCollection} from '../../types';
 import Field from './Field';
 import FormInspector from './FormInspector';
-import type {Schema, SchemaEntry} from './types';
+import type {ErrorCollection, Schema, SchemaEntry} from './types';
 
 type Props = {|
     data: Object,

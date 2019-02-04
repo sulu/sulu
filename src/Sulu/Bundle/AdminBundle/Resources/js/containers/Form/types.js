@@ -1,6 +1,7 @@
 // @flow
 import type {IObservableValue} from 'mobx';
 import type {Size} from '../../components/Grid';
+import FormInspector from './FormInspector';
 
 export type SchemaType = {
     key: string,
@@ -30,12 +31,32 @@ export type Type = BaseType & {
 
 export type Types = {[key: string]: Type};
 
+export type PropertyError = {
+    keyword: string,
+    parameters: {[key: string]: mixed},
+};
+
+export type BlockError = Array<?{[key: string]: Error}>;
+
+export type Error = BlockError | PropertyError;
+
+export type ErrorCollection = {[key: string]: Error};
+
+export type SchemaOption = {
+    name?: string | number,
+    infoText?: string,
+    title?: string,
+    value?: ?string | number | boolean | Array<SchemaOption>,
+};
+
+export type SchemaOptions = {[key: string]: SchemaOption};
+
 type BaseSchemaEntry = {
     description?: string,
     label?: string,
     maxOccurs?: number,
     minOccurs?: number,
-    options?: Object,
+    options?: SchemaOptions,
     required?: boolean,
     size?: Size,
     spaceAfter?: Size,
@@ -71,7 +92,7 @@ export interface FormStoreInterface {
     +loading: boolean,
     +locale: ?IObservableValue<string>,
     dirty: boolean,
-    options: Object,
+    options: SchemaOptions,
     errors: Object,
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
@@ -83,3 +104,21 @@ export interface FormStoreInterface {
     getSchemaEntryByPath(schemaPath: string): SchemaEntry,
     getValuesByTag(tagName: string): Array<mixed>,
 }
+
+export type FieldTypeProps<T> = {|
+    dataPath: string,
+    disabled: ?boolean,
+    error: ?Error | ErrorCollection,
+    fieldTypeOptions: Object,
+    formInspector: FormInspector,
+    label: string,
+    maxOccurs: ?number,
+    minOccurs: ?number,
+    onChange: (value: T) => void,
+    onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
+    schemaOptions?: SchemaOptions,
+    schemaPath: string,
+    showAllErrors: boolean,
+    types: ?Types,
+    value: ?T,
+|};

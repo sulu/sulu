@@ -3,7 +3,7 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import NumberComponent from '../../../components/Number';
-import type {FieldTypeProps, SchemaOptions} from '../../../types';
+import type {FieldTypeProps, SchemaOptions} from '../types';
 
 @observer
 export default class Number extends React.Component<FieldTypeProps<?number>> {
