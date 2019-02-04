@@ -4,10 +4,7 @@ security:
         allow_if_all_abstain: true
 
     encoders:
-        Sulu\Bundle\SecurityBundle\Entity\User:
-            algorithm: sha512
-            iterations: 5000
-            encode_as_base64: false
+        Sulu\Bundle\SecurityBundle\Entity\User: bcrypt
 
     providers:
         sulu:
