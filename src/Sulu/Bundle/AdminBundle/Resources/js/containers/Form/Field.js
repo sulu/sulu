@@ -4,12 +4,11 @@ import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
 import {translate} from '../../utils';
-import type {Error, ErrorCollection} from '../../types';
 import FieldComponent from '../../components/Form/Field';
 import fieldRegistry from './registries/FieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
-import type {SchemaEntry} from './types';
+import type {Error, ErrorCollection, SchemaEntry} from './types';
 
 type Props = {|
     dataPath: string,

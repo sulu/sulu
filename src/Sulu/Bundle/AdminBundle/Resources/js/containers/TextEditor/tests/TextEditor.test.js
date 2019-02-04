@@ -12,7 +12,7 @@ test('Render the TextEditor', () => {
     textEditorRegistry.get.mockReturnValue(() => (<textarea />));
 
     expect(
-        render(<TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />)
+        render(<TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} options={{}} value={undefined} />)
     ).toMatchSnapshot();
 });
 
@@ -25,7 +25,14 @@ test('Pass correct props to the given adapter', () => {
     textEditorRegistry.get.mockReturnValue(TestAdapter);
 
     const textEditor = mount(
-        <TextEditor adapter="test" disabled={true} onBlur={jest.fn()} onChange={jest.fn()} value="testValue" />
+        <TextEditor
+            adapter="test"
+            disabled={true}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            options={{}}
+            value="testValue"
+        />
     );
 
     expect(textEditor.find('TestAdapter').prop('value')).toEqual('testValue');
@@ -38,6 +45,8 @@ test('Throw an exception if a not existing adapter is used', () => {
     });
 
     expect(
-        () => shallow(<TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />)
+        () => shallow(
+            <TextEditor adapter="test" onBlur={jest.fn()} onChange={jest.fn()} options={{}} value={undefined} />
+        )
     ).toThrow(/test/);
 });

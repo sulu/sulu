@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ErrorCollection} from '../../types';
+import type {ErrorCollection} from '../Form/types';
 import {FormInspector, Renderer} from '../Form';
 import type {Schema} from '../Form';
 

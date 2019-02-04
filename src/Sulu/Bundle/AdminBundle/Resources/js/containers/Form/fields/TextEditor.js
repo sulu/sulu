@@ -5,7 +5,7 @@ import type {FieldTypeProps} from '../../../types';
 
 export default class TextEditor extends React.Component<FieldTypeProps<?string>> {
     render() {
-        const {disabled, onChange, onFinish, value} = this.props;
+        const {disabled, onChange, onFinish, schemaOptions, value} = this.props;
 
         return (
             <TextEditorContainer
@@ -13,6 +13,7 @@ export default class TextEditor extends React.Component<FieldTypeProps<?string>>
                 disabled={!!disabled}
                 onBlur={onFinish}
                 onChange={onChange}
+                options={schemaOptions}
                 value={value}
             />
         );

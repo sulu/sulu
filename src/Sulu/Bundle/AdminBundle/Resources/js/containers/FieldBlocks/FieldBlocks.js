@@ -3,7 +3,7 @@ import React from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
-import type {BlockError, FieldTypeProps} from '../../types';
+import type {BlockError, FieldTypeProps} from '../Form/types';
 import FieldRenderer from './FieldRenderer';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';

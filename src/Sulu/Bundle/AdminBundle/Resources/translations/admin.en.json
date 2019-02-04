@@ -95,5 +95,12 @@
     "sulu_admin.settings": "Settings",
     "sulu_admin.move_selected": "Move selected",
     "sulu_admin.details": "Details",
-    "sulu_admin.edit_entries": "Edit entries"
+    "sulu_admin.edit_entries": "Edit entries",
+    "sulu_admin.paragraph": "Paragraph",
+    "sulu_admin.heading1": "Heading 1",
+    "sulu_admin.heading2": "Heading 2",
+    "sulu_admin.heading3": "Heading 3",
+    "sulu_admin.heading4": "Heading 4",
+    "sulu_admin.heading5": "Heading 5",
+    "sulu_admin.heading6": "Heading 6"
 }
