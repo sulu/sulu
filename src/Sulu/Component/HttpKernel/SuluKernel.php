@@ -86,6 +86,7 @@ abstract class SuluKernel extends Kernel
         $this->load($loader, $confDir . '/{packages}/*');
         $this->load($loader, $confDir . '/{packages}/' . $this->environment . '/*');
         $this->load($loader, $confDir . '/{services}');
+        $this->load($loader, $confDir . '/{services}_' . $this->context);
         $this->load($loader, $confDir . '/{services}_' . $this->environment);
     }
 
