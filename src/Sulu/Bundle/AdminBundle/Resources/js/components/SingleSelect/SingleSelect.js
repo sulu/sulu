@@ -27,7 +27,7 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
         let displayValue = translate('sulu_admin.please_choose');
 
         React.Children.forEach(this.props.children, (child: any) => {
-            if (child.type !== SingleSelect.Option) {
+            if (!child || child.type !== SingleSelect.Option) {
                 return;
             }
 

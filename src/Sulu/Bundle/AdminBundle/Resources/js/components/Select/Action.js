@@ -4,9 +4,9 @@ import actionStyles from './action.scss';
 
 type Props<T> = {|
     children: string,
-    onClick: (value: T) => void,
+    onClick: (value: ?T) => void,
     afterAction?: () => void,
-    value: T,
+    value?: T,
 |};
 
 export default class Action<T> extends React.PureComponent<Props<T>> {

@@ -109,6 +109,21 @@ test('Should send a delete request with passed options as query parameters', () 
     expect(Requester.delete).toBeCalledWith('/snippets/5?locale=en&webspace=sulu');
 });
 
+test('Should send a delete request and return the promise', () => {
+    const promise = {};
+    Requester.delete.mockReturnValue(promise);
+    const result = ResourceRequester.deleteList('snippets', {ids: [3]});
+    expect(result).toBe(promise);
+});
+
+test('Should send a collection delete request to the correct URL', () => {
+    ResourceRequester.deleteList('snippets', {ids: [1, 2, 3]});
+    expect(Requester.delete).toBeCalledWith('/snippets?ids=1,2,3');
+
+    ResourceRequester.deleteList('contacts', {ids: [4, 5, 6]});
+    expect(Requester.delete).toBeCalledWith('/contacts?ids=4,5,6');
+});
+
 test('Should send a post request and return the promise', () => {
     const promise = {};
     Requester.post.mockReturnValue(promise);

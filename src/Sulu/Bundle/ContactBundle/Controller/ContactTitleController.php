@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
@@ -22,8 +21,7 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes account categories available through a REST API
- * Used RouteResource annotation to prevent automatic parenting of rest controllers.
+ * @RouteResource("contact-title")
  */
 class ContactTitleController extends RestController implements ClassResourceInterface
 {
@@ -35,7 +33,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     /**
      * {@inheritdoc}
      */
-    protected static $entityKey = 'contactTitles';
+    protected static $entityKey = 'contact_titles';
 
     /**
      * Shows a single contact title for the given id.
@@ -43,7 +41,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/titles/{id}")
      */
     public function getAction($id)
     {
@@ -64,7 +61,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * optional parameter 'flat' calls listAction.
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/titles")
      */
     public function cgetAction()
     {
@@ -84,7 +80,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/titles")
      */
     public function postAction(Request $request)
     {
@@ -154,13 +149,41 @@ class ContactTitleController extends RestController implements ClassResourceInte
         return $this->handleView($view);
     }
 
+    public function cdeleteAction(Request $request)
+    {
+        $ids = array_filter(explode(',', $request->get('ids', '')));
+
+        try {
+            foreach ($ids as $id) {
+                /* @var ContactTitle $title */
+                $title = $this->getDoctrine()
+                    ->getRepository(self::$entityName)
+                    ->find($id);
+
+                if (!$title) {
+                    throw new EntityNotFoundException(self::$entityName, $id);
+                }
+
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($title);
+            }
+
+            $em->flush();
+
+            $view = $this->view();
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        }
+
+        return $this->handleView($view);
+    }
+
     /**
      * Delete a contact title for the given id.
      *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/titles/{id}")
      */
     public function deleteAction($id)
     {
@@ -194,9 +217,8 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/titles")
      */
-    public function patchAction(Request $request)
+    public function cpatchAction(Request $request)
     {
         try {
             $data = [];

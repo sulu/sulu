@@ -46,7 +46,7 @@
                     </params>
                 </property>
 
-                <property name="formOfAddress" type="single_select" mandatory="true" colspan="6">
+                <property name="formOfAddress" type="single_select" mandatory="true" colspan="3">
                     <meta>
                         <title>sulu_contact.form_of_address</title>
                     </meta>
@@ -67,6 +67,15 @@
                     </params>
                 </property>
 
+                <property name="title" type="single_contact_title_selection" colspan="3">
+                    <meta>
+                        <title>sulu_contact.title</title>
+                    </meta>
+                    <params>
+                        <param name="editable" value="true" />
+                    </params>
+                </property>
+
                 <property name="birthday" type="date" colspan="6">
                     <meta>
                         <title>sulu_contact.birthday</title>
@@ -77,6 +86,20 @@
                     <meta>
                         <title>sulu_contact.organization</title>
                     </meta>
+                </property>
+
+                <property
+                    name="position"
+                    type="single_contact_position_selection"
+                    colspan="6"
+                    disabledCondition="account == null"
+                >
+                    <meta>
+                        <title>sulu_contact.position</title>
+                    </meta>
+                    <params>
+                        <param name="editable" value="true" />
+                    </params>
                 </property>
 
                 <property name="salutation" type="text_line">

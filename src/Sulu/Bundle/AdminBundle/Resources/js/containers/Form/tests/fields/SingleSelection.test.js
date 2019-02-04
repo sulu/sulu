@@ -176,6 +176,119 @@ test('Pass correct props to SingleItemSelection', () => {
     const value = 3;
 
     const fieldTypeOptions = {
+        default_type: 'single_select',
+        resource_key: 'accounts',
+        types: {
+            single_select: {
+                display_property: 'name',
+                id_property: 'id',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{editable: {value: true}}}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find('ResourceSingleSelect').props()).toEqual(expect.objectContaining({
+        displayProperty: 'name',
+        editable: true,
+        idProperty: 'id',
+        overlayTitle: 'sulu_contact.overlay_title',
+    }));
+});
+
+test('Call onChange and onFinish when SingleSelect changes', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const fieldTypeOptions = {
+        default_type: 'single_select',
+        resource_key: 'accounts',
+        types: {
+            single_select: {
+                display_property: 'name',
+                id_property: 'id',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={value}
+        />
+    );
+
+    singleSelection.find('ResourceSingleSelect').simulate('change', 2);
+
+    expect(changeSpy).toBeCalledWith(2);
+    expect(finishSpy).toBeCalledWith();
+});
+
+test('Throw an error if no display_property is passed to the the single_select', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const fieldTypeOptions = {
+        default_type: 'single_select',
+        types: {
+            single_select: {
+            },
+        },
+    };
+
+    expect(
+        () => shallow(
+            <SingleSelection
+                {...fieldTypeDefaultProps}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+            />
+        )
+    ).toThrow(/"display_property"/);
+});
+
+test('Throw an error if no id_property is passed to the the single_select', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const fieldTypeOptions = {
+        default_type: 'single_select',
+        types: {
+            single_select: {
+                display_property: 'something',
+            },
+        },
+    };
+
+    expect(
+        () => shallow(
+            <SingleSelection
+                {...fieldTypeDefaultProps}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+            />
+        )
+    ).toThrow(/"id_property"/);
+});
+
+test('Pass correct props to SingleItemSelection', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const value = 3;
+
+    const fieldTypeOptions = {
         default_type: 'datagrid_overlay',
         resource_key: 'accounts',
         types: {
@@ -396,7 +509,7 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     }));
 });
 
-test('Call onChange and onFinish when SingleAutoComplete changes', () => {
+test('Call onChange and onFinish when SingleSelection changes', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();

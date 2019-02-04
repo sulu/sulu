@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
-import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import {userStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
@@ -569,7 +569,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
 
     return promise.then(() => {
         permissions.update();
-        permissions.find(MultiSelect).at(0).instance().props.onChange(['example', 'example3']);
+        permissions.find(ResourceMultiSelect).at(0).instance().props.onChange(['example', 'example3']);
 
         const expectedNewValue: Array<ContextPermission> = [
             {
@@ -734,7 +734,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
 
     return promise.then(() => {
         permissions.update();
-        permissions.find(MultiSelect).at(0).instance().props.onChange(['example3']);
+        permissions.find(ResourceMultiSelect).at(0).instance().props.onChange(['example3']);
 
         const expectedNewValue: Array<ContextPermission> = [
             {
@@ -848,7 +848,7 @@ test('Pass disabled state to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(MultiSelect).prop('disabled')).toEqual(true);
+        expect(permissions.find(ResourceMultiSelect).prop('disabled')).toEqual(true);
     });
 });
 
@@ -871,7 +871,7 @@ test('Pass correct apiOptions to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(MultiSelect).prop('apiOptions')).toEqual({
+        expect(permissions.find(ResourceMultiSelect).prop('apiOptions')).toEqual({
             checkForPermissions: 0,
             locale: 'en',
         });
@@ -904,7 +904,7 @@ test('Pass correct locale to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(MultiSelect).prop('apiOptions')).toEqual({
+        expect(permissions.find(ResourceMultiSelect).prop('apiOptions')).toEqual({
             checkForPermissions: 0,
             locale: 'de',
         });

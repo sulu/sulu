@@ -15,5 +15,8 @@ export type Skin = 'default' | 'flat' | 'dark';
 
 export type OptionSelectedVisualization = 'icon' | 'checkbox';
 
-export type SelectChild<T> = Element<Class<Option<T>>> | Element<Class<Select.Divider>> | Element<Class<Action<*>>>;
+export type SelectChild<T> = Element<Class<Option<T>>>
+    | Element<Class<Select.Divider>>
+    | Element<Class<Action<*>>>
+    | false;
 export type SelectChildren<T> = ChildrenArray<SelectChild<T>>;

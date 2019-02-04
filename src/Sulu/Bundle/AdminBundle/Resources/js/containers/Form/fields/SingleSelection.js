@@ -2,6 +2,7 @@
 import React from 'react';
 import {computed} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
+import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
 import {translate} from '../../../utils/Translator';
@@ -13,10 +14,10 @@ export default class SingleSelection extends React.Component<Props>
     constructor(props: Props) {
         super(props);
 
-        if (this.type !== 'datagrid_overlay' && this.type !== 'auto_complete') {
+        if (this.type !== 'datagrid_overlay' && this.type !== 'single_select' && this.type !== 'auto_complete') {
             throw new Error(
-                'The Selection field must either be declared as "datagrid_overlay" or as "auto_complete", '
-                + 'received type was "' + this.type + '"!'
+                'The Selection field must either be declared as "datagrid_overlay", "single_select" '
+                + 'or as "auto_complete", received type was "' + this.type + '"!'
             );
         }
     }
@@ -56,6 +57,10 @@ export default class SingleSelection extends React.Component<Props>
     render() {
         if (this.type === 'datagrid_overlay') {
             return this.renderDatagridOverlay();
+        }
+
+        if (this.type === 'single_select') {
+            return this.renderSingleSelect();
         }
 
         if (this.type === 'auto_complete') {
@@ -102,6 +107,56 @@ export default class SingleSelection extends React.Component<Props>
                 emptyText={translate(emptyText)}
                 icon={icon}
                 locale={formInspector.locale}
+                onChange={this.handleChange}
+                overlayTitle={translate(overlayTitle)}
+                resourceKey={resourceKey}
+                value={value}
+            />
+        );
+    }
+
+    renderSingleSelect() {
+        const {
+            disabled,
+            fieldTypeOptions: {
+                resource_key: resourceKey,
+                types: {
+                    single_select: {
+                        display_property: displayProperty,
+                        id_property: idProperty,
+                        overlay_title: overlayTitle,
+                    } = {},
+                },
+            },
+            schemaOptions: {
+                editable: {
+                    value: editable,
+                } = {},
+            } = {},
+            value,
+        } = this.props;
+
+        if (typeof value === 'object') {
+            // TODO implement object value support for single_select type
+            throw new Error(
+                'The "single_select" type of the SingleSelection field type supports only an ID value until now.'
+            );
+        }
+
+        if (typeof displayProperty !== 'string') {
+            throw new Error('The "display_property" field-type option must be a string!');
+        }
+
+        if (typeof idProperty !== 'string') {
+            throw new Error('The "id_property" field-type option must be a string!');
+        }
+
+        return (
+            <ResourceSingleSelect
+                disabled={!!disabled}
+                displayProperty={displayProperty}
+                editable={!!editable}
+                idProperty={idProperty}
                 onChange={this.handleChange}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}

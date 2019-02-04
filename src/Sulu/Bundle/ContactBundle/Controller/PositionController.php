@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Route;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\Position;
@@ -21,8 +21,7 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Makes positions available through a REST API
- * Used RouteResource annotation to prevent automatic parenting of rest controllers.
+ * @RouteResource("contact-position")
  */
 class PositionController extends RestController implements ClassResourceInterface
 {
@@ -34,7 +33,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected static $entityKey = 'positions';
+    protected static $entityKey = 'contact_positions';
 
     /**
      * Shows a single position for the given id.
@@ -42,7 +41,6 @@ class PositionController extends RestController implements ClassResourceInterfac
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/positions/{id}")
      */
     public function getAction($id)
     {
@@ -63,7 +61,6 @@ class PositionController extends RestController implements ClassResourceInterfac
      * optional parameter 'flat' calls listAction.
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/positions")
      */
     public function cgetAction()
     {
@@ -83,7 +80,6 @@ class PositionController extends RestController implements ClassResourceInterfac
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/positions")
      */
     public function postAction(Request $request)
     {
@@ -153,13 +149,41 @@ class PositionController extends RestController implements ClassResourceInterfac
         return $this->handleView($view);
     }
 
+    public function cdeleteAction(Request $request)
+    {
+        $ids = array_filter(explode(',', $request->get('ids', '')));
+
+        try {
+            foreach ($ids as $id) {
+                /* @var Position $title */
+                $title = $this->getDoctrine()
+                    ->getRepository(self::$entityName)
+                    ->find($id);
+
+                if (!$title) {
+                    throw new EntityNotFoundException(self::$entityName, $id);
+                }
+
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($title);
+            }
+
+            $em->flush();
+
+            $view = $this->view();
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        }
+
+        return $this->handleView($view);
+    }
+
     /**
      * Delete a position for the given id.
      *
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/positions/{id}")
      */
     public function deleteAction($id)
     {
@@ -193,9 +217,8 @@ class PositionController extends RestController implements ClassResourceInterfac
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("contact/positions")
      */
-    public function patchAction(Request $request)
+    public function cpatchAction(Request $request)
     {
         try {
             $data = [];

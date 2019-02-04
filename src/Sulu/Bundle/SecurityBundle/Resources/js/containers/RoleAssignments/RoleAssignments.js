@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {MultiSelect} from 'sulu-admin-bundle/containers';
+import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import {Loader, Grid} from 'sulu-admin-bundle/components';
 import {localizationStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
@@ -90,7 +90,7 @@ export default class RoleAssignments extends React.Component<Props> {
         return (
             <Grid>
                 <Grid.Item size={6}>
-                    <MultiSelect
+                    <ResourceMultiSelect
                         disabled={disabled}
                         displayProperty="name"
                         onChange={this.handleRoleChange}

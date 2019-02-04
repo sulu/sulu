@@ -95,6 +95,12 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                             'datagrid' => Account::class,
                             'endpoint' => 'get_accounts',
                         ],
+                        'contact_titles' => [
+                            'endpoint' => 'get_contact-titles',
+                        ],
+                        'contact_positions' => [
+                            'endpoint' => 'get_contact-positions',
+                        ],
                     ],
                     'field_type_options' => [
                         'single_selection' => [
@@ -127,6 +133,28 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                         'empty_text' => 'sulu_contact.no_contact_selected',
                                         'icon' => 'su-user',
                                         'overlay_title' => 'sulu_contact.single_contact_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                            'single_contact_title_selection' => [
+                                'default_type' => 'single_select',
+                                'resource_key' => 'contact_titles',
+                                'types' => [
+                                    'single_select' => [
+                                        'id_property' => 'id',
+                                        'display_property' => 'title',
+                                        'overlay_title' => 'sulu_contact.edit_title_overlay_title',
+                                    ],
+                                ],
+                            ],
+                            'single_contact_position_selection' => [
+                                'default_type' => 'single_select',
+                                'resource_key' => 'contact_positions',
+                                'types' => [
+                                    'single_select' => [
+                                        'id_property' => 'id',
+                                        'display_property' => 'position',
+                                        'overlay_title' => 'sulu_contact.edit_position_overlay_title',
                                     ],
                                 ],
                             ],

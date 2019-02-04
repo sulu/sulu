@@ -5,7 +5,7 @@ import Divider from './Divider';
 import menuStyles from './menu.scss';
 
 type Props = {
-    children?: ChildrenArray<Element<*>>,
+    children?: ChildrenArray<Element<*> | false>,
     menuRef?: (ref: ElementRef<'ul'>) => void,
     style?: Object,
 };
