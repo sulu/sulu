@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
@@ -22,6 +24,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class StructureXmlLoaderTest extends TestCase
 {
+    private $requiredTagNames = [
+        'page' => ['sulu.rlp'],
+        'home' => ['sulu.rlp'],
+        'snippet' => [],
+    ];
+
+    private $requiredPropertyNames = [
+        'page' => ['title'],
+        'home' => ['title'],
+        'snippet' => ['title'],
+    ];
+
     /**
      * @var TranslatorInterface
      */
@@ -58,7 +72,9 @@ class StructureXmlLoaderTest extends TestCase
             $this->cacheLifetimeResolver->reveal(),
             $propertiesXmlParser,
             $schemaXmlParser,
-            $this->contentTypeManager->reveal()
+            $this->contentTypeManager->reveal(),
+            $this->requiredPropertyNames,
+            $this->requiredTagNames
         );
     }
 
@@ -198,13 +214,58 @@ class StructureXmlLoaderTest extends TestCase
         $this->load('template_without_invalid_ignore.xml');
     }
 
-    private function load($name)
+    public function testLoadRequiredProperty()
+    {
+        $this->expectException(RequiredPropertyNameNotFoundException::class);
+
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
+        $this->load('template_without_title.xml');
+    }
+
+    public function testLoadRequiredTag()
+    {
+        $this->expectException(RequiredTagNotFoundException::class);
+
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
+        $this->load('template_without_sulu_rlp.xml');
+    }
+
+    public function testLoadRequiredPropertyOtherType()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
+        $result = $this->load('template_without_title.xml', 'test');
+
+        $properties = $result->getProperties();
+
+        $this->assertCount(2, $properties);
+    }
+
+    public function testLoadRequiredTagOtherType()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->getAll()->willReturn(['text_line', 'resource_locator']);
+        $result = $this->load('template_without_sulu_rlp.xml', 'test');
+
+        $properties = $result->getProperties();
+
+        $this->assertCount(2, $properties);
+    }
+
+    private function load($name, $type = null)
     {
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
         $result = $this->loader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/' . $name
+            $this->getResourceDirectory() . '/DataFixtures/Page/' . $name,
+            $type
         );
 
         return $result;

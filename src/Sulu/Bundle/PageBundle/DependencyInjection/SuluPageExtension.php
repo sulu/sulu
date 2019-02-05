@@ -102,6 +102,14 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                 [
                     'content' => [
                         'structure' => [
+                            'required_properties' => [
+                                'home' => ['title'],
+                                'page' => ['title'],
+                            ],
+                            'required_tags' => [
+                                'home' => ['sulu.rlp'],
+                                'page' => ['sulu.rlp'],
+                            ],
                             'paths' => [
                                 'page_extension' => [
                                     'path' => __DIR__ . '/../Content/templates',
