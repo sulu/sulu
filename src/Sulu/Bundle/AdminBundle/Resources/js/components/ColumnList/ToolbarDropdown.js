@@ -38,9 +38,9 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
 
         return (
             <Fragment>
-                <div className={className} onClick={this.handleClick}>
+                <a className={className} onClick={this.handleClick}>
                     <Icon name={icon} />
-                </div>
+                </a>
                 <Popover
                     anchorElement={this.popoverAnchorElement}
                     onClose={this.handlePopoverClose}

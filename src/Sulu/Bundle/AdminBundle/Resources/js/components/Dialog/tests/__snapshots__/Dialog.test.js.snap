@@ -3,12 +3,6 @@
 exports[`The component should not render in body when closed 1`] = `null`;
 
 exports[`The component should render in body when open 1`] = `
-<div
-  class="backdrop visible fixed"
-/>
-`;
-
-exports[`The component should render in body when open 2`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
@@ -28,12 +22,6 @@ exports[`The component should render in body when open 2`] = `
 `;
 
 exports[`The component should render in body with a large class 1`] = `
-<div
-  class="backdrop visible fixed"
-/>
-`;
-
-exports[`The component should render in body with a large class 2`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
@@ -53,12 +41,6 @@ exports[`The component should render in body with a large class 2`] = `
 `;
 
 exports[`The component should render in body with disabled confirm button 1`] = `
-<div
-  class="backdrop visible fixed"
-/>
-`;
-
-exports[`The component should render in body with disabled confirm button 2`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
@@ -78,12 +60,6 @@ exports[`The component should render in body with disabled confirm button 2`] = 
 `;
 
 exports[`The component should render in body with loader instead of confirm button 1`] = `
-<div
-  class="backdrop visible fixed"
-/>
-`;
-
-exports[`The component should render in body with loader instead of confirm button 2`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\"></div>
 </div>

@@ -53,8 +53,9 @@ test('The popover should render in body when open', () => {
                 )
             }
         </Popover>
-    ).render();
-    expect(view).toMatchSnapshot();
+    );
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
@@ -75,8 +76,8 @@ test('The popover should not render in body when not open', () => {
                 )
             }
         </Popover>
-    ).render();
-    expect(view).toMatchSnapshot();
+    );
+    expect(view.find('Backdrop')).toHaveLength(0);
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
@@ -119,7 +120,7 @@ test('The popover should request to be closed when the window is blurred', () =>
                 )
             }
         </Popover>
-    ).render();
+    );
     expect(windowListeners.blur).toBeDefined();
     windowListeners.blur();
     expect(onCloseSpy).toBeCalled();

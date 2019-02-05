@@ -4,22 +4,22 @@ exports[`Should render with active 1`] = `
 <div
   class="toolbar"
 >
-  <div
+  <a
     class="item primary"
   >
     <span
       aria-label="fa-plus"
       class="fa fa-plus"
     />
-  </div>
-  <div
+  </a>
+  <a
     class="item primary"
   >
     <span
       aria-label="fa-gear"
       class="fa fa-gear"
     />
-  </div>
+  </a>
 </div>
 `;
 

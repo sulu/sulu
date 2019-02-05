@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import pretty from 'pretty';
 import ArrowMenu from '../ArrowMenu';
 
 afterEach(() => {
@@ -51,8 +50,10 @@ test('Render ArrowMenu closed', () => {
         </ArrowMenu>
     );
 
-    expect(arrowMenu.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(arrowMenu.children()).toHaveLength(2);
+    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+
+    expect(arrowMenu.find('Popover').prop('open')).toEqual(false);
 });
 
 test('Render ArrowMenu open', () => {
@@ -96,8 +97,12 @@ test('Render ArrowMenu open', () => {
         </ArrowMenu>
     );
 
-    expect(arrowMenu.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(arrowMenu.children()).toHaveLength(2);
+    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+
+    expect(arrowMenu.find('Popover').children()).toHaveLength(2);
+    expect(arrowMenu.find('Popover Backdrop').prop('open')).toEqual(true);
+    expect(arrowMenu.find('Popover > Portal').render()).toMatchSnapshot();
 });
 
 test('Events should be called correctly', () => {

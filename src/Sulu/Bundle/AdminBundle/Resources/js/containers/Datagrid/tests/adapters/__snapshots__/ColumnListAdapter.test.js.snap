@@ -14,14 +14,14 @@ exports[`Render data with disabled items 1`] = `
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div
@@ -166,14 +166,14 @@ exports[`Render data with loading column 1`] = `
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div
@@ -382,14 +382,14 @@ exports[`Render data with selection 1`] = `
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div
@@ -477,14 +477,14 @@ exports[`Render data without edit button 1`] = `
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div
@@ -565,22 +565,22 @@ exports[`Render different kind of data with edit button 1`] = `
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-plus-circle"
             class="su-plus-circle"
           />
-        </div>
-        <div
+        </a>
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div
@@ -1219,22 +1219,22 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
       <div
         class="toolbar"
       >
-        <div
+        <a
           class="item primary"
         >
           <span
             aria-label="su-plus-circle"
             class="su-plus-circle"
           />
-        </div>
-        <div
+        </a>
+        <a
           class="item primary"
         >
           <span
             aria-label="su-cog"
             class="su-cog"
           />
-        </div>
+        </a>
       </div>
     </div>
     <div

@@ -78,22 +78,22 @@ exports[`Render WebspaceOverview 1`] = `
             <div
               class="toolbar"
             >
-              <div
+              <a
                 class="item primary"
               >
                 <span
                   aria-label="su-plus-circle"
                   class="su-plus-circle"
                 />
-              </div>
-              <div
+              </a>
+              <a
                 class="item primary"
               >
                 <span
                   aria-label="su-cog"
                   class="su-cog"
                 />
-              </div>
+              </a>
             </div>
           </div>
           <div

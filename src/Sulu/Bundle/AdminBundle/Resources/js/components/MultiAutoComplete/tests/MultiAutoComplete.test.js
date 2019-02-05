@@ -82,7 +82,7 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
     multiAutoComplete.instance().inputValue = 'test';
     multiAutoComplete.update();
 
-    expect(multiAutoComplete.render()).toMatchSnapshot();
+    expect(multiAutoComplete.find('.item').text()).toEqual('Test');
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 

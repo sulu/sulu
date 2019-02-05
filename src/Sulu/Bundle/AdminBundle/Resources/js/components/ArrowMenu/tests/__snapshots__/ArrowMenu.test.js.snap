@@ -1,52 +1,140 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render ArrowMenu closed 1`] = `
-<button>
-  Nice button
-</button>
-`;
-
-exports[`Render ArrowMenu closed 2`] = `""`;
-
 exports[`Render ArrowMenu open 1`] = `
-<button>
-  Nice button
-</button>
-`;
-
-exports[`Render ArrowMenu open 2`] = `
-"<div>
-  <div class=\\"backdrop fixed\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <div class=\\"arrow top right\\"></div>
-      <div class=\\"arrowMenu\\">
-        <div class=\\"section\\">
-          <div class=\\"title\\">Search Section</div>
-          <div class=\\"children\\"><input type=\\"text\\"></div>
+<div
+  class="container"
+>
+  <div
+    class="arrowMenuContainer"
+    style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+  >
+    <div
+      class="arrow top right"
+    />
+    <div
+      class="arrowMenu"
+    >
+      <div
+        class="section"
+      >
+        <div
+          class="title"
+        >
+          Search Section
         </div>
-        <div class=\\"section\\">
-          <div class=\\"title\\">Webspaces</div>
-          <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
+        <div
+          class="children"
+        >
+          <input
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          class="title"
+        >
+          Webspaces
+        </div>
+        <div
+          class="children"
+        >
+          <div
+            class="item active"
+          >
+            <span
+              class="icon"
+            >
+              <span
+                aria-label="su-webspace"
+                class="su-webspace icon"
+              />
+            </span>
+            <span>
+              Sulu
+            </span>
+          </div>
+          <div
+            class="item"
+          >
+            <span
+              class="icon"
+            />
+            <span>
+              Sulu Blog
+            </span>
+          </div>
+          <div
+            class="item"
+          >
+            <span
+              class="icon"
+            />
+            <span>
+              Sulu Doc
+            </span>
           </div>
         </div>
-        <div class=\\"section\\">
-          <div class=\\"title\\">Columns</div>
-          <div class=\\"children\\">
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Title</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Description</span></div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          class="title"
+        >
+          Columns
+        </div>
+        <div
+          class="children"
+        >
+          <div
+            class="item"
+          >
+            <span
+              class="icon"
+            />
+            <span>
+              Title
+            </span>
+          </div>
+          <div
+            class="item"
+          >
+            <span
+              class="icon"
+            />
+            <span>
+              Description
+            </span>
           </div>
         </div>
-        <div class=\\"section\\">
-          <div class=\\"children\\"><button class=\\"action\\">Test Action 1</button><button class=\\"action\\">Test Action 2</button><button class=\\"action\\">Test Action 3</button></div>
+      </div>
+      <div
+        class="section"
+      >
+        <div
+          class="children"
+        >
+          <button
+            class="action"
+          >
+            Test Action 1
+          </button>
+          <button
+            class="action"
+          >
+            Test Action 2
+          </button>
+          <button
+            class="action"
+          >
+            Test Action 3
+          </button>
         </div>
       </div>
     </div>
   </div>
-</div>"
+</div>
 `;
