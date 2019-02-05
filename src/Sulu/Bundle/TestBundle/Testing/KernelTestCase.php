@@ -66,7 +66,7 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
      *
      * @throws InvalidArgumentException
      */
-    protected function getKernel(array $options = [])
+    protected function getKernel(array $options = [], ?string $kernelClass = null): SuluTestKernel
     {
         $this->requireKernel();
 
@@ -76,7 +76,9 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
             'sulu_context' => 'admin',
         ], $this->getKernelConfiguration(), $options);
 
-        $kernelClass = getenv('KERNEL_CLASS') ?: '\AppKernel';
+        if (!$kernelClass) {
+            $kernelClass = getenv('KERNEL_CLASS') ?: '\AppKernel';
+        }
 
         $kernel = new $kernelClass(
             $options['environment'],

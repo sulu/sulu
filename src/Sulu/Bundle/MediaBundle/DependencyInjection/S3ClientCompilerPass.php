@@ -25,8 +25,8 @@ class S3ClientCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $s3Client = $container->getDefinition('sulu_media.storage.aws_s3.client');
-        $additionalArguments = $container->getParameter('sulu_media.media.storage.aws_s3.arguments');
+        $s3Client = $container->getDefinition('sulu_media.storage.s3.client');
+        $additionalArguments = $container->getParameter('sulu_media.media.storage.s3.arguments');
 
         $argument = array_merge($s3Client->getArgument(0), $additionalArguments);
         $s3Client->setArgument(0, array_filter($argument));
