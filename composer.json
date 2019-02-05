@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "aferrandini/urlizer": "~1.0.0",
         "dantleech/phpcr-migrations-bundle": "^1.0",
         "doctrine/annotations": "^1.2",
@@ -99,7 +99,7 @@
         "phpspec/prophecy": "^1.7",
         "phpstan/phpstan": "^0.10.5",
         "phpstan/phpstan-symfony": "^0.10.2",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^8.0",
         "superbalist/flysystem-google-storage": "^7.1",
         "google/cloud-storage": "~1.0",
         "symfony/browser-kit": "^3.4 || ^4.0",
