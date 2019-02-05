@@ -36,16 +36,11 @@ class StructureXmlLoader extends AbstractLoader
     const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     /**
-     * tags that are required in template
-     * TODO should be possible to inject from config.
+     * Tags that are required in template.
      *
      * @var array
      */
-    private $requiredTagNames = [
-        'page' => ['sulu.rlp'],
-        'home' => ['sulu.rlp'],
-        'snippet' => [],
-    ];
+    private $requiredTagNames = [];
 
     /**
      * reserved names for sulu internals
@@ -71,14 +66,11 @@ class StructureXmlLoader extends AbstractLoader
     ];
 
     /**
-     * tags that are required in template
-     * TODO should be possible to inject from config.
+     * Properties that are required in template.
      *
      * @var array
      */
-    private $requiredPropertyNames = [
-        'title',
-    ];
+    private $requiredPropertyNames = [];
 
     /**
      * @var CacheLifetimeResolverInterface
@@ -104,12 +96,16 @@ class StructureXmlLoader extends AbstractLoader
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         PropertiesXmlParser $propertiesXmlParser,
         SchemaXmlParser $schemaXmlParser,
-        ContentTypeManagerInterface $contentTypeManager
+        ContentTypeManagerInterface $contentTypeManager,
+        array $requiredPropertyNames,
+        array $requiredTagNames
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->propertiesXmlParser = $propertiesXmlParser;
         $this->schemaXmlParser = $schemaXmlParser;
         $this->contentTypeManager = $contentTypeManager;
+        $this->requiredPropertyNames = $requiredPropertyNames;
+        $this->requiredTagNames = $requiredTagNames;
 
         parent::__construct(
             self::SCHEME_PATH,
@@ -177,7 +173,7 @@ class StructureXmlLoader extends AbstractLoader
             $result['schema'] = $this->schemaXmlParser->load($xpath, $schemaNode);
         }
 
-        $missingProperty = $this->findMissingRequiredProperties($result['properties']);
+        $missingProperty = $this->findMissingRequiredProperties($type, $result['properties']);
         if ($missingProperty) {
             throw new RequiredPropertyNameNotFoundException($result['key'], $missingProperty);
         }
@@ -366,10 +362,14 @@ class StructureXmlLoader extends AbstractLoader
         $structure->setDescriptions($meta['info_text']);
     }
 
-    private function findMissingRequiredProperties(array $propertyData): ?string
+    private function findMissingRequiredProperties(string $type, array $propertyData): ?string
     {
-        foreach ($this->requiredPropertyNames as $requiredPropertyName) {
-            if ($this->isRequiredPropertyMissing($propertyData, $requiredPropertyName)) {
+        if (!array_key_exists($type, $this->requiredPropertyNames)) {
+            return null;
+        }
+
+        foreach ($this->requiredPropertyNames[$type] as $requiredPropertyName) {
+            if ($this->isRequiredPropertyMissing($type, $propertyData, $requiredPropertyName)) {
                 return $requiredPropertyName;
             }
         }
@@ -377,7 +377,7 @@ class StructureXmlLoader extends AbstractLoader
         return null;
     }
 
-    private function isRequiredPropertyMissing(array $propertyData, string $requiredPropertyName): bool
+    private function isRequiredPropertyMissing(string $type, array $propertyData, string $requiredPropertyName): bool
     {
         foreach ($propertyData as $property) {
             if ($property->getName() === $requiredPropertyName) {
@@ -385,7 +385,7 @@ class StructureXmlLoader extends AbstractLoader
             }
 
             if ($property instanceof SectionMetadata) {
-                $isPropertyMissing = $this->findMissingRequiredProperties($property->getChildren());
+                $isPropertyMissing = $this->findMissingRequiredProperties($type, $property->getChildren());
 
                 if (!$isPropertyMissing) {
                     return false;

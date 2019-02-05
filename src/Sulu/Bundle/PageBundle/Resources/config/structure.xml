@@ -11,6 +11,8 @@
             <argument type="service" id="sulu_page.structure.properties_xml_parser"/>
             <argument type="service" id="sulu_page.structure.schema_xml_parser"/>
             <argument type="service" id="sulu.content.type_manager" />
+            <argument>%sulu.content.structure.required_properties%</argument>
+            <argument>%sulu.content.structure.required_tags%</argument>
         </service>
 
         <service id="sulu_page.structure.properties_xml_parser"
