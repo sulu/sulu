@@ -1,8 +1,8 @@
 // @flow
 
 export type LinkTypeConfig = {
-    resourceKey: string,
     adapter: string,
+    resourceKey: string,
 };
 
 export type LinkTypeConfigs = {[provider: string]: LinkTypeConfig};

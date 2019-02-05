@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import {observable, action, observe} from 'mobx';
 import {observer} from 'mobx-react';
@@ -7,10 +7,8 @@ import SingleMediaSelection from 'sulu-media-bundle/containers/SingleMediaSelect
 import type {Value as MediaValue} from 'sulu-media-bundle/containers/SingleMediaSelection/types';
 import {translate} from '../../../../utils/Translator';
 import Dialog from '../../../Dialog';
-import Form from '../../../Form/Form';
+import Form from '../../../Form';
 import createLinkPlugin from './src/link';
-
-const {Field} = Form;
 
 type Props = {
     open: boolean,
@@ -83,13 +81,13 @@ export class MediaLinkPluginComponent extends React.Component<Props> {
                 title="Internal Media Link"
             >
                 <Form>
-                    <Field error={this.mediaError} label="Image" required={true}>
+                    <Form.Field error={this.mediaError} label="Image" required={true}>
                         <SingleMediaSelection
                             locale={observable.box('en')}
                             onChange={this.handleMediaChange}
                             value={this.selectedMedia}
                         />
-                    </Field>
+                    </Form.Field>
                 </Form>
             </Dialog>
         );

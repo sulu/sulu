@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import {observable, action, observe} from 'mobx';
 import {observer} from 'mobx-react';
@@ -8,10 +8,8 @@ import SingleSelection from '../../../../containers/SingleSelection';
 import {translate} from '../../../../utils/Translator';
 import SingleSelect from '../../../SingleSelect';
 import Dialog from '../../../Dialog';
-import Form from '../../../Form/Form';
+import Form from '../../../Form';
 import createLinkPlugin from './src/link';
-
-const {Field} = Form;
 
 type Props = {
     open: boolean,
@@ -96,9 +94,9 @@ export class InternalLinkPluginComponent extends React.Component<Props> {
         const {open, plugin: {currentValue}} = this.props;
 
         if (!prevProps.open && open && currentValue) {
-            this.selectedResource = currentValue ? {
-                uuid: currentValue.value,
-            } : undefined;
+            this.selectedResource = currentValue
+                ? {uuid: currentValue.value}
+                : undefined;
 
             const {attributes: {target}} = currentValue;
             if (target) {
@@ -138,16 +136,16 @@ export class InternalLinkPluginComponent extends React.Component<Props> {
                 title="Internal Sulu Link"
             >
                 <Form>
-                    <Field label="Link target" required={true}>
+                    <Form.Field label="Link target" required={true}>
                         <SingleSelect onChange={this.handleTargetChange} value={this.selectedTarget}>
                             <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
                             <SingleSelect.Option value="_self">_self</SingleSelect.Option>
                             <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
                             <SingleSelect.Option value="_top">_top</SingleSelect.Option>
                         </SingleSelect>
-                    </Field>
+                    </Form.Field>
 
-                    <Field label="Link type" required={true}>
+                    <Form.Field label="Link type" required={true}>
                         <SingleSelect
                             onChange={this.handleResourceTypeChange}
                             value={this.provider || InternalLinkPluginComponent.defaultProvider}
@@ -163,11 +161,12 @@ export class InternalLinkPluginComponent extends React.Component<Props> {
                                 );
                             })}
                         </SingleSelect>
-                    </Field>
+                    </Form.Field>
 
-                    <Field error={this.selectedResourceError} label="Page" required={true}>
+                    <Form.Field error={this.selectedResourceError} label="Page" required={true}>
                         <SingleSelection
                             adapter={adapter}
+                            datagridKey={resourceKey}
                             displayProperties={['title']}
                             emptyText="Keine Seite ausgewählt"
                             icon="su-document"
@@ -179,7 +178,7 @@ export class InternalLinkPluginComponent extends React.Component<Props> {
                             resourceKey={resourceKey}
                             value={this.selectedResource ? this.selectedResource.uuid : undefined}
                         />
-                    </Field>
+                    </Form.Field>
                 </Form>
             </Dialog>
         );

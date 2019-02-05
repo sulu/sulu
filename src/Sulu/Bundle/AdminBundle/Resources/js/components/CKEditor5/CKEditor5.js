@@ -37,7 +37,6 @@ type Props = {|
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
-    mounted: boolean;
 
     externalLinkPlugin: ExternalLinkPlugin;
     internalLinkPlugin: InternalLinkPlugin;
@@ -53,7 +52,6 @@ export default class CKEditor5 extends React.Component<Props> {
         super(props);
 
         this.editorInstance = null;
-        this.mounted = false;
 
         this.externalLinkPlugin = new ExternalLinkPlugin(this.handleChange);
         this.internalLinkPlugin = new InternalLinkPlugin(this.handleChange);
@@ -83,14 +81,11 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     handleChange = (): void => {
-        if (this.mounted) {
-            this.forceUpdate();
-        }
+        this.forceUpdate();
     };
 
     componentDidMount() {
         const {formats} = this.props;
-        this.mounted = true;
 
         ClassicEditor
             .create(this.containerRef, {
@@ -227,8 +222,6 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        this.mounted = false;
-
         if (this.editorInstance) {
             this.editorInstance.destroy().then(() => this.editorInstance = null);
         }

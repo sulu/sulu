@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import {observable, action, observe} from 'mobx';
 import {observer} from 'mobx-react';
@@ -7,10 +7,8 @@ import {translate} from '../../../../utils/Translator';
 import SingleSelect from '../../../SingleSelect';
 import Url from '../../../Url';
 import Dialog from '../../../Dialog';
-import Form from '../../../Form/Form';
+import Form from '../../../Form';
 import createLinkPlugin from './src/link';
-
-const {Field} = Form;
 
 type Props = {
     open: boolean,
@@ -95,18 +93,18 @@ export class ExternalLinkPluginComponent extends React.Component<Props> {
                 title="Link"
             >
                 <Form>
-                    <Field label="Link target" required={true}>
+                    <Form.Field label="Link target" required={true}>
                         <SingleSelect onChange={this.handleTargetChange} value={this.selectedTarget}>
                             <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
                             <SingleSelect.Option value="_self">_self</SingleSelect.Option>
                             <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
                             <SingleSelect.Option value="_top">_top</SingleSelect.Option>
                         </SingleSelect>
-                    </Field>
+                    </Form.Field>
 
-                    <Field label="Link URL" required={true}>
+                    <Form.Field label="Link URL" required={true}>
                         <Url defaultProtocol="https://" onChange={this.handleUrlChange} valid={true} value={this.url} />
-                    </Field>
+                    </Form.Field>
                 </Form>
             </Dialog>
         );
