@@ -6,4 +6,4 @@ export type BlockEntry = {
     type: string,
 };
 
-export type RenderBlockContentCallback = (value: *, type: string, index: number) => Node;
+export type RenderBlockContentCallback = (value: *, type: string, index: number, expanded: boolean) => Node;

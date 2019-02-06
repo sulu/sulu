@@ -194,7 +194,27 @@ test('Should call renderBlockContent with the correct arguments', () => {
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7);
+    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, true);
+});
+
+test('Should call renderBlockContent with the correct arguments when block is collapsed', () => {
+    const renderBlockContentSpy = jest.fn();
+    const value = {content: 'Test 1'};
+
+    shallow(
+        <SortableBlock
+            activeType="editor"
+            expanded={false}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            renderBlockContent={renderBlockContentSpy}
+            sortIndex={7}
+            value={value}
+        />
+    );
+
+    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7, false);
 });
 
 test('Should call renderBlockContent with the correct arguments when types are involved', () => {
@@ -214,5 +234,5 @@ test('Should call renderBlockContent with the correct arguments when types are i
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, 'test', 7);
+    expect(renderBlockContentSpy).toBeCalledWith(value, 'test', 7, true);
 });

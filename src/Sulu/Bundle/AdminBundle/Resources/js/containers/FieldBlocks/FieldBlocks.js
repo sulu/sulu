@@ -27,7 +27,11 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onFinish();
     };
 
-    renderBlockContent = (value: Object, type: string, index: number) => {
+    renderBlockContent = (value: Object, type: string, index: number, expanded: boolean) => {
+        if (!expanded) {
+            return null;
+        }
+
         const {dataPath, error, formInspector, onFinish, schemaPath, showAllErrors, types} = this.props;
 
         if (!formInspector) {
