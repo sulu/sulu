@@ -362,7 +362,7 @@ test('Call onRequestItemOrder callback when an item ordering has been changed', 
         />
     );
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
     columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
     columnListAdapter.update();
 
@@ -407,7 +407,7 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
         />
     );
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
     columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
 
     columnListAdapter.find('Item').at(0).simulate('click');
@@ -484,7 +484,7 @@ test('Execute onRequestItemCopy callback when an item is moved with the correct 
         />
     );
 
-    columnListAdapter.find('ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdown a').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
 
     expect(copyClickSpy).toBeCalledWith(3);
@@ -524,7 +524,7 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
         />
     );
 
-    columnListAdapter.find('ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdown a').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
 
     expect(moveClickSpy).toBeCalledWith(3);
@@ -564,7 +564,7 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
         />
     );
 
-    columnListAdapter.find('ToolbarDropdown').simulate('click');
+    columnListAdapter.find('ToolbarDropdown a').simulate('click');
     columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
 
     expect(deleteClickSpy).toBeCalledWith(3);
@@ -604,7 +604,7 @@ test('Enable delete and move button if an item in this column has been activated
         />
     );
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
     expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(0).prop('disabled')).toEqual(false);
     expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(1).prop('disabled')).toEqual(false);
 });
@@ -643,7 +643,7 @@ test('Disable delete and move button if no item in this column has been activate
         />
     );
 
-    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
     expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(0).prop('disabled')).toEqual(true);
     expect(columnListAdapter.find('Toolbar ToolbarDropdown button').at(1).prop('disabled')).toEqual(true);
 });

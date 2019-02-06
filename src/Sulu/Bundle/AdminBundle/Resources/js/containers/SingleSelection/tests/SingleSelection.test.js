@@ -77,7 +77,8 @@ test('Render with selected item', () => {
 
     singleSelection.update();
 
-    expect(singleSelection.render()).toMatchSnapshot();
+    expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
+    expect(singleSelection.find('SingleItemSelection').render()).toMatchSnapshot();
 });
 
 test('Render with selected item in disabled state', () => {
@@ -106,7 +107,8 @@ test('Render with selected item in disabled state', () => {
     };
     singleSelection.update();
 
-    expect(singleSelection.render()).toMatchSnapshot();
+    expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
+    expect(singleSelection.find('SingleItemSelection').render()).toMatchSnapshot();
 });
 
 test('Pass resourceKey and locale to SingleDatagridOverlay', () => {

@@ -110,7 +110,7 @@ test('Render with data with editable option', () => {
     resourceSingleSelect.find('DisplayValue').simulate('click');
     resourceSingleSelect.update();
 
-    expect(resourceSingleSelect.render()).toMatchSnapshot();
+    expect(resourceSingleSelect.find('SingleSelect').render()).toMatchSnapshot();
     expect(resourceSingleSelect.find('Menu').render()).toMatchSnapshot();
 });
 

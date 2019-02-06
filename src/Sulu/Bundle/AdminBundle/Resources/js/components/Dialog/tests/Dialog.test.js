@@ -25,9 +25,10 @@ test('The component should render in body when open', () => {
         >
             <div>My dialog content</div>
         </Dialog>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -47,9 +48,10 @@ test('The component should render in body with disabled confirm button', () => {
         >
             <div>My dialog content</div>
         </Dialog>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -69,9 +71,10 @@ test('The component should render in body with a large class', () => {
         >
             <div>My dialog content</div>
         </Dialog>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -91,9 +94,10 @@ test('The component should render in body with loader instead of confirm button'
         >
             <div>My dialog content</div>
         </Dialog>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 

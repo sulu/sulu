@@ -25,9 +25,10 @@ test('The component should render in body when open', () => {
         >
             <p>My overlay content</p>
         </Overlay>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -45,9 +46,10 @@ test('The component should render with a disabled confirm button', () => {
         >
             <p>My overlay content</p>
         </Overlay>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -65,9 +67,10 @@ test('The component should render in body with loader instead of confirm button'
         >
             <p>My overlay content</p>
         </Overlay>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -89,9 +92,10 @@ test('The component should render in body with actions when open', () => {
         >
             <p>My overlay content</p>
         </Overlay>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
