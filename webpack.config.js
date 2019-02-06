@@ -1,7 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable import/no-nodejs-modules*/
 const path = require('path');
-const glob = require('glob');
 const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -19,9 +18,15 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         publicDir = composerConfig.extra['public-dir'];
     }
 
-    const entries = glob.sync(
-        path.resolve(__dirname, 'src/Sulu/Bundle/*/Resources/js/index.js') // eslint-disable-line no-undef
-    );
+    const entries = [];
+
+    entries.unshift('sulu-admin-bundle');
+    entries.unshift('sulu-contact-bundle');
+    entries.unshift('sulu-media-bundle');
+    entries.unshift('sulu-page-bundle');
+    entries.unshift('sulu-preview-bundle');
+    entries.unshift('sulu-security-bundle');
+
     const entriesCount = entries.length;
 
     entries.unshift('core-js/fn/array/includes');
@@ -57,7 +62,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules/,
+                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
                     use: 'babel-loader',
                 },
                 {

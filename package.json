@@ -3,6 +3,7 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "scripts": {
+        "preinstall": "node preinstall.js",
         "lint:js": "eslint .",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",

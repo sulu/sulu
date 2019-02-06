@@ -6,7 +6,9 @@ jobs:
       - image: circleci/node:10.9
     steps:
       - checkout
-      # Node
+      - run:
+            name: Check error for yarn install
+            command: tests/js/check-yarn-warning.sh
       - run: npm install
       - run: npm run lint:js
       - run: npm run lint:scss

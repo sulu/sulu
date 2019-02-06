@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Add sulu preinstall script to your package.json
+
+Sulu will check if the dependencies are correctly install in a preinstall script
+add this to your project `package.json`:
+
+```diff
+     "scripts": {
++        "preinstall": "node vendor/sulu/sulu/preinstall.js",
+```
+
 ### Type information of contacts
 
 The contacts have different sub entities, which are assigned in combination with a type (e.g. phone numbers, fax number,
