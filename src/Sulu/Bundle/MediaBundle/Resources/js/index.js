@@ -36,11 +36,13 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object) => {
     const imageFormatUrl = config.endpoints.image_format;
     blockPreviewTransformerRegistry.add(
         FIELD_TYPE_MEDIA_SELECTION,
-        new MediaSelectionBlockPreviewTransformer(imageFormatUrl)
+        new MediaSelectionBlockPreviewTransformer(imageFormatUrl),
+        2048
     );
     blockPreviewTransformerRegistry.add(
         FIELD_TYPE_SINGLE_MEDIA_SELECTION,
-        new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl)
+        new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl),
+        2048
     );
 });
 

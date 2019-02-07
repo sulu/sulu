@@ -116,6 +116,21 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 return (propertyTag2.priority || 0) - (propertyTag1.priority || 0);
             });
 
+        if (previewPropertyNames.length === 0) {
+            for (const fieldTypeKey of blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority) {
+                for (const propertyName of Object.keys(blockSchemaTypeForm)) {
+                    if (blockSchemaTypeForm[propertyName].type === fieldTypeKey) {
+                        previewPropertyNames.push(propertyName);
+                        break;
+                    }
+                }
+
+                if (previewPropertyNames.length >= 3) {
+                    break;
+                }
+            }
+        }
+
         return (
             <Fragment>
                 <div className={fieldBlocksStyles.type}>

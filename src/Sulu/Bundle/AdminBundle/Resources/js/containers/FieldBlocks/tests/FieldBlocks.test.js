@@ -34,11 +34,14 @@ jest.mock('../../../utils/Translator', () => ({
 jest.mock('../registries/BlockPreviewTransformerRegistry', () => ({
     has: jest.fn(),
     get: jest.fn(),
+    blockPreviewTransformerKeysByPriority: [],
 }));
 
 beforeEach(() => {
     blockPreviewTransformerRegistry.has.mockClear();
     blockPreviewTransformerRegistry.get.mockClear();
+    // $FlowFixMe
+    blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority = [];
 });
 
 test('Render collapsed blocks with block previews', () => {
@@ -122,6 +125,116 @@ test('Render collapsed blocks with block previews', () => {
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
+test('Render collapsed blocks with block previews without tags', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                nothing: {
+                    label: 'Nothing',
+                    type: 'phone',
+                    visible: true,
+                },
+                text1: {
+                    label: 'Text 1',
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    type: 'media_selection',
+                    visible: true,
+                },
+                something: {
+                    label: 'Text 3',
+                    type: 'text_editor',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            nothing: 'phone',
+            text1: 'Test 1',
+            text2: 'Test 2',
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            nothing: 'phone',
+            text1: 'Test 4',
+            text2: 'Test 5',
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'media_selection':
+            case 'phone':
+            case 'text_line':
+            case 'text_editor':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'phone':
+                return {
+                    transform: function Transformer() {
+                        return <p>phone</p>;
+                    },
+                };
+            case 'media_selection':
+                return {
+                    transform: function Transformer() {
+                        return <p>media_selection</p>;
+                    },
+                };
+            case 'text_line':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_line</p>;
+                    },
+                };
+            case 'text_editor':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_editor</p>;
+                    },
+                };
+        }
+    });
+
+    // $FlowFixMe
+    blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority = [
+        'media_selection',
+        'text_line',
+        'text_editor',
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
             formInspector={formInspector}
             types={types}
             value={value}

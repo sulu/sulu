@@ -1,8 +1,10 @@
 // @flow
-import type {BlockPreviewTransformer} from '../types';
+import {computed, observable} from 'mobx';
+import type {BlockPreviewTransformer, BlockPreviewTransformerMap} from '../types';
 
 class BlockPreviewTransformerRegistry {
-    blockPreviewTransformers: {[string]: BlockPreviewTransformer};
+    @observable blockPreviewTransformers: BlockPreviewTransformerMap;
+    @observable priority: {[string]: number};
 
     constructor() {
         this.clear();
@@ -10,18 +12,20 @@ class BlockPreviewTransformerRegistry {
 
     clear() {
         this.blockPreviewTransformers = {};
+        this.priority = {};
     }
 
     has(name: string) {
         return !!this.blockPreviewTransformers[name];
     }
 
-    add(name: string, blockPreviewTransformer: BlockPreviewTransformer) {
+    add(name: string, blockPreviewTransformer: BlockPreviewTransformer, priority: number = 0) {
         if (name in this.blockPreviewTransformers) {
             throw new Error('The key "' + name + '" has already been used for another BlockPreviewTransformer');
         }
 
         this.blockPreviewTransformers[name] = blockPreviewTransformer;
+        this.priority[name] = priority;
     }
 
     get(name: string): BlockPreviewTransformer {
@@ -33,6 +37,13 @@ class BlockPreviewTransformerRegistry {
         }
 
         return this.blockPreviewTransformers[name];
+    }
+
+    @computed get blockPreviewTransformerKeysByPriority(): Array<string> {
+        return Object.keys(this.priority)
+            .sort((blockPreviewTransformerKey1, blockPreviewTransformerKey2) => {
+                return this.priority[blockPreviewTransformerKey2] - this.priority[blockPreviewTransformerKey1];
+            });
     }
 }
 

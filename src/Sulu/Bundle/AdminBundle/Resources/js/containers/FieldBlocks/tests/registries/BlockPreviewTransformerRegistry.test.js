@@ -19,16 +19,16 @@ test('Clear all transformers', () => {
 });
 
 test('Add transformer', () => {
-    const Test1 = class Test1 {
+    class Test1 {
         transform(value: *): * {
             return value;
         }
-    };
-    const Test2 = class Test1 {
+    }
+    class Test2 {
         transform(value: *): * {
             return value;
         }
-    };
+    }
     blockPreviewTransformerRegistry.add('test1', new Test1());
     blockPreviewTransformerRegistry.add('test2', new Test2());
 
@@ -36,12 +36,28 @@ test('Add transformer', () => {
     expect(blockPreviewTransformerRegistry.get('test2')).toBeInstanceOf(Test2);
 });
 
-test('Add transformer with existing key should throw', () => {
-    const Test1 = class Test1 {
+test('Get transformer keys sorted by priority', () => {
+    class Test {
         transform(value: *): * {
             return value;
         }
-    };
+    }
+
+    blockPreviewTransformerRegistry.add('test1', new Test(), 10);
+    blockPreviewTransformerRegistry.add('test2', new Test(), 15);
+    blockPreviewTransformerRegistry.add('test3', new Test(), -10);
+    blockPreviewTransformerRegistry.add('test4', new Test());
+
+    expect(blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority)
+        .toEqual(['test2', 'test1', 'test4', 'test3']);
+});
+
+test('Add transformer with existing key should throw', () => {
+    class Test1 {
+        transform(value: *): * {
+            return value;
+        }
+    }
     blockPreviewTransformerRegistry.add('test1', new Test1());
     expect(() => blockPreviewTransformerRegistry.add('test1', new Test1())).toThrow(/test1/);
 });
