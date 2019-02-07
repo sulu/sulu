@@ -578,6 +578,35 @@ test('Should pass apiOptions from router to the DatagridStore', () => {
     expect(datagridStore.options.webspace).toEqual('example');
 });
 
+test('Should pass router attributes from router to the DatagridStore', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        attributes: {
+            id: '123-123-123',
+            locale: 'en',
+            title: 'Sulu is awesome',
+        },
+        route: {
+            options: {
+                adapters: ['table'],
+                apiOptions: {},
+                datagridKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                routerAttributesToDatagridStore: {'0': 'locale', 1: 'title', 'parentId': 'id'},
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+
+    expect(datagridStore.options.locale).toEqual('en');
+    expect(datagridStore.options.parentId).toEqual('123-123-123');
+    expect(datagridStore.options.title).toEqual('Sulu is awesome');
+});
+
 test('Should pass locale and page observables to the DatagridStore', () => {
     const Datagrid = require('../Datagrid').default;
     const router = {

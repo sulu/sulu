@@ -1,8 +1,8 @@
 // @flow
 import type {ElementRef} from 'react';
 import React from 'react';
-import {action, computed, isObservableArray, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import {action, computed, isObservableArray, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
@@ -64,11 +64,11 @@ class Form extends React.Component<Props> {
             attributes,
             route: {
                 options: {
+                    apiOptions = {},
                     formKey,
                     idQueryParameter,
                     resourceKey,
-                    apiOptions,
-                    routerAttributesToFormStore,
+                    routerAttributesToFormStore = {},
                 },
             },
         } = router;
@@ -85,12 +85,7 @@ class Form extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "formKey" option');
         }
 
-        const formStoreOptions = apiOptions ? apiOptions : {};
-        if (routerAttributesToFormStore) {
-            routerAttributesToFormStore.forEach((routerAttribute) => {
-                formStoreOptions[routerAttribute] = attributes[routerAttribute];
-            });
-        }
+        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
@@ -112,6 +107,25 @@ class Form extends React.Component<Props> {
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
         }
+    }
+
+    buildFormStoreOptions(
+        apiOptions: Object,
+        attributes: Object,
+        routerAttributesToFormStore: { [string | number]: string }
+    ) {
+        const formStoreOptions = apiOptions ? apiOptions : {};
+
+        Object.keys(routerAttributesToFormStore).forEach((key) => {
+            const attributeName = routerAttributesToFormStore[key];
+            if (!isNaN(key)) {
+                key = routerAttributesToFormStore[key];
+            }
+
+            formStoreOptions[key] = attributes[attributeName];
+        });
+
+        return formStoreOptions;
     }
 
     @action componentDidMount() {

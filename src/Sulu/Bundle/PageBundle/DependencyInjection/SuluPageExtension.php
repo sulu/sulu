@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\DependencyInjection;
 
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Document\RouteDocument;
@@ -130,7 +129,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                             ],
                             'resources' => [
                                 'pages' => [
-                                    'datagrid' => BasePageDocument::class,
                                     'endpoint' => 'get_pages',
                                 ],
                             ],

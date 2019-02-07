@@ -88,11 +88,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'resources' => [
                         'contacts' => [
-                            'datagrid' => '%sulu.model.contact.class%',
                             'endpoint' => 'get_contacts',
                         ],
                         'accounts' => [
-                            'datagrid' => Account::class,
                             'endpoint' => 'get_accounts',
                         ],
                         'contact_titles' => [

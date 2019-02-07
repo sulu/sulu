@@ -86,7 +86,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                             'type_map' => ['snippet' => SnippetBridge::class],
                             'resources' => [
                                 'snippets' => [
-                                    'datagrid' => SnippetDocument::class,
                                     'endpoint' => 'get_snippets',
                                 ],
                             ],

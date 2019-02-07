@@ -73,11 +73,9 @@ class ResourceMetadataProviderTest extends TestCase
 
         $resourcesConfig = [
             'contacts' => [
-                'datagrid' => 'ContactsClass',
                 'endpoint' => '123',
             ],
             'accounts' => [
-                'datagrid' => 'AccountsClass',
                 'endpoint' => '123',
             ],
         ];

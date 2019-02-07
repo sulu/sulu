@@ -46,6 +46,20 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
         return $this;
     }
 
+    public function setTabTitle(string $tabTitle): DatagridRouteBuilderInterface
+    {
+        $this->route->setOption('tabTitle', $tabTitle);
+
+        return $this;
+    }
+
+    public function setTabOrder(int $tabOrder): DatagridRouteBuilderInterface
+    {
+        $this->route->setOption('tabOrder', $tabOrder);
+
+        return $this;
+    }
+
     public function addDatagridAdapters(array $datagridAdapters): DatagridRouteBuilderInterface
     {
         $oldDatagridAdapters = $this->route->getOption('adapters');
@@ -109,6 +123,22 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
     public function disableMoving(): DatagridRouteBuilderInterface
     {
         $this->route->setOption('movable', false);
+
+        return $this;
+    }
+
+    public function addRouterAttributesToDatagridStore(array $routerAttributesToDatagridStore): DatagridRouteBuilderInterface
+    {
+        $oldRouterAttributesToDatagridStore = $this->route->getOption('routerAttributesToDatagridStore');
+        $newRouterAttributesToDatagridStore = $oldRouterAttributesToDatagridStore ? array_merge($oldRouterAttributesToDatagridStore, $routerAttributesToDatagridStore) : $routerAttributesToDatagridStore;
+        $this->route->setOption('routerAttributesToDatagridStore', $newRouterAttributesToDatagridStore);
+
+        return $this;
+    }
+
+    public function setParent(string $parent): DatagridRouteBuilderInterface
+    {
+        $this->route->setParent($parent);
 
         return $this;
     }
