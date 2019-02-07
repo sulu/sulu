@@ -3,6 +3,9 @@ import React from 'react';
 import type {Node} from 'react';
 import {isObservableArray} from 'mobx';
 import type {BlockPreviewTransformer} from 'sulu-admin-bundle/types';
+import mediaSelectionBlockPreviewTransformerStyles from './mediaSelectionBlockPreviewTransformer.scss';
+
+const MAX_LENGTH = 8;
 
 export default class MediaSelectionBlockPreviewTransformer implements BlockPreviewTransformer {
     imageFormatUrl: string;
@@ -20,8 +23,12 @@ export default class MediaSelectionBlockPreviewTransformer implements BlockPrevi
 
         return (
             <div>
-                {ids.map((id) => (
-                    <img key={id} src={this.imageFormatUrl.replace(':id', id) + '?locale=en&format=sulu-50x50'} />
+                {ids.slice(0, MAX_LENGTH).map((id) => (
+                    <img
+                        className={mediaSelectionBlockPreviewTransformerStyles.image}
+                        key={id}
+                        src={this.imageFormatUrl.replace(':id', id) + '?locale=en&format=sulu-50x50'}
+                    />
                 ))}
             </div>
         );

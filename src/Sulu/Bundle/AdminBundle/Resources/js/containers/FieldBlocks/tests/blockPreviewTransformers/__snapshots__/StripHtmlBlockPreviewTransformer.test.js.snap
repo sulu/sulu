@@ -7,4 +7,10 @@ exports[`Return JSX for simple string 1`] = `
 </p>
 `;
 
+exports[`Return JSX for simple string 2`] = `
+<p>
+  cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc...
+</p>
+`;
+
 exports[`Return null for everything expect a string 1`] = `null`;
