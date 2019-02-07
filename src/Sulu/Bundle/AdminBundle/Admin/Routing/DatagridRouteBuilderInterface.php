@@ -19,6 +19,12 @@ interface DatagridRouteBuilderInterface
 
     public function setTitle(string $title): self;
 
+    public function setTabTitle(string $tabTitle): self;
+
+    public function setTabOrder(int $tabOrder): self;
+
+    public function setTabCondition(string $tabCondition): self;
+
     /**
      * @param string[] $adapter
      */
@@ -42,6 +48,13 @@ interface DatagridRouteBuilderInterface
     public function enableMoving(): self;
 
     public function disableMoving(): self;
+
+    /**
+     * @param string[] $routerAttributesToDatagridStore
+     */
+    public function addRouterAttributesToDatagridStore(array $routerAttributesToDatagridStore): self;
+
+    public function setParent(string $parent): self;
 
     public function getRoute(): Route;
 }

@@ -1,9 +1,9 @@
 // @flow
-import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import React from 'react';
 import type {ElementRef} from 'react';
+import React from 'react';
 import {default as DatagridContainer} from '../../containers/Datagrid';
 import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
 import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
@@ -45,13 +45,15 @@ class Datagrid extends React.Component<ViewProps> {
 
         const router = this.props.router;
         const {
+            attributes,
             route: {
                 options: {
                     adapters,
-                    apiOptions,
+                    apiOptions = {},
                     datagridKey,
                     locales,
                     resourceKey,
+                    routerAttributesToDatagridStore = {},
                 },
             },
         } = router;
@@ -78,12 +80,18 @@ class Datagrid extends React.Component<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
+        const datagridStoreOptions = this.buildDatagridStoreOptions(
+            apiOptions,
+            attributes,
+            routerAttributesToDatagridStore
+        );
+
         this.datagridStore = new DatagridStore(
             resourceKey,
             datagridKey,
             USER_SETTINGS_KEY,
             observableOptions,
-            apiOptions
+            datagridStoreOptions
         );
 
         router.bind('active', this.datagridStore.active);
@@ -91,6 +99,24 @@ class Datagrid extends React.Component<ViewProps> {
         router.bind('sortOrder', this.datagridStore.sortOrder);
         router.bind('search', this.datagridStore.searchTerm);
         router.bind('limit', this.datagridStore.limit, 10);
+    }
+
+    buildDatagridStoreOptions(
+        apiOptions: Object,
+        attributes: Object,
+        routerAttributesToDatagridStore: {[string | number]: string}
+    ) {
+        const datagridStoreOptions = apiOptions ? apiOptions : {};
+
+        routerAttributesToDatagridStore = toJS(routerAttributesToDatagridStore);
+        Object.keys(routerAttributesToDatagridStore).forEach((key) => {
+            const attributeName = routerAttributesToDatagridStore[key];
+            const datagridOptionKey = isNaN(key) ? key : routerAttributesToDatagridStore[key];
+
+            datagridStoreOptions[datagridOptionKey] = attributes[attributeName];
+        });
+
+        return datagridStoreOptions;
     }
 
     componentWillUnmount() {

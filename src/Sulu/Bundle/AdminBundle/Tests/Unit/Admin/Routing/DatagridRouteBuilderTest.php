@@ -221,4 +221,68 @@ class DatagridRouteBuilderTest extends TestCase
 
         $this->assertFalse($route->getOption('movable'));
     }
+
+    public function testBuildDatagridWithRouterAttributesToFormStore()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->addRouterAttributesToDatagridStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToDatagridStore(['locale'])
+            ->getRoute();
+
+        $this->assertEquals(
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
+            $route->getOption('routerAttributesToDatagridStore')
+        );
+    }
+
+    public function testBuildDatagridSetParent()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setParent('sulu_role.parent_view')
+            ->getRoute();
+
+        $this->assertEquals('sulu_role.parent_view', $route->getParent());
+    }
+
+    public function testBuildDatagridSetTabTitle()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setTabTitle('sulu_role.title')
+            ->getRoute();
+
+        $this->assertEquals('sulu_role.title', $route->getOption('tabTitle'));
+    }
+
+    public function testBuildDatagridSetTabOrder()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setTabOrder(5)
+            ->getRoute();
+
+        $this->assertEquals(5, $route->getOption('tabOrder'));
+    }
+
+    public function testBuildDatagridSetTabCondition()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setTabCondition('state == 1')
+            ->getRoute();
+
+        $this->assertEquals('state == 1', $route->getOption('tabCondition'));
+    }
 }

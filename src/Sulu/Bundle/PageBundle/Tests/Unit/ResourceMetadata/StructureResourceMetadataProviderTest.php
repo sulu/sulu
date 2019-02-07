@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\ResourceMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Datagrid\Datagrid;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataInterface;
 use Sulu\Bundle\PageBundle\ResourceMetadata\StructureResourceMetadataProvider;
@@ -36,12 +35,10 @@ class StructureResourceMetadataProviderTest extends TestCase
     {
         $resourcesConfig = [
             'pages' => [
-                'datagrid' => 'PageDocumentClass',
                 'types' => ['page', 'home'],
                 'endpoint' => 'get_pages',
             ],
             'snippets' => [
-                'datagrid' => 'SnippetDocumentClass',
                 'types' => ['snippet'],
                 'endpoint' => 'get_snippets',
             ],

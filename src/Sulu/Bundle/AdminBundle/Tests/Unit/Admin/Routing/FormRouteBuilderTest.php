@@ -143,12 +143,12 @@ class FormRouteBuilderTest extends TestCase
         $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
-            ->addRouterAttributesToFormStore(['webspace', 'parent'])
+            ->addRouterAttributesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
             ->addRouterAttributesToFormStore(['locale'])
             ->getRoute();
 
         $this->assertEquals(
-            ['webspace', 'parent', 'locale'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToFormStore')
         );
     }
