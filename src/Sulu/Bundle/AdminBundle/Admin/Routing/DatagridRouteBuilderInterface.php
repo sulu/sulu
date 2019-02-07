@@ -23,6 +23,8 @@ interface DatagridRouteBuilderInterface
 
     public function setTabOrder(int $tabOrder): self;
 
+    public function setTabCondition(string $tabCondition): self;
+
     /**
      * @param string[] $adapter
      */

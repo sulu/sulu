@@ -2,7 +2,7 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import type {IObservableValue} from 'mobx';
-import {action, computed, isObservableArray, observable, when} from 'mobx';
+import {action, computed, toJS, isObservableArray, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
@@ -116,6 +116,7 @@ class Form extends React.Component<Props> {
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
+        routerAttributesToFormStore = toJS(routerAttributesToFormStore);
         Object.keys(routerAttributesToFormStore).forEach((key) => {
             const attributeName = routerAttributesToFormStore[key];
             const formOptionKey = isNaN(key) ? key : routerAttributesToFormStore[key];

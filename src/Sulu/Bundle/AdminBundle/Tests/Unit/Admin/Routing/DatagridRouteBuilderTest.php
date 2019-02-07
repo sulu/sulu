@@ -273,4 +273,16 @@ class DatagridRouteBuilderTest extends TestCase
 
         $this->assertEquals(5, $route->getOption('tabOrder'));
     }
+
+    public function testBuildDatagridSetTabCondition()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setTabCondition('state == 1')
+            ->getRoute();
+
+        $this->assertEquals('state == 1', $route->getOption('tabCondition'));
+    }
 }

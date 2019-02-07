@@ -60,6 +60,13 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
         return $this;
     }
 
+    public function setTabCondition(string $tabCondition): DatagridRouteBuilderInterface
+    {
+        $this->route->setOption('tabCondition', $tabCondition);
+
+        return $this;
+    }
+
     public function addDatagridAdapters(array $datagridAdapters): DatagridRouteBuilderInterface
     {
         $oldDatagridAdapters = $this->route->getOption('adapters');

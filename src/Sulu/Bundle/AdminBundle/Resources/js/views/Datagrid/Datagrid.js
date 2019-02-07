@@ -1,6 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
@@ -108,6 +108,7 @@ class Datagrid extends React.Component<ViewProps> {
     ) {
         const datagridStoreOptions = apiOptions ? apiOptions : {};
 
+        routerAttributesToDatagridStore = toJS(routerAttributesToDatagridStore);
         Object.keys(routerAttributesToDatagridStore).forEach((key) => {
             const attributeName = routerAttributesToDatagridStore[key];
             const datagridOptionKey = isNaN(key) ? key : routerAttributesToDatagridStore[key];

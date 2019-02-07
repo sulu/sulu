@@ -876,7 +876,7 @@ test('Should save form when submitted with mapped router attributes', (done) => 
         options: {
             formKey: 'snippets',
             locales: [],
-            routerAttributesToFormStore: ['parentId', 'webspace'],
+            routerAttributesToFormStore: observable(['parentId', 'webspace']),
             toolbarActions: [],
         },
     };

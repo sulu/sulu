@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import {observable} from 'mobx';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
@@ -604,6 +605,35 @@ test('Should pass router attributes from router to the DatagridStore', () => {
 
     expect(datagridStore.options.locale).toEqual('en');
     expect(datagridStore.options.parentId).toEqual('123-123-123');
+    expect(datagridStore.options.title).toEqual('Sulu is awesome');
+});
+
+test('Should pass router attributes array from router to the DatagridStore', () => {
+    const Datagrid = require('../Datagrid').default;
+    const router = {
+        bind: jest.fn(),
+        attributes: {
+            id: '123-123-123',
+            locale: 'en',
+            title: 'Sulu is awesome',
+        },
+        route: {
+            options: {
+                adapters: ['table'],
+                apiOptions: {},
+                datagridKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                routerAttributesToDatagridStore: observable(['locale', 'title', 'id']),
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+    const datagridStore = datagrid.instance().datagridStore;
+
+    expect(datagridStore.options.locale).toEqual('en');
+    expect(datagridStore.options.id).toEqual('123-123-123');
     expect(datagridStore.options.title).toEqual('Sulu is awesome');
 });
 
