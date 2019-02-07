@@ -131,6 +131,90 @@ test('Render collapsed blocks with block previews', () => {
     expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
+test('Render collapsed blocks with block previews', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    tags: [
+                        {name: 'sulu.block_preview', priority: -100},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                something: {
+                    label: 'Text 3',
+                    tags: [
+                        {name: 'sulu.block_preview', priority: 100},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            text1: 'Test 1',
+            text2: 'Test 2',
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            text1: 'Test 4',
+            text2: 'Test 5',
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return {
+                    transform: function Transformer(value) {
+                        return <p>{value}</p>;
+                    },
+                };
+        }
+    });
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
 test('Render block with schema', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 

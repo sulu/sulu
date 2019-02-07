@@ -91,6 +91,29 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             .filter((schemaKey) => {
                 const schemaEntryTags = blockSchemaTypeForm[schemaKey].tags;
                 return schemaEntryTags && schemaEntryTags.some((tag) => tag.name === BLOCK_PREVIEW_TAG);
+            })
+            .sort((propertyName1, propertyName2) => {
+                const propertyTags1 = blockSchemaTypeForm[propertyName1].tags;
+                const propertyTags2 = blockSchemaTypeForm[propertyName2].tags;
+
+                if (!propertyTags1 || !propertyTags2) {
+                    throw new Error(
+                        'All properties without any tag should have been filtered before.'
+                        + ' This should not happen and is likely a bug.'
+                    );
+                }
+
+                const propertyTag1 = propertyTags1.find((tag) => tag.name === BLOCK_PREVIEW_TAG);
+                const propertyTag2 = propertyTags2.find((tag) => tag.name === BLOCK_PREVIEW_TAG);
+
+                if (!propertyTag1 || !propertyTag2) {
+                    throw new Error(
+                        'All properties not having the "sulu.block_preview" tag should have been filtered before.'
+                        + ' This should not happen and is likely a bug.'
+                    );
+                }
+
+                return (propertyTag2.priority || 0) - (propertyTag1.priority || 0);
             });
 
         return (

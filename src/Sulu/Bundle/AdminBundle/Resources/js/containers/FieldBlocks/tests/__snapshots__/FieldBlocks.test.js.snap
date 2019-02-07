@@ -786,3 +786,92 @@ exports[`Render collapsed blocks with block previews 1`] = `
   </button>
 </section>
 `;
+
+exports[`Render collapsed blocks with block previews 2`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 3
+          </p>
+          <p>
+            Test 2
+          </p>
+          <p>
+            Test 1
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 6
+          </p>
+          <p>
+            Test 5
+          </p>
+          <p>
+            Test 4
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
