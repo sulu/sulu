@@ -17,6 +17,9 @@ import MediaDetails from './views/MediaDetails';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 
+const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
+const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
+
 initializer.addUpdateConfigHook('sulu_media', (config: Object) => {
     viewRegistry.add('sulu_media.overview', MediaOverview);
     viewRegistry.add('sulu_media.details', MediaDetails);
@@ -26,14 +29,17 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object) => {
     datagridAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
     datagridAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
 
-    fieldRegistry.add('media_selection', MediaSelection);
-    fieldRegistry.add('single_media_selection', SingleMediaSelection);
+    fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
+    fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);
     fieldRegistry.add('single_media_upload', SingleMediaUpload);
 
     const imageFormatUrl = config.endpoints.image_format;
-    blockPreviewTransformerRegistry.add('media_selection', new MediaSelectionBlockPreviewTransformer(imageFormatUrl));
     blockPreviewTransformerRegistry.add(
-        'single_media_selection',
+        FIELD_TYPE_MEDIA_SELECTION,
+        new MediaSelectionBlockPreviewTransformer(imageFormatUrl)
+    );
+    blockPreviewTransformerRegistry.add(
+        FIELD_TYPE_SINGLE_MEDIA_SELECTION,
         new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl)
     );
 });

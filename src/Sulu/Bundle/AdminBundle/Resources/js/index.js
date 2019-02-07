@@ -87,6 +87,18 @@ Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
 jexl.addTransform('values', (value: Array<*>) => Object.values(value));
 
+const FIELD_TYPE_COLOR = 'color';
+const FIELD_TYPE_EMAIL = 'email';
+const FIELD_TYPE_NUMBER = 'number';
+const FIELD_TYPE_PHONE = 'phone';
+const FIELD_TYPE_SELECT = 'select';
+const FIELD_TYPE_SINGLE_SELECT = 'single_select';
+const FIELD_TYPE_SMART_CONTENT = 'smart_content';
+const FIELD_TYPE_TEXT_AREA = 'text_area';
+const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
+const FIELD_TYPE_TEXT_LINE = 'text_line';
+const FIELD_TYPE_URL = 'url';
+
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
         registerBlockPreviewTransformers();
@@ -137,22 +149,22 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add('block', FieldBlocks);
     fieldRegistry.add('changelog_line', ChangelogLine);
     fieldRegistry.add('checkbox', Checkbox);
-    fieldRegistry.add('color', ColorPicker);
+    fieldRegistry.add(FIELD_TYPE_COLOR, ColorPicker);
     fieldRegistry.add('date', DatePicker, {dateFormat: true, timeFormat: false});
     fieldRegistry.add('datetime', DatePicker, {dateFormat: true, timeFormat: true});
-    fieldRegistry.add('email', Email);
-    fieldRegistry.add('select', Select);
-    fieldRegistry.add('number', Number);
+    fieldRegistry.add(FIELD_TYPE_EMAIL, Email);
+    fieldRegistry.add(FIELD_TYPE_SELECT, Select);
+    fieldRegistry.add(FIELD_TYPE_NUMBER, Number);
     fieldRegistry.add('password_confirmation', PasswordConfirmation);
-    fieldRegistry.add('phone', Phone);
+    fieldRegistry.add(FIELD_TYPE_PHONE, Phone);
     fieldRegistry.add('resource_locator', ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
-    fieldRegistry.add('smart_content', SmartContent);
-    fieldRegistry.add('single_select', SingleSelect);
-    fieldRegistry.add('text_line', Input);
-    fieldRegistry.add('text_area', TextArea);
-    fieldRegistry.add('text_editor', TextEditor);
+    fieldRegistry.add(FIELD_TYPE_SMART_CONTENT, SmartContent);
+    fieldRegistry.add(FIELD_TYPE_SINGLE_SELECT, SingleSelect);
+    fieldRegistry.add(FIELD_TYPE_TEXT_AREA, TextArea);
+    fieldRegistry.add(FIELD_TYPE_TEXT_EDITOR, TextEditor);
+    fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
     fieldRegistry.add('time', DatePicker, {dateFormat: false, timeFormat: true});
-    fieldRegistry.add('url', Url);
+    fieldRegistry.add(FIELD_TYPE_URL, Url);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
@@ -167,16 +179,17 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
 }
 
 function registerBlockPreviewTransformers() {
-    blockPreviewTransformerRegistry.add('color', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('email', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('number', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('phone', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('text_area', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('text_editor', new StripHtmlBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('text_line', new StringBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('select', new SelectBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('single_select', new SingleSelectBlockPreviewTransformer());
-    blockPreviewTransformerRegistry.add('smart_content', new SmartContentBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_COLOR, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_EMAIL, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_NUMBER, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_PHONE, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_SELECT, new SelectBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_SINGLE_SELECT, new SingleSelectBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_SMART_CONTENT, new SmartContentBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_AREA, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_EDITOR, new StripHtmlBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_LINE, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_URL, new StringBlockPreviewTransformer());
 }
 
 function registerTextEditors() {
