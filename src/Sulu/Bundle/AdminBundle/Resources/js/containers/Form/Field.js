@@ -81,6 +81,7 @@ export default class Field extends React.Component<Props> {
     render() {
         const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
         const {
+            defaultType,
             description,
             disabled,
             label,
@@ -135,6 +136,7 @@ export default class Field extends React.Component<Props> {
                     <div className={fieldStyles.field}>
                         <FieldType
                             dataPath={dataPath}
+                            defaultType={defaultType}
                             disabled={disabled}
                             error={error}
                             fieldTypeOptions={fieldTypeOptions}

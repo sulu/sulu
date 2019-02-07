@@ -7,7 +7,7 @@ import SortableHandle from './SortableHandle';
 import type {RenderBlockContentCallback} from './types';
 
 type Props = {
-    activeType?: string,
+    activeType: string,
     expanded: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,

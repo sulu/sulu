@@ -15,6 +15,7 @@ jest.mock('../../../utils/Translator', () => ({
 test('Render collapsed sortable block', () => {
     expect(render(
         <SortableBlock
+            activeType="editor"
             expanded={false}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -31,6 +32,7 @@ test('Render expanded sortable block', () => {
 
     expect(render(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -47,6 +49,7 @@ test('Render expanded sortable block without remove icon', () => {
 
     expect(render(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -84,6 +87,7 @@ test('Should call onCollapse when the block is being collapsed', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
             onExpand={expandSpy}
@@ -108,6 +112,7 @@ test('Should call onExpand when the block is being expanded', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
             onExpand={expandSpy}
@@ -132,6 +137,7 @@ test('Should call onRemove when the block is being removed', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
             onExpand={expandSpy}
@@ -154,6 +160,7 @@ test('Should call onTypeChange when the block has changed its type', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -176,6 +183,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
 
     shallow(
         <SortableBlock
+            activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -186,7 +194,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
         />
     );
 
-    expect(renderBlockContentSpy).toBeCalledWith(value, undefined, 7);
+    expect(renderBlockContentSpy).toBeCalledWith(value, 'editor', 7);
 });
 
 test('Should call renderBlockContent with the correct arguments when types are involved', () => {
