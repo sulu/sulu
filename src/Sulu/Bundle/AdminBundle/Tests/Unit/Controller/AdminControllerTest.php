@@ -258,6 +258,7 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
         $this->urlGenerator->generate('cget_contexts')->willReturn('/security/contexts');
         $this->urlGenerator->generate('sulu_website.cache.remove')->willReturn('/admin/website/cache');
+        $this->urlGenerator->generate('sulu_media.redirect', ['id' => ':id'])->willReturn('/media/redirect');
 
         $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
             [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]

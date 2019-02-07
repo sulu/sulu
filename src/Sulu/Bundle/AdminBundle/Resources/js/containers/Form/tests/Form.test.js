@@ -37,6 +37,7 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.isFieldModified = jest.fn();
     this.copyFromLocale = jest.fn();
     this.getValueByPath = jest.fn();
+    this.getSchemaEntryByPath = jest.fn().mockReturnValue({types: {default: {form: {}}}});
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a single image if an id is given 1`] = `
+<div>
+  <img
+    src="/admin/media/redirect/media/3?locale=en&format=sulu-50x50"
+  />
+  <img
+    src="/admin/media/redirect/media/7?locale=en&format=sulu-50x50"
+  />
+</div>
+`;
+
+exports[`Render nothing if a wrong type of value is given 1`] = `null`;
+
+exports[`Render nothing if no id is given 1`] = `null`;

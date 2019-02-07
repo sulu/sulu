@@ -1,7 +1,7 @@
 // @flow
 import type {FieldTransformer} from '../types';
 
-class FieldTransformerRegistry {
+class DatagridFieldTransformerRegistry {
     fieldTransformers: {[string]: FieldTransformer};
 
     constructor() {
@@ -36,4 +36,4 @@ class FieldTransformerRegistry {
     }
 }
 
-export default new FieldTransformerRegistry();
+export default new DatagridFieldTransformerRegistry();

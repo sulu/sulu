@@ -1,18 +1,25 @@
 @import '../../containers/Application/colors.scss';
 
-$borderRadius: 3px;
+$blockBorderRadius: 3px;
 $blockBackgroundColor: $white;
 $blockBorderColor: $silver;
-$handleBackgroundColor: $silver;
+$blockHandleColor: $black;
+$blockHandleBackgroundColor: $silver;
+$blockCollapsedTextColor: $silver;
 
 .block {
     display: flex;
     background-color: $blockBackgroundColor;
-    border-radius: $borderRadius;
+    border-radius: $blockBorderRadius;
 
     &:not(.expanded) {
+        color: $blockCollapsedTextColor;
         cursor: pointer;
         border: 1px solid $blockBorderColor;
+
+        .content {
+            padding: 20px 40px;
+        }
     }
 }
 
@@ -21,8 +28,9 @@ $handleBackgroundColor: $silver;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    background-color: $handleBackgroundColor;
-    border-radius: $borderRadius 0 0 $borderRadius;
+    color: $blockHandleColor;
+    background-color: $blockHandleBackgroundColor;
+    border-radius: $blockBorderRadius 0 0 $blockBorderRadius;
     width: 20px;
 }
 

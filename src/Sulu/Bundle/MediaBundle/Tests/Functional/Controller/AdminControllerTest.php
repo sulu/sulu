@@ -15,6 +15,19 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function testContactsConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $mediaConfig = $response->sulu_media;
+
+        $this->assertEquals('/redirect/media/:id', $mediaConfig->endpoints->image_format);
+    }
+
     public function testCollectionMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

@@ -8,6 +8,7 @@ import Datagrid, {
     PaginatedLoadingStrategy,
 } from './Datagrid';
 import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
+import {blockPreviewTransformerRegistry} from './FieldBlocks';
 import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
@@ -29,6 +30,7 @@ export type {
 
 export {
     AbstractAdapter,
+    blockPreviewTransformerRegistry,
     CardCollection,
     Datagrid,
     DatagridStore,

@@ -33,7 +33,14 @@ import {
     TimeFieldTransformer,
     TreeTableAdapter,
 } from './containers/Datagrid';
-import FieldBlocks from './containers/FieldBlocks';
+import FieldBlocks, {
+    blockPreviewTransformerRegistry,
+    SelectBlockPreviewTransformer,
+    SingleSelectBlockPreviewTransformer,
+    SmartContentBlockPreviewTransformer,
+    StringBlockPreviewTransformer,
+    StripHtmlBlockPreviewTransformer,
+} from './containers/FieldBlocks';
 import {
     Checkbox,
     ColorPicker,
@@ -82,12 +89,13 @@ jexl.addTransform('values', (value: Array<*>) => Object.values(value));
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
-        registerViews();
+        registerBlockPreviewTransformers();
         registerDatagridAdapters();
         registerDatagridFieldTransformers();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
         registerToolbarActions();
+        registerViews();
     }
 
     processConfig(config);
@@ -156,6 +164,19 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
             fieldRegistry.add(fieldTypeKey, Component, fieldTypeOptions[fieldTypeKey]);
         }
     }
+}
+
+function registerBlockPreviewTransformers() {
+    blockPreviewTransformerRegistry.add('color', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('email', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('number', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('phone', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('text_area', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('text_editor', new StripHtmlBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('text_line', new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('select', new SelectBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('single_select', new SingleSelectBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add('smart_content', new SmartContentBlockPreviewTransformer());
 }
 
 function registerTextEditors() {
