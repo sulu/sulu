@@ -14,10 +14,9 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Mock;
 use League\Flysystem\Adapter\Polyfill\StreamedCopyTrait;
 use League\Flysystem\Adapter\Polyfill\StreamedTrait;
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\Config;
+use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
-class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
+class GoogleCloudAdapterMock extends GoogleStorageAdapter implements AdapterInterface
 {
     use MemoryStorageAdapterTrait;
     use StreamedTrait;
