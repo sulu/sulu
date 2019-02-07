@@ -104,17 +104,15 @@ class Datagrid extends React.Component<ViewProps> {
     buildDatagridStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToDatagridStore: { [string | number]: string }
+        routerAttributesToDatagridStore: {[string | number]: string}
     ) {
         const datagridStoreOptions = apiOptions ? apiOptions : {};
 
         Object.keys(routerAttributesToDatagridStore).forEach((key) => {
             const attributeName = routerAttributesToDatagridStore[key];
-            if (!isNaN(key)) {
-                key = routerAttributesToDatagridStore[key];
-            }
+            const datagridOptionKey = isNaN(key) ? key : routerAttributesToDatagridStore[key];
 
-            datagridStoreOptions[key] = attributes[attributeName];
+            datagridStoreOptions[datagridOptionKey] = attributes[attributeName];
         });
 
         return datagridStoreOptions;

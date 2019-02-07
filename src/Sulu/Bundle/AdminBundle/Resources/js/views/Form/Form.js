@@ -112,17 +112,15 @@ class Form extends React.Component<Props> {
     buildFormStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToFormStore: { [string | number]: string }
+        routerAttributesToFormStore: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
         Object.keys(routerAttributesToFormStore).forEach((key) => {
             const attributeName = routerAttributesToFormStore[key];
-            if (!isNaN(key)) {
-                key = routerAttributesToFormStore[key];
-            }
+            const formOptionKey = isNaN(key) ? key : routerAttributesToFormStore[key];
 
-            formStoreOptions[key] = attributes[attributeName];
+            formStoreOptions[formOptionKey] = attributes[attributeName];
         });
 
         return formStoreOptions;
