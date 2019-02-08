@@ -288,6 +288,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     private function mapBlock(BlockMetadata $property, string $locale): Field
     {
         $field = $this->mapProperty($property, $locale);
+        $field->setDefaultType($property->getDefaultComponentName());
 
         foreach ($property->getComponents() as $component) {
             $blockType = new Form();

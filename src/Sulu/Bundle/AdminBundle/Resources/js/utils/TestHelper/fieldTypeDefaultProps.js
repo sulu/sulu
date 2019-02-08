@@ -2,6 +2,7 @@
 
 const fieldTypeDefaultProps = {
     dataPath: '/',
+    defaultType: undefined,
     disabled: undefined,
     error: undefined,
     fieldTypeOptions: {},

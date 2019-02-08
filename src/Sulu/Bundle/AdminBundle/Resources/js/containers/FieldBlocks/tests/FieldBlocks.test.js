@@ -55,16 +55,19 @@ test('Render block with schema', () => {
         {
             text1: 'Test 1',
             text2: 'Test 2',
+            type: 'default',
         },
         {
             text1: 'Test 3',
             text2: 'Test 4',
+            type: 'default',
         },
     ];
 
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             formInspector={formInspector}
             types={types}
             value={value}
@@ -96,12 +99,15 @@ test('Render block with schema and error on fields already being modified', () =
     const value = [
         {
             text: 'Test1',
+            type: 'default',
         },
         {
             text: 'T2',
+            type: 'default',
         },
         {
             text: 'T3',
+            type: 'default',
         },
     ];
 
@@ -129,6 +135,7 @@ test('Render block with schema and error on fields already being modified', () =
         <FieldBlocks
             {...fieldTypeDefaultProps}
             dataPath="/block"
+            defaultType="editor"
             error={error}
             formInspector={formInspector}
             schemaPath="/block"
@@ -163,12 +170,15 @@ test('Render block with schema and error on fields already being modified', () =
     const value = [
         {
             text: 'Test1',
+            type: 'default',
         },
         {
             text: 'T2',
+            type: 'default',
         },
         {
             text: 'T3',
+            type: 'default',
         },
     ];
 
@@ -191,6 +201,7 @@ test('Render block with schema and error on fields already being modified', () =
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             error={error}
             formInspector={formInspector}
             showAllErrors={true}
@@ -229,6 +240,7 @@ test('Should correctly pass props to the BlockCollection', () => {
     const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             disabled={true}
             formInspector={formInspector}
             label="Test"
@@ -271,10 +283,11 @@ test('Should pass correct schemaPath to FieldRender', () => {
         <FieldBlocks
             {...fieldTypeDefaultProps}
             dataPath=""
+            defaultType="editor"
             formInspector={formInspector}
             schemaPath=""
             types={types}
-            value={[{}, {}]}
+            value={[{type: 'default'}, {type: 'default'}]}
         />
     );
 
@@ -301,13 +314,14 @@ test('Should call onFinish when a field from the child renderer has finished edi
             },
         },
     };
-    const value = [{}];
+    const value = [{type: 'default'}];
 
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             dataPath=""
+            defaultType="editor"
             fieldTypeOptions={{}}
             formInspector={formInspector}
             onFinish={finishSpy}
@@ -337,12 +351,13 @@ test('Should call onFinish when the order of the blocks has changed', () => {
             },
         },
     };
-    const value = [{}];
+    const value = [{type: 'default'}];
 
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             formInspector={formInspector}
             onFinish={finishSpy}
             types={types}
@@ -355,11 +370,22 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Throw error if no default type are passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    expect(() => shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+        />
+    )).toThrow('The "block" field type needs a defaultType!');
+});
+
 test('Throw error if no types are passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             formInspector={formInspector}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');
@@ -370,6 +396,7 @@ test('Throw error if empty type array is passed', () => {
     expect(() => shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="editor"
             formInspector={formInspector}
             value={[]}
         />

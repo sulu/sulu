@@ -24,6 +24,11 @@ class Field extends Item
     protected $types = [];
 
     /**
+     * @var string
+     */
+    protected $defaultType;
+
+    /**
      * @var bool
      */
     protected $required;
@@ -51,6 +56,16 @@ class Field extends Item
     public function addOption(Option $option): void
     {
         $this->options[$option->getName()] = $option;
+    }
+
+    public function getDefaultType(): string
+    {
+        return $this->defaultType;
+    }
+
+    public function setDefaultType(string $defaultType): void
+    {
+        $this->defaultType = $defaultType;
     }
 
     /**

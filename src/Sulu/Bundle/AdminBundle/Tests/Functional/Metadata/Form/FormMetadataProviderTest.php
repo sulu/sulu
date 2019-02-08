@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\Form;
 
+use Sulu\Bundle\AdminBundle\Metadata\Form\Field;
 use Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\Form\Section;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
@@ -109,5 +110,20 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertEquals('test11', $section1->getItems()['test11']->getName());
         $this->assertEquals('test21', $section2->getItems()['test21']->getName());
         $this->assertEquals('test221', $section22->getItems()['test221']->getName());
+    }
+
+    public function testGetMetadataWithBlocks()
+    {
+        $form = $this->formMetadataProvider->getMetadata('form_with_blocks', 'en');
+
+        $blocks = $form->getItems()['blocks'];
+
+        $this->assertInstanceOf(Field::class, $blocks);
+        $this->assertEquals('editor', $blocks->getDefaultType());
+
+        $types = $blocks->getTypes();
+        $this->assertCount(2, $types);
+        $this->assertEquals('editor', $types['editor']->getName());
+        $this->assertEquals('editor_image', $types['editor_image']->getName());
     }
 }

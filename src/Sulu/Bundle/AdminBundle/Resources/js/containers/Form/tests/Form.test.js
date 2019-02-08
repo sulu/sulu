@@ -193,6 +193,7 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     // $FlowFixMe
     store.schema = {
         block: {
+            defaultType: 'default',
             type: 'block',
             types: {
                 default: {

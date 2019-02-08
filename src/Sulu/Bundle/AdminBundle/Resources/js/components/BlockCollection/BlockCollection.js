@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, observable, toJS} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
@@ -10,6 +10,7 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {|
+    defaultType: string,
     disabled: boolean,
     maxOccurs?: ?number,
     minOccurs?: ?number,
@@ -31,16 +32,6 @@ export default class BlockCollection extends React.Component<Props> {
 
     @observable expandedBlocks: Array<boolean> = [];
 
-    @computed get defaultType(): ?string {
-        const {types} = this.props;
-
-        if (!types) {
-            return undefined;
-        }
-
-        return Object.keys(types)[0];
-    }
-
     constructor(props: Props) {
         super(props);
 
@@ -48,7 +39,7 @@ export default class BlockCollection extends React.Component<Props> {
     }
 
     fillArrays() {
-        const {onChange, minOccurs, value} = this.props;
+        const {defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks} = this;
 
         if (!value) {
@@ -62,14 +53,14 @@ export default class BlockCollection extends React.Component<Props> {
                 ...value,
                 ...Array.from(
                     {length: minOccurs - value.length},
-                    () => this.defaultType ? {type: this.defaultType} : {}
+                    () => ({type: defaultType})
                 ),
             ]);
         }
     }
 
     @action handleAddBlock = () => {
-        const {onChange, value} = this.props;
+        const {defaultType, onChange, value} = this.props;
 
         if (this.hasMaximumReached()) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -78,8 +69,7 @@ export default class BlockCollection extends React.Component<Props> {
         if (value) {
             this.expandedBlocks.push(true);
 
-            const newBlock = this.defaultType ? {type: this.defaultType} : {};
-            onChange([...value, newBlock]);
+            onChange([...value, {type: defaultType}]);
         }
     };
 

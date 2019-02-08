@@ -19,15 +19,18 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Should render an empty block list', () => {
-    expect(render(<BlockCollection onChange={jest.fn()} renderBlockContent={jest.fn()} />)).toMatchSnapshot();
+    expect(render(
+        <BlockCollection defaultType="editor" onChange={jest.fn()} renderBlockContent={jest.fn()} />
+    )).toMatchSnapshot();
 });
 
 test('Should render a block list', () => {
     expect(render(
         <BlockCollection
+            defaultType="editor"
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     )).toMatchSnapshot();
 });
@@ -35,10 +38,11 @@ test('Should render a block list', () => {
 test('Should render a disabled block list', () => {
     expect(render(
         <BlockCollection
+            defaultType="editor"
             disabled={true}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     )).toMatchSnapshot();
 });
@@ -46,19 +50,28 @@ test('Should render a disabled block list', () => {
 test('Should render a fully filled block list without add button if maxOccurs is reached', () => {
     expect(render(
         <BlockCollection
+            defaultType="editor"
             maxOccurs={2}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     )).toMatchSnapshot();
 });
 
 test('Should add at least the minOccurs amount of blocks', () => {
     const changeSpy = jest.fn();
-    const value = [{}];
+    const value = [{type: 'editor'}];
 
-    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+    shallow(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
 
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({}),
@@ -70,7 +83,15 @@ test('Should fill the array up to minOccurs with different objects', () => {
     const changeSpy = jest.fn();
     const value = [];
 
-    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+    shallow(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
 
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({}),
@@ -84,7 +105,15 @@ test('Should add at least the minOccurs amount of blocks with empty starting val
     const changeSpy = jest.fn();
     const value = [];
 
-    shallow(<BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />);
+    shallow(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
 
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({}),
@@ -98,17 +127,18 @@ test('Should add at least the minOccurs amount of blocks with types', () => {
 
     shallow(
         <BlockCollection
+            defaultType="editor"
             minOccurs={2}
             onChange={changeSpy}
             renderBlockContent={jest.fn()}
-            types={{default: 'Default'}}
+            types={{default: 'Default', editor: 'Editor'}}
             value={value}
         />
     );
 
     expect(changeSpy).toBeCalledWith([
         expect.objectContaining({type: 'default'}),
-        expect.objectContaining({type: 'default'}),
+        expect.objectContaining({type: 'editor'}),
     ]);
 });
 
@@ -127,6 +157,7 @@ test('Choosing a different type should call the onChange callback', () => {
     ];
     const blockCollection = mount(
         <BlockCollection
+            defaultType="editor"
             onChange={changeSpy}
             renderBlockContent={renderBlockContent}
             types={{type1: 'Type 1', type2: 'Type2'}}
@@ -151,9 +182,10 @@ test('Choosing a different type should call the onChange callback', () => {
 test('Should allow to expand blocks', () => {
     const blockCollection = mount(
         <BlockCollection
+            defaultType="editor"
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
@@ -169,9 +201,10 @@ test('Should allow to expand blocks', () => {
 test('Should allow to collapse blocks', () => {
     const blockCollection = mount(
         <BlockCollection
+            defaultType="editor"
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
-            value={[{content: 'Test 1'}, {content: 'Test 2'}]}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
     );
 
@@ -190,9 +223,19 @@ test('Should allow to collapse blocks', () => {
 test('Should allow to reorder blocks by using drag and drop', () => {
     const changeSpy = jest.fn();
     const sortEndSpy = jest.fn();
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}, {content: 'Test 3'}];
+    const value = [
+        {content: 'Test 1', type: 'editor'},
+        {content: 'Test 2', type: 'editor'},
+        {content: 'Test 3', type: 'editor'},
+    ];
     const blockCollection = mount(
-        <BlockCollection onChange={changeSpy} onSortEnd={sortEndSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            onSortEnd={sortEndSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     blockCollection.find('Block').at(0).simulate('click');
@@ -212,22 +255,33 @@ test('Should allow to reorder blocks by using drag and drop', () => {
 
 test('Should allow to add a new block', () => {
     const changeSpy = jest.fn();
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
     const blockCollection = shallow(
-        <BlockCollection onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     blockCollection.find('Button').simulate('click');
 
-    expect(changeSpy).toBeCalledWith([...value, {}]);
+    expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
 });
 
 test('Should throw an exception if a new block is added and the maximum has already been reached', () => {
     const changeSpy = jest.fn();
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
     const blockCollection = shallow(
-        <BlockCollection maxOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
@@ -236,13 +290,18 @@ test('Should throw an exception if a new block is added and the maximum has alre
 test('Should allow to remove an existing block', () => {
     // observable makes calling onChange with deleting an entry from expandedBlocks
     // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
-    const value: any = observable([{content: 'Test 1'}, {content: 'Test 2'}]);
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
     const changeSpy = jest.fn().mockImplementation((newValue) => {
         value.splice(0, value.length);
         value.push(...newValue);
     });
     const blockCollection = mount(
-        <BlockCollection onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     blockCollection.find('Block').at(0).simulate('click');
@@ -252,10 +311,16 @@ test('Should allow to remove an existing block', () => {
 });
 
 test('Should not render the remove icon if less or the exact amount of items are passed', () => {
-    const value = [{content: 'Value 1'}, {content: 'Value 2'}];
+    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
 
     const blockCollection = mount(
-        <BlockCollection minOccurs={2} onChange={jest.fn()} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     blockCollection.find('Block').at(0).simulate('click');
@@ -265,10 +330,16 @@ test('Should not render the remove icon if less or the exact amount of items are
 
 test('Should throw an exception if a block is removed and the minimum has already been reached', () => {
     const changeSpy = jest.fn();
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
     const blockCollection = shallow(
-        <BlockCollection minOccurs={2} onChange={changeSpy} renderBlockContent={jest.fn()} value={value} />
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
     );
 
     expect(() => blockCollection.instance().handleRemoveBlock()).toThrow(/minimum amount of blocks/);
@@ -276,10 +347,11 @@ test('Should throw an exception if a block is removed and the minimum has alread
 
 test('Should apply renderBlockContent before rendering the block content', () => {
     const prefix = 'This is the test for ';
-    const value = [{content: 'Test 1'}, {content: 'Test 2'}];
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
     const renderBlockContent = jest.fn().mockImplementation((value) => prefix + value.content);
     const blockCollection = mount(
         <BlockCollection
+            defaultType="editor"
             onChange={jest.fn()}
             renderBlockContent={renderBlockContent}
             value={value}
@@ -316,6 +388,7 @@ test('Should apply renderBlockContent before rendering the block content includi
 
     const blockCollection = mount(
         <BlockCollection
+            defaultType="editor"
             onChange={jest.fn()}
             renderBlockContent={renderBlockContent}
             types={types}

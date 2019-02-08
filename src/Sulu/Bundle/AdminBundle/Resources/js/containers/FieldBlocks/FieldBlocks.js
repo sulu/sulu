@@ -27,7 +27,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onFinish();
     };
 
-    renderBlockContent = (value: Object, type: ?string, index: number) => {
+    renderBlockContent = (value: Object, type: string, index: number) => {
         const {dataPath, error, formInspector, onFinish, schemaPath, showAllErrors, types} = this.props;
 
         if (!formInspector) {
@@ -38,8 +38,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
         }
 
-        const blockTypeKey = type || Object.keys(types)[0]; // TODO replace with a default type
-        const blockType = types[blockTypeKey];
+        const blockType = types[type];
 
         const errors = ((toJS(error): any): ?BlockError);
 
@@ -53,14 +52,18 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 onChange={this.handleBlockChange}
                 onFieldFinish={onFinish}
                 schema={blockType.form}
-                schemaPath={schemaPath + '/types/' + blockTypeKey + '/form'}
+                schemaPath={schemaPath + '/types/' + type + '/form'}
                 showAllErrors={showAllErrors}
             />
         );
     };
 
     render() {
-        const {disabled, maxOccurs, minOccurs, onChange, types, value} = this.props;
+        const {defaultType, disabled, maxOccurs, minOccurs, onChange, types, value} = this.props;
+
+        if (!defaultType) {
+            throw new Error('The "block" field type needs a defaultType!');
+        }
 
         if (!types) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -73,6 +76,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <BlockCollection
+                defaultType={defaultType}
                 disabled={!!disabled}
                 maxOccurs={maxOccurs}
                 minOccurs={minOccurs}

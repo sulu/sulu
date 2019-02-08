@@ -52,6 +52,7 @@ export type SchemaOption = {
 export type SchemaOptions = {[key: string]: SchemaOption};
 
 type BaseSchemaEntry = {
+    defaultType?: string,
     description?: string,
     label?: string,
     maxOccurs?: number,
@@ -107,6 +108,7 @@ export interface FormStoreInterface {
 
 export type FieldTypeProps<T> = {|
     dataPath: string,
+    defaultType: ?string,
     disabled: ?boolean,
     error: ?Error | ErrorCollection,
     fieldTypeOptions: Object,
