@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -13,7 +14,7 @@ jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass props correctly to SingleSelect', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const schemaOptions = {
+    const schemaOptions = observable({
         values: {
             value: [
                 {
@@ -26,7 +27,7 @@ test('Pass props correctly to SingleSelect', () => {
                 },
             ],
         },
-    };
+    });
     const singleSelect = shallow(
         <SingleSelect
             {...fieldTypeDefaultProps}

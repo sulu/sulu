@@ -98,7 +98,7 @@ export interface FormStoreInterface {
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
     isFieldModified(dataPath: string): boolean,
-    finishField(dataPath: string): Promise<*>, // TODO remove promise once jexl is synchronous
+    finishField(dataPath: string):void,
     change(name: string, value: mixed): void,
     validate(): boolean,
     getValueByPath(path: string): mixed,
