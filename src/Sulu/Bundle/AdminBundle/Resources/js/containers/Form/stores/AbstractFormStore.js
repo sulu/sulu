@@ -323,7 +323,7 @@ export default class AbstractFormStore
     }
 
     @action addMissingSchemaProperties() {
-        const schemaFields = Object.keys(this.schema)
+        const schemaFields = Object.keys(this.rawSchema)
             .reduce((data, key) => addSchemaProperties(data, key, this.rawSchema), {});
         set(this.data, {...schemaFields, ...this.data});
     }
