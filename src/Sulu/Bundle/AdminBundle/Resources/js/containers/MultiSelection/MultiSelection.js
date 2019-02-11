@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable, toJS, untracked} from 'mobx';
+import {action, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -35,8 +35,7 @@ export default class MultiSelection extends React.Component<Props> {
     };
 
     selectionStore: MultiSelectionStore;
-    changeDisposer: () => void;
-    changeAutorunInitialized: boolean = false;
+    changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
 
@@ -46,21 +45,16 @@ export default class MultiSelection extends React.Component<Props> {
         const {locale, resourceKey, value} = this.props;
 
         this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
-        this.changeDisposer = autorun(() => {
-            const {onChange, value} = untracked(() => this.props);
-            const itemIds = this.selectionStore.items.map((item) => item.id);
+        this.changeDisposer = reaction(
+            () => (this.selectionStore.items.map((item) => item.id)),
+            (loadedItemIds: Array<string | number>) => {
+                const {onChange, value} = this.props;
 
-            if (!this.changeAutorunInitialized) {
-                this.changeAutorunInitialized = true;
-                return;
+                if (!equals(toJS(value), toJS(loadedItemIds))) {
+                    onChange(loadedItemIds);
+                }
             }
-
-            if (equals(toJS(value), toJS(itemIds))) {
-                return;
-            }
-
-            onChange(itemIds);
-        });
+        );
     }
 
     componentDidUpdate() {
