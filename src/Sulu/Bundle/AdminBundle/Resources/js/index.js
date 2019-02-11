@@ -35,11 +35,13 @@ import {
 } from './containers/Datagrid';
 import FieldBlocks, {
     blockPreviewTransformerRegistry,
+    DateTimeBlockPreviewTransformer,
     SelectBlockPreviewTransformer,
     SingleSelectBlockPreviewTransformer,
     SmartContentBlockPreviewTransformer,
     StringBlockPreviewTransformer,
     StripHtmlBlockPreviewTransformer,
+    TimeBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import {
     Checkbox,
@@ -87,16 +89,24 @@ Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
 jexl.addTransform('values', (value: Array<*>) => Object.values(value));
 
+const FIELD_TYPE_BLOCK = 'block';
+const FIELD_TYPE_CHANGELOG_LINE = 'changelog_line';
+const FIELD_TYPE_CHECKBOX = 'checkbox';
 const FIELD_TYPE_COLOR = 'color';
+const FIELD_TYPE_DATE = 'date';
+const FIELD_TYPE_DATE_TIME = 'datetime';
 const FIELD_TYPE_EMAIL = 'email';
 const FIELD_TYPE_NUMBER = 'number';
+const FIELD_TYPE_PASSWORD_CONFIRMATION = 'password_confirmation';
 const FIELD_TYPE_PHONE = 'phone';
+const FIELD_TYPE_RESOURCE_LOCATOR = 'resource_locator';
 const FIELD_TYPE_SELECT = 'select';
 const FIELD_TYPE_SINGLE_SELECT = 'single_select';
 const FIELD_TYPE_SMART_CONTENT = 'smart_content';
 const FIELD_TYPE_TEXT_AREA = 'text_area';
 const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
 const FIELD_TYPE_TEXT_LINE = 'text_line';
+const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
@@ -146,24 +156,24 @@ function registerDatagridFieldTransformers() {
 }
 
 function registerFieldTypes(fieldTypeOptions) {
-    fieldRegistry.add('block', FieldBlocks);
-    fieldRegistry.add('changelog_line', ChangelogLine);
-    fieldRegistry.add('checkbox', Checkbox);
+    fieldRegistry.add(FIELD_TYPE_BLOCK, FieldBlocks);
+    fieldRegistry.add(FIELD_TYPE_CHANGELOG_LINE, ChangelogLine);
+    fieldRegistry.add(FIELD_TYPE_CHECKBOX, Checkbox);
     fieldRegistry.add(FIELD_TYPE_COLOR, ColorPicker);
-    fieldRegistry.add('date', DatePicker, {dateFormat: true, timeFormat: false});
-    fieldRegistry.add('datetime', DatePicker, {dateFormat: true, timeFormat: true});
+    fieldRegistry.add(FIELD_TYPE_DATE, DatePicker, {dateFormat: true, timeFormat: false});
+    fieldRegistry.add(FIELD_TYPE_DATE_TIME, DatePicker, {dateFormat: true, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_EMAIL, Email);
     fieldRegistry.add(FIELD_TYPE_SELECT, Select);
     fieldRegistry.add(FIELD_TYPE_NUMBER, Number);
-    fieldRegistry.add('password_confirmation', PasswordConfirmation);
+    fieldRegistry.add(FIELD_TYPE_PASSWORD_CONFIRMATION, PasswordConfirmation);
     fieldRegistry.add(FIELD_TYPE_PHONE, Phone);
-    fieldRegistry.add('resource_locator', ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
+    fieldRegistry.add(FIELD_TYPE_RESOURCE_LOCATOR, ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
     fieldRegistry.add(FIELD_TYPE_SMART_CONTENT, SmartContent);
     fieldRegistry.add(FIELD_TYPE_SINGLE_SELECT, SingleSelect);
     fieldRegistry.add(FIELD_TYPE_TEXT_AREA, TextArea);
     fieldRegistry.add(FIELD_TYPE_TEXT_EDITOR, TextEditor);
     fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
-    fieldRegistry.add('time', DatePicker, {dateFormat: false, timeFormat: true});
+    fieldRegistry.add(FIELD_TYPE_TIME, DatePicker, {dateFormat: false, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_URL, Url);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
@@ -180,6 +190,8 @@ function registerFieldTypesWithOptions(fieldTypeOptions, Component) {
 
 function registerBlockPreviewTransformers() {
     blockPreviewTransformerRegistry.add(FIELD_TYPE_COLOR, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_DATE, new DateTimeBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_DATE_TIME, new DateTimeBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_EMAIL, new StringBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_NUMBER, new StringBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_PHONE, new StringBlockPreviewTransformer());
@@ -189,6 +201,7 @@ function registerBlockPreviewTransformers() {
     blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_AREA, new StringBlockPreviewTransformer(), 512);
     blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_EDITOR, new StripHtmlBlockPreviewTransformer(), 512);
     blockPreviewTransformerRegistry.add(FIELD_TYPE_TEXT_LINE, new StringBlockPreviewTransformer(), 1024);
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_TIME, new TimeBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_URL, new StringBlockPreviewTransformer());
 }
 
