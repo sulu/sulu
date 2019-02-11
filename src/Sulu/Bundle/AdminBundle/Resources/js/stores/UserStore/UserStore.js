@@ -7,7 +7,7 @@ import initializer from '../../services/Initializer';
 import localizationStore from '../LocalizationStore';
 import type {Contact, User} from './types';
 
-const UPDATE_PERSISTENT_SETTINGS_DELAY = 5000;
+const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 
 class UserStore {
     @observable persistentSettings: Map<string, string> = new Map();
