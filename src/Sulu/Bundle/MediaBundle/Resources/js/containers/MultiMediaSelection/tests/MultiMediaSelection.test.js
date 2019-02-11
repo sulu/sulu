@@ -209,6 +209,38 @@ test('Should not call the onChange callback if the component props change', () =
     expect(changeSpy).not.toBeCalled();
 });
 
+test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
+    // $FlowFixMe
+    MultiMediaSelectionStore.mockImplementationOnce(function(selectedIds) {
+        mockExtendObservable(this, {
+            selectedMedia: selectedIds.map((id) => {
+                return {id, thumbnails: {}};
+            }),
+            get selectedMediaIds() {
+                return this.selectedMedia.map((media) => media.id);
+            },
+        });
+    });
+
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const mediaSelectionInstance = shallow(
+        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+    ).instance();
+
+    // change callback should be called when item of the store mock changes
+    mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99, thumbnails: {}});
+    expect(changeSpy).toBeCalledWith({ids: [55, 99]});
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    // change callback should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Pass correct props to MultiItemSelection component', () => {
     const mediaSelection = mount(
         <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
