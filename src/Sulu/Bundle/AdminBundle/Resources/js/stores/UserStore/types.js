@@ -4,7 +4,7 @@ export type User = {
     id: number,
     username: string,
     locale: string,
-    settings: Array<string>,
+    settings: {[string]: string},
 };
 
 export type Contact = {

@@ -890,7 +890,7 @@ test('Pass correct locale to MultiSelect', () => {
     userStore.user = {
         id: 1,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'Test',
     };
 

@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 test('Should clear the user store', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const contact = {id: 12, avatar: undefined, firstName: 'Firsti', lastName: 'Lasti', fullName: 'Firsti Lasti'};
     userStore.setLoggedIn(true);
     userStore.setLoading(true);
@@ -49,7 +49,7 @@ test('Should return the locale of the user as system-locale', () => {
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -75,7 +75,7 @@ test('Should load and set first default-localization as content-locale when user
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -96,7 +96,7 @@ test('Should load and set first localization as content-locale if there is no de
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -135,7 +135,7 @@ test('Should login', () => {
 });
 
 test('Should login without initializing when it`s the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
@@ -152,7 +152,7 @@ test('Should login without initializing when it`s the same user', () => {
 });
 
 test('Should login with initializing when it`s not the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
     const initializePromise = Promise.resolve({});
     userStore.setUser(user);

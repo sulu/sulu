@@ -23,7 +23,7 @@ test('Load localizations', () => {
     userStore.user = {
         id: 1,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     };
 
