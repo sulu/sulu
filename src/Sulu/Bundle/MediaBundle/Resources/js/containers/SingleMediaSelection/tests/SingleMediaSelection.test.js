@@ -138,6 +138,37 @@ test('Should call given onChange handler if value of selection store changes', (
     expect(changeSpy).toBeCalledWith({id: 77});
 });
 
+test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
+    // $FlowFixMe
+    SingleMediaSelectionStore.mockImplementationOnce(function() {
+        this.loadSelectedMedia = jest.fn();
+        mockExtendObservable(this, {
+            selectedMedia: undefined,
+            get selectedMediaId() {
+                return this.selectedMedia ? this.selectedMedia.id : undefined;
+            },
+        });
+    });
+
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const singleMediaSelectionInstance = shallow(
+        <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
+    ).instance();
+
+    // change callback should be called when item of the store mock changes
+    singleMediaSelectionInstance.singleMediaSelectionStore.selectedMedia = {id: 77, thumbnails: {}};
+    expect(changeSpy).toBeCalledWith({id: 77});
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    // change callback should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Should not call the onChange callback if the component props change', () => {
     // $FlowFixMe
     SingleMediaSelectionStore.mockImplementationOnce(function() {
