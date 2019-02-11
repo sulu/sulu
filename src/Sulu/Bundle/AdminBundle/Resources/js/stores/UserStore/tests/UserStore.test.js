@@ -4,9 +4,12 @@ import Requester from '../../../services/Requester';
 import initializer from '../../../services/Initializer';
 import localizationStore from '../../../stores/LocalizationStore';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
     post: jest.fn(),
+    patch: jest.fn(),
 }));
 
 jest.mock('../../../services/Initializer', () => ({
@@ -106,12 +109,31 @@ test('Should load and set first localization as content-locale if there is no de
     });
 });
 
+test('Should return initial persistent settings', () => {
+    userStore.setUser({
+        id: 5,
+        locale: 'de',
+        settings: {
+            test1: 'value1',
+        },
+        username: 'test',
+    });
+
+    expect(userStore.getPersistentSetting('test1')).toEqual('value1');
+});
+
 test('Should set persistent setting', () => {
     userStore.setPersistentSetting('categories.sortColumn', 'name');
     expect(userStore.getPersistentSetting('categories.sortColumn')).toEqual('name');
 
     userStore.setPersistentSetting('test.object', {abc: 'DEF', abc2: 'DEF2'});
     expect(userStore.getPersistentSetting('test.object')).toEqual({abc: 'DEF', abc2: 'DEF2'});
+});
+
+test('Should update persistent settings of server with a debounce delay of 5 seconds', () => {
+    userStore.setPersistentSetting('test1', 'value1');
+
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: 'value1'});
 });
 
 test('Should login', () => {

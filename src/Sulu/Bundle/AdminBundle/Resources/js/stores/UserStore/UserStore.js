@@ -1,13 +1,17 @@
 // @flow
 import 'core-js/library/fn/promise';
 import {action, computed, observable} from 'mobx';
+import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/Initializer';
 import localizationStore from '../LocalizationStore';
 import type {Contact, User} from './types';
 
+const UPDATE_PERSISTENT_SETTINGS_DELAY = 5000;
+
 class UserStore {
     @observable persistentSettings: Map<string, string> = new Map();
+    dirtyPersistentSettings: Array<string> = [];
 
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
@@ -50,6 +54,11 @@ class UserStore {
 
     @action setUser(user: User) {
         this.user = user;
+
+        const persistentSettings = this.user.settings;
+        Object.keys(persistentSettings).forEach((key) => {
+            this.persistentSettings.set(key, persistentSettings[key]);
+        });
 
         // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
         // load and use first (default) localization of first webspace as content-locale for the user
@@ -134,22 +143,28 @@ class UserStore {
         });
     }
 
+    updatePersistentSettings = debounce(() => {
+        const persistentSettings = this.dirtyPersistentSettings.reduce((persistentSettings, persistentSettingKey) => {
+            const persistentSetting = this.persistentSettings.get(persistentSettingKey);
+            if (persistentSetting) {
+                persistentSettings[persistentSettingKey] = persistentSetting;
+            }
+            return persistentSettings;
+        }, {});
+
+        Requester.patch(Config.endpoints.profileSettings, persistentSettings);
+    }, UPDATE_PERSISTENT_SETTINGS_DELAY);
+
     @action setPersistentSetting(key: string, value: *) {
-        this.persistentSettings.set(key, JSON.stringify(value));
+        this.persistentSettings.set(key, value);
+        this.dirtyPersistentSettings.push(key);
+        this.updatePersistentSettings();
     }
 
     getPersistentSetting(key: string): * {
         const value = this.persistentSettings.get(key);
 
-        if (!value) {
-            return;
-        }
-
-        try {
-            return JSON.parse(value);
-        } catch (e) {
-            return value;
-        }
+        return value;
     }
 }
 
