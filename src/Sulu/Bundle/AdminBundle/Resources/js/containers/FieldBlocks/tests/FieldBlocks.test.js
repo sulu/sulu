@@ -235,6 +235,7 @@ test('Render collapsed blocks with block previews without tags', () => {
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
             types={types}
             value={value}
@@ -319,6 +320,7 @@ test('Render collapsed blocks with block previews', () => {
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
             types={types}
             value={value}
