@@ -339,27 +339,6 @@ test('Set dirty flag from ResourceStore', () => {
     expect(resourceFormStore.dirty).toEqual(true);
 });
 
-test('Set template property of ResourceStore to first type be default', () => {
-    const metadata = {};
-
-    const schemaTypesPromise = Promise.resolve({
-        type1: {},
-        type2: {},
-    });
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets');
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
-        expect(resourceStore.set).toBeCalledWith('template', 'type1');
-        resourceFormStore.destroy();
-    });
-});
-
 test('Set template property of ResourceStore from the loaded data', () => {
     const metadata = {};
 

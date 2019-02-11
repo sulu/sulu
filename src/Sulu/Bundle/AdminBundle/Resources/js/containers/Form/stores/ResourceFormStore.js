@@ -61,8 +61,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     () => !this.resourceStore.loading,
                     (): void => this.setType(this.resourceStore.data[TYPE])
                 );
-            } else if (this.defaultType) {
-                this.setType(this.defaultType);
             }
         }
 
@@ -93,14 +91,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
-    }
-
-    @computed get defaultType(): ?string {
-        if (!this.hasTypes) {
-            return undefined;
-        }
-
-        return Object.keys(this.types)[0];
     }
 
     @computed get loading(): boolean {

@@ -6,6 +6,7 @@ import SearchResult from './containers/Form/fields/SearchResult';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
 import EditToolbarAction from './views/Form/toolbarActions/EditToolbarAction';
+import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAction';
 import PageTabs from './views/PageTabs';
 import WebspaceOverview from './views/WebspaceOverview';
 
@@ -21,5 +22,6 @@ fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelec
 fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
 
 toolbarActionRegistry.add('sulu_page.edit', EditToolbarAction);
+toolbarActionRegistry.add('sulu_page.templates', TemplateToolbarAction);
 
 bundleReady();

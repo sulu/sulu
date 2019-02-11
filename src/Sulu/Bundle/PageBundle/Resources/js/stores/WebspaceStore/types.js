@@ -2,13 +2,14 @@
 import type {Localization} from 'sulu-admin-bundle/stores';
 
 export type Webspace = {
-    name: string,
+    allLocalizations: Array<LocalizationItem>,
+    defaultTemplates: {[type: string]: string},
     key: string,
     localizations: Array<Localization>,
-    urls: Array<Url>,
-    allLocalizations: Array<LocalizationItem>,
-    portalInformation: Array<PortalInformation>,
+    name: string,
     navigations: Array<Navigation>,
+    portalInformation: Array<PortalInformation>,
+    urls: Array<Url>,
 };
 
 export type Navigation = {
