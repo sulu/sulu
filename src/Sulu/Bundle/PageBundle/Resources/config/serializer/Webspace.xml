@@ -7,5 +7,6 @@
         <property name="localizations" expose="true">
             <type><![CDATA[array<Sulu\Component\Localization\Localization>]]></type>
         </property>
+        <property name="defaultTemplates" expose="true"/>
     </class>
 </serializer>

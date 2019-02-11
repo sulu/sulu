@@ -1,13 +1,29 @@
 // @flow
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import {action, computed, observable} from 'mobx';
+import {AbstractToolbarAction} from 'sulu-admin-bundle/views';
+import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
+import webspaceStore from '../../../stores/WebspaceStore';
+import type {Webspace} from '../../../stores/WebspaceStore/types';
 
-export default class TypeToolbarAction extends AbstractToolbarAction {
+export default class TemplateToolbarAction extends AbstractToolbarAction {
+    @observable webspace: ?Webspace = undefined;
+
+    @computed get defaultTemplate(): ?string {
+        if (!this.webspace) {
+            webspaceStore.loadWebspace(this.router.attributes.webspace).then(action((webspace) => {
+                this.webspace = webspace;
+            }));
+            return undefined;
+        }
+
+        return this.webspace.defaultTemplates.page;
+    }
+
     getToolbarItemConfig(): ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
         const formKeys = Object.keys(formTypes);
-        if (formKeys.length > 0 && !this.resourceFormStore.type) {
-            this.resourceFormStore.setType(formKeys[0]);
+        if (formKeys.length > 0 && !this.resourceFormStore.type && this.defaultTemplate) {
+            this.resourceFormStore.setType(this.defaultTemplate);
         }
 
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {

@@ -100,7 +100,7 @@ class PageAdmin extends Admin
 
         $formToolbarActionsWithType = [
             'sulu_admin.save_with_publishing',
-            'sulu_admin.type',
+            'sulu_page.templates',
             'sulu_admin.delete',
             'sulu_page.edit',
         ];
