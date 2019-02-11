@@ -50,8 +50,8 @@ jest.mock('../../../stores/UserStore', () => {
             return mockUserStoreGetPersistentSetting(value);
         }
 
-        setPersistentSetting(value) {
-            return mockUserStoreSetPersistentSetting(value);
+        setPersistentSetting(name, value) {
+            return mockUserStoreSetPersistentSetting(name, value);
         }
     };
 });
@@ -84,7 +84,7 @@ beforeEach(() => {
     });
 });
 
-test('Application should render login with loader', () => {
+test('Render login with loader', () => {
     mockInitializerInitialized.mockReturnValue(false);
     mockInitializerLoading.mockReturnValue(true);
     mockInitializedTranslationsLocale.mockReturnValue(null);
@@ -95,7 +95,7 @@ test('Application should render login with loader', () => {
     expect(application.render()).toMatchSnapshot();
 });
 
-test('Application should render login when user is not logged in', () => {
+test('Render login when user is not logged in', () => {
     mockInitializerInitialized.mockReturnValue(false);
     mockInitializerLoading.mockReturnValue(false);
     mockInitializedTranslationsLocale.mockReturnValue('en');
@@ -107,14 +107,14 @@ test('Application should render login when user is not logged in', () => {
     expect(application.render()).toMatchSnapshot();
 });
 
-test('Application should not fail if current route does not exist', () => {
+test('Should not fail if current route does not exist', () => {
     const router = new Router({});
     const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view).toMatchSnapshot();
 });
 
-test('Application should render based on current route', () => {
+test('Render based on current route', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
@@ -132,7 +132,7 @@ test('Application should render based on current route', () => {
     expect(view).toMatchSnapshot();
 });
 
-test('Application should render based on current route with app version', () => {
+test('Render based on current route with app version', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
@@ -150,7 +150,7 @@ test('Application should render based on current route with app version', () => 
     expect(view).toMatchSnapshot();
 });
 
-test('Application should render opened navigation', () => {
+test('Render opened navigation', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
@@ -169,7 +169,7 @@ test('Application should render opened navigation', () => {
     expect(view).toMatchSnapshot();
 });
 
-test('Application should render pinned navigation', () => {
+test('Pin navigation', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
@@ -186,10 +186,11 @@ test('Application should render pinned navigation', () => {
     view.find('Button[icon="su-bars"]').simulate('click');
     view.find('button.pin').simulate('click');
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
+    expect(mockUserStoreSetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned', true);
 });
 
-test('Application should render pinned navigation from beginning', () => {
+test('Pin navigation from beginning', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
@@ -211,5 +212,30 @@ test('Application should render pinned navigation from beginning', () => {
 
     expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
 
-    expect(view).toMatchSnapshot();
+    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
+});
+
+test('Do not pin navigation from beginning', () => {
+    const router = new Router({});
+    router.route = {
+        name: 'test',
+        view: 'test',
+        attributeDefaults: {},
+        rerenderAttributes: [],
+        path: '/webspaces',
+        children: [],
+        options: {},
+        parent: null,
+    };
+
+    mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);
+
+    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    expect(view.find('Button[icon="su-bars"]')).toHaveLength(1);
+    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
+    expect(view.find('button.pin')).toHaveLength(1);
+
+    expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
+
+    expect(view.find('Navigation').at(0).prop('pinned')).toEqual(false);
 });
