@@ -60,10 +60,8 @@ export default class Application extends React.Component<Props> {
     constructor() {
         super();
 
-        this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY);
-
         this.navigationPinnedDisposer = autorun(
-            () => userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned)
+            () => this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY)
         );
     }
 
@@ -77,6 +75,7 @@ export default class Application extends React.Component<Props> {
 
     toggleNavigationPinned() {
         this.navigationPinned = !this.navigationPinned;
+        userStore.setPersistentSetting(NAVIGATION_PINNED_SETTING_KEY, this.navigationPinned);
     }
 
     handleNavigationButtonClick = () => {

@@ -25,7 +25,7 @@ test('Load webspaces', () => {
     userStore.user = {
         id: 1,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     };
 
@@ -62,7 +62,7 @@ test('Load webspace with given key', () => {
     userStore.user = {
         id: 1,
         locale: 'en',
-        settings: [],
+        settings: {},
         username: 'test',
     };
 

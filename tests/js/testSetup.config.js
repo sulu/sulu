@@ -10,6 +10,7 @@ jest.mock('sulu-admin-bundle/services/Config', () => ({
         'translations': 'translations_url',
         'loginCheck': 'login_check_url',
         'logout': 'logout_url',
+        'profileSettings': 'profile_settings_url',
         'reset': 'reset_url',
         'resetResend': 'reset_resend_url',
         'resources': 'resources_url/:resource',

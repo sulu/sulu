@@ -92,43 +92,33 @@ class ProfileController implements ClassResourceInterface
      *
      * @return Response
      */
-    public function putSettingsAction(Request $request)
+    public function patchSettingsAction(Request $request)
     {
-        $key = $request->get('key');
-        $value = $request->get('value');
+        $settings = $request->request->all();
 
         try {
-            if (!$key) {
-                throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
-            }
-
-            if (!$value) {
-                throw new MissingArgumentException(static::$entityNameUserSetting, 'value');
-            }
-
             $user = $this->tokenStorage->getToken()->getUser();
 
-            // encode before persist
-            $data = json_encode($value);
+            foreach ($settings as $settingKey => $settingValue) {
+                // get setting
+                // TODO: move this logic into own service (UserSettingManager?)
+                $setting = $this->userSettingRepository->findOneBy(['user' => $user, 'key' => $settingKey]);
 
-            // get setting
-            // TODO: move this logic into own service (UserSettingManager?)
-            $setting = $this->userSettingRepository->findOneBy(['user' => $user, 'key' => $key]);
+                // or create new one
+                if (!$setting) {
+                    $setting = new UserSetting();
+                    $setting->setKey($settingKey);
+                    $setting->setUser($user);
+                    $this->objectManager->persist($setting);
+                }
 
-            // or create new one
-            if (!$setting) {
-                $setting = new UserSetting();
-                $setting->setKey($key);
-                $setting->setUser($user);
-                $this->objectManager->persist($setting);
+                // persist setting
+                $setting->setValue(json_encode($settingValue));
             }
-
-            // persist setting
-            $setting->setValue($data);
             $this->objectManager->flush();
 
             //create view
-            $view = View::create($setting, 200);
+            $view = View::create($settings, 200);
         } catch (RestException $exc) {
             $view = View::create($exc->toArray(), 400);
         }

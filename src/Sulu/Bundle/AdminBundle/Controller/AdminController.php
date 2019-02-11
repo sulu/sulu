@@ -210,6 +210,7 @@ class AdminController
             'items' => $this->urlGenerator->generate('get_items'),
             'loginCheck' => $this->urlGenerator->generate('sulu_admin.login_check'),
             'logout' => $this->urlGenerator->generate('sulu_admin.logout'),
+            'profileSettings' => $this->urlGenerator->generate('patch_profile_settings'),
             'reset' => $this->urlGenerator->generate('sulu_security.reset_password.email'),
             'resetResend' => $this->urlGenerator->generate('sulu_security.reset_password.email.resend'),
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),

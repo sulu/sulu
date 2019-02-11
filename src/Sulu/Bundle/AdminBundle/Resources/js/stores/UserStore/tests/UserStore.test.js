@@ -4,9 +4,12 @@ import Requester from '../../../services/Requester';
 import initializer from '../../../services/Initializer';
 import localizationStore from '../../../stores/LocalizationStore';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
     post: jest.fn(),
+    patch: jest.fn(),
 }));
 
 jest.mock('../../../services/Initializer', () => ({
@@ -22,7 +25,7 @@ beforeEach(() => {
 });
 
 test('Should clear the user store', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const contact = {id: 12, avatar: undefined, firstName: 'Firsti', lastName: 'Lasti', fullName: 'Firsti Lasti'};
     userStore.setLoggedIn(true);
     userStore.setLoading(true);
@@ -49,7 +52,7 @@ test('Should return the locale of the user as system-locale', () => {
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -75,7 +78,7 @@ test('Should load and set first default-localization as content-locale when user
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -96,7 +99,7 @@ test('Should load and set first localization as content-locale if there is no de
     userStore.setUser({
         id: 5,
         locale: 'de',
-        settings: [],
+        settings: {},
         username: 'test',
     });
 
@@ -106,12 +109,31 @@ test('Should load and set first localization as content-locale if there is no de
     });
 });
 
+test('Should return initial persistent settings', () => {
+    userStore.setUser({
+        id: 5,
+        locale: 'de',
+        settings: {
+            test1: 'value1',
+        },
+        username: 'test',
+    });
+
+    expect(userStore.getPersistentSetting('test1')).toEqual('value1');
+});
+
 test('Should set persistent setting', () => {
     userStore.setPersistentSetting('categories.sortColumn', 'name');
     expect(userStore.getPersistentSetting('categories.sortColumn')).toEqual('name');
 
     userStore.setPersistentSetting('test.object', {abc: 'DEF', abc2: 'DEF2'});
     expect(userStore.getPersistentSetting('test.object')).toEqual({abc: 'DEF', abc2: 'DEF2'});
+});
+
+test('Should update persistent settings of server with a debounce delay of 5 seconds', () => {
+    userStore.setPersistentSetting('test1', 'value1');
+
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: 'value1'});
 });
 
 test('Should login', () => {
@@ -135,7 +157,7 @@ test('Should login', () => {
 });
 
 test('Should login without initializing when it`s the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
@@ -152,7 +174,7 @@ test('Should login without initializing when it`s the same user', () => {
 });
 
 test('Should login with initializing when it`s not the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: [], username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
     const initializePromise = Promise.resolve({});
     userStore.setUser(user);
