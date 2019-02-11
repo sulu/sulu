@@ -29,13 +29,13 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('de', $user->getLocale());
     }
 
-    public function testPutSettings()
+    public function testPatchSettings()
     {
         $client = $this->createAuthenticatedClient();
         $client->request(
-            'PUT',
+            'PATCH',
             '/security/profile/settings',
-            ['key' => 'setting-key', 'value' => 'setting-value']
+            ['setting-key' => 'setting-value']
         );
 
         $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
@@ -53,9 +53,9 @@ class ProfileControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
         $client->request(
-            'PUT',
+            'PATCH',
             '/security/profile/settings',
-            ['key' => 'setting-key', 'value' => 'setting-value']
+            ['setting-key' => 'setting-value']
         );
 
         $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
