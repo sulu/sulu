@@ -37,6 +37,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     entries.unshift('core-js/fn/symbol');
     entries.unshift('whatwg-fetch');
     entries.unshift('url-search-params-polyfill');
+    entries.unshift('regenerator-runtime/runtime');
 
     return {
         entry: entries,
