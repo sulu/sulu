@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {extendObservable, observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -20,14 +20,19 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../../stores/ResourceStore', () => jest.fn(function() {
-    this.destroy = jest.fn();
-    this.initialized = true;
-    this.load = jest.fn();
-    mockExtendObservable(this, {data: {}});
-}));
+jest.mock('../../../stores/ResourceStore', () => jest.fn());
+
+beforeEach(() => {
+    ResourceStore.mockReset();
+});
 
 test('Should render the tab title from the ResourceStore as configured in the route', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const route = {
         options: {
             resourceKey: 'test',
@@ -103,6 +108,12 @@ test('Should not render the tab title from the ResourceStore if no titleProperty
 });
 
 test('Should render the tab title from the resourceStore as configured in the props', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const route = {
         options: {
             resourceKey: 'test',
@@ -188,6 +199,12 @@ test('Should not render the tab title on the first tab', () => {
 });
 
 test('Should render the tab title on the first visible tab if the first tab is not visible', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const route = {
         options: {
             resourceKey: 'test',
@@ -233,6 +250,12 @@ test('Should render the tab title on the first visible tab if the first tab is n
 });
 
 test('Should render the child components after the tabs', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const route = {
         options: {
             resourceKey: 'test',
@@ -271,7 +294,13 @@ test('Should render the child components after the tabs', (done) => {
     });
 });
 
-test('Should render a loader if resourceStore was not initialized yet', (done) => {
+test('Should render a loader if resourceStore was not initialized yet', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = false;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const route = {
         options: {
             resourceKey: 'test',
@@ -301,17 +330,18 @@ test('Should render a loader if resourceStore was not initialized yet', (done) =
     const Child = () => (<h1>Child</h1>);
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
-    resourceTabs.instance().resourceStore.initialized = false;
 
-    setTimeout(() => {
-        resourceTabs.update();
-        expect(resourceTabs.find('Loader')).toHaveLength(1);
-        expect(resourceTabs.find('Child')).toHaveLength(0);
-        done();
-    });
+    expect(resourceTabs.find('Loader')).toHaveLength(1);
+    expect(resourceTabs.find('Child')).toHaveLength(0);
 });
 
 test('Should mark the currently active child route as selected tab', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'Tab 1',
         options: {
@@ -356,6 +386,12 @@ test('Should mark the currently active child route as selected tab', (done) => {
 });
 
 test('Should consider the tabOrder option of the route', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'Tab 1',
         options: {
@@ -420,6 +456,12 @@ test('Should consider the tabOrder option of the route', (done) => {
 });
 
 test('Should hide tabs which do not match the tab condition', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'Tab 1',
         options: {
@@ -477,6 +519,12 @@ test('Should hide tabs which do not match the tab condition', (done) => {
 });
 
 test('Should redirect to first child route if no tab is active by default', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -520,6 +568,12 @@ test('Should redirect to first child route if no tab is active by default', (don
 });
 
 test('Should redirect to first visible child route if no tab is active', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -566,6 +620,12 @@ test('Should redirect to first visible child route if no tab is active', (done) 
 });
 
 test('Should redirect to first visible child route if invisible tab is active', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -612,6 +672,12 @@ test('Should redirect to first visible child route if invisible tab is active', 
 });
 
 test('Should redirect to highest prioritized tab if no tab is active', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -791,6 +857,12 @@ test('Should not redirect if a tab is already active', () => {
 });
 
 test('Should navigate and reload ResourceStore to child route if tab is clicked', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {},
@@ -832,6 +904,12 @@ test('Should navigate and reload ResourceStore to child route if tab is clicked'
 });
 
 test('Should navigate to child route if tab is clicked with hidden tabs', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
     const childRoute1 = {
         name: 'route1',
         options: {
@@ -882,6 +960,11 @@ test('Should navigate to child route if tab is clicked with hidden tabs', (done)
 });
 
 test('Should create a ResourceStore on mount and destroy it on unmount', () => {
+    ResourceStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+        this.initialized = true;
+    });
+
     const route = {
         children: [],
         options: {
@@ -906,6 +989,11 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
 });
 
 test('Should create a ResourceStore with locale on mount if locales have been passed in route options', () => {
+    ResourceStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+        this.initialized = true;
+    });
+
     const route = {
         children: [],
         options: {
@@ -932,6 +1020,11 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
 });
 
 test('Should create a ResourceStore with locale on mount if locales have been passed as observable array', () => {
+    ResourceStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+        this.initialized = true;
+    });
+
     const route = {
         children: [],
         options: {
@@ -959,6 +1052,10 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
 });
 
 test('Should pass the ResourceStore and locales to child components', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+    });
+
     const locales = observable(['de', 'en']);
     const route = {
         children: [],
@@ -991,6 +1088,10 @@ test('Should pass the ResourceStore and locales to child components', () => {
 });
 
 test('Should pass locales from route options instead of props to child components', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+    });
+
     const route = {
         children: [],
         options: {

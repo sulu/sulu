@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, computed, observable, toJS} from 'mobx';
+import {autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
@@ -18,10 +18,7 @@ type Props = ViewProps & {
 @observer
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
-
-    @observable visibleTabIndices: Array<number> = [];
     redirectToRouteWithHighestPriorityDisposer: () => void;
-    visibleTabIndicesDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -50,12 +47,10 @@ export default class ResourceTabs extends React.Component<Props> {
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
 
-        this.visibleTabIndicesDisposer = autorun(this.updateVisibleTabIndices);
         this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }
 
     componentWillUnmount() {
-        this.visibleTabIndicesDisposer();
         this.redirectToRouteWithHighestPriorityDisposer();
         this.resourceStore.destroy();
     }
@@ -88,10 +83,24 @@ export default class ResourceTabs extends React.Component<Props> {
 
     @computed get visibleTabRoutes(): Array<Object> {
         const {route} = this.props;
+        const data = toJS(this.resourceStore.data);
 
-        return this.visibleTabIndices.map((index) => {
-            return route.children[index];
-        });
+        return route.children
+            .filter((childRoute) => {
+                const {
+                    options: {
+                        tabCondition,
+                    },
+                } = childRoute;
+
+                return !tabCondition || jexl.evalSync(tabCondition, data);
+            })
+            .sort((childRoute1, childRoute2) => {
+                const {tabOrder: tabOrder1 = 0} = childRoute1.options;
+                const {tabOrder: tabOrder2 = 0} = childRoute2.options;
+
+                return tabOrder1 - tabOrder2;
+            });
     }
 
     @computed get visibleTabRouteWithHighestPriority(): Object {
@@ -140,38 +149,6 @@ export default class ResourceTabs extends React.Component<Props> {
         }
 
         router.redirect(this.visibleTabRouteWithHighestPriority.name, router.attributes);
-    };
-
-    updateVisibleTabIndices = () => {
-        const data = toJS(this.resourceStore.data);
-        if (this.resourceStore.loading || this.resourceStore.saving) {
-            return;
-        }
-
-        const {route} = this.props;
-
-        const tabConditionPromises = route.children
-            .map((childRoute) => {
-                const {tabCondition} = childRoute.options;
-
-                if (!tabCondition) {
-                    return Promise.resolve(true);
-                }
-
-                return jexl.eval(childRoute.options.tabCondition, data);
-            });
-
-        Promise.all(tabConditionPromises).then(action((tabConditionResults) => {
-            this.visibleTabIndices = tabConditionResults
-                .map((tabConditionResult, index) => tabConditionResult ? index : undefined)
-                .filter((tabConditionIndex) => tabConditionIndex !== undefined)
-                .sort((index1, index2) => {
-                    const {tabOrder: tabOrder1 = 0} = route.children[index1].options;
-                    const {tabOrder: tabOrder2 = 0} = route.children[index2].options;
-
-                    return tabOrder1 - tabOrder2;
-                });
-        }));
     };
 
     handleSelect = (index: number) => {
