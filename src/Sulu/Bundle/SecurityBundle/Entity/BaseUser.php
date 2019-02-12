@@ -296,7 +296,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
                 $this->salt,
                 $this->username,
                 $this->locked,
-                $this->enabled
+                $this->enabled,
             ]
         );
     }
