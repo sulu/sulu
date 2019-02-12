@@ -82,6 +82,7 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route,
     };
@@ -103,6 +104,7 @@ test('Should create a new resourceStore if the passed resourceKey differs', () =
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route,
     };
@@ -129,6 +131,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with l
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
         route,
@@ -156,6 +159,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
         route,
@@ -184,6 +188,7 @@ test('Should create a new resourceStore if the passed resourceKey differs with o
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
         route,
@@ -211,6 +216,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route,
     };
@@ -267,6 +273,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {},
@@ -298,6 +305,7 @@ test('Should initialize preview sidebar', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {},
@@ -332,6 +340,7 @@ test('Should not initialize preview sidebar when expression evaluates to false',
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {},
@@ -362,6 +371,7 @@ test('Should not initialize preview sidebar when option is not set', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {},
@@ -392,6 +402,7 @@ test('Should not add PublishIndicator if no publish status is available', () => 
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -424,6 +435,7 @@ test('Should add PublishIndicator if publish status is available showing draft',
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -462,6 +474,7 @@ test('Should add PublishIndicator if publish status is available showing publish
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -500,6 +513,7 @@ test('Should add PublishIndicator if publish status is available showing publish
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -548,6 +562,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {},
@@ -576,6 +591,7 @@ test('Should navigate to defined route on back button click', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -604,6 +620,7 @@ test('Should navigate to defined route on back button click without locale', () 
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         restore: jest.fn(),
         bind: jest.fn(),
         route,
@@ -614,6 +631,98 @@ test('Should navigate to defined route on back button click without locale', () 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
     expect(router.restore).toBeCalledWith('test_route', {});
+});
+
+test('Should navigate to defined route after dialog has been confirmed', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    form.instance().resourceFormStore.dirty = true;
+
+    const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
+
+    const backRoute = {
+        name: 'test_route',
+    };
+    const backRouteAttributes = {};
+
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.navigate)).toEqual(false);
+    form.update();
+    expect(form.find('Dialog').prop('open')).toEqual(true);
+
+    form.find('Dialog').prop('onCancel')();
+    form.update();
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(router.navigate).not.toBeCalled();
+
+    expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.navigate)).toEqual(false);
+    form.find('Dialog').prop('onConfirm')();
+    form.update();
+    expect(router.navigate).toBeCalledWith('test_route', backRouteAttributes);
+});
+
+test('Should navigate to defined route after dialog has been confirmed using restore', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    form.instance().resourceFormStore.dirty = true;
+
+    const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
+
+    const backRoute = {
+        name: 'test_route',
+    };
+    const backRouteAttributes = {};
+
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.restore)).toEqual(false);
+    form.update();
+    expect(form.find('Dialog').prop('open')).toEqual(true);
+
+    form.find('Dialog').prop('onCancel')();
+    form.update();
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(router.restore).not.toBeCalled();
+
+    expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.restore)).toEqual(false);
+    form.find('Dialog').prop('onConfirm')();
+    form.update();
+    expect(router.restore).toBeCalledWith('test_route', backRouteAttributes);
 });
 
 test('Should not render back button when no editLink is configured', () => {
@@ -630,6 +739,7 @@ test('Should not render back button when no editLink is configured', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         navigate: jest.fn(),
         bind: jest.fn(),
         route,
@@ -657,6 +767,7 @@ test('Should change locale in form store via locale chooser', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         navigate: jest.fn(),
         bind: jest.fn(),
         route,
@@ -685,6 +796,7 @@ test('Should show locales from router options in toolbar', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         navigate: jest.fn(),
         bind: jest.fn(),
         route,
@@ -713,6 +825,7 @@ test('Should show locales from props in toolbar if route has no locales', () => 
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         navigate: jest.fn(),
         bind: jest.fn(),
         route,
@@ -741,6 +854,7 @@ test('Should not show a locale chooser if no locales are passed in router option
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         navigate: jest.fn(),
         bind: jest.fn(),
         route,
@@ -766,6 +880,7 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         route,
         attributes: {
@@ -821,6 +936,7 @@ test('Should save form when submitted', (done) => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -881,6 +997,7 @@ test('Should save form when submitted with mapped router attributes', (done) => 
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -944,6 +1061,7 @@ test('Should save form when submitted with given apiOptions', (done) => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1001,6 +1119,7 @@ test('Should save form when submitted with mapped router attributes and given ap
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1065,6 +1184,7 @@ test('Should save form when submitted with mapped named router attributes and gi
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1118,6 +1238,7 @@ test('Should set showSuccess flag after form submission', (done) => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1167,6 +1288,7 @@ test('Should show error if form has been tried to save although it is not valid'
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1222,6 +1344,7 @@ test('Should keep errors after form submission has failed', (done) => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1274,6 +1397,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 8,
             webspace: 'sulu_io',
@@ -1316,6 +1440,7 @@ test('Should pass store and schema handler to FormContainer', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         bind: jest.fn(),
         navigate: jest.fn(),
         route,
@@ -1343,9 +1468,11 @@ test('Should destroy the store on unmount', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
         bind: jest.fn(),
         route,
-        attributes: {},
+        removeUpdateRouteHook: jest.fn(),
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
@@ -1375,8 +1502,10 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route,
+        removeUpdateRouteHook: jest.fn(),
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
@@ -1399,22 +1528,28 @@ test('Should not bind the locale if no locales have been passed via options', ()
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
         bind: jest.fn(),
         unbind: jest.fn(),
+        removeUpdateRouteHook: jest.fn(),
         route,
-        attributes: {},
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(router.bind).not.toBeCalled();
 
+    const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
+
     form.unmount();
     expect(router.unbind).not.toBeCalled();
+    expect(router.removeUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation);
 });
 
 test('Should throw an error if the resourceStore is not passed', () => {
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route: {
             options: {
@@ -1431,6 +1566,7 @@ test('Should throw an error if no formKey is passed', () => {
     const resourceStore = new ResourceStore('snippets', 12);
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {},
         route: {
             options: {
