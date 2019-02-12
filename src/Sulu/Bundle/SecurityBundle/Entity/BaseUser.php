@@ -19,6 +19,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
  * User.
@@ -289,6 +290,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
         return serialize(
             [
                 $this->id,
+                $this->password,
+                $this->salt,
+                $this->username,
+                $this->locked,
+                $this->enabled
             ]
         );
     }
@@ -302,7 +308,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->id) = unserialize($serialized);
+        list(
+            $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
+        ) = unserialize($serialized);
     }
 
     /**
