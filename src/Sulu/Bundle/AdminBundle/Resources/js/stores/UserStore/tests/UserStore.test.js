@@ -132,8 +132,15 @@ test('Should set persistent setting', () => {
 
 test('Should update persistent settings of server with a debounce delay of 5 seconds', () => {
     userStore.setPersistentSetting('test1', 'value1');
-
     expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: 'value1'});
+
+    userStore.setPersistentSetting('test2', 'value2');
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test2: 'value2'});
+});
+
+test('Should also update persistent setting with the value of false on the server', () => {
+    userStore.setPersistentSetting('test1', false);
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {test1: false});
 });
 
 test('Should login', () => {
