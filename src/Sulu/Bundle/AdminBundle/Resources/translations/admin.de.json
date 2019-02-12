@@ -103,5 +103,7 @@
     "sulu_admin.heading3": "Überschrift 3",
     "sulu_admin.heading4": "Überschrift 4",
     "sulu_admin.heading5": "Überschrift 5",
-    "sulu_admin.heading6": "Überschrift 6"
+    "sulu_admin.heading6": "Überschrift 6",
+    "sulu_admin.dirty_warning_dialog_title": "Achtung!",
+    "sulu_admin.dirty_warning_dialog_text": "Es liegen nicht gespeicherte Daten vor, die beim Verlassen verloren gehen."
 }
