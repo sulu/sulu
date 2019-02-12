@@ -145,14 +145,15 @@ class UserStore {
 
     updatePersistentSettings = debounce(() => {
         const persistentSettings = this.dirtyPersistentSettings.reduce((persistentSettings, persistentSettingKey) => {
-            const persistentSetting = this.persistentSettings.get(persistentSettingKey);
-            if (persistentSetting) {
-                persistentSettings[persistentSettingKey] = persistentSetting;
+            if (this.persistentSettings.has(persistentSettingKey)) {
+                persistentSettings[persistentSettingKey] = this.persistentSettings.get(persistentSettingKey);
             }
             return persistentSettings;
         }, {});
 
         Requester.patch(Config.endpoints.profileSettings, persistentSettings);
+
+        this.dirtyPersistentSettings.splice(0, this.dirtyPersistentSettings.length);
     }, UPDATE_PERSISTENT_SETTINGS_DELAY);
 
     @action setPersistentSetting(key: string, value: *) {
