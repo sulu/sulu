@@ -23,6 +23,18 @@ test('Should be marked as initialized after loading the data', () => {
     });
 });
 
+test('Should be marked as not dirty after loading the data', () => {
+    const promise = Promise.resolve({});
+    ResourceRequester.get.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', '1');
+
+    resourceStore.dirty = true;
+
+    return promise.then(() => {
+        expect(resourceStore.dirty).toBe(false);
+    });
+});
+
 test('Should be marked as initialized immediately if a new resource is created', () => {
     const resourceStore = new ResourceStore('snippets');
     expect(resourceStore.initialized).toBe(true);
@@ -407,7 +419,8 @@ test('Saving and dirty flag should be set and data should be updated to false wh
 test('Saving and dirty flag should be set to false when updating has failed', (done) => {
     const error = new Error('An error occured!');
     const promise = Promise.reject(error);
-    ResourceRequester.get.mockReturnValue(Promise.resolve({title: 'Title to stay!'}));
+    const loadingPromise = Promise.resolve({title: 'Title to stay!'});
+    ResourceRequester.get.mockReturnValue(loadingPromise);
     ResourceRequester.put.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
 
@@ -416,22 +429,24 @@ test('Saving and dirty flag should be set to false when updating has failed', (d
     }
 
     resourceStore.locale.set('en');
-    resourceStore.saving = true;
-    resourceStore.dirty = true;
 
-    const savePromise = resourceStore.save();
+    return loadingPromise.then(() => {
+        resourceStore.saving = true;
+        resourceStore.dirty = true;
+        const savePromise = resourceStore.save();
 
-    return savePromise.catch((promiseError) => {
-        expect(promiseError).toBe(error);
-        when(
-            () => !resourceStore.saving,
-            (): void => {
-                expect(resourceStore.saving).toBe(false);
-                expect(resourceStore.dirty).toBe(true);
-                expect(resourceStore.data).toEqual({title: 'Title to stay!'});
-                done();
-            }
-        );
+        return savePromise.catch((promiseError) => {
+            expect(promiseError).toBe(error);
+            when(
+                () => !resourceStore.saving,
+                (): void => {
+                    expect(resourceStore.saving).toBe(false);
+                    expect(resourceStore.dirty).toBe(true);
+                    expect(resourceStore.data).toEqual({title: 'Title to stay!'});
+                    done();
+                }
+            );
+        });
     });
 });
 

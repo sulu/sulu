@@ -86,6 +86,7 @@ export default class ResourceStore {
 
             this.initialized = true;
             this.setLoading(false);
+            this.dirty = false;
         }));
     };
 
