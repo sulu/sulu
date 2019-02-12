@@ -285,4 +285,16 @@ class DatagridRouteBuilderTest extends TestCase
 
         $this->assertEquals('state == 1', $route->getOption('tabCondition'));
     }
+
+    public function testBuildDatagridSetBackRoute()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->setBackRoute('sulu_category.edit_form')
+            ->getRoute();
+
+        $this->assertEquals('sulu_category.edit_form', $route->getOption('backRoute'));
+    }
 }
