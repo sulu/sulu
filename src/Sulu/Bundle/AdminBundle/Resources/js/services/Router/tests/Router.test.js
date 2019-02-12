@@ -156,7 +156,7 @@ test('Navigate to route without default attribute when observable is changed', (
 
     router.bind('locale', locale);
 
-    router.handleNavigation('list', {});
+    router.handleNavigation('list', {}, router.navigate);
     expect(router.attributes.locale).toBe('en');
     expect(history.location.pathname).toBe('/list/en');
 
@@ -197,7 +197,7 @@ test('Apply updateAttributesHooks before applying default attributes but after p
         };
     });
 
-    router.handleNavigation('webspace_overview', {locale: 'en'});
+    router.handleNavigation('webspace_overview', {locale: 'en'}, router.navigate);
 
     expect(router.attributes.webspace).toEqual('webspace2');
     expect(router.attributes.locale).toEqual('en');
@@ -221,7 +221,7 @@ test('Apply attribute defaults if value of passed attribute is undefined', () =>
     const history = createHistory();
     const router = new Router(history);
 
-    router.handleNavigation('webspace_overview', {locale: 'en', webspace: undefined});
+    router.handleNavigation('webspace_overview', {locale: 'en', webspace: undefined}, router.navigate);
 
     expect(router.attributes.webspace).toEqual('webspace1');
     expect(router.attributes.locale).toEqual('en');
@@ -537,7 +537,7 @@ test('Binding should update passed observable', () => {
     const router = new Router(history);
 
     router.bind('page', value);
-    router.handleNavigation('list', {page: 2});
+    router.handleNavigation('list', {page: 2}, router.navigate);
 
     expect(value.get()).toBe(2);
 });
@@ -581,7 +581,7 @@ test('Binding should set default attribute', () => {
     const router = new Router(history);
 
     router.bind('locale', locale, 'en');
-    router.handleNavigation('page', {});
+    router.handleNavigation('page', {}, router.navigate);
     expect(router.attributes.locale).toBe('en');
     expect(router.url).toBe('/page/en');
 });
@@ -652,7 +652,7 @@ test('Binding should update state in router with other default bindings', () => 
 
     router.bind('page', page, '1');
     router.bind('locale', locale);
-    router.handleNavigation('list', {});
+    router.handleNavigation('list', {}, router.navigate);
 
     locale.set('de');
     expect(history.location.search).toBe('?locale=de');
@@ -1154,4 +1154,184 @@ test('Restore should not create a new history entry', () => {
 
     router.restore('page');
     expect(router.attributesHistory['page']).toHaveLength(1);
+});
+
+test('Add and remove updateRouteHooks', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn();
+    const updateRouteHook2 = jest.fn();
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    expect(router.updateRouteHooks).toHaveLength(2);
+    expect(router.updateRouteHooks[0]).toBe(updateRouteHook1);
+    expect(router.updateRouteHooks[1]).toBe(updateRouteHook2);
+
+    router.removeUpdateRouteHook(updateRouteHook1);
+    expect(router.updateRouteHooks).toHaveLength(1);
+    expect(router.updateRouteHooks[0]).toBe(updateRouteHook2);
+});
+
+test('Cancel navigation if an updateRouteHook returns false', () => {
+    const webspaceOverviewRoute = {
+        name: 'webspace_overview',
+        view: 'webspace_overview',
+        path: '/webspace/:webspace/:locale',
+        attributeDefaults: {
+            sortOrder: 'desc',
+            webspace: 'webspace1',
+        },
+    };
+
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: webspaceOverviewRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(false);
+    const updateRouteHook2 = jest.fn().mockReturnValue(true);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    router.navigate('webspace_overview', {locale: 'en'});
+
+    expect(updateRouteHook1).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.navigate
+    );
+    expect(updateRouteHook2).not.toBeCalled();
+
+    expect(router.route).toBe(undefined);
+    expect(router.attributes).toEqual({});
+    expect(history.location.pathname).toBe('/');
+});
+
+test('Navigate if all updateRouteHooks return true', () => {
+    const webspaceOverviewRoute = {
+        name: 'webspace_overview',
+        view: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        attributeDefaults: {
+            sortOrder: 'desc',
+            webspace: 'webspace1',
+        },
+    };
+
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: webspaceOverviewRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(true);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    router.navigate('webspace_overview', {locale: 'en'});
+
+    expect(updateRouteHook1).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.navigate
+    );
+    expect(updateRouteHook2).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.navigate
+    );
+
+    expect(router.route).toEqual(webspaceOverviewRoute);
+    expect(router.attributes).toEqual({locale: 'en', sortOrder: 'desc', webspace: 'webspace1'});
+    expect(history.location.pathname).toBe('/webspace/webspace1/en');
+});
+
+test('Redirect if all updateRouteHooks return true', () => {
+    const webspaceOverviewRoute = {
+        name: 'webspace_overview',
+        view: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        attributeDefaults: {
+            sortOrder: 'desc',
+            webspace: 'webspace1',
+        },
+    };
+
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: webspaceOverviewRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(true);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    router.redirect('webspace_overview', {locale: 'en'});
+
+    expect(updateRouteHook1).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.redirect
+    );
+    expect(updateRouteHook2).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.redirect
+    );
+
+    expect(router.route).toEqual(webspaceOverviewRoute);
+    expect(router.attributes).toEqual({locale: 'en', sortOrder: 'desc', webspace: 'webspace1'});
+    expect(history.location.pathname).toBe('/webspace/webspace1/en');
+});
+
+test('Restore if all updateRouteHooks return true', () => {
+    const webspaceOverviewRoute = {
+        name: 'webspace_overview',
+        view: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        attributeDefaults: {
+            sortOrder: 'desc',
+            webspace: 'webspace1',
+        },
+    };
+
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: webspaceOverviewRoute,
+    });
+
+    const history = createHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(true);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    router.restore('webspace_overview', {locale: 'en'});
+
+    expect(updateRouteHook1).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.restore
+    );
+    expect(updateRouteHook2).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.restore
+    );
+
+    expect(router.route).toEqual(webspaceOverviewRoute);
+    expect(router.attributes).toEqual({locale: 'en', sortOrder: 'desc', webspace: 'webspace1'});
+    expect(history.location.pathname).toBe('/webspace/webspace1/en');
 });
