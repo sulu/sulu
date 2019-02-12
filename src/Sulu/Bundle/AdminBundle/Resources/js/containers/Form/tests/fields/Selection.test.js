@@ -588,6 +588,57 @@ test('Should not call onChange and onFinish prop while datagrid is still loading
     expect(finishSpy).not.toBeCalled();
 });
 
+test('Should not call onChange and onFinish if an observable that is accessed in one of the callbacks changes', () => {
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+    const finishSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const fieldTypeOptions = {
+        default_type: 'datagrid',
+        resource_key: 'snippets',
+        types: {
+            datagrid: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    selection.instance().datagridStore.dataLoading = false;
+
+    // callbacks should be called when selection of datagrid store changes
+    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+    expect(finishSpy).toHaveBeenCalledTimes(1);
+
+    // callbacks should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+    expect(finishSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Should pass props correctly to MultiAutoComplete component', () => {
     const value = [1, 6, 8];
 
