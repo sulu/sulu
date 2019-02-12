@@ -12,6 +12,15 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
+jest.mock('../../stores/MemoryFormStore', () => jest.fn(function(data, schema) {
+    this.data = data;
+    this.schema = schema;
+    this.change = jest.fn().mockImplementation((name, value) => {
+        this.data[name] = value;
+    });
+    this.validate = jest.fn().mockReturnValue(true);
+    this.destroy = jest.fn();
+}));
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
@@ -159,7 +168,7 @@ test('Add a new card using the overlay', () => {
     expect(changeSpy).toBeCalledWith([...value, {firstName: 'John', lastName: 'Doe'}]);
 });
 
-test('Add a new card using the overlay', () => {
+test('Do not add a new card if validation fails', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
 
     const changeSpy = jest.fn();
@@ -196,6 +205,8 @@ test('Add a new card using the overlay', () => {
     expect(cardCollection.find('Overlay').prop('open')).toEqual(false);
     cardCollection.find('.addButtonContainer button').simulate('click');
     expect(cardCollection.find('Overlay').prop('open')).toEqual(true);
+
+    cardCollection.instance().formStore.validate.mockReturnValue(false);
 
     cardCollection.find('Input[dataPath="/firstName"]').prop('onChange')('John');
     cardCollection.find('Overlay').prop('onConfirm')();

@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable, set, toJS, untracked} from 'mobx';
+import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'jsonpointer';
@@ -27,15 +27,15 @@ function addSchemaProperties(data: Object, key: string, schema: RawSchema) {
 
 function transformRawSchema(
     rawSchema: RawSchema,
-    disabledFieldPaths: Array<string>,
-    hiddenFieldPaths: Array<string>,
+    data: Object,
+    locale: ?string,
     basePath: string = ''
 ): Schema {
     return Object.keys(rawSchema).reduce((schema, schemaKey) => {
         schema[schemaKey] = transformRawSchemaEntry(
             rawSchema[schemaKey],
-            disabledFieldPaths,
-            hiddenFieldPaths,
+            data,
+            locale,
             basePath + '/' + schemaKey
         );
 
@@ -45,19 +45,19 @@ function transformRawSchema(
 
 function transformRawSchemaEntry(
     rawSchemaEntry: RawSchemaEntry,
-    disabledFieldPaths: Array<string>,
-    hiddenFieldPaths: Array<string>,
+    data: Object,
+    locale: ?string,
     path: string
 ): SchemaEntry {
+    const evaluationData = {...data, __locale: locale};
+
     return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
-        if (schemaEntryKey === 'disabledCondition') {
-            // jexl could be directly used here, if it would support synchrounous execution
-            schemaEntry.disabled = disabledFieldPaths.includes(path);
-        } else if (schemaEntryKey === 'visibleCondition') {
-            // jexl could be directly used here, if it would support synchrounous execution
-            schemaEntry.visible = !hiddenFieldPaths.includes(path);
+        if (schemaEntryKey === 'disabledCondition' && rawSchemaEntry[schemaEntryKey]) {
+            schemaEntry.disabled = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
+        } else if (schemaEntryKey === 'visibleCondition' && rawSchemaEntry[schemaEntryKey]) {
+            schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
-            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, disabledFieldPaths, hiddenFieldPaths, path);
+            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, path);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
             const rawSchemaEntryTypes = rawSchemaEntry.types;
 
@@ -66,8 +66,8 @@ function transformRawSchemaEntry(
                     title: rawSchemaEntryTypes[schemaEntryTypeKey].title,
                     form: transformRawSchema(
                         rawSchemaEntryTypes[schemaEntryTypeKey].form,
-                        disabledFieldPaths,
-                        hiddenFieldPaths,
+                        data,
+                        locale,
                         path + '/types/' + schemaEntryTypeKey + '/form'
                     ),
                 };
@@ -81,61 +81,6 @@ function transformRawSchemaEntry(
 
         return schemaEntry;
     }, {});
-}
-
-function evaluateFieldConditions(rawSchema: RawSchema, locale: ?string, data: Object, basePath: string = '') {
-    const visibleConditionPromises = [];
-    const disabledConditionPromises = [];
-
-    Object.keys(rawSchema).forEach((schemaKey) => {
-        const {disabledCondition, items, types, visibleCondition} = rawSchema[schemaKey];
-        const schemaPath = basePath + '/' + schemaKey;
-
-        const evaluationData = {...data, __locale: locale};
-
-        if (disabledCondition) {
-            disabledConditionPromises.push(jexl.eval(disabledCondition, evaluationData).then((result) => {
-                if (result) {
-                    return Promise.resolve(schemaPath);
-                }
-            }));
-        }
-
-        if (visibleCondition) {
-            visibleConditionPromises.push(jexl.eval(visibleCondition, evaluationData).then((result) => {
-                if (!result) {
-                    return Promise.resolve(schemaPath);
-                }
-            }));
-        }
-
-        if (items) {
-            const {
-                disabledConditionPromises: itemDisabledConditionPromises,
-                visibleConditionPromises: itemVisibleConditionPromises,
-            } = evaluateFieldConditions(items, locale, data, schemaPath);
-
-            disabledConditionPromises.push(...itemDisabledConditionPromises);
-            visibleConditionPromises.push(...itemVisibleConditionPromises);
-        }
-
-        if (types) {
-            Object.keys(types).forEach((type) => {
-                const {
-                    disabledConditionPromises: typeDisabledConditionPromises,
-                    visibleConditionPromises: typeVisibleConditionPromises,
-                } = evaluateFieldConditions(types[type].form, locale, data, schemaPath + '/types/' + type + '/form');
-
-                disabledConditionPromises.push(...typeDisabledConditionPromises);
-                visibleConditionPromises.push(...typeVisibleConditionPromises);
-            });
-        }
-    });
-
-    return {
-        disabledConditionPromises,
-        visibleConditionPromises,
-    };
 }
 
 function sortObjectByPriority(a, b) {
@@ -212,28 +157,27 @@ export default class AbstractFormStore
     +data: Object;
     +loading: boolean;
     +locale: ?IObservableValue<string>;
-    rawSchema: RawSchema;
-    @observable disabledFieldPaths: Array<string> = [];
-    @observable hiddenFieldPaths: Array<string> = [];
+    @observable rawSchema: RawSchema;
+    @observable evaluatedSchema: Schema = {};
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
     pathsByTag: {[tagName: string]: Array<string>} = {};
 
     @computed.struct get schema(): Schema {
-        return transformRawSchema(this.rawSchema, this.disabledFieldPaths, this.hiddenFieldPaths);
+        return this.evaluatedSchema;
     }
 
     isFieldModified(dataPath: string): boolean {
         return this.modifiedFields.includes(dataPath);
     }
 
-    finishField(dataPath: string): Promise<*> {
+    finishField(dataPath: string) {
         if (!this.modifiedFields.includes(dataPath)) {
             this.modifiedFields.push(dataPath);
         }
 
-        return this.updateFieldPathEvaluations();
+        this.updateFieldPathEvaluations();
     }
 
     @action validate() {
@@ -274,32 +218,25 @@ export default class AbstractFormStore
         return true;
     }
 
-    updateFieldPathEvaluations = (): Promise<*> => {
-        if (this.loading) {
-            return Promise.resolve();
-        }
+    updateFieldPathEvaluations = () => {
+        const {loading, rawSchema} = this;
+        const locale = this.locale ? this.locale.get() : undefined;
 
-        const {
-            disabledConditionPromises,
-            visibleConditionPromises,
-        } = evaluateFieldConditions(
-            this.rawSchema,
-            this.locale ? this.locale.get() : undefined,
-            untracked(() => toJS(this.data))
+        when(
+            () => !loading,
+            (): void => this.setEvaluatedSchema(
+                transformRawSchema(
+                    rawSchema,
+                    untracked(() => toJS(this.data)),
+                    locale
+                )
+            )
         );
-
-        const disabledConditionsPromise = Promise.all(disabledConditionPromises)
-            .then(action((disabledConditionResults) => {
-                this.disabledFieldPaths = disabledConditionResults;
-            }));
-
-        const visibleConditionsPromise = Promise.all(visibleConditionPromises)
-            .then(action((visibleConditionResults) => {
-                this.hiddenFieldPaths = visibleConditionResults;
-            }));
-
-        return Promise.all([disabledConditionsPromise, visibleConditionsPromise]);
     };
+
+    @action setEvaluatedSchema(evaluatedSchema: Schema) {
+        this.evaluatedSchema = evaluatedSchema;
+    }
 
     getValueByPath = (path: string): mixed => {
         return jsonpointer.get(this.data, path);

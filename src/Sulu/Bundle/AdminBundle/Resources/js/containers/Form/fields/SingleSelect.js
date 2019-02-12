@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {toJS} from 'mobx';
 import SingleSelectComponent from '../../../components/SingleSelect';
 import type {FieldTypeProps} from '../../../types';
 
@@ -47,7 +48,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
             throw new Error(MISSING_VALUES_OPTIONS);
         }
 
-        const {values} = schemaOptions;
+        const values = toJS(schemaOptions.values);
 
         if (!Array.isArray(values.value)) {
             throw new Error(MISSING_VALUES_OPTIONS);

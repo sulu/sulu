@@ -85,7 +85,7 @@ test('Create data object for schema with sections', () => {
     memoryFormStore.destroy();
 });
 
-test('Evaluate all disabledConditions and visibleConditions for schema', (done) => {
+test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     const schema = {
         item1: {
             type: 'text_line',
@@ -133,113 +133,110 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
     const memoryFormStore = new MemoryFormStore({}, schema);
 
     setTimeout(() => {
-        const sectionItems = memoryFormStore.schema.section.items;
-        if (!sectionItems) {
+        const sectionItems1 = memoryFormStore.schema.section.items;
+        if (!sectionItems1) {
             throw new Error('Section items should be defined!');
         }
-        const blockTypes = memoryFormStore.schema.block.types;
-        if (!blockTypes) {
+        const blockTypes1 = memoryFormStore.schema.block.types;
+        if (!blockTypes1) {
             throw new Error('Block types should be defined!');
         }
 
         expect(memoryFormStore.schema.item2.disabled).toEqual(true);
         expect(memoryFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems.item32.disabled).toEqual(true);
-        expect(sectionItems.item32.visible).toEqual(false);
+        expect(sectionItems1.item32.disabled).toEqual(true);
+        expect(sectionItems1.item32.visible).toEqual(false);
         expect(memoryFormStore.schema.section.disabled).toEqual(true);
         expect(memoryFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(blockTypes1.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes1.text_line.form.item41.visible).toEqual(false);
 
         memoryFormStore.data = observable({item1: 'item2'});
         expect(memoryFormStore.schema.item2.disabled).toEqual(true);
         expect(memoryFormStore.schema.item2.visible).toEqual(false);
 
-        memoryFormStore.finishField('/item1').then(() => {
-            const sectionItems = memoryFormStore.schema.section.items;
-            if (!sectionItems) {
-                throw new Error('Section items should be defined!');
-            }
-            const blockTypes = memoryFormStore.schema.block.types;
-            if (!blockTypes) {
-                throw new Error('Block types should be defined!');
-            }
+        memoryFormStore.finishField('/item1');
+        const sectionItems2 = memoryFormStore.schema.section.items;
+        if (!sectionItems2) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes2 = memoryFormStore.schema.block.types;
+        if (!blockTypes2) {
+            throw new Error('Block types should be defined!');
+        }
 
-            expect(memoryFormStore.schema.item2.disabled).toEqual(false);
-            expect(memoryFormStore.schema.item2.visible).toEqual(true);
-            expect(sectionItems.item32.disabled).toEqual(true);
-            expect(sectionItems.item32.visible).toEqual(false);
-            expect(memoryFormStore.schema.section.disabled).toEqual(true);
-            expect(memoryFormStore.schema.section.visible).toEqual(false);
-            expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-            expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(memoryFormStore.schema.item2.disabled).toEqual(false);
+        expect(memoryFormStore.schema.item2.visible).toEqual(true);
+        expect(sectionItems2.item32.disabled).toEqual(true);
+        expect(sectionItems2.item32.visible).toEqual(false);
+        expect(memoryFormStore.schema.section.disabled).toEqual(true);
+        expect(memoryFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes2.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes2.text_line.form.item41.visible).toEqual(false);
 
-            memoryFormStore.data = observable({item1: 'item32'});
-            memoryFormStore.finishField('/item1').then(() => {
-                const sectionItems = memoryFormStore.schema.section.items;
-                if (!sectionItems) {
-                    throw new Error('Section items should be defined!');
-                }
-                const blockTypes = memoryFormStore.schema.block.types;
-                if (!blockTypes) {
-                    throw new Error('Block types should be defined!');
-                }
+        memoryFormStore.data = observable({item1: 'item32'});
 
-                expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-                expect(memoryFormStore.schema.item2.visible).toEqual(false);
-                expect(sectionItems.item32.disabled).toEqual(false);
-                expect(sectionItems.item32.visible).toEqual(true);
-                expect(memoryFormStore.schema.section.disabled).toEqual(true);
-                expect(memoryFormStore.schema.section.visible).toEqual(false);
-                expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-                expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        memoryFormStore.finishField('/item1');
+        const sectionItems3 = memoryFormStore.schema.section.items;
+        if (!sectionItems3) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes3 = memoryFormStore.schema.block.types;
+        if (!blockTypes3) {
+            throw new Error('Block types should be defined!');
+        }
 
-                memoryFormStore.data = observable({item1: 'section'});
-                memoryFormStore.finishField('/item1').then(() => {
-                    const sectionItems = memoryFormStore.schema.section.items;
-                    if (!sectionItems) {
-                        throw new Error('Section items should be defined!');
-                    }
-                    const blockTypes = memoryFormStore.schema.block.types;
-                    if (!blockTypes) {
-                        throw new Error('Block types should be defined!');
-                    }
+        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems3.item32.disabled).toEqual(false);
+        expect(sectionItems3.item32.visible).toEqual(true);
+        expect(memoryFormStore.schema.section.disabled).toEqual(true);
+        expect(memoryFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes3.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes3.text_line.form.item41.visible).toEqual(false);
 
-                    expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-                    expect(memoryFormStore.schema.item2.visible).toEqual(false);
-                    expect(sectionItems.item32.disabled).toEqual(true);
-                    expect(sectionItems.item32.visible).toEqual(false);
-                    expect(memoryFormStore.schema.section.disabled).toEqual(false);
-                    expect(memoryFormStore.schema.section.visible).toEqual(true);
-                    expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-                    expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        memoryFormStore.data = observable({item1: 'section'});
+        memoryFormStore.finishField('/item1');
 
-                    memoryFormStore.data = observable({item1: 'item41'});
-                    memoryFormStore.finishField('/item1').then(() => {
-                        const sectionItems = memoryFormStore.schema.section.items;
-                        if (!sectionItems) {
-                            throw new Error('Section items should be defined!');
-                        }
-                        const blockTypes = memoryFormStore.schema.block.types;
-                        if (!blockTypes) {
-                            throw new Error('Block types should be defined!');
-                        }
+        const sectionItems4 = memoryFormStore.schema.section.items;
+        if (!sectionItems4) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes4 = memoryFormStore.schema.block.types;
+        if (!blockTypes4) {
+            throw new Error('Block types should be defined!');
+        }
 
-                        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-                        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-                        expect(sectionItems.item32.disabled).toEqual(true);
-                        expect(sectionItems.item32.visible).toEqual(false);
-                        expect(memoryFormStore.schema.section.disabled).toEqual(true);
-                        expect(memoryFormStore.schema.section.visible).toEqual(false);
-                        expect(blockTypes.text_line.form.item41.disabled).toEqual(false);
-                        expect(blockTypes.text_line.form.item41.visible).toEqual(true);
+        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems4.item32.disabled).toEqual(true);
+        expect(sectionItems4.item32.visible).toEqual(false);
+        expect(memoryFormStore.schema.section.disabled).toEqual(false);
+        expect(memoryFormStore.schema.section.visible).toEqual(true);
+        expect(blockTypes4.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes4.text_line.form.item41.visible).toEqual(false);
 
-                        memoryFormStore.destroy();
-                        done();
-                    });
-                });
-            });
-        });
+        memoryFormStore.data = observable({item1: 'item41'});
+        memoryFormStore.finishField('/item1');
+        const sectionItems5 = memoryFormStore.schema.section.items;
+        if (!sectionItems5) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes5 = memoryFormStore.schema.block.types;
+        if (!blockTypes5) {
+            throw new Error('Block types should be defined!');
+        }
+
+        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems5.item32.disabled).toEqual(true);
+        expect(sectionItems5.item32.visible).toEqual(false);
+        expect(memoryFormStore.schema.section.disabled).toEqual(true);
+        expect(memoryFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes5.text_line.form.item41.disabled).toEqual(false);
+        expect(blockTypes5.text_line.form.item41.visible).toEqual(true);
+
+        memoryFormStore.destroy();
     }, 0);
 });
 

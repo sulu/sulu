@@ -32,7 +32,7 @@ beforeEach(() => {
     metadataStore.getSchemaTypes = jest.fn().mockReturnValue(Promise.resolve({}));
 });
 
-test('Create data object for schema', () => {
+test('Create data object for schema', (done) => {
     const metadata = {
         title: {
             label: 'Title',
@@ -63,10 +63,11 @@ test('Create data object for schema', () => {
             description: undefined,
         });
         resourceFormStore.destroy();
+        done();
     }, 0);
 });
 
-test('Evaluate all disabledConditions and visibleConditions for schema', (done) => {
+test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     const metadata = {
         item1: {
             type: 'text_line',
@@ -119,113 +120,108 @@ test('Evaluate all disabledConditions and visibleConditions for schema', (done) 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
-        const sectionItems = resourceFormStore.schema.section.items;
-        if (!sectionItems) {
+        const sectionItems1 = resourceFormStore.schema.section.items;
+        if (!sectionItems1) {
             throw new Error('Section items should be defined!');
         }
-        const blockTypes = resourceFormStore.schema.block.types;
-        if (!blockTypes) {
+        const blockTypes1 = resourceFormStore.schema.block.types;
+        if (!blockTypes1) {
             throw new Error('Block types should be defined!');
         }
 
         expect(resourceFormStore.schema.item2.disabled).toEqual(true);
         expect(resourceFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems.item32.disabled).toEqual(true);
-        expect(sectionItems.item32.visible).toEqual(false);
+        expect(sectionItems1.item32.disabled).toEqual(true);
+        expect(sectionItems1.item32.visible).toEqual(false);
         expect(resourceFormStore.schema.section.disabled).toEqual(true);
         expect(resourceFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(blockTypes1.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes1.text_line.form.item41.visible).toEqual(false);
 
         resourceStore.data = observable({item1: 'item2'});
         expect(resourceFormStore.schema.item2.disabled).toEqual(true);
         expect(resourceFormStore.schema.item2.visible).toEqual(false);
 
-        resourceFormStore.finishField('/item1').then(() => {
-            const sectionItems = resourceFormStore.schema.section.items;
-            if (!sectionItems) {
-                throw new Error('Section items should be defined!');
-            }
-            const blockTypes = resourceFormStore.schema.block.types;
-            if (!blockTypes) {
-                throw new Error('Block types should be defined!');
-            }
+        resourceFormStore.finishField('/item1');
+        const sectionItems2 = resourceFormStore.schema.section.items;
+        if (!sectionItems2) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes2 = resourceFormStore.schema.block.types;
+        if (!blockTypes2) {
+            throw new Error('Block types should be defined!');
+        }
 
-            expect(resourceFormStore.schema.item2.disabled).toEqual(false);
-            expect(resourceFormStore.schema.item2.visible).toEqual(true);
-            expect(sectionItems.item32.disabled).toEqual(true);
-            expect(sectionItems.item32.visible).toEqual(false);
-            expect(resourceFormStore.schema.section.disabled).toEqual(true);
-            expect(resourceFormStore.schema.section.visible).toEqual(false);
-            expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-            expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(resourceFormStore.schema.item2.disabled).toEqual(false);
+        expect(resourceFormStore.schema.item2.visible).toEqual(true);
+        expect(sectionItems2.item32.disabled).toEqual(true);
+        expect(sectionItems2.item32.visible).toEqual(false);
+        expect(resourceFormStore.schema.section.disabled).toEqual(true);
+        expect(resourceFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes2.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes2.text_line.form.item41.visible).toEqual(false);
 
-            resourceStore.data = observable({item1: 'item32'});
-            resourceFormStore.finishField('/item1').then(() => {
-                const sectionItems = resourceFormStore.schema.section.items;
-                if (!sectionItems) {
-                    throw new Error('Section items should be defined!');
-                }
-                const blockTypes = resourceFormStore.schema.block.types;
-                if (!blockTypes) {
-                    throw new Error('Block types should be defined!');
-                }
+        resourceStore.data = observable({item1: 'item32'});
+        resourceFormStore.finishField('/item1');
+        const sectionItems3 = resourceFormStore.schema.section.items;
+        if (!sectionItems3) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes3 = resourceFormStore.schema.block.types;
+        if (!blockTypes3) {
+            throw new Error('Block types should be defined!');
+        }
 
-                expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-                expect(resourceFormStore.schema.item2.visible).toEqual(false);
-                expect(sectionItems.item32.disabled).toEqual(false);
-                expect(sectionItems.item32.visible).toEqual(true);
-                expect(resourceFormStore.schema.section.disabled).toEqual(true);
-                expect(resourceFormStore.schema.section.visible).toEqual(false);
-                expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-                expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems3.item32.disabled).toEqual(false);
+        expect(sectionItems3.item32.visible).toEqual(true);
+        expect(resourceFormStore.schema.section.disabled).toEqual(true);
+        expect(resourceFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes3.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes3.text_line.form.item41.visible).toEqual(false);
 
-                resourceStore.data = observable({item1: 'section'});
-                resourceFormStore.finishField('/item1').then(() => {
-                    const sectionItems = resourceFormStore.schema.section.items;
-                    if (!sectionItems) {
-                        throw new Error('Section items should be defined!');
-                    }
-                    const blockTypes = resourceFormStore.schema.block.types;
-                    if (!blockTypes) {
-                        throw new Error('Block types should be defined!');
-                    }
+        resourceStore.data = observable({item1: 'section'});
+        resourceFormStore.finishField('/item1');
+        const sectionItems4 = resourceFormStore.schema.section.items;
+        if (!sectionItems4) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes4 = resourceFormStore.schema.block.types;
+        if (!blockTypes4) {
+            throw new Error('Block types should be defined!');
+        }
 
-                    expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-                    expect(resourceFormStore.schema.item2.visible).toEqual(false);
-                    expect(sectionItems.item32.disabled).toEqual(true);
-                    expect(sectionItems.item32.visible).toEqual(false);
-                    expect(resourceFormStore.schema.section.disabled).toEqual(false);
-                    expect(resourceFormStore.schema.section.visible).toEqual(true);
-                    expect(blockTypes.text_line.form.item41.disabled).toEqual(true);
-                    expect(blockTypes.text_line.form.item41.visible).toEqual(false);
+        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems4.item32.disabled).toEqual(true);
+        expect(sectionItems4.item32.visible).toEqual(false);
+        expect(resourceFormStore.schema.section.disabled).toEqual(false);
+        expect(resourceFormStore.schema.section.visible).toEqual(true);
+        expect(blockTypes4.text_line.form.item41.disabled).toEqual(true);
+        expect(blockTypes4.text_line.form.item41.visible).toEqual(false);
 
-                    resourceStore.data = observable({item1: 'item41'});
-                    resourceFormStore.finishField('/item1').then(() => {
-                        const sectionItems = resourceFormStore.schema.section.items;
-                        if (!sectionItems) {
-                            throw new Error('Section items should be defined!');
-                        }
-                        const blockTypes = resourceFormStore.schema.block.types;
-                        if (!blockTypes) {
-                            throw new Error('Block types should be defined!');
-                        }
+        resourceStore.data = observable({item1: 'item41'});
+        resourceFormStore.finishField('/item1');
+        const sectionItems5 = resourceFormStore.schema.section.items;
+        if (!sectionItems5) {
+            throw new Error('Section items should be defined!');
+        }
+        const blockTypes5 = resourceFormStore.schema.block.types;
+        if (!blockTypes5) {
+            throw new Error('Block types should be defined!');
+        }
 
-                        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-                        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-                        expect(sectionItems.item32.disabled).toEqual(true);
-                        expect(sectionItems.item32.visible).toEqual(false);
-                        expect(resourceFormStore.schema.section.disabled).toEqual(true);
-                        expect(resourceFormStore.schema.section.visible).toEqual(false);
-                        expect(blockTypes.text_line.form.item41.disabled).toEqual(false);
-                        expect(blockTypes.text_line.form.item41.visible).toEqual(true);
+        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item2.visible).toEqual(false);
+        expect(sectionItems5.item32.disabled).toEqual(true);
+        expect(sectionItems5.item32.visible).toEqual(false);
+        expect(resourceFormStore.schema.section.disabled).toEqual(true);
+        expect(resourceFormStore.schema.section.visible).toEqual(false);
+        expect(blockTypes5.text_line.form.item41.disabled).toEqual(false);
+        expect(blockTypes5.text_line.form.item41.visible).toEqual(true);
 
-                        resourceFormStore.destroy();
-                        done();
-                    });
-                });
-            });
-        });
+        resourceFormStore.destroy();
     }, 0);
 });
 
@@ -282,8 +278,8 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
             expect(resourceFormStore.schema.item.disabled).toEqual(false);
             expect(resourceFormStore.schema.item.visible).toEqual(true);
             done();
-        }, 0);
-    }, 0);
+        });
+    });
 });
 
 test('Read resourceKey from ResourceStore', () => {
@@ -406,7 +402,7 @@ test('Create data object for schema with sections', () => {
     });
 });
 
-test('Change schema should keep data', () => {
+test('Change schema should keep data', (done) => {
     const metadata = {
         title: {
             label: 'Title',
@@ -440,6 +436,7 @@ test('Change schema should keep data', () => {
             slogan: 'Slogan',
         });
         resourceFormStore.destroy();
+        done();
     }, 0);
 });
 
@@ -471,7 +468,7 @@ test('Change type should update schema and data', (done) => {
     const cachedPathsByTag = resourceFormStore.pathsByTag;
 
     setTimeout(() => {
-        expect(resourceFormStore.rawSchema).toBe(sidebarMetadata);
+        expect(resourceFormStore.rawSchema).toEqual(sidebarMetadata);
         expect(resourceFormStore.pathsByTag).not.toBe(cachedPathsByTag);
         expect(resourceFormStore.data).toEqual({
             title: 'Title',
@@ -546,7 +543,7 @@ test('Type should not be set from response if types are not supported', () => {
     });
 });
 
-test('Changing type should set the appropriate property in the ResourceStore', () => {
+test('Changing type should set the appropriate property in the ResourceStore', (done) => {
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({
         template: 'sidebar',
@@ -567,7 +564,8 @@ test('Changing type should set the appropriate property in the ResourceStore', (
         resourceFormStore.changeType('footer');
         expect(resourceFormStore.type).toEqual('footer');
         setTimeout(() => { // The observe command is executed later
-            expect(resourceStore.set).toBeCalledWith('template', 'footer');
+            expect(resourceStore.change).toBeCalledWith('template', 'footer');
+            done();
         });
     });
 });
@@ -1081,44 +1079,55 @@ test('Return all the values for a given tag within blocks', () => {
     expect(resourceFormStore.getValuesByTag('sulu.resource_locator_part')).toEqual(['Value 1', 'Block 1', 'Block 2']);
 });
 
-test('Return SchemaEntry for given schemaPath', () => {
+test('Return SchemaEntry for given schemaPath', (done) => {
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve(
+        {
+            title: {
+                tags: [
+                    {name: 'sulu.resource_locator_part'},
+                ],
+                type: 'text_line',
+            },
+            description: {
+                type: 'text_area',
+            },
+            block: {
+                type: 'block',
+                types: {
+                    default: {
+                        form: {
+                            text: {
+                                tags: [
+                                    {name: 'sulu.resource_locator_part'},
+                                ],
+                                type: 'text_line',
+                            },
+                            description: {
+                                type: 'text_line',
+                            },
+                        },
+                        title: 'Default',
+                    },
+                },
+            },
+        }
+    );
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
     const resourceFormStore = new ResourceFormStore(new ResourceStore('test'), 'snippets');
-    resourceFormStore.rawSchema = {
-        title: {
+
+    setTimeout(() => {
+        expect(resourceFormStore.getSchemaEntryByPath('/block/types/default/form/text')).toEqual({
             tags: [
                 {name: 'sulu.resource_locator_part'},
             ],
             type: 'text_line',
-        },
-        description: {
-            type: 'text_area',
-        },
-        block: {
-            type: 'block',
-            types: {
-                default: {
-                    form: {
-                        text: {
-                            tags: [
-                                {name: 'sulu.resource_locator_part'},
-                            ],
-                            type: 'text_line',
-                        },
-                        description: {
-                            type: 'text_line',
-                        },
-                    },
-                    title: 'Default',
-                },
-            },
-        },
-    };
-
-    expect(resourceFormStore.getSchemaEntryByPath('/block/types/default/form/text')).toEqual({
-        tags: [
-            {name: 'sulu.resource_locator_part'},
-        ],
-        type: 'text_line',
+        });
+        resourceFormStore.destroy();
+        done();
     });
 });
 
