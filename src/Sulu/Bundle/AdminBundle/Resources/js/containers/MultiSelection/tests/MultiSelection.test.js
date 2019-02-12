@@ -497,3 +497,30 @@ test('Should not call the onChange callback if the component props change', () =
     selection.setProps({overlayTitle: 'New Selection Title'});
     expect(changeSpy).not.toBeCalled();
 });
+
+test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            datagridKey="snippets"
+            onChange={changeSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1]}
+        />
+    );
+
+    // change callback should be called when item of the store mock changes
+    selection.instance().selectionStore.items = [{id: 22}, {id: 23}];
+    expect(changeSpy).toBeCalledWith([22, 23]);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    // change callback should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+});

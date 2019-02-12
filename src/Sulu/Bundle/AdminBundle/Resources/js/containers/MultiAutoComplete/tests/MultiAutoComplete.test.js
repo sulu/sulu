@@ -537,6 +537,67 @@ test('Call onChange and clear search result when chosen option has been selected
     expect(multiAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
 });
 
+test('Should call the onChange callback if the value of the selection-store changes', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const changeSpy = jest.fn();
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={changeSpy}
+            resourceKey="contact"
+            searchProperties={[]}
+            value={[]}
+        />
+    );
+
+    multiAutoComplete.instance().selectionStore.items = [{id: 22}, {id: 23}];
+    expect(changeSpy).toBeCalledWith([22, 23]);
+});
+
+test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementation(function() {
+        this.set = jest.fn();
+        this.loading = false;
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            onChange={changeSpy}
+            resourceKey="contact"
+            searchProperties={[]}
+            value={[]}
+        />
+    );
+
+    // change callback should be called when item of the store mock changes
+    multiAutoComplete.instance().selectionStore.items = [{id: 22}, {id: 23}];
+    expect(changeSpy).toBeCalledWith([22, 23]);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    // change callback should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Should call disposer when component unmounts', () => {
     const suggestions = [
         {id: 7, number: '007', name: 'James Bond'},

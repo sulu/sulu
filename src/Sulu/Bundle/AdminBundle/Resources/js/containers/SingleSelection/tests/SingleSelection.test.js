@@ -231,6 +231,40 @@ test('Should call the onChange callback if a new item was selected', () => {
     expect(singleSelection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
 });
 
+test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
+    const unrelatedObservable = observable.box(22);
+    const changeSpy = jest.fn(() => {
+        jest.fn()(unrelatedObservable.get());
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            datagridKey="test"
+            disabledIds={[]}
+            displayProperties={[]}
+            emptyText="Nothing"
+            icon="su-test"
+            onChange={changeSpy}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    // disable load-item mock that would overwrite the item property of the store mock
+    singleSelection.instance().singleSelectionStore.loadItem = jest.fn();
+
+    // change callback should be called when item of the store mock changes
+    singleSelection.instance().singleSelectionStore.item = {id: 7};
+    expect(changeSpy).toBeCalledWith(7);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+
+    // change callback should not be called when the unrelated observable changes
+    unrelatedObservable.set(55);
+    expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Should not call the onChange callback if the same item was selected', () => {
     const changeSpy = jest.fn();
 

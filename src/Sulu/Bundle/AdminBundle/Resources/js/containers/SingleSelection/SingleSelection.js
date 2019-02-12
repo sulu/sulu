@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, autorun, observable, toJS, untracked} from 'mobx';
+import {action, reaction, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import SingleItemSelection from '../../components/SingleItemSelection';
@@ -32,8 +32,7 @@ export default class SingleSelection extends React.Component<Props> {
     };
 
     singleSelectionStore: SingleSelectionStore;
-    changeDisposer: () => void;
-    changeAutorunInitialized: boolean = false;
+    changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
 
@@ -43,21 +42,16 @@ export default class SingleSelection extends React.Component<Props> {
         const {locale, resourceKey, value} = this.props;
 
         this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale);
-        this.changeDisposer = autorun(() => {
-            const {onChange, value} = untracked(() => this.props);
-            const itemId = this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined;
+        this.changeDisposer = reaction(
+            () => (this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined),
+            (loadedItemId: ?string | number) => {
+                const {onChange, value} = this.props;
 
-            if (!this.changeAutorunInitialized) {
-                this.changeAutorunInitialized = true;
-                return;
+                if (value !== loadedItemId) {
+                    onChange(loadedItemId);
+                }
             }
-
-            if (value === itemId) {
-                return;
-            }
-
-            onChange(itemId);
-        });
+        );
     }
 
     componentWillUnmount() {

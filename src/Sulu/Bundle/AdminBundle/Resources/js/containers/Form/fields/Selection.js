@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, computed, observable, toJS} from 'mobx';
+import {computed, observable, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import Datagrid from '../../../containers/Datagrid';
@@ -18,7 +18,7 @@ const USER_SETTINGS_KEY = 'selection';
 
 export default class Selection extends React.Component<Props> {
     datagridStore: ?DatagridStore;
-    changeDatagridDisposer: ?() => void;
+    changeDatagridDisposer: ?() => *;
 
     constructor(props: Props) {
         super(props);
@@ -61,7 +61,10 @@ export default class Selection extends React.Component<Props> {
                 value
             );
 
-            this.changeDatagridDisposer = autorun(this.handleDatagridSelectionChange);
+            this.changeDatagridDisposer = reaction(
+                () => (this.datagridStore ? this.datagridStore.selectionIds : []),
+                this.handleDatagridSelectionChange
+            );
         }
     }
 
@@ -152,7 +155,7 @@ export default class Selection extends React.Component<Props> {
                 icon={icon}
                 label={translate(label, {count: value ? value.length : 0})}
                 locale={this.locale}
-                onChange={this.handleSelectionChange}
+                onChange={this.handleMultiSelectionChange}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value || []}
@@ -160,7 +163,7 @@ export default class Selection extends React.Component<Props> {
         );
     }
 
-    handleSelectionChange = (selectedIds: Array<string | number>) => {
+    handleMultiSelectionChange = (selectedIds: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 
         onChange(selectedIds);
@@ -244,27 +247,22 @@ export default class Selection extends React.Component<Props> {
         );
     }
 
-    handleDatagridSelectionChange = () => {
-        const {
-            props: {
-                onChange,
-                onFinish,
-                value,
-            },
-            datagridStore,
-        } = this;
+    handleDatagridSelectionChange = (selectedIds: Array<string | number>) => {
+        const {onChange, onFinish, value} = this.props;
 
-        if (!datagridStore) {
+        if (!this.datagridStore) {
             throw new Error(
                 'The DatagridStore has not been initialized! This should not happen and is likely a bug.'
             );
         }
 
-        if (equal(toJS(value), datagridStore.selectionIds) || datagridStore.dataLoading || datagridStore.loading) {
+        if (this.datagridStore.dataLoading || this.datagridStore.loading) {
             return;
         }
 
-        onChange(datagridStore.selectionIds);
-        onFinish();
+        if (!equal(toJS(value), toJS(selectedIds))) {
+            onChange(selectedIds);
+            onFinish();
+        }
     };
 }

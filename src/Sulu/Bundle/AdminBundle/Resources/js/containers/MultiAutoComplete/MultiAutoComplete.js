@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, toJS} from 'mobx';
+import {reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -33,8 +33,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
     searchStore: SearchStore;
     selectionStore: MultiSelectionStore;
-    changeDisposer: () => void;
-    changeAutorunInitialized: boolean = false;
+    changeDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
@@ -43,7 +42,6 @@ export default class MultiAutoComplete extends React.Component<Props> {
             filterParameter,
             idProperty,
             locale,
-            onChange,
             resourceKey,
             searchProperties,
             value,
@@ -51,26 +49,16 @@ export default class MultiAutoComplete extends React.Component<Props> {
 
         this.searchStore = new SearchStore(resourceKey, searchProperties);
         this.selectionStore = new MultiSelectionStore(resourceKey, value || [], locale, filterParameter);
+        this.changeDisposer = reaction(
+            () => (this.selectionStore.items.map((item) => item[idProperty])),
+            (loadedItemIds: Array<string | number>) => {
+                const {onChange, value} = this.props;
 
-        this.changeDisposer = autorun(() => {
-            const {value} = this.props;
-            const itemIds = this.selectionStore.items.map((item) => item[idProperty]);
-
-            if (this.selectionStore.loading) {
-                return;
+                if (!equals(toJS(value), toJS(loadedItemIds))) {
+                    onChange(loadedItemIds);
+                }
             }
-
-            if (!this.changeAutorunInitialized) {
-                this.changeAutorunInitialized = true;
-                return;
-            }
-
-            if (equals(itemIds, toJS(value))) {
-                return;
-            }
-
-            onChange(itemIds);
-        });
+        );
     }
 
     componentWillUnmount() {
