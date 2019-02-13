@@ -198,6 +198,58 @@ test('Should not render the tab title on the first tab', () => {
     });
 });
 
+test('Should not render the tab title on the first tab when tabOrder is defined', (done) => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
+    const route = {
+        options: {
+            resourceKey: 'test',
+            titleProperty: 'test1',
+        },
+        children: [
+            {
+                name: 'Tab 2',
+                options: {
+                    tabOrder: 2,
+                    tabTitle: 'tabTitle2',
+                },
+            },
+            {
+                name: 'Tab 1',
+                options: {
+                    tabOrder: 1,
+                    tabTitle: 'tabTitle1',
+                },
+            },
+        ],
+    };
+    const router = {
+        attributes: {
+            id: 1,
+        },
+        route: route.children[1],
+    };
+
+    const Child = () => (<h1>Child</h1>);
+
+    const resourceTabs = mount(
+        <ResourceTabs route={route} router={router}>
+            {() => (<Child route={route.children[1]} />)}
+        </ResourceTabs>
+    );
+
+    resourceTabs.instance().resourceStore.data = {test1: 'value1'};
+    setTimeout(() => {
+        resourceTabs.update();
+        expect(resourceTabs.find('ResourceTabs > h1')).toHaveLength(0);
+        done();
+    });
+});
+
 test('Should render the tab title on the first visible tab if the first tab is not visible', (done) => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
