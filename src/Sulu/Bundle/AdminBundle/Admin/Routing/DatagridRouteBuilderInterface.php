@@ -41,6 +41,8 @@ interface DatagridRouteBuilderInterface
 
     public function setEditRoute(string $editRoute): self;
 
+    public function setBackRoute(string $editRoute): self;
+
     public function enableSearching(): self;
 
     public function disableSearching(): self;

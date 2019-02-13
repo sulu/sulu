@@ -106,6 +106,13 @@ class DatagridRouteBuilder implements DatagridRouteBuilderInterface
         return $this;
     }
 
+    public function setBackRoute(string $backRoute): DatagridRouteBuilderInterface
+    {
+        $this->route->setOption('backRoute', $backRoute);
+
+        return $this;
+    }
+
     public function enableSearching(): DatagridRouteBuilderInterface
     {
         $this->route->setOption('searchable', true);
