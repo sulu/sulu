@@ -38,6 +38,13 @@ export default class Router {
                 this.redirectFlag = false;
             }
         });
+
+        window.addEventListener('beforeunload', (event) => {
+            if (this.updateRouteHooks.some((updateRouteHook) => updateRouteHook() === false)) {
+                event.preventDefault();
+                event.returnValue = true;
+            }
+        });
     }
 
     addUpdateRouteHook(hook: UpdateRouteHook) {

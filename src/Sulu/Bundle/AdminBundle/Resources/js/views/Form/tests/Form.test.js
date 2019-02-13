@@ -725,6 +725,64 @@ test('Should navigate to defined route after dialog has been confirmed using res
     expect(router.restore).toBeCalledWith('test_route', backRouteAttributes);
 });
 
+test('Should not close the window if formStore is still dirty', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    form.instance().resourceFormStore.dirty = true;
+
+    const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
+
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(false);
+});
+
+test('Should close the window if formStore is not dirty', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    form.instance().resourceFormStore.dirty = false;
+
+    const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
+
+    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(true);
+});
+
 test('Should not render back button when no editLink is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;

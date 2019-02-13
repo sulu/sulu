@@ -119,9 +119,9 @@ class Form extends React.Component<Props> {
     }
 
     @action checkFormStoreDirtyStateBeforeNavigation = (
-        route: Route,
-        attributes: AttributeMap,
-        updateRouteMethod: UpdateRouteMethod
+        route: ?Route,
+        attributes: ?AttributeMap,
+        updateRouteMethod: ?UpdateRouteMethod
     ) => {
         if (!this.resourceFormStore.dirty) {
             return true;
@@ -136,6 +136,11 @@ class Form extends React.Component<Props> {
             // If the warning has already been displayed for the exact same route and attributes we can assume that the
             // confirm button in the warning has been clicked, since it calls the same routing action again.
             return true;
+        }
+
+        if (!route && !attributes && !updateRouteMethod) {
+            // If none of these attributes are set the call comes because the user wants to close the window
+            return false;
         }
 
         this.showDirtyWarning = true;

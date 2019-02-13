@@ -5,6 +5,8 @@ import {extendObservable, observable, isObservable} from 'mobx';
 import Router from '../Router';
 import routeRegistry from '../registries/RouteRegistry';
 
+window.addEventListener = jest.fn();
+
 jest.mock('../registries/RouteRegistry', () => {
     const getAllMock = jest.fn();
 
@@ -1334,4 +1336,50 @@ test('Restore if all updateRouteHooks return true', () => {
     expect(router.route).toEqual(webspaceOverviewRoute);
     expect(router.attributes).toEqual({locale: 'en', sortOrder: 'desc', webspace: 'webspace1'});
     expect(history.location.pathname).toBe('/webspace/webspace1/en');
+});
+
+test('Ask for confirmation to close window if a updateRouteHooks prevents it', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(false);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    const event = {
+        preventDefault: jest.fn(),
+        returnValue: undefined,
+    };
+
+    window.addEventListener.mock.calls[0][1](event);
+
+    expect(event.preventDefault).toBeCalledWith();
+    expect(event.returnValue).toEqual(true);
+});
+
+test('Do not ask for confirmation to close window if no updateRouteHooks prevents it', () => {
+    const history = createHistory();
+    const router = new Router(history);
+
+    expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(true);
+
+    router.addUpdateRouteHook(updateRouteHook1);
+    router.addUpdateRouteHook(updateRouteHook2);
+
+    const event = {
+        preventDefault: jest.fn(),
+        returnValue: undefined,
+    };
+
+    window.addEventListener.mock.calls[0][1](event);
+
+    expect(event.preventDefault).not.toBeCalled();
+    expect(event.returnValue).toEqual(undefined);
 });
