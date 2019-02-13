@@ -218,7 +218,9 @@ export default class Preview extends React.Component<Props> {
                         <Toolbar.Button
                             icon="su-link"
                             onClick={this.handlePreviewWindowClick}
-                        />
+                        >
+                            {translate('sulu_preview.open_in_window')}
+                        </Toolbar.Button>
                     </Toolbar.Controls>
                 </Toolbar>
             </div>

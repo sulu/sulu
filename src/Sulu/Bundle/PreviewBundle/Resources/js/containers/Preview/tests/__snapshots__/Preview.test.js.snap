@@ -174,7 +174,9 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
         showText={true}
-      />
+      >
+        sulu_preview.open_in_window
+      </Button>
     </Controls>
   </Toolbar>
 </div>
@@ -242,7 +244,9 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
-      />
+      >
+        sulu_preview.open_in_window
+      </Button>
     </Controls>
   </Toolbar>
 </div>
@@ -310,7 +314,9 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
-      />
+      >
+        sulu_preview.open_in_window
+      </Button>
     </Controls>
   </Toolbar>
 </div>

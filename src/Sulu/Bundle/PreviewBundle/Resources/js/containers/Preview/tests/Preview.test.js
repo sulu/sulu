@@ -187,7 +187,7 @@ test('React and update preview in external window when data is changed', () => {
         document: {
             close: jest.fn(),
             open: jest.fn(),
-            write: jest.fn()
+            write: jest.fn(),
         },
     };
     window.open.mockReturnValue(previewWindow);
