@@ -7,6 +7,8 @@ import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/Resource
 import Router from 'sulu-admin-bundle/services/Router';
 import Preview from '../Preview';
 
+window.open = jest.fn().mockReturnValue({addEventListener: jest.fn()});
+
 jest.mock('debounce', () => jest.fn((value) => value));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function() {
@@ -62,7 +64,7 @@ test('Render correct preview', () => {
 
     preview.instance().handleStartClick();
 
-    startPromise.then(() => {
+    return startPromise.then(() => {
         expect(preview).toMatchSnapshot();
     });
 });
@@ -73,6 +75,34 @@ test('Render button to start preview', () => {
     const router = new Router({});
 
     expect(render(<Preview formStore={formStore} router={router} />)).toMatchSnapshot();
+});
+
+test('Render nothing if separate window is opened and rerender if it is closed', () => {
+    const previewWindow = {addEventListener: jest.fn()};
+    window.open.mockReturnValue(previewWindow);
+
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    return startPromise.then(() => {
+        expect(preview).toMatchSnapshot();
+        preview.find('Button[icon="su-link"]').simulate('click');
+        expect(preview.html()).toEqual(null);
+
+        expect(previewWindow.addEventListener).toBeCalledWith('beforeunload', expect.anything());
+        previewWindow.addEventListener.mock.calls[0][1]();
+        expect(preview).toMatchSnapshot();
+    });
 });
 
 test('Change css class when selection of device has changed', () => {
@@ -89,7 +119,7 @@ test('Change css class when selection of device has changed', () => {
 
     preview.instance().handleStartClick();
 
-    startPromise.then(() => {
+    return startPromise.then(() => {
         expect(preview.find('.auto')).toHaveLength(1);
         expect(preview.find('.desktop')).toHaveLength(0);
         expect(preview.find('.tablet')).toHaveLength(0);
@@ -145,6 +175,55 @@ test('React and update preview when data is changed', () => {
         expect(previewStore.update).toBeCalledWith({title: 'New Test'});
 
         expect(preview).toMatchSnapshot();
+    });
+});
+
+test('React and update preview in external window when data is changed', () => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+
+    const previewWindow = {
+        addEventListener: jest.fn(),
+        document: {
+            close: jest.fn(),
+            open: jest.fn(),
+            write: jest.fn()
+        },
+    };
+    window.open.mockReturnValue(previewWindow);
+
+    // $FlowFixMe
+    formStore.data = observable.map({title: 'Test'});
+    // $FlowFixMe
+    formStore.loading = false;
+    // $FlowFixMe
+    formStore.type = observable.box('default');
+
+    const router = new Router({});
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.update.mockReturnValue(updatePromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+    preview.update();
+    preview.find('Button[icon="su-link"]').prop('onClick')();
+    preview.update();
+
+    formStore.data.set('title', 'New Test');
+
+    return startPromise.then(() => {
+        expect(previewStore.update).toBeCalledWith({title: 'New Test'});
+
+        expect(preview).toMatchSnapshot();
+        expect(previewWindow.document.open).toBeCalledWith();
+        expect(previewWindow.document.write).toBeCalledWith('<h1>Sulu is awesome</h1>');
+        expect(previewWindow.document.close).toBeCalledWith();
     });
 });
 

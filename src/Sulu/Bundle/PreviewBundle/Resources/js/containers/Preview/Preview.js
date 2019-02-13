@@ -35,6 +35,7 @@ export default class Preview extends React.Component<Props> {
     @observable selectedDeviceOption = this.availableDeviceOptions[0].value;
 
     previewStore: PreviewStore;
+    @observable previewWindow: any;
 
     typeDisposer: () => mixed;
     dataDisposer: () => mixed;
@@ -132,6 +133,10 @@ export default class Preview extends React.Component<Props> {
     }
 
     getPreviewDocument = (): ?Document => {
+        if (this.previewWindow) {
+            return this.previewWindow.document;
+        }
+
         // eslint-disable-next-line react/no-find-dom-node
         const iframe = ReactDOM.findDOMNode(this.iframeRef);
         if (!(iframe instanceof HTMLIFrameElement)) {
@@ -161,7 +166,18 @@ export default class Preview extends React.Component<Props> {
         this.startPreview();
     };
 
+    @action handlePreviewWindowClick = () => {
+        this.previewWindow = window.open(this.previewStore.renderRoute);
+        this.previewWindow.addEventListener('beforeunload', action(() => {
+            this.previewWindow = undefined;
+        }));
+    };
+
     render() {
+        if (this.previewWindow) {
+            return null;
+        }
+
         if (!this.started) {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
@@ -198,6 +214,10 @@ export default class Preview extends React.Component<Props> {
                             onChange={this.handleDeviceSelectChange}
                             options={this.availableDeviceOptions}
                             value={this.selectedDeviceOption}
+                        />
+                        <Toolbar.Button
+                            icon="su-link"
+                            onClick={this.handlePreviewWindowClick}
                         />
                     </Toolbar.Controls>
                 </Toolbar>
