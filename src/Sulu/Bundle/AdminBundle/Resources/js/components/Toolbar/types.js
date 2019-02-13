@@ -17,18 +17,18 @@ export type Group = Element<typeof ItemsComponent> | Element<typeof IconsCompone
 export type Skin = 'light' | 'dark';
 
 export type Button = {|
+    active?: boolean,
     buttonRef?: (ref: ElementRef<'button'>) => void,
     children?: Node,
-    onClick: () => ?Promise<*>,
-    label?: string | number,
+    disabled?: boolean,
+    hasOptions?: boolean,
     icon?: string,
+    label?: string | number,
+    loading?: boolean,
+    onClick: () => ?Promise<*>,
+    primary?: boolean,
     showText?: boolean,
     size?: string,
-    disabled?: boolean,
-    active?: boolean,
-    hasOptions?: boolean,
-    loading?: boolean,
-    primary?: boolean,
     skin?: Skin,
 |};
 
@@ -42,40 +42,40 @@ export type Toggler = {|
 |};
 
 export type DropdownOption = {|
+    disabled?: boolean,
     label: string | number,
     onClick?: () => void,
-    disabled?: boolean,
     skin?: Skin,
 |};
 
 export type SelectOption = {|
-    label: string | number,
-    value: string | number,
     disabled?: boolean,
+    label: string | number,
     skin?: Skin,
+    value: string | number,
 |};
 
 export type Dropdown = {|
-    options: Array<DropdownOption>,
-    label?: string | number,
+    disabled?: boolean,
     icon?: string,
+    label?: string | number,
+    loading?: boolean,
+    options: Array<DropdownOption>,
     showText?: boolean,
     size?: string,
-    disabled?: boolean,
-    loading?: boolean,
     skin?: Skin,
 |};
 
 export type Select = {|
-    value: string | number,
-    options: Array<SelectOption>,
-    onChange: (optionValue: string | number) => void,
-    label?: string | number,
-    icon?: string,
-    showText?: boolean,
-    size?: string,
     className?: string,
     disabled?: boolean,
+    icon?: string,
+    label?: string | number,
     loading?: boolean,
+    options: Array<SelectOption>,
+    onChange: (optionValue: string | number) => void,
+    showText?: boolean,
+    size?: string,
     skin?: Skin,
+    value: string | number,
 |};
