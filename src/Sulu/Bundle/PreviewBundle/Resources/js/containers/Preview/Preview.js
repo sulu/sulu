@@ -147,47 +147,33 @@ export default class Preview extends React.Component<Props> {
         this.startPreview();
     };
 
-    renderToolbar() {
-        return (
-            <Toolbar skin="dark">
-                <Toolbar.Controls>
-                    <Toolbar.Button
-                        icon={sidebarStore.size === 'medium' ? 'su-arrow-left' : 'su-arrow-right'}
-                        onClick={this.handleToggleSidebarClick}
-                    />
-                </Toolbar.Controls>
-            </Toolbar>
-        );
-    }
-
     render() {
         if (!this.started) {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
 
-        if (this.previewStore.starting) {
-            return (
-                <div className={previewStyles.container}>
-                    <div className={previewStyles.loaderContainer}>
-                        <Loader />
-                    </div>
-
-                    {this.renderToolbar()}
-                </div>
-            );
-        }
-
         return (
             <div className={previewStyles.container}>
-                <div className={previewStyles.iframeContainer}>
-                    <iframe
-                        className={previewStyles.iframe}
-                        ref={this.setIframe}
-                        src={this.previewStore.renderRoute}
-                    />
-                </div>
-
-                {this.renderToolbar()}
+                {this.previewStore.starting
+                    ? <div className={previewStyles.loaderContainer}>
+                        <Loader />
+                    </div>
+                    : <div className={previewStyles.iframeContainer}>
+                        <iframe
+                            className={previewStyles.iframe}
+                            ref={this.setIframe}
+                            src={this.previewStore.renderRoute}
+                        />
+                    </div>
+                }
+                <Toolbar skin="dark">
+                    <Toolbar.Controls>
+                        <Toolbar.Button
+                            icon={sidebarStore.size === 'medium' ? 'su-arrow-left' : 'su-arrow-right'}
+                            onClick={this.handleToggleSidebarClick}
+                        />
+                    </Toolbar.Controls>
+                </Toolbar>
             </div>
         );
     }
