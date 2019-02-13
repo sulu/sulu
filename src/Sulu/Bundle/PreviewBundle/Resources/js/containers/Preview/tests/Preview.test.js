@@ -38,6 +38,10 @@ jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function(history) {
     this.attributes = {locale: 'de'};
 }));
 
+jest.mock('sulu-admin-bundle/utils', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 beforeEach(() => {
     jest.resetModules();
 
@@ -49,17 +53,17 @@ test('Render correct preview', () => {
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
-    const component = shallow(<Preview formStore={formStore} router={router} />);
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
-    const previewStore = component.instance().previewStore;
+    const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.starting = false;
 
-    component.instance().handleStartClick();
+    preview.instance().handleStartClick();
 
     startPromise.then(() => {
-        expect(component).toMatchSnapshot();
+        expect(preview).toMatchSnapshot();
     });
 });
 
@@ -69,6 +73,46 @@ test('Render button to start preview', () => {
     const router = new Router({});
 
     expect(render(<Preview formStore={formStore} router={router} />)).toMatchSnapshot();
+});
+
+test('Change css class when selection of device has changed', () => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    startPromise.then(() => {
+        expect(preview.find('.auto')).toHaveLength(1);
+        expect(preview.find('.desktop')).toHaveLength(0);
+        expect(preview.find('.tablet')).toHaveLength(0);
+        expect(preview.find('.smartphone')).toHaveLength(0);
+
+        preview.find('Select').prop('onChange')('tablet');
+        expect(preview.find('.auto')).toHaveLength(0);
+        expect(preview.find('.desktop')).toHaveLength(0);
+        expect(preview.find('.tablet')).toHaveLength(1);
+        expect(preview.find('.smartphone')).toHaveLength(0);
+
+        preview.find('Select').prop('onChange')('desktop');
+        expect(preview.find('.auto')).toHaveLength(0);
+        expect(preview.find('.desktop')).toHaveLength(1);
+        expect(preview.find('.tablet')).toHaveLength(0);
+        expect(preview.find('.smartphone')).toHaveLength(0);
+
+        preview.find('Select').prop('onChange')('smartphone');
+        expect(preview.find('.auto')).toHaveLength(0);
+        expect(preview.find('.desktop')).toHaveLength(0);
+        expect(preview.find('.tablet')).toHaveLength(0);
+        expect(preview.find('.smartphone')).toHaveLength(1);
+    });
 });
 
 test('React and update preview when data is changed', () => {
@@ -83,24 +127,24 @@ test('React and update preview when data is changed', () => {
     formStore.type = observable.box('default');
 
     const router = new Router({});
-    const component = mount(<Preview formStore={formStore} router={router} />);
+    const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = component.instance().previewStore;
+    const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = false;
 
-    component.instance().handleStartClick();
+    preview.instance().handleStartClick();
 
     formStore.data.set('title', 'New Test');
 
     return startPromise.then(() => {
         expect(previewStore.update).toBeCalledWith({title: 'New Test'});
 
-        expect(component).toMatchSnapshot();
+        expect(preview).toMatchSnapshot();
     });
 });
 
@@ -116,24 +160,24 @@ test('Dont react or update preview when data is changed during formstore is load
     formStore.type = observable.box('default');
 
     const router = new Router({});
-    const component = mount(<Preview formStore={formStore} router={router} />);
+    const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = component.instance().previewStore;
+    const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = false;
 
-    component.instance().handleStartClick();
+    preview.instance().handleStartClick();
 
     formStore.data.set('title', 'New Test');
 
     return startPromise.then(() => {
         expect(previewStore.update).not.toBeCalled();
 
-        expect(component).toMatchSnapshot();
+        expect(preview).toMatchSnapshot();
     });
 });
 
@@ -149,24 +193,24 @@ test('Dont react or update preview when data is changed during preview-store is 
     formStore.type = observable.box('default');
 
     const router = new Router({});
-    const component = mount(<Preview formStore={formStore} router={router} />);
+    const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = component.instance().previewStore;
+    const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = true;
 
-    component.instance().handleStartClick();
+    preview.instance().handleStartClick();
 
     formStore.data.set('title', 'New Test');
 
     return startPromise.then(() => {
         expect(previewStore.update).not.toBeCalled();
 
-        expect(component).toMatchSnapshot();
+        expect(preview).toMatchSnapshot();
     });
 });
 
@@ -182,17 +226,17 @@ test('React and update-context when type is changed', () => {
     formStore.type = observable.box('default');
 
     const router = new Router({});
-    const component = mount(<Preview formStore={formStore} router={router} />);
+    const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();
     const updateContextPromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = component.instance().previewStore;
+    const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.updateContext.mockReturnValue(updateContextPromise);
     previewStore.starting = false;
 
-    component.instance().handleStartClick();
+    preview.instance().handleStartClick();
 
     // $FlowFixMe
     formStore.type.set('homepage');

@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom';
 import {action, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
-import {Router} from 'sulu-admin-bundle/services';
-import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
+import classNames from 'classnames';
 import {Loader, Toolbar} from 'sulu-admin-bundle/components';
+import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
+import {Router} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
 import previewStyles from './preview.scss';
 import PreviewStore from './stores/PreviewStore';
 import type {PreviewMode} from './types';
@@ -21,8 +23,16 @@ export default class Preview extends React.Component<Props> {
     static debounceDelay: number = 250;
     static mode: PreviewMode = 'auto';
 
+    availableDeviceOptions = [
+        {label: translate('sulu_preview.auto'), value: 'auto'},
+        {label: translate('sulu_preview.desktop'), value: 'desktop'},
+        {label: translate('sulu_preview.tablet'), value: 'tablet'},
+        {label: translate('sulu_preview.smartphone'), value: 'smartphone'},
+    ];
+
     @observable iframeRef: ?HTMLIFrameElement;
     @observable started: boolean = false;
+    @observable selectedDeviceOption = this.availableDeviceOptions[0].value;
 
     previewStore: PreviewStore;
 
@@ -143,6 +153,10 @@ export default class Preview extends React.Component<Props> {
         sidebarStore.setSize('medium');
     };
 
+    @action handleDeviceSelectChange = (value: string) => {
+        this.selectedDeviceOption = value;
+    };
+
     handleStartClick = () => {
         this.startPreview();
     };
@@ -152,8 +166,15 @@ export default class Preview extends React.Component<Props> {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
 
+        const containerClass = classNames(
+            previewStyles.container,
+            {
+                [previewStyles[this.selectedDeviceOption]]: this.selectedDeviceOption,
+            }
+        );
+
         return (
-            <div className={previewStyles.container}>
+            <div className={containerClass}>
                 {this.previewStore.starting
                     ? <div className={previewStyles.loaderContainer}>
                         <Loader />
@@ -171,6 +192,12 @@ export default class Preview extends React.Component<Props> {
                         <Toolbar.Button
                             icon={sidebarStore.size === 'medium' ? 'su-arrow-left' : 'su-arrow-right'}
                             onClick={this.handleToggleSidebarClick}
+                        />
+                        <Toolbar.Select
+                            icon="su-expand"
+                            onChange={this.handleDeviceSelectChange}
+                            options={this.availableDeviceOptions}
+                            value={this.selectedDeviceOption}
                         />
                     </Toolbar.Controls>
                 </Toolbar>

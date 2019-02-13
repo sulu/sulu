@@ -92,7 +92,7 @@ exports[`Render button to start preview 1`] = `
 
 exports[`Render correct preview 1`] = `
 <div
-  className="container"
+  className="container auto"
 >
   <div
     className="iframeContainer"
@@ -117,6 +117,32 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
         showText={true}
+      />
+      <Select
+        icon="su-expand"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "sulu_preview.auto",
+              "value": "auto",
+            },
+            Object {
+              "label": "sulu_preview.desktop",
+              "value": "desktop",
+            },
+            Object {
+              "label": "sulu_preview.tablet",
+              "value": "tablet",
+            },
+            Object {
+              "label": "sulu_preview.smartphone",
+              "value": "smartphone",
+            },
+          ]
+        }
+        showText={true}
+        value="auto"
       />
     </Controls>
   </Toolbar>
