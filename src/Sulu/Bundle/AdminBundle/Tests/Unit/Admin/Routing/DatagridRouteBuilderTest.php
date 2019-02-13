@@ -196,32 +196,6 @@ class DatagridRouteBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildDatagridRouteWithMoving()
-    {
-        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
-            ->setDatagridKey('roles')
-            ->addDatagridAdapters(['tree'])
-            ->disableMoving()
-            ->enableMoving()
-            ->getRoute();
-
-        $this->assertTrue($route->getOption('movable'));
-    }
-
-    public function testBuildDatagridRouteWithoutMoving()
-    {
-        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
-            ->setDatagridKey('roles')
-            ->addDatagridAdapters(['tree'])
-            ->enableMoving()
-            ->disableMoving()
-            ->getRoute();
-
-        $this->assertFalse($route->getOption('movable'));
-    }
-
     public function testBuildDatagridWithRouterAttributesToFormStore()
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))

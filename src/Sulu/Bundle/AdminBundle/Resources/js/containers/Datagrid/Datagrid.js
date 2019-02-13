@@ -498,7 +498,7 @@ export default class Datagrid extends React.Component<Props> {
                 </div>
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
-                    confirmLoading={this.props.store.deleting}
+                    confirmLoading={store.deleting}
                     confirmText={translate('sulu_admin.ok')}
                     onCancel={this.handleSelectionDeleteDialogCancelClick}
                     onConfirm={this.handleSelectionDeleteDialogConfirmClick}

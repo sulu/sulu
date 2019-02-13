@@ -170,16 +170,19 @@ test('Should render the datagrid with a title', () => {
 
 test('Should pass correct props to move datagrid overlay', () => {
     const Datagrid = require('../Datagrid').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
 
     const router = {
         bind: jest.fn(),
         route: {
             options: {
                 adapters: ['table'],
-                movable: true,
                 datagridKey: 'snippets_datagrid',
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
+                toolbarActions: ['sulu_admin.move'],
             },
         },
     };
@@ -231,6 +234,10 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
 
 test('Should render the datagrid with the add icon if a addRoute has been passed', () => {
     const Datagrid = require('../Datagrid').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
+
     const router = {
         bind: jest.fn(),
         route: {
@@ -239,6 +246,7 @@ test('Should render the datagrid with the add icon if a addRoute has been passed
                 addRoute: 'addRoute',
                 datagridKey: 'snippets',
                 resourceKey: 'snippets',
+                toolbarActions: ['sulu_admin.add'],
             },
         },
     };
@@ -422,6 +430,9 @@ test('Should render the add button in the toolbar only if an addRoute has been p
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
         bind: jest.fn(),
         route: {
@@ -430,6 +441,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
                 addRoute: 'addRoute',
                 datagridKey: 'test',
                 resourceKey: 'test',
+                toolbarActions: ['sulu_admin.add'],
             },
         },
     };
@@ -450,6 +462,9 @@ test('Should navigate when add button is clicked and locales have been passed in
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -460,6 +475,7 @@ test('Should navigate when add button is clicked and locales have been passed in
                 locales: ['de', 'en'],
                 datagridKey: 'test',
                 resourceKey: 'test',
+                toolbarActions: ['sulu_admin.add'],
             },
         },
     };
@@ -481,6 +497,9 @@ test('Should navigate without locale when pencil button is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
@@ -490,6 +509,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
                 addRoute: 'addRoute',
                 datagridKey: 'test',
                 resourceKey: 'test',
+                toolbarActions: ['sulu_admin.add'],
             },
         },
     };
@@ -803,14 +823,17 @@ test('Should make move overlay disappear if cancel is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
     const router = {
         bind: jest.fn(),
         route: {
             options: {
                 adapters: ['table'],
                 datagridKey: 'test',
-                movable: true,
                 resourceKey: 'test',
+                toolbarActions: ['sulu_admin.move'],
             },
         },
     };
@@ -839,14 +862,17 @@ test('Should move items after move overlay was confirmed', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
     const router = {
         bind: jest.fn(),
         route: {
             options: {
                 adapters: ['table'],
                 datagridKey: 'test',
-                movable: true,
                 resourceKey: 'test',
+                toolbarActions: ['sulu_admin.move'],
             },
         },
     };

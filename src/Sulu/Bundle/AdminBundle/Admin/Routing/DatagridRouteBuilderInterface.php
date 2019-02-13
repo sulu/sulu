@@ -40,8 +40,6 @@ interface DatagridRouteBuilderInterface
      */
     public function addToolbarActions(array $toolbarActions): self;
 
-    public function removeToolbarAction(string $toolbarAction): self;
-
     public function setDefaultLocale(string $locale): self;
 
     public function setAddRoute(string $addRoute): self;
@@ -53,10 +51,6 @@ interface DatagridRouteBuilderInterface
     public function enableSearching(): self;
 
     public function disableSearching(): self;
-
-    public function enableMoving(): self;
-
-    public function disableMoving(): self;
 
     /**
      * @param string[] $routerAttributesToDatagridStore

@@ -88,7 +88,9 @@ class CategoryAdmin extends Admin
         ];
 
         $listToolbarActions = [
+            'sulu_admin.add',
             'sulu_admin.delete',
+            'sulu_admin.move',
         ];
 
         return [
@@ -102,7 +104,6 @@ class CategoryAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->enableSearching()
-                ->enableMoving()
                 ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
