@@ -114,8 +114,8 @@
                 <source>snippet.settings.copy-locale-overlay.info</source>
                 <target>Neues Schnipsel wird erstellt</target>
             </trans-unit>
-            <trans-unit id="27" resname="content-navigation.snippets.excerpt">
-                <source>content-navigation.snippets.excerpt</source>
+            <trans-unit id="27" resname="content-navigation.snippets.taxonomies">
+                <source>content-navigation.snippets.taxonomies</source>
                 <target>Taxonomien</target>
             </trans-unit>
         </body>

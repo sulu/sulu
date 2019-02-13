@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
     * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
     * FEATURE     #4394  [WebsiteBundle]        Add exception handling for breadcrumb function
     * FEATURE     #4400  [All]                  Fix FieldJoinDescriptor without a relation
