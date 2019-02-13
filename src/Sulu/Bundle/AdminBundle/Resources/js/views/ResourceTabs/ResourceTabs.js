@@ -81,11 +81,22 @@ export default class ResourceTabs extends React.Component<Props> {
         return this.resourceStore.data[titleProperty || routeTitleProperty];
     }
 
-    @computed get visibleTabRoutes(): Array<Object> {
+    @computed get sortedTabRoutes(): Array<Object> {
         const {route} = this.props;
+
+        return route.children.concat()
+            .sort((childRoute1, childRoute2) => {
+                const {tabOrder: tabOrder1 = 0} = childRoute1.options;
+                const {tabOrder: tabOrder2 = 0} = childRoute2.options;
+
+                return tabOrder1 - tabOrder2;
+            });
+    }
+
+    @computed get visibleTabRoutes(): Array<Object> {
         const data = toJS(this.resourceStore.data);
 
-        return route.children
+        return this.sortedTabRoutes
             .filter((childRoute) => {
                 const {
                     options: {
@@ -94,12 +105,6 @@ export default class ResourceTabs extends React.Component<Props> {
                 } = childRoute;
 
                 return !tabCondition || jexl.evalSync(tabCondition, data);
-            })
-            .sort((childRoute1, childRoute2) => {
-                const {tabOrder: tabOrder1 = 0} = childRoute1.options;
-                const {tabOrder: tabOrder2 = 0} = childRoute2.options;
-
-                return tabOrder1 - tabOrder2;
             });
     }
 
@@ -160,7 +165,7 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     render() {
-        const {children, route} = this.props;
+        const {children} = this.props;
 
         const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
 
@@ -185,7 +190,7 @@ export default class ResourceTabs extends React.Component<Props> {
                             })}
                         </Tabs>
                     </div>
-                    {route.children[0] !== selectedRoute && this.title &&
+                    {this.sortedTabRoutes[0] !== selectedRoute && this.title &&
                         <h1>{this.title}</h1>
                     }
                     {ChildComponent}
