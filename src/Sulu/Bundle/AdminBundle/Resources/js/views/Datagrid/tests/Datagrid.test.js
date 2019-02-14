@@ -340,6 +340,84 @@ test('Should destroy the store on unmount', () => {
     expect(datagridStore.destroy).toBeCalled();
 });
 
+test('Should navigate to defined route on back button click', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                backRoute: 'backRoute',
+                addRoute: 'addRoute',
+                datagridKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+    datagrid.instance().locale = {
+        get: function() {
+            return 'de';
+        },
+    };
+
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('backRoute', {locale: 'de'});
+});
+
+test('Should navigate to defined route on back button click without locale', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                backRoute: 'backRoute',
+                addRoute: 'addRoute',
+                datagridKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('backRoute', {});
+});
+
+test('Should not render back button when no backRoute is configured', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Datagrid = require('../Datagrid').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Datagrid);
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                addRoute: 'addRoute',
+                datagridKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const datagrid = mount(<Datagrid router={router} />);
+
+    const toolbarConfig = toolbarFunction.call(datagrid.instance());
+    expect(toolbarConfig.backButton).toBe(undefined);
+});
+
 test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Datagrid = require('../Datagrid').default;

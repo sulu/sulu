@@ -212,6 +212,7 @@ export default withToolbar(Datagrid, function() {
     const {
         route: {
             options: {
+                backRoute,
                 addRoute,
                 locales,
                 movable,
@@ -219,6 +220,17 @@ export default withToolbar(Datagrid, function() {
         },
     } = router;
 
+    const backButton = backRoute
+        ? {
+            onClick: () => {
+                const options = {};
+                if (this.locale) {
+                    options.locale = this.locale.get();
+                }
+                router.restore(backRoute, options);
+            },
+        }
+        : undefined;
     const locale = locales
         ? {
             value: this.locale.get(),
@@ -265,6 +277,7 @@ export default withToolbar(Datagrid, function() {
     }
 
     return {
+        backButton,
         locale,
         items,
     };
