@@ -195,12 +195,14 @@ export default class Preview extends React.Component<Props> {
                     ? <div className={previewStyles.loaderContainer}>
                         <Loader />
                     </div>
-                    : <div className={previewStyles.iframeContainer}>
-                        <iframe
-                            className={previewStyles.iframe}
-                            ref={this.setIframe}
-                            src={this.previewStore.renderRoute}
-                        />
+                    : <div className={previewStyles.previewContainer}>
+                        <div className={previewStyles.iframeContainer}>
+                            <iframe
+                                className={previewStyles.iframe}
+                                ref={this.setIframe}
+                                src={this.previewStore.renderRoute}
+                            />
+                        </div>
                     </div>
                 }
                 <Toolbar skin="dark">

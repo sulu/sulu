@@ -2,6 +2,10 @@
 
 $previewBackgroundColor: $white;
 $toolbarHeight: 60px;
+$previewSmartphoneWidth: 431px;
+$previewSmartphoneHeight: 887px;
+$previewTabletWidth: 882px;
+$previewTabletHeight: 1248px;
 
 .container {
     height: 100%;
@@ -22,6 +26,13 @@ $toolbarHeight: 60px;
 }
 
 .tablet {
+    .iframe-container {
+        background-image: url('./tablet.png');
+        background-size: $previewTabletWidth $previewTabletHeight;
+        min-width: $previewTabletWidth;
+        min-height: $previewTabletHeight;
+    }
+
     .iframe {
         height: 1024px;
         width: 768px;
@@ -29,6 +40,13 @@ $toolbarHeight: 60px;
 }
 
 .smartphone {
+    .iframe-container {
+        background-image: url('./smartphone.png');
+        background-size: $previewSmartphoneWidth $previewSmartphoneHeight;
+        min-width: $previewSmartphoneWidth;
+        min-height: $previewSmartphoneHeight;
+    }
+
     .iframe {
         height: 667px;
         width: 375px;
@@ -40,16 +58,25 @@ $toolbarHeight: 60px;
     margin: auto;
     border: 0;
     background-color: $previewBackgroundColor;
+    overflow: auto;
 }
 
 .iframe-container {
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.preview-container {
     height: calc(100% - $toolbarHeight);
     overflow: auto;
 }
 
 .loader-container {
     width: 100%;
-    height: calc(100% - $toolbarHeight);
+    height: 100%;
     padding-top: 100px;
 }

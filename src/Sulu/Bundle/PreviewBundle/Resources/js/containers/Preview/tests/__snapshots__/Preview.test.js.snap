@@ -117,12 +117,16 @@ exports[`Render correct preview 1`] = `
   className="container auto"
 >
   <div
-    className="iframeContainer"
+    className="previewContainer"
   >
-    <iframe
-      className="iframe"
-      src="/render"
-    />
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
   </div>
   <Toolbar
     skin="dark"
@@ -187,12 +191,16 @@ exports[`Render nothing if separate window is opened and rerender if it is close
   className="container auto"
 >
   <div
-    className="iframeContainer"
+    className="previewContainer"
   >
-    <iframe
-      className="iframe"
-      src="/render"
-    />
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
   </div>
   <Toolbar
     skin="dark"
@@ -257,12 +265,16 @@ exports[`Render nothing if separate window is opened and rerender if it is close
   className="container auto"
 >
   <div
-    className="iframeContainer"
+    className="previewContainer"
   >
-    <iframe
-      className="iframe"
-      src="/render"
-    />
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
   </div>
   <Toolbar
     skin="dark"
