@@ -163,7 +163,7 @@ result in the navigation not to happen. This way the application can e.g. stop t
 not saved yet (that's what it is used for in the [`Form`](#form) view).
 
 ```javascript static
-router.addUpdateRouteHook((route) => {
+router.addUpdateRouteHook((route, attributes, updateRouteMethod) => {
     if (route.name === 'test') {
         return false;
     }
