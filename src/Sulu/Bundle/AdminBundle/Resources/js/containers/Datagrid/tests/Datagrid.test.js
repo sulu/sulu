@@ -1,7 +1,7 @@
 // @flow
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
-import {observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {translate} from '../../../utils/Translator';
 import SingleDatagridOverlay from '../../SingleDatagridOverlay';
 import Datagrid from '../Datagrid';
@@ -72,6 +72,11 @@ jest.mock('../stores/DatagridStore', () => jest.fn(function(resourceKey, datagri
     this.search = jest.fn();
     this.move = jest.fn();
     this.copy = jest.fn();
+
+    mockExtendObservable(this, {
+        copying: false,
+        ordering: false,
+    });
 }));
 
 jest.mock('../registries/DatagridAdapterRegistry', () => ({
@@ -526,12 +531,10 @@ test('DatagridStore should copy item when onRequestItemCopy callback is called a
 
     datagrid.find(SingleDatagridOverlay).at(1).prop('onConfirm')({id: 8});
     return requestCopyPromise.then(() => {
-        expect(datagrid.instance().copying).toEqual(true);
         expect(datagridStore.copy).toBeCalledWith(5, 8);
 
         return copyPromise.then(() => {
             datagrid.update();
-            expect(datagrid.instance().copying).toEqual(false);
             expect(datagrid.find(SingleDatagridOverlay).at(1).prop('open')).toEqual(false);
         });
     });
@@ -584,12 +587,10 @@ test('DatagridStore should move item when onRequestItemMove callback is called a
 
     datagrid.find(SingleDatagridOverlay).at(0).prop('onConfirm')({id: 8});
     return requestMovePromise.then(() => {
-        expect(datagrid.instance().moving).toEqual(true);
         expect(datagridStore.move).toBeCalledWith(5, 8);
 
         return movePromise.then(() => {
             datagrid.update();
-            expect(datagrid.instance().moving).toEqual(false);
             expect(datagrid.find(SingleDatagridOverlay).at(0).prop('open')).toEqual(false);
         });
     });
@@ -688,12 +689,10 @@ test('DatagridStore should delete item when onRequestItemDelete callback is call
 
     datagrid.find('Dialog').at(1).prop('onConfirm')();
     return requestDeletePromise.then(() => {
-        expect(datagrid.instance().deleting).toEqual(true);
         expect(datagridStore.delete).toBeCalledWith(5);
 
         return deletePromise.then(() => {
             datagrid.update();
-            expect(datagrid.instance().deleting).toEqual(false);
             expect(datagrid.find('Dialog').at(1).prop('open')).toEqual(false);
         });
     });
@@ -743,12 +742,10 @@ test('DatagridStore should order item when onRequestItemOrder callback is called
     datagrid.find('Dialog').at(2).prop('onConfirm')();
 
     return requestOrderPromise.then(() => {
-        expect(datagrid.instance().ordering).toEqual(true);
         expect(datagridStore.order).toBeCalledWith(5, 8);
 
         return orderPromise.then(() => {
             datagrid.update();
-            expect(datagrid.instance().ordering).toEqual(false);
             expect(datagrid.find('Dialog').at(2).prop('open')).toEqual(false);
         });
     });

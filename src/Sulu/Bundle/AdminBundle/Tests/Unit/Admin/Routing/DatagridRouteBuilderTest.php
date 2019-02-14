@@ -196,32 +196,6 @@ class DatagridRouteBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildDatagridRouteWithMoving()
-    {
-        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
-            ->setDatagridKey('roles')
-            ->addDatagridAdapters(['tree'])
-            ->disableMoving()
-            ->enableMoving()
-            ->getRoute();
-
-        $this->assertTrue($route->getOption('movable'));
-    }
-
-    public function testBuildDatagridRouteWithoutMoving()
-    {
-        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
-            ->setDatagridKey('roles')
-            ->addDatagridAdapters(['tree'])
-            ->enableMoving()
-            ->disableMoving()
-            ->getRoute();
-
-        $this->assertFalse($route->getOption('movable'));
-    }
-
     public function testBuildDatagridWithRouterAttributesToFormStore()
     {
         $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
@@ -296,5 +270,18 @@ class DatagridRouteBuilderTest extends TestCase
             ->getRoute();
 
         $this->assertEquals('sulu_category.edit_form', $route->getOption('backRoute'));
+    }
+
+    public function testBuildAddToolbarActions()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->addToolbarActions(['sulu_admin.add', 'sulu_admin.move'])
+            ->addToolbarActions(['sulu_admin.delete'])
+            ->getRoute();
+
+        $this->assertEquals(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
     }
 }

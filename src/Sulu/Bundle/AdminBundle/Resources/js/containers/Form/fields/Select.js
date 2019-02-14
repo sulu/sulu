@@ -3,7 +3,7 @@ import React from 'react';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
 
-const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the SingleSelect FieldType';
+const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the Select FieldType';
 
 type Props = FieldTypeProps<Array<string | number>>;
 

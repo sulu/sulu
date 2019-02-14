@@ -2,6 +2,25 @@
 
 ## dev-develop
 
+### Datagrid Toolbar Actions added
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The datagrid will not longer add automatically toolbar actions so if you e.g.
+need a delete and add button on your datagrid you should add them to your
+toolbarActions the following way:
+
+```php
+$this->routeBuilderFactory->createDatagridRouteBuilder(...)
+    ->addToolbarActions([
+        'sulu_admin.add',
+        'sulu_admin.delete',
+    ]);
+```
+
+The functions `enableMoving` and `disableMoving` where also replaced by a
+ToolbarAction called `sulu_admin.move`.
+
 ### Add sulu preinstall script to your package.json
 
 Sulu will check if the dependencies are correctly install in a preinstall script

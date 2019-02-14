@@ -4,13 +4,13 @@ import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React from 'react';
-import {default as DatagridContainer} from '../../containers/Datagrid';
-import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
-import DatagridStore from '../../containers/Datagrid/stores/DatagridStore';
+import equals from 'fast-deep-equal';
+import {default as DatagridContainer, DatagridStore} from '../../containers/Datagrid';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
+import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import datagridStyles from './datagrid.scss';
 
 const USER_SETTINGS_KEY = 'datagrid';
@@ -21,9 +21,7 @@ class Datagrid extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
     datagrid: ?ElementRef<typeof DatagridContainer>;
-    @observable deleting: boolean = false;
-    @observable moving: boolean = false;
-    @observable showMoveOverlay: boolean = false;
+    @observable toolbarActions = [];
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -119,11 +117,58 @@ class Datagrid extends React.Component<ViewProps> {
         return datagridStoreOptions;
     }
 
+    @action componentDidMount() {
+        const {router} = this.props;
+        const {
+            route: {
+                options: {
+                    locales,
+                    toolbarActions,
+                },
+            },
+        } = router;
+
+        if (!toolbarActions) {
+            return;
+        }
+
+        this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
+            this.datagridStore,
+            this,
+            router,
+            locales
+        ));
+    }
+
+    componentDidUpdate(prevProps: ViewProps) {
+        const {
+            route: {
+                options: {
+                    locales,
+                },
+            },
+        } = this.props.router;
+
+        const {
+            route: {
+                options: {
+                    prevLocales,
+                },
+            },
+        } = prevProps.router;
+
+        if (!equals(locales, prevLocales)) {
+            this.toolbarActions.forEach((toolbarAction) => {
+                toolbarAction.setLocales(locales);
+            });
+        }
+    }
+
     componentWillUnmount() {
         this.datagridStore.destroy();
     }
 
-    handleItemAdd = (rowId: string | number) => {
+    addItem = (rowId: string | number) => {
         const {router} = this.props;
         const {
             route: {
@@ -136,6 +181,14 @@ class Datagrid extends React.Component<ViewProps> {
         router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
     };
 
+    requestSelectionDelete = () => {
+        if (!this.datagrid) {
+            throw new Error('Datagrid not created yet.');
+        }
+
+        this.datagrid.requestSelectionDelete();
+    };
+
     handleEditClick = (rowId: string | number) => {
         const {router} = this.props;
         router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
@@ -145,19 +198,6 @@ class Datagrid extends React.Component<ViewProps> {
         this.datagrid = datagrid;
     };
 
-    @action handleMoveOverlayClose = () => {
-        this.showMoveOverlay = false;
-    };
-
-    @action handleMoveOverlayConfirm = (item: Object) => {
-        this.moving = true;
-
-        this.datagridStore.moveSelection(item.id).then(action(() => {
-            this.moving = false;
-            this.showMoveOverlay = false;
-        }));
-    };
-
     render() {
         const {
             route: {
@@ -165,7 +205,6 @@ class Datagrid extends React.Component<ViewProps> {
                     adapters,
                     addRoute,
                     editRoute,
-                    movable,
                     searchable,
                     title,
                 },
@@ -177,30 +216,13 @@ class Datagrid extends React.Component<ViewProps> {
                 <DatagridContainer
                     adapters={adapters}
                     header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={addRoute && this.handleItemAdd}
+                    onItemAdd={addRoute && this.addItem}
                     onItemClick={editRoute && this.handleEditClick}
                     ref={this.setDatagridRef}
                     searchable={searchable}
                     store={this.datagridStore}
                 />
-                {movable &&
-                    <SingleDatagridOverlay
-                        adapter="column_list"
-                        allowActivateForDisabledItems={false}
-                        clearSelectionOnClose={true}
-                        confirmLoading={this.moving}
-                        datagridKey={this.datagridStore.datagridKey}
-                        disabledIds={this.datagridStore.selectionIds}
-                        locale={this.locale}
-                        onClose={this.handleMoveOverlayClose}
-                        onConfirm={this.handleMoveOverlayConfirm}
-                        open={this.showMoveOverlay}
-                        options={{includeRoot: true}}
-                        reloadOnOpen={true}
-                        resourceKey={this.datagridStore.resourceKey}
-                        title={translate('sulu_admin.move_items')}
-                    />
-                }
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
         );
     }
@@ -213,9 +235,7 @@ export default withToolbar(Datagrid, function() {
         route: {
             options: {
                 backRoute,
-                addRoute,
                 locales,
-                movable,
             },
         },
     } = router;
@@ -244,37 +264,9 @@ export default withToolbar(Datagrid, function() {
         }
         : undefined;
 
-    const items = [];
-
-    if (addRoute) {
-        items.push({
-            icon: 'su-plus-circle',
-            label: translate('sulu_admin.add'),
-            onClick: this.handleItemAdd,
-            type: 'button',
-        });
-    }
-
-    items.push({
-        disabled: this.datagridStore.selectionIds.length === 0,
-        icon: 'su-trash-alt',
-        label: translate('sulu_admin.delete'),
-        loading: this.datagridStore.selectionDeleting,
-        onClick: this.datagrid.requestSelectionDelete,
-        type: 'button',
-    });
-
-    if (movable) {
-        items.push({
-            disabled: this.datagridStore.selectionIds.length === 0,
-            icon: 'su-arrows-alt',
-            label: translate('sulu_admin.move_selected'),
-            onClick: action(() => {
-                this.showMoveOverlay = true;
-            }),
-            type: 'button',
-        });
-    }
+    const items = this.toolbarActions
+        .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+        .filter((item) => item !== undefined);
 
     return {
         backButton,

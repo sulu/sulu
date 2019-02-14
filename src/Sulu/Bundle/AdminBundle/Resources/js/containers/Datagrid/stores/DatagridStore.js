@@ -25,6 +25,12 @@ export default class DatagridStore {
     @observable pageCount: ?number = 0;
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
+    @observable deleting: boolean = false;
+    @observable deletingSelection: boolean = false;
+    @observable moving: boolean = false;
+    @observable movingSelection: boolean = false;
+    @observable copying: boolean = false;
+    @observable ordering: boolean = false;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
@@ -303,8 +309,11 @@ export default class DatagridStore {
     }
 
     delete = (id: string | number): Promise<Object> => {
+        this.deleting = true;
+
         return ResourceRequester.delete(this.resourceKey, id, this.queryOptions)
             .then(action(() => {
+                this.deleting = false;
                 this.deselectById(id);
                 this.remove(id);
             }));
@@ -326,8 +335,11 @@ export default class DatagridStore {
     }
 
     move = (id: string | number, parentId: string | number) => {
+        this.moving = true;
+
         return this.requestMove(id, parentId)
             .then(action(() => {
+                this.moving = false;
                 this.activate(id);
                 this.clear();
             }));
@@ -335,9 +347,11 @@ export default class DatagridStore {
 
     @action moveSelection = (parentId: string | number) => {
         const {selectionIds} = this;
+        this.movingSelection = true;
 
         return Promise.all(selectionIds.map((selectionId: string | number) => this.requestMove(selectionId, parentId)))
             .then(action(() => {
+                this.movingSelection = false;
                 this.clear();
                 this.activate(parentId);
             }));
@@ -355,8 +369,11 @@ export default class DatagridStore {
             queryOptions.locale = locale.get();
         }
 
+        this.copying = true;
+
         return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
             .then(action((response) => {
+                this.copying = false;
                 // TODO do not hardcode "id", but use some metadata instead
                 this.activate(response.id);
                 this.clear();
@@ -365,6 +382,7 @@ export default class DatagridStore {
 
     @action deleteSelection = () => {
         const deletePromises = [];
+        this.deletingSelection = true;
         this.selectionIds.forEach((id) => {
             deletePromises.push(ResourceRequester.delete(this.resourceKey, id, this.queryOptions).catch((error) => {
                 if (error.status !== 404) {
@@ -376,6 +394,7 @@ export default class DatagridStore {
         return Promise.all(deletePromises).then(action(() => {
             this.selectionIds.forEach(this.remove);
             this.clearSelection();
+            this.deletingSelection = false;
         }));
     };
 
@@ -497,14 +516,17 @@ export default class DatagridStore {
     }
 
     @action order(id: string | number, order: number) {
+        this.ordering = true;
+
         return ResourceRequester.postWithId(
             this.resourceKey,
             id,
             {position: order},
             {...this.queryOptions, action: 'order'}
-        ).then(() => {
+        ).then(action(() => {
+            this.ordering = false;
             this.structureStrategy.order(id, order);
-        });
+        }));
     }
 
     @action search(searchTerm: ?string) {

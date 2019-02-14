@@ -128,7 +128,7 @@ class Form extends React.Component<Props> {
     }
 
     @action componentDidMount() {
-        const {locales, router} = this.props;
+        const {router} = this.props;
         const {
             route: {
                 options: {
@@ -145,7 +145,7 @@ class Form extends React.Component<Props> {
             this.resourceFormStore,
             this,
             router,
-            locales
+            this.locales
         ));
 
         when(() => !this.resourceFormStore.loading, this.evaluatePreview);

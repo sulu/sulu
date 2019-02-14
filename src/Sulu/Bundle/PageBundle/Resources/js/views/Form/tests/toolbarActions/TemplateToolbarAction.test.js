@@ -35,7 +35,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
 
 jest.mock('sulu-admin-bundle/views', () => ({
     // $FlowFixMe
-    AbstractToolbarAction: require.requireActual('sulu-admin-bundle/views').AbstractToolbarAction,
+    AbstractFormToolbarAction: require.requireActual('sulu-admin-bundle/views').AbstractFormToolbarAction,
     Form: jest.fn(function() {
         this.submit = jest.fn();
     }),

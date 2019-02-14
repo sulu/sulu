@@ -15,7 +15,12 @@ import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
 import {bundleReady, Config, resourceEndpointRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
-import Datagrid from './views/Datagrid';
+import Datagrid, {
+    AddToolbarAction as DatagridAddToolbarAction,
+    DeleteToolbarAction as DatagridDeleteToolbarAction,
+    MoveToolbarAction as DatagridMoveToolbarAction,
+    toolbarActionRegistry as datagridToolbarActionRegistry,
+} from './views/Datagrid';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {
     BoolFieldTransformer,
@@ -66,11 +71,11 @@ import {
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
-    DeleteToolbarAction,
-    SaveToolbarAction,
-    SaveWithPublishingToolbarAction,
-    toolbarActionRegistry,
-    TypeToolbarAction,
+    DeleteToolbarAction as FormDeleteToolbarAction,
+    SaveToolbarAction as FormSaveToolbarAction,
+    SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
+    toolbarActionRegistry as formToolbarActionRegistry,
+    TypeToolbarAction as FormTypeToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
@@ -116,7 +121,8 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerDatagridFieldTransformers();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
-        registerToolbarActions();
+        registerFormToolbarActions();
+        registerDatagridToolbarActions();
         registerViews();
     }
 
@@ -209,11 +215,17 @@ function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 
-function registerToolbarActions() {
-    toolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
-    toolbarActionRegistry.add('sulu_admin.save_with_publishing', SaveWithPublishingToolbarAction);
-    toolbarActionRegistry.add('sulu_admin.save', SaveToolbarAction);
-    toolbarActionRegistry.add('sulu_admin.type', TypeToolbarAction);
+function registerFormToolbarActions() {
+    formToolbarActionRegistry.add('sulu_admin.delete', FormDeleteToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.save_with_publishing', FormSaveWithPublishingToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
+}
+
+function registerDatagridToolbarActions() {
+    datagridToolbarActionRegistry.add('sulu_admin.add', DatagridAddToolbarAction);
+    datagridToolbarActionRegistry.add('sulu_admin.delete', DatagridDeleteToolbarAction);
+    datagridToolbarActionRegistry.add('sulu_admin.move', DatagridMoveToolbarAction);
 }
 
 function processConfig(config: Object) {

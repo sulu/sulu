@@ -4,10 +4,10 @@ import {action, observable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
-import {AbstractToolbarAction} from 'sulu-admin-bundle/views';
+import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import CopyLocaleDialog from './CopyLocaleDialog';
 
-export default class EditToolbarAction extends AbstractToolbarAction {
+export default class EditToolbarAction extends AbstractFormToolbarAction {
     @observable showCopyLocaleDialog = false;
     @observable showDeleteDraftDialog = false;
     @observable deletingDraft = false;
