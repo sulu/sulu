@@ -62,7 +62,7 @@ class SortableBlock extends React.Component<Props> {
                 onTypeChange={this.handleTypeChange}
                 types={types}
             >
-                {expanded && renderBlockContent(value, activeType, sortIndex)}
+                {renderBlockContent(value, activeType, sortIndex, expanded)}
             </Block>
         );
     }

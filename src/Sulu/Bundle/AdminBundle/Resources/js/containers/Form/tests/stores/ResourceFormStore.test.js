@@ -1,5 +1,5 @@
 // @flow
-import {observable, observable as mockObservable, toJS, when} from 'mobx';
+import {isObservable, observable, observable as mockObservable, toJS, when} from 'mobx';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/MetadataStore';
@@ -120,6 +120,7 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     setTimeout(() => {
+        expect(isObservable(resourceFormStore.schema)).toBe(false);
         const sectionItems1 = resourceFormStore.schema.section.items;
         if (!sectionItems1) {
             throw new Error('Section items should be defined!');

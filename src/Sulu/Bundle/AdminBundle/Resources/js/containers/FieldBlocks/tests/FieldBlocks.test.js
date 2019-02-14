@@ -1,15 +1,16 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import pretty from 'pretty';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
+import blockPreviewTransformerRegistry from '../registries/BlockPreviewTransformerRegistry';
 
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
+    this.getSchemaEntryByPath = jest.fn();
 }));
 jest.mock('../../Form/stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
@@ -29,6 +30,305 @@ jest.mock('../../Form/registries/FieldRegistry', () => ({
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
+
+jest.mock('../registries/BlockPreviewTransformerRegistry', () => ({
+    has: jest.fn(),
+    get: jest.fn(),
+    blockPreviewTransformerKeysByPriority: [],
+}));
+
+beforeEach(() => {
+    blockPreviewTransformerRegistry.has.mockClear();
+    blockPreviewTransformerRegistry.get.mockClear();
+    // $FlowFixMe
+    blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority = [];
+});
+
+test('Render collapsed blocks with block previews', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                something: {
+                    label: 'Something',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_area',
+                    visible: true,
+                },
+                nothing: {
+                    label: 'Nothing',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            text1: 'Test 1',
+            text2: undefined,
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            text1: 'Test 4',
+            text2: undefined,
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return {
+                    transform: function Transformer(value) {
+                        return <p>{value}</p>;
+                    },
+                };
+        }
+    });
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
+test('Render collapsed blocks with block previews without tags', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                nothing: {
+                    label: 'Nothing',
+                    type: 'phone',
+                    visible: true,
+                },
+                text1: {
+                    label: 'Text 1',
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    type: 'media_selection',
+                    visible: true,
+                },
+                something: {
+                    label: 'Text 3',
+                    type: 'text_editor',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            nothing: 'phone',
+            text1: 'Test 1',
+            text2: 'Test 2',
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            nothing: 'phone',
+            text1: 'Test 4',
+            text2: 'Test 5',
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'media_selection':
+            case 'phone':
+            case 'text_line':
+            case 'text_editor':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'phone':
+                return {
+                    transform: function Transformer() {
+                        return <p>phone</p>;
+                    },
+                };
+            case 'media_selection':
+                return {
+                    transform: function Transformer() {
+                        return <p>media_selection</p>;
+                    },
+                };
+            case 'text_line':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_line</p>;
+                    },
+                };
+            case 'text_editor':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_editor</p>;
+                    },
+                };
+        }
+    });
+
+    // $FlowFixMe
+    blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority = [
+        'media_selection',
+        'text_line',
+        'text_editor',
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
+test('Render collapsed blocks with block previews', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    tags: [
+                        {name: 'sulu.block_preview', priority: -100},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+                something: {
+                    label: 'Text 3',
+                    tags: [
+                        {name: 'sulu.block_preview', priority: 100},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            text1: 'Test 1',
+            text2: 'Test 2',
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            text1: 'Test 4',
+            text2: 'Test 5',
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return {
+                    transform: function Transformer(value) {
+                        return <p>{value}</p>;
+                    },
+                };
+        }
+    });
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
 
 test('Render block with schema', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -50,6 +350,8 @@ test('Render block with schema', () => {
             },
         },
     };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const value = [
         {
@@ -77,7 +379,7 @@ test('Render block with schema', () => {
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(1).simulate('click');
 
-    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+    expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
 test('Render block with schema and error on fields already being modified', () => {
@@ -95,6 +397,7 @@ test('Render block with schema and error on fields already being modified', () =
             },
         },
     };
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const value = [
         {
@@ -148,7 +451,7 @@ test('Render block with schema and error on fields already being modified', () =
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(2).simulate('click');
 
-    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+    expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
 test('Render block with schema and error on fields already being modified', () => {
@@ -166,6 +469,8 @@ test('Render block with schema and error on fields already being modified', () =
             },
         },
     };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const value = [
         {
@@ -217,7 +522,7 @@ test('Render block with schema and error on fields already being modified', () =
     fieldBlocks.find('Block').at(0).find('Field').at(0).prop('onFinish')('text');
     fieldBlocks.find('Block').at(1).find('Field').at(0).prop('onFinish')('text');
 
-    expect(pretty(fieldBlocks.html())).toMatchSnapshot();
+    expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
@@ -278,6 +583,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             },
         },
     };
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const fieldBlocks = mount(
         <FieldBlocks
@@ -315,6 +621,7 @@ test('Should call onFinish when a field from the child renderer has finished edi
         },
     };
     const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const finishSpy = jest.fn();
     const fieldBlocks = mount(
@@ -352,6 +659,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
         },
     };
     const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const finishSpy = jest.fn();
     const fieldBlocks = mount(

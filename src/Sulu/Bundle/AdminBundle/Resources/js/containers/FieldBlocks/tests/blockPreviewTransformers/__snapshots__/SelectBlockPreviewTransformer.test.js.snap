@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Return JSX for multiple selected items 1`] = `
+<p>
+  Value 1, Value 3
+</p>
+`;
+
+exports[`Return null if no array is passed 1`] = `null`;

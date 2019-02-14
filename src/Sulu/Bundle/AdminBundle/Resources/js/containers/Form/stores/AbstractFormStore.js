@@ -165,7 +165,7 @@ export default class AbstractFormStore
     pathsByTag: {[tagName: string]: Array<string>} = {};
 
     @computed.struct get schema(): Schema {
-        return this.evaluatedSchema;
+        return toJS(this.evaluatedSchema);
     }
 
     isFieldModified(dataPath: string): boolean {

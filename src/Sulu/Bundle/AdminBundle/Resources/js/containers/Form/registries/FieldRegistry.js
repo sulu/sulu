@@ -1,6 +1,6 @@
 // @flow
 import type {ComponentType} from 'react';
-import type {FieldTypeProps} from '../../../types';
+import type {FieldTypeProps} from '../types';
 
 class FieldRegistry {
     fields: {[string]: ComponentType<FieldTypeProps<*>>};

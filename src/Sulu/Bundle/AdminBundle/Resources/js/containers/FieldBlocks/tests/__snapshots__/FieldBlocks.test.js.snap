@@ -1,188 +1,966 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render block with schema 1`] = `
-"<section class=\\"blockCollection\\">
-  <div class=\\"sortableBlockList\\">
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"//0/text1\\">Text 1</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test 1\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="//0/text1"
+                >
+                  Text 1
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test 1"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"//0/text2\\">Text 2</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test 2\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="//0/text2"
+                >
+                  Text 2
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test 2"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"//1/text1\\">Text 1</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test 3\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="//1/text1"
+                >
+                  Text 1
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test 3"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"//1/text2\\">Text 2</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test 4\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="//1/text2"
+                >
+                  Text 2
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test 4"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"su-plus buttonIcon\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
-</section>"
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
 `;
 
 exports[`Render block with schema and error on fields already being modified 1`] = `
-"<section class=\\"blockCollection\\">
-  <div class=\\"sortableBlockList\\">
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"/block/0/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test1\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="/block/0/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test1"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field error\\"><label class=\\"label\\" for=\\"/block/1/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\"></div>
-                </div><label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field error"
+              >
+                <label
+                  class="label"
+                  for="/block/1/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      class="minLength"
+                      type="text"
+                      value="T2"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                >
+                  sulu_admin.error_minlength
+                </label>
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"/block/2/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"T3\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="/block/2/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="T3"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"su-plus buttonIcon\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
-</section>"
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
 `;
 
 exports[`Render block with schema and error on fields already being modified 2`] = `
-"<section class=\\"blockCollection\\">
-  <div class=\\"sortableBlockList\\">
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field\\"><label class=\\"label\\" for=\\"//0/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input type=\\"text\\" value=\\"Test1\\"></div>
-                </div><label class=\\"errorLabel\\"></label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                  for="//0/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      type="text"
+                      value="Test1"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field error\\"><label class=\\"label\\" for=\\"//1/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input class=\\"minLength\\" type=\\"text\\" value=\\"T2\\"></div>
-                </div><label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field error"
+              >
+                <label
+                  class="label"
+                  for="//1/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      class="minLength"
+                      type="text"
+                      value="T2"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                >
+                  sulu_admin.error_minlength
+                </label>
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-    <section class=\\"block expanded\\">
-      <div class=\\"handle\\"><span aria-label=\\"su-more\\" class=\\"su-more sortableHandle\\"></span></div>
-      <div class=\\"content\\">
-        <header class=\\"header\\">
-          <div class=\\"icons\\"><span aria-label=\\"su-trash-alt\\" class=\\"su-trash-alt clickable\\" role=\\"button\\" tabindex=\\"0\\"></span><span aria-label=\\"su-times\\" class=\\"su-times clickable\\" role=\\"button\\" tabindex=\\"0\\"></span></div>
+    <section
+      class="block expanded"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+            <span
+              aria-label="su-times"
+              class="su-times clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article>
-          <div class=\\"grid grid\\">
-            <div class=\\"item gridItem size size-12 space-before-0 space-after-0\\">
-              <div class=\\"field error\\"><label class=\\"label\\" for=\\"//2/text\\">Text</label>
-                <div class=\\"fieldContainer\\">
-                  <div class=\\"field\\"><input class=\\"minLength\\" type=\\"text\\" value=\\"T3\\"></div>
-                </div><label class=\\"errorLabel\\">sulu_admin.error_minlength</label>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem size size-12 space-before-0 space-after-0"
+            >
+              <div
+                class="field error"
+              >
+                <label
+                  class="label"
+                  for="//2/text"
+                >
+                  Text
+                </label>
+                <div
+                  class="fieldContainer"
+                >
+                  <div
+                    class="field"
+                  >
+                    <input
+                      class="minLength"
+                      type="text"
+                      value="T3"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="errorLabel"
+                >
+                  sulu_admin.error_minlength
+                </label>
               </div>
             </div>
           </div>
         </article>
       </div>
     </section>
-  </div><button class=\\"button secondary\\" type=\\"button\\"><span aria-label=\\"su-plus\\" class=\\"su-plus buttonIcon\\"></span><span class=\\"text\\">sulu_admin.add_block</span></button>
-</section>"
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Render collapsed blocks with block previews 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 1
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 4
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Render collapsed blocks with block previews 2`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 3
+          </p>
+          <p>
+            Test 2
+          </p>
+          <p>
+            Test 1
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            Test 6
+          </p>
+          <p>
+            Test 5
+          </p>
+          <p>
+            Test 4
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Render collapsed blocks with block previews without tags 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <article>
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
 `;

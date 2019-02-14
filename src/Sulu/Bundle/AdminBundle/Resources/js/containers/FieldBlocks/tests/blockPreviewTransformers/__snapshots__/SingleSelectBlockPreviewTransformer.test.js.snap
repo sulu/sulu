@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Return JSX for selected item 1`] = `
+<p>
+  Value 1
+</p>
+`;
+
+exports[`Return null if nothing is passed 1`] = `null`;

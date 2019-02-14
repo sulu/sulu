@@ -266,6 +266,14 @@ class AdminController
                 'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
                 'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
             ],
+            'sulu_media' => [
+                'endpoints' => [
+                    'image_format' => $this->urlGenerator->generate(
+                        'sulu_media.redirect',
+                        ['id' => ':id']
+                    ),
+                ],
+            ],
             'sulu_page' => [
                 'endpoints' => [
                     'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
