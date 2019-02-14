@@ -8,7 +8,7 @@ export default class DeleteToolbarAction extends AbstractToolbarAction {
             disabled: this.datagridStore.selectionIds.length === 0,
             icon: 'su-trash-alt',
             label: translate('sulu_admin.delete'),
-            loading: this.datagridStore.deleting,
+            loading: this.datagridStore.deletingSelection,
             onClick: this.datagrid.requestSelectionDelete,
             type: 'button',
         };

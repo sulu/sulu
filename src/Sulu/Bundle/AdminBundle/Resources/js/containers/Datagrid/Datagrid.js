@@ -59,10 +59,6 @@ export default class Datagrid extends React.Component<Props> {
     };
 
     @observable currentAdapterKey: string;
-    @observable copying: boolean = false;
-    @observable deleting: boolean = false;
-    @observable moving: boolean = false;
-    @observable ordering: boolean = false;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
@@ -156,10 +152,8 @@ export default class Datagrid extends React.Component<Props> {
                 return response;
             }
 
-            this.deleting = true;
             this.props.store.delete(id).then(action(() => {
                 this.showDeleteDialog = false;
-                this.deleting = false;
             }));
 
             return response;
@@ -200,11 +194,9 @@ export default class Datagrid extends React.Component<Props> {
                 throw new Error('The moveId is not set. This should not happen and is likely a bug.');
             }
 
-            this.moving = true;
             // TODO do not hardcode "id", but use some kind of metadata instead
             this.props.store.move(this.moveId, response.parent.id).then(action(() => {
                 this.moveId = undefined;
-                this.moving = false;
                 this.showMoveOverlay = false;
             }));
 
@@ -240,10 +232,8 @@ export default class Datagrid extends React.Component<Props> {
                 return response;
             }
 
-            this.copying = true;
             // TODO do not hardcode "id", but use some kind of metadata instead
             this.props.store.copy(id, response.parent.id).then(action(() => {
-                this.copying = false;
                 this.showCopyOverlay = false;
             }));
 
@@ -279,10 +269,8 @@ export default class Datagrid extends React.Component<Props> {
                 return response;
             }
 
-            this.ordering = true;
             this.props.store.order(id, position).then(action(() => {
                 this.showOrderDialog = false;
-                this.ordering = false;
             }));
 
             return response;
@@ -498,7 +486,7 @@ export default class Datagrid extends React.Component<Props> {
                 </div>
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
-                    confirmLoading={store.deleting}
+                    confirmLoading={store.deletingSelection}
                     confirmText={translate('sulu_admin.ok')}
                     onCancel={this.handleSelectionDeleteDialogCancelClick}
                     onConfirm={this.handleSelectionDeleteDialogConfirmClick}
@@ -510,7 +498,7 @@ export default class Datagrid extends React.Component<Props> {
                 {deletable &&
                     <Dialog
                         cancelText={translate('sulu_admin.cancel')}
-                        confirmLoading={this.deleting}
+                        confirmLoading={store.deleting}
                         confirmText={translate('sulu_admin.ok')}
                         onCancel={this.handleDeleteDialogCancelClick}
                         onConfirm={this.handleDeleteDialogConfirmClick}
@@ -525,7 +513,7 @@ export default class Datagrid extends React.Component<Props> {
                         adapter={adapters[0]}
                         allowActivateForDisabledItems={false}
                         clearSelectionOnClose={true}
-                        confirmLoading={this.moving}
+                        confirmLoading={store.movingSelection || store.moving}
                         datagridKey={store.datagridKey}
                         disabledIds={this.moveId ? [this.moveId] : []}
                         locale={store.observableOptions.locale}
@@ -542,7 +530,7 @@ export default class Datagrid extends React.Component<Props> {
                     <SingleDatagridOverlay
                         adapter={adapters[0]}
                         clearSelectionOnClose={true}
-                        confirmLoading={this.copying}
+                        confirmLoading={store.copying}
                         datagridKey={store.datagridKey}
                         locale={store.observableOptions.locale}
                         onClose={this.handleCopyOverlayClose}
@@ -557,7 +545,7 @@ export default class Datagrid extends React.Component<Props> {
                 {orderable &&
                     <Dialog
                         cancelText={translate('sulu_admin.cancel')}
-                        confirmLoading={this.ordering}
+                        confirmLoading={store.ordering}
                         confirmText={translate('sulu_admin.ok')}
                         onCancel={this.handleOrderDialogCancelClick}
                         onConfirm={this.handleOrderDialogConfirmClick}

@@ -14,7 +14,7 @@ export default class MoveToolbarAction extends AbstractToolbarAction {
                 adapter="column_list"
                 allowActivateForDisabledItems={false}
                 clearSelectionOnClose={true}
-                confirmLoading={this.datagridStore.moving}
+                confirmLoading={this.datagridStore.movingSelection}
                 datagridKey={this.datagridStore.datagridKey}
                 disabledIds={this.datagridStore.selectionIds}
                 key="sulu_admin.move"

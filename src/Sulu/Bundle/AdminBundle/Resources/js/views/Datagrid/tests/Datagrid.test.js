@@ -84,6 +84,7 @@ jest.mock(
 
         mockExtendObservable(this, {
             moving: false,
+            movingSelection: false,
         });
     })
 );
@@ -892,7 +893,7 @@ test('Should move items after move overlay was confirmed', () => {
     expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
 
     getMoveItem().onClick();
-    datagridStore.moving = true;
+    datagridStore.movingSelection = true;
     datagrid.update();
     expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(true);
     datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('onConfirm')({id: 5});
@@ -903,7 +904,7 @@ test('Should move items after move overlay was confirmed', () => {
     expect(datagridStore.moveSelection).toBeCalledWith(5);
 
     return moveSelectionPromise.then(() => {
-        datagridStore.moving = false;
+        datagridStore.movingSelection = false;
         datagrid.update();
         expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
         expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);

@@ -1478,11 +1478,11 @@ test('Should move all selected items to the new given parent and reload the data
         datagridStore.select({id: 2});
         datagridStore.select({id: 4});
 
-        expect(datagridStore.moving).toEqual(false);
+        expect(datagridStore.movingSelection).toEqual(false);
 
         const moveSelectionPromise = datagridStore.moveSelection(3);
 
-        expect(datagridStore.moving).toEqual(true);
+        expect(datagridStore.movingSelection).toEqual(true);
 
         expect(ResourceRequester.postWithId)
             .toBeCalledWith('snippets', 1, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
@@ -1492,7 +1492,7 @@ test('Should move all selected items to the new given parent and reload the data
             .toBeCalledWith('snippets', 4, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
 
         return moveSelectionPromise.then(() => {
-            expect(datagridStore.moving).toEqual(false);
+            expect(datagridStore.movingSelection).toEqual(false);
             expect(structureStrategy.clear).toBeCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',
