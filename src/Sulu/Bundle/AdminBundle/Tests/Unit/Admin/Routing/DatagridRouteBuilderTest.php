@@ -271,4 +271,17 @@ class DatagridRouteBuilderTest extends TestCase
 
         $this->assertEquals('sulu_category.edit_form', $route->getOption('backRoute'));
     }
+
+    public function testBuildAddToolbarActions()
+    {
+        $route = (new DatagridRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setDatagridKey('roles')
+            ->addDatagridAdapters(['tree'])
+            ->addToolbarActions(['sulu_admin.add', 'sulu_admin.move'])
+            ->addToolbarActions(['sulu_admin.delete'])
+            ->getRoute();
+
+        $this->assertEquals(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
+    }
 }
