@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
+import {isObservableArray} from 'mobx';
 import type {BlockPreviewTransformer} from '../types';
 import type {SchemaEntry} from '../../Form/types';
 
 export default class SelectBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *, schema: SchemaEntry): Node {
-        if (!Array.isArray(value)) {
+        if (!Array.isArray(value) && !isObservableArray(value)) {
             return null;
         }
 

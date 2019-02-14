@@ -1,11 +1,12 @@
 // @flow
+import {observable} from 'mobx';
 import SelectBlockPreviewTransformer from '../../blockPreviewTransformers/SelectBlockPreviewTransformer';
 
 test('Return JSX for multiple selected items', () => {
     const selectBlockPreviewTransformer = new SelectBlockPreviewTransformer();
     expect(
         selectBlockPreviewTransformer.transform(
-            ['value1', 'value3'],
+            observable(['value1', 'value3']),
             {
                 options: {
                     values: {
