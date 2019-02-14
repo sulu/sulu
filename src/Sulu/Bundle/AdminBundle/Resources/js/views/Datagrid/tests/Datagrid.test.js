@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
-import {observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import TableAdapter from '../../../containers/Datagrid/adapters/TableAdapter';
 import datagridFieldTransformRegistry from '../../../containers/Datagrid/registries/DatagridFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/Datagrid/fieldTransformers/StringFieldTransformer';
@@ -81,6 +81,10 @@ jest.mock(
         this.clearSelection = jest.fn();
         this.remove = jest.fn();
         this.moveSelection = jest.fn();
+
+        mockExtendObservable(this, {
+            moving: false,
+        });
     })
 );
 
@@ -888,6 +892,7 @@ test('Should move items after move overlay was confirmed', () => {
     expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);
 
     getMoveItem().onClick();
+    datagridStore.moving = true;
     datagrid.update();
     expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(true);
     datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('onConfirm')({id: 5});
@@ -898,6 +903,7 @@ test('Should move items after move overlay was confirmed', () => {
     expect(datagridStore.moveSelection).toBeCalledWith(5);
 
     return moveSelectionPromise.then(() => {
+        datagridStore.moving = false;
         datagrid.update();
         expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
         expect(datagrid.find('SingleDatagridOverlay[title="Move items"]').prop('open')).toEqual(false);

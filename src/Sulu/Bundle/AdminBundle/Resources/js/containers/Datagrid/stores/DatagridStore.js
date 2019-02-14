@@ -26,6 +26,7 @@ export default class DatagridStore {
     @observable selections: Array<Object> = [];
     @observable dataLoading: boolean = true;
     @observable deleting: boolean = false;
+    @observable moving: boolean = false;
     @observable schemaLoading: boolean = true;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
@@ -336,9 +337,11 @@ export default class DatagridStore {
 
     @action moveSelection = (parentId: string | number) => {
         const {selectionIds} = this;
+        this.moving = true;
 
         return Promise.all(selectionIds.map((selectionId: string | number) => this.requestMove(selectionId, parentId)))
             .then(action(() => {
+                this.moving = false;
                 this.clear();
                 this.activate(parentId);
             }));

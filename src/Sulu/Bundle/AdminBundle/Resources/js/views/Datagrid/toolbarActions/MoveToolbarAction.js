@@ -7,7 +7,6 @@ import AbstractToolbarAction from './AbstractToolbarAction';
 
 export default class MoveToolbarAction extends AbstractToolbarAction {
     @observable showOverlay = false;
-    @observable moving = false;
 
     getNode() {
         return (
@@ -15,7 +14,7 @@ export default class MoveToolbarAction extends AbstractToolbarAction {
                 adapter="column_list"
                 allowActivateForDisabledItems={false}
                 clearSelectionOnClose={true}
-                confirmLoading={this.moving}
+                confirmLoading={this.datagridStore.moving}
                 datagridKey={this.datagridStore.datagridKey}
                 disabledIds={this.datagridStore.selectionIds}
                 key="sulu_admin.move"
@@ -48,10 +47,7 @@ export default class MoveToolbarAction extends AbstractToolbarAction {
     };
 
     @action handleConfirm = (item: Object) => {
-        this.moving = true;
-
         this.datagridStore.moveSelection(item.id).then(action(() => {
-            this.moving = false;
             this.showOverlay = false;
         }));
     };

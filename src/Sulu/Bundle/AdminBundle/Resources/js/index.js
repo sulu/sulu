@@ -18,7 +18,7 @@ import ResourceTabs from './views/ResourceTabs';
 import Datagrid, {
     AddToolbarAction as DatagridAddToolbarAction,
     DeleteToolbarAction as DatagridDeleteToolbarAction,
-    MoveToolbarAction as DatagridMovingToolbarAction,
+    MoveToolbarAction as DatagridMoveToolbarAction,
     toolbarActionRegistry as datagridToolbarActionRegistry,
 } from './views/Datagrid';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
@@ -225,7 +225,7 @@ function registerFormToolbarActions() {
 function registerDatagridToolbarActions() {
     datagridToolbarActionRegistry.add('sulu_admin.add', DatagridAddToolbarAction);
     datagridToolbarActionRegistry.add('sulu_admin.delete', DatagridDeleteToolbarAction);
-    datagridToolbarActionRegistry.add('sulu_admin.move', DatagridMovingToolbarAction);
+    datagridToolbarActionRegistry.add('sulu_admin.move', DatagridMoveToolbarAction);
 }
 
 function processConfig(config: Object) {
