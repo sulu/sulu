@@ -63,21 +63,10 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
     }
 
     componentWillUnmount() {
-        if (this.mediaListStore) {
-            this.mediaListStore.destroy();
-        }
-
-        if (this.collectionListStore) {
-            this.collectionListStore.destroy();
-        }
-
-        if (this.excludedIdsDisposer) {
-            this.excludedIdsDisposer();
-        }
-
-        if (this.mediaSelectionDisposer) {
-            this.mediaSelectionDisposer();
-        }
+        this.mediaListStore.destroy();
+        this.collectionListStore.destroy();
+        this.excludedIdsDisposer();
+        this.mediaSelectionDisposer();
     }
 
     @action updateExcludedIds(excludedIds: Array<number>) {

@@ -46,17 +46,9 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        if (this.mediaListStore) {
-            this.mediaListStore.destroy();
-        }
-
-        if (this.collectionListStore) {
-            this.collectionListStore.destroy();
-        }
-
-        if (this.excludedIdsDisposer) {
-            this.excludedIdsDisposer();
-        }
+        this.mediaListStore.destroy();
+        this.collectionListStore.destroy();
+        this.excludedIdsDisposer();
     }
 
     @action updateExcludedIds(excludedIds: Array<number>) {

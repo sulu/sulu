@@ -44,6 +44,26 @@ test('Should create list-stores with correct locale and excluded-ids', () => {
     expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
 });
 
+test('Should create list-stores without excluded-ids', () => {
+    const locale = mockObservable.box('en');
+    shallow(
+        <SingleMediaSelectionOverlay
+            locale={locale}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    ).render();
+
+    expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale
+    );
+    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
+    expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
+});
+
 test('Should update selections of media-list-store to only contain a single item', () => {
     const singleMediaSelectionOverlay = shallow(
         <SingleMediaSelectionOverlay
