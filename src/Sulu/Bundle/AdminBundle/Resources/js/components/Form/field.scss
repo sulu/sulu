@@ -25,6 +25,7 @@ $errorLabelHeight: 20px;
     line-height: 19px;
     margin-bottom: 10px;
     text-align: left;
+    white-space: nowrap;
 
     &::after {
         content: '\200B';

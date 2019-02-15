@@ -835,6 +835,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         $contact->getCategories()->clear();
 
+        if (!$categoryIds) {
+            return true;
+        }
+
         foreach ($categoryIds as $categoryId) {
             $category = $this->em->getRepository(self::$categoryEntityName)->find($categoryId);
 
