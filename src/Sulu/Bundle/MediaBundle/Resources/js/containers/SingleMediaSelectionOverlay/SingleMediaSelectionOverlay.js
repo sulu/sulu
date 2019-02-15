@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
+import equal from 'fast-deep-equal';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
@@ -20,27 +21,29 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         excludedIds: [],
     };
 
+    excludedIds: IObservableValue<Array<number>> = observable.box([]);
     collectionId: IObservableValue<?string | number> = observable.box();
-    excludedIdString: IObservableValue<string>;
     mediaListStore: ListStore;
     collectionListStore: ListStore;
+    excludedIdsDisposer: () => void;
     mediaSelectionDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
-        this.excludedIdString = observable.box(props.excludedIds.sort().join(','));
-
         this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
-            this.excludedIdString,
-            props.locale
+            this.excludedIds,
+            this.props.locale
         );
         this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,
-            props.locale
+            this.props.locale
         );
 
+        this.excludedIdsDisposer = autorun(() => {
+            this.updateExcludedIds(this.props.excludedIds);
+        });
         this.mediaSelectionDisposer = autorun(() => {
             const {selections} = this.mediaListStore;
 
@@ -59,15 +62,6 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         });
     }
 
-    @action componentDidUpdate() {
-        const newExcludedIdString = this.props.excludedIds.sort().join(',');
-
-        if (this.excludedIdString.get() !== newExcludedIdString) {
-            this.mediaListStore.clear();
-            this.excludedIdString.set(this.props.excludedIds.sort().join(','));
-        }
-    }
-
     componentWillUnmount() {
         if (this.mediaListStore) {
             this.mediaListStore.destroy();
@@ -77,8 +71,21 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
             this.collectionListStore.destroy();
         }
 
+        if (this.excludedIdsDisposer) {
+            this.excludedIdsDisposer();
+        }
+
         if (this.mediaSelectionDisposer) {
             this.mediaSelectionDisposer();
+        }
+    }
+
+    @action updateExcludedIds(newExcludedIds: Array<number>) {
+        const currentExcludedIds = toJS(this.excludedIds.get());
+
+        if (!equal(currentExcludedIds, newExcludedIds)) {
+            this.mediaDatagridStore.clear();
+            this.excludedIds.set(newExcludedIds);
         }
     }
 
