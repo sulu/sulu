@@ -154,6 +154,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.setMultiple = jest.fn();
         this.changeSchema = jest.fn();
         this.load = jest.fn();
+        this.reload = jest.fn();
         this.loading = false;
         this.id = 1;
         this.data = {
@@ -654,6 +655,6 @@ test('Confirming the move dialog should move the item', () => {
         mediaCollection.update();
         expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
         expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(false);
-        expect(collectionStore.resourceStore.load).toBeCalledWith();
+        expect(collectionStore.resourceStore.reload).toBeCalledWith();
     });
 });

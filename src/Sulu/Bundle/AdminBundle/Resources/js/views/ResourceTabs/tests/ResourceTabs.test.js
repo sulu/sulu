@@ -908,7 +908,50 @@ test('Should not redirect if a tab is already active', () => {
     expect(router.redirect).not.toBeCalled();
 });
 
-test('Should navigate and reload ResourceStore to child route if tab is clicked', (done) => {
+test('Should reload ResourceStore if children are updated', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        this.reload = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
+    const childRoute1 = {
+        name: 'route1',
+        options: {},
+    };
+    const childRoute2 = {
+        name: 'route2',
+        options: {},
+    };
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        attribute: 'value',
+    };
+
+    const router = {
+        attributes,
+        navigate: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    resourceTabs.setProps({children: () => null});
+    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+});
+
+test('Should navigate to child route if tab is clicked', (done) => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
         this.load = jest.fn();
@@ -950,7 +993,6 @@ test('Should navigate and reload ResourceStore to child route if tab is clicked'
         resourceTabs.update();
         resourceTabs.find('Tab button').at(1).simulate('click');
         expect(router.navigate).toBeCalledWith('route2', attributes);
-        expect(resourceTabs.instance().resourceStore.load).toBeCalledWith();
         done();
     });
 });
@@ -1006,7 +1048,6 @@ test('Should navigate to child route if tab is clicked with hidden tabs', (done)
         resourceTabs.update();
         resourceTabs.find('Tab button').at(0).simulate('click');
         expect(router.navigate).toBeCalledWith('route2', attributes);
-        expect(resourceTabs.instance().resourceStore.load).toBeCalledWith();
         done();
     });
 });

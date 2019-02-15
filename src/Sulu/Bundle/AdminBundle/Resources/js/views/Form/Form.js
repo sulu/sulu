@@ -6,12 +6,15 @@ import {action, computed, toJS, isObservableArray, observable, when} from 'mobx'
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
+import Dialog from '../../components/Dialog';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, ResourceFormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
+import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
+import {translate} from '../../utils/Translator';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import formStyles from './form.scss';
 
@@ -29,6 +32,10 @@ class Form extends React.Component<Props> {
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions = [];
     @observable hasPreview: boolean = false;
+    @observable showDirtyWarning = false;
+    postponedUpdateRouteMethod: ?UpdateRouteMethod;
+    postponedRoute: ?Route;
+    postponedRouteAttributes: ?AttributeMap;
 
     @computed get hasOwnResourceStore() {
         const {
@@ -107,7 +114,42 @@ class Form extends React.Component<Props> {
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
         }
+
+        router.addUpdateRouteHook(this.checkFormStoreDirtyStateBeforeNavigation);
     }
+
+    @action checkFormStoreDirtyStateBeforeNavigation = (
+        route: ?Route,
+        attributes: ?AttributeMap,
+        updateRouteMethod: ?UpdateRouteMethod
+    ) => {
+        if (!this.resourceFormStore.dirty) {
+            return true;
+        }
+
+        if (
+            this.showDirtyWarning === true
+            && this.postponedRoute === route
+            && equals(this.postponedRouteAttributes, attributes)
+            && this.postponedUpdateRouteMethod === updateRouteMethod
+        ) {
+            // If the warning has already been displayed for the exact same route and attributes we can assume that the
+            // confirm button in the warning has been clicked, since it calls the same routing action again.
+            return true;
+        }
+
+        if (!route && !attributes && !updateRouteMethod) {
+            // If none of these attributes are set the call comes because the user wants to close the window
+            return false;
+        }
+
+        this.showDirtyWarning = true;
+        this.postponedUpdateRouteMethod = updateRouteMethod;
+        this.postponedRoute = route;
+        this.postponedRouteAttributes = attributes;
+
+        return false;
+    };
 
     buildFormStoreOptions(
         apiOptions: Object,
@@ -160,6 +202,9 @@ class Form extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        const {router} = this.props;
+        router.removeUpdateRouteHook(this.checkFormStoreDirtyStateBeforeNavigation);
+
         this.resourceFormStore.destroy();
 
         if (this.hasOwnResourceStore) {
@@ -260,6 +305,24 @@ class Form extends React.Component<Props> {
         this.errors.push('Errors occured when trying to save the data from the FormStore');
     };
 
+    @action handleDirtyWarningCancelClick = () => {
+        this.showDirtyWarning = false;
+        this.postponedUpdateRouteMethod = undefined;
+        this.postponedRoute = undefined;
+        this.postponedRouteAttributes = undefined;
+    };
+
+    @action handleDirtyWarningConfirmClick = () => {
+        if (!this.postponedUpdateRouteMethod || !this.postponedRoute || !this.postponedRouteAttributes) {
+            throw new Error('Some routing information is missing. This should not happen and is likely a bug.');
+        }
+
+        this.postponedUpdateRouteMethod(this.postponedRoute.name, this.postponedRouteAttributes);
+        this.postponedUpdateRouteMethod = undefined;
+        this.postponedRoute = undefined;
+        this.postponedRouteAttributes = undefined;
+    };
+
     setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
         this.form = form;
     };
@@ -274,6 +337,16 @@ class Form extends React.Component<Props> {
                     store={this.resourceFormStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.confirm')}
+                    onCancel={this.handleDirtyWarningCancelClick}
+                    onConfirm={this.handleDirtyWarningConfirmClick}
+                    open={this.showDirtyWarning}
+                    title={translate('sulu_admin.dirty_warning_dialog_title')}
+                >
+                    {translate('sulu_admin.dirty_warning_dialog_text')}
+                </Dialog>
             </div>
         );
     }

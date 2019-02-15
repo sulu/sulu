@@ -156,3 +156,20 @@ router.addUpdateAttributesHooks((route) => ({
 // navigates to #/webspace/sulu_io/de?utf=true&test=true
 router.navigate('sulu_page.webspace_overview', {webspace: 'sulu_io', test: true})
 ```
+
+There are also the `updateRouteHooks`, which are called with the destination route, its attributes and a reference to
+the function that was called (`navigate`, `redirect` or `restore`). Each of these hooks can return `false`, which will
+result in the navigation not to happen. This way the application can e.g. stop the navigation process if some data is
+not saved yet (that's what it is used for in the [`Form`](#form) view).
+
+```javascript static
+router.addUpdateRouteHook((route, attributes, updateRouteMethod) => {
+    if (route.name === 'test') {
+        return false;
+    }
+
+    return true;
+});
+
+router.navigate('test'); // This navigation will no happen because of the above hook
+```

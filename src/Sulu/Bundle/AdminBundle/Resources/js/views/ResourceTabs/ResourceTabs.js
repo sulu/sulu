@@ -50,6 +50,13 @@ export default class ResourceTabs extends React.Component<Props> {
         this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }
 
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.children !== prevProps.children) {
+            // If the content for a new tab is loaded we reload the ResourceStore to make sure we have the right title
+            this.resourceStore.reload();
+        }
+    }
+
     componentWillUnmount() {
         this.redirectToRouteWithHighestPriorityDisposer();
         this.resourceStore.destroy();
@@ -159,9 +166,6 @@ export default class ResourceTabs extends React.Component<Props> {
     handleSelect = (index: number) => {
         const {router} = this.props;
         router.navigate(this.visibleTabRoutes[index].name, router.attributes);
-
-        // TODO replace by asking for confirmation when changing tabs and reload only if dirty data should be deleted
-        this.resourceStore.load();
     };
 
     render() {

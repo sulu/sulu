@@ -86,7 +86,12 @@ export default class ResourceStore {
 
             this.initialized = true;
             this.setLoading(false);
+            this.dirty = false;
         }));
+    };
+
+    @action reload = () => {
+        this.load();
     };
 
     @action setLoading(loading: boolean) {
