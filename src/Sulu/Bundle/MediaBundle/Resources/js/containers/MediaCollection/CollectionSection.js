@@ -134,7 +134,7 @@ export default class CollectionSection extends React.Component<Props> {
     handleMoveCollectionConfirm = (collection: Object) => {
         const {resourceStore} = this.props;
         resourceStore.move(collection.id).then(() => {
-            resourceStore.load();
+            resourceStore.reload();
             this.closeCollectionOperationOverlay();
         });
     };

@@ -912,6 +912,7 @@ test('Should reload ResourceStore if children are updated', () => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
         this.load = jest.fn();
+        this.reload = jest.fn();
         extendObservable(this, {data: {}});
     });
 
@@ -947,7 +948,7 @@ test('Should reload ResourceStore if children are updated', () => {
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
     resourceTabs.setProps({children: () => null});
-    expect(resourceTabs.instance().resourceStore.load).toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
 });
 
 test('Should navigate to child route if tab is clicked', (done) => {

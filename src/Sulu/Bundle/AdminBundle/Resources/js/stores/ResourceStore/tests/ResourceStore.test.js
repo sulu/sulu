@@ -115,6 +115,28 @@ test('Should not load the data with the ResourceRequester if locale should be pr
     expect(ResourceRequester.get).not.toBeCalled();
 });
 
+test('Should load the data with the ResourceRequester if a reload is requested', () => {
+    const promise1 = Promise.resolve({value: 'Value'});
+    ResourceRequester.get.mockReturnValue(promise1);
+    const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()}, {test: 10});
+    resourceStore.setLocale('en');
+    expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {locale: 'en', test: 10});
+    return promise1.then(() => {
+        expect(resourceStore.data).toEqual({value: 'Value'});
+
+        const promise2 = Promise.resolve({value: 'new Value'});
+        ResourceRequester.get.mockReturnValue(promise2);
+        resourceStore.reload();
+
+        expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {locale: 'en', test: 10});
+        expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
+
+        return promise2.then(() => {
+            expect(resourceStore.data).toEqual({value: 'new Value'});
+        });
+    });
+});
+
 test('Loading flag should be set to true when loading', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});

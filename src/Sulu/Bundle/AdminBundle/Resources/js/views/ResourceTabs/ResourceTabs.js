@@ -53,7 +53,7 @@ export default class ResourceTabs extends React.Component<Props> {
     componentDidUpdate(prevProps: Props) {
         if (this.props.children !== prevProps.children) {
             // If the content for a new tab is loaded we reload the ResourceStore to make sure we have the right title
-            this.resourceStore.load();
+            this.resourceStore.reload();
         }
     }
 

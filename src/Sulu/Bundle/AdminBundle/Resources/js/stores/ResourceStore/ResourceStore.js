@@ -90,6 +90,10 @@ export default class ResourceStore {
         }));
     };
 
+    @action reload = () => {
+        this.load();
+    };
+
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }
