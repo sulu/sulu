@@ -67,7 +67,7 @@ test('Should render the tab title from the ResourceStore as configured in the ro
     resourceTabs.instance().resourceStore.data = {test1: 'value1'};
     resourceTabs.update();
 
-    expect(resourceTabs.find('ResourceTabs > h1').text()).toEqual('value1');
+    expect(resourceTabs.find('ResourceTabs > Tabs > h1').text()).toEqual('value1');
 });
 
 test('Should not render the tab title from the ResourceStore if no titleProperty is set', () => {
@@ -152,7 +152,7 @@ test('Should render the tab title from the resourceStore as configured in the pr
     resourceTabs.instance().resourceStore.data = {test1: 'value1', test2: 'value2'};
     resourceTabs.update();
 
-    expect(resourceTabs.find('ResourceTabs > h1').text()).toEqual('value2');
+    expect(resourceTabs.find('ResourceTabs > Tabs > h1').text()).toEqual('value2');
 });
 
 test('Should not render the tab title on the first tab', () => {
@@ -296,7 +296,7 @@ test('Should render the tab title on the first visible tab if the first tab is n
     resourceTabs.instance().resourceStore.data = {test1: 'value1'};
     setTimeout(() => {
         resourceTabs.update();
-        expect(resourceTabs.find('ResourceTabs > h1').text()).toEqual('value1');
+        expect(resourceTabs.find('ResourceTabs > Tabs > h1').text()).toEqual('value1');
         done();
     });
 });
@@ -340,7 +340,7 @@ test('Should render the child components after the tabs', (done) => {
 
     setTimeout(() => {
         expect(resourceTabs.find('Loader')).toHaveLength(0);
-        expect(resourceTabs.find('ResourceTabs Tabs').render()).toMatchSnapshot();
+        expect(resourceTabs.find('ResourceTabs Tabs Tabs').render()).toMatchSnapshot();
         expect(resourceTabs.find('ResourceTabs Child').render()).toMatchSnapshot();
         done();
     });
@@ -431,7 +431,7 @@ test('Should mark the currently active child route as selected tab', (done) => {
     );
 
     setTimeout(() => {
-        expect(resourceTabs.find('ResourceTabs Tabs').render()).toMatchSnapshot();
+        expect(resourceTabs.find('ResourceTabs Tabs Tabs').render()).toMatchSnapshot();
         expect(resourceTabs.find('ResourceTabs Child').render()).toMatchSnapshot();
         done();
     });

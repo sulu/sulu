@@ -31,7 +31,9 @@ class PageAdmin extends Admin
      */
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
-    const PAGES_ROUTE = 'sulu_page.webspaces';
+    const WEBSPACE_TABS_ROUTE = 'sulu_page.webspaces';
+
+    const PAGES_ROUTE = 'sulu_page.pages_datagrid';
 
     const ADD_FORM_ROUTE = 'sulu_page.page_add_form';
 
@@ -114,10 +116,14 @@ class PageAdmin extends Admin
         $previewExpression = 'nodeType == 1';
 
         return [
+            // TODO create route builder for default tabs
+            (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_admin.tabs')),
             (new Route(static::PAGES_ROUTE, '/webspaces/:webspace/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey())
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
-                ->addRerenderAttribute('webspace'),
+                ->setOption('tabTitle', 'sulu_page.content')
+                ->addRerenderAttribute('webspace')
+                ->setParent(static::WEBSPACE_TABS_ROUTE),
             (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),

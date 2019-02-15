@@ -21,6 +21,7 @@ import List, {
     MoveToolbarAction as ListMoveToolbarAction,
     toolbarActionRegistry as listToolbarActionRegistry,
 } from './views/List';
+import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {
     BoolFieldTransformer,
@@ -135,8 +136,9 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
-    viewRegistry.add('sulu_admin.resource_tabs', (ResourceTabs: any));
     viewRegistry.add('sulu_admin.list', List);
+    viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
+    viewRegistry.add('sulu_admin.tabs', Tabs);
 }
 
 function registerListAdapters() {
