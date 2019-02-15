@@ -31,7 +31,7 @@ class PageAdmin extends Admin
      */
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
-    const WEBSPACES_ROUTE = 'sulu_page.webspaces';
+    const PAGES_ROUTE = 'sulu_page.webspaces';
 
     const ADD_FORM_ROUTE = 'sulu_page.page_add_form';
 
@@ -79,7 +79,7 @@ class PageAdmin extends Admin
                 $webspaceItem = new NavigationItem('sulu_page.webspaces');
                 $webspaceItem->setPosition(10);
                 $webspaceItem->setIcon('su-webspace');
-                $webspaceItem->setMainRoute(static::WEBSPACES_ROUTE);
+                $webspaceItem->setMainRoute(static::PAGES_ROUTE);
 
                 $rootNavigationItem->addChild($webspaceItem);
 
@@ -114,12 +114,12 @@ class PageAdmin extends Admin
         $previewExpression = 'nodeType == 1';
 
         return [
-            (new Route(static::WEBSPACES_ROUTE, '/webspaces/:webspace/:locale', 'sulu_page.webspace_overview'))
+            (new Route(static::PAGES_ROUTE, '/webspaces/:webspace/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey())
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace'),
             (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_page.page_tabs'))
-                ->setOption('backRoute', static::WEBSPACES_ROUTE)
+                ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
                 ->setResourceKey('pages')
@@ -132,7 +132,7 @@ class PageAdmin extends Admin
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_page.page_tabs'))
-                ->setOption('backRoute', static::WEBSPACES_ROUTE)
+                ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')
@@ -157,7 +157,7 @@ class PageAdmin extends Admin
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                 ->setResourceKey('pages_excerpt')
                 ->setFormKey('page_excerpt')
-                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->setBackRoute(static::PAGES_ROUTE)
                 ->setTabTitle('sulu_page.excerpt')
                 ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithoutType)
@@ -167,7 +167,7 @@ class PageAdmin extends Admin
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
                 ->setResourceKey('pages')
                 ->setFormKey('page_settings')
-                ->setBackRoute(static::WEBSPACES_ROUTE)
+                ->setBackRoute(static::PAGES_ROUTE)
                 ->setTabTitle('sulu_page.settings')
                 ->setTabPriority(512)
                 ->addToolbarActions($formToolbarActionsWithoutType)
