@@ -298,6 +298,29 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
     }
 
+    public function testPostCategoryNull()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'formOfAddress' => 0,
+                'categories' => null,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEmpty($response->categories);
+    }
+
     public function testPost()
     {
         $title = $this->createTitle('MSc');
