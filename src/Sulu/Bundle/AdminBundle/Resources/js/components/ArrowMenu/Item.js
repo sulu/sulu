@@ -8,15 +8,16 @@ type Props = {
     value: *,
     children: string,
     active: boolean,
+    disabled?: boolean,
     icon?: string,
     onClick?: (value: *) => void,
 };
 
 export default class Item extends React.PureComponent<Props> {
     handleButtonClick = () => {
-        const {onClick, value} = this.props;
+        const {onClick, disabled, value} = this.props;
 
-        if (!onClick) {
+        if (disabled || !onClick) {
             return;
         }
 
@@ -25,6 +26,7 @@ export default class Item extends React.PureComponent<Props> {
 
     static defaultProps = {
         active: false,
+        disabled: false,
     };
 
     render() {
@@ -32,10 +34,11 @@ export default class Item extends React.PureComponent<Props> {
             children,
             active,
             icon,
+            disabled,
         } = this.props;
 
         const itemClass = classNames(
-            itemStyles.item,
+            (disabled ? itemStyles.itemDisabled : itemStyles.item),
             {
                 [itemStyles.active]: active,
             }

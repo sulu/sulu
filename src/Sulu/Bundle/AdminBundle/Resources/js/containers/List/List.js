@@ -354,7 +354,6 @@ export default class List extends React.Component<Props> {
     };
 
     @action handleColumnOptionsOpen = () => {
-        this.adapterOptionsOpen = false;
         this.columnOptionsOpen = true;
     };
 
@@ -393,7 +392,10 @@ export default class List extends React.Component<Props> {
                     open={this.adapterOptionsOpen}
                 >
                     <ArrowMenu.Section>
-                        <ArrowMenu.Action onClick={this.handleColumnOptionsOpen}>
+                        <ArrowMenu.Action
+                            onAfterAction={this.handleAdapterOptionsClose}
+                            onClick={this.handleColumnOptionsOpen}
+                        >
                             {translate('sulu_admin.column_options')}
                         </ArrowMenu.Action>
                     </ArrowMenu.Section>
