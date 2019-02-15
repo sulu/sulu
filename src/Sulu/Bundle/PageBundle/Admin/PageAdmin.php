@@ -117,9 +117,9 @@ class PageAdmin extends Admin
 
         return [
             $this->routeBuilderFactory->createTabRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace')
-                ->getRoute(),
-            (new Route(static::PAGES_ROUTE, '/webspaces/:webspace/pages/:locale', 'sulu_page.webspace_overview'))
-                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+                ->getRoute()
+                ->setAttributeDefault('webspace', $firstWebspace->getKey()),
+            (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->setOption('tabTitle', 'sulu_page.content')
                 ->addRerenderAttribute('webspace')

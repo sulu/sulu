@@ -81,11 +81,13 @@ class PageAdminTest extends TestCase
 
         $route = $admin->getRoutes()[0];
         $this->assertAttributeEquals('sulu_page.webspaces', 'name', $route);
+        $this->assertAttributeEquals([
+            'webspace' => 'test-1',
+        ], 'attributeDefaults', $route);
 
         $route = $admin->getRoutes()[1];
         $this->assertAttributeEquals('sulu_page.pages_datagrid', 'name', $route);
         $this->assertAttributeEquals([
-            'webspace' => 'test-1',
             'locale' => 'de',
         ], 'attributeDefaults', $route);
     }
