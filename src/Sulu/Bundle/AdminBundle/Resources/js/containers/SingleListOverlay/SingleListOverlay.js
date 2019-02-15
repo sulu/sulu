@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
-import {autorun, observable} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import equal from 'fast-deep-equal';
+import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
 import type {OverlayType} from '../ListOverlay';
@@ -14,7 +16,8 @@ type Props = {|
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     listKey: string,
-    disabledIds?: Array<string | number>,
+    disabledIds: Array<string | number>,
+    excludedIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItem: Object) => void,
@@ -27,15 +30,20 @@ type Props = {|
     title: string,
 |};
 
+@observer
 export default class SingleListOverlay extends React.Component<Props> {
-    listStore: ListStore;
-    page: IObservableValue<number> = observable.box(1);
-    selectionDisposer: () => void;
-
     static defaultProps = {
         clearSelectionOnClose: false,
+        disabledIds: [],
+        excludedIds: [],
         overlayType: 'overlay',
     };
+
+    excludedIds: IObservableValue<?Array<string | number>> = observable.box();
+    page: IObservableValue<number> = observable.box(1);
+    listStore: ListStore;
+    excludedIdsDisposer: () => void;
+    selectionDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -43,6 +51,7 @@ export default class SingleListOverlay extends React.Component<Props> {
         const {listKey, locale, options, preSelectedItem, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
+        observableOptions.excluded = this.excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;
@@ -61,6 +70,9 @@ export default class SingleListOverlay extends React.Component<Props> {
             initialSelectionIds
         );
 
+        this.excludedIdsDisposer = autorun(() => {
+            this.updateExcludedIds(this.props.excludedIds);
+        });
         this.selectionDisposer = autorun(() => {
             const {selections} = this.listStore;
 
@@ -81,7 +93,18 @@ export default class SingleListOverlay extends React.Component<Props> {
 
     componentWillUnmount() {
         this.listStore.destroy();
+        this.excludedIdsDisposer();
         this.selectionDisposer();
+    }
+
+    @action updateExcludedIds(excludedIds: Array<string | number>) {
+        const currentExcludedIds = toJS(this.excludedIds.get());
+        const newExcludedIds = excludedIds.length ? excludedIds : undefined;
+
+        if (!equal(currentExcludedIds, newExcludedIds)) {
+            this.datagridStore.clear();
+            this.excludedIds.set(newExcludedIds);
+        }
     }
 
     handleConfirm = () => {

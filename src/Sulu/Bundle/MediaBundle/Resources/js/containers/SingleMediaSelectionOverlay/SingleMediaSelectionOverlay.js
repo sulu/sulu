@@ -21,7 +21,7 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         excludedIds: [],
     };
 
-    excludedIds: IObservableValue<Array<number>> = observable.box([]);
+    excludedIds: IObservableValue<?Array<number>> = observable.box();
     collectionId: IObservableValue<?string | number> = observable.box();
     mediaListStore: ListStore;
     collectionListStore: ListStore;
@@ -80,8 +80,9 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         }
     }
 
-    @action updateExcludedIds(newExcludedIds: Array<number>) {
+    @action updateExcludedIds(excludedIds: Array<number>) {
         const currentExcludedIds = toJS(this.excludedIds.get());
+        const newExcludedIds = excludedIds.length ? excludedIds : undefined;
 
         if (!equal(currentExcludedIds, newExcludedIds)) {
             this.mediaDatagridStore.clear();

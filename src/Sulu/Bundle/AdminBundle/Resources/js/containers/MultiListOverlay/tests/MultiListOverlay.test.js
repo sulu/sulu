@@ -22,11 +22,12 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
         this.options = options;
         this.observableOptions = observableOptions;
         this.select = jest.fn();
+        this.clear = jest.fn();
         this.selections = [];
     }
 ));
 
-test('Should instantiate the ListStore with locale and options', () => {
+test('Should instantiate the ListStore with locale, excluded-ids and options', () => {
     const locale = observable.box('en');
     const options = {};
 
@@ -34,6 +35,7 @@ test('Should instantiate the ListStore with locale and options', () => {
         <MultiListOverlay
             adapter="table"
             listKey="snippets_list"
+            excludedIds={['id-1', 'id-2']}
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -47,10 +49,11 @@ test('Should instantiate the ListStore with locale and options', () => {
     expect(multiListOverlay.instance().listStore.listKey).toEqual('snippets_list');
     expect(multiListOverlay.instance().listStore.resourceKey).toEqual('snippets');
     expect(multiListOverlay.instance().listStore.observableOptions.locale.get()).toEqual('en');
+    expect(multiDatagridOverlay.instance().datagridStore.observableOptions.excluded.get()).toEqual(['id-1', 'id-2']);
     expect(multiListOverlay.instance().listStore.options).toBe(options);
 });
 
-test('Should instantiate the ListStore without locale and options', () => {
+test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay
             adapter="table"
@@ -64,6 +67,7 @@ test('Should instantiate the ListStore without locale and options', () => {
     );
 
     expect(multiListOverlay.instance().listStore.observableOptions.locale).toEqual(undefined);
+    expect(multiDatagridOverlay.instance().datagridStore.observableOptions.excluded.get()).toEqual(undefined);
 });
 
 test('Should pass overlayType overlay by default', () => {

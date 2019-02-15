@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {observable, autorun, action, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import equal from 'fast-deep-equal';
+import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
 import type {OverlayType} from '../ListOverlay';
@@ -14,7 +16,8 @@ type Props = {|
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     listKey: string,
-    disabledIds?: Array<string | number>,
+    disabledIds: Array<string | number>,
+    excludedIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
@@ -27,15 +30,20 @@ type Props = {|
     title: string,
 |};
 
+@observer
 export default class MultiListOverlay extends React.Component<Props> {
-    listStore: ListStore;
-    page: IObservableValue<number> = observable.box(1);
-
     static defaultProps = {
         clearSelectionOnClose: false,
+        disabledIds: [],
+        excludedIds: [],
         overlayType: 'overlay',
         preSelectedItems: [],
     };
+
+    excludedIds: IObservableValue<?Array<string | number>> = observable.box();
+    listStore: ListStore;
+    page: IObservableValue<number> = observable.box(1);
+    excludedIdsDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -43,6 +51,7 @@ export default class MultiListOverlay extends React.Component<Props> {
         const {listKey, locale, options, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
+        observableOptions.excluded = this.excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;
@@ -56,10 +65,25 @@ export default class MultiListOverlay extends React.Component<Props> {
             options,
             preSelectedItems.map((preSelectedItem) => preSelectedItem.id)
         );
+
+        this.excludedIdsDisposer = autorun(() => {
+            this.updateExcludedIds(this.props.excludedIds);
+        });
     }
 
     componentWillUnmount() {
         this.listStore.destroy();
+        this.excludedIdsDisposer();
+    }
+
+    @action updateExcludedIds(excludedIds: Array<string | number>) {
+        const currentExcludedIds = toJS(this.excludedIds.get());
+        const newExcludedIds = excludedIds.length ? excludedIds : undefined;
+
+        if (!equal(currentExcludedIds, newExcludedIds)) {
+            this.datagridStore.clear();
+            this.excludedIds.set(newExcludedIds);
+        }
     }
 
     handleConfirm = () => {

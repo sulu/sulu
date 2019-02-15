@@ -47,7 +47,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     static createMediaListStore(
         collectionId: IObservableValue<?string | number>,
-        excludedIds: IObservableValue<Array<number>>,
+        excludedIds: IObservableValue<?Array<number>>,
         locale: IObservableValue<string>
     ) {
         const options = {};
