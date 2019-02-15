@@ -81,7 +81,7 @@ class PageAdmin extends Admin
                 $webspaceItem = new NavigationItem('sulu_page.webspaces');
                 $webspaceItem->setPosition(10);
                 $webspaceItem->setIcon('su-webspace');
-                $webspaceItem->setMainRoute(static::PAGES_ROUTE);
+                $webspaceItem->setMainRoute(static::WEBSPACE_TABS_ROUTE);
 
                 $rootNavigationItem->addChild($webspaceItem);
 
@@ -116,8 +116,8 @@ class PageAdmin extends Admin
         $previewExpression = 'nodeType == 1';
 
         return [
-            // TODO create route builder for default tabs
-            (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_admin.tabs')),
+            $this->routeBuilderFactory->createTabRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace')
+                ->getRoute(),
             (new Route(static::PAGES_ROUTE, '/webspaces/:webspace/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey())
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
