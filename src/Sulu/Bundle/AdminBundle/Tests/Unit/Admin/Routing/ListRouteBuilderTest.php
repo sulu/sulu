@@ -196,7 +196,7 @@ class ListRouteBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildListWithRouterAttributesToFormStore()
+    public function testBuildListWithRouterAttributesToListStore()
     {
         $route = (new ListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -209,6 +209,22 @@ class ListRouteBuilderTest extends TestCase
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToListStore')
+        );
+    }
+
+    public function testBuildListWithResourceStorePropertiesToListStore()
+    {
+        $route = (new ListRouteBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addResourceStorePropertiesToListStore(['id' => 'dimensionId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToListStore(['locale'])
+            ->getRoute();
+
+        $this->assertEquals(
+            ['id' => 'dimensionId', 'parent' => 'parentId', 'locale'],
+            $route->getOption('resourceStorePropertiesToListStore')
         );
     }
 

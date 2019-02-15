@@ -10,13 +10,18 @@ import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
+import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import listStyles from './list.scss';
 
 const USER_SETTINGS_KEY = 'list';
 
+type Props = ViewProps & {
+    resourceStore: ResourceStore,
+};
+
 @observer
-class List extends React.Component<ViewProps> {
+class List extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     listStore: ListStore;
@@ -38,7 +43,7 @@ class List extends React.Component<ViewProps> {
         };
     }
 
-    constructor(props: ViewProps) {
+    constructor(props: Props) {
         super(props);
 
         const router = this.props.router;
@@ -52,6 +57,7 @@ class List extends React.Component<ViewProps> {
                     locales,
                     resourceKey,
                     routerAttributesToListStore = {},
+                    resourceStorePropertiesToListStore = {},
                 },
             },
         } = router;
@@ -81,7 +87,9 @@ class List extends React.Component<ViewProps> {
         const listStoreOptions = this.buildListStoreOptions(
             apiOptions,
             attributes,
-            routerAttributesToListStore
+            routerAttributesToListStore,
+            resourceStorePropertiesToListStore,
+            props.resourceStore
         );
 
         this.listStore = new ListStore(
@@ -102,16 +110,30 @@ class List extends React.Component<ViewProps> {
     buildListStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToListStore: {[string | number]: string}
+        routerAttributesToListStore: {[string | number]: string},
+        resourceStorePropertiesToListStore: {[string | number]: string},
+        resourceStore: ?ResourceStore
     ) {
         const listStoreOptions = apiOptions ? apiOptions : {};
 
         routerAttributesToListStore = toJS(routerAttributesToListStore);
         Object.keys(routerAttributesToListStore).forEach((key) => {
-            const attributeName = routerAttributesToListStore[key];
-            const listOptionKey = isNaN(key) ? key : routerAttributesToListStore[key];
+            const listOptionKey = routerAttributesToListStore[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToListStore[key];
 
             listStoreOptions[listOptionKey] = attributes[attributeName];
+        });
+
+        resourceStorePropertiesToListStore = toJS(resourceStorePropertiesToListStore);
+        Object.keys(resourceStorePropertiesToListStore).forEach((key) => {
+            const listOptionKey = resourceStorePropertiesToListStore[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToListStore[key];
+
+            if (!resourceStore || !resourceStore.data) {
+                return;
+            }
+
+            listStoreOptions[listOptionKey] = resourceStore.data[attributeName];
         });
 
         return listStoreOptions;
@@ -140,7 +162,7 @@ class List extends React.Component<ViewProps> {
         ));
     }
 
-    componentDidUpdate(prevProps: ViewProps) {
+    componentDidUpdate(prevProps: Props) {
         const {
             route: {
                 options: {
