@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\PageBundle\Command;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Sulu\Component\Content\Import\WebspaceImportInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,12 +25,28 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * Export a webspace in a specific format.
  */
-class WebspaceImportCommand extends ContainerAwareCommand
+class WebspaceImportCommand extends Command
 {
+    /**
+     * @var WebspaceImportInterface
+     */
+    private $webspaceImporter;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(WebspaceImportInterface $webspaceImporter, LoggerInterface $logger = null)
+    {
+        $this->webspaceImporter = $webspaceImporter;
+        $this->logger = $logger ?: new NullLogger();
+        parent::__construct('sulu:webspaces:import');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:webspaces:import')
-            ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
+        $this->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addArgument('webspace', InputArgument::REQUIRED)
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
@@ -78,10 +95,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
         $output->writeln('<info>Continue!</info>');
 
-        /** @var WebspaceImportInterface $webspaceImporter */
-        $webspaceImporter = $this->getContainer()->get('sulu_page.import.webspace');
-
-        $import = $webspaceImporter->import(
+        $import = $this->webspaceImporter->import(
             $webspaceKey,
             $locale,
             $filePath,
@@ -109,9 +123,6 @@ class WebspaceImportCommand extends ContainerAwareCommand
      */
     protected function printExceptions($import, $output = null)
     {
-        /** @var $logger LoggerInterface */
-        $logger = $this->getContainer()->get('logger');
-
         if (null === $output) {
             $output = new NullOutput();
         }
@@ -132,7 +143,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
         // If more than 20 exceptions write only into log.
         if (count($import->exceptionStore['ignore']) > 20) {
             foreach ($import->exceptionStore['ignore'] as $msg) {
-                $logger->info($msg);
+                $this->logger->info($msg);
             }
 
             return;
@@ -140,7 +151,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
 
         foreach ($import->exceptionStore['ignore'] as $msg) {
             $output->writeln('<comment>' . $msg . '</comment>');
-            $logger->info($msg);
+            $this->logger->info($msg);
         }
     }
 }

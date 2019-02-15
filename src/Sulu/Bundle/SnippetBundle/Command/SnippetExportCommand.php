@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Sulu\Component\Snippet\Export\SnippetExportInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,14 +20,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Export snippet translation by given language.
  */
-class SnippetExportCommand extends ContainerAwareCommand
+class SnippetExportCommand extends Command
 {
+    /**
+     * @var SnippetExportInterface
+     */
+    private $snippetExporter;
+
+    /**
+     * SnippetExportCommand constructor.
+     *
+     * @param SnippetExportInterface $snippetExporter
+     */
+    public function __construct(SnippetExportInterface $snippetExporter)
+    {
+        $this->snippetExporter = $snippetExporter;
+        parent::__construct('sulu:snippet:export');
+    }
+
     /**
      * {@inheritdoc}
      */
     public function configure()
     {
-        $this->setName('sulu:snippet:export');
         $this->setDescription('Export snippet translations from given language.');
         $this->addArgument('target', InputArgument::REQUIRED, 'Target for export (e.g. export_de.xliff)');
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to export (e.g. de, en)');
@@ -39,8 +55,7 @@ class SnippetExportCommand extends ContainerAwareCommand
     {
         $target = $input->getArgument('target');
         $locale = $input->getArgument('locale');
-        $exporter = $this->getContainer()->get('sulu_snippet.export.snippet');
-        $file = $exporter->export($locale, $output, '1.2.xliff');
+        $file = $this->snippetExporter->export($locale, $output, '1.2.xliff');
 
         file_put_contents($target, $file);
     }

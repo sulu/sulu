@@ -15,7 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Dump sitemaps to filesystem.
  */
-class DumpSitemapCommand extends ContainerAwareCommand
+class DumpSitemapCommand extends Command
 {
     /**
      * @var WebspaceManagerInterface
@@ -61,13 +61,27 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private $scheme = 'http';
 
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        XmlSitemapDumperInterface $sitemapDumper,
+        Filesystem $filesystem,
+        string $baseDirectory,
+        string $environment
+    ) {
+        $this->webspaceManager = $webspaceManager;
+        $this->sitemapDumper = $sitemapDumper;
+        $this->filesystem = $filesystem;
+        $this->environment = $environment;
+        $this->baseDirectory = $baseDirectory;
+        parent::__construct('sulu:website:dump-sitemap');
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('sulu:website:dump-sitemap')
-            ->addOption('https', null, InputOption::VALUE_NONE, 'Use https scheme for url generation.')
+        $this->addOption('https', null, InputOption::VALUE_NONE, 'Use https scheme for url generation.')
             ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
@@ -77,12 +91,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->sitemapDumper = $this->getContainer()->get('sulu_website.sitemap.xml_dumper');
-        $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
-        $this->filesystem = new Filesystem();
-
-        $this->environment = $this->getContainer()->getParameter('kernel.environment');
-        $this->baseDirectory = $this->getContainer()->getParameter('sulu_website.sitemap.dump_dir');
 
         if ($input->getOption('https')) {
             $this->scheme = 'https';

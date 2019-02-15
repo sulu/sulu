@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\CategoryBundle\Command;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,12 +22,28 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Command for recovering categories.
  * This command is fixing wrong left/right and depths (see -d) assignments of the categories tree.
  */
-class RecoverCommand extends ContainerAwareCommand
+class RecoverCommand extends Command
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, CategoryRepositoryInterface $categoryRepository)
+    {
+        $this->entityManager = $entityManager;
+        $this->categoryRepository = $categoryRepository;
+        parent::__construct('sulu:categories:recover');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:categories:recover')
-            ->addOption(
+        $this->addOption(
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
@@ -49,11 +65,11 @@ class RecoverCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $force = $input->getOption('force');
         $fixDepth = $input->getOption('fix-depth');
 
-        $repo = $this->getCategoryRepository();
+        $repo = $this->categoryRepository;
         $verify = $repo->verify();
 
         $success = false;
@@ -123,7 +139,7 @@ class RecoverCommand extends ContainerAwareCommand
     private function findInitialWrongDepthGap()
     {
         // get categories where difference to parents depth > 1
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        $qb = $this->categoryRepository->createQueryBuilder('c2')
             ->select('count(c2.id) as results')
             ->join('c2.parent', 'c1')
             ->where('(c2.depth - 1) <> c1.depth');
@@ -140,7 +156,7 @@ class RecoverCommand extends ContainerAwareCommand
     private function findCategoriesWithoutParents()
     {
         // get categories that have no parent but depth > 0
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        $qb = $this->categoryRepository->createQueryBuilder('c2')
             ->select('count(c2.id)')
             ->leftJoin('c2.parent', 'c1')
             ->where('c2.depth <> 0 AND c2.parent IS NULL');
@@ -162,7 +178,7 @@ class RecoverCommand extends ContainerAwareCommand
                 SET c2.depth = (c1.depth + 1)
                 WHERE ( c2.depth - 1 ) <> c1.depth';
 
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->entityManager->getConnection()->prepare($sql);
         if ($statement->execute()) {
             return $statement->rowCount();
         }
@@ -176,27 +192,11 @@ class RecoverCommand extends ContainerAwareCommand
     private function fixCategoriesWithoutParents()
     {
         // fix categories that have no parent but depth > 0
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        $qb = $this->categoryRepository->createQueryBuilder('c2')
             ->update()
             ->set('c2.depth', 0)
             ->where('c2.parent IS NULL AND c2.depth != 0');
 
         $qb->getQuery()->execute();
-    }
-
-    /**
-     * @return EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @return CategoryRepositoryInterface
-     */
-    private function getCategoryRepository()
-    {
-        return $this->getContainer()->get('sulu.repository.category');
     }
 }

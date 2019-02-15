@@ -14,7 +14,7 @@ namespace Sulu\Bundle\PageBundle\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Cleanup ResourceLocator History.
  */
-class CleanupHistoryCommand extends ContainerAwareCommand
+class CleanupHistoryCommand extends Command
 {
     /**
      * @var SessionManagerInterface

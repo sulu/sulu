@@ -12,19 +12,30 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Component\DocumentManager\Events;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class SubscriberDebugCommand extends ContainerAwareCommand
+class SubscriberDebugCommand extends Command
 {
     const PREFIX = 'sulu_document_manager.';
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        parent::__construct('sulu:document:subscriber:debug');
+    }
+
     public function configure()
     {
-        $this->setName('sulu:document:subscriber:debug');
         $this->addArgument('event_name', InputArgument::OPTIONAL, 'Event name, without the sulu_document_manager. prefix');
         $this->setDescription('Show event listeners associated with the document manager');
     }
@@ -32,14 +43,13 @@ class SubscriberDebugCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $eventName = $input->getArgument('event_name');
-        $dispatcher = $this->getContainer()->get('sulu_document_manager.event_dispatcher');
 
         if (!$eventName) {
             return $this->showEventNames($output);
         }
 
         $eventName = self::PREFIX . $eventName;
-        $listeners = $dispatcher->getListeners($eventName);
+        $listeners = $this->eventDispatcher->getListeners($eventName);
 
         foreach ($listeners as $listenerTuple) {
             list($listener, $methodName) = $listenerTuple;

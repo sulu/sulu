@@ -12,8 +12,12 @@
 namespace Sulu\Bundle\PageBundle\Command;
 
 use Jackalope\Query\Row;
+use PHPCR\SessionInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProviderInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,12 +27,44 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Validates pages.
  */
-class ValidatePagesCommand extends ContainerAwareCommand
+class ValidatePagesCommand extends Command
 {
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
+     * @var WebspaceStructureProviderInterface
+     */
+    private $structureProvider;
+
+    public function __construct(
+        SessionInterface $session,
+        WebspaceManagerInterface $webspaceManager,
+        StructureManagerInterface $structureManager,
+        WebspaceStructureProviderInterface $structureProvider
+    ) {
+        $this->session = $session;
+        $this->webspaceManager = $webspaceManager;
+        $this->structureManager = $structureManager;
+        $this->structureProvider = $structureProvider;
+        parent::__construct('sulu:content:validate');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:content:validate')
-            ->addArgument('webspaceKey', InputArgument::REQUIRED, 'Which webspace to search')
+        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Which webspace to search')
             ->setDescription('Dumps pages without valid templates');
     }
 
@@ -36,13 +72,8 @@ class ValidatePagesCommand extends ContainerAwareCommand
     {
         $webspaceKey = $input->getArgument('webspaceKey');
 
-        $session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
-        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
-        $structureProvider = $this->getContainer()->get('sulu.content.webspace_structure_provider');
-
         /** @var Webspace $webspace */
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         $select = '';
         $headers = [];
@@ -60,16 +91,16 @@ class ValidatePagesCommand extends ContainerAwareCommand
         );
 
         $structures = [];
-        foreach ($structureManager->getStructures() as $structure) {
+        foreach ($this->structureManager->getStructures() as $structure) {
             $structures[] = $structure->getKey();
         }
 
         $availableStructureKeys = [];
-        foreach ($structureProvider->getStructures($webspaceKey) as $structure) {
+        foreach ($this->structureProvider->getStructures($webspaceKey) as $structure) {
             $availableStructureKeys[] = $structure->getKey();
         }
 
-        $queryManager = $session->getWorkspace()->getQueryManager();
+        $queryManager = $this->session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $queryResult = $query->execute();
 

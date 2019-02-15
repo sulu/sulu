@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,8 +22,19 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @deprecated Use the sulu:document:initialize command instead
  */
-class WebspacesInitCommand extends ContainerAwareCommand
+class WebspacesInitCommand extends Command
 {
+    /**
+     * @var InitializerInterface
+     */
+    private $webspaceInitiliazer;
+
+    public function __construct(InitializerInterface $webspaceInitiliazer)
+    {
+        $this->webspaceInitiliazer = $webspaceInitiliazer;
+        parent::__construct('sulu:webspaces:init');
+    }
+
     protected function configure()
     {
         $this->setName('sulu:webspaces:init')
@@ -39,6 +51,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 true
             )
         );
-        $this->getContainer()->get('sulu_core.webspace.document_manager.webspace_initializer')->initialize($output);
+        $this->webspaceInitiliazer->initialize($output);
     }
 }

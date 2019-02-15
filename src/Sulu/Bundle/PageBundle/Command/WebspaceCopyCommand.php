@@ -27,7 +27,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,7 +36,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Copies a given webspace with given locale to a destination webspace with a destination locale.
  */
-class WebspaceCopyCommand extends ContainerAwareCommand
+class WebspaceCopyCommand extends Command
 {
     /**
      * @var SymfonyStyle
@@ -78,10 +78,22 @@ class WebspaceCopyCommand extends ContainerAwareCommand
      */
     protected $webspaceKeyDestination;
 
+    public function __construct(
+        DocumentManager $documentManager,
+        SessionManagerInterface $sessionManager,
+        DocumentInspector $documentInspector,
+        HtmlTagExtractor $htmlTagExtractor
+    ) {
+        $this->documentManager = $documentManager;
+        $this->sessionManager = $sessionManager;
+        $this->documentInspector = $documentInspector;
+        $this->htmlTagExtractor = $htmlTagExtractor;
+        parent::__construct('sulu:webspaces:copy');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:webspaces:copy')
-            ->addArgument('source-webspace', InputArgument::REQUIRED)
+        $this->addArgument('source-webspace', InputArgument::REQUIRED)
             ->addArgument('source-locale', InputArgument::REQUIRED)
             ->addArgument('destination-webspace', InputArgument::REQUIRED)
             ->addArgument('destination-locale', InputArgument::REQUIRED)
@@ -142,11 +154,6 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
             return -1;
         }
-
-        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
-        $this->htmlTagExtractor = $this->getContainer()->get('sulu_markup.parser.html_extractor');
 
         $this->webspaceKeySource = $webspaceKeySource;
         $this->webspaceKeyDestination = $webspaceKeyDestination;

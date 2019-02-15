@@ -34,9 +34,13 @@ class ValidatePagesCommandTest extends SuluTestCase
         $application = new Application();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
-        $command = new ValidatePagesCommand();
+        $command = new ValidatePagesCommand(
+            $this->getContainer()->get('sulu_document_manager.default_session'),
+            $this->getContainer()->get('sulu_core.webspace.webspace_manager'),
+            $this->getContainer()->get('sulu.content.structure_manager'),
+            $this->getContainer()->get('sulu.content.webspace_structure_provider')
+        );
         $command->setApplication($application);
-        $command->setContainer($this->getContainer());
         $this->tester = new CommandTester($command);
 
         $this->setupPages();
