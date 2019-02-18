@@ -23,3 +23,14 @@ test('Clicking the Action should call the right handler', () => {
     action.simulate('click');
     expect(clickHandler).toBeCalled();
 });
+
+test('Clicking the disabled Action should not call a handler', () => {
+    const clickHandler = jest.fn();
+
+    const action = mount(
+        <Action disabled={true} onClick={clickHandler}>My Action</Action>
+    );
+
+    action.simulate('click');
+    expect(clickHandler).not.toBeCalled();
+});
