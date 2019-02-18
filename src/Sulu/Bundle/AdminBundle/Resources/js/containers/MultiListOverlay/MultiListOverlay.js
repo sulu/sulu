@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable, autorun, action, toJS} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import {observer} from 'mobx-react';
