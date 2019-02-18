@@ -15,6 +15,8 @@ interface RouteBuilderFactoryInterface
 {
     public function createListRouteBuilder(string $name, string $path): ListRouteBuilderInterface;
 
+    public function createFormOverlayDatagridRouteBuilder(string $name, string $path): FormOverlayDatagridRouteBuilderInterface;
+
     public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface;
 
     public function createPreviewFormRouteBuilder(string $name, string $path): PreviewFormRouteBuilderInterface;

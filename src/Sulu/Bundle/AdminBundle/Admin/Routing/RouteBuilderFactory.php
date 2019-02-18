@@ -18,6 +18,11 @@ class RouteBuilderFactory implements RouteBuilderFactoryInterface
         return new ListRouteBuilder($name, $path);
     }
 
+    public function createFormOverlayDatagridRouteBuilder(string $name, string $path): FormOverlayDatagridRouteBuilderInterface
+    {
+        return new FormOverlayDatagridRouteBuilder($name, $path);
+    }
+
     public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface
     {
         return new FormRouteBuilder($name, $path);
