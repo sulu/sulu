@@ -9,17 +9,17 @@ jest.mock('../../MediaSelectionOverlay', () => {
     const MediaSelectionOverlay = function() {
         return <div>single media selection overlay</div>;
     };
-    MediaSelectionOverlay.createCollectionDatagridStore = jest.fn().mockReturnValue({
+    MediaSelectionOverlay.createCollectionListStore = jest.fn().mockReturnValue({
         destroy: jest.fn(),
     });
-    MediaSelectionOverlay.createMediaDatagridStore = jest.fn().mockReturnValue({
+    MediaSelectionOverlay.createMediaListStore = jest.fn().mockReturnValue({
         destroy: jest.fn(),
     });
 
     return MediaSelectionOverlay;
 });
 
-test('Should create datagrid-stores with correct locale', () => {
+test('Should create list-stores with correct locale', () => {
     const locale = observable.box('en');
     shallow(
         <MultiMediaSelectionOverlay
@@ -31,20 +31,20 @@ test('Should create datagrid-stores with correct locale', () => {
         />
     ).render();
 
-    expect(MediaSelectionOverlay.createMediaDatagridStore).toHaveBeenCalledWith(
+    expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         locale
     );
-    expect(MediaSelectionOverlay.createMediaDatagridStore.mock.calls[0][1].get()).toEqual('22,44');
-    expect(MediaSelectionOverlay.createCollectionDatagridStore).toHaveBeenCalledWith(expect.anything(), locale);
+    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual('22,44');
+    expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
 });
 
 test('Should pass correct props to media-selection-overlay', () => {
-    const mediaDatagridStoreMock = jest.fn();
-    MediaSelectionOverlay.createMediaDatagridStore.mockReturnValueOnce(mediaDatagridStoreMock);
-    const collectionDatagridStoreMock = jest.fn();
-    MediaSelectionOverlay.createCollectionDatagridStore.mockReturnValueOnce(collectionDatagridStoreMock);
+    const mediaListStoreMock = jest.fn();
+    MediaSelectionOverlay.createMediaListStore.mockReturnValueOnce(mediaListStoreMock);
+    const collectionListStoreMock = jest.fn();
+    MediaSelectionOverlay.createCollectionListStore.mockReturnValueOnce(collectionListStoreMock);
 
     const locale = observable.box('en');
     const onClose = jest.fn();
@@ -61,15 +61,15 @@ test('Should pass correct props to media-selection-overlay', () => {
     );
     const mediaSelectionOverlay = multiMediaSelectionOverlay.find(MediaSelectionOverlay);
 
-    expect(mediaSelectionOverlay.prop('mediaDatagridStore')).toEqual(mediaDatagridStoreMock);
-    expect(mediaSelectionOverlay.prop('collectionDatagridStore')).toEqual(collectionDatagridStoreMock);
+    expect(mediaSelectionOverlay.prop('mediaListStore')).toEqual(mediaListStoreMock);
+    expect(mediaSelectionOverlay.prop('collectionListStore')).toEqual(collectionListStoreMock);
     expect(mediaSelectionOverlay.prop('locale')).toEqual(locale);
     expect(mediaSelectionOverlay.prop('open')).toEqual(true);
     expect(mediaSelectionOverlay.prop('onClose')).toEqual(onClose);
     expect(mediaSelectionOverlay.prop('onConfirm')).toEqual(onConfirm);
 });
 
-test('Should destroy datagrid-stores on unmount', () => {
+test('Should destroy list-stores on unmount', () => {
     const multiMediaSelectionOverlay = shallow(
         <MultiMediaSelectionOverlay
             excludedIds={[]}
@@ -80,12 +80,12 @@ test('Should destroy datagrid-stores on unmount', () => {
         />
     );
 
-    const mediaDatagridStoreMock = multiMediaSelectionOverlay.instance().mediaDatagridStore;
-    const collectionDatagridStoreMock = multiMediaSelectionOverlay.instance().collectionDatagridStore;
+    const mediaListStoreMock = multiMediaSelectionOverlay.instance().mediaListStore;
+    const collectionListStoreMock = multiMediaSelectionOverlay.instance().collectionListStore;
 
-    expect(mediaDatagridStoreMock.destroy).not.toHaveBeenCalled();
-    expect(collectionDatagridStoreMock.destroy).not.toHaveBeenCalled();
+    expect(mediaListStoreMock.destroy).not.toHaveBeenCalled();
+    expect(collectionListStoreMock.destroy).not.toHaveBeenCalled();
     multiMediaSelectionOverlay.unmount();
-    expect(mediaDatagridStoreMock.destroy).toHaveBeenCalled();
-    expect(collectionDatagridStoreMock.destroy).toHaveBeenCalled();
+    expect(mediaListStoreMock.destroy).toHaveBeenCalled();
+    expect(collectionListStoreMock.destroy).toHaveBeenCalled();
 });

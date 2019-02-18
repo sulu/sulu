@@ -14,9 +14,9 @@ export default class SingleSelection extends React.Component<Props>
     constructor(props: Props) {
         super(props);
 
-        if (this.type !== 'datagrid_overlay' && this.type !== 'single_select' && this.type !== 'auto_complete') {
+        if (this.type !== 'list_overlay' && this.type !== 'single_select' && this.type !== 'auto_complete') {
             throw new Error(
-                'The Selection field must either be declared as "datagrid_overlay", "single_select" '
+                'The Selection field must either be declared as "list_overlay", "single_select" '
                 + 'or as "auto_complete", received type was "' + this.type + '"!'
             );
         }
@@ -55,8 +55,8 @@ export default class SingleSelection extends React.Component<Props>
     }
 
     render() {
-        if (this.type === 'datagrid_overlay') {
-            return this.renderDatagridOverlay();
+        if (this.type === 'list_overlay') {
+            return this.renderListOverlay();
         }
 
         if (this.type === 'single_select') {
@@ -70,16 +70,16 @@ export default class SingleSelection extends React.Component<Props>
         throw new Error('The "' + this.type + '" type does not exist in the SingleSelection field type.');
     }
 
-    renderDatagridOverlay() {
+    renderListOverlay() {
         const {
             disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
-                    datagrid_overlay: {
+                    list_overlay: {
                         adapter,
-                        datagrid_key: datagridKey,
+                        list_key: listKey,
                         display_properties: displayProperties,
                         empty_text: emptyText,
                         icon,
@@ -100,12 +100,12 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
-                datagridKey={datagridKey || resourceKey}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
                 icon={icon}
+                listKey={listKey || resourceKey}
                 locale={formInspector.locale}
                 onChange={this.handleChange}
                 overlayTitle={translate(overlayTitle)}

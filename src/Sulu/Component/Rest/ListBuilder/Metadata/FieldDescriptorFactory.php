@@ -31,14 +31,14 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWarmerInterface
 {
     /**
-     * @var DatagridXmlLoader
+     * @var ListXmlLoader
      */
-    private $datagridXmlLoader;
+    private $listXmlLoader;
 
     /**
      * @var string[]
      */
-    private $datagridDirectories;
+    private $listDirectories;
 
     /**
      * @var string
@@ -51,37 +51,37 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     private $debug;
 
     public function __construct(
-        DatagridXmlLoader $datagridXmlLoader,
-        array $datagridDirectories,
+        ListXmlLoader $listXmlLoader,
+        array $listDirectories,
         string $cachePath,
         bool $debug
     ) {
-        $this->datagridXmlLoader = $datagridXmlLoader;
-        $this->datagridDirectories = $datagridDirectories;
+        $this->listXmlLoader = $listXmlLoader;
+        $this->listDirectories = $listDirectories;
         $this->cachePath = $cachePath;
         $this->debug = $debug;
     }
 
     public function warmUp($cacheDir)
     {
-        $datagridsMetadataByKey = [];
+        $listsMetadataByKey = [];
 
-        $datagridFinder = (new Finder())->in($this->datagridDirectories)->name('*.xml');
-        foreach ($datagridFinder as $datagridFile) {
-            $datagridMetadata = $this->datagridXmlLoader->load($datagridFile->getPathName());
-            $datagridKey = $datagridMetadata->getKey();
-            if (!array_key_exists($datagridKey, $datagridsMetadataByKey)) {
-                $datagridsMetadataByKey[$datagridKey] = [];
+        $listFinder = (new Finder())->in($this->listDirectories)->name('*.xml');
+        foreach ($listFinder as $listFile) {
+            $listMetadata = $this->listXmlLoader->load($listFile->getPathName());
+            $listKey = $listMetadata->getKey();
+            if (!array_key_exists($listKey, $listsMetadataByKey)) {
+                $listsMetadataByKey[$listKey] = [];
             }
 
-            $datagridsMetadataByKey[$datagridKey][] = $datagridMetadata;
+            $listsMetadataByKey[$listKey][] = $listMetadata;
         }
 
         /** @var AbstractPropertyMetadata $propertyMetadata */
-        foreach ($datagridsMetadataByKey as $datagridKey => $datagridsMetadata) {
+        foreach ($listsMetadataByKey as $listKey => $listsMetadata) {
             $fieldDescriptors = [];
-            foreach ($datagridsMetadata as $datagridMetadata) {
-                foreach ($datagridMetadata->getPropertiesMetadata() as $propertyMetadata) {
+            foreach ($listsMetadata as $listMetadata) {
+                foreach ($listMetadata->getPropertiesMetadata() as $propertyMetadata) {
                     $fieldDescriptor = null;
                     $options = [];
                     if ($propertyMetadata instanceof ConcatenationPropertyMetadata) {
@@ -122,10 +122,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                 }
             }
 
-            $configCache = $this->getConfigCache($datagridKey);
-            $configCache->write(serialize($fieldDescriptors), array_map(function(DatagridMetadata $datagridMetadata) {
-                return new FileResource($datagridMetadata->getResource());
-            }, $datagridsMetadata));
+            $configCache = $this->getConfigCache($listKey);
+            $configCache->write(serialize($fieldDescriptors), array_map(function(ListMetadata $listMetadata) {
+                return new FileResource($listMetadata->getResource());
+            }, $listsMetadata));
         }
     }
 
@@ -137,9 +137,9 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptors(string $datagridKey): ?array
+    public function getFieldDescriptors(string $listKey): ?array
     {
-        $configCache = $this->getConfigCache($datagridKey);
+        $configCache = $this->getConfigCache($listKey);
 
         if (!$configCache->isFresh()) {
             $this->warmUp($this->cachePath);
@@ -354,14 +354,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         return $joins;
     }
 
-    private function getConfigCache($datagridKey)
+    private function getConfigCache($listKey)
     {
         return new ConfigCache(
             sprintf(
                 '%s%s%s',
                 $this->cachePath,
                 DIRECTORY_SEPARATOR,
-                $datagridKey
+                $listKey
             ),
             $this->debug
         );

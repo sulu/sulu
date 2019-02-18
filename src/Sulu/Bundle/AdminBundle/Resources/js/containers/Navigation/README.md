@@ -26,11 +26,11 @@ const items = [
         "label": "Schnipsel",
         "icon": "su-paper",
         "action": "snippet/snippets",
-        "mainRoute": "sulu_snippet.datagrid",
+        "mainRoute": "sulu_snippet.list",
         "disabled": false,
         "id": "5aba0a9d7a5ef415448250",
         "childRoutes": [
-          "sulu_snippet.datagrid",
+          "sulu_snippet.list",
           "sulu_snippet.add_form",
           "sulu_snippet.add_form.detail",
           "sulu_snippet.edit_form",
@@ -56,11 +56,11 @@ const items = [
         "items": [
           {
             "label": "Personen",
-            "mainRoute": "sulu_contact.contacts_datagrid",
+            "mainRoute": "sulu_contact.contacts_list",
             "disabled": false,
             "id": "5aba0a9d7a608673818690",
             "childRoutes": [
-              "sulu_contact.contacts_datagrid",
+              "sulu_contact.contacts_list",
               "sulu_contact.add_form",
               "sulu_contact.add_form.detail",
               "sulu_contact.edit_form",
@@ -69,11 +69,11 @@ const items = [
           },
           {
             "label": "Organisationen",
-            "mainRoute": "sulu_contact.accounts_datagrid",
+            "mainRoute": "sulu_contact.accounts_list",
             "disabled": false,
             "id": "5aba0a9d7a610927910329",
             "childRoutes": [
-              "sulu_contact.accounts_datagrid"
+              "sulu_contact.accounts_list"
             ]
           }
         ]
@@ -86,20 +86,20 @@ const items = [
         "items": [
           {
             "label": "Benutzerrollen",
-            "mainRoute": "sulu_security.datagrid",
+            "mainRoute": "sulu_security.list",
             "disabled": false,
             "id": "5aba0a9d7a621158100794",
             "childRoutes": [
-              "sulu_security.datagrid"
+              "sulu_security.list"
             ]
           },
           {
             "label": "Tags",
-            "mainRoute": "sulu_tag.datagrid",
+            "mainRoute": "sulu_tag.list",
             "disabled": false,
             "id": "5aba0a9d7a629138404840",
             "childRoutes": [
-              "sulu_tag.datagrid"
+              "sulu_tag.list"
             ]
           }
         ]

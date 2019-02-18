@@ -28,7 +28,7 @@ jest.mock('../registries/NavigationRegistry', () => ({
             id: '222-222',
             title: 'Test Navigation 2',
             icon: 'su-article',
-            mainRoute: 'sulu_article.datagrid',
+            mainRoute: 'sulu_article.list',
             childRoutes: ['sulu_article.form', 'sulu_article.form'],
         },
         {
@@ -46,7 +46,7 @@ jest.mock('../registries/NavigationRegistry', () => ({
                     id: '333-child2',
                     title: 'Test Navigation Child 2',
                     icon: 'su-article',
-                    mainRoute: 'sulu_article.datagrid',
+                    mainRoute: 'sulu_article.list',
                     childRoutes: ['sulu_article.form', 'sulu_article.form'],
                 },
             ],

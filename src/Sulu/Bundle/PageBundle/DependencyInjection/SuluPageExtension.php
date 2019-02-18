@@ -33,9 +33,9 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
-                    'datagrids' => [
+                    'lists' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/datagrids',
+                            __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
                     'forms' => [
@@ -54,12 +54,12 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     'field_type_options' => [
                         'selection' => [
                             'internal_links' => [
-                                'default_type' => 'datagrid_overlay',
+                                'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [
-                                    'datagrid_overlay' => [
+                                    'list_overlay' => [
                                         'adapter' => 'column_list',
-                                        'datagrid_key' => 'pages',
+                                        'list_key' => 'pages',
                                         'display_properties' => ['title', 'url'],
                                         'icon' => 'su-document',
                                         'label' => 'sulu_page.selection_label',
@@ -70,12 +70,12 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         ],
                         'single_selection' => [
                             'single_internal_link' => [
-                                'default_type' => 'datagrid_overlay',
+                                'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [
-                                    'datagrid_overlay' => [
+                                    'list_overlay' => [
                                         'adapter' => 'column_list',
-                                        'datagrid_key' => 'pages',
+                                        'list_key' => 'pages',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_page.no_page_selected',
                                         'icon' => 'su-document',

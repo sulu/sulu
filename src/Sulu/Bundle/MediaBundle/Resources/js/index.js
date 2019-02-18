@@ -2,11 +2,11 @@
 import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {
     blockPreviewTransformerRegistry,
-    datagridAdapterRegistry,
+    listAdapterRegistry,
     fieldRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
-import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/Datagrid';
+import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import {
     MediaSelectionBlockPreviewTransformer,
@@ -26,8 +26,8 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object) => {
     viewRegistry.add('sulu_media.formats', MediaFormats);
     viewRegistry.add('sulu_media.history', MediaHistory);
 
-    datagridAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
-    datagridAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
+    listAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
+    listAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
 
     fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);

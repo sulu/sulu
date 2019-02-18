@@ -1,4 +1,4 @@
-<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+<list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>case</key>
     <properties>
         <case-property name="tag">
@@ -26,5 +26,5 @@
             </field>
         </case-property>
     </properties>
-</datagrid>
+</list>
 

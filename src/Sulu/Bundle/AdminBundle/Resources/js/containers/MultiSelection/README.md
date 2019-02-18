@@ -1,7 +1,7 @@
 The `MultiSelection` can be used to make any kind of selection. For assigning an entity a
-[`DatagridOverlay`](#datagridoverlay) is used. What kind of entities are available is defined by the `resourceKey` prop
+[`ListOverlay`](#listoverlay) is used. What kind of entities are available is defined by the `resourceKey` prop
 of the component. The `displayProperties` prop allows to define which properties of the loaded objects should be used
-to build the items in the selection list. Finally the `adapter` option allows to define which datagrid adapter should be
+to build the items in the selection list. Finally the `adapter` option allows to define which list adapter should be
 used in the overlay.
 
 Like most other fields the `value` prop and the `onChange` callback are used to define the current value, in this case

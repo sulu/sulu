@@ -27,7 +27,7 @@ test('Load metadata for given type and key', () => {
     };
 
     const tagMetadata = {
-        datagrid: {
+        list: {
             name: {
                 label: 'Name',
                 type: 'text_line',
@@ -42,13 +42,13 @@ test('Load metadata for given type and key', () => {
         switch (key) {
             case '/metadata/form/snippets':
                 return snippetPromise;
-            case '/metadata/datagrid/tags':
+            case '/metadata/list/tags':
                 return tagPromise;
         }
     });
 
     expect(metadataStore.loadMetadata('form', 'snippets')).toEqual(snippetPromise);
-    expect(metadataStore.loadMetadata('datagrid', 'tags')).toEqual(tagPromise);
+    expect(metadataStore.loadMetadata('list', 'tags')).toEqual(tagPromise);
 
     return Promise.all([snippetPromise, tagPromise]).then(([snippetMetadataFromPromise, tagMetadataFromPromise]) => {
         expect(snippetMetadataFromPromise).toBe(snippetMetadata);

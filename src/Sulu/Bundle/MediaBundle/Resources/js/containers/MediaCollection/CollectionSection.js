@@ -3,7 +3,7 @@ import React from 'react';
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
-import {Datagrid, DatagridStore, SingleDatagridOverlay} from 'sulu-admin-bundle/containers';
+import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Dialog, Icon, Button, ButtonGroup} from 'sulu-admin-bundle/components';
@@ -17,7 +17,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 type Props = {
     locale: IObservableValue<string>,
     overlayType: OverlayType,
-    datagridStore: DatagridStore,
+    listStore: ListStore,
     resourceStore: ResourceStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
 };
@@ -145,7 +145,7 @@ export default class CollectionSection extends React.Component<Props> {
 
     render() {
         const {
-            datagridStore,
+            listStore,
             locale,
             overlayType,
             resourceStore,
@@ -192,11 +192,11 @@ export default class CollectionSection extends React.Component<Props> {
                         </div>
                     </div>
                 }
-                <Datagrid
+                <List
                     adapters={['folder']}
                     onItemClick={this.handleCollectionClick}
                     searchable={false}
-                    store={datagridStore}
+                    store={listStore}
                 />
                 <CollectionFormOverlay
                     onClose={this.handleCollectionOverlayClose}
@@ -216,13 +216,13 @@ export default class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
-                <SingleDatagridOverlay
+                <SingleListOverlay
                     adapter="column_list"
                     allowActivateForDisabledItems={false}
                     clearSelectionOnClose={true}
                     confirmLoading={resourceStore.moving}
-                    datagridKey={COLLECTIONS_RESOURCE_KEY}
                     disabledIds={resourceStore.id ? [resourceStore.id] : []}
+                    listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={locale}
                     onClose={this.handleMoveCollectionClose}
                     onConfirm={this.handleMoveCollectionConfirm}

@@ -22,7 +22,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
 {
-    const DATAGRID_ROUTE = 'sulu_category.datagrid';
+    const LIST_ROUTE = 'sulu_category.list';
 
     const ADD_FORM_ROUTE = 'sulu_category.add_form';
 
@@ -61,7 +61,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
             $categoryItem = new NavigationItem('sulu_category.categories', $settings);
             $categoryItem->setPosition(20);
-            $categoryItem->setMainRoute(static::DATAGRID_ROUTE);
+            $categoryItem->setMainRoute(static::LIST_ROUTE);
         }
 
         if ($settings->hasChildren()) {
@@ -94,11 +94,11 @@ class CategoryAdmin extends Admin
         ];
 
         return [
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/categories/:locale')
+            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
                 ->setResourceKey('categories')
-                ->setDatagridKey('categories')
+                ->setListKey('categories')
                 ->setTitle('sulu_category.categories')
-                ->addDatagridAdapters(['tree_table'])
+                ->addListAdapters(['tree_table'])
                 ->addLocales($locales)
                 ->setDefaultLocale($locales[0])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
@@ -109,7 +109,7 @@ class CategoryAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
                 ->setResourceKey('categories')
                 ->addLocales($locales)
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.add_form.details', '/details')
                 ->setResourceKey('categories')
@@ -123,7 +123,7 @@ class CategoryAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
                 ->setResourceKey('categories')
                 ->addLocales($locales)
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.details', '/details')

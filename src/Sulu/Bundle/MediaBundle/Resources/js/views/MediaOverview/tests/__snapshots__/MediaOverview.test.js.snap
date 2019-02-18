@@ -81,10 +81,10 @@ exports[`Render a simple MediaOverview 1`] = `
         </div>
       </div>
       <div
-        class="datagridContainer"
+        class="listContainer"
       >
         <div
-          class="datagrid"
+          class="list"
         >
           <section>
             <ul
@@ -249,7 +249,7 @@ exports[`Render a simple MediaOverview 1`] = `
     />
     <div>
       <div
-        class="datagridContainer"
+        class="listContainer"
       >
         <div
           class="headerContainer"
@@ -271,7 +271,7 @@ exports[`Render a simple MediaOverview 1`] = `
                 />
               </div>
               <input
-                placeholder="sulu_admin.datagrid_search_placeholder"
+                placeholder="sulu_admin.list_search_placeholder"
                 type="text"
                 value=""
               />
@@ -307,7 +307,7 @@ exports[`Render a simple MediaOverview 1`] = `
           </div>
         </div>
         <div
-          class="datagrid"
+          class="list"
         >
           <section>
             <div>

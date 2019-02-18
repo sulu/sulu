@@ -99,10 +99,10 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                 </div>
               </div>
               <div
-                class="datagridContainer"
+                class="listContainer"
               >
                 <div
-                  class="datagrid"
+                  class="list"
                 >
                   <section>
                     <ul
@@ -267,7 +267,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
             />
             <div>
               <div
-                class="datagridContainer"
+                class="listContainer"
               >
                 <div
                   class="headerContainer"
@@ -289,7 +289,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                         />
                       </div>
                       <input
-                        placeholder="sulu_admin.datagrid_search_placeholder"
+                        placeholder="sulu_admin.list_search_placeholder"
                         type="text"
                         value=""
                       />
@@ -297,7 +297,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                   </div>
                 </div>
                 <div
-                  class="datagrid"
+                  class="list"
                 >
                   <section>
                     <div>
@@ -692,10 +692,10 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                 </div>
               </div>
               <div
-                class="datagridContainer"
+                class="listContainer"
               >
                 <div
-                  class="datagrid"
+                  class="list"
                 >
                   <section>
                     <ul
@@ -860,7 +860,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
             />
             <div>
               <div
-                class="datagridContainer"
+                class="listContainer"
               >
                 <div
                   class="headerContainer"
@@ -882,7 +882,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                         />
                       </div>
                       <input
-                        placeholder="sulu_admin.datagrid_search_placeholder"
+                        placeholder="sulu_admin.list_search_placeholder"
                         type="text"
                         value=""
                       />
@@ -890,7 +890,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                   </div>
                 </div>
                 <div
-                  class="datagrid"
+                  class="list"
                 >
                   <section>
                     <div>

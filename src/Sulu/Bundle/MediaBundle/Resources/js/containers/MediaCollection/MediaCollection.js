@@ -5,7 +5,7 @@ import {when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
-import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
+import {List, ListStore} from 'sulu-admin-bundle/containers';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import type {OverlayType} from './types';
@@ -14,10 +14,10 @@ import MediaSection from './MediaSection';
 
 type Props = {|
     locale: IObservableValue<string>,
-    mediaDatagridAdapters: Array<string>,
-    mediaDatagridRef?: (?ElementRef<typeof Datagrid>) => void,
-    mediaDatagridStore: DatagridStore,
-    collectionDatagridStore: DatagridStore,
+    mediaListAdapters: Array<string>,
+    mediaListRef?: (?ElementRef<typeof List>) => void,
+    mediaListStore: ListStore,
+    collectionListStore: ListStore,
     collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
@@ -43,24 +43,24 @@ export default class MediaCollection extends React.Component<Props> {
     };
 
     handleUpload = (media: Array<Object>) => {
-        const {mediaDatagridStore} = this.props;
+        const {mediaListStore} = this.props;
 
-        mediaDatagridStore.reload();
+        mediaListStore.reload();
         when(
-            () => !mediaDatagridStore.loading,
-            (): void => media.forEach((mediaItem) => mediaDatagridStore.select(mediaItem))
+            () => !mediaListStore.loading,
+            (): void => media.forEach((mediaItem) => mediaListStore.select(mediaItem))
         );
     };
 
     render() {
         const {
-            collectionDatagridStore,
+            collectionListStore,
             collectionStore,
             locale,
             overlayType,
-            mediaDatagridAdapters,
-            mediaDatagridRef,
-            mediaDatagridStore,
+            mediaListAdapters,
+            mediaListRef,
+            mediaListStore,
         } = this.props;
 
         return (
@@ -70,7 +70,7 @@ export default class MediaCollection extends React.Component<Props> {
                 onUpload={this.handleUpload}
             >
                 <CollectionSection
-                    datagridStore={collectionDatagridStore}
+                    listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     overlayType={overlayType}
@@ -79,9 +79,9 @@ export default class MediaCollection extends React.Component<Props> {
                 <Divider />
                 <div>
                     <MediaSection
-                        adapters={mediaDatagridAdapters}
-                        datagridStore={mediaDatagridStore}
-                        mediaDatagridRef={mediaDatagridRef}
+                        adapters={mediaListAdapters}
+                        listStore={mediaListStore}
+                        mediaListRef={mediaListRef}
                         onMediaClick={this.handleMediaClick}
                     />
                 </div>

@@ -1,0 +1,323 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>contacts</key>
+
+    <joins name="address">
+        <join>
+            <entity-name>SuluContactBundle:ContactAddress</entity-name>
+            <field-name>%sulu.model.contact.class%.contactAddresses</field-name>
+            <method>LEFT</method>
+            <condition>SuluContactBundle:ContactAddress.main = TRUE</condition>
+        </join>
+        <join>
+            <entity-name>SuluContactBundle:Address</entity-name>
+            <field-name>SuluContactBundle:ContactAddress.address</field-name>
+        </join>
+    </joins>
+
+    <joins name="accountContact">
+        <join>
+            <entity-name>SuluContactBundle:AccountContact</entity-name>
+            <field-name>%sulu.model.contact.class%.accountContacts</field-name>
+            <method>LEFT</method>
+            <condition>SuluContactBundle:AccountContact.main = true</condition>
+        </join>
+    </joins>
+
+    <properties>
+        <property
+            name="avatar"
+            visibility="always"
+            translation="sulu_contact.avatar"
+            type="thumbnails"
+            sortable="false"
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluMediaBundle:Media</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluMediaBundle:Media</entity-name>
+                    <field-name>%sulu.model.contact.class%.avatar</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <concatenation-property
+            name="fullName"
+            searchability="yes"
+            filter-type="string"
+            translation="sulu_contact.name"
+            sortable="false"
+            glue=" "
+        >
+            <field property-ref="firstName"/>
+            <field property-ref="lastName"/>
+        </concatenation-property>
+
+        <property
+            name="firstName"
+            visibility="always"
+            searchability="yes"
+            filter-type="string"
+            translation="sulu_contact.first_name"
+        >
+            <field-name>firstName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property
+            name="lastName"
+            visibility="always"
+            searchability="yes"
+            filter-type="string"
+            translation="sulu_contact.last_name"
+        >
+            <field-name>lastName</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property
+            name="mainEmail"
+            visibility="always"
+            searchability="yes"
+            filter-type="string"
+            translation="sulu_contact.email"
+        >
+            <field-name>mainEmail</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="account" visibility="always" translation="sulu_contact.organization">
+            <field-name>name</field-name>
+            <entity-name>%sulu.model.account.class%</entity-name>
+
+            <joins ref="accountContact">
+                <join>
+                    <entity-name>%sulu.model.account.class%</entity-name>
+                    <field-name>SuluContactBundle:AccountContact.account</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <identity-property name="accountId" visibility="never" filter-type="auto-complete"
+            translation="sulu_contact.organization">
+            <field-name>account</field-name>
+            <entity-name>SuluContactBundle:AccountContact</entity-name>
+
+            <joins ref="accountContact"/>
+
+            <filter-type-parameters>
+                <parameter key="singleUrl"><![CDATA[/admin/api/accounts/{id}]]></parameter>
+                <parameter key="remoteUrl">
+                    <![CDATA[/admin/api/accounts?searchFields=name,number&fields=id,name&flat=true]]>
+                </parameter>
+                <parameter key="resultKey">accounts</parameter>
+                <parameter key="valueKey">name</parameter>
+            </filter-type-parameters>
+        </identity-property>
+
+        <property name="city" visibility="always" filter-type="string" translation="sulu_contact.city">
+            <field-name>city</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+
+        <property name="zip" filter-type="string" translation="sulu_contact.zip">
+            <field-name>zip</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+
+        <property name="street" filter-type="string" translation="sulu_contact.street">
+            <field-name>street</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+
+        <property name="number" filter-type="string" translation="sulu_contact.number">
+            <field-name>number</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+
+        <concatenation-property
+            name="addressLine"
+            filter-type="string"
+            translation="sulu_contact.address_line"
+            sortable="false"
+            glue=" "
+        >
+            <field property-ref="street"/>
+            <field property-ref="number"/>
+        </concatenation-property>
+
+        <property name="state" filter-type="string" translation="sulu_contact.state">
+            <field-name>state</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+        </property>
+
+        <property name="countryCode" visibility="always" translation="sulu_contact.country">
+            <field-name>code</field-name>
+            <entity-name>SuluContactBundle:Country</entity-name>
+
+            <joins ref="address">
+                <join>
+                    <entity-name>SuluContactBundle:Country</entity-name>
+                    <field-name>SuluContactBundle:Address.country</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <identity-property
+            name="countryId"
+            visibility="never"
+            filter-type="auto-complete"
+            translation="sulu_contact.country"
+        >
+            <field-name>country</field-name>
+            <entity-name>SuluContactBundle:Address</entity-name>
+
+            <joins ref="address"/>
+
+            <filter-type-parameters>
+                <parameter key="singleUrl"><![CDATA[/admin/api/countries/{id}]]></parameter>
+                <parameter key="prefetchUrl"><![CDATA[/admin/api/countries]]></parameter>
+                <parameter key="resultKey">countries</parameter>
+                <parameter key="valueKey">name</parameter>
+            </filter-type-parameters>
+        </identity-property>
+
+        <property name="mainPhone" visibility="always" filter-type="string" translation="sulu_contact.phone">
+            <field-name>mainPhone</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="id" filter-type="integer" translation="sulu_admin.id" type="string">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="mainFax" filter-type="string" translation="sulu_contact.fax">
+            <field-name>mainFax</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="mainUrl" filter-type="string" translation="sulu_contact.website">
+            <field-name>mainUrl</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="created" filter-type="datetime" translation="sulu_admin.created" type="datetime">
+            <field-name>created</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="changed" filter-type="datetime" translation="sulu_admin.changed" type="datetime">
+            <field-name>changed</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="birthday" filter-type="date" translation="sulu_contact.birthday" type="date">
+            <field-name>birthday</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="title" translation="sulu_contact.title">
+            <field-name>title</field-name>
+            <entity-name>SuluContactBundle:ContactTitle</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluContactBundle:ContactTitle</entity-name>
+                    <field-name>%sulu.model.contact.class%.title</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <identity-property
+            name="titleId"
+            visibility="never"
+            filter-type="auto-complete"
+            translation="sulu_contact.title"
+        >
+            <field-name>title</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+
+            <filter-type-parameters>
+                <parameter key="singleUrl"><![CDATA[/admin/api/contact/titles/{id}]]></parameter>
+                <parameter key="prefetchUrl"><![CDATA[/admin/api/contact/titles]]></parameter>
+                <parameter key="resultKey">contactTitles</parameter>
+                <parameter key="valueKey">title</parameter>
+            </filter-type-parameters>
+        </identity-property>
+
+        <property name="salutation" filter-type="string" translation="sulu_contact.salutation">
+            <field-name>salutation</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property name="formOfAddress" filter-type="string" translation="sulu_contact.form_of_address">
+            <field-name>formOfAddress</field-name>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+        </property>
+
+        <property
+            name="position"
+            filter-type="string"
+            translation="sulu_contact.position"
+            sortable="false"
+        >
+            <field-name>position</field-name>
+            <entity-name>SuluContactBundle:Position</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluContactBundle:AccountContact</entity-name>
+                    <field-name>%sulu.model.contact.class%.accountContacts</field-name>
+                </join>
+                <join>
+                    <entity-name>SuluContactBundle:Position</entity-name>
+                    <field-name>SuluContactBundle:AccountContact.position</field-name>
+                </join>
+            </joins>
+        </property>
+
+        <group-concat-property
+            name="tagIds"
+            visibility="never"
+            filter-type="tags"
+            translation="sulu_tag.tags"
+            glue=","
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluTagBundle:Tag</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluTagBundle:Tag</entity-name>
+                    <field-name>%sulu.model.contact.class%.tags</field-name>
+                </join>
+            </joins>
+        </group-concat-property>
+
+        <property name="user" visibility="no" searchability="yes" translation="sulu_security.user_name">
+            <field-name>username</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>%sulu.model.user.class%</entity-name>
+                    <method>LEFT</method>
+                    <condition>%sulu.model.user.class%.contact = %sulu.model.contact.class%.id</condition>
+                </join>
+            </joins>
+        </property>
+    </properties>
+</list>

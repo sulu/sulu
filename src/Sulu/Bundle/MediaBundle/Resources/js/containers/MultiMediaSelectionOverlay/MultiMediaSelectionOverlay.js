@@ -3,7 +3,7 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {DatagridStore} from 'sulu-admin-bundle/containers';
+import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
@@ -22,20 +22,20 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
 
     collectionId: IObservableValue<?string | number> = observable.box();
     excludedIdString: IObservableValue<string>;
-    mediaDatagridStore: DatagridStore;
-    collectionDatagridStore: DatagridStore;
+    mediaListStore: ListStore;
+    collectionListStore: ListStore;
 
     constructor(props: Props) {
         super(props);
 
         this.excludedIdString = observable.box(props.excludedIds.sort().join(','));
 
-        this.mediaDatagridStore = MediaSelectionOverlay.createMediaDatagridStore(
+        this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
             this.excludedIdString,
             props.locale
         );
-        this.collectionDatagridStore = MediaSelectionOverlay.createCollectionDatagridStore(
+        this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,
             props.locale
         );
@@ -45,18 +45,18 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
         const newExcludedIdString = this.props.excludedIds.sort().join(',');
 
         if (this.excludedIdString.get() !== newExcludedIdString) {
-            this.mediaDatagridStore.clear();
+            this.mediaListStore.clear();
             this.excludedIdString.set(this.props.excludedIds.sort().join(','));
         }
     }
 
     componentWillUnmount() {
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
+        if (this.mediaListStore) {
+            this.mediaListStore.destroy();
         }
 
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
+        if (this.collectionListStore) {
+            this.collectionListStore.destroy();
         }
     }
 
@@ -70,10 +70,10 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
 
         return (
             <MediaSelectionOverlay
-                collectionDatagridStore={this.collectionDatagridStore}
                 collectionId={this.collectionId}
+                collectionListStore={this.collectionListStore}
                 locale={locale}
-                mediaDatagridStore={this.mediaDatagridStore}
+                mediaListStore={this.mediaListStore}
                 onClose={onClose}
                 onConfirm={onConfirm}
                 open={open}

@@ -40,8 +40,8 @@ exports[`Should open an overlay 1`] = `
         </header>
         <article>
           <div class=\\"adapterContainer overlay table\\">
-            <div class=\\"datagrid adapter table\\">
-              <div class=\\"datagrid\\"></div>
+            <div class=\\"list adapter table\\">
+              <div class=\\"list\\"></div>
             </div>
           </div>
         </article>

@@ -79,11 +79,11 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('Austria', $contactConfig->countries[0]->name);
     }
 
-    public function testContactsDatagridMetadataAction()
+    public function testContactsListMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/datagrid/contacts');
+        $client->request('GET', '/admin/metadata/list/contacts');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
@@ -94,11 +94,11 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('firstName', $response);
     }
 
-    public function testAccountsDatagridMetadataAction()
+    public function testAccountsListMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/datagrid/accounts');
+        $client->request('GET', '/admin/metadata/list/accounts');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());

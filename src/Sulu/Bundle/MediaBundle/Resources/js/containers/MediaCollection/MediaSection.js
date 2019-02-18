@@ -1,12 +1,12 @@
 //@flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {Datagrid, DatagridStore} from 'sulu-admin-bundle/containers';
+import {List, ListStore} from 'sulu-admin-bundle/containers';
 
 type Props = {|
     adapters: Array<string>,
-    datagridStore: DatagridStore,
-    mediaDatagridRef?: (?ElementRef<typeof Datagrid>) => void,
+    listStore: ListStore,
+    mediaListRef?: (?ElementRef<typeof List>) => void,
     onMediaClick: (mediaId: string | number) => void,
 |};
 
@@ -18,16 +18,16 @@ export default class MediaSection extends React.PureComponent<Props> {
     render() {
         const {
             adapters,
-            datagridStore,
-            mediaDatagridRef,
+            listStore,
+            mediaListRef,
         } = this.props;
 
         return (
-            <Datagrid
+            <List
                 adapters={adapters}
                 onItemClick={this.handleMediaClick}
-                ref={mediaDatagridRef}
-                store={datagridStore}
+                ref={mediaListRef}
+                store={listStore}
             />
         );
     }

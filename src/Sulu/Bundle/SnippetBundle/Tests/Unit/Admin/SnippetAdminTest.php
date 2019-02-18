@@ -74,12 +74,12 @@ class SnippetAdminTest extends TestCase
         $editFormRoute = $routes[3];
         $editDetailRoute = $routes[4];
 
-        $this->assertAttributeEquals('sulu_snippet.datagrid', 'name', $listRoute);
+        $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeEquals([
             'title' => 'sulu_snippet.snippets',
             'toolbarActions' => ['sulu_admin.add', 'sulu_admin.delete'],
             'resourceKey' => 'snippets',
-            'datagridKey' => 'snippets',
+            'listKey' => 'snippets',
             'adapters' => ['table'],
             'addRoute' => 'sulu_snippet.add_form',
             'editRoute' => 'sulu_snippet.edit_form',
@@ -89,7 +89,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.add_form', 'name', $addFormRoute);
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
-            'backRoute' => 'sulu_snippet.datagrid',
+            'backRoute' => 'sulu_snippet.list',
             'locales' => array_keys($locales),
         ], 'options', $addFormRoute);
         $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
@@ -107,7 +107,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
         $this->assertAttributeEquals([
             'resourceKey' => 'snippets',
-            'backRoute' => 'sulu_snippet.datagrid',
+            'backRoute' => 'sulu_snippet.list',
             'locales' => array_keys($locales),
             'titleProperty' => 'title',
         ], 'options', $editFormRoute);

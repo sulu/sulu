@@ -2,7 +2,7 @@
 import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
-import DatagridStore from 'sulu-admin-bundle/containers/Datagrid/stores/DatagridStore';
+import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
 import MediaCollection from '../../MediaCollection';
 
@@ -18,21 +18,21 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     };
 }));
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
     return {
         getOptions: jest.fn().mockReturnValue({}),
         has: jest.fn().mockReturnValue(true),
         get: jest.fn((key) => {
             const adapters = {
-                'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
-                'media_card_selection': require('../../Datagrid/adapters/MediaCardSelectionAdapter').default,
+                'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
+                'media_card_selection': require('../../List/adapters/MediaCardSelectionAdapter').default,
             };
             return adapters[key];
         }),
     };
 });
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () =>
+jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
     jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
         mockExtendObservable(this, {
             selections: [],
@@ -71,16 +71,16 @@ jest.mock('sulu-admin-bundle/containers/Datagrid/stores/DatagridStore', () =>
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
 
-let collectionDatagridStoreMock: DatagridStore;
-let mediaDatagridStoreMock: DatagridStore;
+let collectionListStoreMock: ListStore;
+let mediaListStoreMock: ListStore;
 
 beforeEach(() => {
     jest.clearAllMocks();
 
-    collectionDatagridStoreMock = new DatagridStore('collections', 'collections', 'media_selection_overlay', {
+    collectionListStoreMock = new ListStore('collections', 'collections', 'media_selection_overlay', {
         page: observable.box(),
     }, {});
-    collectionDatagridStoreMock.data.push({
+    collectionListStoreMock.data.push({
         id: 1,
         title: 'Title 1',
         objectCount: 1,
@@ -93,10 +93,10 @@ beforeEach(() => {
         description: 'Description 2',
     });
 
-    mediaDatagridStoreMock = new DatagridStore('media', 'media', 'media_selection_overlay', {
+    mediaListStoreMock = new ListStore('media', 'media', 'media_selection_overlay', {
         page: observable.box(),
     }, {});
-    mediaDatagridStoreMock.data.push(
+    mediaListStoreMock.data.push(
         {
             id: 1,
             title: 'Title 1',
@@ -126,10 +126,10 @@ test('Render an open MediaSelectionOverlay', () => {
     const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -141,15 +141,15 @@ test('Render an open MediaSelectionOverlay', () => {
 });
 
 test('Render an open MediaSelectionOverlay with selected items', () => {
-    mediaDatagridStoreMock.selections.push({id: 1});
+    mediaListStoreMock.selections.push({id: 1});
 
     const locale = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -160,15 +160,15 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
     expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
 });
 
-test('Should call onConfirm callback with selected medias from media datagrid', () => {
+test('Should call onConfirm callback with selected medias from media list', () => {
     const confirmSpy = jest.fn();
     const locale = observable.box();
     const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
@@ -179,20 +179,20 @@ test('Should call onConfirm callback with selected medias from media datagrid', 
         {id: 1},
         {id: 3},
     ];
-    mediaDatagridStoreMock.selections = selections;
+    mediaListStoreMock.selections = selections;
     mediaSelectionOverlay.find('Overlay').simulate('confirm');
 
     expect(confirmSpy).toBeCalledWith(selections);
 });
 
-test('Should reset the selection of the media datagrid when the reset-button is clicked', () => {
+test('Should reset the selection of the media list when the reset-button is clicked', () => {
     const locale = observable.box();
     const mediaSelectionOverlayInstance = shallow(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -200,17 +200,17 @@ test('Should reset the selection of the media datagrid when the reset-button is 
     ).instance();
 
     mediaSelectionOverlayInstance.handleSelectionReset();
-    expect(mediaDatagridStoreMock.clearSelection).toBeCalled();
+    expect(mediaListStoreMock.clearSelection).toBeCalled();
 });
 
-test('Should reset the selection of the media datagrid when the overlay is closed', () => {
+test('Should reset the selection of the media list when the overlay is closed', () => {
     const locale = observable.box();
     const mediaSelectionOverlay = shallow(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -218,31 +218,31 @@ test('Should reset the selection of the media datagrid when the overlay is close
     );
 
     mediaSelectionOverlay.setProps({open: false});
-    expect(mediaDatagridStoreMock.clearSelection).toBeCalled();
+    expect(mediaListStoreMock.clearSelection).toBeCalled();
 });
 
-test('Should change the current collection id and reset the page of the datagrids on collection-change', () => {
+test('Should change the current collection id and reset the page of the lists on collection-change', () => {
     const locale = observable.box();
     const collectionId = observable.box();
     const mediaSelectionOverlay = mount(
         <MediaSelectionOverlay
-            collectionDatagridStore={collectionDatagridStoreMock}
             collectionId={collectionId}
+            collectionListStore={collectionListStoreMock}
             locale={locale}
-            mediaDatagridStore={mediaDatagridStoreMock}
+            mediaListStore={mediaListStoreMock}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
         />
     );
 
-    expect(collectionDatagridStoreMock.setPage).not.toHaveBeenCalled();
-    expect(mediaDatagridStoreMock.setPage).not.toHaveBeenCalled();
+    expect(collectionListStoreMock.setPage).not.toHaveBeenCalled();
+    expect(mediaListStoreMock.setPage).not.toHaveBeenCalled();
 
     mediaSelectionOverlay.find('Folder').at(0).simulate('click');
 
-    expect(collectionDatagridStoreMock.setPage).toHaveBeenCalledWith(1);
-    expect(mediaDatagridStoreMock.setPage).toHaveBeenCalledWith(1);
+    expect(collectionListStoreMock.setPage).toHaveBeenCalledWith(1);
+    expect(mediaListStoreMock.setPage).toHaveBeenCalledWith(1);
     expect(collectionId.get()).toEqual(1);
-    expect(mediaDatagridStoreMock.clearSelection).not.toBeCalled();
+    expect(mediaListStoreMock.clearSelection).not.toBeCalled();
 });

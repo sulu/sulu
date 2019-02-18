@@ -24,7 +24,7 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
-use Sulu\Bundle\AdminBundle\Metadata\Form\Form;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
@@ -231,7 +231,7 @@ class AdminControllerTest extends TestCase
     public function testConfigAction()
     {
         $routes = [
-            new Route('sulu_snippet.datagrid', '/snippets', 'sulu_admin.datagrid'),
+            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
         ];
         $this->routeRegistry->getRoutes()->willReturn($routes);
 
@@ -305,7 +305,7 @@ class AdminControllerTest extends TestCase
 
     public function testMetadataAction()
     {
-        $form = new Form();
+        $form = new FormMetadata();
 
         $this->user->getLocale()->willReturn('en');
 

@@ -27,7 +27,7 @@ use Sulu\Component\Webspace\Webspace;
  */
 class SnippetAdmin extends Admin
 {
-    const DATAGRID_ROUTE = 'sulu_snippet.datagrid';
+    const LIST_ROUTE = 'sulu_snippet.list';
 
     const ADD_FORM_ROUTE = 'sulu_snippet.add_form';
 
@@ -86,7 +86,7 @@ class SnippetAdmin extends Admin
             $snippet->setPosition(20);
             $snippet->setIcon('su-snippet');
             $snippet->setAction('snippet/snippets');
-            $snippet->setMainRoute(static::DATAGRID_ROUTE);
+            $snippet->setMainRoute(static::LIST_ROUTE);
 
             $rootNavigationItem->addChild($snippet);
         }
@@ -120,11 +120,11 @@ class SnippetAdmin extends Admin
         ];
 
         return [
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/snippets/:locale')
+            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/snippets/:locale')
                 ->setResourceKey('snippets')
-                ->setDatagridKey('snippets')
+                ->setListKey('snippets')
                 ->setTitle('sulu_snippet.snippets')
-                ->addDatagridAdapters(['table'])
+                ->addListAdapters(['table'])
                 ->addLocales($snippetLocales)
                 ->setDefaultLocale($snippetLocales[0])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
@@ -134,7 +134,7 @@ class SnippetAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.details', '/details')
                 ->setResourceKey('snippets')
@@ -147,7 +147,7 @@ class SnippetAdmin extends Admin
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
                 ->setResourceKey('snippets')
                 ->addLocales($snippetLocales)
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->setTitleProperty('title')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.details', '/details')

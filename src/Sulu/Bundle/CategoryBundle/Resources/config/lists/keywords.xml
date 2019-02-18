@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>keywords</key>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" visibility="no" type="string">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.keyword.class%</entity-name>
+        </property>
+
+        <property name="keyword" translation="sulu_category.keyword" visibility="always">
+            <field-name>keyword</field-name>
+            <entity-name>%sulu.model.keyword.class%</entity-name>
+        </property>
+
+        <property name="locale" visibility="never">
+            <field-name>locale</field-name>
+            <entity-name>%sulu.model.keyword.class%</entity-name>
+        </property>
+
+        <group-concat-property name="categoryTranslationIds" visibility="never" glue=",">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>%sulu.model.category_translation.class%</entity-name>
+                    <field-name>%sulu.model.keyword.class%.categoryTranslations</field-name>
+                </join>
+            </joins>
+        </group-concat-property>
+
+        <count-property name="categoryTranslationCount" visibility="always" translation="sulu_category.multiple_usage">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.category_translation.class%</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>%sulu.model.category_translation.class%</entity-name>
+                    <field-name>%sulu.model.keyword.class%.categoryTranslations</field-name>
+                </join>
+            </joins>
+        </count-property>
+    </properties>
+</list>

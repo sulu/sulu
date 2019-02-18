@@ -6,17 +6,17 @@ import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefault
 import {translate} from '../../../../utils/Translator';
 import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/UserStore';
-import Datagrid from '../../../Datagrid';
+import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 
-jest.mock('../../../Datagrid', () => jest.fn(() => null));
+jest.mock('../../../List', () => jest.fn(() => null));
 
-jest.mock('../../../Datagrid/stores/DatagridStore',
-    () => function(resourceKey, datagridKey, userSettingsKey, observableOptions = {}, options, initialSelectionIds) {
+jest.mock('../../../List/stores/ListStore',
+    () => function(resourceKey, listKey, userSettingsKey, observableOptions = {}, options, initialSelectionIds) {
         this.resourceKey = resourceKey;
-        this.datagridKey = datagridKey;
+        this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;
@@ -54,12 +54,12 @@ test('Should pass props correctly to selection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
-                datagrid_key: 'snippets_datagrid',
+                list_key: 'snippets_list',
                 display_properties: ['id', 'title'],
                 icon: '',
                 label: 'sulu_snippet.selection_label',
@@ -92,7 +92,7 @@ test('Should pass props correctly to selection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        datagridKey: 'snippets_datagrid',
+        listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
         label: 'sulu_snippet.selection_label',
@@ -103,14 +103,14 @@ test('Should pass props correctly to selection component', () => {
     }));
 });
 
-test('Should pass resourceKey as datagridKey to selection component if no datagridKey is given', () => {
+test('Should pass resourceKey as listKey to selection component if no listKey is given', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -140,17 +140,17 @@ test('Should pass resourceKey as datagridKey to selection component if no datagr
         />
     );
 
-    expect(selection.find('MultiSelection').prop('datagridKey')).toEqual('snippets');
+    expect(selection.find('MultiSelection').prop('listKey')).toEqual('snippets');
 });
 
 test('Should pass locale from userStore to selection component if form has no locale', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -192,7 +192,7 @@ test('Should pass props with schema-options type correctly to selection componen
         default_type: 'auto_complete',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -211,7 +211,7 @@ test('Should pass props with schema-options type correctly to selection componen
     const schemaOptions = {
         type: {
             name: 'type',
-            value: 'datagrid_overlay',
+            value: 'list_overlay',
         },
     };
 
@@ -252,10 +252,10 @@ test('Should pass props with schema-options type correctly to selection componen
 
 test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'pages',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
             },
         },
@@ -277,10 +277,10 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
 test('Should pass empty array if value is not given to overlay type', () => {
     const changeSpy = jest.fn();
     const fieldOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'pages',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'column_list',
                 label: 'sulu_page.selection_label',
             },
@@ -310,10 +310,10 @@ test('Should call onChange and onFinish callback when selection overlay is confi
     const finishSpy = jest.fn();
 
     const fieldOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'pages',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'column_list',
                 label: 'sulu_page.selection_label',
             },
@@ -343,7 +343,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
     expect(() => shallow(
         <Selection
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={{default_type: 'datagrid_overlay'}}
+            fieldTypeOptions={{default_type: 'list_overlay'}}
             formInspector={formInspector}
         />
     )).toThrowError(/"resource_key"/);
@@ -352,10 +352,10 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
 test('Should throw an error if no "adapter" option is passed for overlay type in fieldTypeOptions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'test',
         types: {
-            datagrid_overlay: {},
+            list_overlay: {},
         },
     };
 
@@ -368,13 +368,13 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
     )).toThrowError(/"adapter"/);
 });
 
-test('Should call the disposer for datagrid selections if unmounted', () => {
+test('Should call the disposer for list selections if unmounted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'test',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'tree_table',
             },
         },
@@ -388,24 +388,24 @@ test('Should call the disposer for datagrid selections if unmounted', () => {
         />
     );
 
-    const changeDatagridDisposerSpy = jest.fn();
-    selection.instance().changeDatagridDisposer = changeDatagridDisposerSpy;
+    const changeListDisposerSpy = jest.fn();
+    selection.instance().changeListDisposer = changeListDisposerSpy;
 
     selection.unmount();
 
-    expect(changeDatagridDisposerSpy).toBeCalledWith();
+    expect(changeListDisposerSpy).toBeCalledWith();
 });
 
-test('Should pass props correctly to datagrid component', () => {
+test('Should pass props correctly to list component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
-                datagrid_key: 'snippets_datagrid',
+                list_key: 'snippets_list',
             },
         },
     };
@@ -429,24 +429,24 @@ test('Should pass props correctly to datagrid component', () => {
         />
     );
 
-    expect(selection.instance().datagridStore.datagridKey).toEqual('snippets_datagrid');
-    expect(selection.instance().datagridStore.resourceKey).toEqual('snippets');
-    expect(selection.instance().datagridStore.initialSelectionIds).toEqual(value);
-    expect(selection.find(Datagrid).props()).toEqual(expect.objectContaining({
+    expect(selection.instance().listStore.listKey).toEqual('snippets_list');
+    expect(selection.instance().listStore.resourceKey).toEqual('snippets');
+    expect(selection.instance().listStore.initialSelectionIds).toEqual(value);
+    expect(selection.find(List).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
         disabled: true,
         searchable: false,
     }));
 });
 
-test('Should pass resourceKey as datagridKey to datagrid component if no datagridKey is given', () => {
+test('Should pass resourceKey as listKey to list component if no listKey is given', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
             },
         },
@@ -471,17 +471,17 @@ test('Should pass resourceKey as datagridKey to datagrid component if no datagri
         />
     );
 
-    expect(selection.instance().datagridStore.datagridKey).toEqual('snippets');
+    expect(selection.instance().listStore.listKey).toEqual('snippets');
 });
 
-test('Should pass locale from userStore to datagridStore if form has no locale', () => {
+test('Should pass locale from userStore to listStore if form has no locale', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
             },
         },
@@ -506,18 +506,18 @@ test('Should pass locale from userStore to datagridStore if form has no locale',
         />
     );
 
-    expect(toJS(selection.instance().datagridStore.locale)).toEqual('en');
+    expect(toJS(selection.instance().listStore.locale)).toEqual('en');
 });
 
-test('Should call onChange and onFinish prop when datagrid selection changes', () => {
+test('Should call onChange and onFinish prop when list selection changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
             },
         },
@@ -542,22 +542,22 @@ test('Should call onChange and onFinish prop when datagrid selection changes', (
         />
     );
 
-    selection.instance().datagridStore.dataLoading = false;
-    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+    selection.instance().listStore.dataLoading = false;
+    selection.instance().listStore.selectionIds = [1, 5, 7];
 
     expect(changeSpy).toBeCalledWith([1, 5, 7]);
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Should not call onChange and onFinish prop while datagrid is still loading', () => {
+test('Should not call onChange and onFinish prop while list is still loading', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
             },
         },
@@ -582,7 +582,7 @@ test('Should not call onChange and onFinish prop while datagrid is still loading
         />
     );
 
-    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+    selection.instance().listStore.selectionIds = [1, 5, 7];
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -598,10 +598,10 @@ test('Should not call onChange and onFinish if an observable that is accessed in
     });
 
     const fieldTypeOptions = {
-        default_type: 'datagrid',
+        default_type: 'list',
         resource_key: 'snippets',
         types: {
-            datagrid: {
+            list: {
                 adapter: 'table',
             },
         },
@@ -626,10 +626,10 @@ test('Should not call onChange and onFinish if an observable that is accessed in
         />
     );
 
-    selection.instance().datagridStore.dataLoading = false;
+    selection.instance().listStore.dataLoading = false;
 
-    // callbacks should be called when selection of datagrid store changes
-    selection.instance().datagridStore.selectionIds = [1, 5, 7];
+    // callbacks should be called when selection of list store changes
+    selection.instance().listStore.selectionIds = [1, 5, 7];
     expect(changeSpy).toHaveBeenCalledTimes(1);
     expect(finishSpy).toHaveBeenCalledTimes(1);
 
@@ -729,10 +729,10 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -792,10 +792,10 @@ test('Throw an error if a none string was passed to schema-options', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',
@@ -842,7 +842,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
         default_type: true,
         resource_key: 'snippets',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['id', 'title'],
                 icon: '',

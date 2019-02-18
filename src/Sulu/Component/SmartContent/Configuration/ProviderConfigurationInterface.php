@@ -30,7 +30,7 @@ interface ProviderConfigurationInterface
      */
     public function getDatasourceResourceKey(): ?string;
 
-    public function getDatasourceDatagridKey(): ?string;
+    public function getDatasourceListKey(): ?string;
 
     /**
      * Returns the adapter to be used for the datasource.

@@ -2,6 +2,153 @@
 
 ## dev-develop
 
+### Datagrid renaming
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The word `datagrid` has been renamed to `list`, which also includes all occurences of this word including file names,
+class names, function resp. method names and service parameters as well as the Symfony configuration.
+
+The most important changes are described in the next few paragraphs:
+
+The configuration for the directories of the list XMLs have changed:
+
+```yaml
+# Before
+sulu_admin:
+    datagrids:
+        - your/folder
+
+# After
+sulu_admin:
+    lists:
+        - your/folder
+```
+
+Also the `datagrid` resp. `datagrid_overlay` types for the `selection` resp. `single_selection` `field_type_options`
+changed to `list` resp. `list_overlay`:
+
+```yaml
+# Before
+sulu_admin:
+    field_type_options:
+        selection:
+            default_type: 'datagrid'
+            types:
+                datagrid:
+                    datagrid_key: 'test'
+                datagrid_overlay:
+                    datagrid_key: 'test'
+        single_selection:
+            default_type: 'datagrid'
+            types:
+                datagrid:
+                    datagrid_key: 'test'
+                datagrid_overlay:
+                    datagrid_key: 'test'
+
+# After
+sulu_admin:
+    field_type_options:
+        selection:
+            default_type: 'list'
+            types:
+                list:
+                    list_key: 'test'
+                list_overlay:
+                    list_key: 'test'
+        single_selection:
+            default_type: 'list'
+            types:
+                list:
+                    list_key: 'test'
+                list_overlay:
+                    list_key: 'test'
+```
+
+The Javascript container component and view has been renamed from `Datagrid` to `List`. This is also true for the
+registries that are used to register some more types:
+
+| Old name                         | New name                     |
+|----------------------------------|------------------------------|
+| datagridAdapterRegistry          | listAdapterRegistry          |
+| datagridFieldTransformerRegistry | listFieldTransformerRegistry |
+
+The root tag for the list XMLs also changed from `datagrid` to `list`:
+
+```xml
+<!-- before -->
+<?xml version="1.0" ?>
+<datagrid xmlns="http://schema.sulu.io/list-builder/datagrid">
+    <!-- config -->
+</datagrid>
+
+<!-- after -->
+<?xml version="1.0" ?>
+<list xmlns="http://schema.sulu.io/list-builder/list">
+    <!-- config -->
+</list>
+```
+
+In addition to that the method to get the route builder for lists and two of its methods changed:
+
+```php
+// Before
+class CategoryAdmin extends Admin
+{
+    public function getRoutes(): array
+    {
+        return [
+            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/categories/:locale')
+                ->setResourceKey('categories')
+                ->setDatagridKey('categories')
+                ->setTitle('sulu_category.categories')
+                ->addDatagridAdapters(['tree_table'])
+                ->addLocales($locales)
+                ->setDefaultLocale($locales[0])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->enableSearching()
+                ->addToolbarActions($listToolbarActions)
+                ->getRoute(),
+        ];
+    }
+}
+
+// After
+class CategoryAdmin extends Admin
+{
+    public function getRoutes(): array
+    {
+        return [
+            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
+                ->setResourceKey('categories')
+                ->setListKey('categories')
+                ->setTitle('sulu_category.categories')
+                ->addListAdapters(['tree_table'])
+                ->addLocales($locales)
+                ->setDefaultLocale($locales[0])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->enableSearching()
+                ->addToolbarActions($listToolbarActions)
+                ->getRoute(),
+        ];
+    }
+}
+```
+
+Also, because the name `list` is a reserved keyword and can't be used for classes nor namespaces in PHP, we have added
+a `Metadata` suffix to the classes in the `Metadata` namespace:
+
+| Old class                                          | New class                                                      |
+|----------------------------------------------------|----------------------------------------------------------------|
+|`Sulu\Bundle\AdminBundle\Metadata\Schema\Schema`    |`Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata`|
+|`Sulu\Bundle\AdminBundle\Metadata\Form\Form`        |`Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata`    |
+|`Sulu\Bundle\AdminBundle\Metadata\Datagrid\Datagrid`|`Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata`    |
+
+All the other files in these namespaces have been moved as well.
+
 ### Datagrid Toolbar Actions added
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

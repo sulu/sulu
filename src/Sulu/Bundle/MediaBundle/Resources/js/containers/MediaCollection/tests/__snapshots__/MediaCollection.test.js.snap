@@ -69,10 +69,10 @@ exports[`Render the MediaCollection 1`] = `
       </div>
     </div>
     <div
-      class="datagridContainer"
+      class="listContainer"
     >
       <div
-        class="datagrid"
+        class="list"
       >
         <section>
           <ul
@@ -237,7 +237,7 @@ exports[`Render the MediaCollection 1`] = `
   />
   <div>
     <div
-      class="datagridContainer"
+      class="listContainer"
     >
       <div
         class="headerContainer"
@@ -266,7 +266,7 @@ exports[`Render the MediaCollection 1`] = `
         </div>
       </div>
       <div
-        class="datagrid"
+        class="list"
       >
         <section>
           <div>
@@ -576,10 +576,10 @@ exports[`Render the MediaCollection for all media 1`] = `
       </div>
     </div>
     <div
-      class="datagridContainer"
+      class="listContainer"
     >
       <div
-        class="datagrid"
+        class="list"
       >
         <section>
           <ul
@@ -744,7 +744,7 @@ exports[`Render the MediaCollection for all media 1`] = `
   />
   <div>
     <div
-      class="datagridContainer"
+      class="listContainer"
     >
       <div
         class="headerContainer"
@@ -773,7 +773,7 @@ exports[`Render the MediaCollection for all media 1`] = `
         </div>
       </div>
       <div
-        class="datagrid"
+        class="list"
       >
         <section>
           <div>

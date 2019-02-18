@@ -1,10 +1,10 @@
 // @flow
-import datagridAdapterDefaultProps from './datagridAdapterDefaultProps';
+import listAdapterDefaultProps from './listAdapterDefaultProps';
 import fieldTypeDefaultProps from './fieldTypeDefaultProps';
 import findWithHighOrderFunction from './findWithHighOrderFunction';
 
 export {
-    datagridAdapterDefaultProps,
+    listAdapterDefaultProps,
     fieldTypeDefaultProps,
     findWithHighOrderFunction,
 };

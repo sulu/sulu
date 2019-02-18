@@ -102,7 +102,7 @@ class ResourceMetadataProvider implements ResourceMetadataProviderInterface, Cac
         foreach ($this->resources as $resourceKey => $resource) {
             $this->writeResourceMetadataCache(
                 $resourceKey,
-                array_key_exists('datagrid', $resource) ? $resource['datagrid'] : null,
+                array_key_exists('list', $resource) ? $resource['list'] : null,
                 $resource['endpoint']
             );
         }

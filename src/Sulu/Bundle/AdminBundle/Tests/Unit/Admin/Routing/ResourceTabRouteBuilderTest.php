@@ -29,7 +29,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
-        $route = (new ResourceTabRouteBuilder('sulu_category.datagrid', '/category'))
+        $route = (new ResourceTabRouteBuilder('sulu_category.list', '/category'))
             ->getRoute();
     }
 
@@ -40,7 +40,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'sulu_category.add_form',
                 '/categories/add',
                 'categories',
-                'sulu_category.datagrid',
+                'sulu_category.list',
                 'title',
             ],
             [
@@ -100,7 +100,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new ResourceTabRouteBuilder('sulu_role.datagrid', '/roles'))
+        $route = (new ResourceTabRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
@@ -112,7 +112,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new ResourceTabRouteBuilder('sulu_role.datagrid', '/roles/:locale'))
+        $route = (new ResourceTabRouteBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
             ->getRoute();
     }

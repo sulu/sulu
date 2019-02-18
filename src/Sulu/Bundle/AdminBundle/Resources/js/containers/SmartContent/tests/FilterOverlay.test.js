@@ -3,8 +3,8 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import SmartContentStore from '../stores/SmartContentStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
-import MultiDatagridOverlay from '../../../containers/MultiDatagridOverlay';
-import SingleDatagridOverlay from '../../../containers/SingleDatagridOverlay';
+import MultiListOverlay from '../../../containers/MultiListOverlay';
+import SingleListOverlay from '../../../containers/SingleListOverlay';
 import FilterOverlay from '../FilterOverlay';
 
 jest.mock('../stores/SmartContentStore', () => jest.fn());
@@ -14,15 +14,15 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../containers/MultiAutoComplete', () => jest.fn(() => null));
-jest.mock('../../../containers/MultiDatagridOverlay', () => jest.fn(() => null));
-jest.mock('../../../containers/SingleDatagridOverlay', () => jest.fn(() => null));
+jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
+jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
 
 test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
     const filterOverlay = shallow(
         <FilterOverlay
             dataSourceAdapter="table"
-            dataSourceDatagridKey="snippets"
+            dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
             onClose={jest.fn()}
             open={false}
@@ -37,7 +37,7 @@ test('Do not display if open is set to false', () => {
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
 });
 
-test('Render with DatagridOverlays if smartContentStore is loaded', () => {
+test('Render with ListOverlays if smartContentStore is loaded', () => {
     const smartContentStore = new SmartContentStore('content');
     // $FlowFixMe
     smartContentStore.loading = false;
@@ -45,7 +45,7 @@ test('Render with DatagridOverlays if smartContentStore is loaded', () => {
     const filterOverlay = shallow(
         <FilterOverlay
             dataSourceAdapter="table"
-            dataSourceDatagridKey="snippets"
+            dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
             onClose={jest.fn()}
             open={true}
@@ -57,11 +57,11 @@ test('Render with DatagridOverlays if smartContentStore is loaded', () => {
         />
     );
 
-    expect(filterOverlay.find(SingleDatagridOverlay)).toHaveLength(1);
-    expect(filterOverlay.find(MultiDatagridOverlay)).toHaveLength(1);
+    expect(filterOverlay.find(SingleListOverlay)).toHaveLength(1);
+    expect(filterOverlay.find(MultiListOverlay)).toHaveLength(1);
 });
 
-test('Render without DatagridOverlays if smartContentStore is not loaded', () => {
+test('Render without ListOverlays if smartContentStore is not loaded', () => {
     const smartContentStore = new SmartContentStore('content');
     // $FlowFixMe
     smartContentStore.loading = true;
@@ -69,7 +69,7 @@ test('Render without DatagridOverlays if smartContentStore is not loaded', () =>
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
-            dataSourceDatagridKey={undefined}
+            dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -80,8 +80,8 @@ test('Render without DatagridOverlays if smartContentStore is not loaded', () =>
             title="Test"
         />
     );
-    expect(filterOverlay.find(SingleDatagridOverlay)).toHaveLength(0);
-    expect(filterOverlay.find(MultiDatagridOverlay)).toHaveLength(0);
+    expect(filterOverlay.find(SingleListOverlay)).toHaveLength(0);
+    expect(filterOverlay.find(MultiListOverlay)).toHaveLength(0);
 });
 
 test('Render with all fields', () => {
@@ -89,7 +89,7 @@ test('Render with all fields', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
-            dataSourceDatagridKey={undefined}
+            dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -108,7 +108,7 @@ test('Render with no fields', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter={undefined}
-            dataSourceDatagridKey={undefined}
+            dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
             onClose={jest.fn()}
             open={true}
@@ -129,7 +129,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
-            dataSourceDatagridKey="pages_datagrid"
+            dataSourceListKey="pages_list"
             dataSourceResourceKey="pages"
             onClose={closeSpy}
             open={true}
@@ -147,14 +147,14 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
         />
     );
 
-    const pagesOptions = {datagridKey: 'pages_datagrid', resourceKey: 'pages'};
+    const pagesOptions = {listKey: 'pages_list', resourceKey: 'pages'};
 
     filterOverlay.find('Button[children="sulu_admin.choose_data_source"]').prop('onClick')();
     filterOverlay.update();
-    expect(filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('open')).toEqual(true);
-    filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('onConfirm')({id: 2, title: 'Test'});
+    expect(filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('open')).toEqual(true);
+    filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('onConfirm')({id: 2, title: 'Test'});
     filterOverlay.update();
-    expect(filterOverlay.find(SingleDatagridOverlay).find(pagesOptions).prop('open')).toEqual(false);
+    expect(filterOverlay.find(SingleListOverlay).find(pagesOptions).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Test');
 
@@ -164,13 +164,13 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
     filterOverlay.find('Button[children="sulu_admin.choose_categories"]').prop('onClick')();
     filterOverlay.update();
-    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(true);
-    filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('onConfirm')([
+    expect(filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(true);
+    filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('onConfirm')([
         {id: 1, name: 'Test1'},
         {id: 3, name: 'Test2'},
     ]);
     filterOverlay.update();
-    expect(filterOverlay.find(MultiDatagridOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(false);
+    expect(filterOverlay.find(MultiListOverlay).find({resourceKey: 'categories'}).prop('open')).toEqual(false);
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test2');
 
@@ -252,7 +252,7 @@ test('Prefill all fields with correct values', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
-            dataSourceDatagridKey="pages"
+            dataSourceListKey="pages"
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}
@@ -270,17 +270,17 @@ test('Prefill all fields with correct values', () => {
         />
     );
 
-    const categoryOptions = {datagridKey: 'categories', resourceKey: 'categories'};
+    const categoryOptions = {listKey: 'categories', resourceKey: 'categories'};
 
     expect(filterOverlay.find('section').at(1).find('label[className="description"]').text())
         .toEqual('sulu_admin.data_source: Homepage');
-    expect(filterOverlay.find(SingleDatagridOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
+    expect(filterOverlay.find(SingleListOverlay).find({resourceKey: 'pages'}).prop('preSelectedItem'))
         .toEqual({id: 4, title: 'Homepage'});
     expect(filterOverlay.find('Toggler[children="sulu_admin.include_sub_elements"]').prop('checked')).toEqual(true);
 
     expect(filterOverlay.find('section').at(2).find('label[className="description"]').text())
         .toEqual('sulu_category.categories: Test1, Test3');
-    expect(filterOverlay.find(MultiDatagridOverlay).find(categoryOptions).prop('preSelectedItems'))
+    expect(filterOverlay.find(MultiListOverlay).find(categoryOptions).prop('preSelectedItems'))
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
@@ -313,7 +313,7 @@ test('Reset all fields when reset action is clicked', () => {
     const filterOverlay = mount(
         <FilterOverlay
             dataSourceAdapter="table"
-            dataSourceDatagridKey="pages"
+            dataSourceListKey="pages"
             dataSourceResourceKey="pages"
             onClose={jest.fn()}
             open={true}

@@ -130,7 +130,7 @@ test('Call delete when dialog is confirmed', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.resourceFormStore.resourceStore.setLocale('en');
-    deleteToolbarAction.router.route.options.backRoute = 'sulu_test.datagrid';
+    deleteToolbarAction.router.route.options.backRoute = 'sulu_test.list';
 
     const deletePromise = Promise.resolve();
     deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
@@ -148,7 +148,7 @@ test('Call delete when dialog is confirmed', () => {
 
     return deletePromise.then(() => {
         element = shallow(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.datagrid', {locale: 'en'});
+        expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
         expect(element.instance().props).toEqual(expect.objectContaining({
             open: false,
         }));

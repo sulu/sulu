@@ -3,7 +3,7 @@ import {action, computed, intercept, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {Datagrid, DatagridStore, withToolbar} from 'sulu-admin-bundle/containers';
+import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
 import {Dialog, Loader} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {Localization} from 'sulu-admin-bundle/stores';
@@ -35,7 +35,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     locale: IObservableValue<string> = observable.box();
     webspace: IObservableValue<string> = observable.box();
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
-    datagridStore: DatagridStore;
+    listStore: ListStore;
     @observable webspaces: Array<Webspace>;
     @observable showCacheClearDialog: boolean = false;
     @observable cacheClearing: boolean = false;
@@ -48,13 +48,13 @@ class WebspaceOverview extends React.Component<ViewProps> {
             : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
 
         return {
-            active: DatagridStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
+            active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
             webspace,
         };
     }
 
     @action handleWebspaceChange = (value: string) => {
-        this.datagridStore.destroy();
+        this.listStore.destroy();
         this.webspace.set(value);
         this.setDefaultLocaleForWebspace();
     };
@@ -121,23 +121,23 @@ class WebspaceOverview extends React.Component<ViewProps> {
         router.bind('webspace', this.webspace);
         apiOptions.webspace = this.webspace;
 
-        this.datagridStore = new DatagridStore(
+        this.listStore = new ListStore(
             PAGES_RESOURCE_KEY,
             PAGES_RESOURCE_KEY,
             getUserSettingsKeyForWebspace(this.webspace.get()),
             observableOptions,
             apiOptions
         );
-        router.bind('active', this.datagridStore.active);
+        router.bind('active', this.listStore.active);
 
         this.excludeGhostsAndShadowsDisposer = intercept(this.excludeGhostsAndShadows, '', (change) => {
-            this.datagridStore.clear();
+            this.listStore.clear();
             return change;
         });
 
         this.webspaceDisposer = intercept(this.webspace, '', (change) => {
             userStore.setPersistentSetting(USER_SETTING_WEBSPACE, change.newValue);
-            this.datagridStore.active.set(undefined);
+            this.listStore.active.set(undefined);
             return change;
         });
 
@@ -148,7 +148,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 
     componentWillUnmount() {
-        this.datagridStore.destroy();
+        this.listStore.destroy();
         this.excludeGhostsAndShadowsDisposer();
         this.webspaceDisposer();
     }
@@ -193,7 +193,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
         return (
             <div className={webspaceOverviewStyles.webspaceOverview}>
                 {this.webspaces
-                    ? <Datagrid
+                    ? <List
                         adapters={['column_list', 'tree_table']}
                         header={this.webspace &&
                             <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspace.get()}>
@@ -208,7 +208,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
                         onItemClick={this.handleEditClick}
                         searchable={false}
                         selectable={false}
-                        store={this.datagridStore}
+                        store={this.listStore}
                     />
                     : <div>
                         <Loader />

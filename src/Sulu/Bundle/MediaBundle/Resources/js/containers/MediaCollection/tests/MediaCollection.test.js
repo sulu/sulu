@@ -3,7 +3,7 @@ import React from 'react';
 import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MediaCollection from '../MediaCollection';
-import MediaCardOverviewAdapter from '../../Datagrid/adapters/MediaCardOverviewAdapter';
+import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapter';
 
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -11,9 +11,9 @@ const SETTINGS_KEY = 'media_collection_test';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
-        AbstractAdapter: require('sulu-admin-bundle/containers/Datagrid/adapters/AbstractAdapter').default,
-        Datagrid: require('sulu-admin-bundle/containers/Datagrid/Datagrid').default,
-        DatagridStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
+        AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
+        List: require('sulu-admin-bundle/containers/List/List').default,
+        ListStore: jest.fn(function(resourceKey, userSettingsKey, observableOptions) {
             const COLLECTIONS_RESOURCE_KEY = 'collections';
 
             const collectionData = [
@@ -92,7 +92,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.updateStructureStrategy = jest.fn();
         }),
         FlatStructureStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/structureStrategies/FlatStructureStrategy'
+            'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
         ).default,
         Form: require('sulu-admin-bundle/containers/Form').default,
         ResourceFormStore: jest.fn(function(resourceStore) {
@@ -116,9 +116,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.validate = jest.fn().mockReturnValue(true);
         }),
         InfiniteLoadingStrategy: require(
-            'sulu-admin-bundle/containers/Datagrid/loadingStrategies/InfiniteLoadingStrategy'
+            'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
-        SingleDatagridOverlay: jest.fn(() => null),
+        SingleListOverlay: jest.fn(() => null),
     };
 });
 
@@ -127,7 +127,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
     const getAllAdaptersMock = jest.fn();
 
     return {
@@ -222,14 +222,14 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/containers/SingleDatagridOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
-    const datagridAdapterRegistry = require('sulu-admin-bundle/containers/Datagrid/registries/DatagridAdapterRegistry');
+    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
 
-    datagridAdapterRegistry.has.mockReturnValue(true);
-    datagridAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': require('sulu-admin-bundle/containers/Datagrid/adapters/FolderAdapter').default,
+    listAdapterRegistry.has.mockReturnValue(true);
+    listAdapterRegistry.getAllAdaptersMock.mockReturnValue({
+        'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
         'media_card_overview': MediaCardOverviewAdapter,
     });
 });
@@ -240,8 +240,8 @@ test('Render the MediaCollection', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -249,7 +249,7 @@ test('Render the MediaCollection', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -262,11 +262,11 @@ test('Render the MediaCollection', () => {
 
     const mediaCollection = render(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -277,8 +277,8 @@ test('Render the MediaCollection for all media', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -286,7 +286,7 @@ test('Render the MediaCollection for all media', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -300,24 +300,24 @@ test('Render the MediaCollection for all media', () => {
 
     const mediaCollection = render(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
     expect(mediaCollection).toMatchSnapshot();
 });
 
-test('Pass correct options to SingleDatagridOverlay', () => {
+test('Pass correct options to SingleListOverlay', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -325,7 +325,7 @@ test('Pass correct options to SingleDatagridOverlay', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -338,18 +338,18 @@ test('Pass correct options to SingleDatagridOverlay', () => {
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
 
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('datagridKey')).toEqual('collections');
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('resourceKey')).toEqual('collections');
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('reloadOnOpen')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('listKey')).toEqual('collections');
+    expect(mediaCollection.find(SingleListOverlay).prop('resourceKey')).toEqual('collections');
+    expect(mediaCollection.find(SingleListOverlay).prop('reloadOnOpen')).toEqual(true);
 });
 
 test('Should send a request to add a new collection via the overlay', () => {
@@ -360,8 +360,8 @@ test('Should send a request to add a new collection via the overlay', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -369,7 +369,7 @@ test('Should send a request to add a new collection via the overlay', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -385,11 +385,11 @@ test('Should send a request to add a new collection via the overlay', () => {
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -424,8 +424,8 @@ test('Should send a request to update the collection via the overlay', () => {
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -433,7 +433,7 @@ test('Should send a request to update the collection via the overlay', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -449,11 +449,11 @@ test('Should send a request to update the collection via the overlay', () => {
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -485,8 +485,8 @@ test('Confirming the delete dialog should delete the item', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -494,7 +494,7 @@ test('Confirming the delete dialog should delete the item', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -508,11 +508,11 @@ test('Confirming the delete dialog should delete the item', () => {
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -544,8 +544,8 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -553,7 +553,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -579,11 +579,11 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
         />
     );
@@ -602,9 +602,9 @@ test('Confirming the move dialog should move the item', () => {
     const promise = Promise.resolve();
     const page = observable.box();
     const locale = observable.box();
-    const SingleDatagridOverlay = require('sulu-admin-bundle/containers').SingleDatagridOverlay;
-    const DatagridStore = require('sulu-admin-bundle/containers').DatagridStore;
-    const mediaDatagridStore = new DatagridStore(
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -612,7 +612,7 @@ test('Confirming the move dialog should move the item', () => {
             locale,
         }
     );
-    const collectionDatagridStore = new DatagridStore(
+    const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -626,11 +626,11 @@ test('Confirming the move dialog should move the item', () => {
 
     const mediaCollection = mount(
         <MediaCollection
-            collectionDatagridStore={collectionDatagridStore}
+            collectionListStore={collectionListStore}
             collectionStore={collectionStore}
             locale={locale}
-            mediaDatagridAdapters={['media_card_overview']}
-            mediaDatagridStore={mediaDatagridStore}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
             onCollectionNavigate={jest.fn()}
         />
     );
@@ -639,22 +639,22 @@ test('Confirming the move dialog should move the item', () => {
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
 
-    mediaCollection.find(SingleDatagridOverlay).prop('onConfirm')({id: 7});
+    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7});
     collectionStore.resourceStore.moving = true;
     mediaCollection.update();
 
     expect(collectionStore.resourceStore.move).toBeCalledWith(7);
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(true);
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('options')).toEqual({includeRoot: true});
-    expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('options')).toEqual({includeRoot: true});
+    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
         collectionStore.resourceStore.moving = false;
         mediaCollection.update();
-        expect(mediaCollection.find(SingleDatagridOverlay).prop('open')).toEqual(false);
-        expect(mediaCollection.find(SingleDatagridOverlay).prop('confirmLoading')).toEqual(false);
+        expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(false);
+        expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
         expect(collectionStore.resourceStore.reload).toBeCalledWith();
     });
 });

@@ -4,7 +4,7 @@ import type {ElementRef} from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {Datagrid, DatagridStore, SingleDatagridOverlay, withToolbar} from 'sulu-admin-bundle/containers';
+import {List, ListStore, SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../../containers/MediaCollection';
@@ -25,18 +25,18 @@ class MediaOverview extends React.Component<ViewProps> {
     mediaPage: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     collectionId: IObservableValue<?number | string> = observable.box();
-    @observable mediaDatagridStore: DatagridStore;
-    @observable collectionDatagridStore: DatagridStore;
+    @observable mediaListStore: ListStore;
+    @observable collectionListStore: ListStore;
     @observable collectionStore: CollectionStore;
-    mediaDatagrid: ?ElementRef<typeof Datagrid>;
+    mediaList: ?ElementRef<typeof List>;
     @observable showMediaMoveOverlay: boolean = false;
     @observable mediaMoving: boolean = false;
     disposer: () => void;
 
     static getDerivedRouteAttributes() {
         return {
-            collectionLimit: DatagridStore.getLimitSetting(COLLECTIONS_RESOURCE_KEY, USER_SETTINGS_KEY),
-            mediaLimit: DatagridStore.getLimitSetting(MEDIA_RESOURCE_KEY, USER_SETTINGS_KEY),
+            collectionLimit: ListStore.getLimitSetting(COLLECTIONS_RESOURCE_KEY, USER_SETTINGS_KEY),
+            mediaLimit: ListStore.getLimitSetting(MEDIA_RESOURCE_KEY, USER_SETTINGS_KEY),
         };
     }
 
@@ -54,17 +54,17 @@ class MediaOverview extends React.Component<ViewProps> {
 
         this.disposer = autorun(this.createCollectionStore);
 
-        this.createCollectionDatagridStore();
-        this.createMediaDatagridStore();
+        this.createCollectionListStore();
+        this.createMediaListStore();
 
-        router.bind('search', this.mediaDatagridStore.searchTerm);
-        router.bind('collectionLimit', this.collectionDatagridStore.limit, 10);
-        router.bind('mediaLimit', this.mediaDatagridStore.limit, 10);
+        router.bind('search', this.mediaListStore.searchTerm);
+        router.bind('collectionLimit', this.collectionListStore.limit, 10);
+        router.bind('mediaLimit', this.mediaListStore.limit, 10);
     }
 
     componentWillUnmount() {
-        this.mediaDatagridStore.destroy();
-        this.collectionDatagridStore.destroy();
+        this.mediaListStore.destroy();
+        this.collectionListStore.destroy();
         this.collectionStore.destroy();
         this.disposer();
     }
@@ -81,8 +81,8 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionStore = collectionStore;
     }
 
-    createCollectionDatagridStore = () => {
-        this.collectionDatagridStore = new DatagridStore(
+    createCollectionListStore = () => {
+        this.collectionListStore = new ListStore(
             COLLECTIONS_RESOURCE_KEY,
             COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
@@ -94,7 +94,7 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     };
 
-    createMediaDatagridStore() {
+    createMediaListStore() {
         const options = {};
 
         options.fields = [
@@ -108,7 +108,7 @@ class MediaOverview extends React.Component<ViewProps> {
             'thumbnails',
         ].join(',');
 
-        this.mediaDatagridStore = new DatagridStore(
+        this.mediaListStore = new ListStore(
             MEDIA_RESOURCE_KEY,
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
@@ -121,15 +121,15 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     }
 
-    clearDatagrids() {
-        this.mediaDatagridStore.clear();
-        this.mediaDatagridStore.clearSelection();
-        this.collectionDatagridStore.clear();
-        this.collectionDatagridStore.clearSelection();
+    clearLists() {
+        this.mediaListStore.clear();
+        this.mediaListStore.clearSelection();
+        this.collectionListStore.clear();
+        this.collectionListStore.clearSelection();
     }
 
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
-        this.clearDatagrids();
+        this.clearLists();
         this.mediaPage.set(1);
         this.collectionPage.set(1);
         this.collectionId.set(collectionId);
@@ -146,8 +146,8 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     };
 
-    setMediaDatagridRef = (mediaDatagrid: ?ElementRef<typeof Datagrid>) => {
-        this.mediaDatagrid = mediaDatagrid;
+    setMediaListRef = (mediaList: ?ElementRef<typeof List>) => {
+        this.mediaList = mediaList;
     };
 
     @action handleMoveMediaOverlayClose = () => {
@@ -157,8 +157,8 @@ class MediaOverview extends React.Component<ViewProps> {
     @action handleMoveMediaOverlayConfirm = (collection: Object) => {
         this.mediaMoving = true;
 
-        this.mediaDatagridStore.moveSelection(collection.id).then(action(() => {
-            this.collectionDatagridStore.reload();
+        this.mediaListStore.moveSelection(collection.id).then(action(() => {
+            this.collectionListStore.reload();
             this.showMediaMoveOverlay = false;
             this.mediaMoving = false;
         }));
@@ -168,21 +168,21 @@ class MediaOverview extends React.Component<ViewProps> {
         return (
             <div className={mediaOverviewStyles.mediaOverview}>
                 <MediaCollection
-                    collectionDatagridStore={this.collectionDatagridStore}
+                    collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
                     locale={this.locale}
-                    mediaDatagridAdapters={['media_card_overview', 'table']}
-                    mediaDatagridRef={this.setMediaDatagridRef}
-                    mediaDatagridStore={this.mediaDatagridStore}
+                    mediaListAdapters={['media_card_overview', 'table']}
+                    mediaListRef={this.setMediaListRef}
+                    mediaListStore={this.mediaListStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
                 />
-                <SingleDatagridOverlay
+                <SingleListOverlay
                     adapter="column_list"
                     clearSelectionOnClose={true}
                     confirmLoading={this.mediaMoving}
-                    datagridKey={COLLECTIONS_RESOURCE_KEY}
                     disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
+                    listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={this.locale}
                     onClose={this.handleMoveMediaOverlayClose}
                     onConfirm={this.handleMoveMediaOverlayConfirm}
@@ -197,7 +197,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
 export default withToolbar(MediaOverview, function() {
     const router = this.props.router;
-    const loading = this.collectionDatagridStore.loading || this.mediaDatagridStore.loading;
+    const loading = this.collectionListStore.loading || this.mediaListStore.loading;
 
     const {
         route: {
@@ -226,7 +226,7 @@ export default withToolbar(MediaOverview, function() {
         backButton: this.collectionId.get()
             ? {
                 onClick: () => {
-                    this.clearDatagrids();
+                    this.clearLists();
                     router.restore(
                         COLLECTION_ROUTE,
                         {
@@ -240,15 +240,15 @@ export default withToolbar(MediaOverview, function() {
             : undefined,
         items: [
             {
-                disabled: this.mediaDatagridStore.selectionIds.length === 0,
+                disabled: this.mediaListStore.selectionIds.length === 0,
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete'),
-                loading: this.mediaDatagridStore.deletingSelection,
-                onClick: this.mediaDatagrid.requestSelectionDelete,
+                loading: this.mediaListStore.deletingSelection,
+                onClick: this.mediaList.requestSelectionDelete,
                 type: 'button',
             },
             {
-                disabled: this.mediaDatagridStore.selectionIds.length === 0,
+                disabled: this.mediaListStore.selectionIds.length === 0,
                 icon: 'su-arrows-alt',
                 label: translate('sulu_admin.move_selected'),
                 onClick: action(() => {

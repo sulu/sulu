@@ -1,0 +1,46 @@
+$listToolbarHeight: 30px;
+$listHeaderMarginBottom: 40px;
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
+}
+
+.header-container {
+    display: flex;
+    flex-grow: 0;
+    margin-bottom: $listHeaderMarginBottom;
+    align-items: center;
+
+    .toolbar {
+        flex-grow: 1;
+    }
+}
+
+.toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    & > * {
+        height: $listToolbarHeight;
+        margin-right: 10px;
+        width: auto;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

@@ -4,9 +4,9 @@ The `Router` handles the translation from the URL to a defined route. Routes are
 ```javascript static
 routeRegistry.addCollection([
     {
-        name: 'sulu_contact.datagrid',
+        name: 'sulu_contact.list',
         path: '/contacts',
-        view: 'sulu_admin.datagrid',
+        view: 'sulu_admin.list',
         options: {
             type: 'contacts',
         },
@@ -86,7 +86,7 @@ of a paginated list.
 
 ```javascript static
 // navigates to #/contacts?page=3
-router.navigate('sulu_contact.datagrid', {page: 3, locale: 'en'});
+router.navigate('sulu_contact.list', {page: 3, locale: 'en'});
 
 // navigates to #/contacts/7/detail?locale=en
 router.navigate('sulu_contact.form.details', {id: 7, locale: 'en'});
@@ -95,7 +95,7 @@ router.navigate('sulu_contact.form.details', {id: 7, locale: 'en'});
 router.navigate('sulu_contact.form.details', {id: 7, locale: 'de'});
 
 // navigates to #/contacts?page=3&locale=de
-router.restore('sulu_contact.datagrid', locale: 'de'});
+router.restore('sulu_contact.list', locale: 'de'});
 ```
 
 Something especially useful is the ability to bind any observable to a query parameter of the router. The `bind` method

@@ -36,7 +36,7 @@ export type Presentation = {
 
 export type SmartContentConfig = {
     datasourceAdapter?: string,
-    datasourceDatagridKey?: string,
+    datasourceListKey?: string,
     datasourceResourceKey?: string,
     audienceTargeting: boolean,
     categories: boolean,

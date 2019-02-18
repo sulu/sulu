@@ -37,7 +37,7 @@
     "sulu_admin.reset_resend": "Resend",
     "sulu_admin.forgot_password": "Forgot password",
     "sulu_admin.reset_password_success": "An email with instructions how to reset your password has been sent if a user was found",
-    "sulu_admin.datagrid_search_placeholder": "Search…",
+    "sulu_admin.list_search_placeholder": "Search…",
     "sulu_admin.error": "Error",
     "sulu_admin.close": "Close",
     "sulu_admin.id": "ID",

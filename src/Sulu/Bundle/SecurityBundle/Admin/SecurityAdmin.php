@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SecurityAdmin extends Admin
 {
-    const DATAGRID_ROUTE = 'sulu_security.roles_datagrid';
+    const LIST_ROUTE = 'sulu_security.roles_list';
 
     const ADD_FORM_ROUTE = 'sulu_security.role_add_form';
 
@@ -54,7 +54,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
             $roles = new NavigationItem('sulu_security.roles', $settings);
             $roles->setPosition(10);
-            $roles->setMainRoute(static::DATAGRID_ROUTE);
+            $roles->setMainRoute(static::LIST_ROUTE);
         }
 
         if ($settings->hasChildren()) {
@@ -104,18 +104,18 @@ class SecurityAdmin extends Admin
         ];
 
         return [
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/roles')
+            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/roles')
                 ->setResourceKey('roles')
-                ->setDatagridKey('roles')
+                ->setListKey('roles')
                 ->setTitle('sulu_security.roles')
-                ->addDatagridAdapters(['table'])
+                ->addListAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
                 ->setResourceKey('roles')
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_add_form.details', '/details')
                 ->setResourceKey('roles')
@@ -127,7 +127,7 @@ class SecurityAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
                 ->setResourceKey('roles')
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_security.role_edit_form.details', '/details')
