@@ -128,7 +128,7 @@ export default class ArrowMenu extends React.Component<Props> {
 
         return (
             <div className={arrowMenuStyles.arrowMenuContainer} ref={setPopoverElementRef} style={popoverStyle}>
-                <div className={arrowClass}/>
+                <div className={arrowClass} />
                 <div className={arrowMenuStyles.arrowMenu}>
                     {clonedChildren}
                 </div>

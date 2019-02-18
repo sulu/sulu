@@ -409,7 +409,7 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
     );
 
     columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0)
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0);
 
     columnListAdapter.find('Item').at(0).simulate('click');
     columnListAdapter.find('Item').at(1).simulate('click');
@@ -566,7 +566,7 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
     );
 
     columnListAdapter.find('ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.delete"]').simulate('click')
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.delete"]').simulate('click');
 
     expect(deleteClickSpy).toBeCalledWith(3);
 });
