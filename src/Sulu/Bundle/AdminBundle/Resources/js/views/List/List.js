@@ -18,6 +18,8 @@ const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
     resourceStore?: ResourceStore,
+    onItemAdd?: (id: string | number) => void,
+    onItemEdit?: (itemId: string | number) => void,
 };
 
 @observer
@@ -222,24 +224,28 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            route: {
-                options: {
-                    adapters,
-                    addRoute,
-                    editRoute,
-                    searchable,
-                    title,
+            onItemAdd,
+            onItemEdit,
+            router: {
+                route: {
+                    options: {
+                        adapters,
+                        addRoute,
+                        editRoute,
+                        searchable,
+                        title,
+                    },
                 },
             },
-        } = this.props.router;
+        } = this.props;
 
         return (
             <div>
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={addRoute && this.addItem}
-                    onItemClick={editRoute && this.handleEditClick}
+                    onItemAdd={onItemAdd ? onItemAdd : addRoute && this.addItem}
+                    onItemClick={onItemEdit ? onItemEdit : editRoute && this.handleEditClick}
                     ref={this.setListRef}
                     searchable={searchable}
                     store={this.listStore}
