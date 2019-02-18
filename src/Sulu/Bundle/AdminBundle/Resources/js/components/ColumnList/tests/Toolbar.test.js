@@ -4,7 +4,6 @@ import {mount} from 'enzyme';
 import pretty from 'pretty';
 import Toolbar from '../Toolbar';
 import ToolbarDropdown from '../ToolbarDropdown';
-import ToolbarDropdownListOption from '../ToolbarDropdownListOption';
 
 test('Should render with active', () => {
     const body = document.body;
