@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render active Item 1`] = `
+<div
+  class="item active"
+>
+  <span
+    class="icon"
+  >
+    <span
+      aria-label="fa-home"
+      class="fa fa-home icon"
+    />
+  </span>
+  <span>
+    My House
+  </span>
+</div>
+`;
+
+exports[`Render default Action 1`] = `
+<button
+  class="action"
+>
+  My Action
+</button>
+`;
+
+exports[`Render default Item 1`] = `
+<div
+  class="item"
+>
+  <span
+    class="icon"
+  />
+  <span>
+    Test Item
+  </span>
+</div>
+`;
+
+exports[`Render disabled Action 1`] = `
+<button
+  class="actionDisabled"
+  disabled=""
+>
+  My Action
+</button>
+`;
