@@ -15,8 +15,13 @@ import datagridStyles from './datagrid.scss';
 
 const USER_SETTINGS_KEY = 'datagrid';
 
+type Props = ViewProps & {
+    onItemAdd?: (id: string | number) => void,
+    onItemEdit?: (itemId: string | number) => void,
+};
+
 @observer
-class Datagrid extends React.Component<ViewProps> {
+class Datagrid extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     datagridStore: DatagridStore;
@@ -38,7 +43,7 @@ class Datagrid extends React.Component<ViewProps> {
         };
     }
 
-    constructor(props: ViewProps) {
+    constructor(props: Props) {
         super(props);
 
         const router = this.props.router;
@@ -200,24 +205,28 @@ class Datagrid extends React.Component<ViewProps> {
 
     render() {
         const {
-            route: {
-                options: {
-                    adapters,
-                    addRoute,
-                    editRoute,
-                    searchable,
-                    title,
+            onItemAdd,
+            onItemEdit,
+            router: {
+                route: {
+                    options: {
+                        adapters,
+                        addRoute,
+                        editRoute,
+                        searchable,
+                        title,
+                    },
                 },
             },
-        } = this.props.router;
+        } = this.props;
 
         return (
             <div>
                 <DatagridContainer
                     adapters={adapters}
                     header={title && <h1 className={datagridStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={addRoute && this.addItem}
-                    onItemClick={editRoute && this.handleEditClick}
+                    onItemAdd={onItemAdd ? onItemAdd : addRoute && this.addItem}
+                    onItemClick={onItemEdit ? onItemEdit : editRoute && this.handleEditClick}
                     ref={this.setDatagridRef}
                     searchable={searchable}
                     store={this.datagridStore}

@@ -79,6 +79,7 @@ import Form, {
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
+import FormOverlayDatagrid from './views/FormOverlayDatagrid';
 
 // $FlowFixMe
 configure({enforceActions: 'observed'});
@@ -137,6 +138,7 @@ function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
     viewRegistry.add('sulu_admin.resource_tabs', (ResourceTabs: any));
     viewRegistry.add('sulu_admin.datagrid', Datagrid);
+    viewRegistry.add('sulu_admin.form_overlay_datagrid', FormOverlayDatagrid);
 }
 
 function registerDatagridAdapters() {
