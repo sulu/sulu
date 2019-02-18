@@ -42,22 +42,17 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
     generateChildren() {
         const {options} = this.props;
         return options.map(({disabled, label, onClick}, index) => (
-            <ArrowMenu.Action disabled={disabled} key={index} onAfterAction={this.handleMenuClose} onClick={onClick}>
+            <ArrowMenu.Action disabled={disabled} key={index} onClick={onClick}>
                 {label}
             </ArrowMenu.Action>
         ));
     }
 
-    handleChange = (onClick) => {
-        this.handleMenuClose();
-        onClick();
-    };
-
     render() {
         return (
             <Fragment>
                 <ArrowMenu anchorElement={this.renderButton()} onClose={this.handleMenuClose} open={this.open}>
-                    <ArrowMenu.Section onChange={this.handleChange}>
+                    <ArrowMenu.Section>
                         {this.generateChildren()}
                     </ArrowMenu.Section>
                 </ArrowMenu>

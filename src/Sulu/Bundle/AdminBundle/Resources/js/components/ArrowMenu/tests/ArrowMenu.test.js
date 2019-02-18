@@ -154,6 +154,7 @@ test('Events should be called correctly', () => {
 
     arrowMenu.find('Action').at(1).simulate('click');
     expect(handleActionClick2).toBeCalled();
+    expect(handleClose).toBeCalled();
 
     arrowMenu.find('SingleItemSection').at(1).find('Item').at(0).simulate('click');
     expect(handleChangeSection2).toBeCalledWith('title');

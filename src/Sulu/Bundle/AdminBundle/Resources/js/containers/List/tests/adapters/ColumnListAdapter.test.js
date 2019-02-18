@@ -363,7 +363,8 @@ test('Call onRequestItemOrder callback when an item ordering has been changed', 
     );
 
     columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0);
+
     columnListAdapter.update();
 
     columnListAdapter.find('Item Input').at(0).prop('onChange')(5);
@@ -408,7 +409,7 @@ test('Do not execute onItemActivate callback when a column is ordering', () => {
     );
 
     columnListAdapter.find('Toolbar ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdownListOption').find({children: 'sulu_admin.order'}).at(0).prop('onClick')(0);
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.order"]').prop('onClick')(0)
 
     columnListAdapter.find('Item').at(0).simulate('click');
     columnListAdapter.find('Item').at(1).simulate('click');
@@ -450,7 +451,7 @@ test('Execute onItemSelectionChange callback when an item is selected', () => {
     expect(itemSelectionChangeSpy).toHaveBeenLastCalledWith(1, true);
 });
 
-test('Execute onRequestItemCopy callback when an item is moved with the correct id', () => {
+test('Execute onRequestItemCopy callback when an item is copied with the correct id', () => {
     const copyClickSpy = jest.fn();
 
     const data = [
@@ -485,7 +486,7 @@ test('Execute onRequestItemCopy callback when an item is moved with the correct 
     );
 
     columnListAdapter.find('ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.copy"]').simulate('click');
 
     expect(copyClickSpy).toBeCalledWith(3);
 });
@@ -525,7 +526,7 @@ test('Execute onRequestItemMove callback when an item is moved with the correct 
     );
 
     columnListAdapter.find('ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.move"]').simulate('click');
 
     expect(moveClickSpy).toBeCalledWith(3);
 });
@@ -565,7 +566,7 @@ test('Execute onRequestItemDelete callback when an item is deleted with the corr
     );
 
     columnListAdapter.find('ToolbarDropdown a').simulate('click');
-    columnListAdapter.find('ToolbarDropdown').find('ToolbarDropdownListOption button').at(0).simulate('click');
+    columnListAdapter.find('ToolbarDropdown').find('ArrowMenu Action[children="sulu_admin.delete"]').simulate('click')
 
     expect(deleteClickSpy).toBeCalledWith(3);
 });

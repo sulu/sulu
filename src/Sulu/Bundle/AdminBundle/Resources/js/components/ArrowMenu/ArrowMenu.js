@@ -42,6 +42,34 @@ export default class ArrowMenu extends React.Component<Props> {
         );
     };
 
+    cloneChildren(children: Element<*>) {
+        return React.Children.map(children, (child: any) => {
+            if (child.type === Section) {
+                return React.cloneElement(child, {
+                    children: this.cloneSection(child),
+                });
+            } else {
+                return child;
+            }
+        });
+    }
+
+    cloneSection(section) {
+        return React.Children.map(section.props.children, (child: any) => {
+            if (child.type === Action) {
+                return this.cloneAction(child);
+            }
+            return child;
+        });
+    }
+
+    cloneAction(originalAction: Element<typeof Action>) {
+        const {onClose} = this.props;
+        return React.cloneElement(originalAction, {
+            onAfterAction: onClose,
+        });
+    }
+
     render() {
         const {
             anchorElement,
@@ -50,7 +78,6 @@ export default class ArrowMenu extends React.Component<Props> {
         } = this.props;
 
         const clonedAnchorElement = this.cloneAnchorElement(anchorElement);
-
         return (
             <Fragment>
                 {clonedAnchorElement}
@@ -87,6 +114,8 @@ export default class ArrowMenu extends React.Component<Props> {
             children,
         } = this.props;
 
+        const clonedChildren = this.cloneChildren(children);
+
         const arrowClass = classNames(
             arrowMenuStyles.arrow,
             {
@@ -99,9 +128,9 @@ export default class ArrowMenu extends React.Component<Props> {
 
         return (
             <div className={arrowMenuStyles.arrowMenuContainer} ref={setPopoverElementRef} style={popoverStyle}>
-                <div className={arrowClass} />
+                <div className={arrowClass}/>
                 <div className={arrowMenuStyles.arrowMenu}>
-                    {children}
+                    {clonedChildren}
                 </div>
             </div>
         );

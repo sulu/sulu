@@ -21,6 +21,10 @@ exports[`Render data with disabled items 1`] = `
             aria-label="su-cog"
             class="su-cog"
           />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
+          />
         </a>
       </div>
     </div>
@@ -172,6 +176,10 @@ exports[`Render data with loading column 1`] = `
           <span
             aria-label="su-cog"
             class="su-cog"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
           />
         </a>
       </div>
@@ -389,6 +397,10 @@ exports[`Render data with selection 1`] = `
             aria-label="su-cog"
             class="su-cog"
           />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
+          />
         </a>
       </div>
     </div>
@@ -483,6 +495,10 @@ exports[`Render data without edit button 1`] = `
           <span
             aria-label="su-cog"
             class="su-cog"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
           />
         </a>
       </div>
@@ -579,6 +595,10 @@ exports[`Render different kind of data with edit button 1`] = `
           <span
             aria-label="su-cog"
             class="su-cog"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
           />
         </a>
       </div>
@@ -1233,6 +1253,10 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
           <span
             aria-label="su-cog"
             class="su-cog"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonArrowIcon"
           />
         </a>
       </div>

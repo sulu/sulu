@@ -93,6 +93,10 @@ exports[`Render WebspaceOverview 1`] = `
                   aria-label="su-cog"
                   class="su-cog"
                 />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down buttonArrowIcon"
+                />
               </a>
             </div>
           </div>

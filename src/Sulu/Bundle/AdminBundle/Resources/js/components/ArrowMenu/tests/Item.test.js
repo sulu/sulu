@@ -11,6 +11,10 @@ test('Render active Item', () => {
     expect(render(<Item active={true} icon="fa-home" value="house">My House</Item>)).toMatchSnapshot();
 });
 
+test('Render disabled Item', () => {
+    expect(render(<Item active={true} disabled={true} icon="fa-home" value="house">My Item</Item>)).toMatchSnapshot();
+});
+
 test('Clicking the left and right button inside the header should call the right handler', () => {
     const clickHandler = jest.fn();
 

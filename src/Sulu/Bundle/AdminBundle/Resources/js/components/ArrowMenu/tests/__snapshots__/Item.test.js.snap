@@ -30,3 +30,21 @@ exports[`Render default Item 1`] = `
   </span>
 </div>
 `;
+
+exports[`Render disabled Item 1`] = `
+<div
+  class="itemDisabled active"
+>
+  <span
+    class="icon"
+  >
+    <span
+      aria-label="fa-home"
+      class="fa fa-home icon"
+    />
+  </span>
+  <span>
+    My Item
+  </span>
+</div>
+`;

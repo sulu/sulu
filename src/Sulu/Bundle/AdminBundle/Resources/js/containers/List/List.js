@@ -393,7 +393,6 @@ export default class List extends React.Component<Props> {
                 >
                     <ArrowMenu.Section>
                         <ArrowMenu.Action
-                            onAfterAction={this.handleAdapterOptionsClose}
                             onClick={this.handleColumnOptionsOpen}
                         >
                             {translate('sulu_admin.column_options')}

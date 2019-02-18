@@ -34,6 +34,10 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           aria-label="fa-gear"
           class="fa fa-gear"
         />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down buttonArrowIcon"
+        />
       </a>
     </div>
   </div>

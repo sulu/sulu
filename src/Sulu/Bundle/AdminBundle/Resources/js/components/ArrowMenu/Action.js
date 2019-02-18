@@ -6,7 +6,6 @@ type Props = {
     children: string,
     disabled?: boolean,
     onClick: () => void,
-    onAfterAction?: () => void,
 };
 
 export default class Action extends React.PureComponent<Props> {
