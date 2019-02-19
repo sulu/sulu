@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render an error-snackbar 1`] = `
+<div
+  class="snackbar visible"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+    <button
+      class="closeButton"
+    >
+      sulu_admin.close
+      <span
+        aria-label="su-times"
+        class="su-times closeButtonIcon"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render an error-snackbar without close button 1`] = `
+<div
+  class="snackbar visible"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+  </div>
+</div>
+`;
+
+exports[`Render an invisible error-snackbar 1`] = `
+<div
+  class="snackbar"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+  </div>
+</div>
+`;
