@@ -90,8 +90,12 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             this.formStore.destroy();
         }
 
+        const observableOptions = {};
+        if (this.datagridRef && this.datagridRef.locale.get()) {
+            observableOptions['locale'] = this.datagridRef.locale;
+        }
+
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
-        const observableOptions = this.datagridRef ? {locale: this.datagridRef.locale} : {};
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
