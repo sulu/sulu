@@ -31,7 +31,6 @@
         "babel-plugin-transform-object-rest-spread": "^6.23.0",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
-        "braces": "^2.3.2",
         "clean-webpack-plugin": "^1.0.0",
         "core-js": "^2.5.1",
         "css-loader": "^0.28.4",
