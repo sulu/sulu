@@ -56,6 +56,28 @@ exports[`Dont react or update preview when data is changed during preview-store 
 </Preview>
 `;
 
+exports[`React and update preview in external window when data is changed 1`] = `
+<Preview
+  formStore={
+    mockConstructor {
+      "data": Object {
+        "title": "New Test",
+      },
+      "loading": false,
+      "type": "default",
+    }
+  }
+  router={
+    mockConstructor {
+      "attributes": Object {
+        "locale": "de",
+      },
+      "history": Object {},
+    }
+  }
+/>
+`;
+
 exports[`React and update preview when data is changed 1`] = `
 <Preview
   formStore={
@@ -92,15 +114,19 @@ exports[`Render button to start preview 1`] = `
 
 exports[`Render correct preview 1`] = `
 <div
-  className="container"
+  className="container auto"
 >
   <div
-    className="iframeContainer"
+    className="previewContainer"
   >
-    <iframe
-      className="iframe"
-      src="/render"
-    />
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
   </div>
   <Toolbar
     skin="dark"
@@ -118,6 +144,191 @@ exports[`Render correct preview 1`] = `
         primary={false}
         showText={true}
       />
+      <Select
+        icon="su-expand"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "sulu_preview.auto",
+              "value": "auto",
+            },
+            Object {
+              "label": "sulu_preview.desktop",
+              "value": "desktop",
+            },
+            Object {
+              "label": "sulu_preview.tablet",
+              "value": "tablet",
+            },
+            Object {
+              "label": "sulu_preview.smartphone",
+              "value": "smartphone",
+            },
+          ]
+        }
+        showText={true}
+        value="auto"
+      />
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-link"
+        onClick={[Function]}
+        primary={false}
+        showText={true}
+      >
+        sulu_preview.open_in_window
+      </Button>
+    </Controls>
+  </Toolbar>
+</div>
+`;
+
+exports[`Render nothing if separate window is opened and rerender if it is closed 1`] = `
+<div
+  className="container auto"
+>
+  <div
+    className="previewContainer"
+  >
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <Toolbar
+    skin="dark"
+  >
+    <Controls
+      grow={false}
+      skin="light"
+    >
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-arrow-right"
+        onClick={[Function]}
+        primary={false}
+        showText={true}
+      />
+      <Select
+        icon="su-expand"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "sulu_preview.auto",
+              "value": "auto",
+            },
+            Object {
+              "label": "sulu_preview.desktop",
+              "value": "desktop",
+            },
+            Object {
+              "label": "sulu_preview.tablet",
+              "value": "tablet",
+            },
+            Object {
+              "label": "sulu_preview.smartphone",
+              "value": "smartphone",
+            },
+          ]
+        }
+        showText={true}
+        value="auto"
+      />
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-link"
+        onClick={[Function]}
+        primary={false}
+        showText={true}
+      >
+        sulu_preview.open_in_window
+      </Button>
+    </Controls>
+  </Toolbar>
+</div>
+`;
+
+exports[`Render nothing if separate window is opened and rerender if it is closed 2`] = `
+<div
+  className="container auto"
+>
+  <div
+    className="previewContainer"
+  >
+    <div
+      className="iframeContainer"
+    >
+      <iframe
+        className="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <Toolbar
+    skin="dark"
+  >
+    <Controls
+      grow={false}
+      skin="light"
+    >
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-arrow-right"
+        onClick={[Function]}
+        primary={false}
+        showText={true}
+      />
+      <Select
+        icon="su-expand"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "label": "sulu_preview.auto",
+              "value": "auto",
+            },
+            Object {
+              "label": "sulu_preview.desktop",
+              "value": "desktop",
+            },
+            Object {
+              "label": "sulu_preview.tablet",
+              "value": "tablet",
+            },
+            Object {
+              "label": "sulu_preview.smartphone",
+              "value": "smartphone",
+            },
+          ]
+        }
+        showText={true}
+        value="auto"
+      />
+      <Button
+        active={false}
+        disabled={false}
+        hasOptions={false}
+        icon="su-link"
+        onClick={[Function]}
+        primary={false}
+        showText={true}
+      >
+        sulu_preview.open_in_window
+      </Button>
     </Controls>
   </Toolbar>
 </div>

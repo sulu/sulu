@@ -4,6 +4,7 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
+        "classnames": "^2.2.5",
         "debounce": "^1.0.2",
         "query-string": "^6.0.0"
     },

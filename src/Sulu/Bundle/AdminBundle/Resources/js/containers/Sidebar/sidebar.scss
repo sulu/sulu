@@ -4,4 +4,10 @@ $sidebarBorderColor: $silver;
 
 .sidebar {
     border-left: 1px $sidebarBorderColor solid;
+    height: 100vh;
+    overflow: auto;
+
+    &:empty {
+        display: none;
+    }
 }
