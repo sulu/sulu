@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Content\Metadata\Parser;
 
-use Sulu\Bundle\AdminBundle\Metadata\Schema\Property;
-use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
 
 class SchemaXmlParser
@@ -39,7 +39,7 @@ class SchemaXmlParser
             $properties = $this->loadProperties($xpath, $propertiesNode);
         }
 
-        return new Schema($properties, $anyOfs, $allOfs);
+        return new SchemaMetadata($properties, $anyOfs, $allOfs);
     }
 
     private function loadAllOfs(\DOMXPath $xpath, \DOMNode $contextNode)
@@ -74,7 +74,7 @@ class SchemaXmlParser
 
     private function loadProperty(\DOMXPath $xpath, \DOMNode $contextNode)
     {
-        return new Property(
+        return new PropertyMetadata(
             $this->getValueFromXPath('@name', $xpath, $contextNode),
             $this->getValueFromXPath('@mandatory', $xpath, $contextNode, false),
             $this->getValueFromXPath('@value', $xpath, $contextNode)

@@ -45,7 +45,7 @@
 
         <service
             id="sulu_admin.form_metadata_provider"
-            class="Sulu\Bundle\AdminBundle\Metadata\Form\FormMetadataProvider"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider"
         >
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
             <argument type="service" id="sulu_page.structure.factory"/>
@@ -59,12 +59,12 @@
         </service>
 
         <service
-            id="sulu_admin.datagrid_metadata_provider"
-            class="Sulu\Bundle\AdminBundle\Metadata\Datagrid\DatagridMetadataProvider"
+            id="sulu_admin.list_metadata_provider"
+            class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider"
         >
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
             <argument type="service" id="translator.default"/>
-            <tag name="sulu_admin.metadata_provider" type="datagrid" />
+            <tag name="sulu_admin.metadata_provider" type="list" />
         </service>
 
         <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />

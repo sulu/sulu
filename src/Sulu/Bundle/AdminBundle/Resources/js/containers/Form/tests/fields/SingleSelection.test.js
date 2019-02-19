@@ -72,14 +72,14 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
     };
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
             auto_complete: {
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -289,12 +289,12 @@ test('Pass correct props to SingleItemSelection', () => {
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
-                datagrid_key: 'accounts_datagrid',
+                list_key: 'accounts_list',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
                 icon: 'su-account',
@@ -315,7 +315,7 @@ test('Pass correct props to SingleItemSelection', () => {
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        datagridKey: 'accounts_datagrid',
+        listKey: 'accounts_list',
         disabled: true,
         disabledIds: [],
         displayProperties: ['name'],
@@ -327,15 +327,15 @@ test('Pass correct props to SingleItemSelection', () => {
     }));
 });
 
-test('Pass resourceKey as datagridKey to SingleItemSelection if no datagridKey is given', () => {
+test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -355,7 +355,7 @@ test('Pass resourceKey as datagridKey to SingleItemSelection if no datagridKey i
         />
     );
 
-    expect(singleSelection.find(SingleSelectionComponent).prop('datagridKey')).toEqual('accounts');
+    expect(singleSelection.find(SingleSelectionComponent).prop('listKey')).toEqual('accounts');
 });
 
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
@@ -370,7 +370,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
                 display_property: 'name',
                 search_properties: ['name', 'number'],
             },
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -383,7 +383,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     const schemaOptions = {
         type: {
             name: 'type',
-            value: 'datagrid_overlay',
+            value: 'list_overlay',
         },
     };
 
@@ -481,10 +481,10 @@ test('Pass correct locale and disabledIds to SingleItemSelection', () => {
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
@@ -517,10 +517,10 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
     const value = 6;
 
     const fieldTypeOptions = {
-        default_type: 'datagrid_overlay',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
-            datagrid_overlay: {
+            list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',

@@ -1,4 +1,4 @@
-<datagrid xmlns="http://schemas.sulu.io/list-builder/datagrid">
+<list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>group-concat</key>
 
     <properties>
@@ -14,5 +14,5 @@
             </joins>
         </group-concat-property>
     </properties>
-</datagrid>
+</list>
 

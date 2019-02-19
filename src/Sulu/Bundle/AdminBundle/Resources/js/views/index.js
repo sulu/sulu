@@ -4,16 +4,16 @@ import Form, {
     AbstractToolbarAction as AbstractFormToolbarAction,
     toolbarActionRegistry as formToolbarActionRegistry,
 } from './Form';
-import Datagrid, {
-    AbstractToolbarAction as AbstractDatagridToolbarAction,
-    toolbarActionRegistry as datagridToolbarActionRegistry,
-} from './Datagrid';
+import List, {
+    AbstractToolbarAction as AbstractListToolbarAction,
+    toolbarActionRegistry as listToolbarActionRegistry,
+} from './List';
 
 export {
-    AbstractDatagridToolbarAction,
+    AbstractListToolbarAction,
     AbstractFormToolbarAction,
-    Datagrid,
-    datagridToolbarActionRegistry,
+    List,
+    listToolbarActionRegistry,
     Form,
     formToolbarActionRegistry,
     ResourceTabs,

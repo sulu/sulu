@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>target_groups</key>
+
+    <properties>
+        <property name="id" filter-type="integer" translation="public.id" type="string">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.target_group.class%</entity-name>
+        </property>
+        <property name="title" filter-type="string" translation="public.title" visibility="always">
+            <field-name>title</field-name>
+            <entity-name>%sulu.model.target_group.class%</entity-name>
+        </property>
+        <property name="active"
+                  filter-type="boolean"
+                  visibility="yes"
+                  type="checkbox_readonly"
+                  translation="sulu_audience_targeting.is-active">
+            <field-name>active</field-name>
+            <entity-name>%sulu.model.target_group.class%</entity-name>
+        </property>
+        <property name="priority"
+                  filter-type="integer"
+                  translation="sulu_audience_targeting.priority"
+                  visibility="yes">
+            <field-name>priority</field-name>
+            <entity-name>%sulu.model.target_group.class%</entity-name>
+        </property>
+        <group-concat-property name="webspaceKeys"
+                               visibility="no"
+                               filter-type="tags"
+                               translation="sulu_audience_targeting.webspaces"
+                               glue=", ">
+            <field-name>webspaceKey</field-name>
+            <entity-name>%sulu.model.target_group_webspace.class%</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>%sulu.model.target_group_webspace.class%</entity-name>
+                    <field-name>%sulu.model.target_group.class%.webspaces</field-name>
+                </join>
+            </joins>
+        </group-concat-property>
+    </properties>
+</list>

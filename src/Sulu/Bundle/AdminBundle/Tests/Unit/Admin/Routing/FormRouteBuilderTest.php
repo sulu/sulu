@@ -47,7 +47,7 @@ class FormRouteBuilderTest extends TestCase
                 100,
                 512,
                 'sulu_category.edit_form',
-                'sulu_category.datagrid',
+                'sulu_category.list',
             ],
             [
                 'sulu_tag.edit_form',
@@ -210,7 +210,7 @@ class FormRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new FormRouteBuilder('sulu_role.datagrid', '/roles'))
+        $route = (new FormRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addLocales(['de', 'en'])
@@ -223,7 +223,7 @@ class FormRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new FormRouteBuilder('sulu_role.datagrid', '/roles/:locale'))
+        $route = (new FormRouteBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->getRoute();

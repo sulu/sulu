@@ -13,9 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class RouteBuilderFactory implements RouteBuilderFactoryInterface
 {
-    public function createDatagridRouteBuilder(string $name, string $path): DatagridRouteBuilderInterface
+    public function createListRouteBuilder(string $name, string $path): ListRouteBuilderInterface
     {
-        return new DatagridRouteBuilder($name, $path);
+        return new ListRouteBuilder($name, $path);
     }
 
     public function createResourceTabRouteBuilder(string $name, string $path): ResourceTabRouteBuilderInterface

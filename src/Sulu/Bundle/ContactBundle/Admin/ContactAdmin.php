@@ -20,13 +20,13 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactAdmin extends Admin
 {
-    const CONTACT_DATAGRID_ROUTE = 'sulu_contact.contacts_datagrid';
+    const CONTACT_LIST_ROUTE = 'sulu_contact.contacts_list';
 
     const CONTACT_ADD_FORM_ROUTE = 'sulu_contact.contact_add_form';
 
     const CONTACT_EDIT_FORM_ROUTE = 'sulu_contact.contact_edit_form';
 
-    const ACCOUNT_DATAGRID_ROUTE = 'sulu_contact.accounts_datagrid';
+    const ACCOUNT_LIST_ROUTE = 'sulu_contact.accounts_list';
 
     const ACCOUNT_ADD_FORM_ROUTE = 'sulu_contact.account_add_form';
 
@@ -67,7 +67,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
-            $people->setMainRoute(static::CONTACT_DATAGRID_ROUTE);
+            $people->setMainRoute(static::CONTACT_LIST_ROUTE);
 
             $contacts->addChild($people);
         }
@@ -75,7 +75,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
             $companies = new NavigationItem('sulu_contact.organizations');
             $companies->setPosition(20);
-            $companies->setMainRoute(static::ACCOUNT_DATAGRID_ROUTE);
+            $companies->setMainRoute(static::ACCOUNT_LIST_ROUTE);
 
             $contacts->addChild($companies);
         }
@@ -100,18 +100,18 @@ class ContactAdmin extends Admin
         ];
 
         return [
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::CONTACT_DATAGRID_ROUTE, '/contacts')
+            $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
                 ->setResourceKey('contacts')
-                ->setDatagridKey('contacts')
+                ->setListKey('contacts')
                 ->setTitle('sulu_contact.people')
-                ->addDatagridAdapters(['table'])
+                ->addListAdapters(['table'])
                 ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
                 ->setResourceKey('contacts')
-                ->setBackRoute(static::CONTACT_DATAGRID_ROUTE)
+                ->setBackRoute(static::CONTACT_LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
                 ->setResourceKey('contacts')
@@ -123,7 +123,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
                 ->setResourceKey('contacts')
-                ->setBackRoute(static::CONTACT_DATAGRID_ROUTE)
+                ->setBackRoute(static::CONTACT_LIST_ROUTE)
                 ->setTitleProperty('fullName')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
@@ -133,18 +133,18 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::ACCOUNT_DATAGRID_ROUTE, '/accounts')
+            $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
                 ->setResourceKey('accounts')
-                ->setDatagridKey('accounts')
+                ->setListKey('accounts')
                 ->setTitle('sulu_contact.organizations')
-                ->addDatagridAdapters(['table'])
+                ->addListAdapters(['table'])
                 ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
                 ->setResourceKey('accounts')
-                ->setBackRoute(static::ACCOUNT_DATAGRID_ROUTE)
+                ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_add_form.details', '/details')
                 ->setResourceKey('accounts')
@@ -156,7 +156,7 @@ class ContactAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
                 ->setResourceKey('accounts')
-                ->setBackRoute(static::ACCOUNT_DATAGRID_ROUTE)
+                ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
                 ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')

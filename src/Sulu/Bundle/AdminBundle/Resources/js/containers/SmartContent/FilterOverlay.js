@@ -7,8 +7,8 @@ import Toggler from '../../components/Toggler';
 import Number from '../../components/Number';
 import SingleSelect from '../../components/SingleSelect';
 import Overlay from '../../components/Overlay';
-import MultiDatagridOverlay from '../../containers/MultiDatagridOverlay';
-import SingleDatagridOverlay from '../../containers/SingleDatagridOverlay';
+import MultiListOverlay from '../../containers/MultiListOverlay';
+import SingleListOverlay from '../../containers/SingleListOverlay';
 import MultiAutoComplete from '../../containers/MultiAutoComplete';
 import {translate} from '../../utils/Translator';
 import SmartContentStore from './stores/SmartContentStore';
@@ -17,7 +17,7 @@ import filterOverlayStyles from './filterOverlay.scss';
 
 type Props = {
     dataSourceAdapter: ?string,
-    dataSourceDatagridKey: ?string,
+    dataSourceListKey: ?string,
     dataSourceResourceKey: ?string,
     onClose: () => void,
     open: boolean,
@@ -200,7 +200,7 @@ export default class FilterOverlay extends React.Component<Props> {
     render() {
         const {
             dataSourceAdapter,
-            dataSourceDatagridKey,
+            dataSourceListKey,
             dataSourceResourceKey,
             onClose,
             open,
@@ -374,11 +374,11 @@ export default class FilterOverlay extends React.Component<Props> {
                         }
                     </div>
                 </Overlay>
-                {!smartContentStore.loading && dataSourceAdapter && dataSourceResourceKey && dataSourceDatagridKey &&
-                    <SingleDatagridOverlay
+                {!smartContentStore.loading && dataSourceAdapter && dataSourceResourceKey && dataSourceListKey &&
+                    <SingleListOverlay
                         adapter={dataSourceAdapter}
                         clearSelectionOnClose={false}
-                        datagridKey={dataSourceDatagridKey}
+                        listKey={dataSourceListKey}
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseDataSourceDialog}
                         onConfirm={this.handleConfirmDataSourceDialog}
@@ -390,10 +390,10 @@ export default class FilterOverlay extends React.Component<Props> {
                     />
                 }
                 {!smartContentStore.loading &&
-                    <MultiDatagridOverlay
+                    <MultiListOverlay
                         adapter="tree_table"
                         clearSelectionOnClose={false}
-                        datagridKey="categories"
+                        listKey="categories"
                         locale={smartContentStore.locale}
                         onClose={this.handleCloseCategoryDialog}
                         onConfirm={this.handleConfirmCategoryDialog}

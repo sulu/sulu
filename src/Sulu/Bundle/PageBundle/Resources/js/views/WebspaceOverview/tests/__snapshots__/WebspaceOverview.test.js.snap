@@ -5,7 +5,7 @@ exports[`Render WebspaceOverview 1`] = `
   class="webspaceOverview"
 >
   <div
-    class="datagridContainer"
+    class="listContainer"
   >
     <div
       class="headerContainer"
@@ -63,7 +63,7 @@ exports[`Render WebspaceOverview 1`] = `
       </div>
     </div>
     <div
-      class="datagrid"
+      class="list"
     >
       <div
         class="columnListAdapter"

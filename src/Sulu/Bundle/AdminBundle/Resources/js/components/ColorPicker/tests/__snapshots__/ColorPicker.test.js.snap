@@ -136,7 +136,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
     <div style=\\"top: 10px; left: 35px; position: fixed; pointer-events: auto;\\">
       <div style=\\"width: 200px; padding: 10px 10px 0px; box-sizing: initial; background: rgb(255, 255, 255); border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);\\" class=\\"sketch-picker \\">
         <div style=\\"width: 100%; padding-bottom: 75%; position: relative; overflow: hidden;\\">
-          <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\">
+          <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: hsl(249.99999999999994, 100%, 50%);\\">
             <style>
               .saturation-white {
                 background: -webkit-linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
@@ -158,7 +158,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
           </div>
         </div>
         <div style=\\"display: flex;\\" class=\\"flexbox-fix\\">
-          <div style=\\"padding: 4px 0px;\\">
+          <div style=\\"padding: 4px 0px; flex: 1;\\">
             <div style=\\"position: relative; height: 10px; overflow: hidden;\\">
               <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\">
                 <div class=\\"hue-horizontal\\" style=\\"padding: 0px 2px; position: relative; height: 100%;\\">
@@ -201,19 +201,19 @@ exports[`ColorPicker should render with open overlay 1`] = `
           </div>
         </div>
         <div style=\\"display: flex; padding-top: 4px;\\" class=\\"flexbox-fix\\">
-          <div>
+          <div style=\\"flex: 2;\\">
             <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"22194D\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize;\\">hex</span></div>
           </div>
-          <div style=\\"padding-left: 6px;\\">
+          <div style=\\"flex: 1; padding-left: 6px;\\">
             <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"34\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">r</span></div>
           </div>
-          <div style=\\"padding-left: 6px;\\">
+          <div style=\\"flex: 1; padding-left: 6px;\\">
             <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"25\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">g</span></div>
           </div>
-          <div style=\\"padding-left: 6px;\\">
+          <div style=\\"flex: 1; padding-left: 6px;\\">
             <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"77\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">b</span></div>
           </div>
-          <div style=\\"padding-left: 6px; display: none;\\">
+          <div style=\\"flex: 1; padding-left: 6px; display: none;\\">
             <div style=\\"position: relative;\\"><input style=\\"width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;\\" spellcheck=\\"false\\" value=\\"100\\"><span style=\\"display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;\\">a</span></div>
           </div>
         </div>

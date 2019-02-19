@@ -3,7 +3,7 @@ import React from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {DatagridStore} from 'sulu-admin-bundle/containers';
+import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
@@ -22,8 +22,8 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
 
     collectionId: IObservableValue<?string | number> = observable.box();
     excludedIdString: IObservableValue<string>;
-    mediaDatagridStore: DatagridStore;
-    collectionDatagridStore: DatagridStore;
+    mediaListStore: ListStore;
+    collectionListStore: ListStore;
     mediaSelectionDisposer: () => void;
 
     constructor(props: Props) {
@@ -31,18 +31,18 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
 
         this.excludedIdString = observable.box(props.excludedIds.sort().join(','));
 
-        this.mediaDatagridStore = MediaSelectionOverlay.createMediaDatagridStore(
+        this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
             this.excludedIdString,
             props.locale
         );
-        this.collectionDatagridStore = MediaSelectionOverlay.createCollectionDatagridStore(
+        this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,
             props.locale
         );
 
         this.mediaSelectionDisposer = autorun(() => {
-            const {selections} = this.mediaDatagridStore;
+            const {selections} = this.mediaListStore;
 
             if (selections.length <= 1) {
                 return;
@@ -54,8 +54,8 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
                 return;
             }
 
-            this.mediaDatagridStore.clearSelection();
-            this.mediaDatagridStore.select(selection);
+            this.mediaListStore.clearSelection();
+            this.mediaListStore.select(selection);
         });
     }
 
@@ -63,18 +63,18 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         const newExcludedIdString = this.props.excludedIds.sort().join(',');
 
         if (this.excludedIdString.get() !== newExcludedIdString) {
-            this.mediaDatagridStore.clear();
+            this.mediaListStore.clear();
             this.excludedIdString.set(this.props.excludedIds.sort().join(','));
         }
     }
 
     componentWillUnmount() {
-        if (this.mediaDatagridStore) {
-            this.mediaDatagridStore.destroy();
+        if (this.mediaListStore) {
+            this.mediaListStore.destroy();
         }
 
-        if (this.collectionDatagridStore) {
-            this.collectionDatagridStore.destroy();
+        if (this.collectionListStore) {
+            this.collectionListStore.destroy();
         }
 
         if (this.mediaSelectionDisposer) {
@@ -83,14 +83,14 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
     }
 
     handleConfirm = () => {
-        if (this.mediaDatagridStore.selections.length > 1) {
+        if (this.mediaListStore.selections.length > 1) {
             throw new Error(
                 'The SingleMediaSelectionOverlay can only handle single selection.'
                 + 'This should not happen and is likely a bug.'
             );
         }
 
-        this.props.onConfirm(this.mediaDatagridStore.selections[0]);
+        this.props.onConfirm(this.mediaListStore.selections[0]);
     };
 
     render() {
@@ -102,10 +102,10 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
 
         return (
             <MediaSelectionOverlay
-                collectionDatagridStore={this.collectionDatagridStore}
                 collectionId={this.collectionId}
+                collectionListStore={this.collectionListStore}
                 locale={locale}
-                mediaDatagridStore={this.mediaDatagridStore}
+                mediaListStore={this.mediaListStore}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}

@@ -81,9 +81,9 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
-                    'datagrids' => [
+                    'lists' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/datagrids',
+                            __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
                     'forms' => [
@@ -99,12 +99,12 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     'field_type_options' => [
                         'selection' => [
                             'category_selection' => [
-                                'default_type' => 'datagrid',
+                                'default_type' => 'list',
                                 'resource_key' => 'categories',
                                 'types' => [
-                                    'datagrid' => [
+                                    'list' => [
                                         'adapter' => 'tree_table_slim',
-                                        'datagrid_key' => 'categories',
+                                        'list_key' => 'categories',
                                     ],
                                 ],
                             ],

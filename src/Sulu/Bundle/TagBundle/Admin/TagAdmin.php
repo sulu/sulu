@@ -20,7 +20,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class TagAdmin extends Admin
 {
-    const DATAGRID_ROUTE = 'sulu_tag.datagrid';
+    const LIST_ROUTE = 'sulu_tag.list';
 
     const ADD_FORM_ROUTE = 'sulu_tag.add_form';
 
@@ -53,7 +53,7 @@ class TagAdmin extends Admin
         if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
             $roles = new NavigationItem('sulu_tag.tags', $settings);
             $roles->setPosition(30);
-            $roles->setMainRoute(static::DATAGRID_ROUTE);
+            $roles->setMainRoute(static::LIST_ROUTE);
         }
 
         if ($settings->hasChildren()) {
@@ -76,18 +76,18 @@ class TagAdmin extends Admin
         ];
 
         return [
-            $this->routeBuilderFactory->createDatagridRouteBuilder(static::DATAGRID_ROUTE, '/tags')
+            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/tags')
                 ->setResourceKey('tags')
-                ->setDatagridKey('tags')
+                ->setListKey('tags')
                 ->setTitle('sulu_tag.tags')
-                ->addDatagridAdapters(['table'])
+                ->addListAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($listToolbarActions)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
                 ->setResourceKey('tags')
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.details', '/details')
                 ->setResourceKey('tags')
@@ -99,7 +99,7 @@ class TagAdmin extends Admin
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
                 ->setResourceKey('tags')
-                ->setBackRoute(static::DATAGRID_ROUTE)
+                ->setBackRoute(static::LIST_ROUTE)
                 ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.details', '/details')

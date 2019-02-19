@@ -68,7 +68,7 @@ interface BuilderInterface
      *
      * @return BuilderInterface
      */
-    public function enableDatasource(string $resourceKey, string $datagridKey, string $adapter);
+    public function enableDatasource(string $resourceKey, string $listKey, string $adapter);
 
     /**
      * Enables audience targeting.

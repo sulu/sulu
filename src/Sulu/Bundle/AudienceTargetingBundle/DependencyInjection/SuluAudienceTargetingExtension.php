@@ -76,9 +76,9 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
-                    'datagrids' => [
+                    'lists' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/datagrids',
+                            __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
                 ]

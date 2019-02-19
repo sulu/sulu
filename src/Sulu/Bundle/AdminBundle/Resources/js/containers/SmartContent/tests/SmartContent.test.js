@@ -68,7 +68,7 @@ test('Pass correct props to MultiItemSelection component', () => {
 
 test('Pass correct sections prop with other values', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
-        datasourceDatagridKey: 'pages_datagrid',
+        datasourceListKey: 'pages_list',
         datasourceResourceKey: 'pages',
         datasourceAdapter: 'table',
         tags: false,
@@ -88,7 +88,7 @@ test('Pass correct sections prop with other values', () => {
         <SmartContent fieldLabel="Test" presentations={presentations} store={smartContentStore} />
     );
 
-    expect(smartContent.find('FilterOverlay').prop('dataSourceDatagridKey')).toEqual('pages_datagrid');
+    expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
     expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
     expect(smartContent.find('FilterOverlay').prop('sections'))
         .toEqual(['datasource', 'categories', 'sorting', 'presentation']);
@@ -147,7 +147,7 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
 });
 
-test('Pass the loading prop to the MultiItemSelection if datagrid or categories are still loading', () => {
+test('Pass the loading prop to the MultiItemSelection if list or categories are still loading', () => {
     const smartContentStore = new SmartContentStore('content');
     // $FlowFixMe
     smartContentStore.loading = true;

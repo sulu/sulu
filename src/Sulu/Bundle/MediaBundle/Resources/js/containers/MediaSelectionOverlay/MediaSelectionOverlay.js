@@ -3,7 +3,7 @@ import React from 'react';
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {DatagridStore} from 'sulu-admin-bundle/containers';
+import {ListStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../MediaCollection';
@@ -18,8 +18,8 @@ type Props = {|
     open: boolean,
     locale: IObservableValue<string>,
     collectionId: IObservableValue<?string | number>,
-    collectionDatagridStore: DatagridStore,
-    mediaDatagridStore: DatagridStore,
+    collectionListStore: ListStore,
+    mediaListStore: ListStore,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
 |};
@@ -29,11 +29,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     @observable collectionStore: CollectionStore;
     updateCollectionStoreDisposer: () => void;
 
-    static createCollectionDatagridStore(
+    static createCollectionListStore(
         collectionId: IObservableValue<?string | number>,
         locale: IObservableValue<string>
     ) {
-        return new DatagridStore(
+        return new ListStore(
             COLLECTIONS_RESOURCE_KEY,
             COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
@@ -45,7 +45,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         );
     }
 
-    static createMediaDatagridStore(
+    static createMediaListStore(
         collectionId: IObservableValue<?string | number>,
         excludedIdString: IObservableValue<string>,
         locale: IObservableValue<string>
@@ -64,7 +64,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ].join(',');
 
-        return new DatagridStore(
+        return new ListStore(
             MEDIA_RESOURCE_KEY,
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
@@ -85,10 +85,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        const {mediaDatagridStore, open} = this.props;
+        const {mediaListStore, open} = this.props;
 
         if (prevProps.open === true && open === false) {
-            mediaDatagridStore.clearSelection();
+            mediaListStore.clearSelection();
         }
     }
 
@@ -113,11 +113,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     @action handleCollectionNavigate = (collectionId: ?string | number) => {
         this.props.collectionId.set(collectionId);
 
-        this.props.collectionDatagridStore.clear();
-        this.props.collectionDatagridStore.setPage(1);
+        this.props.collectionListStore.clear();
+        this.props.collectionListStore.setPage(1);
 
-        this.props.mediaDatagridStore.clear();
-        this.props.mediaDatagridStore.setPage(1);
+        this.props.mediaListStore.clear();
+        this.props.mediaListStore.setPage(1);
     };
 
     handleClose = () => {
@@ -125,17 +125,17 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
     };
 
     handleSelectionReset = () => {
-        this.props.mediaDatagridStore.clearSelection();
+        this.props.mediaListStore.clearSelection();
     };
 
     handleConfirm = () => {
-        this.props.onConfirm(this.props.mediaDatagridStore.selections);
+        this.props.onConfirm(this.props.mediaListStore.selections);
     };
 
     render() {
         const {
-            collectionDatagridStore,
-            mediaDatagridStore,
+            collectionListStore,
+            mediaListStore,
             open,
             locale,
         } = this.props;
@@ -148,7 +148,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         return (
             <Overlay
                 actions={overlayActions}
-                confirmDisabled={!mediaDatagridStore.selections.length}
+                confirmDisabled={!mediaListStore.selections.length}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
@@ -157,11 +157,11 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             >
                 <div className={mediaSelectionOverlayStyles.overlay}>
                     <MediaCollection
-                        collectionDatagridStore={collectionDatagridStore}
+                        collectionListStore={collectionListStore}
                         collectionStore={this.collectionStore}
                         locale={locale}
-                        mediaDatagridAdapters={['media_card_selection']}
-                        mediaDatagridStore={mediaDatagridStore}
+                        mediaListAdapters={['media_card_selection']}
+                        mediaListStore={mediaListStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
                         overlayType="dialog"
                     />

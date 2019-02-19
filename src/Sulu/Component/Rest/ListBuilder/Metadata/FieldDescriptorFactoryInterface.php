@@ -21,5 +21,5 @@ interface FieldDescriptorFactoryInterface
     /**
      * @return FieldDescriptorInterface[]
      */
-    public function getFieldDescriptors(string $datagridKey): ?array;
+    public function getFieldDescriptors(string $listKey): ?array;
 }

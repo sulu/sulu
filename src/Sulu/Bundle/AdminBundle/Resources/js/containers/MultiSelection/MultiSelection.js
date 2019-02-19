@@ -6,12 +6,12 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from '../../components';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
-import MultiDatagridOverlay from '../MultiDatagridOverlay';
+import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
-    datagridKey: string,
+    listKey: string,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
@@ -104,7 +104,7 @@ export default class MultiSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
-            datagridKey,
+            listKey,
             disabled,
             disabledIds,
             displayProperties,
@@ -147,10 +147,10 @@ export default class MultiSelection extends React.Component<Props> {
                         </MultiItemSelection.Item>
                     ))}
                 </MultiItemSelection>
-                <MultiDatagridOverlay
+                <MultiListOverlay
                     adapter={adapter}
-                    datagridKey={datagridKey}
                     disabledIds={disabledIds}
+                    listKey={listKey}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

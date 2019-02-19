@@ -1,13 +1,13 @@
 // @flow
-import Datagrid, {
-    DatagridStore,
-    datagridAdapterRegistry,
+import List, {
+    ListStore,
+    listAdapterRegistry,
     AbstractAdapter,
     FlatStructureStrategy,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
-} from './Datagrid';
-import type {DatagridAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './Datagrid';
+} from './List';
+import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
 import {blockPreviewTransformerRegistry} from './FieldBlocks';
 import {textEditorRegistry} from './TextEditor';
 import {viewRegistry} from './ViewRenderer';
@@ -19,10 +19,10 @@ import ResourceMultiSelect from './ResourceMultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
-import SingleDatagridOverlay from './SingleDatagridOverlay';
+import SingleListOverlay from './SingleListOverlay';
 
 export type {
-    DatagridAdapterProps,
+    ListAdapterProps,
     LoadingStrategyInterface,
     StructureStrategyInterface,
     ViewProps,
@@ -32,9 +32,9 @@ export {
     AbstractAdapter,
     blockPreviewTransformerRegistry,
     CardCollection,
-    Datagrid,
-    DatagridStore,
-    datagridAdapterRegistry,
+    List,
+    ListStore,
+    listAdapterRegistry,
     fieldRegistry,
     FlatStructureStrategy,
     Form,
@@ -46,7 +46,7 @@ export {
     ResourceFormStore,
     ResourceMultiSelect,
     SingleAutoComplete,
-    SingleDatagridOverlay,
+    SingleListOverlay,
     Sidebar,
     sidebarStore,
     sidebarRegistry,

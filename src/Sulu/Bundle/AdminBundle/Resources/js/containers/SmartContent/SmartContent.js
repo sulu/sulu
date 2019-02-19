@@ -131,7 +131,7 @@ export default class SmartContent extends React.Component<Props> {
                 </MultiItemSelection>
                 <FilterOverlay
                     dataSourceAdapter={this.config.datasourceAdapter}
-                    dataSourceDatagridKey={this.config.datasourceDatagridKey}
+                    dataSourceListKey={this.config.datasourceListKey}
                     dataSourceResourceKey={this.config.datasourceResourceKey}
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}

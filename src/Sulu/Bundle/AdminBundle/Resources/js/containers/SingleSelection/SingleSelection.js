@@ -5,12 +5,12 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import SingleItemSelection from '../../components/SingleItemSelection';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
-import SingleDatagridOverlay from '../SingleDatagridOverlay';
+import SingleListOverlay from '../SingleListOverlay';
 import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
-    datagridKey: string,
+    listKey: string,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
@@ -96,7 +96,7 @@ export default class SingleSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
-            datagridKey,
+            listKey,
             disabled,
             disabledIds,
             displayProperties,
@@ -135,10 +135,10 @@ export default class SingleSelection extends React.Component<Props> {
                         </div>
                     }
                 </SingleItemSelection>
-                <SingleDatagridOverlay
+                <SingleListOverlay
                     adapter={adapter}
-                    datagridKey={datagridKey}
                     disabledIds={disabledIds}
+                    listKey={listKey}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

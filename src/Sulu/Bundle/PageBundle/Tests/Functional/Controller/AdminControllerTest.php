@@ -15,11 +15,11 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testPagesDatagridMetadataAction()
+    public function testPagesListMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/datagrid/pages');
+        $client->request('GET', '/admin/metadata/list/pages');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());

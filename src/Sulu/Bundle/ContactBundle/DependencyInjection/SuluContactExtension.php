@@ -76,9 +76,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_admin',
                 [
-                    'datagrids' => [
+                    'lists' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/datagrids',
+                            __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
                     'forms' => [
@@ -110,9 +110,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                         'display_property' => 'name',
                                         'search_properties' => ['number', 'name'],
                                     ],
-                                    'datagrid_overlay' => [
+                                    'list_overlay' => [
                                         'adapter' => 'table',
-                                        'datagrid_key' => 'accounts',
+                                        'list_key' => 'accounts',
                                         'display_properties' => ['name'],
                                         'empty_text' => 'sulu_contact.no_account_selected',
                                         'icon' => 'su-house',
@@ -121,12 +121,12 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 ],
                             ],
                             'single_contact_selection' => [
-                                'default_type' => 'datagrid_overlay',
+                                'default_type' => 'list_overlay',
                                 'resource_key' => 'contacts',
                                 'types' => [
-                                    'datagrid_overlay' => [
+                                    'list_overlay' => [
                                         'adapter' => 'table',
-                                        'datagrid_key' => 'contacts',
+                                        'list_key' => 'contacts',
                                         'display_properties' => ['fullName'],
                                         'empty_text' => 'sulu_contact.no_contact_selected',
                                         'icon' => 'su-user',

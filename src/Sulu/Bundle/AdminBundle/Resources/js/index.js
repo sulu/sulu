@@ -15,19 +15,19 @@ import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
 import {bundleReady, Config, resourceEndpointRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
-import Datagrid, {
-    AddToolbarAction as DatagridAddToolbarAction,
-    DeleteToolbarAction as DatagridDeleteToolbarAction,
-    MoveToolbarAction as DatagridMoveToolbarAction,
-    toolbarActionRegistry as datagridToolbarActionRegistry,
-} from './views/Datagrid';
+import List, {
+    AddToolbarAction as ListAddToolbarAction,
+    DeleteToolbarAction as ListDeleteToolbarAction,
+    MoveToolbarAction as ListMoveToolbarAction,
+    toolbarActionRegistry as listToolbarActionRegistry,
+} from './views/List';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {
     BoolFieldTransformer,
     BytesFieldTransformer,
     ColumnListAdapter,
-    datagridAdapterRegistry,
-    datagridFieldTransformerRegistry,
+    listAdapterRegistry,
+    listFieldTransformerRegistry,
     DateFieldTransformer,
     DateTimeFieldTransformer,
     FolderAdapter,
@@ -37,7 +37,7 @@ import {
     ThumbnailFieldTransformer,
     TimeFieldTransformer,
     TreeTableAdapter,
-} from './containers/Datagrid';
+} from './containers/List';
 import FieldBlocks, {
     blockPreviewTransformerRegistry,
     DateTimeBlockPreviewTransformer,
@@ -117,12 +117,12 @@ const FIELD_TYPE_URL = 'url';
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
         registerBlockPreviewTransformers();
-        registerDatagridAdapters();
-        registerDatagridFieldTransformers();
+        registerListAdapters();
+        registerListFieldTransformers();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
         registerFormToolbarActions();
-        registerDatagridToolbarActions();
+        registerListToolbarActions();
         registerViews();
     }
 
@@ -136,29 +136,29 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
     viewRegistry.add('sulu_admin.resource_tabs', (ResourceTabs: any));
-    viewRegistry.add('sulu_admin.datagrid', Datagrid);
+    viewRegistry.add('sulu_admin.list', List);
 }
 
-function registerDatagridAdapters() {
-    datagridAdapterRegistry.add('column_list', ColumnListAdapter);
-    datagridAdapterRegistry.add('folder', FolderAdapter);
-    datagridAdapterRegistry.add('table', TableAdapter);
-    datagridAdapterRegistry.add('tree_table', TreeTableAdapter);
-    datagridAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
+function registerListAdapters() {
+    listAdapterRegistry.add('column_list', ColumnListAdapter);
+    listAdapterRegistry.add('folder', FolderAdapter);
+    listAdapterRegistry.add('table', TableAdapter);
+    listAdapterRegistry.add('tree_table', TreeTableAdapter);
+    listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
 }
 
-function registerDatagridFieldTransformers() {
-    datagridFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
-    datagridFieldTransformerRegistry.add('date', new DateFieldTransformer());
-    datagridFieldTransformerRegistry.add('time', new TimeFieldTransformer());
-    datagridFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
-    datagridFieldTransformerRegistry.add('number', new NumberFieldTransformer());
-    datagridFieldTransformerRegistry.add('string', new StringFieldTransformer());
-    datagridFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
-    datagridFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
+function registerListFieldTransformers() {
+    listFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
+    listFieldTransformerRegistry.add('date', new DateFieldTransformer());
+    listFieldTransformerRegistry.add('time', new TimeFieldTransformer());
+    listFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
+    listFieldTransformerRegistry.add('number', new NumberFieldTransformer());
+    listFieldTransformerRegistry.add('string', new StringFieldTransformer());
+    listFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
+    listFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
 
     // TODO: Remove this type when not needed anymore
-    datagridFieldTransformerRegistry.add('title', new StringFieldTransformer());
+    listFieldTransformerRegistry.add('title', new StringFieldTransformer());
 }
 
 function registerFieldTypes(fieldTypeOptions) {
@@ -222,10 +222,10 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
 }
 
-function registerDatagridToolbarActions() {
-    datagridToolbarActionRegistry.add('sulu_admin.add', DatagridAddToolbarAction);
-    datagridToolbarActionRegistry.add('sulu_admin.delete', DatagridDeleteToolbarAction);
-    datagridToolbarActionRegistry.add('sulu_admin.move', DatagridMoveToolbarAction);
+function registerListToolbarActions() {
+    listToolbarActionRegistry.add('sulu_admin.add', ListAddToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.delete', ListDeleteToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.move', ListMoveToolbarAction);
 }
 
 function processConfig(config: Object) {

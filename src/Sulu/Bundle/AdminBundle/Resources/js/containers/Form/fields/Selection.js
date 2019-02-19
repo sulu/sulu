@@ -3,8 +3,8 @@ import React from 'react';
 import {computed, observable, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
-import Datagrid from '../../../containers/Datagrid';
-import DatagridStore from '../../../containers/Datagrid/stores/DatagridStore';
+import List from '../../../containers/List';
+import ListStore from '../../../containers/List/stores/ListStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
@@ -17,15 +17,15 @@ type Props = FieldTypeProps<Array<string | number>>;
 const USER_SETTINGS_KEY = 'selection';
 
 export default class Selection extends React.Component<Props> {
-    datagridStore: ?DatagridStore;
-    changeDatagridDisposer: ?() => *;
+    listStore: ?ListStore;
+    changeListDisposer: ?() => *;
 
     constructor(props: Props) {
         super(props);
 
-        if (this.type !== 'datagrid_overlay' && this.type !== 'datagrid' && this.type !== 'auto_complete') {
+        if (this.type !== 'list_overlay' && this.type !== 'list' && this.type !== 'auto_complete') {
             throw new Error(
-                'The Selection field must either be declared as "overlay", "datagrid" or as "auto_complete", '
+                'The Selection field must either be declared as "overlay", "list" or as "auto_complete", '
                 + 'received type was "' + this.type + '"!'
             );
         }
@@ -40,37 +40,37 @@ export default class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (this.type === 'datagrid') {
+        if (this.type === 'list') {
             const {
                 fieldTypeOptions: {
                     types: {
-                        datagrid: {
-                            datagrid_key: datagridKey,
+                        list: {
+                            list_key: listKey,
                         },
                     },
                 },
                 value,
             } = this.props;
 
-            this.datagridStore = new DatagridStore(
+            this.listStore = new ListStore(
                 resourceKey,
-                datagridKey || resourceKey,
+                listKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
                 {},
                 value
             );
 
-            this.changeDatagridDisposer = reaction(
-                () => (this.datagridStore ? this.datagridStore.selectionIds : []),
-                this.handleDatagridSelectionChange
+            this.changeListDisposer = reaction(
+                () => (this.listStore ? this.listStore.selectionIds : []),
+                this.handleListSelectionChange
             );
         }
     }
 
     componentWillUnmount() {
-        if (this.changeDatagridDisposer) {
-            this.changeDatagridDisposer();
+        if (this.changeListDisposer) {
+            this.changeListDisposer();
         }
     }
 
@@ -106,31 +106,31 @@ export default class Selection extends React.Component<Props> {
     }
 
     render() {
-        if (this.type === 'datagrid_overlay') {
-            return this.renderDatagridOverlay();
+        if (this.type === 'list_overlay') {
+            return this.renderListOverlay();
         }
 
         if (this.type === 'auto_complete') {
             return this.renderAutoComplete();
         }
 
-        if (this.type === 'datagrid') {
-            return this.renderDatagrid();
+        if (this.type === 'list') {
+            return this.renderList();
         }
 
         throw new Error('The "' + this.type + '" type does not exist in the Selection field type.');
     }
 
-    renderDatagridOverlay() {
+    renderListOverlay() {
         const {
             disabled,
             formInspector,
             fieldTypeOptions: {
                 resource_key: resourceKey,
                 types: {
-                    datagrid_overlay: {
+                    list_overlay: {
                         adapter,
-                        datagrid_key: datagridKey,
+                        list_key: listKey,
                         display_properties: displayProperties,
                         icon,
                         label,
@@ -148,12 +148,12 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
-                datagridKey={datagridKey || resourceKey}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 icon={icon}
                 label={translate(label, {count: value ? value.length : 0})}
+                listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
                 overlayTitle={translate(overlayTitle)}
@@ -220,16 +220,16 @@ export default class Selection extends React.Component<Props> {
         onFinish();
     };
 
-    renderDatagrid() {
-        if (!this.datagridStore) {
-            throw new Error('The DatagridStore has not been initialized! This should not happen and is likely a bug.');
+    renderList() {
+        if (!this.listStore) {
+            throw new Error('The ListStore has not been initialized! This should not happen and is likely a bug.');
         }
 
         const {
             disabled,
             fieldTypeOptions: {
                 types: {
-                    datagrid: {
+                    list: {
                         adapter,
                     },
                 },
@@ -237,26 +237,26 @@ export default class Selection extends React.Component<Props> {
         } = this.props;
 
         if (!adapter) {
-            throw new Error('The selection field needs a "adapter" option for the datagrid type to work properly');
+            throw new Error('The selection field needs a "adapter" option for the list type to work properly');
         }
 
         return (
-            <div className={selectionStyles.datagrid}>
-                <Datagrid adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.datagridStore} />
+            <div className={selectionStyles.list}>
+                <List adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.listStore} />
             </div>
         );
     }
 
-    handleDatagridSelectionChange = (selectedIds: Array<string | number>) => {
+    handleListSelectionChange = (selectedIds: Array<string | number>) => {
         const {onChange, onFinish, value} = this.props;
 
-        if (!this.datagridStore) {
+        if (!this.listStore) {
             throw new Error(
-                'The DatagridStore has not been initialized! This should not happen and is likely a bug.'
+                'The ListStore has not been initialized! This should not happen and is likely a bug.'
             );
         }
 
-        if (this.datagridStore.dataLoading || this.datagridStore.loading) {
+        if (this.listStore.dataLoading || this.listStore.loading) {
             return;
         }
 

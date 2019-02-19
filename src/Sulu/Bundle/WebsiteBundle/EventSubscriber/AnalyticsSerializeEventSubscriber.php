@@ -43,7 +43,7 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // domains can be an array or a boolean, this difference is necessary for the datagrid to recognize if it is
+        // domains can be an array or a boolean, this difference is necessary for the list to recognize if it is
         // valid for all domains or only a single one
         $domains = $analytics->getDomains();
         if ($analytics->isAllDomains()) {

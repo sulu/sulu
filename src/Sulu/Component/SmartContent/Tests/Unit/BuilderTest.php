@@ -169,7 +169,7 @@ class BuilderTest extends TestCase
         $this->assertFalse($configuration->hasPagination());
 
         $this->assertEquals('collections', $configuration->getDatasourceResourceKey());
-        $this->assertEquals('collections', $configuration->getDatasourceDatagridKey());
+        $this->assertEquals('collections', $configuration->getDatasourceListKey());
         $this->assertEquals('column_list', $configuration->getDatasourceAdapter());
     }
 }

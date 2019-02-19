@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\Schema\Schema;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 /**
  * Represents metadata for a structure.
@@ -44,7 +44,7 @@ class StructureMetadata extends PropertiesMetadata
     protected $areas;
 
     /**
-     * @var Schema
+     * @var SchemaMetadata
      */
     protected $schema;
 
@@ -108,12 +108,12 @@ class StructureMetadata extends PropertiesMetadata
         return $this;
     }
 
-    public function getSchema(): ?Schema
+    public function getSchema(): ?SchemaMetadata
     {
         return $this->schema;
     }
 
-    public function setSchema(Schema $schema)
+    public function setSchema(SchemaMetadata $schema)
     {
         $this->schema = $schema;
 
