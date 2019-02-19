@@ -42,7 +42,7 @@ export default class ArrowMenu extends React.Component<Props> {
         );
     };
 
-    cloneChildren(children: Element<*>) {
+    cloneChildren(children: ChildrenArray<Element<*>>) {
         return React.Children.map(children, (child: any) => {
             if (child.type === Section) {
                 return React.cloneElement(child, {
@@ -54,7 +54,7 @@ export default class ArrowMenu extends React.Component<Props> {
         });
     }
 
-    cloneSection(section) {
+    cloneSection(section: Element<typeof Section>) {
         return React.Children.map(section.props.children, (child: any) => {
             if (child.type === Action) {
                 return this.cloneAction(child);
