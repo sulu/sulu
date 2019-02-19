@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
+use Imagine\Image\ImageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\InvalidMediaFormatException;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -26,7 +27,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
 
     const SCHEME_PATH = '';
 
-    const SCALE_MODE_DEFAULT = 'outbound';
+    const SCALE_MODE_DEFAULT = ImageInterface::THUMBNAIL_OUTBOUND;
 
     const SCALE_RETINA_DEFAULT = false;
 
@@ -171,6 +172,28 @@ abstract class BaseXmlFormatLoader extends FileLoader
                 $e
             );
         }
+    }
+
+    /**
+     * @internal
+     */
+    protected function getMode($modeNode)
+    {
+        if (!$modeNode) {
+            return static::SCALE_MODE_DEFAULT;
+        }
+
+        $mode = $modeNode->nodeValue;
+
+        if ('outbound' === $mode) {
+            $mode = ImageInterface::THUMBNAIL_OUTBOUND;
+        } elseif ('inset' === $mode) {
+            $mode = ImageInterface::THUMBNAIL_INSET;
+        } else {
+            throw new InvalidMediaFormatException(sprintf('The scale mode "%s" is not supported', $mode));
+        }
+
+        return $mode;
     }
 
     /**

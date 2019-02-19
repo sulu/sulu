@@ -104,7 +104,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
                 return [
                     'x' => $xValue,
                     'y' => $yValue,
-                    'mode' => (null !== $modeNode) ? $modeNode->nodeValue : static::SCALE_MODE_DEFAULT,
+                    'mode' => $this->getMode($modeNode),
                     'retina' => $retina,
                     'forceRatio' => $forceRatio,
                 ];

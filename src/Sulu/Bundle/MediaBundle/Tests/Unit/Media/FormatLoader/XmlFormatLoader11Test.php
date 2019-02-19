@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
+use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
@@ -66,7 +67,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
                 'scale' => [
                     'x' => '400',
                     'y' => '400',
-                    'mode' => 'outbound',
+                    'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
                     'forceRatio' => false,
                     'retina' => false,
                 ],
@@ -102,7 +103,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
                 'scale' => [
                     'x' => '400',
                     'y' => null,
-                    'mode' => 'outbound',
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
                     'forceRatio' => true,
                     'retina' => false,
                 ],
@@ -126,7 +127,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
                 'scale' => [
                     'x' => '200',
                     'y' => '180',
-                    'mode' => 'outbound',
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
                     'forceRatio' => true,
                     'retina' => false,
                 ],
@@ -148,7 +149,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
                 'scale' => [
                     'x' => '3840',
                     'y' => '2160',
-                    'mode' => 'outbound',
+                    'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
                     'forceRatio' => true,
                     'retina' => true,
                 ],
