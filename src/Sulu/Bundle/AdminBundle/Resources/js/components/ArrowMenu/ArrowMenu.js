@@ -55,12 +55,15 @@ export default class ArrowMenu extends React.Component<Props> {
     }
 
     cloneSection(section: Element<typeof Section>) {
-        return React.Children.map(section.props.children, (child: any) => {
-            if (child.type === Action) {
-                return this.cloneAction(child);
-            }
-            return child;
-        });
+        if (section.props.children){
+            return React.Children.map(section.props.children, (child: any) => {
+                if (child.type === Action) {
+                    return this.cloneAction(child);
+                }
+                return child;
+            });
+        }
+        return section;
     }
 
     cloneAction(originalAction: Element<typeof Action>) {
