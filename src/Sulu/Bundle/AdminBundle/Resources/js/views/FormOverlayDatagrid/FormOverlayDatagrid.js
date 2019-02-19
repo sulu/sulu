@@ -15,8 +15,9 @@ import formOverlayDatagridStyles from './formOverlayDatagrid.scss';
 export default class FormOverlayDatagrid extends React.Component<ViewProps> {
     static getDerivedRouteAttributes = Datagrid.getDerivedRouteAttributes;
 
-    @observable formStore: ?ResourceFormStore;
+    datagridRef: ?Datagrid;
     formRef: ?Form;
+    @observable formStore: ?ResourceFormStore;
 
     handleItemAdd = () => {
         const {
@@ -61,15 +62,14 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             this.formStore.save()
                 .then(() => {
                     this.destroyFormStore();
+                    if (this.datagridRef) {
+                        this.datagridRef.datagridStore.sendRequest();
+                    }
                 })
                 .catch((error) => {
                     log.error('Error while saving form-overlay content', error);
                 });
         }
-    };
-
-    setFormRef = (formRef: ?Form) => {
-        this.formRef = formRef;
     };
 
     @action updateFormStore = (itemId: ?string | number, formKey: string) => {
@@ -91,7 +91,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
         }
 
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
-        const resourceStore = new ResourceStore(resourceKey, itemId, {}, formStoreOptions);
+        const observableOptions = this.datagridRef ? {locale: this.datagridRef.locale} : {};
+        const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
 
@@ -119,6 +120,14 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
 
         return formStoreOptions;
     }
+
+    setFormRef = (formRef: ?Form) => {
+        this.formRef = formRef;
+    };
+
+    setDatagridRef = (datagridRef: ?Datagrid) => {
+        this.datagridRef = datagridRef;
+    };
 
     componentWillUnmount() {
         this.destroyFormStore();
@@ -148,6 +157,7 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
                     {...this.props}
                     onItemAdd={addFormKey && this.handleItemAdd}
                     onItemClick={editFormKey && this.handleItemClick}
+                    ref={this.setDatagridRef}
                 />
                 {!!this.formStore &&
                     <Overlay
