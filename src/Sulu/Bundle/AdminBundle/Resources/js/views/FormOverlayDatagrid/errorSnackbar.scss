@@ -1,0 +1,56 @@
+@import '../../containers/Application/colors.scss';
+
+$snackbarColor: $white;
+$snackbarBackgroundColor: $roman;
+$snackbarIconBackgroundColor: $persianRed;
+$closeButtonBorderColor: $white;
+
+.snackbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 1;
+    display: flex;
+    background-color: $snackbarBackgroundColor;
+    color: $snackbarColor;
+    align-items: center;
+    will-change: top, bottom;
+    transition: top .15s, bottom .15s;
+
+    &:not(.visible) {
+        top: -100%;
+        bottom: 100%;
+    }
+}
+
+.icon {
+    width: 60px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    justify-content: center;
+    background-color: $snackbarIconBackgroundColor;
+}
+
+.text {
+    font-size: 12px;
+    margin-left: 20px;
+}
+
+.close-button {
+    border: 1px solid $closeButtonBorderColor;
+    border-radius: 3px;
+    margin-left: 20px;
+    padding: 4px 20px;
+    cursor: pointer;
+    background-color: $snackbarBackgroundColor;
+    color: $snackbarColor;
+}
+
+.close-button-icon {
+    font-size: 10px;
+    margin-left: 20px;
+}
