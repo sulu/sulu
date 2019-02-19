@@ -3,19 +3,19 @@ import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import Datagrid from '../Datagrid';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
 import Form, {ResourceFormStore} from '../../containers/Form';
 import {ResourceStore} from '../../stores';
-import formOverlayDatagridStyles from './formOverlayDatagrid.scss';
+import List from '../List';
+import formOverlayListStyles from './formOverlayList.scss';
 import ErrorSnackbar from './ErrorSnackbar';
 
 @observer
-export default class FormOverlayDatagrid extends React.Component<ViewProps> {
-    static getDerivedRouteAttributes = Datagrid.getDerivedRouteAttributes;
+export default class FormOverlayList extends React.Component<ViewProps> {
+    static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
 
-    datagridRef: ?Datagrid;
+    listRef: ?List;
     formRef: ?Form;
 
     @observable formStore: ?ResourceFormStore;
@@ -64,8 +64,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             this.formStore.save()
                 .then(() => {
                     this.destroyFormOverlay();
-                    if (this.datagridRef) {
-                        this.datagridRef.datagridStore.sendRequest();
+                    if (this.listRef) {
+                        this.listRef.listStore.sendRequest();
                     }
                 })
                 .catch(action((error) => {
@@ -97,8 +97,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
         }
 
         const observableOptions = {};
-        if (this.datagridRef && this.datagridRef.locale.get()) {
-            observableOptions['locale'] = this.datagridRef.locale;
+        if (this.listRef && this.listRef.locale.get()) {
+            observableOptions['locale'] = this.listRef.locale;
         }
 
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
@@ -137,8 +137,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
         this.formRef = formRef;
     };
 
-    setDatagridRef = (datagridRef: ?Datagrid) => {
-        this.datagridRef = datagridRef;
+    setListRef = (listRef: ?List) => {
+        this.listRef = listRef;
     };
 
     componentWillUnmount() {
@@ -176,7 +176,7 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
                 size="small"
                 title={overlayTitle}
             >
-                <div className={formOverlayDatagridStyles.form}>
+                <div className={formOverlayListStyles.form}>
                     <ErrorSnackbar
                         onCloseClick={this.handleErrorSnackbarClose}
                         visible={!!this.formErrors.length}
@@ -204,11 +204,11 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
 
         return (
             <Fragment>
-                <Datagrid
+                <List
                     {...this.props}
                     onItemAdd={formKey && this.handleItemAdd}
                     onItemClick={formKey && this.handleItemClick}
-                    ref={this.setDatagridRef}
+                    ref={this.setListRef}
                 />
                 {this.renderFormOverlay()}
             </Fragment>

@@ -11,11 +11,11 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface FormOverlayDatagridRouteBuilderInterface
+interface FormOverlayListRouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
-    public function setDatagridKey(string $datagridKey): self;
+    public function setListKey(string $listKey): self;
 
     public function setFormKey(string $formKey): self;
 
@@ -34,7 +34,7 @@ interface FormOverlayDatagridRouteBuilderInterface
     /**
      * @param string[] $adapter
      */
-    public function addDatagridAdapters(array $adapter): self;
+    public function addListAdapters(array $adapter): self;
 
     /**
      * @param string[] $locales
@@ -55,9 +55,9 @@ interface FormOverlayDatagridRouteBuilderInterface
     public function disableSearching(): self;
 
     /**
-     * @param string[] $routerAttributesToDatagridStore
+     * @param string[] $routerAttributesToListStore
      */
-    public function addRouterAttributesToDatagridStore(array $routerAttributesToDatagridStore): self;
+    public function addRouterAttributesToListStore(array $routerAttributesToListStore): self;
 
     /**
      * @param string[] $routerAttributesToFormStore
