@@ -18,8 +18,8 @@ const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
     resourceStore?: ResourceStore,
-    onItemAdd?: (id: string | number) => void,
-    onItemEdit?: (itemId: string | number) => void,
+    onItemAdd?: (parentId: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
 };
 
 @observer
@@ -192,17 +192,26 @@ class List extends React.Component<Props> {
         this.listStore.destroy();
     }
 
-    addItem = (rowId: string | number) => {
-        const {router} = this.props;
-        const {
-            route: {
-                options: {
-                    addRoute,
-                },
-            },
-        } = router;
+    handleItemAdd = (parentId: string | number) => {
+        const {onItemAdd, router} = this.props;
 
-        router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
+        if (onItemAdd) {
+            onItemAdd(parentId);
+            return;
+        }
+
+        router.navigate(router.route.options.addRoute, {locale: this.locale.get(), parentId: parentId});
+    };
+
+    handleItemClick = (itemId: string | number) => {
+        const {onItemClick, router} = this.props;
+
+        if (onItemClick) {
+            onItemClick(itemId);
+            return;
+        }
+
+        router.navigate(router.route.options.editRoute, {id: itemId, locale: this.locale.get()});
     };
 
     requestSelectionDelete = () => {
@@ -213,11 +222,6 @@ class List extends React.Component<Props> {
         this.list.requestSelectionDelete();
     };
 
-    handleEditClick = (rowId: string | number) => {
-        const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
-    };
-
     setListRef = (list: ?ElementRef<typeof ListContainer>) => {
         this.list = list;
     };
@@ -225,7 +229,7 @@ class List extends React.Component<Props> {
     render() {
         const {
             onItemAdd,
-            onItemEdit,
+            onItemClick,
             router: {
                 route: {
                     options: {
@@ -244,8 +248,8 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={onItemAdd ? onItemAdd : addRoute && this.addItem}
-                    onItemClick={onItemEdit ? onItemEdit : editRoute && this.handleEditClick}
+                    onItemAdd={onItemAdd || addRoute ? this.handleItemAdd : undefined}
+                    onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
                     ref={this.setListRef}
                     searchable={searchable}
                     store={this.listStore}

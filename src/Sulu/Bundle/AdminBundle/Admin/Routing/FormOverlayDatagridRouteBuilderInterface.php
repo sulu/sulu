@@ -21,6 +21,10 @@ interface FormOverlayDatagridRouteBuilderInterface
 
     public function setTabTitle(string $tabTitle): self;
 
+    public function setAddOverlayTitle(string $addOverlayTitle): self;
+
+    public function setEditOverlayTitle(string $editOverlayTitle): self;
+
     public function setTabOrder(int $tabOrder): self;
 
     public function setTabCondition(string $tabCondition): self;

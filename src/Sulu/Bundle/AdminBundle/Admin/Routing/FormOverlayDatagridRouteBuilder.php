@@ -46,6 +46,20 @@ class FormOverlayDatagridRouteBuilder implements FormOverlayDatagridRouteBuilder
         return $this;
     }
 
+    public function setAddOverlayTitle(string $addOverlayTitle): FormOverlayDatagridRouteBuilderInterface
+    {
+        $this->route->setOption('addOverlayTitle', $addOverlayTitle);
+
+        return $this;
+    }
+
+    public function setEditOverlayTitle(string $editOverlayTitle): FormOverlayDatagridRouteBuilderInterface
+    {
+        $this->route->setOption('editOverlayTitle', $editOverlayTitle);
+
+        return $this;
+    }
+
     public function setTabTitle(string $tabTitle): FormOverlayDatagridRouteBuilderInterface
     {
         $this->route->setOption('tabTitle', $tabTitle);
