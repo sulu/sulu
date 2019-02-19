@@ -2,7 +2,6 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
-import log from 'loglevel';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Datagrid from '../Datagrid';
 import Overlay from '../../components/Overlay';
@@ -10,6 +9,7 @@ import {translate} from '../../utils/Translator';
 import Form, {ResourceFormStore} from '../../containers/Form';
 import {ResourceStore} from '../../stores';
 import formOverlayDatagridStyles from './formOverlayDatagrid.scss';
+import ErrorSnackbar from './ErrorSnackbar';
 
 @observer
 export default class FormOverlayDatagrid extends React.Component<ViewProps> {
@@ -17,7 +17,9 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
 
     datagridRef: ?Datagrid;
     formRef: ?Form;
+
     @observable formStore: ?ResourceFormStore;
+    @observable formErrors = [];
 
     handleItemAdd = () => {
         const {
@@ -30,7 +32,7 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             },
         } = this.props;
 
-        this.updateFormStore(undefined, formKey);
+        this.createFormOverlay(undefined, formKey);
     };
 
     handleItemClick = (itemId: string | number) => {
@@ -44,35 +46,39 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             },
         } = this.props;
 
-        this.updateFormStore(itemId, formKey);
+        this.createFormOverlay(itemId, formKey);
     };
 
-    handleOverlayConfirm = () => {
+    handleFormOverlayConfirm = () => {
         if (this.formRef) {
             this.formRef.submit();
         }
     };
 
-    handleOverlayClose = () => {
-        this.destroyFormStore();
+    handleFormOverlayClose = () => {
+        this.destroyFormOverlay();
     };
 
     handleFormSubmit = () => {
         if (this.formStore) {
             this.formStore.save()
                 .then(() => {
-                    this.destroyFormStore();
+                    this.destroyFormOverlay();
                     if (this.datagridRef) {
                         this.datagridRef.datagridStore.sendRequest();
                     }
                 })
-                .catch((error) => {
-                    log.error('Error while saving form-overlay content', error);
-                });
+                .catch(action((error) => {
+                    this.formErrors.push(error);
+                }));
         }
     };
 
-    @action updateFormStore = (itemId: ?string | number, formKey: string) => {
+    @action handleErrorSnackbarClose = () => {
+        this.formErrors.pop();
+    };
+
+    @action createFormOverlay = (itemId: ?string | number, formKey: string) => {
         const {
             router: {
                 attributes,
@@ -100,7 +106,9 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
 
-    @action destroyFormStore = () => {
+    @action destroyFormOverlay = () => {
+        this.formErrors = [];
+
         if (this.formStore) {
             this.formStore.destroy();
             this.formStore = undefined;
@@ -134,7 +142,53 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
     };
 
     componentWillUnmount() {
-        this.destroyFormStore();
+        this.destroyFormOverlay();
+    }
+
+    renderFormOverlay() {
+        const {
+            router: {
+                route: {
+                    options: {
+                        addOverlayTitle,
+                        editOverlayTitle,
+                    },
+                },
+            },
+        } = this.props;
+
+        if (!this.formStore) {
+            return null;
+        }
+
+        const overlayTitle = this.formStore.id
+            ? translate(editOverlayTitle || 'sulu_admin.edit')
+            : translate(addOverlayTitle || 'sulu_admin.create');
+
+        return (
+            <Overlay
+                confirmDisabled={!this.formStore.dirty}
+                confirmLoading={this.formStore.saving}
+                confirmText={translate('sulu_admin.save')}
+                onClose={this.handleFormOverlayClose}
+                onConfirm={this.handleFormOverlayConfirm}
+                open={!!this.formStore}
+                size="small"
+                title={overlayTitle}
+            >
+                <div className={formOverlayDatagridStyles.form}>
+                    <ErrorSnackbar
+                        onCloseClick={this.handleErrorSnackbarClose}
+                        visible={!!this.formErrors.length}
+                    />
+                    <Form
+                        onSubmit={this.handleFormSubmit}
+                        ref={this.setFormRef}
+                        store={this.formStore}
+                    />
+                </div>
+            </Overlay>
+        );
     }
 
     render() {
@@ -143,16 +197,10 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
                 route: {
                     options: {
                         formKey,
-                        addOverlayTitle,
-                        editOverlayTitle,
                     },
                 },
             },
         } = this.props;
-
-        const overlayTitle = this.formStore && this.formStore.id
-            ? translate(editOverlayTitle || 'sulu_admin.edit')
-            : translate(addOverlayTitle || 'sulu_admin.create');
 
         return (
             <Fragment>
@@ -162,26 +210,7 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setDatagridRef}
                 />
-                {!!this.formStore &&
-                    <Overlay
-                        confirmDisabled={!this.formStore.dirty}
-                        confirmLoading={this.formStore.saving}
-                        confirmText={translate('sulu_admin.save')}
-                        onClose={this.handleOverlayClose}
-                        onConfirm={this.handleOverlayConfirm}
-                        open={!!this.formStore}
-                        size="large"
-                        title={overlayTitle}
-                    >
-                        <div className={formOverlayDatagridStyles.form}>
-                            <Form
-                                onSubmit={this.handleFormSubmit}
-                                ref={this.setFormRef}
-                                store={this.formStore}
-                            />
-                        </div>
-                    </Overlay>
-                }
+                {this.renderFormOverlay()}
             </Fragment>
         );
     }
