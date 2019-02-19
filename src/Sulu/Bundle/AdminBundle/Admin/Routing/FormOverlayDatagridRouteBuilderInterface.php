@@ -17,6 +17,8 @@ interface FormOverlayDatagridRouteBuilderInterface
 
     public function setDatagridKey(string $datagridKey): self;
 
+    public function setFormKey(string $formKey): self;
+
     public function setTitle(string $title): self;
 
     public function setTabTitle(string $tabTitle): self;
@@ -45,10 +47,6 @@ interface FormOverlayDatagridRouteBuilderInterface
     public function addToolbarActions(array $toolbarActions): self;
 
     public function setDefaultLocale(string $locale): self;
-
-    public function setAddFormKey(string $addFormKey): self;
-
-    public function setEditFormKey(string $editFormKey): self;
 
     public function setBackRoute(string $editRoute): self;
 

@@ -24,13 +24,13 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             router: {
                 route: {
                     options: {
-                        addFormKey,
+                        formKey,
                     },
                 },
             },
         } = this.props;
 
-        this.updateFormStore(undefined, addFormKey);
+        this.updateFormStore(undefined, formKey);
     };
 
     handleItemClick = (itemId: string | number) => {
@@ -38,13 +38,13 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             router: {
                 route: {
                     options: {
-                        editFormKey,
+                        formKey,
                     },
                 },
             },
         } = this.props;
 
-        this.updateFormStore(itemId, editFormKey);
+        this.updateFormStore(itemId, formKey);
     };
 
     handleOverlayConfirm = () => {
@@ -138,9 +138,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             router: {
                 route: {
                     options: {
-                        addFormKey,
+                        formKey,
                         addOverlayTitle,
-                        editFormKey,
                         editOverlayTitle,
                     },
                 },
@@ -155,8 +154,8 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             <Fragment>
                 <Datagrid
                     {...this.props}
-                    onItemAdd={addFormKey && this.handleItemAdd}
-                    onItemClick={editFormKey && this.handleItemClick}
+                    onItemAdd={formKey && this.handleItemAdd}
+                    onItemClick={formKey && this.handleItemClick}
                     ref={this.setDatagridRef}
                 />
                 {!!this.formStore &&

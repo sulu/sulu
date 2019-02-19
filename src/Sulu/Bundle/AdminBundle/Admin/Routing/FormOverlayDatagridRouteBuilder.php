@@ -39,6 +39,13 @@ class FormOverlayDatagridRouteBuilder implements FormOverlayDatagridRouteBuilder
         return $this;
     }
 
+    public function setFormKey(string $formKey): FormOverlayDatagridRouteBuilderInterface
+    {
+        $this->route->setOption('formKey', $formKey);
+
+        return $this;
+    }
+
     public function setTitle(string $title): FormOverlayDatagridRouteBuilderInterface
     {
         $this->route->setOption('title', $title);
@@ -111,20 +118,6 @@ class FormOverlayDatagridRouteBuilder implements FormOverlayDatagridRouteBuilder
         $oldToolbarActions = $this->route->getOption('toolbarActions');
         $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
         $this->route->setOption('toolbarActions', $newToolbarActions);
-
-        return $this;
-    }
-
-    public function setAddFormKey(string $addFormKey): FormOverlayDatagridRouteBuilderInterface
-    {
-        $this->route->setOption('addFormKey', $addFormKey);
-
-        return $this;
-    }
-
-    public function setEditFormKey(string $editFormKey): FormOverlayDatagridRouteBuilderInterface
-    {
-        $this->route->setOption('editFormKey', $editFormKey);
 
         return $this;
     }
