@@ -1,14 +1,13 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import log from 'loglevel';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Datagrid from '../Datagrid';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
-import {ResourceFormStore} from '../../containers/Form';
-import Form from '../../containers/Form';
+import Form, {ResourceFormStore} from '../../containers/Form';
 import {ResourceStore} from '../../stores';
 import formOverlayDatagridStyles from './formOverlayDatagrid.scss';
 
@@ -76,9 +75,12 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
     @action updateFormStore = (itemId: ?string | number, formKey: string) => {
         const {
             router: {
+                attributes,
                 route: {
                     options: {
+                        apiOptions = {},
                         resourceKey,
+                        routerAttributesToFormStore = {},
                     },
                 },
             },
@@ -88,8 +90,9 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             this.formStore.destroy();
         }
 
-        const resourceStore = new ResourceStore(resourceKey, itemId);
-        this.formStore = new ResourceFormStore(resourceStore, formKey);
+        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
+        const resourceStore = new ResourceStore(resourceKey, itemId, {}, formStoreOptions);
+        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
 
     @action destroyFormStore = () => {
@@ -98,6 +101,24 @@ export default class FormOverlayDatagrid extends React.Component<ViewProps> {
             this.formStore = undefined;
         }
     };
+
+    buildFormStoreOptions(
+        apiOptions: Object,
+        attributes: Object,
+        routerAttributesToFormStore: {[string | number]: string}
+    ) {
+        const formStoreOptions = apiOptions ? apiOptions : {};
+
+        routerAttributesToFormStore = toJS(routerAttributesToFormStore);
+        Object.keys(routerAttributesToFormStore).forEach((key) => {
+            const attributeName = routerAttributesToFormStore[key];
+            const formOptionKey = isNaN(key) ? key : routerAttributesToFormStore[key];
+
+            formStoreOptions[formOptionKey] = attributes[attributeName];
+        });
+
+        return formStoreOptions;
+    }
 
     componentWillUnmount() {
         this.destroyFormStore();
