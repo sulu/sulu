@@ -19,6 +19,7 @@ import Datagrid, {
     AddToolbarAction as DatagridAddToolbarAction,
     DeleteToolbarAction as DatagridDeleteToolbarAction,
     MoveToolbarAction as DatagridMoveToolbarAction,
+    ExportToolbarAction as DatagridExportToolbarAction,
     toolbarActionRegistry as datagridToolbarActionRegistry,
 } from './views/Datagrid';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
@@ -226,6 +227,7 @@ function registerDatagridToolbarActions() {
     datagridToolbarActionRegistry.add('sulu_admin.add', DatagridAddToolbarAction);
     datagridToolbarActionRegistry.add('sulu_admin.delete', DatagridDeleteToolbarAction);
     datagridToolbarActionRegistry.add('sulu_admin.move', DatagridMoveToolbarAction);
+    datagridToolbarActionRegistry.add('sulu_admin.export', DatagridExportToolbarAction);
 }
 
 function processConfig(config: Object) {
