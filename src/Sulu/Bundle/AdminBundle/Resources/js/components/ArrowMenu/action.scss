@@ -22,15 +22,9 @@ $disabledColor: $silver;
     &:last-child {
         margin-bottom: 0;
     }
-}
 
-.action-disabled {
-    border: none;
-    background: transparent;
-    line-height: 14px;
-    color: $disabledColor;
-    font-size: 12px;
-    margin-bottom: 10px;
-    text-align: left;
-    width: 100%;
+    &:disabled {
+        color: $disabledColor;
+        cursor: default;
+    }
 }

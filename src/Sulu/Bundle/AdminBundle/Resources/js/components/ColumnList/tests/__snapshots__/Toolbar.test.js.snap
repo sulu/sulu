@@ -37,7 +37,7 @@ exports[`Should render with active 2`] = `
       <div class=\\"arrow top right\\"></div>
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">
-          <div class=\\"children\\"><button class=\\"action\\">Option1</button><button class=\\"actionDisabled\\" disabled=\\"\\">Option1</button></div>
+          <div class=\\"children\\"><button class=\\"action\\">Option1</button><button class=\\"action\\" disabled=\\"\\">Option1</button></div>
         </div>
       </div>
     </div>

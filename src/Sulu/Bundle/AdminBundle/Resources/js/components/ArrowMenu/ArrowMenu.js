@@ -78,6 +78,7 @@ export default class ArrowMenu extends React.Component<Props> {
         } = this.props;
 
         const clonedAnchorElement = this.cloneAnchorElement(anchorElement);
+
         return (
             <Fragment>
                 {clonedAnchorElement}

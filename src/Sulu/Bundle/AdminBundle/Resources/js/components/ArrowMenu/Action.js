@@ -4,14 +4,16 @@ import actionStyles from './action.scss';
 
 type Props = {
     children: string,
-    disabled?: boolean,
+    disabled: boolean,
     onClick: () => void,
+    onAfterAction?: () => void,
 };
 
 export default class Action extends React.PureComponent<Props> {
     static defaultProps = {
         disabled: false,
     };
+
     handleButtonClick = () => {
         const {
             onClick,
@@ -29,7 +31,7 @@ export default class Action extends React.PureComponent<Props> {
         const {disabled} = this.props;
         return (
             <button
-                className={disabled ? actionStyles.actionDisabled : actionStyles.action}
+                className={actionStyles.action}
                 disabled={disabled}
                 onClick={this.handleButtonClick}
             >

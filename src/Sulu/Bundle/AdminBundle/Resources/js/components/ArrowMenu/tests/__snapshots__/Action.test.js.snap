@@ -10,7 +10,7 @@ exports[`Render default Action 1`] = `
 
 exports[`Render disabled Action 1`] = `
 <button
-  class="actionDisabled"
+  class="action"
   disabled=""
 >
   My Action

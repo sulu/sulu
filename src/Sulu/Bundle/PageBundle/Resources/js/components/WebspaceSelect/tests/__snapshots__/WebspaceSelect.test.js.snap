@@ -61,11 +61,7 @@ exports[`Render WebspaceSelect opened 2`] = `
       <div class=\\"arrowMenu\\">
         <div class=\\"section\\">
           <div class=\\"title\\">Webspaces</div>
-          <div class=\\"children\\">
-            <div class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></div>
-            <div class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></div>
-          </div>
+          <div class=\\"children\\"><a class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></a><a class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></a><a class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></a></div>
         </div>
       </div>
     </div>

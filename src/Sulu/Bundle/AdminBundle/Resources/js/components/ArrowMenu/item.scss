@@ -21,14 +21,11 @@ $disabledColor: $silver;
         font-weight: bold;
         color: $itemColorActive;
     }
-}
 
-.item-disabled {
-    height: 22px;
-    color: $disabledColor;
-    font-size: 12px;
-    line-height: 22px;
-    margin-bottom: 6px;
+    &.disabled {
+        color: $disabledColor;
+        cursor: default;
+    }
 }
 
 .icon {

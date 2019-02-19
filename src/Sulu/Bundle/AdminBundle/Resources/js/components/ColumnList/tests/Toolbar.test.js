@@ -71,6 +71,7 @@ test('Should close dropdown when item is clicked', () => {
     expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
     toolbar.find(ToolbarDropdown).find('a').simulate('click');
     expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(2);
+
     toolbar.find('ToolbarDropdown Action[children="Option1"]').simulate('click');
     expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
 });
