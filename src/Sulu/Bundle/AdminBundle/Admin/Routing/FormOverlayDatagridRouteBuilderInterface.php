@@ -61,6 +61,11 @@ interface FormOverlayDatagridRouteBuilderInterface
      */
     public function addRouterAttributesToDatagridStore(array $routerAttributesToDatagridStore): self;
 
+    /**
+     * @param string[] $routerAttributesToFormStore
+     */
+    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): self;
+
     public function setParent(string $parent): self;
 
     public function getRoute(): Route;

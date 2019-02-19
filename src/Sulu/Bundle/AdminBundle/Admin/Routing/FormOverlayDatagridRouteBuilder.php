@@ -173,6 +173,15 @@ class FormOverlayDatagridRouteBuilder implements FormOverlayDatagridRouteBuilder
         return $this;
     }
 
+    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): FormOverlayDatagridRouteBuilderInterface
+    {
+        $oldRouterAttributesToFormStore = $this->route->getOption('routerAttributesToFormStore');
+        $newRouterAttributesToFormStore = $oldRouterAttributesToFormStore ? array_merge($oldRouterAttributesToFormStore, $routerAttributesToFormStore) : $routerAttributesToFormStore;
+        $this->route->setOption('routerAttributesToFormStore', $newRouterAttributesToFormStore);
+
+        return $this;
+    }
+
     public function setParent(string $parent): FormOverlayDatagridRouteBuilderInterface
     {
         $this->route->setParent($parent);
