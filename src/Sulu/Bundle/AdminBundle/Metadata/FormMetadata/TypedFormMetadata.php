@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use JMS\Serializer\Annotation\SerializedName;
 
-class TypedForm
+class TypedFormMetadata
 {
     /**
      * @var FormMetadata[]

@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\Property;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 
-class PropertyTest extends TestCase
+class PropertyMetadataTest extends TestCase
 {
     public function provideGetter()
     {
@@ -29,7 +29,7 @@ class PropertyTest extends TestCase
      */
     public function testGetter($name, $mandatory)
     {
-        $property = new Property($name, $mandatory, null);
+        $property = new PropertyMetadata($name, $mandatory, null);
         $this->assertEquals($name, $property->getName());
         $this->assertEquals($mandatory, $property->isMandatory());
     }
@@ -48,7 +48,7 @@ class PropertyTest extends TestCase
      */
     public function testToJsonSchema($name, $const, $expectedSchema)
     {
-        $property = new Property($name, false, $const);
+        $property = new PropertyMetadata($name, false, $const);
         $jsonSchema = $property->toJsonSchema();
 
         $this->assertEquals($jsonSchema, $expectedSchema);

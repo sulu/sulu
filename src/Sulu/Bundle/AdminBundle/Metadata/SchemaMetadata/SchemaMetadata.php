@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 class SchemaMetadata
 {
     /**
-     * @var Property[]
+     * @var PropertyMetadata[]
      */
     private $properties;
 
@@ -46,7 +46,7 @@ class SchemaMetadata
 
         $jsonSchema['required'] = array_values(
             array_filter(
-                array_map(function(Property $property) {
+                array_map(function(PropertyMetadata $property) {
                     if ($property->isMandatory()) {
                         return $property->getName();
                     }

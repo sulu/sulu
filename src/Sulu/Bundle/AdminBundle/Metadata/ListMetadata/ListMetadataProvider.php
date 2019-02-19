@@ -46,7 +46,7 @@ class ListMetadataProvider implements MetadataProviderInterface
 
         $list = new ListMetadata();
         foreach ($fieldDescriptors as $fieldDescriptor) {
-            $field = new Field($fieldDescriptor->getName());
+            $field = new FieldMetadata($fieldDescriptor->getName());
 
             $field->setLabel($this->translator->trans($fieldDescriptor->getTranslation(), [], 'admin', $locale));
             $field->setType($fieldDescriptor->getType());

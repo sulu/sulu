@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata;
 
-class Field
+class FieldMetadata
 {
     /**
      * @var string

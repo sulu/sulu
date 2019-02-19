@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-class Tag
+class TagMetadata
 {
     /**
      * @var string

@@ -15,14 +15,14 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\Property;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata;
-use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -100,7 +100,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
         if ($form instanceof FormMetadata) {
             $this->evaluateFormItemExpressions($form->getItems());
-        } elseif ($form instanceof TypedForm) {
+        } elseif ($form instanceof TypedFormMetadata) {
             foreach ($form->getForms() as $formType) {
                 $this->evaluateFormItemExpressions($formType->getItems());
             }
@@ -110,22 +110,22 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param Item[] $items
+     * @param ItemMetadata[] $items
      */
     private function evaluateFormItemExpressions(array $items)
     {
         foreach ($items as $item) {
-            if ($item instanceof Section) {
+            if ($item instanceof SectionMetadata) {
                 $this->evaluateFormItemExpressions($item->getItems());
             }
 
-            if ($item instanceof Field) {
+            if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
                     $this->evaluateFormItemExpressions($type->getItems());
                 }
 
                 foreach ($item->getOptions() as $option) {
-                    if (Option::TYPE_EXPRESSION === $option->getType()) {
+                    if (OptionMetadata::TYPE_EXPRESSION === $option->getType()) {
                         $option->setValue($this->expressionLanguage->evaluate($option->getValue()));
                     }
                 }
@@ -163,7 +163,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 $configCache = $this->getConfigCache($structureType, $locale);
                 $configCache->write(
                     serialize($form),
-                    array_map(function(StructureMetadata $structureMetadata) {
+                    array_map(function(ContentStructureMetadata $structureMetadata) {
                         return new FileResource($structureMetadata->getResource());
                     }, $structuresMetadata)
                 );
@@ -188,11 +188,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param StructureMetadata[] $structuresMetadata
+     * @param ContentStructureMetadata[] $structuresMetadata
      */
     public function mapStructureMetadata(array $structuresMetadata, string $structureType, string $locale)
     {
-        $typedForm = new TypedForm();
+        $typedForm = new TypedFormMetadata();
 
         foreach ($structuresMetadata as $structureMetadata) {
             $form = new FormMetadata();
@@ -236,16 +236,16 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param ItemMetadata[] $children
+     * @param ContentItemMetadata[] $children
      */
     private function mapChildren(array $children, FormMetadata $form, string $locale)
     {
         foreach ($children as $child) {
             if ($child instanceof BlockMetadata) {
                 $item = $this->mapBlock($child, $locale);
-            } elseif ($child instanceof PropertyMetadata) {
+            } elseif ($child instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($child, $locale);
-            } elseif ($child instanceof SectionMetadata) {
+            } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
             } else {
                 throw new \Exception('Unsupported property given "' . get_class($child) . '"');
@@ -255,9 +255,9 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         }
     }
 
-    private function mapSection(SectionMetadata $property, string $locale): Section
+    private function mapSection(ContentSectionMetadata $property, string $locale): SectionMetadata
     {
-        $section = new Section($property->getName());
+        $section = new SectionMetadata($property->getName());
 
         $title = $property->getTitle($locale);
         if ($title) {
@@ -271,9 +271,9 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         foreach ($property->getChildren() as $component) {
             if ($component instanceof BlockMetadata) {
                 $item = $this->mapBlock($component, $locale);
-            } elseif ($component instanceof PropertyMetadata) {
+            } elseif ($component instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
-            } elseif ($component instanceof SectionMetadata) {
+            } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
             } else {
                 throw new \Exception('Unsupported property given "' . get_class($property) . '"');
@@ -285,7 +285,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return $section;
     }
 
-    private function mapBlock(BlockMetadata $property, string $locale): Field
+    private function mapBlock(BlockMetadata $property, string $locale): FieldMetadata
     {
         $field = $this->mapProperty($property, $locale);
         $field->setDefaultType($property->getDefaultComponentName());
@@ -296,7 +296,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             $blockType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
 
             foreach ($component->getChildren() as $componentProperty) {
-                if ($componentProperty instanceof PropertyMetadata) {
+                if ($componentProperty instanceof ContentPropertyMetadata) {
                     $blockTypeField = $this->mapProperty($componentProperty, $locale);
                     $blockType->addItem($blockTypeField);
                 }
@@ -308,11 +308,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return $field;
     }
 
-    private function mapProperty(PropertyMetadata $property, string $locale): Field
+    private function mapProperty(ContentPropertyMetadata $property, string $locale): FieldMetadata
     {
-        $field = new Field($property->getName());
+        $field = new FieldMetadata($property->getName());
         foreach ($property->getTags() as $tag) {
-            $fieldTag = new Tag();
+            $fieldTag = new TagMetadata();
             $fieldTag->setName($tag['name']);
             $fieldTag->setPriority($tag['priority']);
             $field->addTag($fieldTag);
@@ -334,15 +334,15 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return $field;
     }
 
-    private function mapOption($parameter, string $locale): Option
+    private function mapOption($parameter, string $locale): OptionMetadata
     {
-        $option = new Option();
+        $option = new OptionMetadata();
         $option->setName($parameter['name']);
         $option->setType($parameter['type']);
 
         if ('collection' === $parameter['type']) {
             foreach ($parameter['value'] as $parameterName => $parameterValue) {
-                $valueOption = new Option();
+                $valueOption = new OptionMetadata();
                 $valueOption->setName($parameterValue['name']);
                 $valueOption->setValue($parameterValue['value']);
 
@@ -360,7 +360,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         return $option;
     }
 
-    private function mapOptionMeta($parameterValue, string $locale, Option $option)
+    private function mapOptionMeta($parameterValue, string $locale, OptionMetadata $option)
     {
         if (!array_key_exists('meta', $parameterValue)) {
             return;
@@ -384,7 +384,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param ItemMetadata[] $itemsMetadata
+     * @param ContentItemMetadata[] $itemsMetadata
      */
     private function mapSchema(array $itemsMetadata): SchemaMetadata
     {
@@ -392,12 +392,12 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     }
 
     /**
-     * @param ItemMetadata[] $itemsMetadata
+     * @param ContentItemMetadata[] $itemsMetadata
      */
     private function mapSchemaProperties(array $itemsMetadata)
     {
-        return array_filter(array_map(function(ItemMetadata $itemMetadata) {
-            if ($itemMetadata instanceof SectionMetadata) {
+        return array_filter(array_map(function(ContentItemMetadata $itemMetadata) {
+            if ($itemMetadata instanceof ContentSectionMetadata) {
                 return $this->mapSchemaProperties($itemMetadata->getChildren());
             }
 
@@ -405,7 +405,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 return;
             }
 
-            return new Property($itemMetadata->getName(), $itemMetadata->isRequired());
+            return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
         }, $itemsMetadata));
     }
 

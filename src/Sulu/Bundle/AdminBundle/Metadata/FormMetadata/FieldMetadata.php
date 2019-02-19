@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-class Field extends Item
+class FieldMetadata extends ItemMetadata
 {
     /**
-     * @var Option[]
+     * @var OptionMetadata[]
      */
     protected $options = [];
 
@@ -39,7 +39,7 @@ class Field extends Item
     protected $spaceAfter;
 
     /**
-     * @var Tag[]
+     * @var TagMetadata[]
      */
     protected $tags;
 
@@ -53,7 +53,7 @@ class Field extends Item
         return $this->options;
     }
 
-    public function addOption(Option $option): void
+    public function addOption(OptionMetadata $option): void
     {
         $this->options[$option->getName()] = $option;
     }
@@ -102,14 +102,14 @@ class Field extends Item
     }
 
     /**
-     * @return Tag[]
+     * @return TagMetadata[]
      */
     public function getTags(): array
     {
         return $this->tags;
     }
 
-    public function addTag(Tag $tag): void
+    public function addTag(TagMetadata $tag): void
     {
         $this->tags[] = $tag;
     }

@@ -11,24 +11,24 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-class Section extends Item
+class SectionMetadata extends ItemMetadata
 {
     /**
-     * @var Item[]
+     * @var ItemMetadata[]
      */
     protected $items;
 
     protected $type = 'section';
 
     /**
-     * @return Item[]
+     * @return ItemMetadata[]
      */
     public function getItems(): array
     {
         return $this->items;
     }
 
-    public function addItem(Item $item): void
+    public function addItem(ItemMetadata $item): void
     {
         $this->items[$item->getName()] = $item;
     }

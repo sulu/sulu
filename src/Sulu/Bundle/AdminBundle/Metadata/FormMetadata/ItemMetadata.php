@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use JMS\Serializer\Annotation as Serializer;
 
-abstract class Item
+abstract class ItemMetadata
 {
     /**
      * @var string

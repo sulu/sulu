@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as Serializer;
 class ListMetadata
 {
     /**
-     * @var Field[]
+     * @var FieldMetadata[]
      *
      * @Serializer\Inline()
      */
@@ -32,7 +32,7 @@ class ListMetadata
         $this->fields = $fields;
     }
 
-    public function addField(Field $field): void
+    public function addField(FieldMetadata $field): void
     {
         $this->fields[$field->getName()] = $field;
     }

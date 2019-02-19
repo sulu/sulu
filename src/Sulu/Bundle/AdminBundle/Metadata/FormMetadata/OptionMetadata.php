@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use JMS\Serializer\Annotation\Exclude;
 
-class Option
+class OptionMetadata
 {
     const TYPE_STRING = 'string';
 
@@ -33,7 +33,7 @@ class Option
     protected $type;
 
     /**
-     * @var string|int|Option[]
+     * @var string|int|OptionMetadata[]
      */
     protected $value;
 
@@ -79,7 +79,7 @@ class Option
     }
 
     /**
-     * @return int|string|Option[]
+     * @return int|string|OptionMetadata[]
      */
     public function getValue()
     {
@@ -87,7 +87,7 @@ class Option
     }
 
     /**
-     * @param int|string|Option[] $value
+     * @param int|string|OptionMetadata[] $value
      */
     public function setValue($value): void
     {

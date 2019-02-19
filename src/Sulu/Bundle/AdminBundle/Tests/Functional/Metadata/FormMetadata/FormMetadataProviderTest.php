@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Field;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Section;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 class FormMetadataProviderTest extends KernelTestCase
@@ -103,9 +103,9 @@ class FormMetadataProviderTest extends KernelTestCase
         $section2 = $form->getItems()['test2'];
         $section22 = $section2->getItems()['test22'];
 
-        $this->assertInstanceOf(Section::class, $section1);
-        $this->assertInstanceOf(Section::class, $section2);
-        $this->assertInstanceOf(Section::class, $section22);
+        $this->assertInstanceOf(SectionMetadata::class, $section1);
+        $this->assertInstanceOf(SectionMetadata::class, $section2);
+        $this->assertInstanceOf(SectionMetadata::class, $section22);
 
         $this->assertEquals('test11', $section1->getItems()['test11']->getName());
         $this->assertEquals('test21', $section2->getItems()['test21']->getName());
@@ -118,7 +118,7 @@ class FormMetadataProviderTest extends KernelTestCase
 
         $blocks = $form->getItems()['blocks'];
 
-        $this->assertInstanceOf(Field::class, $blocks);
+        $this->assertInstanceOf(FieldMetadata::class, $blocks);
         $this->assertEquals('editor', $blocks->getDefaultType());
 
         $types = $blocks->getTypes();

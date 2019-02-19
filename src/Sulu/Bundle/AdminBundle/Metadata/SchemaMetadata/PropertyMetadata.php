@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class Property
+class PropertyMetadata
 {
     /**
      * @var string

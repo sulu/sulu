@@ -27,7 +27,7 @@ class FormMetadata
     private $title;
 
     /**
-     * @var Item[]
+     * @var ItemMetadata[]
      *
      * @SerializedName("form")
      */
@@ -54,7 +54,7 @@ class FormMetadata
     }
 
     /**
-     * @return Item[]
+     * @return ItemMetadata[]
      */
     public function getItems(): array
     {
@@ -62,14 +62,14 @@ class FormMetadata
     }
 
     /**
-     * @param Item[] $items
+     * @param ItemMetadata[] $items
      */
     public function setItems(array $items)
     {
         $this->items = $items;
     }
 
-    public function addItem(Item $item): void
+    public function addItem(ItemMetadata $item): void
     {
         $this->items[$item->getName()] = $item;
     }
