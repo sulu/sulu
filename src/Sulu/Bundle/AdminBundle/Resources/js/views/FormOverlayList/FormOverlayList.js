@@ -5,9 +5,10 @@ import {action, observable, toJS} from 'mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
-import Form, {ResourceFormStore} from '../../containers/Form';
-import {ResourceStore} from '../../stores';
+import Form from '../../containers/Form';
+import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
+import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
 import formOverlayListStyles from './formOverlayList.scss';
 import ErrorSnackbar from './ErrorSnackbar';
 
@@ -22,31 +23,11 @@ export default class FormOverlayList extends React.Component<ViewProps> {
     @observable formErrors = [];
 
     handleItemAdd = () => {
-        const {
-            router: {
-                route: {
-                    options: {
-                        formKey,
-                    },
-                },
-            },
-        } = this.props;
-
-        this.createFormOverlay(undefined, formKey);
+        this.createFormOverlay(undefined);
     };
 
     handleItemClick = (itemId: string | number) => {
-        const {
-            router: {
-                route: {
-                    options: {
-                        formKey,
-                    },
-                },
-            },
-        } = this.props;
-
-        this.createFormOverlay(itemId, formKey);
+        this.createFormOverlay(itemId);
     };
 
     handleFormOverlayConfirm = () => {
@@ -78,13 +59,14 @@ export default class FormOverlayList extends React.Component<ViewProps> {
         this.formErrors.pop();
     };
 
-    @action createFormOverlay = (itemId: ?string | number, formKey: string) => {
+    @action createFormOverlay = (itemId: ?string | number) => {
         const {
             router: {
                 attributes,
                 route: {
                     options: {
                         apiOptions = {},
+                        formKey,
                         resourceKey,
                         routerAttributesToFormStore = {},
                     },
@@ -97,7 +79,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
         }
 
         const observableOptions = {};
-        if (this.listRef && this.listRef.locale.get()) {
+        if (this.listRef && this.listRef.locale && this.listRef.locale.get()) {
             observableOptions['locale'] = this.listRef.locale;
         }
 
