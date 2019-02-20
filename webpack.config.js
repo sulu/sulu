@@ -9,11 +9,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
-    let publicDir = 'public';
     const basePath = env && env.base_path ? env.base_path : 'build/admin';
     const rootPath = env && env.root_path ? env.root_path : __dirname; // eslint-disable-line no-undef
+    const composerConfig = require( // eslint-disable-line import/no-dynamic-require
+        path.resolve(rootPath, 'composer.json')
+    );
 
-    const composerConfig = require(path.resolve('composer.json')); // eslint-disable-line import/no-dynamic-require
+    let publicDir = path.resolve(rootPath, 'public');
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
     }
