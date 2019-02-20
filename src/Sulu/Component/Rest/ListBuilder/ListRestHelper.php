@@ -51,6 +51,32 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
+     * Returns an array of ids that specifies which entities should be included in the response.
+     * If null is returned, entities in the response should not be filtered by their id.
+     *
+     * @return array
+     */
+    public function getIds()
+    {
+        $idsString = $this->getRequest()->get('ids');
+
+        return (null !== $idsString) ? explode(',', $idsString) : [];
+    }
+
+
+    /**
+     * Returns an array of ids which should be excluded in the response.
+     *
+     * @return array
+     */
+    public function getExcludedIds()
+    {
+        $excludedIdsString = $this->getRequest()->get('excludedIds');
+
+        return (null !== $excludedIdsString) ? explode(',', $excludedIdsString) : [];
+    }
+
+    /**
      * Returns the desired sort column.
      *
      * @return string
