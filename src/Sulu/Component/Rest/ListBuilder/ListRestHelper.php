@@ -63,7 +63,6 @@ class ListRestHelper implements ListRestHelperInterface
         return (null !== $idsString) ? explode(',', $idsString) : [];
     }
 
-
     /**
      * Returns an array of ids which should be excluded in the response.
      *

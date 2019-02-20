@@ -81,7 +81,7 @@ export default class MultiListOverlay extends React.Component<Props> {
         const newExcludedIds = excludedIds.length ? excludedIds : undefined;
 
         if (!equal(currentExcludedIds, newExcludedIds)) {
-            this.datagridStore.clear();
+            this.listStore.clear();
             this.excludedIds.set(newExcludedIds);
         }
     }

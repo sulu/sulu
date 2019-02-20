@@ -40,8 +40,8 @@ test('Should instantiate the ListStore with locale, excluded-ids and options', (
     const singleListOverlay = shallow(
         <SingleListOverlay
             adapter="table"
-            listKey="snippets_list"
             excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
             locale={locale}
             onClose={jest.fn()}
             onConfirm={jest.fn()}

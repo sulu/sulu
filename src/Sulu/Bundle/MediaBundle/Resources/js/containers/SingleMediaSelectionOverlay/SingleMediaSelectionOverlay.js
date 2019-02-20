@@ -74,7 +74,7 @@ export default class SingleMediaSelectionOverlay extends React.Component<Props> 
         const newExcludedIds = excludedIds.length ? excludedIds : undefined;
 
         if (!equal(currentExcludedIds, newExcludedIds)) {
-            this.mediaDatagridStore.clear();
+            this.mediaListStore.clear();
             this.excludedIds.set(newExcludedIds);
         }
     }
