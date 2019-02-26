@@ -55,7 +55,7 @@ test('Should instantiate the ListStore with locale, excluded-ids and options', (
     expect(singleListOverlay.instance().listStore.listKey).toEqual('snippets_list');
     expect(singleListOverlay.instance().listStore.resourceKey).toEqual('snippets');
     expect(singleListOverlay.instance().listStore.observableOptions.locale.get()).toEqual('en');
-    expect(singleListOverlay.instance().listStore.observableOptions.excluded.get()).toEqual(['id-1', 'id-2']);
+    expect(singleListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
     expect(singleListOverlay.instance().listStore.options).toBe(options);
 });
 
@@ -73,7 +73,7 @@ test('Should instantiate the ListStore without locale, excluded-ids and options'
     );
 
     expect(singleListOverlay.instance().listStore.observableOptions.locale).toEqual(undefined);
-    expect(singleListOverlay.instance().listStore.observableOptions.excluded.get()).toEqual(undefined);
+    expect(singleListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(undefined);
 });
 
 test('Should pass overlayType overlay by default', () => {

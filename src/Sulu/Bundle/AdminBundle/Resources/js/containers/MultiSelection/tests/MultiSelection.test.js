@@ -14,14 +14,18 @@ jest.mock('../../../containers/List', () => function List() {
     return <div className="list" />;
 });
 
-jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(function(resourceKey, listKey) {
-    this.clearSelection = jest.fn();
-    this.destroy = jest.fn();
-    this.resourceKey = resourceKey;
-    this.listKey = listKey;
-    this.select = jest.fn();
-    this.setActive = jest.fn();
-}));
+jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
+    function(resourceKey, listKey, userSettingsKey, observableOptions) {
+        this.clearSelection = jest.fn();
+        this.destroy = jest.fn();
+        this.resourceKey = resourceKey;
+        this.listKey = listKey;
+        this.observableOptions = observableOptions;
+        this.select = jest.fn();
+        this.setActive = jest.fn();
+        this.clear = jest.fn();
+    }
+));
 
 jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.set = jest.fn();
@@ -218,6 +222,8 @@ test('Should close an overlay using the confirm button', () => {
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
+    const listStore = selection.find('MultiListOverlay').instance().listStore;
+    listStore.selections = [];
 
     const confirmButton = document.querySelector('button.primary');
     if (confirmButton) {
@@ -310,7 +316,7 @@ test('Should instantiate the ListStore with the correct resourceKey and destroy 
     expect(listStore.destroy).toBeCalled();
 });
 
-test('Should instantiate the ListStore with the preselected ids', () => {
+test('Should instantiate the ListStore with excluded-ids', () => {
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function() {
         this.items = [{id: 1}, {id: 5}, {id: 8}];
@@ -330,9 +336,7 @@ test('Should instantiate the ListStore with the preselected ids', () => {
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.observableOptions.excludedIds.get()).toEqual([1, 5, 8]);
 });
 
 test('Should reinstantiate the ListStore with the preselected ids when new props are received', () => {
@@ -359,9 +363,7 @@ test('Should reinstantiate the ListStore with the preselected ids when new props
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.observableOptions.excludedIds.get()).toEqual([1, 5, 8]);
 
     selection.setProps({value: [1, 3]});
     const loadItemsCall = selection.instance().selectionStore.loadItems.mock.calls[0];
@@ -392,9 +394,7 @@ test('Should not reload items if none of the items changed', () => {
     selection.find('Button[icon="su-plus"]').simulate('click');
 
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    expect(listStore.select).toBeCalledWith({id: 1});
-    expect(listStore.select).toBeCalledWith({id: 5});
-    expect(listStore.select).toBeCalledWith({id: 8});
+    expect(listStore.observableOptions.excludedIds.get()).toEqual([1, 5, 8]);
 
     selection.setProps({value: [1, 5, 8]});
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
