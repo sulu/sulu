@@ -555,6 +555,69 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetIds()
+    {
+        $this->doctrineListBuilder->setIds([11, 22]);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setParameter('idsFilter', [11, 22])
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetIdsEmpty()
+    {
+        $this->doctrineListBuilder->setIds([]);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setParameter('idsFilter', [])
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetIdsNull()
+    {
+        $this->doctrineListBuilder->setIds(null);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIds()
+    {
+        $this->doctrineListBuilder->setExcludedIds([55, 99]);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setParameter('excludedIs', [55, 99])
+            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIdsEmpty()
+    {
+        $this->doctrineListBuilder->setExcludedIds([]);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIdsNull()
+    {
+        $this->doctrineListBuilder->setExcludedIds(null);
+
+        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testCount()
     {
         $this->doctrineListBuilder->setSelectFields(

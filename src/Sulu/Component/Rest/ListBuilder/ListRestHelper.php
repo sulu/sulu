@@ -60,7 +60,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $idsString = $this->getRequest()->get('ids');
 
-        return (null !== $idsString) ? explode(',', $idsString) : [];
+        return (null !== $idsString) ? explode(',', $idsString) : null;
     }
 
     /**

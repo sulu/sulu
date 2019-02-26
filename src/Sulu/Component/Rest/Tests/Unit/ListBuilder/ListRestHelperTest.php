@@ -45,6 +45,17 @@ class ListRestHelperTest extends TestCase
                         '_format' => 'csv',
                     ]
                 ),
+                [
+                    'fields' => ['one', 'two', 'three'],
+                    'searchPattern' => 'now',
+                    'sortColumn' => null,
+                    'sortOrder' => 'asc',
+                    'searchFields' => ['title'],
+                    'limit' => 20,
+                    'offset' => 0,
+                    'ids' => null,
+                    'excludedIds' => [],
+                ],
             ],
             [
                 new Request(
@@ -59,6 +70,66 @@ class ListRestHelperTest extends TestCase
                         '_format' => 'csv',
                     ]
                 ),
+                [
+                    'fields' => ['one', 'two', 'three'],
+                    'searchPattern' => 'now',
+                    'sortColumn' => null,
+                    'sortOrder' => 'asc',
+                    'searchFields' => ['title'],
+                    'limit' => null,
+                    'offset' => 0,
+                    'ids' => null,
+                    'excludedIds' => [],
+                ],
+            ],
+            [
+                new Request(
+                    [
+                        'fields' => 'one,two,three',
+                        'search' => 'now',
+                        'page' => 1,
+                        'ids' => 'id1,id2',
+                        'excludedIds' => 'id3,id4',
+                    ],
+                    [],
+                    []
+                ),
+                [
+                    'fields' => ['one', 'two', 'three'],
+                    'searchPattern' => 'now',
+                    'sortColumn' => null,
+                    'sortOrder' => 'asc',
+                    'searchFields' => [],
+                    'limit' => 2,
+                    'offset' => 0,
+                    'ids' => ['id1', 'id2'],
+                    'excludedIds' => ['id3', 'id4'],
+                ],
+            ],
+            [
+                new Request(
+                    [
+                        'fields' => 'one,two,three',
+                        'search' => 'now',
+                        'page' => 1,
+                        'limit' => 1,
+                        'ids' => 'id1,id2',
+                        'excludedIds' => 'id3,id4',
+                    ],
+                    [],
+                    []
+                ),
+                [
+                    'fields' => ['one', 'two', 'three'],
+                    'searchPattern' => 'now',
+                    'sortColumn' => null,
+                    'sortOrder' => 'asc',
+                    'searchFields' => [],
+                    'limit' => 1,
+                    'offset' => 0,
+                    'ids' => ['id1', 'id2'],
+                    'excludedIds' => ['id3', 'id4'],
+                ],
             ],
         ];
     }
@@ -66,17 +137,19 @@ class ListRestHelperTest extends TestCase
     /**
      * @dataProvider dataFieldsProvider
      */
-    public function testGetFields($request)
+    public function testGetFields($request, $expected)
     {
         $this->requestStack->getCurrentRequest()->willReturn($request);
         $helper = new ListRestHelper($this->requestStack->reveal());
 
-        $this->assertEquals(explode(',', $request->get('fields')), $helper->getFields());
-        $this->assertEquals($request->get('sortBy'), $helper->getSortColumn());
-        $this->assertEquals($request->get('sortOrder', 'asc'), $helper->getSortOrder());
-        $this->assertEquals($request->get('search'), $helper->getSearchPattern());
-        $this->assertEquals(explode(',', $request->get('searchFields')), $helper->getSearchFields());
-        $this->assertEquals($request->get('limit'), $helper->getLimit());
-        $this->assertEquals($request->get('limit') * ($request->get('page') - 1), $helper->getOffset());
+        $this->assertEquals($expected['fields'], $helper->getFields());
+        $this->assertEquals($expected['sortColumn'], $helper->getSortColumn());
+        $this->assertEquals($expected['sortOrder'], $helper->getSortOrder());
+        $this->assertEquals($expected['searchPattern'], $helper->getSearchPattern());
+        $this->assertEquals($expected['searchFields'], $helper->getSearchFields());
+        $this->assertEquals($expected['limit'], $helper->getLimit());
+        $this->assertEquals($expected['offset'], $helper->getOffset());
+        $this->assertEquals($expected['ids'], $helper->getIds());
+        $this->assertEquals($expected['excludedIds'], $helper->getExcludedIds());
     }
 }
