@@ -89,7 +89,7 @@ export default class MultiSelection extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedItems: Array<Object>) => {
-        this.selectionStore.set(selectedItems);
+        this.selectionStore.set([...this.selectionStore.items, ...selectedItems]);
         this.closeOverlay();
     };
 
@@ -116,6 +116,7 @@ export default class MultiSelection extends React.Component<Props> {
         } = this.props;
 
         const {items, loading} = this.selectionStore;
+        const itemIds = items.map((item) => item.id);
         const columns = displayProperties.length;
 
         return (
@@ -149,13 +150,14 @@ export default class MultiSelection extends React.Component<Props> {
                 </MultiItemSelection>
                 <MultiListOverlay
                     adapter={adapter}
+                    clearSelectionOnClose={true}
                     disabledIds={disabledIds}
+                    excludedIds={itemIds}
                     listKey={listKey}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
-                    preSelectedItems={items}
                     resourceKey={resourceKey}
                     title={overlayTitle}
                 />
