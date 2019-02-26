@@ -526,6 +526,16 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->assignJoins($this->queryBuilder, $joins);
 
+        if (null != $this->ids) {
+            $this->queryBuilder->andWhere($this->idField->getSelect() . ' in (:ids)');
+            $this->queryBuilder->setParameter('ids', $this->ids);
+        }
+
+        if (!empty($this->excludedIds)) {
+            $this->queryBuilder->andWhere($this->idField->getSelect() . ' not in (:excludedIs)');
+            $this->queryBuilder->setParameter('excludedIs', $this->excludedIds);
+        }
+
         // set expressions
         if (!empty($this->expressions)) {
             foreach ($this->expressions as $expression) {

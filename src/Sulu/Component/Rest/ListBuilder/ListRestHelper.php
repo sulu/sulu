@@ -51,8 +51,8 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns an array of ids that specifies which entities should be included in the response.
-     * If null is returned, entities in the response should not be filtered by their id.
+     * Returns an array of ids to which the response should be restricted.
+     * If null is returned, entities in the response should not be restricted by their id.
      *
      * @return array
      */
@@ -64,7 +64,7 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
-     * Returns an array of ids which should be excluded in the response.
+     * Returns an array of ids which should be excluded from the response.
      *
      * @return array
      */
@@ -105,6 +105,12 @@ class ListRestHelper implements ListRestHelperInterface
         $default = 10;
         if ('csv' === $this->getRequest()->getRequestFormat()) {
             $default = null;
+        }
+
+        // set default limit to count of ids if result is restricted to specific ids
+        $ids = $this->getIds();
+        if (null != $ids) {
+            $default = count($ids);
         }
 
         return $this->getRequest()->get('limit', $default);

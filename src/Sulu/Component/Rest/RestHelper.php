@@ -42,15 +42,8 @@ class RestHelper implements RestHelperInterface
         $listBuilder->limit($this->listRestHelper->getLimit());
         $listBuilder->setCurrentPage($this->listRestHelper->getPage());
         $listBuilder->setFieldDescriptors($fieldDescriptors);
-
-        if (array_key_exists('id', $fieldDescriptors)) {
-            $listBuilder->notIn($fieldDescriptors['id'], $this->listRestHelper->getExcludedIds());
-
-            $ids = $this->listRestHelper->getIds();
-            if (null !== $ids) {
-                $listBuilder->in($fieldDescriptors['id'], $ids);
-            }
-        }
+        $listBuilder->setIds($this->listRestHelper->getIds());
+        $listBuilder->setExcludedIds($this->listRestHelper->getExcludedIds());
 
         $fields = $this->listRestHelper->getFields();
         if (null != $fields) {

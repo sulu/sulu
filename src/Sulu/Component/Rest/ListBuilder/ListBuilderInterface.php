@@ -156,6 +156,38 @@ interface ListBuilderInterface
     public function getCurrentPage();
 
     /**
+     * Restricts the rows to return to have one of the given ids.
+     *
+     * @param ?array $ids
+     *
+     * @return ListBuilderInterface
+     */
+    public function setIds($ids);
+
+    /**
+     * Returns an array of ids to which the rows to return are restricted.
+     *
+     * @return ?array
+     */
+    public function getIds();
+
+    /**
+     * Excludes the given ids from the rows to return.
+     *
+     * @param array $excludedIds
+     *
+     * @return ListBuilderInterface
+     */
+    public function setExcludedIds($excludedIds);
+
+    /**
+     * Returns an array of ids which are excluded from the rows to return.
+     *
+     * @return array
+     */
+    public function getExcludedIds();
+
+    /**
      * Sets the permission check for the ListBuilder.
      *
      * @param UserInterface $user The user for which the permission must be granted
