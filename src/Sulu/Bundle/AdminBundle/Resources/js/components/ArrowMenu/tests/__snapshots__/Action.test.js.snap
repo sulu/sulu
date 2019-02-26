@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default Action 1`] = `
+<button
+  class="action"
+>
+  My Action
+</button>
+`;
+
+exports[`Render disabled Action 1`] = `
+<button
+  class="action"
+  disabled=""
+>
+  My Action
+</button>
+`;

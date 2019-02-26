@@ -41,7 +41,7 @@ exports[`Render ArrowMenu open 1`] = `
         <div
           class="children"
         >
-          <div
+          <button
             class="item active"
           >
             <span
@@ -55,8 +55,8 @@ exports[`Render ArrowMenu open 1`] = `
             <span>
               Sulu
             </span>
-          </div>
-          <div
+          </button>
+          <button
             class="item"
           >
             <span
@@ -65,8 +65,8 @@ exports[`Render ArrowMenu open 1`] = `
             <span>
               Sulu Blog
             </span>
-          </div>
-          <div
+          </button>
+          <button
             class="item"
           >
             <span
@@ -75,7 +75,7 @@ exports[`Render ArrowMenu open 1`] = `
             <span>
               Sulu Doc
             </span>
-          </div>
+          </button>
         </div>
       </div>
       <div
@@ -89,7 +89,7 @@ exports[`Render ArrowMenu open 1`] = `
         <div
           class="children"
         >
-          <div
+          <button
             class="item"
           >
             <span
@@ -98,8 +98,8 @@ exports[`Render ArrowMenu open 1`] = `
             <span>
               Title
             </span>
-          </div>
-          <div
+          </button>
+          <button
             class="item"
           >
             <span
@@ -108,7 +108,7 @@ exports[`Render ArrowMenu open 1`] = `
             <span>
               Description
             </span>
-          </div>
+          </button>
         </div>
       </div>
       <div

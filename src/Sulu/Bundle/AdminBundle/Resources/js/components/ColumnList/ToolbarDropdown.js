@@ -1,14 +1,13 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
-import Popover from '../Popover';
-import ToolbarDropdownList from './ToolbarDropdownList';
+import ArrowMenu from '../ArrowMenu';
 import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 import toolbarStyles from './toolbar.scss';
+import toolbarDropdownStyles from './toolbarDropdown.scss';
 
 @observer
 export default class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
@@ -16,50 +15,44 @@ export default class ToolbarDropdown extends React.Component<ToolbarDropdownProp
         skin: 'primary',
     };
 
-    @observable popoverOpen: boolean = false;
-    @observable popoverAnchorElement: ?ElementRef<*>;
+    @observable open: boolean = false;
 
-    @action handleClick = (event: SyntheticEvent<HTMLOptionElement>) => {
-        this.popoverAnchorElement = event.currentTarget;
-        this.popoverOpen = true;
+    @action handleClick = () => {
+        this.open = true;
     };
 
-    @action handlePopoverClose = () => {
-        this.popoverOpen = false;
+    @action handleMenuClose = () => {
+        this.open = false;
     };
 
-    render() {
-        const {icon, options, skin} = this.props;
-
+    renderButton() {
+        const {icon, skin} = this.props;
         const className = classNames(
             toolbarStyles.item,
             toolbarStyles[skin]
         );
+        return (
+            <a className={className} onClick={this.handleClick}>
+                <Icon name={icon} />
+                <Icon className={toolbarDropdownStyles.buttonArrowIcon} name="su-angle-down" />
+            </a>
+        );
+    }
 
+    render() {
         return (
             <Fragment>
-                <a className={className} onClick={this.handleClick}>
-                    <Icon name={icon} />
-                </a>
-                <Popover
-                    anchorElement={this.popoverAnchorElement}
-                    onClose={this.handlePopoverClose}
-                    open={this.popoverOpen}
-                >
-                    {
-                        (setPopoverElementRef, popoverStyle) => (
-                            <div
-                                ref={setPopoverElementRef}
-                                style={popoverStyle}
-                            >
-                                <ToolbarDropdownList
-                                    onClick={this.handlePopoverClose}
-                                    options={options}
-                                />
-                            </div>
-                        )
-                    }
-                </Popover>
+                <ArrowMenu anchorElement={this.renderButton()} onClose={this.handleMenuClose} open={this.open}>
+                    <ArrowMenu.Section>
+                        {
+                            this.props.options.map(({disabled, label, onClick}, index) => (
+                                <ArrowMenu.Action disabled={disabled} key={index} onClick={onClick}>
+                                    {label}
+                                </ArrowMenu.Action>
+                            ))
+                        }
+                    </ArrowMenu.Section>
+                </ArrowMenu>
             </Fragment>
         );
     }

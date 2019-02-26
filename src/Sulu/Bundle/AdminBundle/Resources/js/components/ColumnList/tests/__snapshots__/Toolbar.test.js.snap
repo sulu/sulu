@@ -19,6 +19,10 @@ exports[`Should render with active 1`] = `
       aria-label="fa-gear"
       class="fa fa-gear"
     />
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down buttonArrowIcon"
+    />
   </a>
 </div>
 `;
@@ -29,12 +33,12 @@ exports[`Should render with active 2`] = `
 </div>
 <div>
   <div class=\\"container\\">
-    <div style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <div class=\\"listContainer\\">
-        <ul class=\\"list primary\\">
-          <li><button class=\\"option\\">Option1</button></li>
-          <li><button class=\\"option\\" disabled=\\"\\">Option1</button></li>
-        </ul>
+    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
+      <div class=\\"arrow top right\\"></div>
+      <div class=\\"arrowMenu\\">
+        <div class=\\"section\\">
+          <div class=\\"children\\"><button class=\\"action\\">Option1</button><button class=\\"action\\" disabled=\\"\\">Option1</button></div>
+        </div>
       </div>
     </div>
   </div>

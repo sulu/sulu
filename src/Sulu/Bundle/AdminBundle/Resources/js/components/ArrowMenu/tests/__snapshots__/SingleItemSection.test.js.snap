@@ -12,7 +12,7 @@ exports[`Render ItemSection 1`] = `
   <div
     class="children"
   >
-    <div
+    <button
       class="item"
     >
       <span
@@ -21,8 +21,8 @@ exports[`Render ItemSection 1`] = `
       <span>
         Villa
       </span>
-    </div>
-    <div
+    </button>
+    <button
       class="item"
     >
       <span
@@ -31,8 +31,8 @@ exports[`Render ItemSection 1`] = `
       <span>
         White House
       </span>
-    </div>
-    <div
+    </button>
+    <button
       class="item"
     >
       <span
@@ -41,7 +41,7 @@ exports[`Render ItemSection 1`] = `
       <span>
         Flat
       </span>
-    </div>
+    </button>
   </div>
 </div>
 `;
@@ -58,7 +58,7 @@ exports[`Render ItemSection with value 1`] = `
   <div
     class="children"
   >
-    <div
+    <button
       class="item"
     >
       <span
@@ -67,8 +67,8 @@ exports[`Render ItemSection with value 1`] = `
       <span>
         Villa
       </span>
-    </div>
-    <div
+    </button>
+    <button
       class="item"
     >
       <span
@@ -77,8 +77,8 @@ exports[`Render ItemSection with value 1`] = `
       <span>
         White House
       </span>
-    </div>
-    <div
+    </button>
+    <button
       class="item active"
     >
       <span
@@ -92,7 +92,7 @@ exports[`Render ItemSection with value 1`] = `
       <span>
         Flat
       </span>
-    </div>
+    </button>
   </div>
 </div>
 `;

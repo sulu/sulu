@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render active Item 1`] = `
-<div
+<button
   class="item active"
 >
   <span
@@ -15,11 +15,11 @@ exports[`Render active Item 1`] = `
   <span>
     My House
   </span>
-</div>
+</button>
 `;
 
 exports[`Render default Item 1`] = `
-<div
+<button
   class="item"
 >
   <span
@@ -28,5 +28,24 @@ exports[`Render default Item 1`] = `
   <span>
     Test Item
   </span>
-</div>
+</button>
+`;
+
+exports[`Render disabled Item 1`] = `
+<button
+  class="item active"
+  disabled=""
+>
+  <span
+    class="icon"
+  >
+    <span
+      aria-label="fa-home"
+      class="fa fa-home icon"
+    />
+  </span>
+  <span>
+    My Item
+  </span>
+</button>
 `;

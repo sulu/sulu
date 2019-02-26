@@ -4,17 +4,38 @@ import actionStyles from './action.scss';
 
 type Props = {
     children: string,
+    disabled: boolean,
     onClick: () => void,
+    onAfterAction?: () => void,
 };
 
 export default class Action extends React.PureComponent<Props> {
-    render() {
+    static defaultProps = {
+        disabled: false,
+    };
+
+    handleButtonClick = () => {
         const {
             onClick,
+            onAfterAction,
         } = this.props;
 
+        onClick();
+
+        if (onAfterAction) {
+            onAfterAction();
+        }
+    };
+
+    render() {
+        const {disabled} = this.props;
+
         return (
-            <button className={actionStyles.action} onClick={onClick}>
+            <button
+                className={actionStyles.action}
+                disabled={disabled}
+                onClick={this.handleButtonClick}
+            >
                 {this.props.children}
             </button>
         );

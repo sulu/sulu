@@ -354,7 +354,6 @@ export default class List extends React.Component<Props> {
     };
 
     @action handleColumnOptionsOpen = () => {
-        this.adapterOptionsOpen = false;
         this.columnOptionsOpen = true;
     };
 

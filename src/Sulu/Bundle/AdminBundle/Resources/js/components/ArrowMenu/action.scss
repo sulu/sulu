@@ -2,6 +2,7 @@
 
 $hoverColor: $shakespeare;
 $fontColor: $black;
+$disabledColor: $silver;
 
 .action {
     border: none;
@@ -20,5 +21,10 @@ $fontColor: $black;
 
     &:last-child {
         margin-bottom: 0;
+    }
+
+    &:disabled {
+        color: $disabledColor;
+        cursor: default;
     }
 }
