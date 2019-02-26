@@ -6,7 +6,7 @@ import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
-import MultiMediaSelectionStore from '../../stores/MultiMediaSelectionStore';
+import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
@@ -19,6 +19,7 @@ type Props = {|
     value: Value,
 |}
 
+const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 
 @observer
@@ -28,7 +29,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
         value: {ids: []},
     };
 
-    mediaSelectionStore: MultiMediaSelectionStore;
+    mediaSelectionStore: MultiSelectionStore;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
@@ -38,9 +39,9 @@ export default class MultiMediaSelection extends React.Component<Props> {
 
         const {locale, value} = this.props;
 
-        this.mediaSelectionStore = new MultiMediaSelectionStore(value.ids, locale);
+        this.mediaSelectionStore = new MultiSelectionStore(MEDIA_RESOURCE_KEY, (value.ids: any), locale);
         this.changeDisposer = reaction(
-            () => (this.mediaSelectionStore.selectedMediaIds),
+            () => (this.mediaSelectionStore.items.map((item) => item.id)),
             (loadedMediaIds: Array<number>) => {
                 const {onChange, value} = this.props;
 
@@ -52,18 +53,13 @@ export default class MultiMediaSelection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const {
-            locale,
-            value,
-        } = this.props;
-
-        const newSelectedIds = toJS(value.ids);
-        const loadedSelectedIds = toJS(this.mediaSelectionStore.selectedMediaIds);
+        const newSelectedIds = toJS(this.props.value.ids);
+        const loadedSelectedIds = toJS(this.mediaSelectionStore.items.map((item) => item.id));
 
         newSelectedIds.sort();
         loadedSelectedIds.sort();
         if (!equals(newSelectedIds, loadedSelectedIds)) {
-            this.mediaSelectionStore.loadSelectedMedia(newSelectedIds, locale);
+            this.mediaSelectionStore.loadItems((newSelectedIds: any));
         }
     }
 
@@ -106,19 +102,15 @@ export default class MultiMediaSelection extends React.Component<Props> {
     };
 
     handleOverlayConfirm = (selectedMedia: Array<Object>) => {
-        selectedMedia.forEach((media) => this.mediaSelectionStore.add(media));
+        this.mediaSelectionStore.set([...this.mediaSelectionStore.items, ...selectedMedia]);
         this.closeMediaOverlay();
     };
 
     render() {
         const {locale, disabled} = this.props;
 
-        const {
-            loading,
-            selectedMedia,
-            selectedMediaIds,
-        } = this.mediaSelectionStore;
-        const label = (loading) ? '' : this.getLabel(selectedMedia.length);
+        const {loading, items: medias} = this.mediaSelectionStore;
+        const label = (loading) ? '' : this.getLabel(medias.length);
 
         return (
             <Fragment>
@@ -133,7 +125,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
-                    {selectedMedia.map((media, index) => {
+                    {medias.map((media, index) => {
                         return (
                             <MultiItemSelection.Item
                                 id={media.id}
@@ -161,7 +153,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
                     })}
                 </MultiItemSelection>
                 <MultiMediaSelectionOverlay
-                    excludedIds={selectedMediaIds}
+                    excludedIds={medias.map((media) => media.id)}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

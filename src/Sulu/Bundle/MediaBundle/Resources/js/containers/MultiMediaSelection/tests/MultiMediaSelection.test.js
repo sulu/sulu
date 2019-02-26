@@ -3,8 +3,8 @@ import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiMediaSelection from '../MultiMediaSelection';
-import MultiMediaSelectionStore from '../../../stores/MultiMediaSelectionStore';
 import MultiMediaSelectionOverlay from '../../MultiMediaSelectionOverlay';
+import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -14,16 +14,15 @@ jest.mock('../../MultiMediaSelectionOverlay', () => jest.fn(function() {
     return <div>single media selection overlay</div>;
 }));
 
-jest.mock('../../../stores/MultiMediaSelectionStore', () => jest.fn(function() {
-    this.selectedMedia = [];
-    this.selectedMediaIds = [];
-    this.loadSelectedMedia = jest.fn();
+jest.mock('sulu-admin-bundle/stores/MultiSelectionStore', () => jest.fn(function() {
+    this.items = [];
+    this.loadItems = jest.fn();
 }));
 
 test('Render a MultiMediaSelection field', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
             {
                 id: 1,
                 title: 'Media 1',
@@ -46,7 +45,6 @@ test('Render a MultiMediaSelection field', () => {
                 },
             },
         ];
-        this.selectedMediaIds = [1, 2, 3];
     });
 
     expect(render(
@@ -56,8 +54,8 @@ test('Render a MultiMediaSelection field', () => {
 
 test('The MultiMediaSelection should have 3 child-items', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
             {
                 id: 1,
                 title: 'Media 1',
@@ -80,7 +78,6 @@ test('The MultiMediaSelection should have 3 child-items', () => {
                 },
             },
         ];
-        this.selectedMediaIds = [1, 2, 3];
     });
 
     const mediaSelection = shallow(
@@ -100,9 +97,8 @@ test('Clicking on the "add media" button should open up an overlay', () => {
 
 test('Should remove media from the selection store', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [];
-        this.selectedMediaIds = [];
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [];
         this.removeById = jest.fn();
     });
 
@@ -116,9 +112,8 @@ test('Should remove media from the selection store', () => {
 
 test('Should move media inside the selection store', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [];
-        this.selectedMediaIds = [];
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [];
         this.move = jest.fn();
     });
 
@@ -132,22 +127,16 @@ test('Should move media inside the selection store', () => {
 
 test('Should add the selected medias to the selection store on confirm', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function() {
-        this.selectedMedia = [];
-        this.selectedMediaIds = [];
-        this.add = jest.fn();
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [];
+        this.set = jest.fn();
     });
 
     const thumbnails = {
         'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-25x25': 'http://lorempixel.com/25/25',
     };
-    const mediaSelectionInstance = shallow(
-        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
-    ).instance();
-
-    mediaSelectionInstance.openMediaOverlay();
-    mediaSelectionInstance.handleOverlayConfirm([
+    const medias = [
         {
             id: 1,
             title: 'Title 1',
@@ -164,24 +153,25 @@ test('Should add the selected medias to the selection store on confirm', () => {
             url: 'http://lorempixel.com/500/500',
             thumbnails: thumbnails,
         },
-    ]);
-    expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[0][0].id).toBe(1);
-    expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[0][0].title).toBe('Title 1');
-    expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[1][0].id).toBe(2);
-    expect(mediaSelectionInstance.mediaSelectionStore.add.mock.calls[1][0].title).toBe('Title 2');
+    ];
+
+    const mediaSelectionInstance = shallow(
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+    ).instance();
+
+    mediaSelectionInstance.openMediaOverlay();
+    mediaSelectionInstance.handleOverlayConfirm(medias);
+    expect(mediaSelectionInstance.mediaSelectionStore.set).toBeCalledWith(medias);
     expect(mediaSelectionInstance.overlayOpen).toBe(false);
 });
 
 test('Should call the onChange handler if selection store changes', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function(selectedIds) {
+    MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
         mockExtendObservable(this, {
-            selectedMedia: selectedIds.map((id) => {
+            items: selectedIds.map((id) => {
                 return {id, thumbnails: {}};
             }),
-            get selectedMediaIds() {
-                return this.selectedMedia.map((media) => media.id);
-            },
         });
     });
 
@@ -191,10 +181,10 @@ test('Should call the onChange handler if selection store changes', () => {
         <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
     ).instance();
 
-    mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99, thumbnails: {}});
+    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
     expect(changeSpy).toBeCalledWith({ids: [55, 99]});
 
-    mediaSelectionInstance.mediaSelectionStore.selectedMedia.splice(0, 1);
+    mediaSelectionInstance.mediaSelectionStore.items.splice(0, 1);
     expect(changeSpy).toBeCalledWith({ids: [99]});
 });
 
@@ -211,14 +201,11 @@ test('Should not call the onChange callback if the component props change', () =
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
     // $FlowFixMe
-    MultiMediaSelectionStore.mockImplementationOnce(function(selectedIds) {
+    MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
         mockExtendObservable(this, {
-            selectedMedia: selectedIds.map((id) => {
+            items: selectedIds.map((id) => {
                 return {id, thumbnails: {}};
             }),
-            get selectedMediaIds() {
-                return this.selectedMedia.map((media) => media.id);
-            },
         });
     });
 
@@ -232,7 +219,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
     ).instance();
 
     // change callback should be called when item of the store mock changes
-    mediaSelectionInstance.mediaSelectionStore.selectedMedia.push({id: 99, thumbnails: {}});
+    mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
     expect(changeSpy).toBeCalledWith({ids: [55, 99]});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
