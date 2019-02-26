@@ -121,7 +121,7 @@ class PageAdmin extends Admin
                 ->setAttributeDefault('webspace', $firstWebspace->getKey()),
             (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
-                ->setOption('tabTitle', 'sulu_page.content')
+                ->setOption('tabTitle', 'sulu_page.pages')
                 ->addRerenderAttribute('webspace')
                 ->setParent(static::WEBSPACE_TABS_ROUTE),
             (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_page.page_tabs'))
