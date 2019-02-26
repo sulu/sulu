@@ -194,24 +194,38 @@ class List extends React.Component<Props> {
 
     handleItemAdd = (parentId: string | number) => {
         const {onItemAdd, router} = this.props;
+        const {
+            route: {
+                options: {
+                    addRoute,
+                },
+            },
+        } = router;
 
         if (onItemAdd) {
             onItemAdd(parentId);
             return;
         }
 
-        router.navigate(router.route.options.addRoute, {locale: this.locale.get(), parentId: parentId});
+        router.navigate(addRoute, {locale: this.locale.get(), parentId});
     };
 
     handleItemClick = (itemId: string | number) => {
         const {onItemClick, router} = this.props;
+        const {
+            route: {
+                options: {
+                    editRoute,
+                },
+            },
+        } = router;
 
         if (onItemClick) {
             onItemClick(itemId);
             return;
         }
 
-        router.navigate(router.route.options.editRoute, {id: itemId, locale: this.locale.get()});
+        router.navigate(editRoute, {id: itemId, locale: this.locale.get()});
     };
 
     requestSelectionDelete = () => {

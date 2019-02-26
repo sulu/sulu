@@ -24,7 +24,7 @@ type Props = ViewProps & {
 @observer
 class MediaDetails extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
-    form: ?Form;
+    form: ?ElementRef<typeof Form>;
     formStore: ResourceFormStore;
     @observable showFocusPointOverlay: boolean = false;
     showSuccess: IObservableValue<boolean> = observable.box(false);

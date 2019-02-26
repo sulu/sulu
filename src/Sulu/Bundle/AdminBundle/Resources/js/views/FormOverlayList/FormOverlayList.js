@@ -2,6 +2,7 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
+import type {ElementRef} from 'react';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
@@ -16,8 +17,8 @@ import ErrorSnackbar from './ErrorSnackbar';
 export default class FormOverlayList extends React.Component<ViewProps> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
 
-    listRef: ?List;
-    formRef: ?Form;
+    listRef: ?ElementRef<typeof List>;
+    formRef: ?ElementRef<typeof Form>;
 
     @observable formStore: ?ResourceFormStore;
     @observable formErrors = [];
@@ -80,7 +81,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
 
         const observableOptions = {};
         if (this.listRef && this.listRef.locale && this.listRef.locale.get()) {
-            observableOptions['locale'] = this.listRef.locale;
+            observableOptions.locale = this.listRef.locale;
         }
 
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
@@ -115,11 +116,11 @@ export default class FormOverlayList extends React.Component<ViewProps> {
         return formStoreOptions;
     }
 
-    setFormRef = (formRef: ?Form) => {
+    setFormRef = (formRef: ?ElementRef<typeof Form>) => {
         this.formRef = formRef;
     };
 
-    setListRef = (listRef: ?List) => {
+    setListRef = (listRef: ?ElementRef<typeof List>) => {
         this.listRef = listRef;
     };
 

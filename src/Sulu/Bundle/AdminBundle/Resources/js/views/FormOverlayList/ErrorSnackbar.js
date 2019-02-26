@@ -33,10 +33,10 @@ export default class ErrorSnackbar extends React.Component<Props> {
                 <div className={errorSnackbarStyles.text}>
                     <strong>{translate('sulu_admin.error')}</strong>
                     {onCloseClick &&
-                    <button className={errorSnackbarStyles.closeButton} onClick={onCloseClick}>
-                        {translate('sulu_admin.close')}
-                        <Icon className={errorSnackbarStyles.closeButtonIcon} name="su-times" />
-                    </button>
+                        <button className={errorSnackbarStyles.closeButton} onClick={onCloseClick}>
+                            {translate('sulu_admin.close')}
+                            <Icon className={errorSnackbarStyles.closeButtonIcon} name="su-times" />
+                        </button>
                     }
                 </div>
             </div>
