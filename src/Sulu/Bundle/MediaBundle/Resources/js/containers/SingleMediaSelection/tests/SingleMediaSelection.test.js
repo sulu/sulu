@@ -3,9 +3,9 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import SingleMediaSelection from '../SingleMediaSelection';
 import SingleMediaSelectionOverlay from '../../SingleMediaSelectionOverlay';
-import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),

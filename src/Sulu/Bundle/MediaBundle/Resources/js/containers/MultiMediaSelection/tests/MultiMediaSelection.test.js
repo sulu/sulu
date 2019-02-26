@@ -2,9 +2,9 @@
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 import MultiMediaSelection from '../MultiMediaSelection';
 import MultiMediaSelectionOverlay from '../../MultiMediaSelectionOverlay';
-import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
