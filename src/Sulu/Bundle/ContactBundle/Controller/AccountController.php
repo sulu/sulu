@@ -332,10 +332,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $numberIdsFilter = 0;
-        $requestLimit = $request->get('limit');
         $locale = $this->getUser()->getLocale();
-        $filter = $this->retrieveFilter($request, $numberIdsFilter);
 
         if ('true' == $request->get('flat')) {
             /** @var RestHelperInterface $restHelper */
@@ -344,12 +341,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $fieldDescriptors = $this->getFieldDescriptors();
             $listBuilder = $this->generateFlatListBuilder();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-            $this->applyRequestParameters($request, $filter, $listBuilder);
-
-            // If no limit is set in request and limit is set by ids
-            if (!$requestLimit && $numberIdsFilter > 0 && $numberIdsFilter > $listBuilder->getLimit()) {
-                $listBuilder->limit($numberIdsFilter);
-            }
+            $this->applyRequestParameters($request, $listBuilder);
 
             $listResponse = $listBuilder->execute();
             $listResponse = $this->addLogos($listResponse, $locale);
@@ -365,6 +357,7 @@ class AccountController extends RestController implements ClassResourceInterface
             );
             $view = $this->view($list, 200);
         } else {
+            $filter = $this->retrieveFilter($request);
             $accountManager = $this->getAccountManager();
             $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
@@ -396,10 +389,9 @@ class AccountController extends RestController implements ClassResourceInterface
      * Applies the filter parameter and hasNoparent parameter for listbuilder.
      *
      * @param Request $request
-     * @param array $filter
      * @param DoctrineListBuilder $listBuilder
      */
-    protected function applyRequestParameters(Request $request, $filter, $listBuilder)
+    protected function applyRequestParameters(Request $request, $listBuilder)
     {
         if (json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
@@ -407,14 +399,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
         if (json_decode($request->get('hasEmail', null))) {
             $listBuilder->whereNot($this->getFieldDescriptors()['mainEmail'], null);
-        }
-
-        foreach ($filter as $key => $value) {
-            if (is_array($value)) {
-                $listBuilder->in($this->getFieldDescriptors()[$key], $value);
-            } else {
-                $listBuilder->where($this->getFieldDescriptors()[$key], $value);
-            }
         }
     }
 
@@ -1253,18 +1237,16 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @return array
      */
-    private function retrieveFilter(Request $request, &$count)
+    private function retrieveFilter(Request $request)
     {
         $filter = [];
         $ids = $request->get('ids');
-        $count = 0;
 
         if ($ids) {
             if (is_string($ids)) {
                 $ids = explode(',', $ids);
             }
 
-            $count = count($ids);
             $filter['id'] = $ids;
         }
 

@@ -97,16 +97,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 ->getFieldDescriptors('tags');
             $listBuilder = $factory->create($tagEntityName);
 
-            $ids = array_filter(explode(',', $request->get('ids', '')));
-            if (count($ids) > 0) {
-                $listBuilder->in($fieldDescriptors['id'], $ids);
-            }
-
-            $excludedIds = array_filter(explode(',', $request->get('excludedIds', '')));
-            if (count($excludedIds) > 0) {
-                $listBuilder->notIn($fieldDescriptors['id'], $excludedIds);
-            }
-
             $names = array_filter(explode(',', $request->get('names', '')));
             if (count($names) > 0) {
                 $listBuilder->in($fieldDescriptors['name'], $names);

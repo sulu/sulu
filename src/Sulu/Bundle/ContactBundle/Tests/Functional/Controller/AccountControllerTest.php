@@ -1999,7 +1999,7 @@ class AccountControllerTest extends SuluTestCase
             'GET',
             '/api/accounts?flat=true',
             [
-                'ids' => $ids,
+                'ids' => implode(',', $ids),
             ]
         );
 
@@ -2030,7 +2030,7 @@ class AccountControllerTest extends SuluTestCase
             'GET',
             '/api/accounts?flat=true',
             [
-                'ids' => $ids,
+                'ids' => implode(',', $ids),
                 'page' => 2,
                 'limit' => 10,
             ]
