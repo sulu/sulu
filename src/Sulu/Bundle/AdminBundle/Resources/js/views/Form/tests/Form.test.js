@@ -1015,9 +1015,8 @@ test('Should save form when submitted', (done) => {
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).toBeCalledWith(
                 'snippets',
-                8,
                 {value: 'Value'},
-                {action: 'publish', locale: 'en'}
+                {action: 'publish', id: 8, locale: 'en'}
             );
             done();
         });
@@ -1079,9 +1078,8 @@ test('Should save form when submitted with mapped router attributes', (done) => 
             expect(ResourceRequester.put)
                 .toBeCalledWith(
                     'snippets',
-                    8,
                     {value: 'Value'},
-                    {locale: 'en', parentId: 3, webspace: 'sulu_io'}
+                    {id: 8, locale: 'en', parentId: 3, webspace: 'sulu_io'}
                 );
             done();
         });
@@ -1139,7 +1137,7 @@ test('Should save form when submitted with given apiOptions', (done) => {
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put)
-                .toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en', apiKey: 'api-option-value'});
+                .toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
             done();
         });
     });
@@ -1201,9 +1199,8 @@ test('Should save form when submitted with mapped router attributes and given ap
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).toBeCalledWith(
                 'snippets',
-                8,
                 {value: 'Value'},
-                {locale: 'en', apiKey: 'api-option-value', id: 3, webspace: 'sulu_io', title: 'Sulu is awesome'}
+                {id: 8, locale: 'en', apiKey: 'api-option-value', webspace: 'sulu_io', title: 'Sulu is awesome'}
             );
             done();
         });
@@ -1262,7 +1259,7 @@ test('Should save form when submitted with mapped named router attributes and gi
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).toBeCalledWith(
-                'snippets', 8, {value: 'Value'}, {locale: 'en', apiKey: 'api-option-value', parentId: 8}
+                'snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value', parentId: 8}
             );
             done();
         });
@@ -1313,7 +1310,7 @@ test('Should set showSuccess flag after form submission', (done) => {
 
     form.find('Form').at(1).instance().submit().then(() => {
         expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().showSuccess.get()).toEqual(true);
         done();
     });
@@ -1419,7 +1416,7 @@ test('Should keep errors after form submission has failed', (done) => {
 
     form.find('Form').at(1).instance().submit().then(() => {
         expect(resourceStore.destroy).not.toBeCalled();
-        expect(ResourceRequester.put).toBeCalledWith('snippets', 8, {value: 'Value'}, {locale: 'en'});
+        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().errors).toEqual([error]);
         done();
     });

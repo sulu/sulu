@@ -149,11 +149,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         // if the type parameter is falsy, assign NULL to $type
         $type = $request->query->get('type', null) ?: null;
 
-        $uuidsString = $request->get('ids');
+        $idsString = $request->get('ids');
 
-        if ($uuidsString) {
-            $uuids = explode(',', $uuidsString);
-            $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $locale);
+        if ($idsString) {
+            $ids = explode(',', $idsString);
+            $snippets = $this->snippetRepository->getSnippetsByUuids($ids, $locale);
             $total = count($snippets);
         } else {
             $snippets = $this->snippetRepository->getSnippets(
@@ -192,17 +192,17 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * Returns snippet by ID.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Get(defaults={"uuid" = ""})
+     * @Get(defaults={"id" = ""})
      */
-    public function getAction(Request $request, $uuid = null)
+    public function getAction(Request $request, $id = null)
     {
         $locale = $this->getLocale($request);
 
-        $snippet = $this->findDocument($uuid, $locale);
+        $snippet = $this->findDocument($id, $locale);
         $view = View::create($snippet);
 
         return $this->viewHandler->handle($view);
@@ -227,13 +227,13 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * Saves a new existing snippet.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction(Request $request, $uuid)
+    public function putAction(Request $request, $id)
     {
-        $document = $this->findDocument($uuid, $this->getLocale($request));
+        $document = $this->findDocument($id, $this->getLocale($request));
 
         $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
         if (!$this->checkAreaSnippet($request, $document)) {
@@ -256,26 +256,26 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * Deletes an existing Snippet.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return JsonResponse
      */
-    public function deleteAction(Request $request, $uuid)
+    public function deleteAction(Request $request, $id)
     {
         $locale = $this->getLocale($request);
         $webspaceKey = $request->query->get('webspace', null);
 
-        $references = $this->snippetRepository->getReferences($uuid);
+        $references = $this->snippetRepository->getReferences($id);
 
         if (count($references) > 0) {
             $force = $request->headers->get('SuluForceRemove', false);
             if ($force) {
-                $this->contentMapper->delete($uuid, $webspaceKey, true);
+                $this->contentMapper->delete($id, $webspaceKey, true);
             } else {
-                return $this->getReferentialIntegrityResponse($webspaceKey, $references, $uuid, $locale);
+                return $this->getReferentialIntegrityResponse($webspaceKey, $references, $id, $locale);
             }
         } else {
-            $this->contentMapper->delete($uuid, $webspaceKey);
+            $this->contentMapper->delete($id, $webspaceKey);
         }
 
         return new JsonResponse();
@@ -284,14 +284,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * trigger a action for given snippet specified over get-action parameter.
      *
-     * @Post("/snippets/{uuid}")
+     * @Post("/snippets/{id}")
      *
-     * @param string $uuid
+     * @param string $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postTriggerAction($uuid, Request $request)
+    public function postTriggerAction($id, Request $request)
     {
         $view = null;
         $snippet = null;
@@ -306,7 +306,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
                     // call repository method
                     $snippet = $this->snippetRepository->copyLocale(
-                        $uuid,
+                        $id,
                         $this->getUser()->getId(),
                         $locale,
                         $destLocales
@@ -314,7 +314,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
                     // publish the snippet in every dest locale, otherwise it's not in the live workspace.
                     foreach ($destLocales as $destLocale) {
-                        $destSnippet = $this->findDocument($uuid, $destLocale);
+                        $destSnippet = $this->findDocument($id, $destLocale);
                         $this->documentManager->publish($destSnippet, $destLocale);
                     }
 
@@ -363,16 +363,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 '_links' => [
                     'self' => $this->urlGenerator->generate(
                         'get_snippet',
-                        ['uuid' => $snippet['id'], 'language' => $locale]
+                        ['id' => $snippet['id'], 'language' => $locale]
                     ),
                     'delete' => $this->urlGenerator->generate(
                         'delete_snippet',
-                        ['uuid' => $snippet['id'], 'language' => $locale]
+                        ['id' => $snippet['id'], 'language' => $locale]
                     ),
                     'new' => $this->urlGenerator->generate('post_snippet', ['language' => $locale]),
                     'update' => $this->urlGenerator->generate(
                         'put_snippet',
-                        ['uuid' => $snippet['id'], 'language' => $locale]
+                        ['id' => $snippet['id'], 'language' => $locale]
                     ),
                 ],
             ]
@@ -411,16 +411,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      *
      * @param string $webspace
      * @param NodeInterface[] $references
-     * @param string $uuid
+     * @param string $id
      *
      * @return Response
      */
-    private function getReferentialIntegrityResponse($webspace, $references, $uuid, $locale)
+    private function getReferentialIntegrityResponse($webspace, $references, $id, $locale)
     {
         $data = [
             'structures' => [],
             'other' => [],
-            'isDefault' => $this->defaultSnippetManager->isDefault($uuid),
+            'isDefault' => $this->defaultSnippetManager->isDefault($id),
         ];
 
         foreach ($references as $reference) {
@@ -440,10 +440,10 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         return new JsonResponse($data, 409);
     }
 
-    private function findDocument($uuid, $locale)
+    private function findDocument($id, $locale)
     {
         return $this->documentManager->find(
-            $uuid,
+            $id,
             $locale,
             [
                 'load_ghost_content' => false,

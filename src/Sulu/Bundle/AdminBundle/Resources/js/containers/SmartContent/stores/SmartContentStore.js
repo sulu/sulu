@@ -57,7 +57,6 @@ export default class SmartContentStore {
                 // TODO extract 'categories' into some kind of variable?
                 ResourceRequester.get(
                     'categories',
-                    undefined,
                     {
                         ids: filterCriteria.categories,
                         locale: this.locale ? this.locale.get() : undefined,
@@ -72,8 +71,7 @@ export default class SmartContentStore {
                 this.dataSourceLoading = true;
                 ResourceRequester.get(
                     this.dataSourceResourceKey,
-                    filterCriteria.dataSource,
-                    {locale: this.locale ? this.locale.get() : undefined}
+                    {id: filterCriteria.dataSource, locale: this.locale ? this.locale.get() : undefined}
                 ).then(action((response) => {
                     this.dataSource = response;
                     this.dataSourceLoading = false;

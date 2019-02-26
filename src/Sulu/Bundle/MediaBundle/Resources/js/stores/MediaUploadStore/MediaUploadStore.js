@@ -2,7 +2,6 @@
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {ResourceRequester, resourceEndpointRegistry} from 'sulu-admin-bundle/services';
-import {buildQueryString} from 'sulu-admin-bundle/utils';
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
@@ -79,7 +78,7 @@ export default class MediaUploadStore {
             throw new Error('The "id" property must be available for deleting a media');
         }
 
-        return ResourceRequester.delete(RESOURCE_KEY, this.id)
+        return ResourceRequester.delete(RESOURCE_KEY, {id: this.id})
             .then(action(() => {
                 this.media = undefined;
             }));
@@ -92,12 +91,14 @@ export default class MediaUploadStore {
             throw new Error('The "id" property must be available for updating a media');
         }
 
-        const endpoint = resourceEndpointRegistry.getEndpoint(RESOURCE_KEY);
-        const queryString = buildQueryString({
-            action: 'new-version',
-            locale: this.locale.get(),
-        });
-        const url = endpoint + '/' + id + queryString;
+        const url = resourceEndpointRegistry.getDetailUrl(
+            RESOURCE_KEY,
+            {
+                action: 'new-version',
+                id,
+                locale: this.locale.get(),
+            }
+        );
 
         this.setUploading(true);
 
@@ -106,12 +107,13 @@ export default class MediaUploadStore {
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
-        const endpoint = resourceEndpointRegistry.getEndpoint(RESOURCE_KEY);
-        const queryString = buildQueryString({
-            locale: this.locale.get(),
-            collection: collectionId,
-        });
-        const url = endpoint + queryString;
+        const url = resourceEndpointRegistry.getDetailUrl(
+            RESOURCE_KEY,
+            {
+                collection: collectionId,
+                locale: this.locale.get(),
+            }
+        );
 
         this.setUploading(true);
 

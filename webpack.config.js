@@ -59,6 +59,14 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             }),
             new CleanObsoleteChunksPlugin(),
         ],
+        resolve: {
+            alias: {
+                'fos-jsrouting': path.resolve(
+                    rootPath,
+                    'vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js'
+                ),
+            },
+        },
         module: {
             rules: [
                 {

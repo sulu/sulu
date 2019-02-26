@@ -56,7 +56,7 @@ test('Render with loaded changer and creator', () => {
         fullName: 'Erika Mustermann',
     });
 
-    ResourceRequester.get.mockImplementation((resourceKey, id) => {
+    ResourceRequester.get.mockImplementation((resourceKey, {id}) => {
         switch (id) {
             case 1:
                 return creatorPromise;
@@ -68,8 +68,8 @@ test('Render with loaded changer and creator', () => {
     const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
-    expect(ResourceRequester.get).toBeCalledWith('users', 1);
-    expect(ResourceRequester.get).toBeCalledWith('users', 2);
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
 
     return Promise.all([creatorPromise, changerPromise]).then(() => {
         changelogLine.update();

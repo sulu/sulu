@@ -26,8 +26,8 @@ test('Should load media when being constructed', () => {
 
     expect(ResourceRequester.get).toBeCalledWith(
         'media',
-        22,
         {
+            id: 22,
             locale: 'en',
         }
     );
@@ -115,8 +115,8 @@ test('Should load media with given id', () => {
 
     expect(ResourceRequester.get).toBeCalledWith(
         'media',
-        22,
         {
+            id: 22,
             locale: 'en',
         }
     );

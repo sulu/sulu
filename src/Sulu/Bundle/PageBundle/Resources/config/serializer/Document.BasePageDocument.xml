@@ -3,7 +3,7 @@
     <class name="Sulu\Bundle\PageBundle\Document\BasePageDocument" xmlns:h="https://github.com/willdurand/Hateoas">
         <h:relation rel="self">
             <h:href route="get_node">
-                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+                <h:parameter name="id" value="expr(object.getUuid())"/>
                 <h:parameter name="language" value="expr(object.getLocale())"/>
             </h:href>
             <h:exclusion groups="defaultPage"/>

@@ -28,8 +28,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -96,11 +94,6 @@ class AdminControllerTest extends TestCase
     private $metadataProviderRegistry;
 
     /**
-     * @var ResourceMetadataPool
-     */
-    private $resourceMetadataPool;
-
-    /**
      * @var RouteRegistry
      */
     private $routeRegistry;
@@ -144,6 +137,15 @@ class AdminControllerTest extends TestCase
      * @var string
      */
     private $appVersion = '666';
+
+    private $resources = [
+        'tags' => [
+            'endpoint' => [
+                'list' => 'get_tags',
+                'detail' => 'get_tag',
+            ],
+        ],
+    ];
 
     /**
      * @var array
@@ -189,7 +191,6 @@ class AdminControllerTest extends TestCase
         $this->engine = $this->prophesize(EngineInterface::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
         $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
-        $this->resourceMetadataPool = $this->prophesize(ResourceMetadataPool::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
@@ -209,7 +210,6 @@ class AdminControllerTest extends TestCase
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
             $this->metadataProviderRegistry->reveal(),
-            $this->resourceMetadataPool->reveal(),
             $this->routeRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
@@ -219,6 +219,7 @@ class AdminControllerTest extends TestCase
             $this->environment,
             $this->suluVersion,
             $this->appVersion,
+            $this->resources,
             $this->locales,
             $this->translations,
             $this->fallbackLocale,
@@ -238,14 +239,6 @@ class AdminControllerTest extends TestCase
         $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
 
-        $resourceMetadata1 = $this->prophesize(ResourceMetadata::class);
-        $resourceMetadata1->getKey()->willReturn('test1');
-        $resourceMetadata1->getEndpoint()->willReturn('route_id_1');
-
-        $resourceMetadata2 = $this->prophesize(ResourceMetadata::class);
-        $resourceMetadata2->getKey()->willReturn('test2');
-        $resourceMetadata2->getEndpoint()->willReturn('route_id_2');
-
         $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
         $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
         $this->urlGenerator->generate('sulu_admin.metadata', ['type' => ':type', 'key' => ':key'])
@@ -258,10 +251,6 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator->generate('cget_contexts')->willReturn('/security/contexts');
         $this->urlGenerator->generate('sulu_website.cache.remove')->willReturn('/admin/website/cache');
         $this->urlGenerator->generate('sulu_media.redirect', ['id' => ':id'])->willReturn('/media/redirect');
-
-        $this->resourceMetadataPool->getAllResourceMetadata('en')->willReturn(
-            [$resourceMetadata1->reveal(), $resourceMetadata2->reveal()]
-        );
 
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
@@ -293,10 +282,7 @@ class AdminControllerTest extends TestCase
                 && $data['smartContent'] === $dataProviders
                 && $data['routes'] === $routes
                 && $data['navigation'] === ['navigation_item1', 'navigation_item2']
-                && $data['resourceMetadataEndpoints'] === [
-                    'test1' => '/path1',
-                    'test2' => '/path2',
-                ];
+                && $data['resourceMetadataEndpoints'] === $this->resources;
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configAction();

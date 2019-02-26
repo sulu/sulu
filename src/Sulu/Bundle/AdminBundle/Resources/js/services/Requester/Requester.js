@@ -12,7 +12,7 @@ const defaultOptions = {
 function transformResponseObject(data: Object) {
     return Object.keys(data).reduce((transformedData: Object, key) => {
         const value = data[key];
-        transformedData[key] = value === null || value === '' ? undefined : data[key];
+        transformedData[key] = value === null ? undefined : data[key];
         return transformedData;
     }, {});
 }

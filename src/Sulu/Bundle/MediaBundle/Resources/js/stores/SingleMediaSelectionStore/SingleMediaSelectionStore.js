@@ -39,7 +39,8 @@ export default class SingleMediaSelectionStore {
         }
 
         this.setLoading(true);
-        return ResourceRequester.get(MEDIA_RESOURCE_KEY, selectedMediaId, {
+        return ResourceRequester.get(MEDIA_RESOURCE_KEY, {
+            id: selectedMediaId,
             locale: locale.get(),
         }).then((data) => {
             this.set(data);

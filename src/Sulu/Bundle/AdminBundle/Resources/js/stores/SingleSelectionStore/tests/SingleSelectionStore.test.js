@@ -18,8 +18,8 @@ test('Should load item when being constructed', () => {
 
     expect(ResourceRequester.get).toBeCalledWith(
         'snippets',
-        1,
         {
+            id: 1,
             locale: 'en',
         }
     );
@@ -51,8 +51,8 @@ test('Should load items when being constructed without a locale', () => {
 
     expect(ResourceRequester.get).toBeCalledWith(
         'snippets',
-        2,
         {
+            id: 2,
             locale: undefined,
         }
     );

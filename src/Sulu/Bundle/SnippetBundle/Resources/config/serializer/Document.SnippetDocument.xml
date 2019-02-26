@@ -3,20 +3,20 @@
     <class name="Sulu\Bundle\SnippetBundle\Document\SnippetDocument" xmlns:h="https://github.com/willdurand/Hateoas">
         <h:relation rel="self">
             <h:href route="get_snippet">
-                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+                <h:parameter name="id" value="expr(object.getUuid())"/>
                 <h:parameter name="language" value="expr(object.getLocale())"/>
             </h:href>
         </h:relation>
 
         <h:relation rel="delete">
             <h:href route="delete_snippet">
-                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+                <h:parameter name="id" value="expr(object.getUuid())"/>
             </h:href>
         </h:relation>
 
         <h:relation rel="update">
             <h:href route="put_snippet">
-                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+                <h:parameter name="id" value="expr(object.getUuid())"/>
             </h:href>
         </h:relation>
 

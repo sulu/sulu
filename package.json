@@ -78,7 +78,8 @@
     "jest": {
         "moduleNameMapper": {
             "\\.(scss|css)$": "identity-obj-proxy",
-            "\\.svg$": "<rootDir>/tests/js/mocks/svg.js"
+            "\\.svg$": "<rootDir>/tests/js/mocks/svg.js",
+            "fos-jsrouting/router": "<rootDir>/tests/js/mocks/fos-jsrouting-router.js"
         },
         "setupFiles": [
             "jest-canvas-mock"
@@ -91,6 +92,7 @@
         "transformIgnorePatterns": [
             "node_modules/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)/)"
         ],
+        "testPathIgnorePatterns": ["vendor/friendsofsymfony"],
         "testURL": "http://localhost"
     }
 }

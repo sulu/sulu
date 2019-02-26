@@ -43,11 +43,11 @@ class PageController extends NodeController
     }
 
     /**
-     * @Post("/pages/{uuid}")
+     * @Post("/pages/{id}")
      */
-    public function postTriggerAction($uuid, Request $request)
+    public function postTriggerAction($id, Request $request)
     {
-        return parent::postTriggerAction($uuid, $request);
+        return parent::postTriggerAction($id, $request);
     }
 
     protected function cgetContent(Request $request)

@@ -137,6 +137,12 @@ module.exports = { // eslint-disable-line
                 SULU_CONFIG: {},
             }),
         ],
+        resolve: {
+            alias: {
+                // eslint-disable-next-line no-undef
+                'fos-jsrouting/router': path.resolve(__dirname, 'tests/js/mocks/empty.js'),
+            },
+        },
         module: {
             rules: [
                 {

@@ -1,25 +1,15 @@
 // @flow
 import 'url-search-params-polyfill';
 import {observable, when} from 'mobx';
-import {ResourceRequester} from 'sulu-admin-bundle/services';
-import {buildQueryString} from 'sulu-admin-bundle/utils';
+import {resourceEndpointRegistry, ResourceRequester} from 'sulu-admin-bundle/services';
 import MediaUploadStore from '../MediaUploadStore';
-
-jest.mock('sulu-admin-bundle/utils', () => ({
-    buildQueryString: jest.fn(),
-}));
 
 jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
         delete: jest.fn(),
     },
     resourceEndpointRegistry: {
-        getEndpoint: jest.fn((resourceKey) => {
-            switch (resourceKey) {
-                case 'media':
-                    return '/media';
-            }
-        }),
+        getDetailUrl: jest.fn(),
     },
 }));
 
@@ -35,8 +25,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Calling the "update" method should make a "POST" request to the media update api', () => {
-    // $FlowFixMe
-    buildQueryString.mockReturnValueOnce('?action=new-version&locale=en');
+    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
 
     const openSpy = jest.fn();
 
@@ -55,13 +44,15 @@ test('Calling the "update" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
-    expect(buildQueryString).toBeCalledWith({action: 'new-version', locale: 'en'});
+    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith(
+        'media',
+        {action: 'new-version', id: 1, locale: 'en'}
+    );
     expect(openSpy).toBeCalledWith('POST', '/media/1?action=new-version&locale=en');
 });
 
 test('Calling the "create" method should make a "POST" request to the media update api', () => {
-    // $FlowFixMe
-    buildQueryString.mockReturnValueOnce('?locale=en&collection=1');
+    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/media?locale=en&collection=1');
 
     const openSpy = jest.fn();
 
@@ -80,7 +71,8 @@ test('Calling the "create" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.create(1, fileData);
-    expect(buildQueryString).toBeCalledWith({collection: 1, locale: 'en'});
+
+    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 });
 
@@ -93,7 +85,7 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
 
     const deletePromise = mediaUploadStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('media', 2);
+    expect(ResourceRequester.delete).toBeCalledWith('media', {id: 2});
 
     return deletePromise.then(() => {
         expect(mediaUploadStore.media).toEqual(undefined);

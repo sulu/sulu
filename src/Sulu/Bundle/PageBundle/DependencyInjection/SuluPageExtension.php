@@ -45,13 +45,28 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     ],
                     'resources' => [
                         'pages' => [
-                            'endpoint' => 'get_pages',
+                            'endpoint' => [
+                                'list' => 'get_pages',
+                                'detail' => 'get_page',
+                            ],
                         ],
                         'pages_seo' => [
-                            'endpoint' => 'get_page-seos',
+                            'endpoint' => [
+                                'list' => 'get_page-seos',
+                                'detail' => 'get_page-seo',
+                            ],
                         ],
                         'pages_excerpt' => [
-                            'endpoint' => 'get_page-excerpts',
+                            'endpoint' => [
+                                'list' => 'get_page-excerpts',
+                                'detail' => 'get_page-excerpt',
+                            ],
+                        ],
+                        'webspaces' => [
+                            'endpoint' => [
+                                'list' => 'get_webspaces',
+                                'detail' => 'get_webspace',
+                            ],
                         ],
                     ],
                     'field_type_options' => [
@@ -197,19 +212,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page', 'form_type' => PageDocumentType::class],
                         'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home', 'form_type' => HomeDocumentType::class],
                         'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
-                    ],
-                ]
-            );
-        }
-
-        if ($container->hasExtension('sulu_admin')) {
-            $container->prependExtensionConfig(
-                'sulu_admin',
-                [
-                    'resources' => [
-                        'webspaces' => [
-                            'endpoint' => 'get_webspaces',
-                        ],
                     ],
                 ]
             );

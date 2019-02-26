@@ -40,7 +40,8 @@ export default class SingleSelectionStore {
         }
 
         this.setLoading(true);
-        return ResourceRequester.get(this.resourceKey, itemId, {
+        return ResourceRequester.get(this.resourceKey, {
+            id: itemId,
             locale: this.locale ? this.locale.get() : undefined,
         }).then(action((data) => {
             this.item = data;

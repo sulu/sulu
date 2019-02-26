@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10.9
+      - image: circleci/php:7.3-node
     steps:
       - checkout
       - run:
@@ -15,4 +15,5 @@ jobs:
       - run: npm run flow
       - run: npm run styleguide:build
       - run: npm test -- --maxWorkers=4
+      - run: composer install --no-dev
       - run: npm run build

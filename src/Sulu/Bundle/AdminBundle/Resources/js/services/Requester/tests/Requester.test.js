@@ -41,7 +41,7 @@ test('Should execute GET request and reject if array is returned', () => {
     return expect(Requester.get('/some-url')).rejects.toThrow('array');
 });
 
-test('Should execute GET request and replace null and empty string with undefined', () => {
+test('Should execute GET request and replace null with undefined', () => {
     const response = {
         json: jest.fn(),
         ok: true,
@@ -61,7 +61,7 @@ test('Should execute GET request and replace null and empty string with undefine
         expect(data).toEqual({
             test1: undefined,
             test2: undefined,
-            test3: undefined,
+            test3: '',
             test4: 'something',
         });
     });
@@ -91,7 +91,7 @@ test('Should execute POST request and return JSON', () => {
         test: undefined,
     };
     const requestPromise = Requester.post('/some-url', data).then((response) => {
-        expect(response).toEqual({test: undefined, value: 'test'});
+        expect(response).toEqual({test: '', value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {
@@ -125,7 +125,7 @@ test('Should execute PUT request and return JSON', () => {
         test: undefined,
     };
     const requestPromise = Requester.put('/some-url', data).then((response) => {
-        expect(response).toEqual({test: undefined, value: 'test'});
+        expect(response).toEqual({test: '', value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {
@@ -162,7 +162,7 @@ test('Should execute PATCH request and return JSON', () => {
     ];
 
     const requestPromise = Requester.patch('/some-url', data).then((response) => {
-        expect(response).toEqual([{test: undefined, value: 'test'}]);
+        expect(response).toEqual([{test: '', value: 'test'}]);
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {
@@ -187,7 +187,7 @@ test('Should execute DELETE request and return JSON', () => {
     window.fetch.mockReturnValue(promise);
 
     const requestPromise = Requester.delete('/some-url').then((data) => {
-        expect(data).toEqual({test: undefined, value: 'test'});
+        expect(data).toEqual({test: '', value: 'test'});
     });
 
     expect(window.fetch).toBeCalledWith('/some-url', {

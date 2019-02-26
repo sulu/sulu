@@ -117,13 +117,13 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
 
         this.deletingDraft = true;
 
-        ResourceRequester.postWithId(
+        ResourceRequester.post(
             'pages',
-            id,
             undefined,
             {
                 action: 'remove-draft',
                 locale,
+                id,
                 webspace,
             }
         ).then(action((response) => {
