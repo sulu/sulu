@@ -44,6 +44,9 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'resources' => [
+                        'pages' => [
+                            'endpoint' => 'get_pages',
+                        ],
                         'pages_seo' => [
                             'endpoint' => 'get_page-seos',
                         ],
@@ -126,11 +129,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                             'type_map' => [
                                 'page' => PageBridge::class,
                                 'home' => PageBridge::class,
-                            ],
-                            'resources' => [
-                                'pages' => [
-                                    'endpoint' => 'get_pages',
-                                ],
                             ],
                         ],
                     ],
