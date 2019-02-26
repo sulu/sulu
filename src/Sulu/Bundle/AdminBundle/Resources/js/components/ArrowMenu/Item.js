@@ -41,19 +41,22 @@ export default class Item extends React.PureComponent<Props> {
             itemStyles.item,
             {
                 [itemStyles.active]: active,
-                [itemStyles.disabled]: disabled,
             }
         );
 
         return (
-            <a className={itemClass} onClick={this.handleButtonClick}>
+            <button
+                className={itemClass}
+                disabled={disabled}
+                onClick={this.handleButtonClick}
+            >
                 <span className={itemStyles.icon}>
                     {icon && active && <Icon className={itemStyles.icon} name={icon} />}
                 </span>
                 <span>
                     {children}
                 </span>
-            </a>
+            </button>
         );
     }
 }

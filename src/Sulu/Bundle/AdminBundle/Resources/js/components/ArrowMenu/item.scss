@@ -5,24 +5,28 @@ $itemColorActive: $blueZodiac;
 $disabledColor: $silver;
 
 .item {
+    background: none;
+    border: none;
+    display: block;
     height: 22px;
     color: $itemColor;
     font-size: 12px;
     line-height: 22px;
     margin-bottom: 6px;
     cursor: pointer;
+    width: 100%;
 
     &:last-child {
         margin-bottom: 0;
     }
 
     &.active,
-    &:hover {
+    &:hover:not([disabled]) {
         font-weight: bold;
         color: $itemColorActive;
     }
 
-    &.disabled {
+    &:disabled {
         color: $disabledColor;
         cursor: default;
     }
