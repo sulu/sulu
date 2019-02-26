@@ -29,6 +29,7 @@ export default class Action extends React.PureComponent<Props> {
 
     render() {
         const {disabled} = this.props;
+
         return (
             <button
                 className={actionStyles.action}
