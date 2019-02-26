@@ -51,7 +51,7 @@ export default class SingleListOverlay extends React.Component<Props> {
         const {listKey, locale, options, preSelectedItem, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
-        observableOptions.excluded = this.excludedIds;
+        observableOptions.excludedIds = this.excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;

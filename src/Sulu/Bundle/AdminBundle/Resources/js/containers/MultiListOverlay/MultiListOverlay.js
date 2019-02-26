@@ -51,7 +51,7 @@ export default class MultiListOverlay extends React.Component<Props> {
         const {listKey, locale, options, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
-        observableOptions.excluded = this.excludedIds;
+        observableOptions.excludedIds = this.excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;

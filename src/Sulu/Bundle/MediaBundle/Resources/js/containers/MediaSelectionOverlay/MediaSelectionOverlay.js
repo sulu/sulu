@@ -71,7 +71,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             {
                 page: observable.box(),
                 collection: collectionId,
-                excluded: excludedIds,
+                excludedIds: excludedIds,
                 locale: locale,
             },
             options
