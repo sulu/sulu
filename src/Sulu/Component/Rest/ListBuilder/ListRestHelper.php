@@ -60,7 +60,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $idsString = $this->getRequest()->get('ids');
 
-        return (null !== $idsString) ? explode(',', $idsString) : null;
+        return (null !== $idsString) ? array_filter(explode(',', $idsString)) : null;
     }
 
     /**
@@ -72,7 +72,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $excludedIdsString = $this->getRequest()->get('excludedIds');
 
-        return (null !== $excludedIdsString) ? explode(',', $excludedIdsString) : [];
+        return (null !== $excludedIdsString) ? array_filter(explode(',', $excludedIdsString)) : [];
     }
 
     /**

@@ -64,6 +64,8 @@ class ListRestHelperTest extends TestCase
                         'search' => 'now',
                         'searchFields' => 'title',
                         'page' => 1,
+                        'ids' => '',
+                        'excludedIds' => '',
                     ],
                     [],
                     [
@@ -78,7 +80,7 @@ class ListRestHelperTest extends TestCase
                     'searchFields' => ['title'],
                     'limit' => null,
                     'offset' => 0,
-                    'ids' => null,
+                    'ids' => [],
                     'excludedIds' => [],
                 ],
             ],
