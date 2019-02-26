@@ -143,20 +143,6 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
         return $this;
     }
 
-    public function enableMoving(): FormOverlayListRouteBuilderInterface
-    {
-        $this->route->setOption('movable', true);
-
-        return $this;
-    }
-
-    public function disableMoving(): FormOverlayListRouteBuilderInterface
-    {
-        $this->route->setOption('movable', false);
-
-        return $this;
-    }
-
     public function addRouterAttributesToListStore(array $routerAttributesToListStore): FormOverlayListRouteBuilderInterface
     {
         $oldRouterAttributesToListStore = $this->route->getOption('routerAttributesToListStore');
