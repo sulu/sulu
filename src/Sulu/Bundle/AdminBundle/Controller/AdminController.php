@@ -247,7 +247,7 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
-                'resourceMetadataEndpoints' => $this->resources,
+                'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
                 }, $this->dataProviderPool->getAll()),

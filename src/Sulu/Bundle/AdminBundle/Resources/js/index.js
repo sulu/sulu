@@ -238,7 +238,7 @@ function processConfig(config: Object) {
     routeRegistry.addCollection(config.routes);
     metadataStore.endpoint = config.endpoints.metadata;
     navigationRegistry.set(config.navigation);
-    resourceRouteRegistry.setEndpoints(config.resourceMetadataEndpoints);
+    resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
 }
 
