@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.6.24
 
 ### Collection Repository count function changed
 

@@ -262,5 +262,18 @@
                 </orm:join>
             </orm:joins>
         </group-concat-property>
+
+        <property name="user" list:translation="sulu_security.user_name">
+            <orm:field-name>username</orm:field-name>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+                    <orm:method>LEFT</orm:method>
+                    <orm:condition>%sulu.model.user.class%.contact = %sulu.model.contact.class%.id</orm:condition>
+                </orm:join>
+            </orm:joins>
+        </property>
     </properties>
 </class>

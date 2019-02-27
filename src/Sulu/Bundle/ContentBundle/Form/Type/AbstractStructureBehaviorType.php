@@ -30,7 +30,7 @@ abstract class AbstractStructureBehaviorType extends AbstractType
     {
         $builder->add('title', TextType::class);
         $builder->add('structureType', TextType::class);
-        $builder->add('structure', TextType::class, ['property_path' => 'structure.stagedData']);
+        $builder->add('structure', UnstructuredType::class, ['property_path' => 'structure.stagedData']);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, [DataNormalizer::class, 'normalize']);
     }

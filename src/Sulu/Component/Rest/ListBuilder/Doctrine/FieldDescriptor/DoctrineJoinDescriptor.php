@@ -65,7 +65,7 @@ class DoctrineJoinDescriptor
 
     public function __construct(
         $entityName,
-        $join,
+        $join = null,
         $joinCondition = null,
         $joinMethod = self::JOIN_METHOD_LEFT,
         $joinConditionMethod = self::JOIN_CONDITION_METHOD_WITH
@@ -90,6 +90,11 @@ class DoctrineJoinDescriptor
      */
     public function getJoin()
     {
+        // When joining without a relation the join should not be encoded
+        if (null === $this->join || $this->entityName === $this->join) {
+            return $this->entityName;
+        }
+
         return $this->encodeAlias($this->join);
     }
 

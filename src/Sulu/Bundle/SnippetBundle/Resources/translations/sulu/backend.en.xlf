@@ -115,7 +115,7 @@
                 <target>New snippet will be created</target>
             </trans-unit>
             <trans-unit id="27" resname="content-navigation.snippets.taxonomies">
-                <source>content-navigation.snippets.excerpt</source>
+                <source>content-navigation.snippets.taxonomies</source>
                 <target>Taxonomies</target>
             </trans-unit>
         </body>

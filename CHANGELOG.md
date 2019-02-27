@@ -2,7 +2,17 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * BUGFIX      #4343 [MediaBundle]           Fixed format manager types configuration cannot be changed
+    * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
+    * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
+    * FEATURE     #4394  [WebsiteBundle]        Add exception handling for breadcrumb function
+    * FEATURE     #4400  [All]                  Fix FieldJoinDescriptor without a relation
+    * ENHANCEMENT #4370  [WebsiteBundle]        Add attributes to sitemap-url
+    * FEATURE     #4357  [MediaBundle]          Added dimension properties to video media
+    * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
+
+* 1.6.24 (2019-01-09)
+    * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
+    * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
 
 * 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
@@ -267,6 +277,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.20 (2019-01-09)
+    * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
 
 * 1.5.19 (2018-12-03)
     * HOTFIX      #4304 [DocumentManager]       Fix performance issue by removing redundant properties on Metadata
