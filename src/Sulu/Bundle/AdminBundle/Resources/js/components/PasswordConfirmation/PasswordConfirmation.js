@@ -78,7 +78,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
 
         return (
             <Grid className={passwordConfirmationStyles.grid}>
-                <Grid.Item size={6}>
+                <Grid.Item colspan={6}>
                     <Input
                         disabled={disabled}
                         icon={LOCK_ICON}
@@ -88,7 +88,7 @@ export default class PasswordConfirmation extends React.Component<Props> {
                         value={this.firstValue}
                     />
                 </Grid.Item>
-                <Grid.Item className={passwordConfirmationStyles.item} size={6}>
+                <Grid.Item className={passwordConfirmationStyles.item} colspan={6}>
                     <Input
                         disabled={disabled}
                         icon={LOCK_ICON}

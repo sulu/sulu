@@ -48,9 +48,9 @@ abstract class ItemMetadata
     protected $type;
 
     /**
-     * @var null|int
+     * @var int
      */
-    protected $size;
+    protected $colspan;
 
     public function __construct(string $name)
     {
@@ -102,14 +102,14 @@ abstract class ItemMetadata
         $this->description = $description;
     }
 
-    public function getSize(): ?int
+    public function getColspan(): int
     {
-        return $this->size;
+        return $this->colspan;
     }
 
-    public function setSize(int $size = null): void
+    public function setColspan(int $colspan): void
     {
-        $this->size = $size;
+        $this->colspan = $colspan;
     }
 
     public function getType(): string

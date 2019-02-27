@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import type {Node} from 'react';
 import Grid from '../Grid';
-import type {Size} from '../Grid';
+import type {Colspan} from '../Grid';
 import fieldStyles from './field.scss';
 import gridStyles from './grid.scss';
 
@@ -14,19 +14,19 @@ type Props = {|
     id?: string,
     label?: string,
     required: boolean,
-    size: Size,
-    spaceAfter: Size,
+    colspan: Colspan,
+    spaceAfter: Colspan,
 |};
 
 export default class Field extends React.Component<Props> {
     static defaultProps = {
         required: false,
-        size: 12,
+        colspan: 12,
         spaceAfter: 0,
     };
 
     render() {
-        const {children, id, description, error, label, required, size, spaceAfter} = this.props;
+        const {children, id, description, error, label, required, colspan, spaceAfter} = this.props;
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -38,7 +38,7 @@ export default class Field extends React.Component<Props> {
         return (
             <Grid.Item
                 className={gridStyles.gridItem}
-                size={size}
+                colspan={colspan}
                 spaceAfter={spaceAfter}
             >
                 <div className={fieldClass}>

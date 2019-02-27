@@ -295,7 +295,7 @@ class MediaManagerTest extends TestCase
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn($fileName);
         $uploadedFile->getPathname()->willReturn('');
-        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getColspan()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('img');
 
         $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
@@ -326,7 +326,7 @@ class MediaManagerTest extends TestCase
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
         $uploadedFile->getPathname()->willReturn('');
-        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getColspan()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('img');
 
         $media = $this->prophesize(Media::class);
@@ -429,7 +429,7 @@ class MediaManagerTest extends TestCase
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
         $uploadedFile->getPathname()->willReturn('');
-        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getColspan()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('video/ogg');
         $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class)->shouldBeCalled();
 

@@ -19,9 +19,9 @@ test('Display a field without label', () => {
     )).toMatchSnapshot();
 });
 
-test('Display a field with size and after space', () => {
+test('Display a field with colspan and after space', () => {
     expect(render(
-        <Field size={7} spaceAfter={5}>
+        <Field colspan={7} spaceAfter={5}>
             <div>Test</div>
         </Field>
     )).toMatchSnapshot();

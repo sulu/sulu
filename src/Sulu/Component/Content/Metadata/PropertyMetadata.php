@@ -49,14 +49,7 @@ class PropertyMetadata extends ItemMetadata
      *
      * @var int
      */
-    protected $colSpan = null;
-
-    /**
-     * The number of grid columns the property should use in the admin interface.
-     *
-     * @var int
-     */
-    protected $size = null;
+    protected $colspan = 12;
 
     /**
      * The number of grid columns the property should have space after.
@@ -160,44 +153,14 @@ class PropertyMetadata extends ItemMetadata
         return false;
     }
 
-    public function getColSpan(): ?int
+    public function getColspan(): int
     {
-        @trigger_error(
-            sprintf('Do not use getter "%s" from "%s"', 'getColSpan', __CLASS__),
-            E_USER_DEPRECATED
-        );
-
-        return $this->colSpan;
+        return $this->colspan;
     }
 
-    public function setColSpan(int $colSpan = null): self
+    public function setColspan(int $colspan): self
     {
-        @trigger_error(
-            sprintf('Do not use setter "%s" from "%s"', 'setColSpan', __CLASS__),
-            E_USER_DEPRECATED
-        );
-
-        $this->colSpan = $colSpan;
-
-        return $this;
-    }
-
-    public function getSize(): ?int
-    {
-        if ($this->size) {
-            return $this->size;
-        }
-
-        if ($this->colSpan) {
-            return $this->getColSpan();
-        }
-
-        return null;
-    }
-
-    public function setSize(int $size = null): self
-    {
-        $this->size = $size;
+        $this->colspan = $colspan;
 
         return $this;
     }

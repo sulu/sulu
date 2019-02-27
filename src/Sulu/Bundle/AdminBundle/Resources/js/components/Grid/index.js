@@ -1,6 +1,6 @@
 // @flow
 import Grid from './Grid';
-import type {Size} from './types';
+import type {Colspan} from './types';
 
 export default Grid;
-export type {Size};
+export type {Colspan};

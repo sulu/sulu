@@ -101,7 +101,7 @@ export default class Field extends React.Component<Props> {
 
             return (
                 <FieldComponent
-                    size={schema.size}
+                    colspan={schema.colspan}
                     spaceAfter={schema.spaceAfter}
                 >
                     <div className={fieldStyles.fieldContainer}>
@@ -129,7 +129,7 @@ export default class Field extends React.Component<Props> {
                 id={dataPath}
                 label={label}
                 required={required}
-                size={schema.size}
+                colspan={schema.colspan}
                 spaceAfter={schema.spaceAfter}
             >
                 <div className={fieldStyles.fieldContainer}>

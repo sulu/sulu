@@ -13,7 +13,7 @@ type Props = BaseItemProps & {
 export default class BaseItem extends React.PureComponent<Props> {
     render() {
         const {
-            size,
+            colspan,
             children,
             className,
             spaceAfter,
@@ -22,8 +22,8 @@ export default class BaseItem extends React.PureComponent<Props> {
 
         const baseItemClass = classNames(
             className,
-            baseItemStyles.size,
-            baseItemStyles['size-' + size],
+            baseItemStyles.colspan,
+            baseItemStyles['colspan-' + colspan],
             baseItemStyles['space-before-' + spaceBefore],
             baseItemStyles['space-after-' + spaceAfter]
         );

@@ -67,7 +67,7 @@ test('Render field with correct values for grid', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            schema={{label: 'label1', type: 'text', size: 8, spaceAfter: 3, visible: true}}
+            schema={{label: 'label1', type: 'text', colspan: 8, spaceAfter: 3, visible: true}}
             schemaPath=""
         />
     )).toMatchSnapshot();

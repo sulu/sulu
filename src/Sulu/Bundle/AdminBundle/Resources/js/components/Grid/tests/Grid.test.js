@@ -6,18 +6,18 @@ import Grid from '../Grid';
 test('Render a Grid with Items in all sizes', () => {
     expect(render(
         <Grid>
-            <Grid.Item size={1} />
-            <Grid.Item size={2} />
-            <Grid.Item size={3} />
-            <Grid.Item size={4} />
-            <Grid.Item size={5} />
-            <Grid.Item size={6} />
-            <Grid.Item size={7} />
-            <Grid.Item size={8} />
-            <Grid.Item size={9} />
-            <Grid.Item size={10} />
-            <Grid.Item size={11} />
-            <Grid.Item size={12} />
+            <Grid.Item colspan={1} />
+            <Grid.Item colspan={2} />
+            <Grid.Item colspan={3} />
+            <Grid.Item colspan={4} />
+            <Grid.Item colspan={5} />
+            <Grid.Item colspan={6} />
+            <Grid.Item colspan={7} />
+            <Grid.Item colspan={8} />
+            <Grid.Item colspan={9} />
+            <Grid.Item colspan={10} />
+            <Grid.Item colspan={11} />
+            <Grid.Item colspan={12} />
         </Grid>
     )).toMatchSnapshot();
 });
@@ -25,21 +25,21 @@ test('Render a Grid with Items in all sizes', () => {
 test('Render a Grid with Sections', () => {
     expect(render(
         <Grid>
-            <Grid.Section size={4}>
-                <Grid.Item size={1} />
-                <Grid.Item size={2} />
-                <Grid.Item size={3} />
-                <Grid.Item size={4} />
-                <Grid.Item size={5} />
-                <Grid.Item size={6} />
+            <Grid.Section colspan={4}>
+                <Grid.Item colspan={1} />
+                <Grid.Item colspan={2} />
+                <Grid.Item colspan={3} />
+                <Grid.Item colspan={4} />
+                <Grid.Item colspan={5} />
+                <Grid.Item colspan={6} />
             </Grid.Section>
-            <Grid.Section size={8}>
-                <Grid.Item size={7} />
-                <Grid.Item size={8} />
-                <Grid.Item size={9} />
-                <Grid.Item size={10} />
-                <Grid.Item size={11} />
-                <Grid.Item size={12} />
+            <Grid.Section colspan={8}>
+                <Grid.Item colspan={7} />
+                <Grid.Item colspan={8} />
+                <Grid.Item colspan={9} />
+                <Grid.Item colspan={10} />
+                <Grid.Item colspan={11} />
+                <Grid.Item colspan={12} />
             </Grid.Section>
         </Grid>
     )).toMatchSnapshot();
@@ -48,8 +48,8 @@ test('Render a Grid with Sections', () => {
 test('Render a Grid with Items having spaces between them', () => {
     expect(render(
         <Grid>
-            <Grid.Item size={4} spaceAfter={8} />
-            <Grid.Item size={2} spaceBefore={10} />
+            <Grid.Item colspan={4} spaceAfter={8} />
+            <Grid.Item colspan={2} spaceBefore={10} />
         </Grid>
     )).toMatchSnapshot();
 });
