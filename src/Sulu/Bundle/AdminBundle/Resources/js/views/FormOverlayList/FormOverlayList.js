@@ -32,9 +32,11 @@ export default class FormOverlayList extends React.Component<ViewProps> {
     };
 
     handleFormOverlayConfirm = () => {
-        if (this.formRef) {
-            this.formRef.submit();
+        if (!this.formRef) {
+            throw new Error('The Form ref has not been set! This should not happen and is likely a bug.');
         }
+
+        this.formRef.submit();
     };
 
     handleFormOverlayClose = () => {
@@ -42,18 +44,20 @@ export default class FormOverlayList extends React.Component<ViewProps> {
     };
 
     handleFormSubmit = () => {
-        if (this.formStore) {
-            this.formStore.save()
-                .then(() => {
-                    this.destroyFormOverlay();
-                    if (this.listRef) {
-                        this.listRef.listStore.sendRequest();
-                    }
-                })
-                .catch(action((error) => {
-                    this.formErrors.push(error);
-                }));
+        if (!this.formStore) {
+            throw new Error('The FormStore has not been initialized! This should not happen and is likely a bug.');
         }
+
+        this.formStore.save()
+            .then(() => {
+                this.destroyFormOverlay();
+                if (this.listRef) {
+                    this.listRef.listStore.sendRequest();
+                }
+            })
+            .catch(action((error) => {
+                this.formErrors.push(error);
+            }));
     };
 
     @action handleErrorSnackbarClose = () => {
@@ -128,62 +132,22 @@ export default class FormOverlayList extends React.Component<ViewProps> {
         this.destroyFormOverlay();
     }
 
-    renderFormOverlay() {
+    render() {
         const {
             router: {
                 route: {
                     options: {
                         addOverlayTitle,
                         editOverlayTitle,
-                    },
-                },
-            },
-        } = this.props;
-
-        if (!this.formStore) {
-            return null;
-        }
-
-        const overlayTitle = this.formStore.id
-            ? translate(editOverlayTitle || 'sulu_admin.edit')
-            : translate(addOverlayTitle || 'sulu_admin.create');
-
-        return (
-            <Overlay
-                confirmDisabled={!this.formStore.dirty}
-                confirmLoading={this.formStore.saving}
-                confirmText={translate('sulu_admin.save')}
-                onClose={this.handleFormOverlayClose}
-                onConfirm={this.handleFormOverlayConfirm}
-                open={!!this.formStore}
-                size="small"
-                title={overlayTitle}
-            >
-                <div className={formOverlayListStyles.form}>
-                    <ErrorSnackbar
-                        onCloseClick={this.handleErrorSnackbarClose}
-                        visible={!!this.formErrors.length}
-                    />
-                    <Form
-                        onSubmit={this.handleFormSubmit}
-                        ref={this.setFormRef}
-                        store={this.formStore}
-                    />
-                </div>
-            </Overlay>
-        );
-    }
-
-    render() {
-        const {
-            router: {
-                route: {
-                    options: {
                         formKey,
                     },
                 },
             },
         } = this.props;
+
+        const overlayTitle = this.formStore && this.formStore.id
+            ? translate(editOverlayTitle || 'sulu_admin.edit')
+            : translate(addOverlayTitle || 'sulu_admin.create');
 
         return (
             <Fragment>
@@ -193,7 +157,30 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setListRef}
                 />
-                {this.renderFormOverlay()}
+                {!!this.formStore &&
+                    <Overlay
+                        confirmDisabled={!this.formStore.dirty}
+                        confirmLoading={this.formStore.saving}
+                        confirmText={translate('sulu_admin.save')}
+                        onClose={this.handleFormOverlayClose}
+                        onConfirm={this.handleFormOverlayConfirm}
+                        open={!!this.formStore}
+                        size="small"
+                        title={overlayTitle}
+                    >
+                        <div className={formOverlayListStyles.form}>
+                            <ErrorSnackbar
+                                onCloseClick={this.handleErrorSnackbarClose}
+                                visible={!!this.formErrors.length}
+                            />
+                            <Form
+                                onSubmit={this.handleFormSubmit}
+                                ref={this.setFormRef}
+                                store={this.formStore}
+                            />
+                        </div>
+                    </Overlay>
+                }
             </Fragment>
         );
     }
