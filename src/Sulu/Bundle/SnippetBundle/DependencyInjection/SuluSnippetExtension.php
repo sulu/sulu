@@ -38,7 +38,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'resources' => [
                         'snippets' => [
-                            'endpoint' => [
+                            'routes' => [
                                 'list' => 'get_snippets',
                                 'detail' => 'get_snippet',
                             ],

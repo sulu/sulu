@@ -93,7 +93,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     ],
                     'resources' => [
                         'categories' => [
-                            'endpoint' => [
+                            'routes' => [
                                 'list' => 'get_categories',
                                 'detail' => 'get_category',
                             ],

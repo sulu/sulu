@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('resourceKey')
                     ->prototype('array')
                         ->children()
-                            ->arrayNode('endpoint')
+                            ->arrayNode('routes')
                                 ->children()
                                     ->scalarNode('list')->end()
                                     ->scalarNode('detail')->end()

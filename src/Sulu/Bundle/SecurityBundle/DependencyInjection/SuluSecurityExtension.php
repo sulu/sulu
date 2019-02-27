@@ -98,13 +98,13 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                     ],
                     'resources' => [
                         'roles' => [
-                            'endpoint' => [
+                            'routes' => [
                                 'list' => 'get_roles',
                                 'detail' => 'get_role',
                             ],
                         ],
                         'users' => [
-                            'endpoint' => [
+                            'routes' => [
                                 'list' => 'get_users',
                                 'detail' => 'get_user',
                             ],

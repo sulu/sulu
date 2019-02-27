@@ -9,7 +9,7 @@ test('Set and get endpoints for given key', () => {
 
     resourceEndpointRegistry.setEndpoints({
         snippets: {
-            endpoint: {
+            routes: {
                 detail: 'get_snippet',
                 list: 'get_snippets',
             },
@@ -31,21 +31,21 @@ test('Throw exception when getting detail url for not existing key', () => {
 test('Throw exception when getting detail url for not existing detail url', () => {
     resourceEndpointRegistry.setEndpoints({
         existing: {
-            endpoint: {},
+            routes: {},
         },
     });
 
     expect(() => resourceEndpointRegistry.getDetailUrl('existing'))
-        .toThrow(/no detail endpoint for the resourceKey "existing"/);
+        .toThrow(/no detail route for the resourceKey "existing"/);
 });
 
 test('Throw exception when getting detail url for not existing list url', () => {
     resourceEndpointRegistry.setEndpoints({
         existing: {
-            endpoint: {},
+            routes: {},
         },
     });
 
     expect(() => resourceEndpointRegistry.getListUrl('existing'))
-        .toThrow(/no list endpoint for the resourceKey "existing"/);
+        .toThrow(/no list route for the resourceKey "existing"/);
 });

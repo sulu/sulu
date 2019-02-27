@@ -96,7 +96,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             [
                 'resources' => [
                     'localizations' => [
-                        'endpoint' => [
+                        'routes' => [
                             'list' => 'get_localizations',
                         ],
                     ],

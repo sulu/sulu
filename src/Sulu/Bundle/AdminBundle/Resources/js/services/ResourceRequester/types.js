@@ -1,7 +1,7 @@
 // @flow
 export type EndpointConfiguration = {
     [string]: {
-        endpoint: {
+        routes: {
             detail?: string,
             list?: string,
         },
