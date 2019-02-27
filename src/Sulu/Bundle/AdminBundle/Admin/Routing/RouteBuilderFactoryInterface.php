@@ -15,7 +15,9 @@ interface RouteBuilderFactoryInterface
 {
     public function createListRouteBuilder(string $name, string $path): ListRouteBuilderInterface;
 
+    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface;
+
     public function createResourceTabRouteBuilder(string $name, string $path): ResourceTabRouteBuilderInterface;
 
-    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface;
+    public function createTabRouteBuilder(string $name, string $path): TabRouteBuilderInterface;
 }

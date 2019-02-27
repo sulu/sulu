@@ -18,13 +18,18 @@ class RouteBuilderFactory implements RouteBuilderFactoryInterface
         return new ListRouteBuilder($name, $path);
     }
 
+    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface
+    {
+        return new FormRouteBuilder($name, $path);
+    }
+
     public function createResourceTabRouteBuilder(string $name, string $path): ResourceTabRouteBuilderInterface
     {
         return new ResourceTabRouteBuilder($name, $path);
     }
 
-    public function createFormRouteBuilder(string $name, string $path): FormRouteBuilderInterface
+    public function createTabRouteBuilder(string $name, string $path): TabRouteBuilderInterface
     {
-        return new FormRouteBuilder($name, $path);
+        return new TabRouteBuilder($name, $path);
     }
 }

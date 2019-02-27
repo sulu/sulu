@@ -6,7 +6,7 @@ import type {Route} from '../../services/Router';
 export type ViewProps = {
     router: Router,
     route: Route,
-    children?: (?Object) => Element<View> | null,
+    children?: (?Object) => Element<*> | null,
 };
 
 export type View = Class<Component<ViewProps & *>>;

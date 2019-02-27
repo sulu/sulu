@@ -1,12 +1,11 @@
 // @flow
 import React, {Fragment} from 'react';
-import {autorun, computed, observable, toJS} from 'mobx';
+import {computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
-import Tabs from '../../components/Tabs';
+import Tabs from '../../views/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import resourceTabsStyles from './resourceTabs.scss';
 
@@ -18,7 +17,6 @@ type Props = ViewProps & {
 @observer
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
-    redirectToRouteWithHighestPriorityDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -46,8 +44,6 @@ export default class ResourceTabs extends React.Component<Props> {
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
-
-        this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -58,7 +54,6 @@ export default class ResourceTabs extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        this.redirectToRouteWithHighestPriorityDisposer();
         this.resourceStore.destroy();
     }
 
@@ -115,63 +110,12 @@ export default class ResourceTabs extends React.Component<Props> {
             });
     }
 
-    @computed get visibleTabRouteWithHighestPriority(): Object {
-        return this.visibleTabRoutes.reduce((prioritizedRoute, route) => {
-            if (!prioritizedRoute) {
-                return route;
-            }
-
-            const {
-                options: {
-                    tabPriority: highestTabPriority = 0,
-                },
-            } = prioritizedRoute;
-
-            const {
-                options: {
-                    tabPriority = 0,
-                },
-            } = route;
-
-            if (highestTabPriority >= tabPriority) {
-                return prioritizedRoute;
-            }
-
-            return route;
-        }, undefined);
-    }
-
-    redirectToRouteWithHighestPriority = (): void => {
-        const {route, router} = this.props;
-
-        if (!this.resourceStore.initialized || this.resourceStore.loading) {
-            return;
-        }
-
-        if (!route.children.includes(router.route) && router.route !== route) {
-            return;
-        }
-
-        if (this.visibleTabRoutes.includes(router.route)) {
-            return;
-        }
-
-        if (!this.visibleTabRouteWithHighestPriority) {
-            return;
-        }
-
-        router.redirect(this.visibleTabRouteWithHighestPriority.name, router.attributes);
-    };
-
-    handleSelect = (index: number) => {
-        const {router} = this.props;
-        router.navigate(this.visibleTabRoutes[index].name, router.attributes);
-    };
-
     render() {
         const {children} = this.props;
 
-        const ChildComponent = children ? children({locales: this.locales, resourceStore: this.resourceStore}) : null;
+        const ChildComponent = children
+            ? children({locales: this.locales, resourceStore: this.resourceStore})
+            : null;
 
         const selectedRouteIndex = ChildComponent
             ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === ChildComponent.props.route)
@@ -181,24 +125,16 @@ export default class ResourceTabs extends React.Component<Props> {
 
         return this.resourceStore.initialized
             ? (
-                <Fragment>
-                    <div className={resourceTabsStyles.tabsContainer}>
-                        <Tabs onSelect={this.handleSelect} selectedIndex={selectedRouteIndex}>
-                            {this.visibleTabRoutes.map((tabRoute) => {
-                                const tabTitle = tabRoute.options.tabTitle;
-                                return (
-                                    <Tabs.Tab key={tabRoute.name}>
-                                        {tabTitle ? translate(tabTitle) : tabRoute.name}
-                                    </Tabs.Tab>
-                                );
-                            })}
-                        </Tabs>
-                    </div>
-                    {this.sortedTabRoutes[0] !== selectedRoute && this.title &&
-                        <h1>{this.title}</h1>
-                    }
-                    {ChildComponent}
-                </Fragment>
+                <Tabs {...this.props} routeChildren={this.visibleTabRoutes} selectedIndex={selectedRouteIndex}>
+                    {() => (
+                        <Fragment>
+                            {this.sortedTabRoutes[0] !== selectedRoute && this.title &&
+                                <h1>{this.title}</h1>
+                            }
+                            {ChildComponent}
+                        </Fragment>
+                    )}
+                </Tabs>
             )
             : (
                 <div className={resourceTabsStyles.loader}>
