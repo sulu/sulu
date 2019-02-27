@@ -1,14 +1,14 @@
 // @flow
 import 'url-search-params-polyfill';
 import {observable, when} from 'mobx';
-import {resourceEndpointRegistry, ResourceRequester} from 'sulu-admin-bundle/services';
+import {resourceRouteRegistry, ResourceRequester} from 'sulu-admin-bundle/services';
 import MediaUploadStore from '../MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
         delete: jest.fn(),
     },
-    resourceEndpointRegistry: {
+    resourceRouteRegistry: {
         getDetailUrl: jest.fn(),
     },
 }));
@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 }));
 
 test('Calling the "update" method should make a "POST" request to the media update api', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
 
     const openSpy = jest.fn();
 
@@ -44,7 +44,7 @@ test('Calling the "update" method should make a "POST" request to the media upda
     const fileData = new File([''], 'fileName');
 
     mediaUploadStore.update(fileData);
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith(
         'media',
         {action: 'new-version', id: 1, locale: 'en'}
     );
@@ -52,7 +52,7 @@ test('Calling the "update" method should make a "POST" request to the media upda
 });
 
 test('Calling the "create" method should make a "POST" request to the media update api', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/media?locale=en&collection=1');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media?locale=en&collection=1');
 
     const openSpy = jest.fn();
 
@@ -72,7 +72,7 @@ test('Calling the "create" method should make a "POST" request to the media upda
 
     mediaUploadStore.create(1, fileData);
 
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 });
 

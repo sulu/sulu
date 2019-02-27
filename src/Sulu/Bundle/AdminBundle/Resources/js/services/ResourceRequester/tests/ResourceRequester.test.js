@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import ResourceRequester from '../ResourceRequester';
 import Requester from '../../Requester/Requester';
-import resourceEndpointRegistry from '../registries/ResourceEndpointRegistry';
+import resourceRouteRegistry from '../registries/ResourceRouteRegistry';
 
 jest.mock('../../Requester/Requester', () => ({
     get: jest.fn(),
@@ -11,36 +11,36 @@ jest.mock('../../Requester/Requester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('../registries/ResourceEndpointRegistry', () => ({
+jest.mock('../registries/ResourceRouteRegistry', () => ({
     getDetailUrl: jest.fn(),
     getListUrl: jest.fn(),
 }));
 
 test('Should send a get request and return the promise', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets/5');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5');
     const promise = {};
     Requester.get.mockReturnValue(promise);
     const result = ResourceRequester.get('snippets', {id: 5});
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5});
     expect(Requester.get).toBeCalledWith('/snippets/5');
     expect(result).toBe(promise);
 });
 
 test('Should send a get request without an ID and return the promise', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets');
     const promise = {};
     Requester.get.mockReturnValue(promise);
     const result = ResourceRequester.get('snippets');
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {});
     expect(Requester.get).toBeCalledWith('/snippets');
     expect(result).toBe(promise);
 });
 
 test('Should send a get request with passed options as query parameters', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
     const options = {id: 5, locale: 'en', action: 'publish'};
     ResourceRequester.get('snippets', options);
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', options);
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', options);
     expect(Requester.get).toBeCalledWith('/snippets/5?locale=en&action=publish');
 });
 
@@ -52,7 +52,7 @@ test('Should send a list get request and return the promise', () => {
 });
 
 test('Should send a list get request to the correct URL with page and limit parameters', () => {
-    resourceEndpointRegistry.getListUrl.mockImplementation((resourceKey, {page, limit}) => {
+    resourceRouteRegistry.getListUrl.mockImplementation((resourceKey, {page, limit}) => {
         return '/snippets?page=' + page + '&limit=' + limit + '&flat=true';
     });
 
@@ -76,23 +76,23 @@ test('Should send a list get request to the correct URL with page and limit para
 });
 
 test('Should send a put request and return the promise', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets/5');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5');
     const promise = {};
     const data = {title: 'Title'};
     Requester.put.mockReturnValue(promise);
     const result = ResourceRequester.put('snippets', data, {id: 5});
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5});
     expect(Requester.put).toBeCalledWith('/snippets/5', data);
     expect(result).toBe(promise);
 });
 
 test('Should send a put request with passed options as query parameters', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
     const data = {slogan: 'Slogan'};
     const options = {action: 'publish', id: 5, locale: 'en'};
     Requester.put.mockReturnValue({});
     ResourceRequester.put('snippets', data, options);
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {action: 'publish', id: 5, locale: 'en'});
     expect(Requester.put).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
@@ -104,7 +104,7 @@ test('Should send a delete request and return the promise', () => {
 });
 
 test('Should send a delete request to the correct URL', () => {
-    resourceEndpointRegistry.getDetailUrl
+    resourceRouteRegistry.getDetailUrl
         .mockImplementation((resourceKey, {id}) => '/' + resourceKey + '/' + id);
 
     ResourceRequester.delete('snippets', {id: 5});
@@ -115,11 +115,11 @@ test('Should send a delete request to the correct URL', () => {
 });
 
 test('Should send a delete request with passed options as query parameters', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&webspace=sulu');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&webspace=sulu');
     const options = {id: 5, locale: 'en', webspace: 'sulu'};
     Requester.delete.mockReturnValue({});
     ResourceRequester.delete('snippets', options);
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5, locale: 'en', webspace: 'sulu'});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5, locale: 'en', webspace: 'sulu'});
     expect(Requester.delete).toBeCalledWith('/snippets/5?locale=en&webspace=sulu');
 });
 
@@ -131,7 +131,7 @@ test('Should send a delete request and return the promise', () => {
 });
 
 test('Should send a collection delete request to the correct URL', () => {
-    resourceEndpointRegistry.getListUrl
+    resourceRouteRegistry.getListUrl
         .mockImplementation((resourceKey, {ids}) => '/' + resourceKey + '?ids=' + ids.join(','));
 
     ResourceRequester.deleteList('snippets', {ids: [1, 2, 3]});
@@ -142,11 +142,11 @@ test('Should send a collection delete request to the correct URL', () => {
 });
 
 test('Should send a post request and return the promise', () => {
-    resourceEndpointRegistry.getDetailUrl.mockReturnValue('/snippets');
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets');
     const promise = {};
     Requester.post.mockReturnValue(promise);
     const result = ResourceRequester.post('snippets', {});
-    expect(resourceEndpointRegistry.getDetailUrl).toBeCalledWith('snippets', {});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {});
     expect(Requester.post).toBeCalledWith('/snippets', {});
     expect(result).toBe(promise);
 });

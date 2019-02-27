@@ -5,7 +5,7 @@ import userStore from '../../stores/UserStore';
 import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
-import {resourceEndpointRegistry} from '../ResourceRequester';
+import {resourceRouteRegistry} from '../ResourceRequester';
 import {bundlesReadyPromise} from '../../services/Bundles';
 import type {UpdateConfigHook} from './types';
 
@@ -65,7 +65,7 @@ class Initializer {
 
     initializeSymfonyRouting() {
         return Requester.get(Config.endpoints.routing).then((data) => {
-            resourceEndpointRegistry.setRoutingData(data);
+            resourceRouteRegistry.setRoutingData(data);
         });
     }
 

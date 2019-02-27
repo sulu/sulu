@@ -1,7 +1,7 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import {ResourceRequester, resourceEndpointRegistry} from 'sulu-admin-bundle/services';
+import {ResourceRequester, resourceRouteRegistry} from 'sulu-admin-bundle/services';
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
@@ -91,7 +91,7 @@ export default class MediaUploadStore {
             throw new Error('The "id" property must be available for updating a media');
         }
 
-        const url = resourceEndpointRegistry.getDetailUrl(
+        const url = resourceRouteRegistry.getDetailUrl(
             RESOURCE_KEY,
             {
                 action: 'new-version',
@@ -107,7 +107,7 @@ export default class MediaUploadStore {
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
-        const url = resourceEndpointRegistry.getDetailUrl(
+        const url = resourceRouteRegistry.getDetailUrl(
             RESOURCE_KEY,
             {
                 collection: collectionId,

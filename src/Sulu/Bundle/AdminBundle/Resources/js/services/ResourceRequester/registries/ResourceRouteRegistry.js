@@ -17,7 +17,7 @@ function transformParameters(parameters) {
         }, {});
 }
 
-class ResourceEndpointRegistry {
+class ResourceRouteRegistry {
     endpoints: EndpointConfiguration = {};
 
     configurationPromises: {[string]: Promise<Object>} = {};
@@ -66,4 +66,4 @@ class ResourceEndpointRegistry {
     }
 }
 
-export default new ResourceEndpointRegistry();
+export default new ResourceRouteRegistry();

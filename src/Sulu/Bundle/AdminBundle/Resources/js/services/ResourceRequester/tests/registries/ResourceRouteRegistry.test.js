@@ -1,13 +1,13 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
-import resourceEndpointRegistry from '../../registries/ResourceEndpointRegistry';
+import resourceRouteRegistry from '../../registries/ResourceRouteRegistry';
 
 test('Set and get endpoints for given key', () => {
     SymfonyRouting.generate.mockImplementation((routeName, {value}) => {
         return routeName + '?value=' + value;
     });
 
-    resourceEndpointRegistry.setEndpoints({
+    resourceRouteRegistry.setEndpoints({
         snippets: {
             routes: {
                 detail: 'get_snippet',
@@ -16,36 +16,36 @@ test('Set and get endpoints for given key', () => {
         },
     });
 
-    expect(resourceEndpointRegistry.getDetailUrl('snippets', {value: 1})).toEqual('get_snippet?value=1');
-    expect(resourceEndpointRegistry.getListUrl('snippets', {value: 2})).toEqual('get_snippets?value=2');
+    expect(resourceRouteRegistry.getDetailUrl('snippets', {value: 1})).toEqual('get_snippet?value=1');
+    expect(resourceRouteRegistry.getListUrl('snippets', {value: 2})).toEqual('get_snippets?value=2');
 });
 
 test('Throw exception when getting detail url for not existing key', () => {
-    expect(() => resourceEndpointRegistry.getDetailUrl('not-existing')).toThrow(/"not-existing"/);
+    expect(() => resourceRouteRegistry.getDetailUrl('not-existing')).toThrow(/"not-existing"/);
 });
 
 test('Throw exception when getting detail url for not existing key', () => {
-    expect(() => resourceEndpointRegistry.getListUrl('not-existing')).toThrow(/"not-existing"/);
+    expect(() => resourceRouteRegistry.getListUrl('not-existing')).toThrow(/"not-existing"/);
 });
 
 test('Throw exception when getting detail url for not existing detail url', () => {
-    resourceEndpointRegistry.setEndpoints({
+    resourceRouteRegistry.setEndpoints({
         existing: {
             routes: {},
         },
     });
 
-    expect(() => resourceEndpointRegistry.getDetailUrl('existing'))
+    expect(() => resourceRouteRegistry.getDetailUrl('existing'))
         .toThrow(/no detail route for the resourceKey "existing"/);
 });
 
 test('Throw exception when getting detail url for not existing list url', () => {
-    resourceEndpointRegistry.setEndpoints({
+    resourceRouteRegistry.setEndpoints({
         existing: {
             routes: {},
         },
     });
 
-    expect(() => resourceEndpointRegistry.getListUrl('existing'))
+    expect(() => resourceRouteRegistry.getListUrl('existing'))
         .toThrow(/no list route for the resourceKey "existing"/);
 });
