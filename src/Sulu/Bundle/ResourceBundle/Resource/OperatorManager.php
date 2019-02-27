@@ -40,7 +40,7 @@ class OperatorManager implements OperatorManagerInterface
         if ($operators) {
             array_walk(
                 $operators,
-                function (&$operator) use ($locale) {
+                function(&$operator) use ($locale) {
                     $operator = new Operator($operator, $locale);
                 }
             );

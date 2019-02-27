@@ -103,7 +103,7 @@ class CsvHandler
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', $disposition);
         $response->setCallback(
-            function () use ($data, $exporter) {
+            function() use ($data, $exporter) {
                 $exporter->export('php://output', $data);
             }
         );

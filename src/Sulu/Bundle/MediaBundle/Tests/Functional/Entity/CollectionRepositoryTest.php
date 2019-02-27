@@ -104,7 +104,7 @@ class CollectionRepositoryTest extends SuluTestCase
         }
         $this->em->flush();
 
-        /** @var CollectionRepository $repository */
+        /* @var CollectionRepository $repository */
         $this->collectionRepository = $this->getContainer()->get('sulu_media.collection_repository');
         $this->collectionRepository->recover();
         $this->em->flush();

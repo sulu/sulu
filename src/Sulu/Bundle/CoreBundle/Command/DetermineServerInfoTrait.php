@@ -28,10 +28,10 @@ trait DetermineServerInfoTrait
      * environment to choose a standard script if no custom router script is
      * specified.
      *
-     * @param string|null  $router  File path of the custom router script, if
-     *                              set by the user; otherwise null
-     * @param string       $context The context of the application kernel
-     * @param SymfonyStyle $io      An SymfonyStyle instance
+     * @param string|null $router File path of the custom router script, if
+     *                            set by the user; otherwise null
+     * @param string $context The context of the application kernel
+     * @param SymfonyStyle $io An SymfonyStyle instance
      *
      * @return bool|string The absolute file path of the router script, or false
      *                     on failure
@@ -61,8 +61,8 @@ trait DetermineServerInfoTrait
     /**
      * Determine the web server port that should be used.
      *
-     * @param string|null  $port    The port, if set by the user; otherwise null
-     * @param string       $context The context of the application kernel
+     * @param string|null $port The port, if set by the user; otherwise null
+     * @param string $context The context of the application kernel
      *
      * @return string The web server port to use
      */

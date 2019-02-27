@@ -40,7 +40,7 @@ class AccountDataProvider extends BaseDataProvider
     protected function decorateDataItems(array $data)
     {
         return array_map(
-            function ($item) {
+            function($item) {
                 return new AccountDataItem($item);
             },
             $data

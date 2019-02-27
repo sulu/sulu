@@ -21,7 +21,7 @@ class ReservedPropertyNameException extends InvalidXmlException
     protected $propertyName;
 
     /**
-     * @param string $template     The template causing the problem
+     * @param string $template The template causing the problem
      * @param string $propertyName The name of the property, which has been used
      */
     public function __construct($template, $propertyName)

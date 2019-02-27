@@ -94,7 +94,7 @@ class MediaRedirectControllerTest extends SuluTestCase
 
     protected function cleanImage()
     {
-        if ($this->getContainer()) { //
+        if ($this->getContainer()) {
             $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
 

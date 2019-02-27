@@ -22,10 +22,10 @@ interface NavigationMapperInterface
      * @param string $parent uuid of parent node
      * @param $webspaceKey
      * @param $locale
-     * @param int         $depth
-     * @param bool        $flat
+     * @param int $depth
+     * @param bool $flat
      * @param string|null $context
-     * @param bool        $loadExcerpt
+     * @param bool $loadExcerpt
      *
      * @return NavigationItem[]
      */
@@ -42,12 +42,12 @@ interface NavigationMapperInterface
     /**
      * returns navigation from root.
      *
-     * @param string      $webspaceKey
-     * @param string      $locale
-     * @param int         $depth
-     * @param bool        $flat
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param int $depth
+     * @param bool $flat
      * @param string|null $context
-     * @param bool        $loadExcerpt
+     * @param bool $loadExcerpt
      *
      * @return NavigationItem[]
      */

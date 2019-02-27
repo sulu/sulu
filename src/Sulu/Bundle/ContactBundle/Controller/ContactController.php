@@ -310,7 +310,7 @@ class ContactController extends RestController implements ClassResourceInterface
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
             @usort(
                 $listResponse,
-                function ($a, $b) use ($comparator, $ids) {
+                function($a, $b) use ($comparator, $ids) {
                     return $comparator->compare($a['id'], $b['id'], $ids);
                 }
             );
@@ -353,7 +353,7 @@ class ContactController extends RestController implements ClassResourceInterface
         try {
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($contactManager, $locale) {
+                function($id) use ($contactManager, $locale) {
                     return $contactManager->getById($id, $locale);
                 }
             );

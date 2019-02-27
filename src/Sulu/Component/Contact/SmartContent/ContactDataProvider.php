@@ -40,7 +40,7 @@ class ContactDataProvider extends BaseDataProvider
     protected function decorateDataItems(array $data)
     {
         return array_map(
-            function ($item) {
+            function($item) {
                 return new ContactDataItem($item);
             },
             $data

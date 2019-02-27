@@ -194,7 +194,7 @@ class Xliff12 implements FormatImportInterface
     /**
      * Part of Symfony XliffFileLoader.
      *
-     * @param string $content  String to decode
+     * @param string $content String to decode
      * @param string $encoding Target encoding
      *
      * @return string

@@ -45,10 +45,10 @@ class PropertyParameter implements \JsonSerializable
     /**
      * Constructor.
      *
-     * @param string            $name
-     * @param string|null       $type
+     * @param string $name
+     * @param string|null $type
      * @param string|bool|array $value
-     * @param array             $metadata
+     * @param array $metadata
      */
     public function __construct($name, $value, $type = null, $metadata = [])
     {

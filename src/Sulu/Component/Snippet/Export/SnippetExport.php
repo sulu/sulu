@@ -90,7 +90,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         $progress = new ProgressBar($this->output, count($snippets));
         $progress->start();
 
-        /**
+        /*
          * @var SnippetDocument
          */
         foreach ($snippets as $snippet) {

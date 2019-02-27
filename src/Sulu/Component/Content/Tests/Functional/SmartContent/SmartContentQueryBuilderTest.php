@@ -1036,7 +1036,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $state = WorkflowStage::PUBLISHED
     ) {
         if (!$isShadow) {
-            /** @var PageDocument $document */
+            /* @var PageDocument $document */
             try {
                 $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $e) {

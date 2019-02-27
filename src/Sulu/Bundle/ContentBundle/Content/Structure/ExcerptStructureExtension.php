@@ -311,7 +311,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             if (isset($data[$property->getName()])
                 && $this->importManager->hasImport($property->getContentTypeName(), $format)
             ) {
-                /** @var ContentTypeExportInterface $contentType */
+                /* @var ContentTypeExportInterface $contentType */
                 $contentType->importData(
                     $node,
                     new TranslatedProperty(

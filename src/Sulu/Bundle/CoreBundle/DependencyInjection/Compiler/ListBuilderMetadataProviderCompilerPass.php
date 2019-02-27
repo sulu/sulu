@@ -39,7 +39,7 @@ class ListBuilderMetadataProviderCompilerPass implements CompilerPassInterface
         $chainProvider->replaceArgument(
             0,
             array_map(
-                function ($id) {
+                function($id) {
                     return new Reference($id);
                 },
                 array_keys($ids)

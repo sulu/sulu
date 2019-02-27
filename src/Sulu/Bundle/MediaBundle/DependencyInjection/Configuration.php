@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('adapter')
                 ->defaultValue('auto')
                 ->validate()
-                    ->ifTrue(function ($v) {
+                    ->ifTrue(function($v) {
                         return !in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
                     })
                     ->thenInvalid('Invalid imagine adapted specified: %s')

@@ -123,7 +123,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      *
-     * @param Document  $document
+     * @param Document $document
      * @param \DateTime $created
      * @param \DateTime $changed
      */
@@ -141,7 +141,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map the creator and changer to the document.
      *
-     * @param Document      $document
+     * @param Document $document
      * @param UserInterface $creator
      * @param UserInterface $changer
      */

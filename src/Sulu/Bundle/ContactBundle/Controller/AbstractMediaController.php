@@ -103,7 +103,7 @@ abstract class AbstractMediaController extends RestController
     protected function removeMediaFromEntity($entityName, $id, $mediaId)
     {
         try {
-            $delete = function () use ($entityName, $id, $mediaId) {
+            $delete = function() use ($entityName, $id, $mediaId) {
                 $em = $this->getDoctrine()->getManager();
                 $entity = $em->getRepository($entityName)->find($id);
                 $media = $this->container->get('sulu.repository.media')->find($mediaId);
@@ -452,7 +452,7 @@ abstract class AbstractMediaController extends RestController
         $i = 0;
         foreach ($entities as $key => $entity) {
             $entities[$key]['url'] = $apiEntities[$i]->getUrl();
-            $i += 1;
+            ++$i;
         }
 
         return $entities;

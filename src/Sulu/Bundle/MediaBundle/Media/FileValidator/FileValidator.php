@@ -35,7 +35,7 @@ class FileValidator implements FileValidatorInterface
 
     /**
      * @param UploadedFile $file
-     * @param array        $methods
+     * @param array $methods
      *
      * @return mixed|void
      *

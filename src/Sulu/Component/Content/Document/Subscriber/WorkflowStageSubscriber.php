@@ -202,18 +202,18 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     {
         $workflowStageNameFilter = $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, '*');
         foreach ($node->getProperties($workflowStageNameFilter) as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             $property->setValue(WorkflowStage::TEST);
         }
 
         $publishedNameFilter = $this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, '*');
         foreach ($node->getProperties($publishedNameFilter) as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             $property->setValue(null);
         }
 
         foreach ($node->getNodes() as $node) {
-            /** @var NodeInterface $node */
+            /* @var NodeInterface $node */
             $this->setNodeWorkflowStageToTestForCopy($node);
         }
     }

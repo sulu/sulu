@@ -19,8 +19,8 @@ class TextUtils
     /**
      * UTF-8 safe text truncation.
      *
-     * @param string $text   - Text to truncate
-     * @param int    $length - Length to truncate to
+     * @param string $text - Text to truncate
+     * @param int $length - Length to truncate to
      * @param string $suffix - This string will replace the last characters of the text
      *
      * @return string

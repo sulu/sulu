@@ -113,7 +113,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->getManager()->findById($id);
             }
         );
@@ -261,7 +261,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $this->getManager()->delete($id);
             } catch (TagNotFoundException $tnfe) {

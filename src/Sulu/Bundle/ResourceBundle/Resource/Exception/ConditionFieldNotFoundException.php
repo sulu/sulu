@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when the name of a field in a condition does not match the field descriptors.
-  */
+ */
 class ConditionFieldNotFoundException extends FilterException
 {
     /**

@@ -131,7 +131,7 @@ class MediaTag implements TagInterface
         $ids = array_unique(
             array_values(
                 array_map(
-                    function ($attributes) {
+                    function($attributes) {
                         return $attributes['id'];
                     },
                     $attributesByTag

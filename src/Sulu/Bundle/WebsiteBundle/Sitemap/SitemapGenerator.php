@@ -100,8 +100,8 @@ class SitemapGenerator implements SitemapGeneratorInterface
 
     /**
      * @param string $webspaceKey
-     * @param array  $locales
-     * @param bool   $flat
+     * @param array $locales
+     * @param bool $flat
      *
      * @return array
      */

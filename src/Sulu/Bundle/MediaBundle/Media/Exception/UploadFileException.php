@@ -18,7 +18,7 @@ class UploadFileException extends MediaException
 {
     /**
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct($message, $code)
     {

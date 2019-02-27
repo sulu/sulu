@@ -29,7 +29,7 @@ class AccountContact extends ApiWrapper
 {
     /**
      * @param AccountContactEntity $accountContact
-     * @param string               $locale         The locale of this product
+     * @param string $locale The locale of this product
      */
     public function __construct(AccountContactEntity $accountContact, $locale)
     {

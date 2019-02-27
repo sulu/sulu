@@ -56,7 +56,7 @@ class SubscriberDebugCommand extends ContainerAwareCommand
             ];
         }
 
-        usort($rows, function ($a, $b) {
+        usort($rows, function($a, $b) {
             return $a[2] < $b[2];
         });
 

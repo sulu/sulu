@@ -35,8 +35,8 @@ class ConstraintViolationException extends RestException
 
     /**
      * @param string $message The error message
-     * @param string $field   The field which is not
-     * @param int    $code
+     * @param string $field The field which is not
+     * @param int $code
      */
     public function __construct($message, $field, $code = 0)
     {

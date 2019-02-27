@@ -40,7 +40,7 @@ class TagRequestHandler implements TagRequestHandlerInterface
         }
 
         return array_map(
-            function ($item) {
+            function($item) {
                 return trim($item);
             },
             array_filter(explode(',', $tags))

@@ -19,7 +19,7 @@ final class WildcardUrlUtil
     /**
      * Cannot instantiate this class.
      */
-    final private function __construct()
+    private function __construct()
     {
     }
 

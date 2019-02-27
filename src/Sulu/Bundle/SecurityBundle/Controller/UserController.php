@@ -97,7 +97,7 @@ class UserController extends RestController implements ClassResourceInterface, S
      */
     public function getAction($id)
     {
-        $find = function ($id) {
+        $find = function($id) {
             return $this->getUserManager()->getUserById($id);
         };
 

@@ -69,13 +69,13 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $calls = [];
         $output = new NullOutput();
 
-        $this->initializer1->initialize($output, false)->will(function () use (&$calls) {
+        $this->initializer1->initialize($output, false)->will(function() use (&$calls) {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($output, false)->will(function () use (&$calls) {
+        $this->initializer2->initialize($output, false)->will(function() use (&$calls) {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($output, false)->will(function () use (&$calls) {
+        $this->initializer3->initialize($output, false)->will(function() use (&$calls) {
             $calls[] = 'service3';
         });
 
@@ -91,13 +91,13 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $calls = [];
         $output = new NullOutput();
 
-        $this->initializer1->initialize($output, true)->will(function () use (&$calls) {
+        $this->initializer1->initialize($output, true)->will(function() use (&$calls) {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($output, true)->will(function () use (&$calls) {
+        $this->initializer2->initialize($output, true)->will(function() use (&$calls) {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($output, true)->will(function () use (&$calls) {
+        $this->initializer3->initialize($output, true)->will(function() use (&$calls) {
             $calls[] = 'service3';
         });
 

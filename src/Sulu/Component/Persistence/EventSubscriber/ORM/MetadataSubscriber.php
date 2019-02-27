@@ -90,7 +90,7 @@ class MetadataSubscriber implements EventSubscriber
 
     /**
      * @param ClassMetadataInfo $metadata
-     * @param Configuration     $configuration
+     * @param Configuration $configuration
      */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {

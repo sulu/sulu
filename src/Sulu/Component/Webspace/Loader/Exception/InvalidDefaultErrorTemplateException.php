@@ -25,7 +25,7 @@ class InvalidDefaultErrorTemplateException extends WebspaceException
      * InvalidErrorTemplateException constructor.
      *
      * @param string $template
-     * @param int    $webspace
+     * @param int $webspace
      */
     public function __construct($template, $webspace)
     {

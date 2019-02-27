@@ -368,7 +368,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         return array_values(
             array_filter(
                 array_map(
-                    function (Collaboration $collaboration) use ($time) {
+                    function(Collaboration $collaboration) use ($time) {
                         if ($collaboration->getChanged() < $time) {
                             $this->removeCollaboration(
                                 $collaboration->getType(),

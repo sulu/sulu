@@ -46,9 +46,9 @@ class ContentNodeDeleteEvent extends Event
 
     /**
      * @param ContentMapperInterface $contentMapper
-     * @param SuluNodeHelper         $nodeHelper
-     * @param NodeInterface          $node
-     * @param string                 $webspace
+     * @param SuluNodeHelper $nodeHelper
+     * @param NodeInterface $node
+     * @param string $webspace
      */
     public function __construct(
         ContentMapperInterface $contentMapper,

@@ -327,8 +327,8 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * returns config value.
      *
-     * @param string $name    config name
-     * @param mixed  $default
+     * @param string $name config name
+     * @param mixed $default
      *
      * @return mixed config value
      */

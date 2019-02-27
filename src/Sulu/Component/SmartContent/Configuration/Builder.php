@@ -105,7 +105,7 @@ class Builder implements BuilderInterface
     {
         $this->configuration->setSorting(
             array_map(
-                function ($item) {
+                function($item) {
                     return new PropertyParameter($item['column'], $item['title'] ?: ucfirst($item['column']));
                 },
                 $sorting

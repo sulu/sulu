@@ -79,7 +79,7 @@ class DocumentFixtureLoader
             $fixtures[] = $fixture;
         }
 
-        usort($fixtures, function (DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
+        usort($fixtures, function(DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
             return $fixture1->getOrder() > $fixture2->getOrder();
         });
 

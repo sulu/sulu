@@ -40,7 +40,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         }
 
         return array_map(
-            function ($item) {
+            function($item) {
                 return trim($item);
             },
             array_filter(explode(',', $categories))

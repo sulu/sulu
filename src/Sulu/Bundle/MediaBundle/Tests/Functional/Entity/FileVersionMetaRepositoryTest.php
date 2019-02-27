@@ -80,7 +80,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $titles = array_map(
-            function (FileVersionMeta $fileVersionMeta) {
+            function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
             $this->fileVersionMetaRepository->findLatestWithoutSecurity()
@@ -106,7 +106,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $titles = array_map(
-            function (FileVersionMeta $fileVersionMeta) {
+            function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
             $this->fileVersionMetaRepository->findByCollectionId($this->collection->getId())

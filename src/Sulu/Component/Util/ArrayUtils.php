@@ -18,7 +18,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 final class ArrayUtils
 {
-    final private function __construct()
+    private function __construct()
     {
     }
 

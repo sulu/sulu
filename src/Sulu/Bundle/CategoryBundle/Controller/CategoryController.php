@@ -82,7 +82,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $findCallback = function ($id) use ($locale) {
+        $findCallback = function($id) use ($locale) {
             $entity = $this->getCategoryManager()->findById($id);
 
             return $this->getCategoryManager()->getApiObject($entity, $locale);
@@ -197,7 +197,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function deleteAction($id)
     {
-        $deleteCallback = function ($id) {
+        $deleteCallback = function($id) {
             $this->getCategoryManager()->delete($id);
         };
 

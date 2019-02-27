@@ -17,7 +17,7 @@ interface SitemapGeneratorInterface
      * Generates a sitemap over all languages in webspace.
      *
      * @param string $webspaceKey
-     * @param bool   $flat
+     * @param bool $flat
      *
      * @return WebspaceSitemap
      */
@@ -28,7 +28,7 @@ interface SitemapGeneratorInterface
      *
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool   $flat
+     * @param bool $flat
      *
      * @return WebspaceSitemap
      */

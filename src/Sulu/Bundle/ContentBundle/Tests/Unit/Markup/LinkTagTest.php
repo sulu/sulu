@@ -42,7 +42,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
         ];
         $this->providerPool = $this->prophesize(LinkProviderPoolInterface::class);
         $this->providerPool->getProvider(Argument::any())->will(
-            function ($arguments) use ($providers) {
+            function($arguments) use ($providers) {
                 return $providers[$arguments[0]];
             }
         );

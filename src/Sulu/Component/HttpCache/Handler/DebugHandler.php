@@ -12,7 +12,6 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\Content\Compat\PageInterface;
-use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\CacheLifetimeResolverInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;

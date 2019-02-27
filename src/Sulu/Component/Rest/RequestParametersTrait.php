@@ -24,9 +24,9 @@ trait RequestParametersTrait
      * returns request parameter with given name.
      *
      * @param Request $request
-     * @param string  $name
-     * @param bool    $force   TRUE if value is mandatory
-     * @param mixed   $default value if parameter not exists
+     * @param string $name
+     * @param bool $force TRUE if value is mandatory
+     * @param mixed $default value if parameter not exists
      *
      * @throws MissingParameterException parameter is mandatory but does not exists
      *
@@ -46,11 +46,11 @@ trait RequestParametersTrait
      * returns request parameter as boolean 'true' => true , 'false' => false.
      *
      * @param Request $request
-     * @param string  $name
-     * @param bool    $force   TRUE if value is mandatory
-     * @param bool    $default value if parameter not exists
+     * @param string $name
+     * @param bool $force TRUE if value is mandatory
+     * @param bool $default value if parameter not exists
      *
-     * @throws MissingParameterException  parameter is mandatory but does not exists
+     * @throws MissingParameterException parameter is mandatory but does not exists
      * @throws ParameterDataTypeException parameter hast the wrong data type
      *
      * @return bool

@@ -385,8 +385,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     }
 
     /**
-    * Returns user.
-    */
+     * Returns user.
+     */
     private function getUser()
     {
         $token = $this->tokenStorage->getToken();

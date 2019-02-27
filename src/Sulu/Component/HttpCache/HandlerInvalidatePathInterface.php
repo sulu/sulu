@@ -24,8 +24,8 @@ interface HandlerInvalidatePathInterface
     /**
      * Invalidate a path or URL.
      *
-     * @param string $path    Path or URL
-     * @param array  $headers HTTP headers (optional)
+     * @param string $path Path or URL
+     * @param array $headers HTTP headers (optional)
      *
      * @return $this
      */

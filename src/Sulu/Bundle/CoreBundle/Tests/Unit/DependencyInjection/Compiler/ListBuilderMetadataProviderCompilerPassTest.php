@@ -50,7 +50,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_Tes
             $definition->replaceArgument(
                 0,
                 Argument::that(
-                    function (array $argument) use ($taggedServices) {
+                    function(array $argument) use ($taggedServices) {
                         foreach ($argument as $item) {
                             if (!$item instanceof Reference
                                 || !in_array(

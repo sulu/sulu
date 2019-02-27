@@ -27,7 +27,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
         $filterKeys = ['localization'];
 
         $filteredData = array_map(
-            function ($value) use ($filterKeys) {
+            function($value) use ($filterKeys) {
                 return array_intersect_key($value, array_flip($filterKeys));
             },
             $data

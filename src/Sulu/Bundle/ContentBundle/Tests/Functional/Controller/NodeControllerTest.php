@@ -2024,7 +2024,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(2, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes
@@ -2048,7 +2048,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(1, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes
@@ -2071,7 +2071,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(1, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes

@@ -112,7 +112,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
 
         $structureMetadatas = array_filter(
             $structureMetadatas,
-            function (StructureMetadata $structureMetadata) use (&$properties) {
+            function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
                 $this->findDateProperties($structureMetadata, $properties);
 
@@ -250,7 +250,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
         $up
     ) {
         $componentNames = array_map(
-            function ($item) {
+            function($item) {
                 return $item['component']->getName();
             },
             $components

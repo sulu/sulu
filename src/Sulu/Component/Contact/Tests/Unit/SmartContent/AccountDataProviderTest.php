@@ -131,7 +131,7 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Account $account) {
+        $serializeCallback = function(Account $account) {
             return $this->serialize($account);
         };
 
@@ -142,7 +142,7 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $serializer->serialize(Argument::type(Account::class), 'array', $context)
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );

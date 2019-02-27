@@ -38,7 +38,7 @@ class TeaserProviderPoolTest extends \PHPUnit_Framework_TestCase
 
         $this->teaserProviderPool = new TeaserProviderPool(
             array_map(
-                function ($provider) {
+                function($provider) {
                     return $provider->reveal();
                 },
                 $this->providers

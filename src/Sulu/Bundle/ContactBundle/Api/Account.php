@@ -51,7 +51,7 @@ class Account extends ApiWrapper
 
     /**
      * @param AccountInterface $account
-     * @param string           $locale  The locale of this product
+     * @param string $locale The locale of this product
      */
     public function __construct(AccountInterface $account, $locale)
     {

@@ -21,8 +21,8 @@ interface MessageHandlerInterface
     /**
      * Processes given message.
      *
-     * @param ConnectionInterface   $conn
-     * @param array                 $message
+     * @param ConnectionInterface $conn
+     * @param array $message
      * @param MessageHandlerContext $context
      */
     public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context);

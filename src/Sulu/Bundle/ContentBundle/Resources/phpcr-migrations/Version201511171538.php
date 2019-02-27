@@ -104,7 +104,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
 
         $structureMetadatas = array_filter(
             $structureMetadatas,
-            function (StructureMetadata $structureMetadata) use (&$properties) {
+            function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
                 $this->findDateProperties($structureMetadata, $properties);
 

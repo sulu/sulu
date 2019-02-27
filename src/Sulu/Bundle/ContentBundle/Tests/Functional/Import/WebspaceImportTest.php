@@ -91,7 +91,7 @@ class WebspaceImportTest extends SuluTestCase
         // testing imported data
         $loadedDocuments = [];
 
-        /** @var BasePageDocument $document */
+        /* @var BasePageDocument $document */
         $loadedDocuments[0] = $this->documentManager->find(
             $this->pages[0]->getUuid(),
             'en',
@@ -101,7 +101,7 @@ class WebspaceImportTest extends SuluTestCase
             ]
         );
 
-        /** @var BasePageDocument $document */
+        /* @var BasePageDocument $document */
         $loadedDocuments[1] = $this->documentManager->find(
             $this->pages[1]->getUuid(),
             'en',

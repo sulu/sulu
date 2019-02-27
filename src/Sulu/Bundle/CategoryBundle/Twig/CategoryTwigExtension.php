@@ -81,7 +81,7 @@ class CategoryTwigExtension extends \Twig_Extension
         return $this->memoizeCache->memoizeById(
             'sulu_categories',
             func_get_args(),
-            function ($locale, $parentKey = null) {
+            function($locale, $parentKey = null) {
                 $entities = $this->categoryManager->findChildrenByParentKey($parentKey);
                 $categories = $this->categoryManager->getApiObjects($entities, $locale);
                 $context = SerializationContext::create();

@@ -253,21 +253,21 @@ class FilterManager implements FilterManagerInterface
 
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {
-            $get = function (ConditionGroupEntity $conditionGroup) {
+            $get = function(ConditionGroupEntity $conditionGroup) {
                 return $conditionGroup->getId();
             };
 
-            $add = function ($conditionGroupData) use ($filter) {
+            $add = function($conditionGroupData) use ($filter) {
                 return $this->addConditionGroup($filter, $conditionGroupData);
             };
 
-            $delete = function (ConditionGroupEntity $conditionGroup) use ($filter) {
+            $delete = function(ConditionGroupEntity $conditionGroup) use ($filter) {
                 $this->em->remove($conditionGroup);
 
                 return true;
             };
 
-            $update = function (ConditionGroupEntity $conditionGroup, $matchedEntry) {
+            $update = function(ConditionGroupEntity $conditionGroup, $matchedEntry) {
                 return $this->updateConditionGroup($conditionGroup, $matchedEntry);
             };
 
@@ -580,7 +580,7 @@ class FilterManager implements FilterManagerInterface
         $filters = $this->filterRepository->findByUserAndContextAndLocale($locale, $context, $userId);
         array_walk(
             $filters,
-            function (&$filter) use ($locale) {
+            function(&$filter) use ($locale) {
                 $filter = new Filter($filter, $locale);
             }
         );

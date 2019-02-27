@@ -576,7 +576,7 @@ class WebspaceExportTest extends SuluTestCase
         $shadowBaseLanguage = null,
         $documentAlias = Structure::TYPE_PAGE
     ) {
-        /** @var PageDocument $document */
+        /* @var PageDocument $document */
         try {
             $document = $this->documentManager->find($uuid, $locale);
         } catch (DocumentNotFoundException $e) {

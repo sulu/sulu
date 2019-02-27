@@ -37,7 +37,7 @@ class StructureMetadataLoadEvent extends Event
 
     /**
      * @param StructureInterface $structure
-     * @param IndexMetadata      $indexMetadata
+     * @param IndexMetadata $indexMetadata
      */
     public function __construct(StructureInterface $structure, IndexMetadata $indexMetadata)
     {

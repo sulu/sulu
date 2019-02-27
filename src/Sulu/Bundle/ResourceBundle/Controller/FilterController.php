@@ -59,7 +59,7 @@ class FilterController extends RestController implements ClassResourceInterface
         $locale = $this->getRequestParameter($request, 'locale', true);
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($locale) {
+            function($id) use ($locale) {
                 return $this->getManager()->findByIdAndLocale($id, $locale);
             }
         );

@@ -77,7 +77,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         /** @var PortalInformation[] $portalInformations */
         $portalInformations = array_filter(
             $portalInformations,
-            function (PortalInformation $portalInformation) {
+            function(PortalInformation $portalInformation) {
                 return RequestAnalyzer::MATCH_TYPE_WILDCARD === $portalInformation->getType();
             }
         );

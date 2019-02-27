@@ -43,8 +43,8 @@ class TypeManager implements TypeManagerInterface
 
     /**
      * @param ObjectManager $objectManager
-     * @param array         $mediaTypes
-     * @param array         $blockedMimeTypes
+     * @param array $mediaTypes
+     * @param array $blockedMimeTypes
      */
     public function __construct(
         ObjectManager $objectManager,

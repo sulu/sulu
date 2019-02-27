@@ -116,7 +116,7 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
         );
         $imageUrl = 'foo';
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) use ($imageUrl) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) use ($imageUrl) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([
                 'test_format' => $imageUrl,
@@ -142,7 +142,7 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
             321
         );
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([
                 'for' => '/fo',
@@ -170,7 +170,7 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
             321
         );
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([]);
         });

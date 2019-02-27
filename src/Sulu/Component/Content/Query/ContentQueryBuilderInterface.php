@@ -16,7 +16,7 @@ interface ContentQueryBuilderInterface
     /**
      * Build query.
      *
-     * @param string   $webspaceKey
+     * @param string $webspaceKey
      * @param string[] $locales
      *
      * @return string

@@ -160,7 +160,7 @@ trait DataProviderRepositoryTrait
         }
 
         return array_map(
-            function ($item) {
+            function($item) {
                 return $item['id'];
             },
             $query->getScalarResult()

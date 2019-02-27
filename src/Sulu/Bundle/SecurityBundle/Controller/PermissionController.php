@@ -113,7 +113,7 @@ class PermissionController implements ClassResourceInterface
 
             // transfer all permission strings to booleans
             foreach ($permissions as &$permission) {
-                array_walk($permission, function (&$permissionLine) {
+                array_walk($permission, function(&$permissionLine) {
                     $permissionLine = 'true' === $permissionLine || true === $permissionLine;
                 });
             }

@@ -34,7 +34,7 @@ class FallbackControllerTest extends \PHPUnit_Framework_TestCase
         $appManager->getApp('test')->willReturn($app->reveal());
 
         $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), ['test' => 1])->will(
-            function ($args) {
+            function($args) {
                 $return = ['test' => $args[1]['test'] + 1];
                 $args[0]->send(json_encode($return));
             }

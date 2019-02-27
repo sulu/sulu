@@ -71,7 +71,7 @@ interface BlockPropertyInterface extends PropertyInterface
     /**
      * initiate new child with given type name.
      *
-     * @param int    $index
+     * @param int $index
      * @param string $typeName
      *
      * @return BlockPropertyType

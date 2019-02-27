@@ -130,8 +130,8 @@ EOT
      * Cleanup specific node and his children.
      *
      * @param NodeInterface $node
-     * @param string        $rootPath
-     * @param bool          $dryRun
+     * @param string $rootPath
+     * @param bool $dryRun
      */
     private function cleanup(OutputInterface $output, NodeInterface $node, $rootPath, $dryRun)
     {

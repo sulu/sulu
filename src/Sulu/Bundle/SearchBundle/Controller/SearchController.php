@@ -160,7 +160,7 @@ class SearchController
         return $this->viewHandler->handle(
             View::create(
                 array_map(
-                    function ($indexName) {
+                    function($indexName) {
                         $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
 
                         return $indexConfiguration ?: new IndexConfiguration($indexName);

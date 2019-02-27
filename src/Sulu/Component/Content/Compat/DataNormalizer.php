@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Component\Form\FormEvent;
 
 /**

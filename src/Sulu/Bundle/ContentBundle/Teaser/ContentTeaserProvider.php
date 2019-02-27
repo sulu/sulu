@@ -50,7 +50,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
     public function find(array $ids, $locale)
     {
         $statements = array_map(
-            function ($item) {
+            function($item) {
                 return sprintf('__id:"%s"', $item);
             },
             $ids
@@ -123,7 +123,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
     {
         return array_filter(
             $this->searchManager->getIndexNames(),
-            function ($index) {
+            function($index) {
                 return preg_match('/page_(.*)_published/', $index) > 0;
             }
         );

@@ -58,7 +58,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
      * renders a widget group.
      *
      * @param string $groupAlias
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return string
      *

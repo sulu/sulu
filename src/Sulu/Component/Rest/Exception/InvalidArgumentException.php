@@ -31,9 +31,9 @@ class InvalidArgumentException extends RestException
     protected $argument;
 
     /**
-     * @param string $entity        The type of the entity
-     * @param string $argument      The argument of the entity, which was invalid
-     * @param null   $customMessage
+     * @param string $entity The type of the entity
+     * @param string $argument The argument of the entity, which was invalid
+     * @param null $customMessage
      */
     public function __construct($entity, $argument, $customMessage = null)
     {

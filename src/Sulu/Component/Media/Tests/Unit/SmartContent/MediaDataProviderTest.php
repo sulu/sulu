@@ -154,14 +154,14 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Media $media) {
+        $serializeCallback = function(Media $media) {
             return $this->serialize($media);
         };
 
         $serializer = $this->prophesize(SerializerInterface::class);
         $serializer->serialize(Argument::type(Media::class), 'array', Argument::type(SerializationContext::class))
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );
@@ -259,7 +259,7 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
             'id' => $media->getId(),
             'title' => $media->getTitle(),
             'tags' => array_map(
-                function ($tag) {
+                function($tag) {
                     return $tag->getName();
                 },
                 $media->getTags()

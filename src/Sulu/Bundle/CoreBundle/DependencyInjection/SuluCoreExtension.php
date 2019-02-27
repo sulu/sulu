@@ -253,7 +253,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $webspaceConfig
-     * @param ContainerBuilder     $container
+     * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
      */
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
@@ -274,7 +274,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $contentConfig
-     * @param ContainerBuilder     $container
+     * @param ContainerBuilder $container
      * @param Loader\XmlFileLoader $loader
      */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)

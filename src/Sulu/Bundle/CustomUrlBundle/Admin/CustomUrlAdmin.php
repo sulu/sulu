@@ -58,8 +58,8 @@ class CustomUrlAdmin extends Admin
     }
 
     /**
-         * {@inheritdoc}
-         */
+     * {@inheritdoc}
+     */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];

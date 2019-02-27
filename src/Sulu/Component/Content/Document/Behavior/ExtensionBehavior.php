@@ -35,7 +35,7 @@ interface ExtensionBehavior extends StructureBehavior
      * Set data for a specific extension.
      *
      * @param string $name Extension name
-     * @param array  $data Extension data
+     * @param array $data Extension data
      */
     public function setExtension($name, $data);
 }

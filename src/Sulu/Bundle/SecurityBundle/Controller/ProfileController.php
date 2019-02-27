@@ -51,9 +51,9 @@ class ProfileController implements ClassResourceInterface
     private $userSettingRepository;
 
     /**
-     * @param TokenStorageInterface          $tokenStorage
-     * @param ObjectManager                  $objectManager
-     * @param ViewHandlerInterface           $viewHandler
+     * @param TokenStorageInterface $tokenStorage
+     * @param ObjectManager $objectManager
+     * @param ViewHandlerInterface $viewHandler
      * @param UserSettingRepositoryInterface $userSettingRepository
      */
     public function __construct(

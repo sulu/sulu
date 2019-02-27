@@ -104,7 +104,7 @@ class XmlLegacyLoader implements LoaderInterface
         // read file
         $xmlDocument = XmlUtils::loadFile(
             $resource,
-            function (\DOMDocument $dom) use ($resource, $schemaPath) {
+            function(\DOMDocument $dom) use ($resource, $schemaPath) {
                 $dom->documentURI = $resource;
                 $dom->xinclude();
 
@@ -180,7 +180,7 @@ class XmlLegacyLoader implements LoaderInterface
 
             $result = array_filter(
                 $result,
-                function ($value) {
+                function($value) {
                     return null !== $value;
                 }
             );

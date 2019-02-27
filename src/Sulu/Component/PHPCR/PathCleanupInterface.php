@@ -19,7 +19,7 @@ interface PathCleanupInterface
     /**
      * returns a clean string.
      *
-     * @param string $dirty        dirty string to cleanup
+     * @param string $dirty dirty string to cleanup
      * @param string $languageCode
      *
      * @return string clean string

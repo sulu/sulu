@@ -154,7 +154,7 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Contact $contact) {
+        $serializeCallback = function(Contact $contact) {
             return $this->serialize($contact);
         };
 
@@ -165,7 +165,7 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $serializer->serialize(Argument::type(Contact::class), 'array', $context)
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );

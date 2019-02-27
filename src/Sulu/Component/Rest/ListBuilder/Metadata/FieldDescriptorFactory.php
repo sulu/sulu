@@ -249,7 +249,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     ) {
         return new DoctrineConcatenationFieldDescriptor(
             array_map(
-                function (FieldMetadata $fieldMetadata) use ($generalMetadata, $options) {
+                function(FieldMetadata $fieldMetadata) use ($generalMetadata, $options) {
                     return $this->getFieldDescriptor($generalMetadata, $fieldMetadata, $options);
                 },
                 $type->getFields()

@@ -93,7 +93,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $url = $this->prophesize(Url::class);
         $url->isMain()->willReturn($isMain);
         $url->setMain(Argument::any())->will(
-            function ($args) use ($url) {
+            function($args) use ($url) {
                 $url->isMain()->willReturn($args[0]);
             }
         );

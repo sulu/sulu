@@ -69,7 +69,7 @@ class ResettingController extends Controller
      * a link to the resetting route.
      *
      * @param Request $request
-     * @param bool    $generateNewKey If true a new token will be generated before sending the mail
+     * @param bool $generateNewKey If true a new token will be generated before sending the mail
      *
      * @return JsonResponse
      */
@@ -289,8 +289,8 @@ class ResettingController extends Controller
      * Sends the password-reset-token of a user to an email-adress.
      *
      * @param UserInterface $user
-     * @param string        $from From-Email-Address
-     * @param string        $to   To-Email-Address
+     * @param string $from From-Email-Address
+     * @param string $to To-Email-Address
      *
      * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
@@ -324,7 +324,7 @@ class ResettingController extends Controller
      * Changes the password of a user.
      *
      * @param UserInterface $user
-     * @param string        $password
+     * @param string $password
      *
      * @throws MissingPasswordException
      */
@@ -414,8 +414,8 @@ class ResettingController extends Controller
      * Returns an encoded password gor a given one.
      *
      * @param UserInterface $user
-     * @param string        $password
-     * @param string        $salt
+     * @param string $password
+     * @param string $salt
      *
      * @return mixed
      */

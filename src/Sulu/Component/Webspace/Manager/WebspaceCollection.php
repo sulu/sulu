@@ -104,7 +104,7 @@ class WebspaceCollection implements \IteratorAggregate
 
         return array_filter(
             $this->portalInformations[$environment],
-            function (PortalInformation $portalInformation) use ($types) {
+            function(PortalInformation $portalInformation) use ($types) {
                 return in_array($portalInformation->getType(), $types);
             }
         );

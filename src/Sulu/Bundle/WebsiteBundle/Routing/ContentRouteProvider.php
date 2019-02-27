@@ -247,7 +247,7 @@ class ContentRouteProvider implements RouteProviderInterface
      *
      * @param string $name the route name to fetch
      * @param array $parameters DEPRECATED the parameters as they are passed
-     *                           to the UrlGeneratorInterface::generate call
+     *                          to the UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
      *

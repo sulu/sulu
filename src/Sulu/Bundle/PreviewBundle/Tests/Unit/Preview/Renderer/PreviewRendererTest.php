@@ -163,7 +163,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) {
+                function(Request $request) {
                     return null !== $request->get('_sulu');
                 }
             ),

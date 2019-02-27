@@ -83,7 +83,7 @@ class HandlerPass implements CompilerPassInterface
      * (if it does not then someone has added a tag in the wrong place).
      *
      * @param ContainerBuilder $container
-     * @param mixed            $id
+     * @param mixed $id
      */
     private function validateHandler(ContainerBuilder $container, $id)
     {

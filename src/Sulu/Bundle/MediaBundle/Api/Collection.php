@@ -573,7 +573,7 @@ class Collection extends ApiWrapper
 
         // get meta only with this locale
         $metaCollectionFiltered = $metaCollection->filter(
-            function ($meta) use ($locale) {
+            function($meta) use ($locale) {
                 /** @var CollectionMeta $meta */
                 if ($meta->getLocale() == $locale) {
                     return true;

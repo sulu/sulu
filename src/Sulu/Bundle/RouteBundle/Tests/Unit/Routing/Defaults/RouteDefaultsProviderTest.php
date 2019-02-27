@@ -33,7 +33,7 @@ class RouteDefaultsProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->defaultsProvider = new RouteDefaultsProvider(
             array_map(
-                function ($provider) {
+                function($provider) {
                     return $provider->reveal();
                 },
                 $this->providers

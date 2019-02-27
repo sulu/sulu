@@ -119,7 +119,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         if (!$input->getArgument('name')) {
             $question = new Question('Please choose a rolename: ');
             $question->setValidator(
-                function ($name) use ($doctrine) {
+                function($name) use ($doctrine) {
                     if (empty($name)) {
                         throw new \InvalidArgumentException('Rolename cannot be empty');
                     }

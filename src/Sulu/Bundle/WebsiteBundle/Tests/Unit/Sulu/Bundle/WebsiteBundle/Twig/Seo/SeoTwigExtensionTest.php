@@ -116,7 +116,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
             null,
             'https'
         )->will(
-            function ($arguments) {
+            function($arguments) {
                 return '/' . str_replace('_', '-', $arguments[2]) . $arguments[0];
             }
         );

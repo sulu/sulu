@@ -18,11 +18,11 @@ interface StructureMetadataFactoryInterface
     /**
      * Return the structure of the given $type and $structureType.
      *
-     * @param mixed $type          The primary system type, e.g. page, snippet
+     * @param mixed $type The primary system type, e.g. page, snippet
      * @param mixed $structureType The secondary user type
      *
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
-     * @throws Exception\DocumentTypeNotFoundException  If the document type was not mapped
+     * @throws Exception\DocumentTypeNotFoundException If the document type was not mapped
      *
      * @return StructureMetadata|null
      */

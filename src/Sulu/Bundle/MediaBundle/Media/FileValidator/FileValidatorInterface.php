@@ -31,7 +31,7 @@ interface FileValidatorInterface
      * Validated a given file.
      *
      * @param UploadedFile $file
-     * @param array        $methods
+     * @param array $methods
      *
      * @return mixed
      */

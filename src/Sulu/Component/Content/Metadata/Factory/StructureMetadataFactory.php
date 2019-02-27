@@ -54,10 +54,10 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
     /**
      * @param LoaderInterface $loader
-     * @param array           $typePaths
-     * @param array           $defaultTypes
-     * @param mixed           $cachePath
-     * @param mixed           $debug
+     * @param array $typePaths
+     * @param array $defaultTypes
+     * @param mixed $cachePath
+     * @param mixed $debug
      */
     public function __construct(
         LoaderInterface $loader,

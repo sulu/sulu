@@ -97,7 +97,7 @@ class SnippetImportTest extends SuluTestCase
         // testing imported data
         $loadedDocuments = [];
 
-        /** @var BasePageDocument $document */
+        /* @var BasePageDocument $document */
         $loadedDocuments[0] = $this->documentManager->find(
             $this->snippets[0]->getUuid(),
             'en',

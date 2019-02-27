@@ -199,7 +199,7 @@ class ContentDataProvider implements DataProviderInterface
             $items,
             $hasNextPage,
             array_map(
-                function (ContentDataItem $item) {
+                function(ContentDataItem $item) {
                     return $item->getId();
                 },
                 $items
@@ -232,7 +232,7 @@ class ContentDataProvider implements DataProviderInterface
             $items,
             $hasNextPage,
             array_map(
-                function (ArrayAccessItem $item) {
+                function(ArrayAccessItem $item) {
                     return $item->getId();
                 },
                 $items
@@ -355,7 +355,7 @@ class ContentDataProvider implements DataProviderInterface
     private function decorateDataItems(array $data, $locale)
     {
         return array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -373,7 +373,7 @@ class ContentDataProvider implements DataProviderInterface
     private function decorateResourceItems(array $data, $locale)
     {
         return array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -392,7 +392,7 @@ class ContentDataProvider implements DataProviderInterface
     {
         return $this->proxyFactory->createProxy(
             PageDocument::class,
-            function (
+            function(
                 &$wrappedObject,
                 LazyLoadingInterface $proxy,
                 $method,

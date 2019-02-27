@@ -86,7 +86,7 @@ class TeaserContentTypeTest extends \PHPUnit_Framework_TestCase
         $items = [['type' => 'content', 'id' => '123-123-123'], ['type' => 'media', 'id' => 1]];
 
         $teasers = array_map(
-            function ($item) {
+            function($item) {
                 $teaser = $this->prophesize(Teaser::class);
                 $teaser->getType()->willReturn($item['type']);
                 $teaser->getId()->willReturn($item['id']);

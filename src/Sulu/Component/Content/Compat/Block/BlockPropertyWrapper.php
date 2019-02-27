@@ -34,7 +34,7 @@ class BlockPropertyWrapper implements PropertyInterface
     /**
      * @param PropertyInterface $property
      * @param PropertyInterface $block
-     * @param int               $index
+     * @param int $index
      */
     public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
     {

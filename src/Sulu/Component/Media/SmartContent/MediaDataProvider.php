@@ -124,7 +124,7 @@ class MediaDataProvider extends BaseDataProvider
     protected function decorateDataItems(array $data)
     {
         return array_map(
-            function ($item) {
+            function($item) {
                 return new MediaDataItem($item);
             },
             $data

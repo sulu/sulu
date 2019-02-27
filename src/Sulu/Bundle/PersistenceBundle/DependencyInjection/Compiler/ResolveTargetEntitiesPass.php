@@ -61,7 +61,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
 
     /**
      * @param ContainerBuilder $container
-     * @param string           $key
+     * @param string $key
      *
      * @return string
      *

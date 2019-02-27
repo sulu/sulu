@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Base exception for handling filter specific exceptions.
-  */
+ */
 class FilterException extends \Exception
 {
 }

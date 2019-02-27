@@ -34,7 +34,7 @@ class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
 
         $extractor = new DelegatingTagExtractor(
             array_map(
-                function ($extrator) {
+                function($extrator) {
                     return $extrator->reveal();
                 },
                 $extractors
@@ -70,7 +70,7 @@ class DelegatingTagExtractorTest extends \PHPUnit_Framework_TestCase
 
         $extractor = new DelegatingTagExtractor(
             array_map(
-                function ($extrator) {
+                function($extrator) {
                     return $extrator->reveal();
                 },
                 $extractors

@@ -40,7 +40,7 @@ class ContentTypeManager implements ContentTypeManagerInterface
     /**
      * Map a content type alias to a service ID.
      *
-     * @param string $alias     - Alias for content type, e.g. media
+     * @param string $alias - Alias for content type, e.g. media
      * @param string $serviceId - ID of corresponding service in the DI container
      */
     public function mapAliasToServiceId($alias, $serviceId)

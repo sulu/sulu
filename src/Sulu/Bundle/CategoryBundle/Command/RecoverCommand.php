@@ -44,7 +44,7 @@ class RecoverCommand extends ContainerAwareCommand
     /**
      * Execute command.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)

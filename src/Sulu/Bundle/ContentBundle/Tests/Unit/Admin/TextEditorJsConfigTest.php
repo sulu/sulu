@@ -54,9 +54,9 @@ class TextEditorJsConfigTest extends \PHPUnit_Framework_TestCase
 
         $self = $this;
         $this->user->getRoleObjects()->will(
-            function () use ($self) {
+            function() use ($self) {
                 return array_map(
-                    function ($role) {
+                    function($role) {
                         return $role->reveal();
                     },
                     $self->roles

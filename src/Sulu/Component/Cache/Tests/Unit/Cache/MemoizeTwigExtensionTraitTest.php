@@ -77,13 +77,13 @@ class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
         $before = [
             new \Twig_SimpleFunction(
                 'sulu_content_load',
-                function () {
+                function() {
                     return 1;
                 }
             ),
             new \Twig_SimpleFunction(
                 'sulu_content_load_parent',
-                function () {
+                function() {
                     return 2;
                 }
             ),
@@ -92,13 +92,13 @@ class MemoizeTwigExtensionTraitTest extends \PHPUnit_Framework_TestCase
         $this->extension->getFunctions()->willReturn($before);
         $this->memoizeCache->memoizeById('sulu_content_load', [], Argument::type('callable'), $this->lifeTime)
             ->will(
-                function ($arguments) {
+                function($arguments) {
                     return call_user_func($arguments[2]);
                 }
             );
         $this->memoizeCache->memoizeById('sulu_content_load_parent', [], Argument::type('callable'), $this->lifeTime)
             ->will(
-                function ($arguments) {
+                function($arguments) {
                     return call_user_func($arguments[2]);
                 }
             );

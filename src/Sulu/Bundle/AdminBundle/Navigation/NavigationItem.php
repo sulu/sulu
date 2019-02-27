@@ -109,7 +109,7 @@ class NavigationItem implements \Iterator
     protected $disabled;
 
     /**
-     * @param string         $name   The name of the item
+     * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
      */
     public function __construct($name, $parent = null)
@@ -557,7 +557,7 @@ class NavigationItem implements \Iterator
 
         usort(
             $children,
-            function (NavigationItem $a, NavigationItem $b) {
+            function(NavigationItem $a, NavigationItem $b) {
                 $aPosition = $a->getPosition() ?: PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?: PHP_INT_MAX;
 

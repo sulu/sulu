@@ -49,7 +49,7 @@ interface StructureInterface extends \ArrayAccess
      * set to NULL.
      *
      * @param array $data
-     * @param bool  $clearMissing
+     * @param bool $clearMissing
      */
     public function bind($data, $clearMissing = false);
 

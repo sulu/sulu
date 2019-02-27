@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
-use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Metadata;

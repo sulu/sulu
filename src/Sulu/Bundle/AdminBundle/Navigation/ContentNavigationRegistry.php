@@ -51,7 +51,7 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 
         usort(
             $navigationItems,
-            function (ContentNavigationItem $a, ContentNavigationItem $b) {
+            function(ContentNavigationItem $a, ContentNavigationItem $b) {
                 $aPosition = $a->getPosition() ?: PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?: PHP_INT_MAX;
 

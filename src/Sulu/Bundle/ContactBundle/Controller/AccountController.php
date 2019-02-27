@@ -117,7 +117,7 @@ class AccountController extends RestController implements ClassResourceInterface
         try {
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($includes, $accountManager, $locale) {
+                function($id) use ($includes, $accountManager, $locale) {
                     return $accountManager->getByIdAndInclude($id, $locale, $includes);
                 }
             );
@@ -768,7 +768,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) use ($request) {
+        $delete = function($id) use ($request) {
             /* @var AccountInterface $account */
             $account = $this->getDoctrine()
                 ->getRepository($this->getAccountEntityName())

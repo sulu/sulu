@@ -155,7 +155,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
         array_walk(
             $items,
-            function (&$item, $index) {
+            function(&$item, $index) {
                 $item['depth'] = $index;
             }
         );

@@ -20,7 +20,7 @@ interface WidgetsHandlerInterface
      * renders a widget group.
      *
      * @param string $groupAlias
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return string
      */
@@ -49,7 +49,7 @@ interface WidgetsHandlerInterface
      * add an widget to rendering process.
      *
      * @param WidgetInterface $widget
-     * @param string          $alias
+     * @param string $alias
      */
     public function addWidget(WidgetInterface $widget, $alias);
 }

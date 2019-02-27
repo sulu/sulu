@@ -231,7 +231,7 @@ class NavigationMapper implements NavigationMapperInterface
      * checks if content should be displayed.
      *
      * @param StructureInterface $content
-     * @param string|null        $context
+     * @param string|null $context
      *
      * @return bool
      */

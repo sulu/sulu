@@ -95,7 +95,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $lazyLoading = $this->prophesize(LazyLoadingInterface::class);
 
         $mock->createProxy(PageDocument::class, Argument::any())->will(
-            function ($args) use ($lazyLoading) {
+            function($args) use ($lazyLoading) {
                 $wrappedObject = 1;
                 $initializer = 1;
                 $args[1]($wrappedObject, $lazyLoading->reveal(), null, [], $initializer);

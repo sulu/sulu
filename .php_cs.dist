@@ -1,0 +1,17 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__);
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'class_definition' => false,
+        'concat_space' => ['spacing' => 'one'],
+        'function_declaration' => ['closure_function_spacing' => 'none'],
+        'ordered_imports' => true,
+        'phpdoc_align' => ['align' => 'left'],
+        'phpdoc_types_order' => false,
+    ])
+    ->setFinder($finder);

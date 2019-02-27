@@ -87,7 +87,7 @@ class TemplateController extends Controller
      * renders one structure as form.
      *
      * @param Request $request
-     * @param string  $key     template key
+     * @param string $key template key
      *
      * @return Response
      */
@@ -147,7 +147,7 @@ class TemplateController extends Controller
     /**
      * returns structure for given key.
      *
-     * @param string $key  template key
+     * @param string $key template key
      * @param string $type
      *
      * @return StructureInterface

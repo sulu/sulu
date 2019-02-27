@@ -34,7 +34,7 @@ class StructureResolver implements StructureResolverInterface
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param ExtensionManagerInterface   $structureManager
+     * @param ExtensionManagerInterface $structureManager
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,

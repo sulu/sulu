@@ -452,7 +452,7 @@ class CollectionManager implements CollectionManagerInterface
      * Data can be set over by array.
      *
      * @param Collection $collection
-     * @param array      $data
+     * @param array $data
      *
      * @return Collection
      */
@@ -589,7 +589,7 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param int    $id
+     * @param int $id
      * @param string $locale
      *
      * @return array
@@ -618,9 +618,9 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param int         $mediaId
+     * @param int $mediaId
      * @param FileVersion $fileVersion
-     * @param string      $locale
+     * @param string $locale
      *
      * @return array
      */

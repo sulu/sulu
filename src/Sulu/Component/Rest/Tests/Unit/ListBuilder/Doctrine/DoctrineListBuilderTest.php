@@ -95,9 +95,9 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
 
-        $this->queryBuilder->distinct(false)->should(function () {
+        $this->queryBuilder->distinct(false)->should(function() {
         });
-        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function () {
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {
         });
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
 

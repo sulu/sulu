@@ -810,7 +810,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $items = array_map(
-            function (Content $content) {
+            function(Content $content) {
                 return [
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
@@ -842,7 +842,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $result);
 
         $items = array_map(
-            function (Content $content) {
+            function(Content $content) {
                 return [
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
@@ -870,7 +870,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $paths = array_map(
-            function (Content $content) {
+            function(Content $content) {
                 return $content->getPath();
             },
             $result
@@ -894,7 +894,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(1, $result);
 
         $paths = array_map(
-            function (Content $content) {
+            function(Content $content) {
                 return $content->getPath();
             },
             $result
@@ -913,7 +913,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->setResolveUrl(true)->getMapping()
         );
 
-        usort($result, function ($content1, $content2) {
+        usort($result, function($content1, $content2) {
             return strcmp($content1->getPath(), $content2->getPath());
         });
 

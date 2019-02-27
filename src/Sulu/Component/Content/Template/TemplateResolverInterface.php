@@ -19,7 +19,7 @@ interface TemplateResolverInterface
     /**
      * Resolves template for different node types.
      *
-     * @param int    $nodeType
+     * @param int $nodeType
      * @param string $templateKey
      *
      * @return string

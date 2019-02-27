@@ -120,7 +120,7 @@ class PermissionControllerTest extends \PHPUnit_Framework_TestCase
 
         array_walk(
             $permissions,
-            function (&$permissionLine) {
+            function(&$permissionLine) {
                 $permissionLine = 'true' === $permissionLine || true === $permissionLine;
             }
         );

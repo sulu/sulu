@@ -682,7 +682,7 @@ class FileVersion implements AuditableInterface
             $newFormatOptionsArray = [];
 
             foreach ($this->meta as $meta) {
-                /** @var FileVersionMeta $meta */
+                /* @var FileVersionMeta $meta */
                 $newMetaList[] = clone $meta;
             }
 
@@ -697,7 +697,7 @@ class FileVersion implements AuditableInterface
             }
 
             foreach ($this->contentLanguages as $contentLanguage) {
-                /** @var FileVersionContentLanguage $contentLanguage */
+                /* @var FileVersionContentLanguage $contentLanguage */
                 $newContentLanguageList[] = clone $contentLanguage;
             }
 
@@ -708,7 +708,7 @@ class FileVersion implements AuditableInterface
             }
 
             foreach ($this->publishLanguages as $publishLanguage) {
-                /** @var FileVersionPublishLanguage $publishLanguage */
+                /* @var FileVersionPublishLanguage $publishLanguage */
                 $newPublishLanguageList[] = clone $publishLanguage;
             }
 
@@ -719,13 +719,13 @@ class FileVersion implements AuditableInterface
             }
 
             foreach ($this->formatOptions as $formatOptions) {
-                /** @var FormatOptions $formatOptions */
+                /* @var FormatOptions $formatOptions */
                 $newFormatOptionsArray[] = clone $formatOptions;
             }
 
             $this->formatOptions->clear();
             foreach ($newFormatOptionsArray as $newFormatOptions) {
-                /** @var FormatOptions $newFormatOptions */
+                /* @var FormatOptions $newFormatOptions */
                 $newFormatOptions->setFileVersion($this);
                 $this->addFormatOptions($newFormatOptions);
             }

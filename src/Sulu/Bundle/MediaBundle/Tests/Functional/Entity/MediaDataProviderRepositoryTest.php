@@ -519,7 +519,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
             $filters['tags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
@@ -529,7 +529,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['websiteTags']

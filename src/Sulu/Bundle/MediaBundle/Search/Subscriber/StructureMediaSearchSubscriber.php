@@ -43,7 +43,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     protected $searchImageFormat;
 
     /**
-     * @param MediaManagerInterface    $mediaManager
+     * @param MediaManagerInterface $mediaManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param $searchImageFormat
      */

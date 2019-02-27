@@ -61,21 +61,21 @@ class SnippetResolverTest extends \PHPUnit_Framework_TestCase
 
         $contentMapper->load(
             Argument::that(
-                function ($item) use ($uuids) {
+                function($item) use ($uuids) {
                     return in_array($item, $uuids);
                 }
             ),
             $webspaceKey,
             $locale
         )->shouldBeCalledTimes(count(array_unique($uuids)))->will(
-            function ($arguments) use ($structures) {
+            function($arguments) use ($structures) {
                 return $structures[$arguments[0]];
             }
         );
 
         $structureResolver->resolve(
             Argument::that(
-                function (StructureInterface $structure) use ($uuids) {
+                function(StructureInterface $structure) use ($uuids) {
                     return in_array($structure->getUuid(), $uuids);
                 }
             )

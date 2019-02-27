@@ -33,8 +33,8 @@ class StructureTag
     protected $attributes;
 
     /**
-     * @param string $name       Name of tag
-     * @param array  $attributes Tag attributes
+     * @param string $name Name of tag
+     * @param array $attributes Tag attributes
      */
     public function __construct($name, $attributes)
     {

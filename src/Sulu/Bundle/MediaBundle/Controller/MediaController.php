@@ -84,7 +84,7 @@ class MediaController extends AbstractMediaController implements
             $mediaManager = $this->getMediaManager();
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $mediaManager) {
+                function($id) use ($locale, $mediaManager) {
                     $media = $mediaManager->getById($id, $locale);
                     $collection = $media->getEntity()->getCollection();
 
@@ -313,7 +313,7 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $this->getMediaManager()->delete($id, true);
             } catch (MediaNotFoundException $e) {

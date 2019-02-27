@@ -49,7 +49,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->getDoctrine()
                     ->getRepository(self::$entityName)
                     ->find($id);
@@ -118,7 +118,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * Edits the existing contact title for the given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int                                       $id      The id of the title to update
+     * @param int $id The id of the title to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -165,7 +165,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     public function deleteAction($id)
     {
         try {
-            $delete = function ($id) {
+            $delete = function($id) {
                 /* @var ContactTitle $title */
                 $title = $this->getDoctrine()
                     ->getRepository(self::$entityName)

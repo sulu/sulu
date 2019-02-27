@@ -77,7 +77,7 @@ class CustomerManager implements CustomerManagerInterface
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
         @usort(
             $result,
-            function ($a, $b) use ($ids) {
+            function($a, $b) use ($ids) {
                 return $this->comparator->compare($a['id'], $b['id'], $ids);
             }
         );

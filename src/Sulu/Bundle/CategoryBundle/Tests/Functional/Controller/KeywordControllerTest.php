@@ -85,7 +85,7 @@ class KeywordControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
 
-        usort($response->_embedded->keywords, function ($key1, $key2) {
+        usort($response->_embedded->keywords, function($key1, $key2) {
             return $key1->id > $key2->id;
         });
 

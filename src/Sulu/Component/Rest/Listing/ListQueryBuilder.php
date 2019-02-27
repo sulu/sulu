@@ -140,7 +140,7 @@ class ListQueryBuilder
      * @param $where
      * @param array $searchTextFields
      * @param array $searchNumberFields
-     * @param array $joinConditions     - specify a custom join condition
+     * @param array $joinConditions - specify a custom join condition
      */
     public function __construct(
         $associationNames,
@@ -307,7 +307,7 @@ class ListQueryBuilder
     /**
      * Generate JOIN {parent}.{fieldname} {alias} foreach fieldPart.
      *
-     * @param array  $fieldParts
+     * @param array $fieldParts
      * @param string $prefix
      *
      * @return string

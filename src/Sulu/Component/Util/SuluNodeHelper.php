@@ -41,8 +41,8 @@ class SuluNodeHelper
 
     /**
      * @param SessionInterface $session
-     * @param string           $languageNamespace
-     * @param array            $paths             Path segments from configuration
+     * @param string $languageNamespace
+     * @param array $paths Path segments from configuration
      */
     public function __construct(SessionInterface $session, $languageNamespace, $paths)
     {
@@ -109,7 +109,7 @@ class SuluNodeHelper
      * by $name.
      *
      * @param NodeInterface $node
-     * @param string        $name Name of localized property
+     * @param string $name Name of localized property
      */
     public function getLocalizedPropertyValues(NodeInterface $node, $name)
     {
@@ -138,7 +138,7 @@ class SuluNodeHelper
      *   snippet is the Sulu node type
      *
      * @param NodeInterface $node
-     * @param string|array  $suluNodeTypes One or more node sulu types
+     * @param string|array $suluNodeTypes One or more node sulu types
      *
      * @return bool
      */
@@ -246,8 +246,8 @@ class SuluNodeHelper
      * Return translated property.
      *
      * @param \Sulu\Component\Content\Compat\PropertyInterface $property
-     * @param string                                           $locale
-     * @param string                                           $prefix
+     * @param string $locale
+     * @param string $prefix
      *
      * @return \Sulu\Component\Content\Compat\PropertyInterface
      */
@@ -261,7 +261,7 @@ class SuluNodeHelper
      * according to the $previous flag.
      *
      * @param NodeInterface $node
-     * @param bool          $previous
+     * @param bool $previous
      *
      * @return NodeInterface|null
      *

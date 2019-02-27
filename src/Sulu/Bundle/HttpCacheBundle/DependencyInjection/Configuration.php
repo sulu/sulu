@@ -65,7 +65,7 @@ class Configuration implements ConfigurationInterface
                             ->fixXmlConfig('server')
                             ->children()
                                 ->arrayNode('servers')
-                                    ->beforeNormalization()->ifString()->then(function ($v) {
+                                    ->beforeNormalization()->ifString()->then(function($v) {
                                         return preg_split('/\s*,\s*/', $v);
                                     })->end()
                                     ->useAttributeAsKey('name')

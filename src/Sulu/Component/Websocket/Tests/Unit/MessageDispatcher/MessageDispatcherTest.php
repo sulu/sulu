@@ -38,7 +38,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
         $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
-            function ($arguments) {
+            function($arguments) {
                 return json_encode(
                     [
                         'handler' => $arguments[0],

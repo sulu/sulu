@@ -44,7 +44,7 @@ class PropertyTag
 
     /**
      * @param string $name
-     * @param int    $priority
+     * @param int $priority
      */
     public function __construct($name, $priority, $attributes = [])
     {

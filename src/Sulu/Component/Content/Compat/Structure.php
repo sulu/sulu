@@ -470,7 +470,7 @@ abstract class Structure implements StructureInterface
      * returns a property instance with given tag name.
      *
      * @param string $tagName
-     * @param bool   $highest
+     * @param bool $highest
      *
      * @return PropertyInterface
      *
