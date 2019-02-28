@@ -16,7 +16,6 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 class Preview implements PreviewInterface
 {
@@ -93,16 +92,7 @@ class Preview implements PreviewInterface
             $this->save($cacheItem);
         }
 
-        $partialHtml = $this->renderer->render(
-            $cacheItem->getObject(),
-            $cacheItem->getId(),
-            $webspaceKey,
-            $cacheItem->getLocale(),
-            true,
-            $targetGroupId
-        );
-
-        return str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
     }
 
     public function updateContext(string $token, string $webspaceKey, array $context, ?int $targetGroupId): string
@@ -132,11 +122,10 @@ class Preview implements PreviewInterface
             $targetGroupId
         );
 
-        $crawler = new Crawler($html);
-        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), self::CONTENT_REPLACER, $html));
+        $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $html;
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
     }
 
     public function render(string $token, string $webspaceKey, string $locale, ?int $targetGroupId): string
@@ -152,11 +141,31 @@ class Preview implements PreviewInterface
             $targetGroupId
         );
 
-        $crawler = new Crawler($html);
-        $cacheItem->setHtml(str_replace($crawler->filter('#content')->html(), self::CONTENT_REPLACER, $html));
+        $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $html;
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
+    }
+
+    protected function renderPartial(PreviewCacheItem $cacheItem, string $webspaceKey, ?int $targetGroupId): string
+    {
+        $partialHtml = $this->renderer->render(
+            $cacheItem->getObject(),
+            $cacheItem->getId(),
+            $webspaceKey,
+            $cacheItem->getLocale(),
+            true,
+            $targetGroupId
+        );
+
+        return str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());
+    }
+
+    protected function removeContent(string $html): string
+    {
+        $parts = explode(self::CONTENT_REPLACER, $html);
+
+        return $parts[0] . self::CONTENT_REPLACER . $parts[2];
     }
 
     protected function getProvider(string $providerKey): PreviewObjectProviderInterface

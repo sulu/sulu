@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
+use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,8 +62,13 @@ abstract class WebsiteController extends Controller
                     'content',
                     $data
                 );
+            } elseif ($preview) {
+                $content = $this->renderPreview(
+                    $viewTemplate,
+                    $data
+                );
             } else {
-                $content = parent::renderView(
+                $content = $this->renderView(
                     $viewTemplate,
                     $data
                 );
@@ -120,6 +126,14 @@ abstract class WebsiteController extends Controller
 
             throw $e;
         }
+    }
+
+    protected function renderPreview(string $view, array $parameters = []): string
+    {
+        $parameters['previewParentTemplate'] = $view;
+        $parameters['previewContentReplacer'] = Preview::CONTENT_REPLACER;
+
+        return parent::renderView('SuluWebsiteBundle:Preview:preview.html.twig', $parameters);
     }
 
     /**
