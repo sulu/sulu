@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.25 (2019-02-28)
     * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
     * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
     * FEATURE     #4394  [WebsiteBundle]        Add exception handling for breadcrumb function
