@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) Sulu GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -12,29 +12,29 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\Routing\FormRouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\Routing\PreviewFormRouteBuilder;
 
-class FormRouteBuilderTest extends TestCase
+class PreviewFormRouteBuilderTest extends TestCase
 {
-    public function testBuildFormRouteWithClone()
+    public function testBuildPreviewFormRouteWithClone()
     {
-        $routeBuilder = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+        $routeBuilder = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles');
 
         $this->assertNotSame($routeBuilder->getRoute(), $routeBuilder->getRoute());
     }
 
-    public function testBuildFormRouteWithoutResourceKey()
+    public function testBuildPreviewFormRouteWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
-        $route = (new FormRouteBuilder('sulu_category.edit_form.details', '/details'))
+        $route = (new PreviewFormRouteBuilder('sulu_category.edit_form.details', '/details'))
             ->getRoute();
     }
 
-    public function provideBuildFormRoute()
+    public function provideBuildPreviewFormRoute()
     {
         return [
             [
@@ -65,9 +65,9 @@ class FormRouteBuilderTest extends TestCase
     }
 
     /**
-     * @dataProvider provideBuildFormRoute
+     * @dataProvider provideBuildPreviewFormRoute
      */
-    public function testBuildFormRoute(
+    public function testBuildPreviewFormRoute(
         string $name,
         string $path,
         string $resourceKey,
@@ -79,7 +79,7 @@ class FormRouteBuilderTest extends TestCase
         ?string $editRoute,
         ?string $backRoute
     ) {
-        $routeBuilder = (new FormRouteBuilder($name, $path))
+        $routeBuilder = (new PreviewFormRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setFormKey($formKey);
 
@@ -120,12 +120,12 @@ class FormRouteBuilderTest extends TestCase
         $this->assertEquals($editRoute, $route->getOption('editRoute'));
         $this->assertEquals($backRoute, $route->getOption('backRoute'));
         $this->assertNull($route->getParent());
-        $this->assertEquals('sulu_admin.form', $route->getView());
+        $this->assertEquals('sulu_admin.preview_form', $route->getView());
     }
 
     public function testBuildFormWithToolbarActions()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addToolbarActions(['sulu_admin.save', 'sulu_admin.types'])
@@ -140,7 +140,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithRouterAttributesToFormStore()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addRouterAttributesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
@@ -155,7 +155,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithRouterAttributesToEditRoute()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addRouterAttributesToEditRoute(['webspace', 'parent'])
@@ -170,7 +170,7 @@ class FormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithIdQueryParameter()
     {
-        $route = (new FormRouteBuilder('sulu_security.add_form', '/roles'))
+        $route = (new PreviewFormRouteBuilder('sulu_security.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->setIdQueryParameter('contactId')
@@ -182,9 +182,20 @@ class FormRouteBuilderTest extends TestCase
         );
     }
 
+    public function testBuildFormWithPreviewCondition()
+    {
+        $route = (new PreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/pages/:id/details'))
+            ->setResourceKey('pages')
+            ->setFormKey('pages')
+            ->setPreviewCondition('nodeType == 1')
+            ->getRoute();
+
+        $this->assertEquals('nodeType == 1', $route->getOption('previewCondition'));
+    }
+
     public function testBuildFormWithLocales()
     {
-        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addLocales(['de', 'en'])
@@ -199,7 +210,7 @@ class FormRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new FormRouteBuilder('sulu_role.list', '/roles'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->addLocales(['de', 'en'])
@@ -212,7 +223,7 @@ class FormRouteBuilderTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageRegExp('":locale"');
 
-        $route = (new FormRouteBuilder('sulu_role.list', '/roles/:locale'))
+        $route = (new PreviewFormRouteBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
             ->getRoute();
