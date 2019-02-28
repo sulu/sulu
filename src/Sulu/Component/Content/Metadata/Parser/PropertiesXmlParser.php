@@ -487,7 +487,6 @@ class PropertiesXmlParser
                 'cssClass' => null,
                 'minOccurs' => null,
                 'maxOccurs' => null,
-                'colspan' => null,
                 'spaceAfter' => null,
             ],
             $this->normalizeItem($data)
