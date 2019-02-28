@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -123,7 +123,7 @@ class SuluNodeHelper
      * by $name.
      *
      * @param NodeInterface $node
-     * @param string        $name Name of localized property
+     * @param string $name Name of localized property
      */
     public function getLocalizedPropertyValues(NodeInterface $node, $name)
     {
@@ -152,7 +152,7 @@ class SuluNodeHelper
      *   snippet is the Sulu node type
      *
      * @param NodeInterface $node
-     * @param string|array  $suluNodeTypes One or more node sulu types
+     * @param string|array $suluNodeTypes One or more node sulu types
      *
      * @return bool
      */
@@ -217,7 +217,7 @@ class SuluNodeHelper
         try {
             return $this->session->getNode($this->getBaseSnippetPath($type))->getIdentifier();
         } catch (PathNotFoundException $e) {
-            $snippetStructures = array_map(function (StructureMetadata $structureMetadata) {
+            $snippetStructures = array_map(function(StructureMetadata $structureMetadata) {
                 return $structureMetadata->getName();
             }, $this->structureMetadataFactory->getStructures('snippet'));
 
@@ -306,8 +306,8 @@ class SuluNodeHelper
      * Return translated property.
      *
      * @param \Sulu\Component\Content\Compat\PropertyInterface $property
-     * @param string                                           $locale
-     * @param string                                           $prefix
+     * @param string $locale
+     * @param string $prefix
      *
      * @return \Sulu\Component\Content\Compat\PropertyInterface
      */
@@ -321,7 +321,7 @@ class SuluNodeHelper
      * according to the $previous flag.
      *
      * @param NodeInterface $node
-     * @param bool          $previous
+     * @param bool $previous
      *
      * @return NodeInterface|null
      *

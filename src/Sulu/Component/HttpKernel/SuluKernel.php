@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,7 +31,7 @@ abstract class SuluKernel extends Kernel
      * {@inheritdoc}
      *
      * @param string $environment
-     * @param bool   $debug
+     * @param bool $debug
      * @param string $suluContext The Sulu context (self::CONTEXT_ADMIN, self::CONTEXT_WEBSITE)
      */
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)

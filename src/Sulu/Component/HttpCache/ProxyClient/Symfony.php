@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -87,9 +87,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Add a request to the queue.
      *
-     * @param string $method  HTTP method
-     * @param string $url     URL
-     * @param array  $headers HTTP headers
+     * @param string $method HTTP method
+     * @param string $url URL
+     * @param array $headers HTTP headers
      */
     protected function queueRequest($method, $url, array $headers = [])
     {
@@ -99,9 +99,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     /**
      * Create request.
      *
-     * @param string $method  HTTP method
-     * @param string $url     URL
-     * @param array  $headers HTTP headers
+     * @param string $method HTTP method
+     * @param string $url URL
+     * @param array $headers HTTP headers
      *
      * @return Request
      */
@@ -131,9 +131,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface
                 ]
             );
             $promise->then(
-                function (ResponseInterface $res) {
+                function(ResponseInterface $res) {
                 },
-                function (RequestException $exception) use ($collection) {
+                function(RequestException $exception) use ($collection) {
                     if ($exception instanceof ConnectException) {
                         // Caching proxy unreachable
                         $collection->add(
@@ -171,7 +171,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      * Prefix the URL with "http://" if it has no scheme, then check the URL
      * for validity. You can specify what parts of the URL are allowed.
      *
-     * @param string   $url
+     * @param string $url
      * @param string[] $allowedParts Array of allowed URL parts (optional)
      *
      * @throws InvalidUrlException If URL is invalid, the scheme is not http or

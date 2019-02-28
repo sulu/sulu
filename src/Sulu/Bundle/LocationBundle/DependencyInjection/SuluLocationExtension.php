@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -90,12 +90,12 @@ class SuluLocationExtension extends Extension
         $geolocatorName = $config['geolocator'];
         $container->setParameter('sulu_location.geolocator.name', $geolocatorName);
 
-        $nominatim = function ($config, $container) {
+        $nominatim = function($config, $container) {
             $endpoint = $config['geolocators']['nominatim']['endpoint'];
             $container->setParameter('sulu_location.geolocator.service.nominatim.endpoint', $endpoint);
         };
 
-        $google = function ($config, $container) {
+        $google = function($config, $container) {
             $apiKey = $config['geolocators']['google']['api_key'];
             $container->setParameter('sulu_location.geolocator.service.google.api_key', $apiKey);
         };

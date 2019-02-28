@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -130,8 +130,8 @@ EOT
      * Cleanup specific node and his children.
      *
      * @param NodeInterface $node
-     * @param string        $rootPath
-     * @param bool          $dryRun
+     * @param string $rootPath
+     * @param bool $dryRun
      */
     private function cleanup(OutputInterface $output, NodeInterface $node, $rootPath, $dryRun)
     {

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -128,7 +128,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectToSee($text)
     {
-        $this->spin(function () use ($text) {
+        $this->spin(function() use ($text) {
             $this->waitForTextAndAssert($text);
 
             return true;
@@ -157,7 +157,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iWaitAndShouldSeeNbElements($num, $element)
     {
-        $this->spin(function (RawMinkContext $context) use ($num, $element) {
+        $this->spin(function(RawMinkContext $context) use ($num, $element) {
             $context->assertSession()->elementsCount('css', $element, intval($num));
 
             return true;
@@ -231,7 +231,7 @@ EOT;
      */
     public function iWaitAndExpectToSeeElement($selector)
     {
-        $this->spin(function (RawMinkContext $context) use ($selector) {
+        $this->spin(function(RawMinkContext $context) use ($selector) {
             $element = $context->getSession()->getPage()->find('css', $selector);
 
             if (null === $element) {
@@ -258,7 +258,7 @@ EOT;
      */
     public function waitAndAssertElementContains($element, $value)
     {
-        $this->spin(function (RawMinkContext $context) use ($element, $value) {
+        $this->spin(function(RawMinkContext $context) use ($element, $value) {
             $context->assertSession()->elementContains('css', $element, $value);
 
             return true;
@@ -289,7 +289,7 @@ EOT;
      */
     public function assertUrlRegExp($pattern)
     {
-        $this->spin(function (RawMinkContext $context) use ($pattern) {
+        $this->spin(function(RawMinkContext $context) use ($pattern) {
             $context->assertSession()->addressMatches($pattern);
 
             return true;

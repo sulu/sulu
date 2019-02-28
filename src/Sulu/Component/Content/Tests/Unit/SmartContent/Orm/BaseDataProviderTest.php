@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -282,7 +282,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $items
     ) {
         $mockedItems = array_map(
-            function ($item) {
+            function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
 
@@ -302,7 +302,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
             'array',
             Argument::type(SerializationContext::class)
         )->will(
-            function ($args) {
+            function($args) {
                 return ['id' => $args[0]->getId()];
             }
         );
@@ -349,7 +349,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $items
     ) {
         $mockedItems = array_map(
-            function ($item) {
+            function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
 
@@ -369,7 +369,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
             'array',
             Argument::type(SerializationContext::class)
         )->will(
-            function ($args) {
+            function($args) {
                 return ['id' => $args[0]->getId()];
             }
         );

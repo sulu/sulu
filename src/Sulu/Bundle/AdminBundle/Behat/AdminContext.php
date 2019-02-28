@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -476,7 +476,7 @@ EOT;
      */
     public function iWaitUntilToolbarDropdownMenuIsVisible($item)
     {
-        $this->spin(function (RawMinkContext $context) use ($item) {
+        $this->spin(function(RawMinkContext $context) use ($item) {
             $page = $context->getSession()->getPage();
             $element = $page->find('css', '.toolbar-dropdown-menu');
 
@@ -531,7 +531,7 @@ EOT;
         $el->postValue(['value' => [$itemValue]]);
 
         // Wait until loading is finished.
-        $this->spin(function (RawMinkContext $context) use ($containerElement) {
+        $this->spin(function(RawMinkContext $context) use ($containerElement) {
             // Search for all displayed suggestions.
             $suggestionElementSelector = '.tt-suggestions .suggestion';
             $suggestionElements = $containerElement->findAll('css', $suggestionElementSelector);

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -192,7 +192,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     protected function decorateResourceItems(array $data, $locale)
     {
         return array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 $itemData = $this->serializer->serialize($item, 'array', $this->getSerializationContext());
                 $id = $this->getIdForItem($item);
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -48,7 +48,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->getDoctrine()
                     ->getRepository(self::$entityName)
                     ->find($id);
@@ -117,7 +117,7 @@ class PositionController extends RestController implements ClassResourceInterfac
      * Edits the existing position for the given id.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int                                       $id      The id of the position to update
+     * @param int $id The id of the position to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -164,7 +164,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     public function deleteAction($id)
     {
         try {
-            $delete = function ($id) {
+            $delete = function($id) {
                 /* @var Position $position */
                 $position = $this->getDoctrine()
                     ->getRepository(self::$entityName)

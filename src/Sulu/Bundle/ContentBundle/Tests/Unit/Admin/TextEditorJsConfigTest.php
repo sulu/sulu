@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -54,9 +54,9 @@ class TextEditorJsConfigTest extends \PHPUnit_Framework_TestCase
 
         $self = $this;
         $this->user->getRoleObjects()->will(
-            function () use ($self) {
+            function() use ($self) {
                 return array_map(
-                    function ($role) {
+                    function($role) {
                         return $role->reveal();
                     },
                     $self->roles

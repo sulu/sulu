@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -93,7 +93,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $url = $this->prophesize(Url::class);
         $url->isMain()->willReturn($isMain);
         $url->setMain(Argument::any())->will(
-            function ($args) use ($url) {
+            function($args) use ($url) {
                 $url->isMain()->willReturn($args[0]);
             }
         );

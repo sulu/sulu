@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -26,7 +26,7 @@ class XmlFormatLoader10Test extends WebspaceTestCase
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
         $locator->locate(Argument::any())->will(
-            function ($arguments) {
+            function($arguments) {
                 return $arguments[0];
             }
         );

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -146,7 +146,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
 
         $structureMetadatas = array_filter(
             $structureMetadatas,
-            function (StructureMetadata $structureMetadata) use (&$properties) {
+            function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
                 $this->findUrlProperties($structureMetadata, $properties);
 
@@ -284,7 +284,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         $addScheme
     ) {
         $componentNames = array_map(
-            function ($item) {
+            function($item) {
                 return $item['component']->getName();
             },
             $components

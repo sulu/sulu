@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -88,7 +88,7 @@ class TemplateController extends Controller
      * renders one structure as form.
      *
      * @param Request $request
-     * @param string  $key     template key
+     * @param string $key template key
      *
      * @return Response
      */
@@ -147,7 +147,7 @@ class TemplateController extends Controller
     /**
      * returns structure for given key.
      *
-     * @param string $key  template key
+     * @param string $key template key
      * @param string $type
      *
      * @return StructureInterface

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -35,7 +35,7 @@ class FallbackController
     /**
      * Redirect message to app and returns value as json response.
      *
-     * @param string  $appName
+     * @param string $appName
      * @param Request $request
      *
      * @return JsonResponse

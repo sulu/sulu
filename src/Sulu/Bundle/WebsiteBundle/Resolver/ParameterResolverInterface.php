@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -22,10 +22,10 @@ interface ParameterResolverInterface
     /**
      * Resolves parameter for website controller.
      *
-     * @param array                    $parameter
+     * @param array $parameter
      * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param StructureInterface       $structure
-     * @param bool                     $preview
+     * @param StructureInterface $structure
+     * @param bool $preview
      *
      * @return mixed
      */

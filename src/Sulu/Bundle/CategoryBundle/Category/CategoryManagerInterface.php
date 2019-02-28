@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -60,9 +60,9 @@ interface CategoryManagerInterface
      * Returns tags with a given parent and/or a given depth-level
      * if no arguments passed returns all categories.
      *
-     * @param int         $parent    the id of the parent to filter for
-     * @param int         $depth     the depth-level to filter for
-     * @param string|null $sortBy    column name to sort the categories by
+     * @param int $parent the id of the parent to filter for
+     * @param int $depth the depth-level to filter for
+     * @param string|null $sortBy column name to sort the categories by
      * @param string|null $sortOrder sort order
      *
      * @return CategoryInterface[]
@@ -86,8 +86,8 @@ interface CategoryManagerInterface
     /**
      * Returns the children for a given category.
      *
-     * @param int         $key       the key of the category to search the children for
-     * @param string|null $sortBy    column name to sort by
+     * @param int $key the key of the category to search the children for
+     * @param string|null $sortBy column name to sort by
      * @param string|null $sortOrder sort order
      *
      * @return CategoryInterface[]
@@ -140,7 +140,7 @@ interface CategoryManagerInterface
      * and provides neat getters and setters.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
-     * @param string   $locale
+     * @param string $locale
      *
      * @return CategoryInterface
      */
@@ -150,7 +150,7 @@ interface CategoryManagerInterface
      * Same as getApiObject, but takes multiple category-entities.
      *
      * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
-     * @param string     $locale
+     * @param string $locale
      *
      * @return CategoryInterface
      */

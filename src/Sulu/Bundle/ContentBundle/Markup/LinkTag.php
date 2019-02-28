@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -61,7 +61,7 @@ class LinkTag implements TagInterface
             $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
 
             $htmlAttributes = array_map(
-                function ($value, $name) {
+                function($value, $name) {
                     if (in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
                         return;
                     }

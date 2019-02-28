@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -34,7 +34,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
 
     /**
      * @param string $name
-     * @param array  $metadata
+     * @param array $metadata
      * @param string $col
      */
     public function __construct($name, $metadata, $col)

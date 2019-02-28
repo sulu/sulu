@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -355,7 +355,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     private function decorateDataItems(array $data, $locale)
     {
         return array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -373,7 +373,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     private function decorateResourceItems(array $data, $locale)
     {
         return array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 $this->referenceStore->add($item['uuid']);
 
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
@@ -394,7 +394,7 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     {
         return $this->proxyFactory->createProxy(
             PageDocument::class,
-            function (
+            function(
                 &$wrappedObject,
                 LazyLoadingInterface $proxy,
                 $method,

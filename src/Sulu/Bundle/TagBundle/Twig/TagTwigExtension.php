@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -72,7 +72,7 @@ class TagTwigExtension extends \Twig_Extension
         return $this->memoizeCache->memoizeById(
             'sulu_tags',
             func_get_args(),
-            function () {
+            function() {
                 $tags = $this->tagManager->findAll();
 
                 $context = SerializationContext::create();

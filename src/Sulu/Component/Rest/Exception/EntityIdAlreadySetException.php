@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -32,7 +32,7 @@ class EntityIdAlreadySetException extends RestException
 
     /**
      * @param string $entity The type of the entity, which was not found
-     * @param int    $id     The id of the entity, which was not found
+     * @param int $id The id of the entity, which was not found
      */
     public function __construct($entity, $id)
     {

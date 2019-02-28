@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -213,7 +213,7 @@ class PublishSubscriber implements EventSubscriberInterface
 
         // Copy all localized system and content properties from the live node
         foreach ($liveNode->getProperties($this->propertyEncoder->localizedSystemName('', $locale) . '*') as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             $node->setProperty($property->getName(), $property->getValue());
         }
 

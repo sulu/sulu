@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -51,7 +51,7 @@ class AutoIncrementConflictResolverTest extends \PHPUnit_Framework_TestCase
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
         $route->setPath('/test-1')->shouldBeCalled()->will(
-            function () use ($route) {
+            function() use ($route) {
                 $route->getPath()->willReturn('/test-1');
             }
         );
@@ -78,12 +78,12 @@ class AutoIncrementConflictResolverTest extends \PHPUnit_Framework_TestCase
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
         $route->setPath('/test-1')->shouldBeCalled()->will(
-            function () use ($route) {
+            function() use ($route) {
                 $route->getPath()->willReturn('/test-1');
             }
         );
         $route->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($route) {
+            function() use ($route) {
                 $route->getPath()->willReturn('/test-2');
             }
         );

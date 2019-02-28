@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -275,10 +275,10 @@ abstract class RestController extends FOSRestController
     /**
      * function replaces a url parameter.
      *
-     * @param string $url   String the complete url
-     * @param string $key   String parameter name (e.g. page=)
+     * @param string $url String the complete url
+     * @param string $key String parameter name (e.g. page=)
      * @param string $value replace value
-     * @param bool   $add   defines if value should be added
+     * @param bool $add defines if value should be added
      *
      * @return mixed|string
      *
@@ -383,7 +383,7 @@ abstract class RestController extends FOSRestController
         $success = true;
         // default for entityIdCallback
         if (null === $entityIdCallback) {
-            $entityIdCallback = function ($entity) {
+            $entityIdCallback = function($entity) {
                 return $entity->getId();
             };
         }
@@ -438,9 +438,9 @@ abstract class RestController extends FOSRestController
      * Tries to find a given id in a given set of entities. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      *
-     * @param array  $requestEntities The set of entities to search in
-     * @param int    $id              The id to search
-     * @param array  $matchedEntry
+     * @param array $requestEntities The set of entities to search in
+     * @param int $id The id to search
+     * @param array $matchedEntry
      * @param string $matchedKey
      */
     protected function findMatch($requestEntities, $id, &$matchedEntry, &$matchedKey)

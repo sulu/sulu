@@ -277,6 +277,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.21 (2019-02-28)
+    * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
+    * BUGFIX      #4376 [SecurityBundle]        Exclude role permissions in user API to improve performance
+
 * 1.5.20 (2019-01-09)
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
 

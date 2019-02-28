@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -51,9 +51,9 @@ class ProfileController implements ClassResourceInterface
     private $userSettingRepository;
 
     /**
-     * @param TokenStorageInterface          $tokenStorage
-     * @param ObjectManager                  $objectManager
-     * @param ViewHandlerInterface           $viewHandler
+     * @param TokenStorageInterface $tokenStorage
+     * @param ObjectManager $objectManager
+     * @param ViewHandlerInterface $viewHandler
      * @param UserSettingRepositoryInterface $userSettingRepository
      */
     public function __construct(

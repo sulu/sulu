@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -369,7 +369,7 @@ class CategoryManager implements CategoryManagerInterface
             $translationEntity = $this->findOrCreateCategoryTranslation($categoryEntity, $categoryWrapper, $locale);
             $translationEntity->setMedias(
                 array_map(
-                    function ($item) {
+                    function($item) {
                         return $this->em->getReference(Media::class, $item);
                     },
                     $this->getProperty($data, 'medias', [])
@@ -497,7 +497,7 @@ class CategoryManager implements CategoryManagerInterface
     public function getApiObjects($entities, $locale)
     {
         return array_map(
-            function ($entity) use ($locale) {
+            function($entity) use ($locale) {
                 return $this->getApiObject($entity, $locale);
             },
             $entities

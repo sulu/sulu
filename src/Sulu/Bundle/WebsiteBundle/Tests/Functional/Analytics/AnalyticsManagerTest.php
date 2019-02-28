@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -191,7 +191,7 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
-                function (Analytics $analytics) use ($result) {
+                function(Analytics $analytics) use ($result) {
                     return $analytics->getId() === $result->getId();
                 }
             )
@@ -223,7 +223,7 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytics) use ($result) {
+                function(Analytics $analytics) use ($result) {
                     return $analytics->getTitle() === $result->getTitle();
                 }
             )
@@ -294,7 +294,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytics) {
+                function(Analytics $analytics) {
                     return $analytics->getId() === $this->entities[0]->getId();
                 }
             )
@@ -310,7 +310,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytics) use ($ids) {
+                function(Analytics $analytics) use ($ids) {
                     return in_array($analytics->getId(), $ids);
                 }
             )

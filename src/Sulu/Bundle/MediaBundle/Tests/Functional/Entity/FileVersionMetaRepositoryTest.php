@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -80,7 +80,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $titles = array_map(
-            function (FileVersionMeta $fileVersionMeta) {
+            function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
             $this->fileVersionMetaRepository->findLatestWithoutSecurity()
@@ -106,7 +106,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $titles = array_map(
-            function (FileVersionMeta $fileVersionMeta) {
+            function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
             $this->fileVersionMetaRepository->findByCollectionId($this->collection->getId())

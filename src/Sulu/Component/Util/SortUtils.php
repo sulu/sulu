@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -21,7 +21,7 @@ final class SortUtils
     /**
      * Cannot instantiate this class.
      */
-    final private function __construct()
+    private function __construct()
     {
     }
 
@@ -55,9 +55,9 @@ final class SortUtils
      *
      * @see http://symfony.com/doc/current/components/property_access/introduction.html
      *
-     * @param array        $values
-     * @param string|array $path      Path or paths on which to sort on
-     * @param string       $direction Direction to sort in (either ASC or DESC)
+     * @param array $values
+     * @param string|array $path Path or paths on which to sort on
+     * @param string $direction Direction to sort in (either ASC or DESC)
      *
      * @return array
      */
@@ -68,7 +68,7 @@ final class SortUtils
         $values = (array) $values;
         $paths = (array) $paths;
 
-        usort($values, function ($a, $b) use ($accessor, $paths) {
+        usort($values, function($a, $b) use ($accessor, $paths) {
             foreach ($paths as $i => $path) {
                 $aOrder = $accessor->getValue($a, $path);
                 $bOrder = $accessor->getValue($b, $path);

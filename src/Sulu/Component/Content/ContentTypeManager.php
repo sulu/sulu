@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -40,7 +40,7 @@ class ContentTypeManager implements ContentTypeManagerInterface
     /**
      * Map a content type alias to a service ID.
      *
-     * @param string $alias     - Alias for content type, e.g. media
+     * @param string $alias - Alias for content type, e.g. media
      * @param string $serviceId - ID of corresponding service in the DI container
      */
     public function mapAliasToServiceId($alias, $serviceId)

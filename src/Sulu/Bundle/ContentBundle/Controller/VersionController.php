@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -50,7 +50,7 @@ class VersionController extends FOSRestController implements
 
         $document = $this->get('sulu_document_manager.document_manager')->find($uuid, $request->query->get('language'));
         $versions = array_reverse(array_filter($document->getVersions(), function($version) use ($locale) {
-            /** @var Version $version */
+            /* @var Version $version */
             return $version->getLocale() === $locale;
         }));
         $total = count($versions);
@@ -61,7 +61,7 @@ class VersionController extends FOSRestController implements
         $versions = array_slice($versions, $listRestHelper->getOffset(), $limit);
 
         $userIds = array_unique(array_map(function($version) {
-            /** @var Version $version */
+            /* @var Version $version */
             return $version->getAuthor();
         }, $versions));
 

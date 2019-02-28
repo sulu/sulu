@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -197,14 +197,14 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->getCreator()->willReturn(1);
         $document->getAuthor()->willReturn(null);
         $document->setAuthor(5)->shouldBeCalled()->will(
-            function ($arguments) use ($document) {
+            function($arguments) use ($document) {
                 $document->getAuthor()->willReturn($arguments[0]);
             }
         );
 
         $document->getAuthored()->willReturn(null);
         $document->setAuthored(Argument::type(\DateTime::class))->shouldBeCalled()->will(
-            function ($arguments) use ($document) {
+            function($arguments) use ($document) {
                 $document->getAuthored()->willReturn($arguments[0]);
             }
         );
@@ -236,7 +236,7 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $document->getAuthored()->willReturn(null);
         $document->setAuthored(Argument::type(\DateTime::class))->shouldBeCalled()->will(
-            function ($arguments) use ($document) {
+            function($arguments) use ($document) {
                 $document->getAuthored()->willReturn($arguments[0]);
             }
         );
@@ -272,7 +272,7 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $document->getAuthored()->willReturn(null);
         $document->setAuthored(Argument::type(\DateTime::class))->shouldBeCalled()->will(
-            function ($arguments) use ($document) {
+            function($arguments) use ($document) {
                 $document->getAuthored()->willReturn($arguments[0]);
             }
         );
@@ -307,7 +307,7 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $document->getAuthored()->willReturn(null);
         $document->setAuthored(Argument::type(\DateTime::class))->shouldBeCalled()->will(
-            function ($arguments) use ($document) {
+            function($arguments) use ($document) {
                 $document->getAuthored()->willReturn($arguments[0]);
             }
         );
