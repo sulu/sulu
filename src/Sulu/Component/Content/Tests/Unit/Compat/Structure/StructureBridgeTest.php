@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -67,7 +67,7 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
             Argument::type(PropertyMetadata::class),
             Argument::type(StructureBridge::class)
         )->will(
-            function ($args) use ($title, $images) {
+            function($args) use ($title, $images) {
                 if ('title' === $args[0]->getName()) {
                     return $title->reveal();
                 } elseif ('images' === $args[0]->getName()) {

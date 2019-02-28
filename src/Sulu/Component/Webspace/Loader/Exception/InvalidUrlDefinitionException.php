@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -24,7 +24,7 @@ class InvalidUrlDefinitionException extends WebspaceException
 
     /**
      * @param Webspace $portal
-     * @param string   $urlPattern
+     * @param string $urlPattern
      */
     public function __construct(Webspace $portal, $urlPattern)
     {

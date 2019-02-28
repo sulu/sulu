@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -21,7 +21,7 @@ interface SecurityCheckerInterface
     /**
      * Checks a Sulu specific permission based on the subject, a permission type and a locale.
      *
-     * @param mixed  $subject
+     * @param mixed $subject
      * @param string $permission
      *
      * @return bool

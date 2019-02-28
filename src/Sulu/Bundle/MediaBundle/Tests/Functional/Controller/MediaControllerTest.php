@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -101,7 +101,7 @@ class MediaControllerTest extends SuluTestCase
 
     protected function cleanImage()
     {
-        if ($this->getContainer()) { //
+        if ($this->getContainer()) {
             $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
 
@@ -656,7 +656,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $medias = array_map(
-            function ($item) {
+            function($item) {
                 return ['id' => $item->id, 'name' => $item->name, 'title' => $item->title, 'locale' => $item->locale];
             },
             $response->_embedded->media
@@ -717,7 +717,7 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $medias = array_map(
-            function ($item) {
+            function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             },
             $response->_embedded->media
@@ -750,7 +750,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertCount(2, $response['_embedded']['media']);
 
         $titles = array_map(
-            function ($media) {
+            function($media) {
                 return $media['name'];
             },
             $response['_embedded']['media']

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -104,7 +104,7 @@ class CollectionRepositoryTest extends SuluTestCase
         }
         $this->em->flush();
 
-        /** @var CollectionRepository $repository */
+        /* @var CollectionRepository $repository */
         $this->collectionRepository = $this->getContainer()->get('sulu_media.collection_repository');
         $this->collectionRepository->recover();
         $this->em->flush();

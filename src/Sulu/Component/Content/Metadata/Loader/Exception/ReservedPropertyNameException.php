@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -24,7 +24,7 @@ class ReservedPropertyNameException extends InvalidXmlException
     protected $propertyName;
 
     /**
-     * @param string $template     The template causing the problem
+     * @param string $template The template causing the problem
      * @param string $propertyName The name of the property, which has been used
      */
     public function __construct($template, $propertyName)

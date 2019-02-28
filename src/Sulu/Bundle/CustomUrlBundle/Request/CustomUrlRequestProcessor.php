@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -77,7 +77,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         /** @var PortalInformation[] $portalInformations */
         $portalInformations = array_filter(
             $portalInformations,
-            function (PortalInformation $portalInformation) {
+            function(PortalInformation $portalInformation) {
                 return RequestAnalyzer::MATCH_TYPE_WILDCARD === $portalInformation->getType();
             }
         );

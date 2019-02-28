@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -76,13 +76,13 @@ class RdfaExtractor
             // FIXME it is a bit complex but there is no :not operator in crawler
             // should be *[property="block"]:not(*[property] *)
             $nodes = $nodes->filter('*[property="' . $property . '"]')->reduce(
-                function (Crawler $node) {
+                function(Crawler $node) {
                     // get parents
                     $parents = $node->parents();
                     $count = 0;
                     // check if one parent is property exclude it
                     $parents->each(
-                        function ($node) use (&$count) {
+                        function($node) use (&$count) {
                             if (null !== $node->attr('property') && 'collection' === $node->attr('typeof')) {
                                 ++$count;
                             }
@@ -98,7 +98,7 @@ class RdfaExtractor
         if ($nodes->count() > 0) {
             // create an array of changes
             return $nodes->each(
-                function (Crawler $crawlerNode) {
+                function(Crawler $crawlerNode) {
                     $node = $crawlerNode->getNode(0);
                     $attributes = [];
                     foreach ($node->attributes as $name => $value) {

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -153,7 +153,7 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $result = array_merge($accounts, $contacts);
         @usort(
             $result,
-            function ($a, $b) use ($value) {
+            function($a, $b) use ($value) {
                 $typeA = $a instanceof Contact ? 'c' : 'a';
                 $typeB = $b instanceof Contact ? 'c' : 'a';
 
@@ -162,7 +162,7 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         );
 
         return array_map(
-            function ($entity) {
+            function($entity) {
                 $groups = ['fullContact', 'partialAccount'];
                 if ($entity instanceof Account) {
                     $groups = ['fullAccount', 'partialContact'];

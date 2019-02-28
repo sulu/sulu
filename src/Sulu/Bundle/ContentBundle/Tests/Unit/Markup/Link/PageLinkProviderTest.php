@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -107,7 +107,7 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function (MappingInterface $mapping) {
+                function(MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
@@ -150,7 +150,7 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function (MappingInterface $mapping) {
+                function(MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
@@ -187,7 +187,7 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             [1],
             $this->locale,
             Argument::that(
-                function (MappingInterface $mapping) {
+                function(MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                     && !$mapping->shouldHydrateGhost()
                     && $mapping->onlyPublished()
@@ -234,7 +234,7 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             null,
             $this->scheme
         )->will(
-            function ($arguments) {
+            function($arguments) {
                 return sprintf('/%s%s', $arguments[2], $arguments[0]);
             }
         );

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -35,7 +35,7 @@ class TagMergeEvent extends Event
 
     /**
      * @param array $srcTags The deleted Tag
-     * @param Tag   $destTag The Tag the deleted Tag got merged into
+     * @param Tag $destTag The Tag the deleted Tag got merged into
      */
     public function __construct(array $srcTags, Tag $destTag)
     {

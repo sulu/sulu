@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -22,10 +22,10 @@ interface NavigationMapperInterface
      * @param string $parent uuid of parent node
      * @param $webspaceKey
      * @param $locale
-     * @param int         $depth
-     * @param bool        $flat
+     * @param int $depth
+     * @param bool $flat
      * @param string|null $context
-     * @param bool        $loadExcerpt
+     * @param bool $loadExcerpt
      *
      * @return NavigationItem[]
      */
@@ -42,12 +42,12 @@ interface NavigationMapperInterface
     /**
      * returns navigation from root.
      *
-     * @param string      $webspaceKey
-     * @param string      $locale
-     * @param int         $depth
-     * @param bool        $flat
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param int $depth
+     * @param bool $flat
      * @param string|null $context
-     * @param bool        $loadExcerpt
+     * @param bool $loadExcerpt
      *
      * @return NavigationItem[]
      */

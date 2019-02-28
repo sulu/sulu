@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -48,8 +48,8 @@ interface TagManagerInterface
     /**
      * Loads the tag with the given name, or creates it, if it does not exist.
      *
-     * @param string $name   The name to find or create
-     * @param int    $userId The id of the user who tries to find a tag
+     * @param string $name The name to find or create
+     * @param int $userId The id of the user who tries to find a tag
      *
      * @return Tag
      */
@@ -58,9 +58,9 @@ interface TagManagerInterface
     /**
      * Saves the given Tag.
      *
-     * @param array       $data   The data of the tag to save
-     * @param int         $userId The id of the user, who is doing this change
-     * @param number|null $id     The id for saving the tag (optional)
+     * @param array $data The data of the tag to save
+     * @param int $userId The id of the user, who is doing this change
+     * @param number|null $id The id for saving the tag (optional)
      *
      * @return
      */
@@ -77,7 +77,7 @@ interface TagManagerInterface
      * Merges the source tag into the destination tag.
      * The source tag will be deleted.
      *
-     * @param array  $srcTagIds The source tags, which will be removed afterwards
+     * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      *
      * @throws Exception\TagNotFoundException

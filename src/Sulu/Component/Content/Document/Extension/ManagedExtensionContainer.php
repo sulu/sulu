@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -63,13 +63,13 @@ class ManagedExtensionContainer extends ExtensionContainer
     private $webspaceName;
 
     /**
-     * @param string                    $structureType
+     * @param string $structureType
      * @param ExtensionManagerInterface $extensionManager
-     * @param NodeInterface             $node
-     * @param string                    $locale
-     * @param string                    $prefix
-     * @param string                    $internalPrefix
-     * @param string                    $webspaceName
+     * @param NodeInterface $node
+     * @param string $locale
+     * @param string $prefix
+     * @param string $internalPrefix
+     * @param string $webspaceName
      */
     public function __construct(
         $structureType,

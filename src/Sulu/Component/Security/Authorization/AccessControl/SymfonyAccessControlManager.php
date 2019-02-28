@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -46,8 +46,8 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
 
     /**
      * @param MutableAclProviderInterface $aclProvider
-     * @param MaskConverterInterface      $maskConverter
-     * @param EventDispatcherInterface    $eventDispatcher
+     * @param MaskConverterInterface $maskConverter
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         MutableAclProviderInterface $aclProvider,

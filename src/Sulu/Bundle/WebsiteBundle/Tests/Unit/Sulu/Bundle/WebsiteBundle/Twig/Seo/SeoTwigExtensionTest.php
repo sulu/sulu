@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -116,7 +116,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
             null,
             'https'
         )->will(
-            function ($arguments) {
+            function($arguments) {
                 return '/' . str_replace('_', '-', $arguments[2]) . $arguments[0];
             }
         );

@@ -17,6 +17,7 @@
 
 npm-debug.log
 package-lock.json
+.php_cs.cache
 
 # .DS_Store
 .DS_Store
@@ -34,4 +35,3 @@ jackrabbit/*
 
 # phpunit
 /phpunit.xml
-

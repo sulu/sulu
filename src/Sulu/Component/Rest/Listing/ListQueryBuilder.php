@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -140,7 +140,7 @@ class ListQueryBuilder
      * @param $where
      * @param array $searchTextFields
      * @param array $searchNumberFields
-     * @param array $joinConditions     - specify a custom join condition
+     * @param array $joinConditions - specify a custom join condition
      */
     public function __construct(
         $associationNames,
@@ -307,7 +307,7 @@ class ListQueryBuilder
     /**
      * Generate JOIN {parent}.{fieldname} {alias} foreach fieldPart.
      *
-     * @param array  $fieldParts
+     * @param array $fieldParts
      * @param string $prefix
      *
      * @return string

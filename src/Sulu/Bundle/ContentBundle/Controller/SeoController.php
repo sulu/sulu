@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -50,7 +50,7 @@ class SeoController extends RestController implements ClassResourceInterface
      * returns seo information for given node uuid.
      *
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -61,7 +61,7 @@ class SeoController extends RestController implements ClassResourceInterface
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $webspace) {
+            function($id) use ($language, $webspace) {
                 try {
                     return $this->getRepository()->loadExtensionData(
                         $id,
@@ -82,7 +82,7 @@ class SeoController extends RestController implements ClassResourceInterface
      * handles a post request to save seo data.
      *
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

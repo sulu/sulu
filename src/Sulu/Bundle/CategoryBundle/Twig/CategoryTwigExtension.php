@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -81,7 +81,7 @@ class CategoryTwigExtension extends \Twig_Extension
         return $this->memoizeCache->memoizeById(
             'sulu_categories',
             func_get_args(),
-            function ($locale, $parentKey = null) {
+            function($locale, $parentKey = null) {
                 $entities = $this->categoryManager->findChildrenByParentKey($parentKey);
                 $categories = $this->categoryManager->getApiObjects($entities, $locale);
                 $context = SerializationContext::create();

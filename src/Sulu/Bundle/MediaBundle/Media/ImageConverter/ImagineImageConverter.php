@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -130,7 +130,7 @@ class ImagineImageConverter implements ImageConverterInterface
         );
         if (isset($cropParameters)) {
             $image = $this->applyFormatCrop($image, $cropParameters);
-        } elseif (isset($format['scale']) && $format['scale']['mode'] !== ImageInterface::THUMBNAIL_INSET) {
+        } elseif (isset($format['scale']) && ImageInterface::THUMBNAIL_INSET !== $format['scale']['mode']) {
             $image = $this->applyFocus($image, $fileVersion, $format['scale']);
         }
 
@@ -177,7 +177,7 @@ class ImagineImageConverter implements ImageConverterInterface
             }
             $image = $this->modifyAllLayers(
                 $image,
-                function (ImageInterface $layer) use ($transformation) {
+                function(ImageInterface $layer) use ($transformation) {
                     return $this->transformationPool->get($transformation['effect'])->execute(
                         $layer,
                         $transformation['parameters']
@@ -201,7 +201,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         return $this->modifyAllLayers(
             $image,
-            function (ImageInterface $layer) use ($cropParameters) {
+            function(ImageInterface $layer) use ($cropParameters) {
                 return $this->cropper->crop(
                     $layer,
                     $cropParameters['x'],
@@ -250,7 +250,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         return $this->modifyAllLayers(
             $image,
-            function (ImageInterface $layer) use ($scale) {
+            function(ImageInterface $layer) use ($scale) {
                 return $this->scaler->scale(
                     $layer,
                     $scale['x'],
@@ -332,7 +332,7 @@ class ImagineImageConverter implements ImageConverterInterface
             /** @var ImageInterface $temporaryImage */
             $temporaryImage = null;
             foreach ($image->layers() as $layer) {
-                $countLayer += 1;
+                ++$countLayer;
                 $layer = call_user_func($modifier, $layer);
                 if (1 === $countLayer) {
                     $temporaryImage = $layer; // use first layer as main image

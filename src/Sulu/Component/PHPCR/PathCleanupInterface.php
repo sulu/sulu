@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -19,7 +19,7 @@ interface PathCleanupInterface
     /**
      * returns a clean string.
      *
-     * @param string $dirty        dirty string to cleanup
+     * @param string $dirty dirty string to cleanup
      * @param string $languageCode
      *
      * @return string clean string

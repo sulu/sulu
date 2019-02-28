@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -196,7 +196,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->setEntityClass(get_class($this->entity->reveal()))->shouldBeCalled()
             ->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($newRoute) {
+            function() use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
 
                 return $newRoute->reveal();
@@ -230,7 +230,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->setEntityClass(get_class($entity))->shouldBeCalled()
             ->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($newRoute) {
+            function() use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
 
                 return $newRoute->reveal();
@@ -265,7 +265,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->setEntityClass(get_class($this->entity->reveal()))->shouldBeCalled()
             ->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($newRoute) {
+            function() use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
 
                 return $newRoute->reveal();
@@ -304,7 +304,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->setEntityClass(get_class($this->entity->reveal()))->shouldBeCalled()
             ->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($newRoute) {
+            function() use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
 
                 return $newRoute->reveal();
@@ -350,7 +350,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $newRoute->setEntityClass(get_class($this->entity->reveal()))->shouldBeCalled()
             ->willReturn($newRoute->reveal());
         $newRoute->setPath('/test-2')->shouldBeCalled()->will(
-            function () use ($newRoute) {
+            function() use ($newRoute) {
                 $newRoute->getPath()->willReturn('/test-2');
 
                 return $newRoute->reveal();

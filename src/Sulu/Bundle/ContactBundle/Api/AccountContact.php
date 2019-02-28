@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -29,7 +29,7 @@ class AccountContact extends ApiWrapper
 {
     /**
      * @param AccountContactEntity $accountContact
-     * @param string               $locale         The locale of this product
+     * @param string $locale The locale of this product
      */
     public function __construct(AccountContactEntity $accountContact, $locale)
     {

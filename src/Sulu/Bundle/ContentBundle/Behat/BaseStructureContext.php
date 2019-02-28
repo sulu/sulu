@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -62,7 +62,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
      * ),
      *
      * @param string $type
-     * @param array  $data
+     * @param array $data
      */
     protected function createStructures($type, $data)
     {
@@ -143,8 +143,8 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
      * These installed templates will be removed after the scenario has
      * been completed.
      *
-     * @param string $type     Type of the structure template
-     * @param string $name     Name of the structure template to create
+     * @param string $type Type of the structure template
+     * @param string $name Name of the structure template to create
      * @param string $template The contents of the XML template
      */
     protected function createStructureTemplate($type, $name, $template)

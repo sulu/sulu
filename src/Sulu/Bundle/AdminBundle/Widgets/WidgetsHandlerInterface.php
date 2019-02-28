@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -20,7 +20,7 @@ interface WidgetsHandlerInterface
      * renders a widget group.
      *
      * @param string $groupAlias
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return string
      */
@@ -49,7 +49,7 @@ interface WidgetsHandlerInterface
      * add an widget to rendering process.
      *
      * @param WidgetInterface $widget
-     * @param string          $alias
+     * @param string $alias
      */
     public function addWidget(WidgetInterface $widget, $alias);
 }
