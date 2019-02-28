@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
-import equal from 'fast-deep-equal';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
@@ -21,7 +20,6 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
         excludedIds: [],
     };
 
-    excludedIds: IObservableValue<?Array<number>> = observable.box();
     collectionId: IObservableValue<?string | number> = observable.box();
     mediaListStore: ListStore;
     collectionListStore: ListStore;
@@ -30,35 +28,24 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        this.excludedIdsDisposer = excludedIds.observe(() => this.mediaListStore.clear());
+
         this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
-            this.excludedIds,
+            excludedIds,
             props.locale
         );
         this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,
             props.locale
         );
-
-        this.excludedIdsDisposer = autorun(() => {
-            this.updateExcludedIds(this.props.excludedIds);
-        });
     }
 
     componentWillUnmount() {
         this.mediaListStore.destroy();
         this.collectionListStore.destroy();
         this.excludedIdsDisposer();
-    }
-
-    @action updateExcludedIds(excludedIds: Array<number>) {
-        const currentExcludedIds = toJS(this.excludedIds.get());
-        const newExcludedIds = excludedIds.length ? excludedIds : undefined;
-
-        if (!equal(currentExcludedIds, newExcludedIds)) {
-            this.mediaListStore.clear();
-            this.excludedIds.set(newExcludedIds);
-        }
     }
 
     render() {

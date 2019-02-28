@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable, toJS} from 'mobx';
+import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import equal from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
@@ -40,7 +39,6 @@ export default class MultiListOverlay extends React.Component<Props> {
         preSelectedItems: [],
     };
 
-    excludedIds: IObservableValue<?Array<string | number>> = observable.box();
     listStore: ListStore;
     page: IObservableValue<number> = observable.box(1);
     excludedIdsDisposer: () => void;
@@ -48,10 +46,13 @@ export default class MultiListOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
+
         const {listKey, locale, options, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
-        observableOptions.excludedIds = this.excludedIds;
+        observableOptions.excludedIds = excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;
@@ -65,25 +66,11 @@ export default class MultiListOverlay extends React.Component<Props> {
             options,
             preSelectedItems.map((preSelectedItem) => preSelectedItem.id)
         );
-
-        this.excludedIdsDisposer = autorun(() => {
-            this.updateExcludedIds(this.props.excludedIds);
-        });
     }
 
     componentWillUnmount() {
         this.listStore.destroy();
         this.excludedIdsDisposer();
-    }
-
-    @action updateExcludedIds(excludedIds: Array<string | number>) {
-        const currentExcludedIds = toJS(this.excludedIds.get());
-        const newExcludedIds = excludedIds.length ? excludedIds : undefined;
-
-        if (!equal(currentExcludedIds, newExcludedIds)) {
-            this.listStore.clear();
-            this.excludedIds.set(newExcludedIds);
-        }
     }
 
     handleConfirm = () => {
