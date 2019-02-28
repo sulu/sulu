@@ -1,5 +1,60 @@
 # Upgrade
 
+## dev-develop
+
+### Endpoint configuration
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The Symfony configuration to set the endpoints for a specific resource have changed. Instead of defining one endpoint
+two different routes for a list and a detail view are defined. This allows to remove a dirty hack with an empty
+`cgetAction` when only a detail view exists.
+
+```yaml
+# Before
+sulu_admin:
+    resources:
+        pages:
+            endpoint: get_pages
+
+# After
+sulu_admin:
+    resources:
+        pages:
+            routes:
+                list: get_pages
+                detail: get_page
+```
+
+### ResourceRequester
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `id` parameter in all methods of the `ResourceRequester` has been removed. Instead of building the URLs following a
+certain schema the real routes from Symfony are used and if the `id` is required it has to be passed as parameter. This
+allows to support sub resources at a later point.
+
+```javascript
+// Before
+ResourceRequster.get('snippets', 5, {locale: 'de'});
+
+// After
+ResourceRequster.get('snippets', {id: 5, locale: 'de'});
+```
+
+Therefore also the `postWithId` method was removed, since the `post` method can be used instead now.
+
+```javascript
+// Before
+ResourceRequster.postWithId('snippets', 5, {locale: 'de'});
+
+// After
+ResourceRequster.post('snippets', {id: 5, locale: 'de'});
+```
+
+In case you have used the `ResourceEndpointRegistry` somewhere, it has been renamed to `ResourceRouteRegistry` to better
+match the other names.
+
 ## 2.0.0-alpha5
 
 ### Datagrid renaming
