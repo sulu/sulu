@@ -26,7 +26,7 @@
         "doctrine/inflector": "^1.3",
         "doctrine/orm": "^2.5.3",
         "doctrine/phpcr-bundle": "^1.3.5 || ^2.0",
-        "friendsofsymfony/http-cache": "~2.1",
+        "friendsofsymfony/http-cache": "^2.1.3",
         "friendsofsymfony/http-cache-bundle": "~2.0",
         "friendsofsymfony/jsrouting-bundle": "^2.3",
         "friendsofsymfony/rest-bundle": "^2.2",
@@ -120,7 +120,6 @@
     "conflict": {
         "doctrine/dbal": "2.7.0",
         "doctrine/lexer": "1.0.0",
-        "friendsofsymfony/http-cache": "2.1.0 - 2.1.2",
         "symfony/http-foundation": "3.4.12",
         "symfony/http-kernel": "3.4.12",
         "jackalope/jackalope": "1.2.8 || 1.3.0 || 1.3.1",

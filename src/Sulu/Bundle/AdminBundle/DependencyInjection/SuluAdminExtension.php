@@ -91,6 +91,17 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'c?get_.*',
+                    ],
+                ]
+            );
+        }
+
         $container->prependExtensionConfig(
             'sulu_admin',
             [

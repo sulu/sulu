@@ -15,5 +15,5 @@ jobs:
       - run: npm run flow
       - run: npm run styleguide:build
       - run: npm test -- --maxWorkers=4
-      - run: composer install --no-dev
+      - run: composer install --no-dev -q
       - run: npm run build
