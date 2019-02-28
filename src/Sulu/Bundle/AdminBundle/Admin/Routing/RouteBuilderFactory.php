@@ -32,4 +32,9 @@ class RouteBuilderFactory implements RouteBuilderFactoryInterface
     {
         return new TabRouteBuilder($name, $path);
     }
+
+    public function createPreviewFormRouteBuilder(string $name, string $path): PreviewFormRouteBuilderInterface
+    {
+        return new PreviewFormRouteBuilder($name, $path);
+    }
 }

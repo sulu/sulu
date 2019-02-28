@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) Sulu GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-class FormRouteBuilder implements FormRouteBuilderInterface
+class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
 {
-    const VIEW = 'sulu_admin.form';
+    const VIEW = 'sulu_admin.preview_form';
 
     /**
      * @var Route
@@ -25,21 +25,21 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         $this->route = new Route($name, $path, static::VIEW);
     }
 
-    public function setResourceKey(string $resourceKey): FormRouteBuilderInterface
+    public function setResourceKey(string $resourceKey): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('resourceKey', $resourceKey);
 
         return $this;
     }
 
-    public function setFormKey(string $formKey): FormRouteBuilderInterface
+    public function setFormKey(string $formKey): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('formKey', $formKey);
 
         return $this;
     }
 
-    public function addLocales(array $locales): FormRouteBuilderInterface
+    public function addLocales(array $locales): PreviewFormRouteBuilderInterface
     {
         $oldLocales = $this->route->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
@@ -48,35 +48,35 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function setTabTitle(string $tabTitle): FormRouteBuilderInterface
+    public function setTabTitle(string $tabTitle): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('tabTitle', $tabTitle);
 
         return $this;
     }
 
-    public function setTabCondition(string $tabCondition): FormRouteBuilderInterface
+    public function setTabCondition(string $tabCondition): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('tabCondition', $tabCondition);
 
         return $this;
     }
 
-    public function setTabOrder(int $tabOrder): FormRouteBuilderInterface
+    public function setTabOrder(int $tabOrder): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('tabOrder', $tabOrder);
 
         return $this;
     }
 
-    public function setTabPriority(int $tabPriority): FormRouteBuilderInterface
+    public function setTabPriority(int $tabPriority): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('tabPriority', $tabPriority);
 
         return $this;
     }
 
-    public function addToolbarActions(array $toolbarActions): FormRouteBuilderInterface
+    public function addToolbarActions(array $toolbarActions): PreviewFormRouteBuilderInterface
     {
         $oldToolbarActions = $this->route->getOption('toolbarActions');
         $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
@@ -85,7 +85,7 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): FormRouteBuilderInterface
+    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): PreviewFormRouteBuilderInterface
     {
         $oldRouterAttributesToFormStore = $this->route->getOption('routerAttributesToFormStore');
         $newRouterAttributesToFormStore = $oldRouterAttributesToFormStore ? array_merge($oldRouterAttributesToFormStore, $routerAttributesToFormStore) : $routerAttributesToFormStore;
@@ -94,7 +94,7 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToEditRoute(array $routerAttributesToEditRoute): FormRouteBuilderInterface
+    public function addRouterAttributesToEditRoute(array $routerAttributesToEditRoute): PreviewFormRouteBuilderInterface
     {
         $oldRouterAttributesToEditRoute = $this->route->getOption('routerAttributesToEditRoute');
         $newRouterAttributesToEditRoute = $oldRouterAttributesToEditRoute ? array_merge($oldRouterAttributesToEditRoute, $routerAttributesToEditRoute) : $routerAttributesToEditRoute;
@@ -103,28 +103,35 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function setEditRoute(string $editRoute): FormRouteBuilderInterface
+    public function setEditRoute(string $editRoute): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('editRoute', $editRoute);
 
         return $this;
     }
 
-    public function setBackRoute(string $backRoute): FormRouteBuilderInterface
+    public function setBackRoute(string $backRoute): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('backRoute', $backRoute);
 
         return $this;
     }
 
-    public function setIdQueryParameter(string $idQueryParameter): FormRouteBuilderInterface
+    public function setIdQueryParameter(string $idQueryParameter): PreviewFormRouteBuilderInterface
     {
         $this->route->setOption('idQueryParameter', $idQueryParameter);
 
         return $this;
     }
 
-    public function setParent(string $parent): FormRouteBuilderInterface
+    public function setPreviewCondition(string $previewCondition): PreviewFormRouteBuilderInterface
+    {
+        $this->route->setOption('previewCondition', $previewCondition);
+
+        return $this;
+    }
+
+    public function setParent(string $parent): PreviewFormRouteBuilderInterface
     {
         $this->route->setParent($parent);
 

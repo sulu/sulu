@@ -80,6 +80,7 @@ import Form, {
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
+import PreviewForm from './views/PreviewForm';
 
 // $FlowFixMe
 configure({enforceActions: 'observed'});
@@ -136,6 +137,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
+    viewRegistry.add('sulu_admin.preview_form', PreviewForm);
     viewRegistry.add('sulu_admin.list', List);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
     viewRegistry.add('sulu_admin.tabs', Tabs);
