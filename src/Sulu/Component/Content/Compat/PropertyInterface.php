@@ -130,7 +130,7 @@ interface PropertyInterface extends ArrayableInterface
      *
      * @return string
      */
-    public function getColspan();
+    public function getColSpan();
 
     /**
      * returns title of property.

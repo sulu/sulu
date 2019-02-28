@@ -2,7 +2,7 @@
 
 exports[`Display a field with a required label 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -24,7 +24,7 @@ exports[`Display a field with a required label 1`] = `
 
 exports[`Display a field with an error 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field error"
@@ -46,9 +46,26 @@ exports[`Display a field with an error 1`] = `
 </div>
 `;
 
+exports[`Display a field with colSpan and after space 1`] = `
+<div
+  class="item gridItem colSpan colSpan-7 space-before-0 space-after-5"
+>
+  <div
+    class="field"
+  >
+    <div>
+      Test
+    </div>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
 exports[`Display a field with description 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -70,7 +87,7 @@ exports[`Display a field with description 1`] = `
 
 exports[`Display a field with label 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -90,26 +107,9 @@ exports[`Display a field with label 1`] = `
 </div>
 `;
 
-exports[`Display a field with size and after space 1`] = `
-<div
-  class="item gridItem size size-7 space-before-0 space-after-5"
->
-  <div
-    class="field"
-  >
-    <div>
-      Test
-    </div>
-    <label
-      class="errorLabel"
-    />
-  </div>
-</div>
-`;
-
 exports[`Display a field without label 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"

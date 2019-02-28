@@ -130,7 +130,7 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->assertEquals($legacyProperty->getMultilingual(), $localized);
         $this->assertEquals($legacyProperty->getMaxOccurs(), $maxOccurs);
         $this->assertEquals($legacyProperty->getMinOccurs(), $minOccurs);
-        $this->assertEquals($legacyProperty->getColspan(), $colSpan);
+        $this->assertEquals($legacyProperty->getColSpan(), $colSpan);
         $this->assertContainsOnlyInstancesOf(PropertyParameter::class, $legacyProperty->getParams());
         $this->assertArrayHasKey('prop', $legacyProperty->getParams());
         $this->assertArrayHasKey('propfoo', $legacyProperty->getParams());
@@ -181,7 +181,7 @@ class LegacyPropertyFactoryTest extends TestCase
 
         $this->assertInstanceOf(SectionPropertyInterface::class, $legacyProperty);
         $this->assertEquals($name, $legacyProperty->getName());
-        $this->assertEquals($colSpan, $legacyProperty->getColspan());
+        $this->assertEquals($colSpan, $legacyProperty->getColSpan());
         $this->assertEquals($title['de'], $legacyProperty->getTitle('de'));
         $this->assertEquals($description['de'], $legacyProperty->getInfoText('de'));
         $this->assertCount(1, $legacyProperty->getChildProperties());

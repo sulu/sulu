@@ -50,7 +50,7 @@ abstract class ItemMetadata
     /**
      * @var int
      */
-    protected $colspan;
+    protected $colSpan;
 
     public function __construct(string $name)
     {
@@ -102,14 +102,14 @@ abstract class ItemMetadata
         $this->description = $description;
     }
 
-    public function getColspan(): int
+    public function getColSpan(): int
     {
-        return $this->colspan;
+        return $this->colSpan;
     }
 
-    public function setColspan(int $colspan): void
+    public function setColSpan(int $colSpan): void
     {
-        $this->colspan = $colspan;
+        $this->colSpan = $colSpan;
     }
 
     public function getType(): string

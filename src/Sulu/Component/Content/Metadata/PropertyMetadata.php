@@ -49,7 +49,7 @@ class PropertyMetadata extends ItemMetadata
      *
      * @var int
      */
-    protected $colspan = 12;
+    protected $colSpan = 12;
 
     /**
      * The number of grid columns the property should have space after.
@@ -153,14 +153,14 @@ class PropertyMetadata extends ItemMetadata
         return false;
     }
 
-    public function getColspan(): int
+    public function getColSpan(): int
     {
-        return $this->colspan;
+        return $this->colSpan;
     }
 
-    public function setColspan(int $colspan): self
+    public function setColSpan(int $colSpan): self
     {
-        $this->colspan = $colspan;
+        $this->colSpan = $colSpan;
 
         return $this;
     }

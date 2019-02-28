@@ -288,10 +288,10 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertCount(2, $formMetadata->getChildren());
         $this->assertEquals('logo', $formMetadata->getChildren()['logo']->getName());
-        $this->assertEquals(4, $formMetadata->getChildren()['logo']->getColspan());
+        $this->assertEquals(4, $formMetadata->getChildren()['logo']->getColSpan());
         $this->assertCount(1, $formMetadata->getChildren()['logo']->getChildren());
         $this->assertEquals('name', $formMetadata->getChildren()['name']->getName());
-        $this->assertEquals(8, $formMetadata->getChildren()['name']->getColspan());
+        $this->assertEquals(8, $formMetadata->getChildren()['name']->getColSpan());
         $this->assertCount(1, $formMetadata->getChildren()['name']->getChildren());
     }
 

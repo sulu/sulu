@@ -9,7 +9,7 @@ type Props = {
     className?: string,
     /** If set to true, the cell will not stretch and stay at minimal width */
     small: boolean,
-    colspan?: number,
+    colSpan?: number,
     depth?: number,
 };
 
@@ -22,7 +22,7 @@ export default class Cell extends React.PureComponent<Props> {
 
     render() {
         const {
-            colspan,
+            colSpan,
             children,
             className,
             depth,
@@ -44,7 +44,7 @@ export default class Cell extends React.PureComponent<Props> {
         return (
             <td
                 className={cellClass}
-                colSpan={colspan}
+                colSpan={colSpan}
             >
                 <div className={tableStyles.cellContent} style={style}>
                     {children}

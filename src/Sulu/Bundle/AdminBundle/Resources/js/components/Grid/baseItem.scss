@@ -1,55 +1,55 @@
 @import './variables.scss';
 
-.colspan {
+.colSpan {
     width: 100%;
 }
 
 @media (min-width: $gridMinWidth) {
-    .colspan-1 {
+    .colSpan-1 {
         width: calc(1 * 100% / 12);
     }
 
-    .colspan-2 {
+    .colSpan-2 {
         width: calc(2 * 100% / 12);
     }
 
-    .colspan-3 {
+    .colSpan-3 {
         width: calc(3 * 100% / 12);
     }
 
-    .colspan-4 {
+    .colSpan-4 {
         width: calc(4 * 100% / 12);
     }
 
-    .colspan-5 {
+    .colSpan-5 {
         width: calc(5 * 100% / 12);
     }
 
-    .colspan-6 {
+    .colSpan-6 {
         width: calc(6 * 100% / 12);
     }
 
-    .colspan-7 {
+    .colSpan-7 {
         width: calc(7 * 100% / 12);
     }
 
-    .colspan-8 {
+    .colSpan-8 {
         width: calc(8 * 100% / 12);
     }
 
-    .colspan-9 {
+    .colSpan-9 {
         width: calc(9 * 100% / 12);
     }
 
-    .colspan-10 {
+    .colSpan-10 {
         width: calc(10 * 100% / 12);
     }
 
-    .colspan-11 {
+    .colSpan-11 {
         width: calc(11 * 100% / 12);
     }
 
-    .colspan-12 {
+    .colSpan-12 {
         width: calc(12 * 100% / 12);
     }
 

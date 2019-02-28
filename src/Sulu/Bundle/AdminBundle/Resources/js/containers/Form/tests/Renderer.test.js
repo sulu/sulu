@@ -398,14 +398,14 @@ test('Should render nested sections', () => {
     )).toMatchSnapshot();
 });
 
-test('Should render sections with colspan', () => {
+test('Should render sections with colSpan', () => {
     const changeSpy = jest.fn();
 
     const schema = {
         section1: {
             label: 'Section 1',
             type: 'section',
-            colspan: 8,
+            colSpan: 8,
             items: {
                 item11: {
                     label: 'Item 1.1',
@@ -418,7 +418,7 @@ test('Should render sections with colspan', () => {
         section2: {
             label: 'Section 2',
             type: 'section',
-            colspan: 4,
+            colSpan: 4,
             items: {
                 item21: {
                     label: 'Item 2.1',
@@ -451,7 +451,7 @@ test('Should render sections without label', () => {
     const schema = {
         section1: {
             type: 'section',
-            colspan: 8,
+            colSpan: 8,
             items: {
                 item11: {
                     label: 'Item 1.1',
@@ -464,7 +464,7 @@ test('Should render sections without label', () => {
         section2: {
             label: 'Section 2',
             type: 'section',
-            colspan: 4,
+            colSpan: 4,
             items: {
                 item21: {
                     label: 'Item 2.1',

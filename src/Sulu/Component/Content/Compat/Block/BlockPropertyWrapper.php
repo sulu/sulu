@@ -234,9 +234,9 @@ class BlockPropertyWrapper implements PropertyInterface
      *
      * @return string
      */
-    public function getColspan()
+    public function getColSpan()
     {
-        return $this->property->getColspan();
+        return $this->property->getColSpan();
     }
 
     /**

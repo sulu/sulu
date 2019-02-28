@@ -86,7 +86,7 @@ class Property implements PropertyInterface, \JsonSerializable
      *
      * @var string
      */
-    private $col;
+    private $colSpan;
 
     /**
      * value of property.
@@ -117,7 +117,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = [],
         $tags = [],
-        $col = null
+        $colSpan = null
     ) {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
@@ -128,7 +128,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->metadata = new Metadata($metaData);
         $this->params = $params;
         $this->tags = $tags;
-        $this->col = $col;
+        $this->colSpan = $colSpan;
     }
 
     public function setPropertyValue(PropertyValue $propertyValue)
@@ -255,9 +255,9 @@ class Property implements PropertyInterface, \JsonSerializable
      *
      * @return string
      */
-    public function getColspan()
+    public function getColSpan()
     {
-        return $this->col;
+        return $this->colSpan;
     }
 
     /**

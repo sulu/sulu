@@ -2,7 +2,7 @@
 
 exports[`Render a field with a description 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -38,7 +38,7 @@ exports[`Render a field with a description 1`] = `
 
 exports[`Render a field with a error collection 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field error"
@@ -71,7 +71,7 @@ exports[`Render a field with a error collection 1`] = `
 
 exports[`Render a field with an error 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field error"
@@ -104,7 +104,7 @@ exports[`Render a field with an error 1`] = `
 
 exports[`Render a field without a const error 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -135,7 +135,7 @@ exports[`Render a field without a const error 1`] = `
 
 exports[`Render a field without a label 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -160,7 +160,7 @@ exports[`Render a field without a label 1`] = `
 
 exports[`Render a required field with correct field type 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -191,7 +191,7 @@ exports[`Render a required field with correct field type 1`] = `
 
 exports[`Render correct label with correct field type 1`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -222,7 +222,7 @@ exports[`Render correct label with correct field type 1`] = `
 
 exports[`Render correct label with correct field type 2`] = `
 <div
-  class="item gridItem size size-12 space-before-0 space-after-0"
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
     class="field"
@@ -253,7 +253,7 @@ exports[`Render correct label with correct field type 2`] = `
 
 exports[`Render field with correct values for grid 1`] = `
 <div
-  class="item gridItem size size-8 space-before-0 space-after-3"
+  class="item gridItem colSpan colSpan-8 space-before-0 space-after-3"
 >
   <div
     class="field"

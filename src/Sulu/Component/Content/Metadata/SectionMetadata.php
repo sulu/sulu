@@ -22,7 +22,7 @@ class SectionMetadata extends ItemMetadata
      *
      * @var int
      */
-    protected $colspan = 12;
+    protected $colSpan = 12;
 
     public function getTitle($locale)
     {
@@ -33,14 +33,14 @@ class SectionMetadata extends ItemMetadata
         return $this->titles[$locale];
     }
 
-    public function getColspan(): int
+    public function getColSpan(): int
     {
-        return $this->colspan;
+        return $this->colSpan;
     }
 
-    public function setColspan(int $colspan): self
+    public function setColSpan(int $colSpan): self
     {
-        $this->colspan = $colspan;
+        $this->colSpan = $colSpan;
 
         return $this;
     }

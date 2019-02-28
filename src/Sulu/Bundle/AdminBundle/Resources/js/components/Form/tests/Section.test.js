@@ -3,7 +3,7 @@ import React from 'react';
 import {render} from 'enzyme';
 import Section from '../Section';
 
-test('Render section with given colspan', () => {
+test('Render section with given colSpan', () => {
     expect(render(
         <Section label="Test">
             <p>Test</p>
@@ -13,7 +13,7 @@ test('Render section with given colspan', () => {
 
 test('Render section without label', () => {
     expect(render(
-        <Section colspan={8}>
+        <Section colSpan={8}>
             <div>Test</div>
         </Section>
     )).toMatchSnapshot();

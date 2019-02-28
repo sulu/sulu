@@ -3,30 +3,30 @@ import React from 'react';
 import classNames from 'classnames';
 import type {Node} from 'react';
 import Grid from '../Grid';
-import type {Colspan} from '../Grid';
+import type {ColSpan} from '../Grid';
 import fieldStyles from './field.scss';
 import gridStyles from './grid.scss';
 
 type Props = {|
     children: Node,
+    colSpan: ColSpan,
     description?: string,
     error?: string,
     id?: string,
     label?: string,
     required: boolean,
-    colspan: Colspan,
-    spaceAfter: Colspan,
+    spaceAfter: ColSpan,
 |};
 
 export default class Field extends React.Component<Props> {
     static defaultProps = {
+        colSpan: 12,
         required: false,
-        colspan: 12,
         spaceAfter: 0,
     };
 
     render() {
-        const {children, id, description, error, label, required, colspan, spaceAfter} = this.props;
+        const {children, id, description, error, label, required, colSpan, spaceAfter} = this.props;
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -38,7 +38,7 @@ export default class Field extends React.Component<Props> {
         return (
             <Grid.Item
                 className={gridStyles.gridItem}
-                colspan={colspan}
+                colSpan={colSpan}
                 spaceAfter={spaceAfter}
             >
                 <div className={fieldClass}>
