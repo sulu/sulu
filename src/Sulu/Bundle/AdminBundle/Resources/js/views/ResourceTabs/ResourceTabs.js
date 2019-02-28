@@ -4,6 +4,7 @@ import {computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
+import type {Route} from '../../services/Router';
 import Tabs from '../../views/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
@@ -44,17 +45,29 @@ export default class ResourceTabs extends React.Component<Props> {
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
+
+        router.addUpdateRouteHook(this.reloadResourceStoreOnRouteChange);
     }
 
-    componentDidUpdate(prevProps: Props) {
-        if (this.props.children !== prevProps.children) {
-            // If the content for a new tab is loaded we reload the ResourceStore to make sure we have the right title
+    reloadResourceStoreOnRouteChange = (route: ?Route) => {
+        const {router, route: viewRoute} = this.props;
+
+        if (router.route === viewRoute) {
+            return true;
+        }
+
+        if (viewRoute.children.includes(route)) {
             this.resourceStore.reload();
         }
-    }
+
+        return true;
+    };
 
     componentWillUnmount() {
+        const {router} = this.props;
+
         this.resourceStore.destroy();
+        router.removeUpdateRouteHook(this.reloadResourceStoreOnRouteChange);
     }
 
     @computed get locales() {

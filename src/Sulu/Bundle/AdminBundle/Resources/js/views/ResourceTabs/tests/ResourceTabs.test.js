@@ -54,6 +54,7 @@ test('Should render the tab title from the ResourceStore as configured in the ro
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -91,6 +92,7 @@ test('Should not render the tab title from the ResourceStore if no titleProperty
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -135,6 +137,7 @@ test('Should render the tab title from the resourceStore as configured in the pr
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -177,6 +180,7 @@ test('Should not render the tab title on the first tab', () => {
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -228,6 +232,7 @@ test('Should not render the tab title on the first tab when tabOrder is defined'
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -279,6 +284,7 @@ test('Should render the tab title on the first visible tab if the first tab is n
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -328,6 +334,7 @@ test('Should render the child components after the tabs', (done) => {
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -373,6 +380,7 @@ test('Should render a loader if resourceStore was not initialized yet', () => {
         ],
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -418,6 +426,7 @@ test('Should mark the currently active child route as selected tab', (done) => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -484,6 +493,7 @@ test('Should consider the tabOrder option of the route', (done) => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -540,6 +550,7 @@ test('Should hide tabs which do not match the tab condition', (done) => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 1,
         },
@@ -605,6 +616,7 @@ test('Should redirect to first child route if no tab is active by default', (don
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route,
@@ -656,6 +668,7 @@ test('Should redirect to first visible child route if no tab is active', (done) 
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route,
@@ -708,6 +721,7 @@ test('Should redirect to first visible child route if invisible tab is active', 
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route: childRoute1,
@@ -766,6 +780,7 @@ test('Should redirect to highest prioritized tab if no tab is active', (done) =>
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route,
@@ -809,6 +824,7 @@ test('Should not redirect to first child route if resourceStore is not initializ
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route,
@@ -853,6 +869,7 @@ test('Should not redirect to first child route if resourceStore is currently loa
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route,
@@ -897,6 +914,7 @@ test('Should not redirect if a tab is already active', () => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         redirect: jest.fn(),
         route: childRoute1,
@@ -908,7 +926,7 @@ test('Should not redirect if a tab is already active', () => {
     expect(router.redirect).not.toBeCalled();
 });
 
-test('Should reload ResourceStore if children are updated', () => {
+test('Should reload ResourceStore if route is about to change to another child route', () => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
         this.load = jest.fn();
@@ -920,17 +938,12 @@ test('Should reload ResourceStore if children are updated', () => {
         name: 'route1',
         options: {},
     };
-    const childRoute2 = {
-        name: 'route2',
-        options: {},
-    };
     const route = {
         options: {
             resourceKey: 'test',
         },
         children: [
             childRoute1,
-            childRoute2,
         ],
     };
 
@@ -939,6 +952,7 @@ test('Should reload ResourceStore if children are updated', () => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         navigate: jest.fn(),
         route: childRoute1,
@@ -947,8 +961,90 @@ test('Should reload ResourceStore if children are updated', () => {
     const Child = () => (<h1>Child</h1>);
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    resourceTabs.setProps({children: () => null});
+    router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
+
     expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+});
+
+test('Should not reload ResourceStore if route is about to change to same route', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        this.reload = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
+    const childRoute1 = {
+        name: 'route1',
+        options: {},
+    };
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+        ],
+    };
+
+    const attributes = {
+        attribute: 'value',
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes,
+        navigate: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    router.addUpdateRouteHook.mock.calls[0][0](route);
+
+    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
+});
+
+test('Should not reload ResourceStore if route is about to change to route outside of tabs', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        this.reload = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
+    const childRoute1 = {
+        name: 'route1',
+        options: {},
+    };
+    const route1 = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+        ],
+    };
+    const route2 = {};
+
+    const attributes = {
+        attribute: 'value',
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes,
+        navigate: jest.fn(),
+        route: childRoute1,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route1} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    router.addUpdateRouteHook.mock.calls[0][0](route2);
+
+    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
 });
 
 test('Should navigate to child route if tab is clicked', (done) => {
@@ -981,6 +1077,7 @@ test('Should navigate to child route if tab is clicked', (done) => {
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         navigate: jest.fn(),
         route: childRoute1,
@@ -1034,6 +1131,7 @@ test('Should navigate to child route if tab is clicked with hidden tabs', (done)
     };
 
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes,
         navigate: jest.fn(),
         redirect: jest.fn(),
@@ -1065,10 +1163,12 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         route,
         attributes: {
             id: 5,
         },
+        removeUpdateRouteHook: jest.fn(),
     };
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
@@ -1095,11 +1195,13 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 5,
         },
         bind: jest.fn(),
         route,
+        removeUpdateRouteHook: jest.fn(),
     };
 
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
@@ -1126,10 +1228,12 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 5,
         },
         bind: jest.fn(),
+        removeUpdateRouteHook: jest.fn(),
         route,
     };
 
@@ -1158,6 +1262,7 @@ test('Should pass the ResourceStore and locales to child components', () => {
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 5,
         },
@@ -1193,6 +1298,7 @@ test('Should pass locales from route options instead of props to child component
         },
     };
     const router = {
+        addUpdateRouteHook: jest.fn(),
         attributes: {
             id: 5,
         },
