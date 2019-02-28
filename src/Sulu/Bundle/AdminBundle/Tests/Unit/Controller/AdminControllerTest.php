@@ -282,7 +282,7 @@ class AdminControllerTest extends TestCase
                 && $data['smartContent'] === $dataProviders
                 && $data['routes'] === $routes
                 && $data['navigation'] === ['navigation_item1', 'navigation_item2']
-                && $data['resourceMetadataEndpoints'] === $this->resources;
+                && $data['resources'] === $this->resources;
         }))->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configAction();
