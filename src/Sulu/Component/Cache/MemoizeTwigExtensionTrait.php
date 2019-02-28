@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -43,7 +43,7 @@ trait MemoizeTwigExtensionTrait
 
             $result[] = new \Twig_SimpleFunction(
                 $name,
-                function () use ($callable, $name) {
+                function() use ($callable, $name) {
                     return $this->memoizeCache->memoizeById($name, func_get_args(), $callable, $this->lifeTime);
                 }
             );

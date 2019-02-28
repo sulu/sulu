@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -118,7 +118,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $view = $this->responseGetById(
             null,
-            function () use ($language, $webspace, $depth, $ghostContent) {
+            function() use ($language, $webspace, $depth, $ghostContent) {
                 try {
                     return $this->getRepository()->getWebspaceNode(
                         $webspace,
@@ -253,7 +253,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $ghostContent, $template) {
+            function($id) use ($language, $ghostContent, $template) {
                 try {
                     return $this->getDocumentManager()->find(
                         $id,
@@ -612,7 +612,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         if (!$force) {
             $references = array_filter(
                 $this->getRepository()->getReferences($uuid),
-                function (PropertyInterface $reference) {
+                function(PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
             );
@@ -639,7 +639,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $view = $this->responseDelete(
             $uuid,
-            function ($id) use ($webspace) {
+            function($id) use ($webspace) {
                 try {
                     $this->getRepository()->deleteNode($id, $webspace);
                 } catch (DocumentNotFoundException $ex) {

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -114,7 +114,7 @@ class SuluTestKernel extends SuluKernel
 
         // we need to resolve the SULU_PHPCR_TRANSPORT environment variable at this point,
         // because the doctrine phpcr configuration is not working with unresolved environment variables
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(function(ContainerBuilder $container) {
             $container->setParameter('phpcr.transport', $container->resolveEnvPlaceholders(
                 $container->getParameter('phpcr.transport'),
                 true

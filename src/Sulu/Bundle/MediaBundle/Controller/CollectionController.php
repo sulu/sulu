@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -98,7 +98,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
+                function($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
                     $collection = $collectionManager->getById(
                         $id,
                         $locale,
@@ -248,7 +248,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $collectionManager = $this->getCollectionManager();
                 $collectionManager->delete($id);

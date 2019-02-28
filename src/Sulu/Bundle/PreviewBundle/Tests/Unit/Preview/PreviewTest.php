@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -105,7 +105,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -140,7 +140,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -227,7 +227,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -377,7 +377,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -478,7 +478,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -533,7 +533,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;
@@ -588,7 +588,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function ($json) use ($expectedData) {
+                function($json) use ($expectedData) {
                     $this->assertEquals($expectedData, json_decode($json, true));
 
                     return true;

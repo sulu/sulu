@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 trait PersistenceExtensionTrait
 {
     /**
-     * @param array            $objects
+     * @param array $objects
      * @param ContainerBuilder $container
      */
     protected function configurePersistence(array $objects, ContainerBuilder $container)
@@ -46,7 +46,7 @@ trait PersistenceExtensionTrait
     /**
      * Define repositories.
      *
-     * @param array            $objects
+     * @param array $objects
      * @param ContainerBuilder $container
      */
     private function defineRepositories(array $objects, ContainerBuilder $container)
@@ -66,8 +66,8 @@ trait PersistenceExtensionTrait
     /**
      * Get the repository service definition.
      *
-     * @param string           $object
-     * @param array            $services
+     * @param string $object
+     * @param array $services
      * @param ContainerBuilder $container
      *
      * @return Definition
@@ -118,7 +118,7 @@ trait PersistenceExtensionTrait
     /**
      * Remap object parameters.
      *
-     * @param array            $objects
+     * @param array $objects
      * @param ContainerBuilder $container
      */
     private function remapObjectParameters(array $objects, ContainerBuilder $container)
@@ -140,8 +140,8 @@ trait PersistenceExtensionTrait
     /**
      * Get container key.
      *
-     * @param string      $key
-     * @param string      $object
+     * @param string $key
+     * @param string $object
      * @param string|null $suffix
      *
      * @return string

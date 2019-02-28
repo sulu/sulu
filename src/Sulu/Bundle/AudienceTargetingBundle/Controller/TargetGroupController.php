@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -119,7 +119,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function getAction($id)
     {
-        $findCallback = function ($id) {
+        $findCallback = function($id) {
             $targetGroup = $this->getTargetGroupRepository()->find($id);
 
             return $targetGroup;

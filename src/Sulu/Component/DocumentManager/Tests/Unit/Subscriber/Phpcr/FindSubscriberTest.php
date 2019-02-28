@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -91,7 +91,7 @@ class FindSubscriberTest extends TestCase
         $this->nodeManager->find($path)->willReturn($this->node->reveal());
         $this->eventDispatcher
             ->dispatch(Events::HYDRATE, Argument::type(HydrateEvent::class))
-            ->will(function ($args) {
+            ->will(function($args) {
                 $args[1]->setDocument(new \stdClass());
             });
 

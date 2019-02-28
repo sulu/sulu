@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 

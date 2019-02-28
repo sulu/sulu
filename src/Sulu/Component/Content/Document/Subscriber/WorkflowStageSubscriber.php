@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -203,18 +203,18 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     {
         $workflowStageNameFilter = $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, '*');
         foreach ($node->getProperties($workflowStageNameFilter) as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             $property->setValue(WorkflowStage::TEST);
         }
 
         $publishedNameFilter = $this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, '*');
         foreach ($node->getProperties($publishedNameFilter) as $property) {
-            /** @var PropertyInterface $property */
+            /* @var PropertyInterface $property */
             $property->setValue(null);
         }
 
         foreach ($node->getNodes() as $node) {
-            /** @var NodeInterface $node */
+            /* @var NodeInterface $node */
             $this->setNodeWorkflowStageToTestForCopy($node);
         }
     }

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -28,11 +28,11 @@ interface ContentMapperInterface
      * save a extension with given name and data to an existing node.
      *
      * @param string $uuid
-     * @param array  $data
+     * @param array $data
      * @param string $extensionName
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param int    $userId
+     * @param int $userId
      *
      * @return StructureInterface
      */
@@ -48,13 +48,13 @@ interface ContentMapperInterface
     /**
      * returns a list of data from children of given node.
      *
-     * @param string $uuid             The uuid of the parent node
-     * @param string $webspaceKey      The key of the webspace we are loading in
-     * @param string $languageCode     The requested content language
-     * @param int    $depth            The depth of the search
-     * @param bool   $flat             If true, the result is a flat list
-     * @param bool   $ignoreExceptions
-     * @param bool   $excludeGhosts    If true ghost pages are also loaded
+     * @param string $uuid The uuid of the parent node
+     * @param string $webspaceKey The key of the webspace we are loading in
+     * @param string $languageCode The requested content language
+     * @param int $depth The depth of the search
+     * @param bool $flat If true, the result is a flat list
+     * @param bool $ignoreExceptions
+     * @param bool $excludeGhosts If true ghost pages are also loaded
      *
      * @return StructureInterface[]
      */
@@ -71,10 +71,10 @@ interface ContentMapperInterface
     /**
      * returns the data from the given id.
      *
-     * @param string $uuid             UUID of the content
-     * @param string $webspaceKey      Key of webspace
-     * @param string $languageCode     Read data for given language
-     * @param bool   $loadGhostContent True if also a ghost page should be returned, otherwise false
+     * @param string $uuid UUID of the content
+     * @param string $webspaceKey Key of webspace
+     * @param string $languageCode Read data for given language
+     * @param bool $loadGhostContent True if also a ghost page should be returned, otherwise false
      *
      * @return StructureInterface
      */
@@ -83,12 +83,12 @@ interface ContentMapperInterface
     /**
      * returns the data for the given node.
      *
-     * @param NodeInterface $contentNode      The node for which to load the data
-     * @param string        $languageCode     The locale
-     * @param string        $webspaceKey      Key of the webspace
-     * @param bool          $excludeGhost     Do not return Ghost structures (return null instead)
-     * @param bool          $loadGhostContent Load ghost content
-     * @param bool          $excludeShadow    Do not return shadow structures (return null instead)
+     * @param NodeInterface $contentNode The node for which to load the data
+     * @param string $languageCode The locale
+     * @param string $webspaceKey Key of the webspace
+     * @param bool $excludeGhost Do not return Ghost structures (return null instead)
+     * @param bool $loadGhostContent Load ghost content
+     * @param bool $excludeShadow Do not return shadow structures (return null instead)
      */
     public function loadByNode(
         NodeInterface $contentNode,
@@ -102,7 +102,7 @@ interface ContentMapperInterface
     /**
      * returns the data from the given id.
      *
-     * @param string $webspaceKey  Key of webspace
+     * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
      *
      * @return StructureInterface
@@ -112,10 +112,10 @@ interface ContentMapperInterface
     /**
      * returns the content returned by the given sql2 query as structures.
      *
-     * @param string $sql2         The query, which returns the content
+     * @param string $sql2 The query, which returns the content
      * @param string $languageCode The language code
-     * @param string $webspaceKey  The webspace key
-     * @param int    $limit        Limits the number of returned rows
+     * @param string $webspaceKey The webspace key
+     * @param int $limit Limits the number of returned rows
      *
      * @return StructureInterface[]
      */
@@ -124,11 +124,11 @@ interface ContentMapperInterface
     /**
      * load Structures for the given QOM\QueryInterface instance.
      *
-     * @param QueryInterface $query            The query, which returns the content
-     * @param string         $languageCode     The language code
-     * @param string         $webspaceKey      The webspace key
-     * @param bool           $excludeGhost
-     * @param bool           $loadGhostContent
+     * @param QueryInterface $query The query, which returns the content
+     * @param string $languageCode The language code
+     * @param string $webspaceKey The webspace key
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
      *
      * @return StructureInterface[]
      */
@@ -150,7 +150,7 @@ interface ContentMapperInterface
     /**
      * deletes content with subcontent in given webspace.
      *
-     * @param string $uuid        UUID of content
+     * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
      */
     public function delete($uuid, $webspaceKey);
@@ -174,7 +174,7 @@ interface ContentMapperInterface
      *
      * @param string $uuid
      * @param string $beforeUuid
-     * @param int    $userId
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      *
@@ -186,8 +186,8 @@ interface ContentMapperInterface
      * brings a node with a given uuid into a given position.
      *
      * @param string $uuid
-     * @param int    $position
-     * @param int    $userId
+     * @param int $position
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      *
@@ -202,10 +202,10 @@ interface ContentMapperInterface
      * Converts a query result in a list of arrays.
      *
      * @param QueryResultInterface $queryResult
-     * @param string               $webspaceKey
-     * @param string[]             $locales
-     * @param array                $fields
-     * @param int                  $maxDepth
+     * @param string $webspaceKey
+     * @param string[] $locales
+     * @param array $fields
+     * @param int $maxDepth
      *
      * @return array
      */

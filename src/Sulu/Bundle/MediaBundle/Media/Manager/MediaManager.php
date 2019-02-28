@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -310,9 +310,20 @@ class MediaManager implements MediaManagerInterface
             // if the file is a video we add the duration
             if (fnmatch('video/*', $mimeType) && $this->ffprobe) {
                 $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+
+                // Dimensions
+                try {
+                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
+                    $properties['width'] = $dimensions->getWidth();
+                    $properties['height'] = $dimensions->getHeight();
+                } catch (\InvalidArgumentException $e) {
+                    // Exception is thrown if the video stream could not be obtained
+                } catch (\RuntimeException $e) {
+                    // Exception is thrown if the dimension could not be extracted
+                }
             }
         } catch (ExecutableNotFoundException $e) {
-            // Exception is thrown if ffmpeg is not installed -> duration is not set
+            // Exception is thrown if ffmpeg is not installed -> video properties are not set
         }
 
         return $properties;

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -111,7 +111,7 @@ class CustomUrlRepository
         $result = $query->execute();
 
         $uuids = array_map(
-            function (Row $item) {
+            function(Row $item) {
                 return $item->getValue('a.targetDocument');
             },
             iterator_to_array($result->getRows())
@@ -196,7 +196,7 @@ class CustomUrlRepository
         $result = $query->execute();
 
         return array_map(
-            function (Row $item) {
+            function(Row $item) {
                 return $this->generator->generate(
                     $item->getValue('a.baseDomain'),
                     json_decode($item->getValue('a.domainParts'), true)

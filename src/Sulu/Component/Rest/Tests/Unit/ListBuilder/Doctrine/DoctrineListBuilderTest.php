@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -102,9 +102,9 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
         $this->queryBuilder->getDQL()->willReturn('');
 
-        $this->queryBuilder->distinct(false)->should(function () {
+        $this->queryBuilder->distinct(false)->should(function() {
         });
-        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function () {
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {
         });
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
 
@@ -774,6 +774,38 @@ class DoctrineListBuilderTest extends TestCase
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                         self::$translationEntityName,
                         null,
+                        'alias.id = translation.id'
+                    ),
+                ]
+            ),
+        ];
+
+        $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name')->shouldBeCalled();
+
+        $this->queryBuilder->leftJoin(
+            self::$translationEntityName,
+            self::$translationEntityNameAlias,
+            'WITH',
+            'alias.id = translation.id'
+        )->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testJoinWithoutFieldNameByGivenEntity()
+    {
+        $fieldDescriptors = [
+            'name' => new DoctrineFieldDescriptor(
+                'name',
+                'name',
+                self::$entityName,
+                '',
+                [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName,
+                        self::$translationEntityName,
                         'alias.id = translation.id'
                     ),
                 ]

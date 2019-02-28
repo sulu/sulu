@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -45,9 +45,9 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoize(
-                function ($a, $b) use (&$called) {
+                function($a, $b) use (&$called) {
                     ++$called;
 
                     return $a + $b;
@@ -77,9 +77,9 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoize(
-                function ($a, $b) use (&$called) {
+                function($a, $b) use (&$called) {
                     ++$called;
 
                     return $a + $b;
@@ -110,9 +110,9 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoize(
-                function ($a, $b) use (&$called) {
+                function($a, $b) use (&$called) {
                     ++$called;
 
                     return $a + $b;
@@ -142,11 +142,11 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
                 [$a, $b],
-                function ($a, $b) use (&$called) {
+                function($a, $b) use (&$called) {
                     ++$called;
 
                     return $a + $b;
@@ -176,11 +176,11 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
                 [$a, $b],
-                function ($a, $b) use (&$called) {
+                function($a, $b) use (&$called) {
                     ++$called;
 
                     return $a + $b;
@@ -211,11 +211,11 @@ class MemoizeTest extends TestCase
     {
         $mem = $this->mem;
         $called = 0;
-        $closure = function ($a, $b) use ($mem, &$called) {
+        $closure = function($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
                 'mem',
                 [$a, $b],
-                function () use ($a, $b, &$called) {
+                function() use ($a, $b, &$called) {
                     ++$called;
 
                     return $a + $b;

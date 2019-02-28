@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -77,7 +77,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $listsMetadataByKey[$listKey][] = $listMetadata;
         }
 
-        /** @var AbstractPropertyMetadata $propertyMetadata */
+        /* @var AbstractPropertyMetadata $propertyMetadata */
         foreach ($listsMetadataByKey as $listKey => $listsMetadata) {
             $fieldDescriptors = [];
             foreach ($listsMetadata as $listMetadata) {
@@ -230,7 +230,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     ): DoctrineConcatenationFieldDescriptor {
         return new DoctrineConcatenationFieldDescriptor(
             array_map(
-                function (FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
+                function(FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
                     return $this->getFieldDescriptor($propertyMetadata, $fieldMetadata, $options);
                 },
                 $propertyMetadata->getFields()

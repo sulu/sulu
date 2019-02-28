@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -56,7 +56,7 @@ abstract class AbstractLoader implements LoaderInterface
         // read file
         $xmlDocument = XmlUtils::loadFile(
             $resource,
-            function (\DOMDocument $dom) use ($resource, $schemaPath) {
+            function(\DOMDocument $dom) use ($resource, $schemaPath) {
                 $dom->documentURI = $resource;
                 $dom->xinclude();
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -19,8 +19,8 @@ class TextUtils
     /**
      * UTF-8 safe text truncation.
      *
-     * @param string $text   - Text to truncate
-     * @param int    $length - Length to truncate to
+     * @param string $text - Text to truncate
+     * @param int $length - Length to truncate to
      * @param string $suffix - This string will replace the last characters of the text
      *
      * @return string

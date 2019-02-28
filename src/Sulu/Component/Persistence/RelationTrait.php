@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -22,12 +22,12 @@ trait RelationTrait
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks.
      *
-     * @param Traversable $entities        The list of entities to work on
-     * @param array       $requestEntities The entities as retrieved from the request
-     * @param callable    $get             Return id of entity
-     * @param callable    $add
-     * @param callable    $update
-     * @param callable    $delete
+     * @param Traversable $entities The list of entities to work on
+     * @param array $requestEntities The entities as retrieved from the request
+     * @param callable $get Return id of entity
+     * @param callable $add
+     * @param callable $update
+     * @param callable $delete
      *
      * @return bool
      */
@@ -40,11 +40,11 @@ trait RelationTrait
         callable $delete = null
     ) {
         // compare id with with $get callback
-        $compareFunction = function ($entity, $data) use ($get) {
+        $compareFunction = function($entity, $data) use ($get) {
             return isset($data['id']) && $data['id'] == $get($entity);
         };
         // define a matching function
-        $matchFunction = function ($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compareFunction) {
+        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compareFunction) {
             $this->findMatchByCallback($entity, $requestEntities, $compareFunction, $matchedEntry, $matchedKey);
         };
 
@@ -54,12 +54,12 @@ trait RelationTrait
     /**
      * Compares entities with data array and calls the given callbacks.
      *
-     * @param Traversable $entities        The list of entities to work on
-     * @param array       $requestEntities The entities as retrieved from the request
-     * @param callable    $compare         return true if data matches entity
-     * @param callable    $add
-     * @param callable    $update
-     * @param callable    $delete
+     * @param Traversable $entities The list of entities to work on
+     * @param array $requestEntities The entities as retrieved from the request
+     * @param callable $compare return true if data matches entity
+     * @param callable $add
+     * @param callable $update
+     * @param callable $delete
      *
      * @return bool
      */
@@ -72,7 +72,7 @@ trait RelationTrait
         callable $delete = null
     ) {
         // define a matching function
-        $matchFunction = function ($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
+        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
             $this->findMatchByCallback($entity, $requestEntities, $compare, $matchedEntry, $matchedKey);
         };
 
@@ -84,10 +84,10 @@ trait RelationTrait
      * $matchedEntry and $matchKey parameters.
      *
      * @param $entity The entity to compare
-     * @param array    $requestEntities The set of entities to search in
-     * @param callable $compare         Compare function, which defines if data matches the entity
-     * @param array    $matchedEntry
-     * @param string   $matchedKey
+     * @param array $requestEntities The set of entities to search in
+     * @param callable $compare Compare function, which defines if data matches the entity
+     * @param array $matchedEntry
+     * @param string $matchedKey
      */
     protected function findMatchByCallback($entity, $requestEntities, callable $compare, &$matchedEntry, &$matchedKey)
     {
@@ -108,7 +108,7 @@ trait RelationTrait
      * function compares entities with data of array and makes callback.
      *
      * @param $entities
-     * @param array    $requestEntities
+     * @param array $requestEntities
      * @param callable $compare
      * @param callable $add
      * @param callable $update

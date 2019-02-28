@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -108,7 +108,7 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         return 1 < count($this->sitemapProviderPool->getProviders())
         || 1 < array_reduce(
             $this->sitemapProviderPool->getIndex(),
-            function ($v1, Sitemap $v2) {
+            function($v1, Sitemap $v2) {
                 return $v1 + $v2->getMaxPage();
             }
         );

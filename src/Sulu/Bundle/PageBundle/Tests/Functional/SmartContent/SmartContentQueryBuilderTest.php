@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -1287,7 +1287,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $state = WorkflowStage::PUBLISHED
     ) {
         if (!$isShadow) {
-            /** @var PageDocument $document */
+            /* @var PageDocument $document */
             try {
                 $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $e) {

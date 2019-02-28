@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -54,10 +54,10 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
     /**
      * @param LoaderInterface $loader
-     * @param array           $typePaths
-     * @param array           $defaultTypes
-     * @param mixed           $cachePath
-     * @param mixed           $debug
+     * @param array $typePaths
+     * @param array $defaultTypes
+     * @param mixed $cachePath
+     * @param mixed $debug
      */
     public function __construct(
         LoaderInterface $loader,

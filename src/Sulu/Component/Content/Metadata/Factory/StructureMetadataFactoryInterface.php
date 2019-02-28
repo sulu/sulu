@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -18,11 +18,11 @@ interface StructureMetadataFactoryInterface
     /**
      * Return the structure of the given $type and $structureType.
      *
-     * @param mixed $type          The primary system type, e.g. page, snippet
+     * @param mixed $type The primary system type, e.g. page, snippet
      * @param mixed $structureType The secondary user type
      *
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
-     * @throws Exception\DocumentTypeNotFoundException  If the document type was not mapped
+     * @throws Exception\DocumentTypeNotFoundException If the document type was not mapped
      *
      * @return StructureMetadata|null
      */

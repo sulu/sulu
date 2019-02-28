@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -152,13 +152,13 @@ class UserBlameSubscriber implements EventSubscriber
             $recompute = false;
 
             if ($insertions
-                && (!isset($changeset[self::CREATOR_FIELD]) || $changeset[self::CREATOR_FIELD][1] === null)
+                && (!isset($changeset[self::CREATOR_FIELD]) || null === $changeset[self::CREATOR_FIELD][1])
             ) {
                 $meta->setFieldValue($blameEntity, self::CREATOR_FIELD, $user);
                 $recompute = true;
             }
 
-            if (!isset($changeset[self::CHANGER_FIELD]) || $changeset[self::CHANGER_FIELD][1] === null) {
+            if (!isset($changeset[self::CHANGER_FIELD]) || null === $changeset[self::CHANGER_FIELD][1]) {
                 $meta->setFieldValue($blameEntity, self::CHANGER_FIELD, $user);
                 $recompute = true;
             }

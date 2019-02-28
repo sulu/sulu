@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -96,7 +96,7 @@ class PageLinkProvider implements LinkProviderInterface
         );
 
         return array_map(
-            function (Content $content) use ($locale, $scheme) {
+            function(Content $content) use ($locale, $scheme) {
                 return $this->getLinkItem($content, $locale, $scheme);
             },
             $contents

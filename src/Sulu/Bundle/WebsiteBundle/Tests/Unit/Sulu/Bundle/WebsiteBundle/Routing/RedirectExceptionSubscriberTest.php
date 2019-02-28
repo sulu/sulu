@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -111,7 +111,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return '/de/test' === $response->getTargetUrl();
                 }
             )
@@ -134,7 +134,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return '/' === $response->getTargetUrl();
                 }
             )
@@ -157,7 +157,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     echo '"' . $response->getTargetUrl() . '"';
 
                     return '/' === $response->getTargetUrl();
@@ -182,7 +182,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return '/de/test' === $response->getTargetUrl();
                 }
             )
@@ -249,7 +249,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
@@ -285,7 +285,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
@@ -325,7 +325,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo/de' === $response->getTargetUrl();
                 }
             )
@@ -366,7 +366,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->router->matchRequest(
             Argument::that(
-                function (Request $request) {
+                function(Request $request) {
                     return 'http://sulu.lo/de-at' === $request->getUri();
                 }
             )
@@ -376,7 +376,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo/de-at' === $response->getTargetUrl();
                 }
             )
@@ -450,7 +450,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo' === $response->getTargetUrl();
                 }
             )
@@ -481,7 +481,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) {
+                function(RedirectResponse $response) {
                     return 'http://sulu.lo/de-at' === $response->getTargetUrl();
                 }
             )
@@ -563,7 +563,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->event->setResponse(
             Argument::that(
-                function (RedirectResponse $response) use ($expectedTargetUrl) {
+                function(RedirectResponse $response) use ($expectedTargetUrl) {
                     return $response->getTargetUrl() === $expectedTargetUrl;
                 }
             )

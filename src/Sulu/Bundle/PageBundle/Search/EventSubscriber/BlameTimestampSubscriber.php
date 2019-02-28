@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -123,7 +123,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      *
-     * @param Document  $document
+     * @param Document $document
      * @param \DateTime $created
      * @param \DateTime $changed
      */
@@ -141,7 +141,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map the creator and changer to the document.
      *
-     * @param Document      $document
+     * @param Document $document
      * @param UserInterface $creator
      * @param UserInterface $changer
      */

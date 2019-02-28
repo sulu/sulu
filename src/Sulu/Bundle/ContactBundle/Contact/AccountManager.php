@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -199,7 +199,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         $accounts = $this->accountRepository->findByIds($ids);
 
         return array_map(
-            function ($account) use ($locale) {
+            function($account) use ($locale) {
                 return $this->getApiObject($account, $locale);
             },
             $accounts
@@ -283,7 +283,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     public function setMedias(Account $account, $medias)
     {
         $mediaIds = array_map(
-            function ($media) {
+            function($media) {
                 return $media['id'];
             },
             $medias
@@ -291,7 +291,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
 
         $foundMedias = $this->mediaRepository->findById($mediaIds);
         $foundMediaIds = array_map(
-            function ($mediaEntity) {
+            function($mediaEntity) {
                 return $mediaEntity->getId();
             },
             $foundMedias
@@ -382,7 +382,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return array_map(
-            function ($contact) use ($locale) {
+            function($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },
             $entities

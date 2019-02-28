@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -19,11 +19,11 @@ interface ResourceLocatorRepositoryInterface
     /**
      * generates a resource locator with given title.
      *
-     * @param string[]    $parts        parts of title
-     * @param null|string $parentUuid   uuid of parent node (can be null)
-     * @param string      $webspaceKey
-     * @param string      $languageCode
-     * @param string      $templateKey
+     * @param string[] $parts parts of title
+     * @param null|string $parentUuid uuid of parent node (can be null)
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $templateKey
      * @param null|string $segmentKey
      *
      * @return string
@@ -42,9 +42,9 @@ interface ResourceLocatorRepositoryInterface
     /**
      * deletes given resource locator.
      *
-     * @param string      $path
-     * @param string      $webspaceKey
-     * @param string      $languageCode
+     * @param string $path
+     * @param string $webspaceKey
+     * @param string $languageCode
      * @param null|string $segmentKey
      *
      * @return mixed

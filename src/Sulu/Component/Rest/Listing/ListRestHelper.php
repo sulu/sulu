@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -49,7 +49,7 @@ class ListRestHelper
      * The constructor takes the request as an argument, which
      * is injected by the service container.
      *
-     * @param Request       $request
+     * @param Request $request
      * @param ObjectManager $em
      */
     public function __construct(Request $request, ObjectManager $em)
@@ -74,8 +74,8 @@ class ListRestHelper
      * Create a ListRepository for given EntityName and find Entities for list.
      *
      * @param string $entityName
-     * @param array  $where
-     * @param array  $joinConditions
+     * @param array $where
+     * @param array $joinConditions
      *
      * @return array
      */

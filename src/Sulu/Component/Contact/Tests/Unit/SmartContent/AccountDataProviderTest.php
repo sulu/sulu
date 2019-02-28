@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -138,7 +138,7 @@ class AccountDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Account $account) {
+        $serializeCallback = function(Account $account) {
             return $this->serialize($account);
         };
 
@@ -149,7 +149,7 @@ class AccountDataProviderTest extends TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $serializer->serialize(Argument::type(Account::class), 'array', $context)
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -915,7 +915,7 @@ class Media extends ApiWrapper
         $metaCollection = $this->getFileVersion()->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
+        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
             /** @var FileVersionMeta $meta */
             if ($meta->getLocale() == $locale) {
                 return true;

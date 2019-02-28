@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -19,7 +19,7 @@ class ExpectedDefaultTemplatesNotFound extends WebspaceException
     /**
      * ExpectedDefaultTemplatesNotFound constructor.
      *
-     * @param string   $webspace
+     * @param string $webspace
      * @param string[] $expected
      * @param string[] $found
      */

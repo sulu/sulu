@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -550,7 +550,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
             $filters['tags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
@@ -560,7 +560,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['websiteTags']

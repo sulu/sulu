@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -132,7 +132,7 @@ class ProxyFactoryTest extends TestCase
         $this->dispatcher->dispatch(
             'sulu_document_manager.hydrate',
             Argument::that(
-                function ($event) use ($options) {
+                function($event) use ($options) {
                     return $event->getOptions() === $options;
                 }
             )
@@ -154,7 +154,7 @@ class ProxyFactoryTest extends TestCase
         $dispatcher->dispatch(
             Events::HYDRATE,
             Argument::that(
-                function (HydrateEvent $arg) {
+                function(HydrateEvent $arg) {
                     return 'de' === $arg->getLocale();
                 }
             )

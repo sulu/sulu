@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -72,7 +72,7 @@ class QueryTest extends TestCase
     public function testExecuteDocument()
     {
         $resultCollection = $this->prophesize(QueryResultCollection::class);
-        $this->dispatcher->dispatch(Events::QUERY_EXECUTE, new QueryExecuteEvent($this->query))->will(function ($args) use ($resultCollection) {
+        $this->dispatcher->dispatch(Events::QUERY_EXECUTE, new QueryExecuteEvent($this->query))->will(function($args) use ($resultCollection) {
             $args[1]->setResult($resultCollection->reveal());
         });
 

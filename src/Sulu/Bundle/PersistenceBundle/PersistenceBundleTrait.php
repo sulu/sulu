@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -23,8 +23,8 @@ trait PersistenceBundleTrait
     /**
      * Build persistence adds a `ResolveTargetEntitiesPass` for the given interfaces.
      *
-     * @param array            $interfaces Target entities resolver configuration.
-     *                                     Mapping interfaces to a concrete implementation
+     * @param array $interfaces Target entities resolver configuration.
+     *                          Mapping interfaces to a concrete implementation
      * @param ContainerBuilder $container
      */
     public function buildPersistence(array $interfaces, ContainerBuilder $container)

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -21,7 +21,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class MediaRedirectControllerTest extends SuluTestCase
@@ -94,7 +93,7 @@ class MediaRedirectControllerTest extends SuluTestCase
 
     protected function cleanImage()
     {
-        if ($this->getContainer()) { //
+        if ($this->getContainer()) {
             $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
 

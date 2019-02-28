@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * Exception which is thrown when the value of a condition does not match the type.
-  */
+ */
 class ConditionTypeMismatchException extends FilterException
 {
     /**

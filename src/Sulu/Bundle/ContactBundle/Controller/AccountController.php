@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -730,7 +730,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($id, Request $request)
     {
-        $delete = function ($id) use ($request) {
+        $delete = function($id) use ($request) {
             $account = $this->getRepository()->findAccountByIdAndDelete($id);
 
             if (!$account) {
@@ -886,7 +886,7 @@ class AccountController extends RestController implements ClassResourceInterface
         try {
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($includes, $accountManager, $locale) {
+                function($id) use ($includes, $accountManager, $locale) {
                     return $accountManager->getByIdAndInclude($id, $locale, $includes);
                 }
             );

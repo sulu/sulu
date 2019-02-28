@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -82,7 +82,7 @@ class DebugEventDispatcher extends EventDispatcher
     {
         $parts = explode('\\', $className);
         $last = array_pop($parts);
-        $parts = array_map(function ($part) {
+        $parts = array_map(function($part) {
             return substr($part, 0, 1);
         }, $parts);
 

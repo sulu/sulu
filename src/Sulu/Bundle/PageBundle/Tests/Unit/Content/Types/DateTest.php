@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -78,7 +78,7 @@ class DateTest extends TestCase
         $node->setProperty(
             'test',
             Argument::that(
-                function (\DateTime $value) use ($dateValue) {
+                function(\DateTime $value) use ($dateValue) {
                     // let there a delta of 2 seconds is ok
                     $this->assertEquals($dateValue->getTimestamp(), $value->getTimestamp(), '', 60);
 

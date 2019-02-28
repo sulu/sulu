@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -32,7 +32,7 @@ class TeaserController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $ids = array_map(
-            function ($item) {
+            function($item) {
                 $parts = explode(';', $item);
 
                 return ['type' => $parts[0], 'id' => $parts[1]];

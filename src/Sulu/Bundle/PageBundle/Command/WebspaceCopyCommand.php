@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -297,7 +297,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
 
         $this->output->writeln('<info>Processing: </info>' . $documentSource->getPath() . ' => ' . $newPath);
 
-        /** @var BasePageDocument $documentDestination */
+        /* @var BasePageDocument $documentDestination */
         try {
             $documentDestination = $this->documentManager->find($newPath, $localeDestination);
         } catch (DocumentNotFoundException $exception) {

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -60,7 +60,7 @@ class ListToTreeConverter
 
         uksort(
             $map,
-            function ($a, $b) use ($map) {
+            function($a, $b) use ($map) {
                 $depthDifference = substr_count($a, '/') - substr_count($b, '/');
                 if ($depthDifference > 0) {
                     return 1;
@@ -158,9 +158,9 @@ class ListToTreeConverter
      *
      * @see      http://kevin.vanzonneveld.net/
      *
-     * @param array  $array
+     * @param array $array
      * @param string $delimiter
-     * @param bool   $baseval
+     * @param bool $baseval
      *
      * @return array
      */

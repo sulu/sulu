@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -46,7 +46,7 @@ class DoctrineRestHelperTest extends TestCase
         $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator([null, null]));
         $entities->expects($this->exactly(2))->method('add');
 
-        $this->restHelper->processSubEntities($entities, [], function () {
+        $this->restHelper->processSubEntities($entities, [], function() {
         });
     }
 }

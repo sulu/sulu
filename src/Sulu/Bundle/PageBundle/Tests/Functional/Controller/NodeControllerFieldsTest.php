@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -394,7 +394,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
         $layer = $result['_embedded']['nodes'];
 
-        usort($layer, function ($layer1, $layer2) {
+        usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });
 
@@ -444,7 +444,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
-        usort($layer, function ($layer1, $layer2) {
+        usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });
 
@@ -496,7 +496,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
-        usort($layer, function ($layer1, $layer2) {
+        usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });
         $this->assertCount(3, $layer);

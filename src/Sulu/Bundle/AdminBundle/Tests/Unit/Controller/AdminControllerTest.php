@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -30,7 +30,6 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadata;
 use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Type\Type;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -434,7 +434,7 @@ class VersionSubscriberTest extends TestCase
         $newChild1Node->getNodes()->willReturn([]);
         $newChild1Node->getDefinition()->willReturn($definition->reveal());
         $node->addNode('child1')->will(
-            function () use ($node, $newChild1Node, $newChild2Node, $newChild3Node) {
+            function() use ($node, $newChild1Node, $newChild2Node, $newChild3Node) {
                 $node->getNode('child1')->willReturn($newChild1Node->reveal());
                 $node->getNodes()->willReturn(
                     [$newChild1Node->reveal(), $newChild2Node->reveal(), $newChild3Node->reveal()]

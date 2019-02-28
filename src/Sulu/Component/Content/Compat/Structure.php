@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -470,7 +470,7 @@ abstract class Structure implements StructureInterface
      * returns a property instance with given tag name.
      *
      * @param string $tagName
-     * @param bool   $highest
+     * @param bool $highest
      *
      * @return PropertyInterface
      *
