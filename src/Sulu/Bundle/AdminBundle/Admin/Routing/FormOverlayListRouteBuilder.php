@@ -172,34 +172,41 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
     {
         if (!$this->route->getOption('resourceKey')) {
             throw new \DomainException(
-                'A route for a list view needs a "resourceKey" option.'
+                'A route for a form-overlay-list view needs a "resourceKey" option.'
                 . ' You have likely forgotten to call the "setResourceKey" method.'
             );
         }
 
         if (!$this->route->getOption('listKey')) {
             throw new \DomainException(
-                'A route for a list view needs a "listKey" option.'
+                'A route for a form-overlay-list view needs a "listKey" option.'
                 . ' You have likely forgotten to call the "setListKey" method.'
+            );
+        }
+
+        if (!$this->route->getOption('formKey')) {
+            throw new \DomainException(
+                'A route for a form-overlay-list view needs a "formKey" option.'
+                . ' You have likely forgotten to call the "setFormKey" method.'
             );
         }
 
         if (!$this->route->getOption('adapters')) {
             throw new \DomainException(
-                'A route for a list needs a "adapters" option.'
+                'A route for a form-overlay-list needs a "adapters" option.'
                 . ' You have likely forgotten to call the "addListAdapters" method.'
             );
         }
 
         if ($this->route->getOption('locales') && false === strpos($this->route->getPath(), ':locale')) {
             throw new \DomainException(
-                'A route for a list needs a ":locale" placeholder in its URL if some "locales" have been set.'
+                'A route for a form-overlay-list needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
         if (!$this->route->getOption('locales') && false !== strpos($this->route->getPath(), ':locale')) {
             throw new \DomainException(
-                'A route for a list cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
+                'A route for a form-overlay-list cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );
         }
 
