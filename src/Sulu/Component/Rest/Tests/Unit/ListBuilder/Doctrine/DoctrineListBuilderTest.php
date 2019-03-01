@@ -559,10 +559,11 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds([11, 22]);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
-        $this->queryBuilder->setParameter('idsFilter', [11, 22])
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->queryBuilder->setParameter(Argument::containingString('id'), [11, 22])->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('SuluCoreBundle_Example.id IN (:id')
+        )->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -571,10 +572,9 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds([]);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
-        $this->queryBuilder->setParameter('idsFilter', [])
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->andWhere(
+            Argument::containingString(' IS NULL')
+        )->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -583,7 +583,9 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds(null);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id in (:idsFilter)')->shouldNotBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -592,10 +594,10 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds([55, 99]);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
-        $this->queryBuilder->setParameter('excludedIs', [55, 99])
-            ->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->setParameter(Argument::containingString('id'), [55, 99])->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -604,7 +606,9 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds([]);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')->shouldNotBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -613,7 +617,9 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds(null);
 
-        $this->queryBuilder->andWhere('SuluCoreBundle_Example.id not in (:excludedIs)')->shouldNotBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
 
         $this->doctrineListBuilder->execute();
     }

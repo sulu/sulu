@@ -60,4 +60,19 @@ class DoctrineInExpressionTest extends TestCase
 
         $this->assertEquals(1, $result);
     }
+
+    public function testGetStatementSingleNullValue()
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $values = [null];
+        $whereExpression = new DoctrineInExpression($fieldDescriptor, $values);
+
+        $statement = $whereExpression->getStatement($this->queryBuilder);
+        $result = preg_match(
+            sprintf('/^name\S{%s} IS NULL/', $this->uniqueIdLength),
+            $statement
+        );
+
+        $this->assertEquals(1, $result);
+    }
 }
