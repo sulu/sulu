@@ -5,7 +5,7 @@ import {translate} from '../../../utils/Translator';
 import Overlay from '../../../components/Overlay';
 import Form from '../../../components/Form';
 import SingleSelect from '../../../components/SingleSelect';
-import resourceEndpointRegistry from '../../../services/ResourceRequester/registries/ResourceEndpointRegistry';
+import resourceEndpointRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
 import {buildQueryString} from '../../../utils/Request';
 import exportToolbarActionStyles from './exportToolbarAction.scss';
 import AbstractToolbarAction from './AbstractToolbarAction';
@@ -110,7 +110,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     };
 
     @action handleConfirm = () => {
-        window.location.assign(resourceEndpointRegistry.getEndpoint(this.listStore.resourceKey) + '.csv' +
+        window.location.assign(resourceEndpointRegistry.getListUrl(this.listStore.resourceKey) + '.csv' +
             buildQueryString(
                 {
                     flat: true,
