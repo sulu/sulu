@@ -1,6 +1,6 @@
 // @flow
 import jexl from 'jexl';
-import {withSidebar} from '../../containers/Sidebar';
+import withSidebar from '../../containers/Sidebar/withSidebar';
 import Form from '../Form';
 
 export default withSidebar(Form, function() {
@@ -13,7 +13,7 @@ export default withSidebar(Form, function() {
             },
         },
     } = this.props;
-    const enablePreview = !previewCondition || jexl.evalSync(previewCondition, this.resourceStore.data);
+    const enablePreview = !previewCondition || jexl.evalSync(previewCondition, this.resourceFormStore.data);
 
     return enablePreview ? {
         view: 'sulu_preview.preview',
