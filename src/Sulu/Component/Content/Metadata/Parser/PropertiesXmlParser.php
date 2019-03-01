@@ -153,7 +153,7 @@ class PropertiesXmlParser
                 'default-type',
                 'minOccurs',
                 'maxOccurs',
-                'colSpan',
+                'colspan',
                 'cssClass',
                 'disabledCondition',
                 'visibleCondition',
