@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,9 +31,9 @@ interface ExtensionInterface
      * save data to node.
      *
      * @param NodeInterface $node
-     * @param mixed         $data
-     * @param string        $webspaceKey
-     * @param string        $languageCode
+     * @param mixed $data
+     * @param string $webspaceKey
+     * @param string $languageCode
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode);
 
@@ -41,8 +41,8 @@ interface ExtensionInterface
      * load data from node.
      *
      * @param NodeInterface $node
-     * @param string        $webspaceKey
-     * @param string        $languageCode
+     * @param string $webspaceKey
+     * @param string $languageCode
      *
      * @return mixed data of extension
      */

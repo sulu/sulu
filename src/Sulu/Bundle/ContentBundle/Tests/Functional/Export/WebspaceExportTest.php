@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -585,7 +585,7 @@ class WebspaceExportTest extends SuluTestCase
         $shadowBaseLanguage = null,
         $documentAlias = Structure::TYPE_PAGE
     ) {
-        /** @var PageDocument $document */
+        /* @var PageDocument $document */
         try {
             $document = $this->documentManager->find($uuid, $locale);
         } catch (DocumentNotFoundException $e) {

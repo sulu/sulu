@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -216,7 +216,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
+                function(Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
                     return $request->getHost() === $expectedHost
                         && $request->getPort() === $expectedPort
                         && $request->getScheme() === $expectedScheme;
@@ -578,7 +578,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($server) {
+                function(Request $request) use ($server) {
                     foreach ($server as $key => $expectedValue) {
                         $value = $request->server->get($key);
 

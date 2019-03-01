@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -37,7 +37,7 @@ class DocumentExecutor
 
     /**
      * @param DocumentManager $documentManager
-     * @param Initializer     $initializer
+     * @param Initializer $initializer
      */
     public function __construct(
         DocumentManager $documentManager,
@@ -50,9 +50,9 @@ class DocumentExecutor
     /**
      * Load the given fixture classes.
      *
-     * @param array           $fixtures
-     * @param mixed           $purge
-     * @param mixed           $initialize
+     * @param array $fixtures
+     * @param mixed $purge
+     * @param mixed $initialize
      * @param OutputInterface $output
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, OutputInterface $output = null)

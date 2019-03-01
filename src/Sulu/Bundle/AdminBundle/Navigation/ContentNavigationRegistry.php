@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -51,7 +51,7 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 
         usort(
             $navigationItems,
-            function (ContentNavigationItem $a, ContentNavigationItem $b) {
+            function(ContentNavigationItem $a, ContentNavigationItem $b) {
                 $aPosition = $a->getPosition() ?: PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?: PHP_INT_MAX;
 

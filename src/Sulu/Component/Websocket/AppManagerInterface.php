@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -19,10 +19,10 @@ use React\EventLoop\LoopInterface;
 interface AppManagerInterface
 {
     /**
-     * @param string                $route          The URI the client will connect to
-     * @param WebsocketAppInterface $app            Your application to server for the route. If not specified, assumed to be for a WebSocket
-     * @param array                 $allowedOrigins An array of hosts allowed to connect (same host by default), ['*'] for any
-     * @param string                $httpHost       Override the $httpHost variable provided in the __construct
+     * @param string $route The URI the client will connect to
+     * @param WebsocketAppInterface $app Your application to server for the route. If not specified, assumed to be for a WebSocket
+     * @param array $allowedOrigins An array of hosts allowed to connect (same host by default), ['*'] for any
+     * @param string $httpHost Override the $httpHost variable provided in the __construct
      */
     public function add($route, WebsocketAppInterface $app, $allowedOrigins = ['*'], $httpHost = null);
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -56,7 +56,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
         $definition->replaceArgument(
             1,
             Argument::that(
-                function ($argument) use ($generatorAlias, $serviceId) {
+                function($argument) use ($generatorAlias, $serviceId) {
                     return 1 === count($argument) && $argument[$generatorAlias]->__toString() === $serviceId;
                 }
             )
@@ -114,7 +114,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
         $definition->replaceArgument(
             1,
             Argument::that(
-                function ($argument) use ($serviceId) {
+                function($argument) use ($serviceId) {
                     return 0 === count($argument);
                 }
             )

@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -168,7 +168,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
             $question->setValidator(
-                function ($username) use ($userRepository) {
+                function($username) use ($userRepository) {
                     if (empty($username)) {
                         throw new \InvalidArgumentException('Username can not be empty');
                     }
@@ -189,7 +189,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('firstName')) {
             $question = new Question('Please choose a FirstName: ');
             $question->setValidator(
-                function ($firstName) use ($doctrine) {
+                function($firstName) use ($doctrine) {
                     if (empty($firstName)) {
                         throw new \InvalidArgumentException('FirstName can not be empty');
                     }
@@ -205,7 +205,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('lastName')) {
             $question = new Question('Please choose a LastName: ');
             $question->setValidator(
-                function ($lastName) use ($doctrine) {
+                function($lastName) use ($doctrine) {
                     if (empty($lastName)) {
                         throw new \InvalidArgumentException('LastName can not be empty');
                     }
@@ -221,7 +221,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose a Email: ');
             $question->setValidator(
-                function ($email) use ($userRepository) {
+                function($email) use ($userRepository) {
                     if (empty($email)) {
                         $email = null;
                     }
@@ -260,7 +260,7 @@ class CreateUserCommand extends ContainerAwareCommand
             $question = new Question('Please choose a Password: ');
             $question->setHidden(true);
             $question->setValidator(
-                function ($password) use ($doctrine) {
+                function($password) use ($doctrine) {
                     if (empty($password)) {
                         throw new \InvalidArgumentException('Password can not be empty');
                     }

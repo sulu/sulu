@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -58,9 +58,9 @@ interface TagManagerInterface
     /**
      * Saves the given Tag.
      *
-     * @param array       $data   The data of the tag to save
-     * @param int         $userId The id of the user, who is doing this change
-     * @param number|null $id     The id for saving the tag (optional)
+     * @param array $data The data of the tag to save
+     * @param int $userId The id of the user, who is doing this change
+     * @param number|null $id The id for saving the tag (optional)
      *
      * @return
      */

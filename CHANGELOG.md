@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.25 (2019-02-28)
     * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
     * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
     * FEATURE     #4394  [WebsiteBundle]        Add exception handling for breadcrumb function
@@ -277,6 +277,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Changed way to determine `sulu.version` to composer.lock
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
+
+* 1.5.21 (2019-02-28)
+    * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
+    * BUGFIX      #4376 [SecurityBundle]        Exclude role permissions in user API to improve performance
 
 * 1.5.20 (2019-01-09)
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats

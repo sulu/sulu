@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -45,7 +45,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
      * Triggered when a client sends data through the socket.
      *
      * @param \Ratchet\ConnectionInterface $from The socket/connection that sent the message to your application
-     * @param string                       $msg  The message received
+     * @param string $msg The message received
      *
      * @throws \Exception
      */
@@ -95,9 +95,9 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     /**
      * Dispatches message to handler with dispatcher service.
      *
-     * @param ConnectionInterface        $conn
+     * @param ConnectionInterface $conn
      * @param ConnectionContextInterface $context
-     * @param array                      $msg
+     * @param array $msg
      *
      * @throws MissingParameterException
      */
@@ -123,7 +123,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
      * Create a message handler context.
      *
      * @param ConnectionContextInterface $context
-     * @param string                     $handlerName
+     * @param string $handlerName
      *
      * @return MessageHandlerContext
      */

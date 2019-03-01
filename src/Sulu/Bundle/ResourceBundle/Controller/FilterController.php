@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -59,7 +59,7 @@ class FilterController extends RestController implements ClassResourceInterface
         $locale = $this->getRequestParameter($request, 'locale', true);
         $view = $this->responseGetById(
             $id,
-            function ($id) use ($locale) {
+            function($id) use ($locale) {
                 return $this->getManager()->findByIdAndLocale($id, $locale);
             }
         );

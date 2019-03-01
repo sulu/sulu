@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -85,7 +85,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $findCallback = function ($id) use ($locale) {
+        $findCallback = function($id) use ($locale) {
             $entity = $this->getCategoryManager()->findById($id);
 
             return $this->getCategoryManager()->getApiObject($entity, $locale);
@@ -250,7 +250,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function deleteAction($id)
     {
-        $deleteCallback = function ($id) {
+        $deleteCallback = function($id) {
             $this->getCategoryManager()->delete($id);
         };
 

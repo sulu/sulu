@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -97,7 +97,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
 
         $that = $this;
         $mock->createProxy(PageDocument::class, Argument::any())->will(
-            function ($args) use ($that, $lazyLoading) {
+            function($args) use ($that, $lazyLoading) {
                 $wrappedObject = 1;
                 $initializer = 1;
                 $args[1]($wrappedObject, $lazyLoading->reveal(), null, [], $initializer);

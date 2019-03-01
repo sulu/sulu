@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -77,7 +77,7 @@ class CustomerManager implements CustomerManagerInterface
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
         @usort(
             $result,
-            function ($a, $b) use ($ids) {
+            function($a, $b) use ($ids) {
                 return $this->comparator->compare($a['id'], $b['id'], $ids);
             }
         );

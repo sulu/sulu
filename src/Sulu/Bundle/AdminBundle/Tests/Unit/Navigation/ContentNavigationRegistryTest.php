@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -118,7 +118,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
             $contentNavigationProvider = $this->prophesize(ContentNavigationProviderInterface::class);
 
             $items = array_map(
-                function ($item) use (&$pos) {
+                function($item) use (&$pos) {
                     $navigationItem = new ContentNavigationItem($item[0]);
                     $navigationItem->setAction($item[0]);
                     $navigationItem->setPosition(isset($item[1]) ? $item[1] : $pos);
@@ -140,7 +140,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(
                 $result,
                 array_map(
-                    function (ContentNavigationItem $item) {
+                    function(ContentNavigationItem $item) {
                         return [$item->getAction()];
                     },
                     $actual

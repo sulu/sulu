@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -32,8 +32,6 @@ abstract class WebsiteController extends Controller
      * @param bool $partial Defines if only the content block of the template should be rendered
      *
      * @return Response
-     *
-     * @deprecated will be remove with 2.0
      */
     protected function renderStructure(
         StructureInterface $structure,

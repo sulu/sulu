@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,9 +31,9 @@ class InvalidArgumentException extends RestException
     protected $argument;
 
     /**
-     * @param string $entity        The type of the entity
-     * @param string $argument      The argument of the entity, which was invalid
-     * @param null   $customMessage
+     * @param string $entity The type of the entity
+     * @param string $argument The argument of the entity, which was invalid
+     * @param null $customMessage
      */
     public function __construct($entity, $argument, $customMessage = null)
     {

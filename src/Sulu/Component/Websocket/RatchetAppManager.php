@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -63,10 +63,10 @@ class RatchetAppManager implements AppManagerInterface
     private $apps = [];
 
     /**
-     * @param int           $port      Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
-     * @param string        $httpHost  HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`
-     * @param string        $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine
-     * @param LoopInterface $loop      Specific React\EventLoop to bind the application to. null will create one for you
+     * @param int $port Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
+     * @param string $httpHost HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`
+     * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine
+     * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you
      */
     public function __construct(
         $port,

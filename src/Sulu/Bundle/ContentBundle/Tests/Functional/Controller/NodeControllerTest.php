@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -2056,7 +2056,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(3, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes
@@ -2081,7 +2081,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(1, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes
@@ -2104,7 +2104,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertCount(1, $nodes);
 
         $titles = array_map(
-            function ($node) {
+            function($node) {
                 return $node['title'];
             },
             $nodes

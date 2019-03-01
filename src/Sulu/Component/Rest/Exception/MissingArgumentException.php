@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,7 +31,7 @@ class MissingArgumentException extends RestException
     protected $argument;
 
     /**
-     * @param string $entity   The type of the entity, which was not found
+     * @param string $entity The type of the entity, which was not found
      * @param string $argument The argument of the entity, which was not passed
      */
     public function __construct($entity, $argument)

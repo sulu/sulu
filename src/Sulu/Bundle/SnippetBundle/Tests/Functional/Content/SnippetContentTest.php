@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -92,7 +92,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
         $this->property->expects($this->once())
             ->method('setValue')
-            ->will($this->returnCallback(function ($snippets) {
+            ->will($this->returnCallback(function($snippets) {
                 foreach ($snippets as $snippet) {
                     $this->assertTrue(UUIDHelper::isUUID($snippet));
                 }

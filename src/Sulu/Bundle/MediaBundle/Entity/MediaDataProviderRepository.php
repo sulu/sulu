@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -80,7 +80,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $entities = $this->parentFindByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return array_map(
-            function (Media $media) use ($locale) {
+            function(Media $media) use ($locale) {
                 return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
             },
             $entities

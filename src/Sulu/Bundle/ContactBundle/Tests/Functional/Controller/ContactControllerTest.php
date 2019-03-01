@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -2262,7 +2262,7 @@ class ContactControllerTest extends SuluTestCase
         ];
 
         $filteredAddresses = array_map(
-            function ($address) use ($filterKeys) {
+            function($address) use ($filterKeys) {
                 return array_intersect_key($address, array_flip($filterKeys));
             },
             $addresses
@@ -2428,7 +2428,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function sortAddressesPrimaryLast()
     {
-        return function ($a, $b) {
+        return function($a, $b) {
             if (true === $a->primaryAddress && false === $b->primaryAddress) {
                 return true;
             }

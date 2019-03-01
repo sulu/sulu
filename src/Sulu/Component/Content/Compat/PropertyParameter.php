@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -45,10 +45,10 @@ class PropertyParameter implements \JsonSerializable
     /**
      * Constructor.
      *
-     * @param string            $name
-     * @param string|null       $type
+     * @param string $name
+     * @param string|null $type
      * @param string|bool|array $value
-     * @param array             $metadata
+     * @param array $metadata
      */
     public function __construct($name, $value, $type = null, $metadata = [])
     {

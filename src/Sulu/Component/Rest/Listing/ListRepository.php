@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -28,8 +28,8 @@ class ListRepository extends EntityRepository
     private $helper;
 
     /**
-     * @param ObjectManager  $em
-     * @param ClassMetadata  $class
+     * @param ObjectManager $em
+     * @param ClassMetadata $class
      * @param ListRestHelper $helper
      */
     public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
@@ -41,10 +41,10 @@ class ListRepository extends EntityRepository
     /**
      * Find list with parameter.
      *
-     * @param array  $where
+     * @param array $where
      * @param string $prefix
-     * @param bool   $justCount      Defines, if find should just return the total number of results
-     * @param array  $joinConditions optionally specify conditions on join
+     * @param bool $justCount Defines, if find should just return the total number of results
+     * @param array $joinConditions optionally specify conditions on join
      *
      * @return array|object|int
      */
@@ -163,8 +163,8 @@ class ListRepository extends EntityRepository
     /**
      * returns the amount of data.
      *
-     * @param array  $where
-     * @param array  $joinConditions
+     * @param array $where
+     * @param array $joinConditions
      * @param string $prefix
      *
      * @return int
@@ -178,7 +178,7 @@ class ListRepository extends EntityRepository
      * returns all fields with a specified type.
      *
      * @param array $types
-     * @param null  $intersectArray only return fields that are defined in this array
+     * @param null $intersectArray only return fields that are defined in this array
      *
      * @return array
      */

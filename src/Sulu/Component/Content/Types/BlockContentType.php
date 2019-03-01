@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -325,7 +325,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 return $contentType->getViewData($property);
             },
             false
@@ -339,7 +339,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 return $contentType->getContentData($property);
             }
         );
@@ -350,8 +350,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      * use callback to prepare data foreach property function($contentType, $property).
      *
      * @param PropertyInterface $property
-     * @param callable          $dataCallback
-     * @param bool              $returnType
+     * @param callable $dataCallback
+     * @param bool $returnType
      *
      * @return array
      */
@@ -416,7 +416,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 if (!$contentType instanceof PreResolvableContentTypeInterface) {
                     return;
                 }

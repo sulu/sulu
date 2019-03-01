@@ -220,6 +220,13 @@ The following deprecated classes was removed:
 
 Therefor the dependency `symfony/security-acl` was useless and removed.
 
+## 1.5.21
+
+### User API performance improvement
+
+The API at `/admin/api/users/{id}` does not contain the `permissions` field of the roles anymore, because it caused
+problems if many webspaces are configured.
+
 ## 1.5.15
 
 Added method `hasType` to `Sulu\Component\Content\Compat\Block\BlockPropertyInterface`.

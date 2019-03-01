@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -127,7 +127,7 @@ class MediaDataProvider extends BaseDataProvider
     protected function decorateDataItems(array $data)
     {
         return array_map(
-            function ($item) {
+            function($item) {
                 return new MediaDataItem($item);
             },
             $data

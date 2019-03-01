@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -94,7 +94,7 @@ class SuluTestKernel extends SuluKernel
         // @see https://github.com/symfony/symfony/issues/7555
         $envParameters = $this->getEnvParameters();
 
-        $loader->load(function ($container) use ($envParameters) {
+        $loader->load(function($container) use ($envParameters) {
             $container->getParameterBag()->add($envParameters);
         });
     }

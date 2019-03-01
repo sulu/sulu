@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -34,7 +34,7 @@ class BlockPropertyWrapper implements PropertyInterface
     /**
      * @param PropertyInterface $property
      * @param PropertyInterface $block
-     * @param int               $index
+     * @param int $index
      */
     public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
     {

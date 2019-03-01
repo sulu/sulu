@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -311,7 +311,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -346,7 +346,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -380,7 +380,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -419,7 +419,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -495,7 +495,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -520,7 +520,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -547,7 +547,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -605,7 +605,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -635,7 +635,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -700,7 +700,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -742,7 +742,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -855,7 +855,7 @@ class CategoryControllerTest extends SuluTestCase
         ];
 
         $ids = array_map(
-            function (Media $media) {
+            function(Media $media) {
                 return $media->getId();
             },
             $medias
@@ -1031,7 +1031,7 @@ class CategoryControllerTest extends SuluTestCase
 
         usort(
             $response->meta,
-            function ($m1, $m2) {
+            function($m1, $m2) {
                 return strcmp($m1->key, $m2->key);
             }
         );
@@ -1053,7 +1053,7 @@ class CategoryControllerTest extends SuluTestCase
 
         usort(
             $response->meta,
-            function ($m1, $m2) {
+            function($m1, $m2) {
                 return strcmp($m1->key, $m2->key);
             }
         );
@@ -1220,7 +1220,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );
@@ -1256,7 +1256,7 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
         usort(
             $categories,
-            function ($cat1, $cat2) {
+            function($cat1, $cat2) {
                 return $cat1->id > $cat2->id;
             }
         );

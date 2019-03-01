@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -35,7 +35,7 @@ interface ExtensionBehavior extends StructureBehavior
      * Set data for a specific extension.
      *
      * @param string $name Extension name
-     * @param array  $data Extension data
+     * @param array $data Extension data
      */
     public function setExtension($name, $data);
 }

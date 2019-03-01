@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -448,7 +448,7 @@ class AccountRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
             $filters['tags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
@@ -458,7 +458,7 @@ class AccountRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['websiteTags']
@@ -468,7 +468,7 @@ class AccountRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('categories', $filters)) {
             $filters['categories'] = array_map(
-                function ($category) {
+                function($category) {
                     return $this->categories[$category]->getId();
                 },
                 $filters['categories']
@@ -478,7 +478,7 @@ class AccountRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (array_key_exists('websiteCategories', $filters)) {
             $filters['websiteCategories'] = array_map(
-                function ($category) {
+                function($category) {
                     return $this->categories[$category]->getId();
                 },
                 $filters['websiteCategories']

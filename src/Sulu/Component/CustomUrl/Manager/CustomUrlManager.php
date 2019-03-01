@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -121,7 +121,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
 
         $baseDomains = array_map(
-            function (CustomUrl $customUrl) {
+            function(CustomUrl $customUrl) {
                 return $customUrl->getUrl();
             },
             $customUrls
