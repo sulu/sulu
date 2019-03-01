@@ -24,6 +24,10 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
         this.select = jest.fn();
         this.setActive = jest.fn();
         this.clear = jest.fn();
+
+        mockExtendObservable(this, {
+            selections: [],
+        });
     }
 ));
 
@@ -223,7 +227,7 @@ test('Should close an overlay using the confirm button', () => {
 
     selection.find('Button[icon="su-plus"]').simulate('click');
     const listStore = selection.find('MultiListOverlay').instance().listStore;
-    listStore.selections = [];
+    listStore.selections = [1];
 
     const confirmButton = document.querySelector('button.primary');
     if (confirmButton) {
