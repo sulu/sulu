@@ -34,7 +34,7 @@ class CacheController extends Controller
 
         $this->get('sulu_website.http_cache.clearer')->clear();
 
-        return new JsonResponse([], 200);
+        return new JsonResponse(null, 204);
     }
 
     /**
