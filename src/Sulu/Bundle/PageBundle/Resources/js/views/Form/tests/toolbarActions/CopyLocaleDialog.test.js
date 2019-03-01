@@ -10,7 +10,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
-        postWithId: jest.fn(() => Promise.resolve()),
+        post: jest.fn(() => Promise.resolve()),
     },
 }));
 
@@ -53,7 +53,7 @@ test('Call onClose callback if cancel is clicked', () => {
 test('Copy locales and call onClose callback if confirm is clicked', () => {
     const closeSpy = jest.fn();
     const postWithIdPromise = Promise.resolve();
-    ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+    ResourceRequester.post.mockReturnValue(postWithIdPromise);
 
     const copyLocaleDialog = mount(
         <CopyLocaleDialog
@@ -72,11 +72,10 @@ test('Copy locales and call onClose callback if confirm is clicked', () => {
     copyLocaleDialog.find('Button[skin="primary"]').simulate('click');
 
     expect(copyLocaleDialog.find('Dialog').prop('confirmLoading')).toEqual(true);
-    expect(ResourceRequester.postWithId).toBeCalledWith(
+    expect(ResourceRequester.post).toBeCalledWith(
         'pages',
-        3,
         undefined,
-        {action: 'copy-locale', dest: ['cn', 'jp'], locale: 'en', webspace: 'sulu_io'}
+        {action: 'copy-locale', dest: ['cn', 'jp'], id: 3, locale: 'en', webspace: 'sulu_io'}
     );
 
     return postWithIdPromise.then(() => {

@@ -311,7 +311,7 @@ export default class ListStore {
     delete = (id: string | number): Promise<Object> => {
         this.deleting = true;
 
-        return ResourceRequester.delete(this.resourceKey, id, this.queryOptions)
+        return ResourceRequester.delete(this.resourceKey, {...this.queryOptions, id})
             .then(action(() => {
                 this.deleting = false;
                 this.deselectById(id);
@@ -331,7 +331,7 @@ export default class ListStore {
             queryOptions.locale = locale.get();
         }
 
-        return ResourceRequester.postWithId(this.resourceKey, id, {}, queryOptions);
+        return ResourceRequester.post(this.resourceKey, undefined, {...queryOptions, id});
     }
 
     move = (id: string | number, parentId: string | number) => {
@@ -371,7 +371,7 @@ export default class ListStore {
 
         this.copying = true;
 
-        return ResourceRequester.postWithId(this.resourceKey, id, queryOptions)
+        return ResourceRequester.post(this.resourceKey, undefined, {...queryOptions, id})
             .then(action((response) => {
                 this.copying = false;
                 // TODO do not hardcode "id", but use some metadata instead
@@ -384,11 +384,14 @@ export default class ListStore {
         const deletePromises = [];
         this.deletingSelection = true;
         this.selectionIds.forEach((id) => {
-            deletePromises.push(ResourceRequester.delete(this.resourceKey, id, this.queryOptions).catch((error) => {
-                if (error.status !== 404) {
-                    return Promise.reject(error);
-                }
-            }));
+            deletePromises.push(
+                ResourceRequester.delete(this.resourceKey, {...this.queryOptions, id})
+                    .catch((error) => {
+                        if (error.status !== 404) {
+                            return Promise.reject(error);
+                        }
+                    })
+            );
         });
 
         return Promise.all(deletePromises).then(action(() => {
@@ -518,11 +521,10 @@ export default class ListStore {
     @action order(id: string | number, order: number) {
         this.ordering = true;
 
-        return ResourceRequester.postWithId(
+        return ResourceRequester.post(
             this.resourceKey,
-            id,
             {position: order},
-            {...this.queryOptions, action: 'order'}
+            {...this.queryOptions, action: 'order', id}
         ).then(action(() => {
             this.ordering = false;
             this.structureStrategy.order(id, order);

@@ -5,6 +5,7 @@ import userStore from '../../stores/UserStore';
 import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
+import {resourceRouteRegistry} from '../ResourceRequester';
 import {bundlesReadyPromise} from '../../services/Bundles';
 import type {UpdateConfigHook} from './types';
 
@@ -62,6 +63,12 @@ class Initializer {
         this.updateConfigHooks[bundle].push(hook);
     }
 
+    initializeSymfonyRouting() {
+        return Requester.get(Config.endpoints.routing).then((data) => {
+            resourceRouteRegistry.setRoutingData(data);
+        });
+    }
+
     initializeTranslations() {
         const locale = userStore.user ? userStore.user.locale : getDefaultLocale();
 
@@ -80,25 +87,30 @@ class Initializer {
     initialize() {
         this.setLoading(true);
         return bundlesReadyPromise.then(() => {
-            return Requester.get(Config.endpoints.config).then((config) => {
-                if (!this.initialized) {
-                    setMomentLocale();
-                }
+            const configPromise = Requester.get(Config.endpoints.config);
+            const routePromise = this.initializeSymfonyRouting();
 
-                for (const bundle in this.updateConfigHooks) {
-                    this.updateConfigHooks[bundle].forEach((hook) => {
-                        hook(config[bundle], this.initialized);
-                    });
-                }
+            return Promise.all([configPromise, routePromise])
+                .then(([config]) => {
+                    if (!this.initialized) {
+                        setMomentLocale();
+                    }
 
-                this.setInitialized();
-                return this.initializeTranslations();
-            }).catch((error) => {
-                if (error.status !== 401) {
-                    return Promise.reject(error);
-                }
-                return this.initializeTranslations();
-            });
+                    for (const bundle in this.updateConfigHooks) {
+                        this.updateConfigHooks[bundle].forEach((hook) => {
+                            hook(config[bundle], this.initialized);
+                        });
+                    }
+
+                    this.setInitialized();
+                    return this.initializeTranslations();
+                })
+                .catch((error) => {
+                    if (error.status !== 401) {
+                        return Promise.reject(error);
+                    }
+                    return this.initializeTranslations();
+                });
         });
     }
 }

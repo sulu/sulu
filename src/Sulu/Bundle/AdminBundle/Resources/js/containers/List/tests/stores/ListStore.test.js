@@ -12,7 +12,7 @@ jest.mock('../../stores/MetadataStore', () => ({
 
 jest.mock('../../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
-    postWithId: jest.fn(),
+    post: jest.fn(),
 }));
 
 jest.mock('../../../../stores/UserStore', () => ({
@@ -1406,12 +1406,15 @@ test('Should move the item with the given ID to the new given parent and reload 
         listStore.updateStructureStrategy(structureStrategy);
 
         const postWithIdPromise = Promise.resolve();
-        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+        ResourceRequester.post.mockReturnValue(postWithIdPromise);
 
         listStore.move(3, 8);
 
-        expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 3, {}, {action: 'move', destination: 8, locale: 'de', webspace: 'sulu'});
+        expect(ResourceRequester.post).toBeCalledWith(
+            'snippets',
+            undefined,
+            {action: 'move', destination: 8, id: 3, locale: 'de', webspace: 'sulu'}
+        );
 
         return postWithIdPromise.then(() => {
             expect(structureStrategy.clear).toBeCalledWith();
@@ -1472,7 +1475,7 @@ test('Should move all selected items to the new given parent and reload the list
         listStore.updateStructureStrategy(structureStrategy);
 
         const postWithIdPromise = Promise.resolve();
-        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+        ResourceRequester.post.mockReturnValue(postWithIdPromise);
 
         listStore.select({id: 1});
         listStore.select({id: 2});
@@ -1484,12 +1487,21 @@ test('Should move all selected items to the new given parent and reload the list
 
         expect(listStore.movingSelection).toEqual(true);
 
-        expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 1, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
-        expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 2, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
-        expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 4, {}, {action: 'move', destination: 3, locale: 'de', webspace: 'sulu'});
+        expect(ResourceRequester.post).toBeCalledWith(
+            'snippets',
+            undefined,
+            {action: 'move', destination: 3, id: 1, locale: 'de', webspace: 'sulu'}
+        );
+        expect(ResourceRequester.post).toBeCalledWith(
+            'snippets',
+            undefined,
+            {action: 'move', destination: 3, id: 2, locale: 'de', webspace: 'sulu'}
+        );
+        expect(ResourceRequester.post).toBeCalledWith(
+            'snippets',
+            undefined,
+            {action: 'move', destination: 3, id: 4, locale: 'de', webspace: 'sulu'}
+        );
 
         return moveSelectionPromise.then(() => {
             expect(listStore.movingSelection).toEqual(false);
@@ -1551,12 +1563,15 @@ test('Should copy the item with the given ID to the new given parent and reload 
 
     return schemaPromise.then(() => {
         const postWithIdPromise = Promise.resolve({id: 9});
-        ResourceRequester.postWithId.mockReturnValue(postWithIdPromise);
+        ResourceRequester.post.mockReturnValue(postWithIdPromise);
 
         listStore.copy(3, 8);
 
-        expect(ResourceRequester.postWithId)
-            .toBeCalledWith('snippets', 3, {action: 'copy', destination: 8, locale: 'de', webspace: 'sulu'});
+        expect(ResourceRequester.post).toBeCalledWith(
+            'snippets',
+            undefined,
+            {action: 'copy', destination: 8, id: 3, locale: 'de', webspace: 'sulu'}
+        );
 
         return postWithIdPromise.then(() => {
             expect(structureStrategy.clear).toBeCalledWith();
@@ -1602,7 +1617,7 @@ test('Should delete the item with the given ID and options', () => {
 
     listStore.delete(5);
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en', webspace: 'sulu'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, locale: 'en', webspace: 'sulu'});
 
     return deletePromise.then(() => {
         expect(structureStrategy.remove).toBeCalledWith(5);
@@ -1626,7 +1641,7 @@ test('Should delete the item with the given ID and remove it from the selection 
     expect(toJS(listStore.selections)).toEqual([{id: 5}]);
     listStore.delete(5);
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {locale: 'en'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, locale: 'en'});
 
     return deletePromise.then(() => {
         expect(toJS(listStore.selections)).toEqual([]);
@@ -1648,7 +1663,7 @@ test('Should delete the item with the given ID without locale', () => {
 
     listStore.delete(5);
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 5, {webspace: 'sulu'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, webspace: 'sulu'});
 
     return deletePromise.then(() => {
         expect(structureStrategy.remove).toBeCalledWith(5);
@@ -1669,8 +1684,8 @@ test('Should delete all selected items', () => {
 
     return deletePromise.then(() => {
         expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
         expect(structureStrategy.remove).toBeCalledWith(1);
         expect(structureStrategy.remove).toBeCalledWith(2);
         expect(listStore.selections).toEqual([]);
@@ -1693,8 +1708,8 @@ test('Should delete all selected items and succeed even if one of them returns a
 
     return deletePromise.then(() => {
         expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', 1, {});
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', 2, {});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
+        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
         expect(structureStrategy.remove).toBeCalledWith(1);
         expect(structureStrategy.remove).toBeCalledWith(2);
         expect(listStore.selections).toEqual([]);
@@ -1732,7 +1747,7 @@ test('Should order the item with the given ID and options to the given position'
     );
     listStore.schema = {};
     const orderPromise = Promise.resolve();
-    ResourceRequester.postWithId.mockReturnValue(orderPromise);
+    ResourceRequester.post.mockReturnValue(orderPromise);
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1741,8 +1756,8 @@ test('Should order the item with the given ID and options to the given position'
 
     listStore.order(5, 1);
 
-    expect(ResourceRequester.postWithId)
-        .toBeCalledWith('snippets', 5, {position: 1}, {action: 'order', locale: 'en', webspace: 'sulu'});
+    expect(ResourceRequester.post)
+        .toBeCalledWith('snippets', {position: 1}, {action: 'order', id: 5, locale: 'en', webspace: 'sulu'});
 
     return orderPromise.then(() => {
         expect(structureStrategy.order).toBeCalledWith(5, 1);

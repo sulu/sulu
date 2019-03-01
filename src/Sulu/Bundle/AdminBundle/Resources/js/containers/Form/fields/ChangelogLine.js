@@ -32,7 +32,7 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
             return;
         }
 
-        ResourceRequester.get('users', this.changerId).then(action((changer) => {
+        ResourceRequester.get('users', {id: this.changerId}).then(action((changer) => {
             this.setChanger(changer);
         }));
     };
@@ -43,7 +43,7 @@ export default class ChangelogLine extends React.Component<FieldTypeProps<typeof
             return;
         }
 
-        ResourceRequester.get('users', this.creatorId).then(action((creator) => {
+        ResourceRequester.get('users', {id: this.creatorId}).then(action((creator) => {
             this.setCreator(creator);
         }));
     };

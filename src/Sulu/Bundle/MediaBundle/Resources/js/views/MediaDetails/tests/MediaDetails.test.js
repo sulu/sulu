@@ -356,7 +356,7 @@ test('Should save form when submitted', (done) => {
 
             mediaDetails.find(Form).instance().submit().then(() => {
                 mediaDetails.update();
-                expect(ResourceRequester.put).toBeCalledWith('media', 4, {value: 'Value'}, {locale: 'en'});
+                expect(ResourceRequester.put).toBeCalledWith('media', {value: 'Value'}, {id: 4, locale: 'en'});
                 expect(toolbarFunction.call(mediaDetails.instance()).showSuccess.get()).toEqual(true);
                 done();
             });
@@ -492,9 +492,8 @@ test('Should save focus point overlay', (done) => {
 
             expect(ResourceRequester.put).toBeCalledWith(
                 'media',
-                4,
                 {focusPointX: 0, focusPointY: 2},
-                {locale: undefined}
+                {id: 4, locale: undefined}
             );
 
             setTimeout(() => {

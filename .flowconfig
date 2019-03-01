@@ -1,6 +1,7 @@
 [options]
 esproposal.decorators=ignore
 module.name_mapper='.+\.s?css' -> 'empty/object'
+module.name_mapper='fos-jsrouting/router' -> 'empty/object'
 
 [ignore]
 .*/node_modules/bower-json/.*

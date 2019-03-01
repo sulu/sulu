@@ -21,8 +21,6 @@ use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\Endpoint\EndpointInterface;
-use Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
@@ -79,11 +77,6 @@ class AdminController
     private $metadataProviderRegistry;
 
     /**
-     * @var ResourceMetadataPool
-     */
-    private $resourceMetadataPool;
-
-    /**
      * @var RouteRegistry
      */
     private $routeRegistry;
@@ -131,6 +124,11 @@ class AdminController
     /**
      * @var array
      */
+    private $resources;
+
+    /**
+     * @var array
+     */
     private $locales;
 
     /**
@@ -162,7 +160,6 @@ class AdminController
         EngineInterface $engine,
         TranslatorBagInterface $translatorBag,
         MetadataProviderRegistry $metadataProviderRegistry,
-        ResourceMetadataPool $resourceMetadataPool,
         RouteRegistry $routeRegistry,
         NavigationRegistry $navigationRegistry,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
@@ -172,6 +169,7 @@ class AdminController
         string $environment,
         string $suluVersion,
         ?string $appVersion,
+        array $resources,
         array $locales,
         array $translations,
         string $fallbackLocale,
@@ -186,7 +184,6 @@ class AdminController
         $this->engine = $engine;
         $this->translatorBag = $translatorBag;
         $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->resourceMetadataPool = $resourceMetadataPool;
         $this->routeRegistry = $routeRegistry;
         $this->navigationRegistry = $navigationRegistry;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
@@ -196,6 +193,7 @@ class AdminController
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
         $this->appVersion = $appVersion;
+        $this->resources = $resources;
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
@@ -215,6 +213,7 @@ class AdminController
             'resetResend' => $this->urlGenerator->generate('sulu_security.reset_password.email.resend'),
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
             'generateUrl' => $this->urlGenerator->generate('post_resourcelocator', ['action' => 'generate']),
+            'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
         ];
 
         return $this->engine->renderResponse(
@@ -237,13 +236,6 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
 
-        $resourceMetadataEndpoints = [];
-        foreach ($this->resourceMetadataPool->getAllResourceMetadata($user->getLocale()) as $resourceMetadata) {
-            if ($resourceMetadata instanceof EndpointInterface) {
-                $resourceMetadataEndpoints[$resourceMetadata->getKey()] = $this->urlGenerator->generate($resourceMetadata->getEndpoint());
-            }
-        }
-
         $view = View::create([
             'sulu_admin' => [
                 'endpoints' => [
@@ -255,7 +247,7 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
-                'resourceMetadataEndpoints' => $resourceMetadataEndpoints,
+                'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
                 }, $this->dataProviderPool->getAll()),

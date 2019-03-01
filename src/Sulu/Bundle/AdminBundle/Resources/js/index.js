@@ -12,7 +12,7 @@ import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import metadataStore from './stores/MetadataStore';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
-import {bundleReady, Config, resourceEndpointRegistry} from './services';
+import {bundleReady, Config, resourceRouteRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
@@ -233,12 +233,12 @@ function registerListToolbarActions() {
 function processConfig(config: Object) {
     routeRegistry.clear();
     navigationRegistry.clear();
-    resourceEndpointRegistry.clear();
+    resourceRouteRegistry.clear();
 
     routeRegistry.addCollection(config.routes);
     metadataStore.endpoint = config.endpoints.metadata;
     navigationRegistry.set(config.navigation);
-    resourceEndpointRegistry.setEndpoints(config.resourceMetadataEndpoints);
+    resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
 }
 

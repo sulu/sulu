@@ -62,8 +62,8 @@ test('Load categories and datasource when constructed', () => {
     );
 
     expect(smartContentStore.loading).toEqual(true);
-    expect(ResourceRequester.get).toBeCalledWith('pages', 4, {locale: 'en'});
-    expect(ResourceRequester.get).toBeCalledWith('categories', undefined, {ids: [1, 2, 4], locale: 'en'});
+    expect(ResourceRequester.get).toBeCalledWith('pages', {id: 4, locale: 'en'});
+    expect(ResourceRequester.get).toBeCalledWith('categories', {ids: [1, 2, 4], locale: 'en'});
 
     return Promise.all([dataSourcePromise, categoriesPromise]).then(() => {
         expect(smartContentStore.loading).toEqual(false);

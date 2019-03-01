@@ -37,11 +37,11 @@ export default class CopyLocaleDialog extends React.Component<Props> {
             webspace,
         } = this.props;
 
-        ResourceRequester.postWithId(
+        ResourceRequester.post(
             'pages',
-            id,
             undefined,
             {
+                id,
                 locale,
                 dest: this.selectedLocales,
                 action: 'copy-locale',

@@ -3,6 +3,11 @@ import 'core-js/library/fn/promise';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
 import {setTranslations} from '../../../utils/Translator';
+import resourceRouteRegistry from '../../ResourceRequester/registries/ResourceRouteRegistry';
+
+jest.mock('../../ResourceRequester/registries/ResourceRouteRegistry', () => ({
+    setRoutingData: jest.fn(),
+}));
 
 jest.mock('../../Requester', () => ({
     get: jest.fn(),
@@ -52,8 +57,11 @@ test('Should initialize when everything works', () => {
         'sulu_admin.test1': 'Test1',
     };
 
+    const routeData = {};
+
     const translationPromise = Promise.resolve(translationData);
     const configPromise = Promise.resolve(configData);
+    const routePromise = Promise.resolve(routeData);
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
@@ -61,6 +69,8 @@ test('Should initialize when everything works', () => {
                 return translationPromise;
             case 'config_url':
                 return configPromise;
+            case 'routing':
+                return routePromise;
         }
     });
 
@@ -72,6 +82,7 @@ test('Should initialize when everything works', () => {
 
     return initPromise
         .then(() => {
+            expect(resourceRouteRegistry.setRoutingData).toBeCalledWith(routeData);
             expect(setTranslations).toBeCalledWith(translationData, 'en');
             expect(initializer.initializedTranslationsLocale).toBe('en');
 
@@ -97,8 +108,11 @@ test('Should not reinitialize everything when it was already initialized', () =>
         'sulu_admin.test1': 'Test1',
     };
 
+    const routeData = {};
+
     const translationPromise = Promise.resolve(translationData);
     const configPromise = Promise.resolve(configData);
+    const routePromise = Promise.resolve(routeData);
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
@@ -106,6 +120,8 @@ test('Should not reinitialize everything when it was already initialized', () =>
                 return translationPromise;
             case 'config_url':
                 return configPromise;
+            case 'routing':
+                return routePromise;
         }
     });
 
@@ -117,6 +133,7 @@ test('Should not reinitialize everything when it was already initialized', () =>
 
     return initPromise
         .then(() => {
+            expect(resourceRouteRegistry.setRoutingData).toBeCalledWith(routeData);
             expect(setTranslations).not.toBeCalled();
 
             expect(initializer.initialized).toBe(true);
@@ -131,6 +148,7 @@ test('Should not crash when the config request throws an 401 error', () => {
 
     const translationPromise = Promise.resolve(translationData);
     const configPromise = Promise.reject({status: 401});
+    const routePromise = Promise.resolve();
 
     Requester.get.mockImplementation((key) => {
         switch (key) {
@@ -138,6 +156,8 @@ test('Should not crash when the config request throws an 401 error', () => {
                 return translationPromise;
             case 'config_url':
                 return configPromise;
+            case 'routing':
+                return routePromise;
         }
     });
 

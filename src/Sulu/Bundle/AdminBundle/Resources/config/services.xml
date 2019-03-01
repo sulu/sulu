@@ -17,7 +17,6 @@
             <argument type="service" id="templating"/>
             <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
-            <argument type="service" id="sulu_admin.metadata.resource_metadata_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
@@ -27,6 +26,7 @@
             <argument>%kernel.environment%</argument>
             <argument>%sulu.version%</argument>
             <argument>%app.version%</argument>
+            <argument>%sulu_admin.resources%</argument>
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>
@@ -65,20 +65,6 @@
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
             <argument type="service" id="translator.default"/>
             <tag name="sulu_admin.metadata_provider" type="list" />
-        </service>
-
-        <service id="sulu_admin.metadata.resource_metadata_pool" class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataPool" />
-
-        <service id="sulu_admin.metadata.resource_metadata_provider"
-                 class="Sulu\Bundle\AdminBundle\ResourceMetadata\ResourceMetadataProvider"
-        >
-            <argument type="string">%sulu_admin.resources%</argument>
-            <argument>%sulu_core.locales%</argument>
-            <argument>%kernel.cache_dir%/sulu/resourcemetadata</argument>
-            <argument>%kernel.debug%</argument>
-
-            <tag name="sulu.resource_metadata_provider"/>
-            <tag name="kernel.cache_warmer"/>
         </service>
 
         <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory" />

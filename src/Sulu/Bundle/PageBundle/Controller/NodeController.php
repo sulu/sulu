@@ -139,31 +139,31 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction(Request $request, $uuid)
+    public function getAction(Request $request, $id)
     {
         if (null !== $request->get('fields')) {
-            return $this->getContent($request, $uuid);
+            return $this->getContent($request, $id);
         }
 
-        return $this->getSingleNode($request, $uuid);
+        return $this->getSingleNode($request, $id);
     }
 
     /**
      * Returns single content.
      *
      * @param Request $request
-     * @param $uuid
+     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      * @throws \Sulu\Component\Rest\Exception\ParameterDataTypeException
      */
-    private function getContent(Request $request, $uuid)
+    private function getContent(Request $request, $id)
     {
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
@@ -181,16 +181,16 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ->addProperties($properties)
             ->getMapping();
 
-        $data = $this->get('sulu_page.content_repository')->find($uuid, $locale, $webspaceKey, $mapping, $user);
+        $data = $this->get('sulu_page.content_repository')->find($id, $locale, $webspaceKey, $mapping, $user);
         $view = $this->view($data);
 
         return $this->handleView($view);
     }
 
     /**
-     * Returns tree response for given uuid.
+     * Returns tree response for given id.
      *
-     * @param string $uuid
+     * @param string $id
      * @param string $locale
      * @param string $webspaceKey
      * @param bool $webspaceNodes
@@ -203,7 +203,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws EntityNotFoundException
      */
     private function getTreeContent(
-        $uuid,
+        $id,
         $locale,
         $webspaceKey,
         $webspaceNodes,
@@ -216,14 +216,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         try {
             $contents = $this->get('sulu_page.content_repository')->findParentsWithSiblingsByUuid(
-                $uuid,
+                $id,
                 $locale,
                 $webspaceKey,
                 $mapping,
                 $user
             );
         } catch (ItemNotFoundException $e) {
-            throw new EntityNotFoundException('node', $uuid, $e);
+            throw new EntityNotFoundException('node', $id, $e);
         }
 
         if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
@@ -239,11 +239,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getSingleNode(Request $request, $uuid)
+    private function getSingleNode(Request $request, $id)
     {
         $language = $this->getLanguage($request);
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
@@ -252,7 +252,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $template = $this->getRequestParameter($request, 'template', false, null);
 
         $view = $this->responseGetById(
-            $uuid,
+            $id,
             function($id) use ($language, $ghostContent, $template) {
                 try {
                     return $this->getDocumentManager()->find(
@@ -294,11 +294,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * This functionality is required for preloading the content navigation.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getTreeForUuid(Request $request, $uuid)
+    private function getTreeForUuid(Request $request, $id)
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request, false);
@@ -306,9 +306,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
 
         try {
-            if (null !== $uuid && '' !== $uuid) {
+            if (null !== $id && '' !== $id) {
                 $result = $this->getRepository()->getNodesTree(
-                    $uuid,
+                    $id,
                     $webspace,
                     $language,
                     $excludeGhosts,
@@ -523,10 +523,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * saves node with given uuid and data.
+     * saves node with given id and data.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return Response
      *
@@ -534,15 +534,15 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws InvalidHashException
      * @throws MissingParameterException
      */
-    public function putAction(Request $request, $uuid)
+    public function putAction(Request $request, $id)
     {
         $language = $this->getLanguage($request);
         $action = $request->get('action');
 
-        $this->checkActionParameterSecurity($action, $language, $uuid);
+        $this->checkActionParameterSecurity($action, $language, $id);
 
         $document = $this->getDocumentManager()->find(
-            $uuid,
+            $id,
             $language,
             [
                 'load_ghost_content' => false,
@@ -596,14 +596,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * deletes node with given uuid.
+     * deletes node with given id.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, $uuid)
+    public function deleteAction(Request $request, $id)
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
@@ -611,7 +611,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         if (!$force) {
             $references = array_filter(
-                $this->getRepository()->getReferences($uuid),
+                $this->getRepository()->getReferences($id),
                 function(PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
@@ -638,7 +638,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         $view = $this->responseDelete(
-            $uuid,
+            $id,
             function($id) use ($webspace) {
                 try {
                     $this->getRepository()->deleteNode($id, $webspace);
@@ -658,14 +658,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * - copy: copy a node
      *   + destination: specifies the destination node.
      *
-     * @Post("/nodes/{uuid}")
+     * @Post("/nodes/{id}")
      *
-     * @param string $uuid
+     * @param string $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postTriggerAction($uuid, Request $request)
+    public function postTriggerAction($id, Request $request)
     {
         // extract parameter
         $action = $this->getRequestParameter($request, 'action', true);
@@ -680,7 +680,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
-                    $data = $this->getDocumentManager()->find($uuid, $language);
+                    $data = $this->getDocumentManager()->find($id, $language);
 
                     $this->getDocumentManager()->move(
                         $data,
@@ -690,7 +690,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     break;
                 case 'copy':
                     $copiedPath = $this->getDocumentManager()->copy(
-                        $this->getDocumentManager()->find($uuid, $language),
+                        $this->getDocumentManager()->find($id, $language),
                         $this->getRequestParameter($request, 'destination', true)
                     );
                     $this->getDocumentManager()->flush();
@@ -702,25 +702,25 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
+                    $data = $repository->orderAt($id, $position, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->copyLocale($uuid, $userId, $webspace, $language, explode(',', $destLocale));
+                    $data = $repository->copyLocale($id, $userId, $webspace, $language, explode(',', $destLocale));
                     break;
                 case 'unpublish':
-                    $document = $this->getDocumentManager()->find($uuid, $language);
+                    $document = $this->getDocumentManager()->find($id, $language);
                     $this->getDocumentManager()->unpublish($document, $language);
                     $this->getDocumentManager()->flush();
 
-                    $data = $this->getDocumentManager()->find($uuid, $language);
+                    $data = $this->getDocumentManager()->find($id, $language);
                     break;
                 case 'remove-draft':
                     $webspace = $this->getWebspace($request);
-                    $data = $this->getDocumentManager()->find($uuid, $language);
+                    $data = $this->getDocumentManager()->find($id, $language);
                     $this->getDocumentManager()->removeDraft($data, $language);
                     $this->getDocumentManager()->flush();
                     break;
@@ -794,8 +794,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $id = null;
 
-        if (null !== ($uuid = $request->get('uuid'))) {
-            $id = $uuid;
+        if (null !== ($id = $request->get('id'))) {
+            $id = $id;
         } elseif (null !== ($parent = $request->get('parentId')) && Request::METHOD_GET !== $request->getMethod()) {
             // the user is always allowed to get the children of a node
             // so the security check only applies for requests not being GETs
@@ -967,13 +967,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * Checks if the user has the required permissions for the given action with the given locale. The additional
-     * uuid parameter will also include checks for the document identified by it.
+     * id parameter will also include checks for the document identified by it.
      *
      * @param string $actionParameter
      * @param string $locale
-     * @param string $uuid
+     * @param string $id
      */
-    private function checkActionParameterSecurity($actionParameter, $locale, $uuid = null)
+    private function checkActionParameterSecurity($actionParameter, $locale, $id = null)
     {
         $permission = null;
         switch ($actionParameter) {
@@ -991,7 +991,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $this->getSecurityContext(),
                 $locale,
                 $this->getSecuredClass(),
-                $uuid
+                $id
             ),
             $permission
         );

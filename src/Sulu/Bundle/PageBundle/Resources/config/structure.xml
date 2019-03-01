@@ -34,16 +34,5 @@
             <argument>%kernel.cache_dir%/sulu/structures</argument>
             <argument>%kernel.debug%</argument>
         </service>
-
-        <!-- resource metadata provider -->
-        <service id="sulu_page.resource_metadata_provider.structure"
-                 class="Sulu\Bundle\PageBundle\ResourceMetadata\StructureResourceMetadataProvider"
-        >
-            <argument type="service" id="sulu_page.structure.factory"/>
-            <argument type="string">%sulu.content.structure.resources%</argument>
-
-            <tag name="sulu.resource_metadata_provider"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
     </services>
 </container>

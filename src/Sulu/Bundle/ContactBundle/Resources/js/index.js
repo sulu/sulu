@@ -12,7 +12,11 @@ import Bic from './containers/Form/fields/Bic';
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
 
-initializer.addUpdateConfigHook('sulu_contact', (config: Object) => {
+initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: boolean) => {
+    if (initialized) {
+        return;
+    }
+
     when(
         () => !!initializer.initializedTranslationsLocale, (): void => {
             fieldRegistry.add(

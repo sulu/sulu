@@ -43,7 +43,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
 
 jest.mock('sulu-admin-bundle/services', () => ({
     ResourceRequester: {
-        postWithId: jest.fn(),
+        post: jest.fn(),
     },
     Router: jest.fn(),
 }));
@@ -320,7 +320,7 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     };
 
     const deleteDraftPromise = Promise.resolve(data);
-    ResourceRequester.postWithId.mockReturnValue(deleteDraftPromise);
+    ResourceRequester.post.mockReturnValue(deleteDraftPromise);
 
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
     editToolbarAction.resourceFormStore.resourceStore.id = 3;
@@ -341,11 +341,10 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     element.prop('onConfirm')();
     element = mount(editToolbarAction.getNode()).at(1);
     expect(element.prop('confirmLoading')).toEqual(true);
-    expect(ResourceRequester.postWithId).toBeCalledWith(
+    expect(ResourceRequester.post).toBeCalledWith(
         'pages',
-        3,
         undefined,
-        {action: 'remove-draft', locale: editToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
+        {action: 'remove-draft', id: 3, locale: editToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
     );
 
     return deleteDraftPromise.then(() => {

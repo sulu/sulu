@@ -1,6 +1,6 @@
 // @flow
 import ResourceRequester from './ResourceRequester';
-import resourceEndpointRegistry from './registries/ResourceEndpointRegistry';
+import resourceRouteRegistry from './registries/ResourceRouteRegistry';
 
 export default ResourceRequester;
-export {resourceEndpointRegistry};
+export {resourceRouteRegistry};

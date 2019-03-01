@@ -7,7 +7,6 @@ jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn(),
     put: jest.fn(),
     post: jest.fn(),
-    postWithId: jest.fn(),
     delete: jest.fn(),
 }));
 
@@ -67,7 +66,7 @@ test('Should load the data with the ResourceRequester', () => {
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()}, {test: 10});
     resourceStore.setLocale('en');
-    expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {locale: 'en', test: 10});
+    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
     });
@@ -78,7 +77,7 @@ test('Should load without locale the data with the ResourceRequester', () => {
     ResourceRequester.get.mockReturnValue(promise);
     const resourceStore = new ResourceStore('snippets', '3');
     const oldData = resourceStore.data;
-    expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {});
+    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3'});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
         expect(resourceStore.data).toBe(oldData);
@@ -91,7 +90,7 @@ test('Should load with the idQueryParameter and reset after successful load', ()
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
     const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
-    expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
+    expect(ResourceRequester.get).toBeCalledWith('users', {contactId: 2});
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual({id: 5, value: 'test'});
@@ -120,7 +119,7 @@ test('Should load the data with the ResourceRequester if a reload is requested',
     ResourceRequester.get.mockReturnValue(promise1);
     const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()}, {test: 10});
     resourceStore.setLocale('en');
-    expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {locale: 'en', test: 10});
+    expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise1.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
 
@@ -128,7 +127,7 @@ test('Should load the data with the ResourceRequester if a reload is requested',
         ResourceRequester.get.mockReturnValue(promise2);
         resourceStore.reload();
 
-        expect(ResourceRequester.get).toBeCalledWith('snippets', '3', {locale: 'en', test: 10});
+        expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
         expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
 
         return promise2.then(() => {
@@ -198,7 +197,7 @@ test('Save the store should send a PUT request', () => {
     resourceStore.dirty = false;
 
     resourceStore.save({test: 10});
-    expect(ResourceRequester.put).toBeCalledWith('snippets', '3', {title: 'Title'}, {locale: 'de', test: 10});
+    expect(ResourceRequester.put).toBeCalledWith('snippets', {title: 'Title'}, {id: '3', locale: 'de', test: 10});
 });
 
 test('Save the store should send a PUT request without a locale', () => {
@@ -311,7 +310,7 @@ test('Calling the delete method should send a DELETE request', () => {
     resourceStore.dirty = false;
 
     resourceStore.delete();
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3, {});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 3});
 });
 
 test('Calling the delete method with options should send a DELETE request', () => {
@@ -321,11 +320,11 @@ test('Calling the delete method with options should send a DELETE request', () =
     resourceStore.dirty = false;
 
     resourceStore.delete({test: 'value'});
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', 3, {test: 'value'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 3, test: 'value'});
 });
 
 test('Moving flag should be set to true when moving', () => {
-    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.data = {id: 1};
     resourceStore.moving = false;
@@ -338,8 +337,8 @@ test('Moving flag should be set to true when moving', () => {
 
 test('Moving flag and id should be reset to false when moving has finished', () => {
     const promise = Promise.resolve({});
-    ResourceRequester.postWithId.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    ResourceRequester.post.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', 1, {locale: observable.box()});
     resourceStore.data = {id: 1};
     const oldData = resourceStore.data;
     resourceStore.setLocale('en');
@@ -350,35 +349,35 @@ test('Moving flag and id should be reset to false when moving has finished', () 
 
     return promise.then(() => {
         expect(resourceStore.moving).toBe(false);
-        expect(ResourceRequester.get).toBeCalledWith('snippets', '1', {locale: 'en'});
+        expect(ResourceRequester.get).toBeCalledWith('snippets', {id: 1, locale: 'en'});
         expect(resourceStore.data).toBe(oldData);
     });
 });
 
 test('Calling the move method should send a POST request', () => {
-    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', 3, {});
     resourceStore.data = {id: 3, title: 'Title'};
 
     resourceStore.move(9);
-    expect(ResourceRequester.postWithId).toBeCalledWith(
+    expect(ResourceRequester.post).toBeCalledWith(
         'snippets',
-        3,
-        {action: 'move', destination: 9, locale: undefined}
+        undefined,
+        {action: 'move', destination: 9, id: 3, locale: undefined}
     );
 });
 
 test('Calling the move method should send a POST request with locale', () => {
-    ResourceRequester.postWithId.mockReturnValue(Promise.resolve({}));
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', 3, {locale: observable.box()});
     resourceStore.setLocale('de');
     resourceStore.data = {id: 3, title: 'Title'};
 
     resourceStore.move(9);
-    expect(ResourceRequester.postWithId).toBeCalledWith(
+    expect(ResourceRequester.post).toBeCalledWith(
         'snippets',
-        3,
-        {action: 'move', destination: 9, locale: 'de'}
+        undefined,
+        {action: 'move', destination: 9, id: 3, locale: 'de'}
     );
 });
 
@@ -479,7 +478,7 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
     const resourceStore = new ResourceStore('users', 2, {}, {}, 'contactId');
     const oldData = resourceStore.data;
     expect(resourceStore.idQueryParameter).toEqual('contactId');
-    expect(ResourceRequester.get).toBeCalledWith('users', undefined, {contactId: 2});
+    expect(ResourceRequester.get).toBeCalledWith('users', {contactId: 2});
 
     resourceStore.save();
 
@@ -499,12 +498,12 @@ test('Copy the content from different locale', () => {
 
     const germanContent = {id: 3, content: 'new content'};
     const promise = Promise.resolve(germanContent);
-    ResourceRequester.postWithId.mockReturnValue(promise);
+    ResourceRequester.post.mockReturnValue(promise);
 
     resourceStore.copyFromLocale('de');
 
-    expect(ResourceRequester.postWithId)
-        .toBeCalledWith('pages', 4, {}, {action: 'copy-locale', locale: 'de', dest: 'en'});
+    expect(ResourceRequester.post)
+        .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'de', dest: 'en'});
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual(germanContent);

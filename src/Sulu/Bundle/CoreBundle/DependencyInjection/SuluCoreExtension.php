@@ -345,10 +345,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $contentConfig['structure']['required_tags']
         );
         $container->setParameter(
-            'sulu.content.structure.resources',
-            $contentConfig['structure']['resources']
-        );
-        $container->setParameter(
             'sulu.content.structure.default_type.snippet',
             $contentConfig['structure']['default_type']['snippet']
         );

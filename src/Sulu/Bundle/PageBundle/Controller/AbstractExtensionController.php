@@ -24,7 +24,10 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class AbstractExtensionController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+abstract class AbstractExtensionController extends RestController implements
+    ClassResourceInterface,
+    SecuredControllerInterface,
+    SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -56,13 +59,13 @@ abstract class AbstractExtensionController extends RestController implements Cla
         throw new NotFoundHttpException();
     }
 
-    public function getAction(Request $request, $uuid)
+    public function getAction(Request $request, $id)
     {
         $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
 
         $view = $this->responseGetById(
-            $uuid,
+            $id,
             function($id) use ($locale, $webspace) {
                 try {
                     return $this->getRepository()->loadExtensionData(
@@ -80,14 +83,14 @@ abstract class AbstractExtensionController extends RestController implements Cla
         return $this->handleView($view);
     }
 
-    public function putAction(Request $request, $uuid)
+    public function putAction(Request $request, $id)
     {
         $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
         $data = $request->request->all();
 
         $this->getRepository()->saveExtensionData(
-            $uuid,
+            $id,
             $data,
             $this->getExtensionName(),
             $webspace,
@@ -95,10 +98,10 @@ abstract class AbstractExtensionController extends RestController implements Cla
             $this->getUser()->getId()
         );
 
-        $this->handleActionParameter($request->get('action'), $uuid, $locale);
+        $this->handleActionParameter($request->get('action'), $id, $locale);
 
         $result = $this->getRepository()->loadExtensionData(
-            $uuid,
+            $id,
             $this->getExtensionName(),
             $webspace,
             $locale
@@ -134,15 +137,15 @@ abstract class AbstractExtensionController extends RestController implements Cla
 
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('uuid');
+        return $request->get('id');
     }
 
-    private function handleActionParameter($actionParameter, $uuid, $locale)
+    private function handleActionParameter($actionParameter, $id, $locale)
     {
         $documentManager = $this->getDocumentManager();
 
         $document = $documentManager->find(
-            $uuid,
+            $id,
             $locale,
             [
                 'load_ghost_content' => false,
@@ -157,7 +160,7 @@ abstract class AbstractExtensionController extends RestController implements Cla
                         $this->getSecurityContext(),
                         $locale,
                         $this->getSecuredClass(),
-                        $uuid
+                        $id
                     ),
                     'live'
                 );

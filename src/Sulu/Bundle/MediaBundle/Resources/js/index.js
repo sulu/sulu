@@ -20,7 +20,11 @@ import MediaFormats from './views/MediaFormats';
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
 
-initializer.addUpdateConfigHook('sulu_media', (config: Object) => {
+initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: boolean) => {
+    if (initialized) {
+        return;
+    }
+
     viewRegistry.add('sulu_media.overview', MediaOverview);
     viewRegistry.add('sulu_media.details', MediaDetails);
     viewRegistry.add('sulu_media.formats', MediaFormats);

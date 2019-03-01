@@ -87,16 +87,26 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'resources' => [
                         'contacts' => [
-                            'endpoint' => 'get_contacts',
+                            'routes' => [
+                                'list' => 'get_contacts',
+                                'detail' => 'get_contact',
+                            ],
                         ],
                         'accounts' => [
-                            'endpoint' => 'get_accounts',
+                            'routes' => [
+                                'list' => 'get_accounts',
+                                'detail' => 'get_account',
+                            ],
                         ],
                         'contact_titles' => [
-                            'endpoint' => 'get_contact-titles',
+                            'routes' => [
+                                'list' => 'get_contact-titles',
+                            ],
                         ],
                         'contact_positions' => [
-                            'endpoint' => 'get_contact-positions',
+                            'routes' => [
+                                'list' => 'get_contact-positions',
+                            ],
                         ],
                     ],
                     'field_type_options' => [

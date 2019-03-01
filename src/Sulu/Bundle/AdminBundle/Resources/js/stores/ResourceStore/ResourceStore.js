@@ -71,10 +71,9 @@ export default class ResourceStore {
         const promise = this.idQueryParameter
             ? ResourceRequester.get(
                 this.resourceKey,
-                undefined,
                 {...options, ...this.loadOptions, [this.idQueryParameter]: id}
             )
-            : ResourceRequester.get(this.resourceKey, id, {...options, ...this.loadOptions});
+            : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
 
         promise.then(action((response: Object) => {
             if (this.idQueryParameter) {
@@ -154,7 +153,7 @@ export default class ResourceStore {
 
         this.saving = true;
 
-        return ResourceRequester.put(this.resourceKey, this.id, this.data, options)
+        return ResourceRequester.put(this.resourceKey, this.data, {...options, id: this.id})
             .then(action((response) => {
                 this.setMultiple(response);
                 this.saving = false;
@@ -182,7 +181,7 @@ export default class ResourceStore {
             requestOptions.locale = locale.get();
         }
 
-        return ResourceRequester.delete(this.resourceKey, this.data.id, requestOptions)
+        return ResourceRequester.delete(this.resourceKey, {...requestOptions, id: this.data.id})
             .then(action((response) => {
                 this.id = undefined;
                 this.setMultiple(response);
@@ -211,7 +210,7 @@ export default class ResourceStore {
             locale: locale ? locale.get() : undefined,
         };
 
-        return ResourceRequester.postWithId(this.resourceKey, this.id, queryOptions)
+        return ResourceRequester.post(this.resourceKey, undefined, {...queryOptions, id: this.id})
             .then(action(() => {
                 this.moving = false;
             }))
@@ -230,11 +229,10 @@ export default class ResourceStore {
         }
 
         return ResourceRequester
-            .postWithId(
+            .post(
                 this.resourceKey,
-                this.id,
                 {},
-                {action: 'copy-locale', locale: locale, dest: this.locale.get(), ...options}
+                {...options, action: 'copy-locale', dest: this.locale.get(), id: this.id, locale}
             ).then(action((response) => {
                 this.setMultiple(response);
                 return response;

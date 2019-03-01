@@ -41,12 +41,12 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
-        $this->assertObjectHasAttribute('resourceMetadataEndpoints', $response->sulu_admin);
+        $this->assertObjectHasAttribute('resources', $response->sulu_admin);
         $this->assertObjectHasAttribute('routes', $response->sulu_admin);
         $this->assertObjectHasAttribute('fieldTypeOptions', $response->sulu_admin);
         $this->assertInternalType('array', $response->sulu_admin->navigation);
         $this->assertInternalType('array', $response->sulu_admin->routes);
-        $this->assertInternalType('object', $response->sulu_admin->resourceMetadataEndpoints);
+        $this->assertInternalType('object', $response->sulu_admin->resources);
         $this->assertObjectHasAttribute('sulu_preview', $response);
     }
 

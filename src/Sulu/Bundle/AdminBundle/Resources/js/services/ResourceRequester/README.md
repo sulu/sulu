@@ -12,11 +12,11 @@ ResourceRequester.getList('contacts', {page: 2})
     });
 
 // get only the snippet with the ID 2 and send the locale as query parameter
-ResourceRequester.get('snippets', 2, {locale: 'en'});
+ResourceRequester.get('snippets', {id: 2, locale: 'en'});
 
 // update the snippet with the ID 3 and send the locale as query parameter
-ResourceRequester.put('snippets', 3, {title: 'Title'}, {locale: 'en'});
+ResourceRequester.put('snippets', {title: 'Title'}, {id: 3, locale: 'en'});
 
 // delete the snippet with the ID 6
-ResourceRequester.delete('snippets', 6);
+ResourceRequester.delete('snippets', {id: 6});
 ```

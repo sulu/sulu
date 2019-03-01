@@ -36,6 +36,14 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                             __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
+                    'resources' => [
+                        'snippets' => [
+                            'routes' => [
+                                'list' => 'get_snippets',
+                                'detail' => 'get_snippet',
+                            ],
+                        ],
+                    ],
                     'field_type_options' => [
                         'selection' => [
                             'snippet' => [
@@ -84,11 +92,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 'snippet' => 'default',
                             ],
                             'type_map' => ['snippet' => SnippetBridge::class],
-                            'resources' => [
-                                'snippets' => [
-                                    'endpoint' => 'get_snippets',
-                                ],
-                            ],
                         ],
                     ],
                 ]
