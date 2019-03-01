@@ -29,17 +29,21 @@ test('Closing the overlay should call the onClose callback', () => {
     expect(closeSpy).toBeCalledWith();
 });
 
-test('Select first image format as default and change dimensions of ImageRectangleSelection when changed', () => {
+test('Select first non-internal image format as default and change dimensions of ImageRectangleSelection', () => {
     const formats = [
         {
             key: 'test1',
+            internal: true,
+        },
+        {
+            key: 'test2',
             scale: {
                 x: 400,
                 y: 500,
             },
         },
         {
-            key: 'test2',
+            key: 'test3',
             scale: {
                 x: 700,
                 y: 300,
@@ -66,7 +70,7 @@ test('Select first image format as default and change dimensions of ImageRectang
             minWidth: 400,
         }));
 
-        cropOverlay.find('SingleSelect').prop('onChange')('test2');
+        cropOverlay.find('SingleSelect').prop('onChange')('test3');
         cropOverlay.update();
         expect(cropOverlay.find('withContainerSize(ImageRectangleSelection)').props()).toEqual(expect.objectContaining({
             minHeight: 300,

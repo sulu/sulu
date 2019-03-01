@@ -16,21 +16,26 @@ type Props = {|
 
 @observer
 export default class CropOverlay extends React.Component<Props> {
-    @observable formats: ?Array<Object>;
+    @observable rawFormats: ?Array<Object>;
     @observable formatKey: ?string;
 
-    @computed get format() {
-        if (!this.formats) {
+    @computed get availableFormats(): Array<Object> {
+        if (!this.rawFormats) {
+            return [];
+        }
+
+        return this.rawFormats.filter((format) => !format.internal);
+    }
+
+    @computed get selectedFormat() {
+        if (!this.availableFormats) {
             throw new Error('Cannot access format as long as formats have not finished loading!');
         }
 
-        const format = this.formats.find((format) => format.key === this.formatKey);
+        const format = this.availableFormats.find((format) => format.key === this.formatKey);
 
         if (!format) {
-            throw new Error(
-                'Format with key "' + (this.formatKey || 'undefined') + '" does not exist! '
-                + 'This should not happen and is likely a bug.'
-            );
+            return undefined;
         }
 
         return format;
@@ -38,8 +43,8 @@ export default class CropOverlay extends React.Component<Props> {
 
     componentDidMount() {
         formatStore.loadFormats().then(action((formats) => {
-            this.formats = formats;
-            this.formatKey = this.formats.length > 0 ? this.formats[0].key : undefined;
+            this.rawFormats = formats;
+            this.formatKey = this.availableFormats.length > 0 ? this.availableFormats[0].key : undefined;
         }));
     }
 
@@ -56,7 +61,7 @@ export default class CropOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {formats} = this;
+        const {availableFormats, selectedFormat} = this;
         const {image, open} = this.props;
 
         return (
@@ -68,22 +73,22 @@ export default class CropOverlay extends React.Component<Props> {
                 size="large"
                 title={translate('sulu_media.crop')}
             >
-                {formats
+                {availableFormats
                     ? <div className={cropOverlayStyles.cropOverlayContainer}>
                         <div className={cropOverlayStyles.formatSelect}>
                             <SingleSelect onChange={this.handleFormatChange} value={this.formatKey}>
-                                {formats.filter((format) => !format.internal).map((format) => (
+                                {availableFormats.map((format) => (
                                     <SingleSelect.Option key={format.key} value={format.key}>
                                         {format.title}
                                     </SingleSelect.Option>
                                 ))}
                             </SingleSelect>
                         </div>
-                        <ImageRectangleSelection
+                        {selectedFormat && <ImageRectangleSelection
                             image={image}
-                            minHeight={this.format.scale.y}
-                            minWidth={this.format.scale.x}
-                        />
+                            minHeight={selectedFormat.scale.y}
+                            minWidth={selectedFormat.scale.x}
+                        />}
                     </div>
                     : <Loader />
                 }
