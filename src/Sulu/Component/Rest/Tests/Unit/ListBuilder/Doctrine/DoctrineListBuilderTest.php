@@ -559,7 +559,6 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds([11, 22]);
 
-
         $this->queryBuilder->setParameter(Argument::containingString('id'), [11, 22])->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('SuluCoreBundle_Example.id IN (:id')
