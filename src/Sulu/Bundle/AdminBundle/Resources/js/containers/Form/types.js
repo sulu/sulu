@@ -1,6 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx';
-import type {Size} from '../../components/Grid';
+import type {ColSpan} from '../../components/Grid';
 import FormInspector from './FormInspector';
 
 export type SchemaType = {
@@ -59,8 +59,8 @@ type BaseSchemaEntry = {
     minOccurs?: number,
     options?: SchemaOptions,
     required?: boolean,
-    size?: Size,
-    spaceAfter?: Size,
+    colSpan?: ColSpan,
+    spaceAfter?: ColSpan,
     tags?: Array<Tag>,
     type: string,
 };

@@ -5,7 +5,7 @@ exports[`Render component 1`] = `
   class="grid"
 >
   <div
-    class="item size size-6 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="select"
@@ -47,7 +47,7 @@ exports[`Render component 1`] = `
     </div>
   </div>
   <div
-    class="item size size-12 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="roleAssignmentsContainer"
@@ -162,7 +162,7 @@ exports[`Render component in disabled state 1`] = `
   class="grid"
 >
   <div
-    class="item size size-6 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="select"
@@ -205,7 +205,7 @@ exports[`Render component in disabled state 1`] = `
     </div>
   </div>
   <div
-    class="item size size-12 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="roleAssignmentsContainer"
@@ -322,7 +322,7 @@ exports[`Render component without data 1`] = `
   class="grid"
 >
   <div
-    class="item size size-6 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="select"

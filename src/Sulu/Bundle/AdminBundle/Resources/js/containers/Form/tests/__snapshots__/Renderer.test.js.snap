@@ -5,17 +5,17 @@ exports[`Should not render fields when the schema contains a visible flag of fal
   class="grid grid"
 >
   <div
-    class="section gridSection size size-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
       />
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -38,7 +38,7 @@ exports[`Should not render fields when the schema contains a visible flag of fal
     </div>
   </div>
   <div
-    class="item gridItem size size-12 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -73,7 +73,7 @@ exports[`Should render field types based on schema 1`] = `
   class="grid grid"
 >
   <div
-    class="item gridItem size size-12 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -101,7 +101,7 @@ exports[`Should render field types based on schema 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem size size-12 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -136,10 +136,10 @@ exports[`Should render nested sections 1`] = `
   class="grid grid"
 >
   <div
-    class="section gridSection size size-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -148,7 +148,7 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -176,10 +176,10 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="section gridSection size size-12 space-before-0 space-after-0"
+      class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
-        class="item size size-12 space-before-0 space-after-0"
+        class="item colSpan colSpan-12 space-before-0 space-after-0"
       >
         <div
           class="divider"
@@ -190,10 +190,10 @@ exports[`Should render nested sections 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection size size-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -202,7 +202,7 @@ exports[`Should render nested sections 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -233,15 +233,15 @@ exports[`Should render nested sections 1`] = `
 </div>
 `;
 
-exports[`Should render sections with size 1`] = `
+exports[`Should render sections with colSpan 1`] = `
 <div
   class="grid grid"
 >
   <div
-    class="section gridSection size size-8 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -250,7 +250,7 @@ exports[`Should render sections with size 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -279,10 +279,10 @@ exports[`Should render sections with size 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection size size-4 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -291,7 +291,7 @@ exports[`Should render sections with size 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -327,10 +327,10 @@ exports[`Should render sections without label 1`] = `
   class="grid grid"
 >
   <div
-    class="section gridSection size size-8 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
   >
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"
@@ -359,10 +359,10 @@ exports[`Should render sections without label 1`] = `
     </div>
   </div>
   <div
-    class="section gridSection size size-4 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
   >
     <div
-      class="item size size-12 space-before-0 space-after-0"
+      class="item colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -371,7 +371,7 @@ exports[`Should render sections without label 1`] = `
       </div>
     </div>
     <div
-      class="item gridItem size size-12 space-before-0 space-after-0"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="field"

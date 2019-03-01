@@ -90,7 +90,6 @@ class PropertiesXmlParser
                 'maxOccurs',
                 'colspan',
                 'cssClass',
-                'size',
                 'spaceAfter',
                 'disabledCondition',
                 'visibleCondition',
@@ -378,7 +377,9 @@ class PropertiesXmlParser
     {
         $section = new SectionMetadata();
         $section->setName($propertyName);
-        $section->setSize($data['colspan']);
+        if (isset($data['colspan'])) {
+            $section->setColSpan($data['colspan']);
+        }
 
         if (isset($data['meta']['title'])) {
             $section->setTitles($data['meta']['title']);
@@ -456,8 +457,9 @@ class PropertiesXmlParser
         $property->setType($data['type']);
         $property->setLocalized($data['multilingual']);
         $property->setRequired($data['mandatory']);
-        $property->setColSpan($data['colspan']);
-        $property->setSize($data['size']);
+        if (isset($data['colspan'])) {
+            $property->setColSpan($data['colspan']);
+        }
         $property->setSpaceAfter($data['spaceAfter']);
         $property->setCssClass($data['cssClass']);
         $property->setTags($data['tags']);
@@ -481,11 +483,10 @@ class PropertiesXmlParser
                 'type' => null,
                 'multilingual' => true,
                 'mandatory' => true,
-                'colSpan' => null,
+                'colspan' => null,
                 'cssClass' => null,
                 'minOccurs' => null,
                 'maxOccurs' => null,
-                'size' => null,
                 'spaceAfter' => null,
             ],
             $this->normalizeItem($data)

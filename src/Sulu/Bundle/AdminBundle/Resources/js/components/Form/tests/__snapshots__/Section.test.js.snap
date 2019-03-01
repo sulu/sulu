@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render section with given size 1`] = `
+exports[`Render section with given colSpan 1`] = `
 <div
-  class="section gridSection size size-12 space-before-0 space-after-0"
+  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
-    class="item size size-12 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="divider"
@@ -21,7 +21,7 @@ exports[`Render section with given size 1`] = `
 
 exports[`Render section without label 1`] = `
 <div
-  class="section gridSection size size-8 space-before-0 space-after-0"
+  class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
 >
   <div>
     Test
@@ -31,10 +31,10 @@ exports[`Render section without label 1`] = `
 
 exports[`Render section without label but with divider 1`] = `
 <div
-  class="section gridSection size size-12 space-before-0 space-after-0"
+  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
-    class="item size size-12 space-before-0 space-after-0"
+    class="item colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="divider"

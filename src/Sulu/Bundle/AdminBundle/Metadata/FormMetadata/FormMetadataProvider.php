@@ -264,7 +264,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
             $section->setLabel($title);
         }
 
-        $section->setSize($property->getSize());
+        $section->setColSpan($property->getColSpan());
         $section->setDisabledCondition($property->getDisabledCondition());
         $section->setVisibleCondition($property->getVisibleCondition());
 
@@ -323,7 +323,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $field->setVisibleCondition($property->getVisibleCondition());
         $field->setDescription($property->getDescription($locale));
         $field->setType($property->getType());
-        $field->setSize($property->getSize());
+        $field->setColSpan($property->getColSpan());
         $field->setRequired($property->isRequired());
         $field->setSpaceAfter($property->getSpaceAfter());
 

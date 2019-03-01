@@ -3,27 +3,27 @@ import React from 'react';
 import type {Node} from 'react';
 import Divider from '../Divider';
 import Grid from '../Grid';
-import type {Size} from '../Grid';
+import type {ColSpan} from '../Grid';
 import gridStyles from './grid.scss';
 
 type Props = {|
     children: Node,
     label?: string,
-    size: Size,
+    colSpan: ColSpan,
 |};
 
 export default class Section extends React.Component<Props> {
     static defaultProps = {
-        size: 12,
+        colSpan: 12,
     };
 
     render() {
-        const {children, label, size} = this.props;
+        const {children, label, colSpan} = this.props;
 
         return (
-            <Grid.Section className={gridStyles.gridSection} size={size}>
-                {(label || size === 12) &&
-                    <Grid.Item size={12}>
+            <Grid.Section className={gridStyles.gridSection} colSpan={colSpan}>
+                {(label || colSpan === 12) &&
+                    <Grid.Item colSpan={12}>
                         <Divider>
                             {label}
                         </Divider>

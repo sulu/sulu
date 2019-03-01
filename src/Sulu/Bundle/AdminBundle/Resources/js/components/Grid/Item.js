@@ -13,7 +13,7 @@ type Props = BaseItemProps & {
 
 export default class Item extends React.PureComponent<Props> {
     static defaultProps = {
-        size: 12,
+        colSpan: 12,
         spaceAfter: 0,
         spaceBefore: 0,
     };

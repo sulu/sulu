@@ -104,7 +104,7 @@ class LegacyPropertyFactory
             $property->getMinOccurs(),
             $parameters,
             [],
-            $property->getColspan()
+            $property->getColSpan()
         );
 
         foreach ($property->getTags() as $tag) {
@@ -140,7 +140,7 @@ class LegacyPropertyFactory
                 'title' => $property->getTitles(),
                 'info_text' => $property->getDescriptions(),
             ],
-            $property->getColspan()
+            $property->getColSpan()
         );
 
         foreach ($property->getChildren() as $child) {
@@ -165,7 +165,7 @@ class LegacyPropertyFactory
             $property->getMinOccurs(),
             $property->getParameters(),
             [],
-            $property->getColspan()
+            $property->getColSpan()
         );
         $blockProperty->setStructure($structure);
 

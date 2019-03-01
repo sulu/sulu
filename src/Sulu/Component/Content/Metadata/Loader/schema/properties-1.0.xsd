@@ -72,7 +72,7 @@
 
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional" default="12"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
         <xs:attributeGroup ref="defaultAttributes"/>
@@ -100,8 +100,7 @@
         <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
-        <xs:attribute type="xs:integer" name="size" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional" default="12"/>
         <xs:attribute type="xs:integer" name="spaceAfter" use="optional"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
@@ -122,7 +121,7 @@
         <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
-        <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attribute type="xs:integer" name="colspan" use="optional" default="12"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
         <xs:attributeGroup ref="defaultAttributes"/>

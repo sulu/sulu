@@ -34,9 +34,9 @@ export default class Renderer extends React.Component<Props> {
     };
 
     renderSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {label, items, size} = schemaField;
+        const {colSpan, label, items} = schemaField;
         return (
-            <Form.Section key={schemaKey} label={label} size={size}>
+            <Form.Section colSpan={colSpan} key={schemaKey} label={label}>
                 {!!items &&
                     Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
                 }

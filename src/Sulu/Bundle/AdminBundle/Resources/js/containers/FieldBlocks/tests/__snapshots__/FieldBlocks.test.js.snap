@@ -46,7 +46,7 @@ exports[`Render block with schema 1`] = `
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -75,7 +75,7 @@ exports[`Render block with schema 1`] = `
               </div>
             </div>
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -146,7 +146,7 @@ exports[`Render block with schema 1`] = `
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -175,7 +175,7 @@ exports[`Render block with schema 1`] = `
               </div>
             </div>
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -271,7 +271,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -342,7 +342,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field error"
@@ -416,7 +416,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -512,7 +512,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field"
@@ -583,7 +583,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field error"
@@ -657,7 +657,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
             class="grid grid"
           >
             <div
-              class="item gridItem size size-12 space-before-0 space-after-0"
+              class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
             >
               <div
                 class="field error"
