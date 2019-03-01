@@ -12,10 +12,10 @@ import AbstractToolbarAction from './AbstractToolbarAction';
 
 export default class ExportToolbarAction extends AbstractToolbarAction {
     @observable showOverlay = false;
-    @observable delimiter: string;
-    @observable enclosure: string;
-    @observable escape: string;
-    @observable newLine: string;
+    @observable delimiter: string = ';';
+    @observable enclosure: string = '"';
+    @observable escape: string = '\\';
+    @observable newLine: string = '\\n';
 
     getNode() {
         return (
@@ -110,16 +110,6 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     };
 
     @action handleConfirm = () => {
-        console.log(resourceEndpointRegistry.getEndpoint(this.listStore.resourceKey) + '.csv' + buildQueryString(
-            {
-                flat: true,
-                delimiter: this.delimiter,
-                escape: this.escape,
-                enclosure: this.enclosure,
-                newLine: this.newLine,
-            }
-        ));
-
         window.location.assign(resourceEndpointRegistry.getEndpoint(this.listStore.resourceKey) + '.csv' +
             buildQueryString(
                 {
@@ -130,5 +120,6 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                     newLine: this.newLine,
                 }
             ));
+        this.showOverlay = false;
     };
 }
