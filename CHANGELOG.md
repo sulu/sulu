@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
+
 * 1.6.25 (2019-02-28)
     * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
     * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
@@ -8,7 +11,6 @@ CHANGELOG for Sulu
     * FEATURE     #4400  [All]                  Fix FieldJoinDescriptor without a relation
     * ENHANCEMENT #4370  [WebsiteBundle]        Add attributes to sitemap-url
     * FEATURE     #4357  [MediaBundle]          Added dimension properties to video media
-    * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
 
 * 1.6.24 (2019-01-09)
     * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
