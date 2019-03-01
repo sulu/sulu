@@ -19,6 +19,7 @@ import List, {
     AddToolbarAction as ListAddToolbarAction,
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
+    ExportToolbarAction as ListExportToolbarAction,
     toolbarActionRegistry as listToolbarActionRegistry,
 } from './views/List';
 import Tabs from './views/Tabs';
@@ -228,6 +229,7 @@ function registerListToolbarActions() {
     listToolbarActionRegistry.add('sulu_admin.add', ListAddToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.delete', ListDeleteToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.move', ListMoveToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.export', ListExportToolbarAction);
 }
 
 function processConfig(config: Object) {
