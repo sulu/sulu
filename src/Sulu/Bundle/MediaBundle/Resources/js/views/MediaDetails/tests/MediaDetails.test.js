@@ -512,7 +512,7 @@ test('Should save focus point overlay', (done) => {
 test('Should open and close crop overlay', (done) => {
     const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const MediaDetail = require('../MediaDetail').default;
+    const MediaDetail = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
