@@ -105,5 +105,15 @@
     "sulu_admin.heading5": "Überschrift 5",
     "sulu_admin.heading6": "Überschrift 6",
     "sulu_admin.dirty_warning_dialog_title": "Formular verlassen?",
-    "sulu_admin.dirty_warning_dialog_text": "Ihre Änderungen werden nicht gespeichert."
+    "sulu_admin.dirty_warning_dialog_text": "Ihre Änderungen werden nicht gespeichert.",
+    "sulu_admin.export": "Exportieren",
+    "sulu_admin.export_overlay_title": "Datenformat konfigurieren",
+    "sulu_admin.delimiter": "Trennzeichen",
+    "sulu_admin.enclosure": "Umschließen",
+    "sulu_admin.escape": "Maskieren",
+    "sulu_admin.new_line": "Neue Zeile",
+    "sulu_admin.delimiter_description": "Zeichen um Zellen zu trennen.",
+    "sulu_admin.enclosure_description": "Einträge mit mehreren Wörtern markieren.",
+    "sulu_admin.escape_description": "Zusatz bei Sonderzeichen.",
+    "sulu_admin.new_line_description": "Zeichen für den Zeilenumbruch."
 }
