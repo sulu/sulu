@@ -8,6 +8,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
@@ -80,6 +81,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     EssentialsPlugin,
                     HeadingPlugin,
                     ItalicPlugin,
+                    LinkPlugin,
                     ListPlugin,
                     ParagraphPlugin,
                     StrikethroughPlugin,
@@ -104,6 +106,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     'numberedlist',
                     '|',
                     'insertTable',
+                    'link',
                 ],
                 heading: {
                     options: [
