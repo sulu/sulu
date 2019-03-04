@@ -54,7 +54,7 @@ class MediaFormatController extends RestController implements ClassResourceInter
      */
     public function putAction($id, $key, Request $request)
     {
-        $options = $request->get('options', []);
+        $options = $request->request->all();
         $locale = $this->getRequestParameter($request, 'locale', true);
 
         if (empty($options)) {

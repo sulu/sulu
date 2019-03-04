@@ -149,15 +149,12 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/small-inset', $this->media->getId()),
+            sprintf('/api/media/%d/formats/small-inset?locale=de', $this->media->getId()),
             [
-                'locale' => 'de',
-                'options' => [
-                    'cropX' => 10,
-                    'cropY' => 15,
-                    'cropWidth' => 100,
-                    'cropHeight' => 100,
-                ],
+                'cropX' => 10,
+                'cropY' => 15,
+                'cropWidth' => 100,
+                'cropHeight' => 100,
             ]
         );
 
@@ -175,10 +172,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats', $this->media->getId()),
-            [
-                'locale' => 'de',
-            ]
+            sprintf('/api/media/%d/formats?locale=de', $this->media->getId())
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -197,11 +191,8 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/big-squared', $this->media->getId()),
-            [
-                'locale' => 'en',
-                'options' => [],
-            ]
+            sprintf('/api/media/%d/formats/big-squared?locale=en', $this->media->getId()),
+            []
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -214,10 +205,8 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats', $this->media->getId()),
-            [
-                'locale' => 'en',
-            ]
+            sprintf('/api/media/%d/formats?locale=en', $this->media->getId()),
+            []
         );
 
         $response = json_decode($client->getResponse()->getContent());
