@@ -22,50 +22,6 @@ exports[`The component should center and maximize the selection when a minHeight
 </div>
 `;
 
-exports[`The component should center and maximize the selection when a minHeight and minWidth is given 2`] = `
-<div
-  class="selection"
->
-  <p>
-    Lorem ipsum
-  </p>
-  <div
-    class="rectangle"
-    style="left: 0px; top: 250px; width: 2000px; height: 500px;"
-  >
-    <div
-      class="resizeHandle"
-    />
-    <div
-      class="backdrop"
-      style="outline-width: 2000px;"
-    />
-  </div>
-</div>
-`;
-
-exports[`The component should maximize the selection when no initial values given 1`] = `
-<div
-  class="selection"
->
-  <p>
-    Lorem ipsum
-  </p>
-  <div
-    class="rectangle"
-    style="left: 0px; top: 0px; width: 2000px; height: 1000px;"
-  >
-    <div
-      class="resizeHandle"
-    />
-    <div
-      class="backdrop"
-      style="outline-width: 2000px;"
-    />
-  </div>
-</div>
-`;
-
 exports[`The component should render with children 1`] = `
 <div
   class="selection"
@@ -75,7 +31,7 @@ exports[`The component should render with children 1`] = `
   </p>
   <div
     class="rectangle"
-    style="left:0px;top:0px;width:0px;height:0px"
+    style="left:0px;top:0px;width:2000px;height:1000px"
   >
     <div
       class="resizeHandle"

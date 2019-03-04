@@ -7,7 +7,9 @@ export default function withContainerSize(Component: ComponentType<*>) {
         component: *;
 
         componentDidMount() {
-            this.component.containerDidMount();
+            if (this.component.containerDidMount) {
+                this.component.containerDidMount();
+            }
             if (this.props.mountSpy) {
                 Promise.resolve().then(this.props.mountSpy);
             }

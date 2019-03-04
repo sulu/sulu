@@ -12,10 +12,10 @@ type Props = {|
     containerHeight: number,
     containerWidth: number,
     image: string,
-    initialSelection?: SelectionData,
     minWidth?: number,
     minHeight?: number,
-    onChange?: (s: SelectionData) => void,
+    onChange: (s: SelectionData) => void,
+    value: ?SelectionData,
 |};
 
 @observer
@@ -79,10 +79,8 @@ export class ImageRectangleSelection extends React.Component<Props> {
     }
 
     handleRectangleSelectionChange = (data: SelectionData) => {
-        if (this.props.onChange) {
-            const onChange = this.props.onChange;
-            onChange(this.rounding.normalize(this.scaledDataToNatural(data)));
-        }
+        const {onChange} = this.props;
+        onChange(this.rounding.normalize(this.scaledDataToNatural(data)));
     };
 
     render() {
@@ -92,15 +90,15 @@ export class ImageRectangleSelection extends React.Component<Props> {
 
         const minWidth = this.props.minWidth ? this.naturalHorizontalToScaled(this.props.minWidth) : null;
         const minHeight = this.props.minHeight ? this.naturalVerticalToScaled(this.props.minHeight) : null;
-        const initialSelection = this.props.initialSelection ?
-            this.naturalDataToScaled(this.props.initialSelection) : null;
+        const value = this.props.value ? this.naturalDataToScaled(this.props.value) : undefined;
+
         return (
             <RectangleSelection
-                initialSelection={initialSelection}
                 minHeight={minHeight}
                 minWidth={minWidth}
                 onChange={this.handleRectangleSelectionChange}
                 round={false}
+                value={value}
             >
                 <img
                     height={this.imageResizedHeight}
