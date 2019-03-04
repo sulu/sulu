@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -206,6 +207,20 @@ class SingleMediaSelectionTest extends TestCase
         $this->mediaManager->getById(11, 'de')->willReturn($this->media->reveal());
 
         $this->assertEquals($this->media->reveal(), $this->singleMediaSelection->getContentData($property));
+    }
+
+    public function testContentDataDeleted()
+    {
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+
+        $property = new Property('media', [], 'single_media_selection');
+        $property->setValue(['id' => 11]);
+        $property->setStructure($structure->reveal());
+
+        $this->mediaManager->getById(11, 'de')->willThrow(MediaNotFoundException::class);
+
+        $this->assertNull($this->singleMediaSelection->getContentData($property));
     }
 
     public function testPreResolveEmpty()
