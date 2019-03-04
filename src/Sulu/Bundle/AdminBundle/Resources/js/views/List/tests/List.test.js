@@ -7,6 +7,10 @@ import listFieldTransformRegistry from '../../../containers/List/registries/List
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 
+jest.mock('../../../services/ResourceRequester/registries/ResourceRouteRegistry', () => ({
+    getListUrl: jest.fn().mockReturnValue('testfile'),
+}));
+
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
 jest.mock('../../../containers/List/stores/MetadataStore', () => ({
@@ -119,6 +123,8 @@ jest.mock('../../../utils/Translator', () => ({
                 return 'Move selected';
             case 'sulu_snippet.snippets':
                 return 'Snippets';
+            case 'sulu_admin.export':
+                return 'Export';
         }
     },
 }));
@@ -909,4 +915,119 @@ test('Should move items after move overlay was confirmed', () => {
         expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
         expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
     });
+});
+
+test('Export dialog should open when the button is pressed', () => {
+    function getExportItem() {
+        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                toolbarActions: ['sulu_admin.export'],
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    listStore.selectionIds.push(1, 4, 6);
+
+    list.update();
+    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
+
+    getExportItem().onClick();
+    list.update();
+
+    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(true);
+});
+
+test('Render export dialog', () => {
+    function getExportItem() {
+        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+    }
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                toolbarActions: ['sulu_admin.export'],
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    listStore.selectionIds.push(1, 4, 6);
+
+    list.update();
+
+    getExportItem().onClick();
+    list.update();
+
+    expect(list.find('Overlay').find({confirmText: 'Export'})).toMatchSnapshot();
+});
+
+test('Export method should be called when the export-button is pressed', () => {
+    function getExportItem() {
+        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
+    }
+
+    window.location.assign = jest.fn();
+
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
+    const resourceRouteRegistry = require('../../../services/ResourceRequester/registries/ResourceRouteRegistry');
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                toolbarActions: ['sulu_admin.export'],
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    listStore.selectionIds.push(1, 4, 6);
+    list.update();
+
+    getExportItem().onClick();
+    list.update();
+
+    list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
+    expect(resourceRouteRegistry.getListUrl).toBeCalledWith('test');
+
+    expect(window.location.assign).toBeCalledWith(
+        'testfile.csv?flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
+    );
+
+    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
 });
