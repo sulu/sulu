@@ -2,6 +2,17 @@
 
 ## dev-develop
 
+### Moved preview functionality of Form view
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The functionality to display the preview of the page which is edited in a sidebar was moved from the default `Form` 
+view(registered with the name `sulu_admin.form`) to a new `PreviewForm` view (registered with key 
+`sulu_admin.preview_form`). 
+
+Furthermore, the route-option `preview` which is used to define a condition whether to preview should be displayed or
+not was renamed to `previewCondition`.
+
 ### excluded query parameter of Media API
 
 The `excluded` query parameter which can be used to exclude specific ids from the media list returned by the Media API
