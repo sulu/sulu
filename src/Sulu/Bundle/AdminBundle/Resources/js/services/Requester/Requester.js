@@ -76,7 +76,7 @@ function transformRequestObject(data: Object): Object {
     }, {});
 }
 
-function transformRequestArray(data: Array<Object>) {
+function transformRequestArray(data) {
     return data.map((value) => {
         if (Array.isArray(value) || isObservableArray(value)) {
             return transformRequestArray(value);
@@ -90,7 +90,7 @@ function transformRequestArray(data: Array<Object>) {
     });
 }
 
-function transformRequestData(data: Object | Array<Object>): Object | Array<Object> {
+function transformRequestData(data: Object | Array<Object>) {
     if (Array.isArray(data) || isObservableArray(data)) {
         return transformRequestArray(data);
     }
