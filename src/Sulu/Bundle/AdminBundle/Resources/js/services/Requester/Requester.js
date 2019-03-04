@@ -1,4 +1,5 @@
 // @flow
+import {isObservableArray} from 'mobx';
 import type {HandleResponseHook} from './types';
 
 const defaultOptions = {
@@ -12,25 +13,86 @@ const defaultOptions = {
 function transformResponseObject(data: Object) {
     return Object.keys(data).reduce((transformedData: Object, key) => {
         const value = data[key];
-        transformedData[key] = value === null ? undefined : data[key];
+
+        if (value === null) {
+            transformedData[key] = undefined;
+
+            return transformedData;
+        }
+
+        if (Array.isArray(value)) {
+            transformedData[key] = transformResponseArray(value);
+
+            return transformedData;
+        }
+
+        if (value instanceof Object) {
+            transformedData[key] = transformResponseObject(value);
+
+            return transformedData;
+        }
+
+        transformedData[key] = value;
+
         return transformedData;
     }, {});
 }
 
 function transformResponseArray(data: Array<Object>) {
-    return data.map(transformResponseObject);
+    return data.map((value) => {
+        if (value instanceof Object) {
+            return transformResponseObject(value);
+        }
+
+        return value;
+    });
 }
 
 function transformRequestObject(data: Object): Object {
     return Object.keys(data).reduce((transformedData: Object, key) => {
-        transformedData[key] = data[key] === undefined ? null : data[key];
+        const value = data[key];
+
+        if (value === undefined || value === null) {
+            transformedData[key] = null;
+
+            return transformedData;
+        }
+
+        if (Array.isArray(value) || isObservableArray(value)) {
+            transformedData[key] = transformRequestArray(value);
+
+            return transformedData;
+        }
+
+        if (value instanceof Object) {
+            transformedData[key] = transformRequestObject(value);
+
+            return transformedData;
+        }
+
+        transformedData[key] = value;
+
         return transformedData;
     }, {});
 }
 
-function transformRequestData(data: Object | Array<Object>): Object | Array<Object> {
-    if (Array.isArray(data)) {
-        return data.map(transformRequestObject);
+function transformRequestArray(data) {
+    return data.map((value) => {
+        if (Array.isArray(value) || isObservableArray(value)) {
+            return transformRequestArray(value);
+        }
+
+        if (value instanceof Object) {
+            return transformRequestObject(value);
+        }
+
+        return value;
+    });
+}
+
+function transformRequestData(data: Object | Array<Object>) {
+    if (Array.isArray(data) || isObservableArray(data)) {
+        return transformRequestArray(data);
     }
 
     return transformRequestObject(data);
