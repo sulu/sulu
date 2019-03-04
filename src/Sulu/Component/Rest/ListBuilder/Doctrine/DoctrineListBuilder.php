@@ -530,7 +530,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->in($this->idField, !empty($this->ids) ? $this->ids : [null]);
         }
 
-        if (!empty($this->excludedIds)) {
+        if (null !== $this->excludedIds && !empty($this->excludedIds)) {
             $this->notIn($this->idField, $this->excludedIds);
         }
 

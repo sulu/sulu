@@ -63,16 +63,17 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      * Array of ids to which the result of the query is restricted.
      * If null, the result is not restricted to specific ids.
      *
-     * @var ?array
+     * @var array|null
      */
     protected $ids = null;
 
     /**
      * Array of ids which are excluded from the result of the query.
+     * If null, no ids will be excluded from the result.
      *
-     * @var array
+     * @var array|null
      */
-    protected $excludedIds = [];
+    protected $excludedIds = null;
 
     /**
      * group by fields.

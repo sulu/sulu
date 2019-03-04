@@ -157,8 +157,9 @@ interface ListBuilderInterface
 
     /**
      * Restricts the rows to return to have one of the given ids.
+     * If null, the rows to return are not restricted to specific ids.
      *
-     * @param ?array $ids
+     * @param array|null $ids
      *
      * @return ListBuilderInterface
      */
@@ -166,15 +167,17 @@ interface ListBuilderInterface
 
     /**
      * Returns an array of ids to which the rows to return are restricted.
+     * If null, the rows to return are not restricted to specific ids.
      *
-     * @return ?array
+     * @return array|null
      */
     public function getIds();
 
     /**
      * Excludes the given ids from the rows to return.
+     * If null, no ids will be excluded from the rows to return.
      *
-     * @param array $excludedIds
+     * @param array|null $excludedIds
      *
      * @return ListBuilderInterface
      */
@@ -182,8 +185,9 @@ interface ListBuilderInterface
 
     /**
      * Returns an array of ids which are excluded from the rows to return.
+     * If null, no ids will be excluded from the rows to return.
      *
-     * @return array
+     * @return array|null
      */
     public function getExcludedIds();
 
