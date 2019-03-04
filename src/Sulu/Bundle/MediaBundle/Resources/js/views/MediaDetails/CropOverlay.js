@@ -1,16 +1,20 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
 import {ImageRectangleSelection, Loader, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
+import type {SelectionData} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
+import MediaFormatStore from '../../stores/MediaFormatStore';
+import type {MediaFormat} from '../../stores/MediaFormatStore';
 import formatStore from '../../stores/FormatStore';
 import cropOverlayStyles from './cropOverlay.scss';
 
 type Props = {|
+    id: string | number,
     image: string,
+    locale: string,
     onClose: () => void,
-    onConfirm: () => void,
     open: boolean,
 |};
 
@@ -18,6 +22,17 @@ type Props = {|
 export default class CropOverlay extends React.Component<Props> {
     @observable rawFormats: ?Array<Object>;
     @observable formatKey: ?string;
+    @observable currentSelection: ?Object;
+    @observable dirty: boolean;
+    mediaFormatStore: MediaFormatStore;
+
+    constructor(props: Props) {
+        super(props);
+
+        const {id, locale} = this.props;
+
+        this.mediaFormatStore = new MediaFormatStore(id, locale);
+    }
 
     @computed get availableFormats(): Array<Object> {
         if (!this.rawFormats) {
@@ -44,8 +59,42 @@ export default class CropOverlay extends React.Component<Props> {
     componentDidMount() {
         formatStore.loadFormats().then(action((formats) => {
             this.rawFormats = formats;
-            this.formatKey = this.availableFormats.length > 0 ? this.availableFormats[0].key : undefined;
+            const formatKey = this.availableFormats.length > 0 ? this.availableFormats[0].key : undefined;
+            this.formatKey = formatKey;
+
+            if (formatKey) {
+                when(
+                    () => !this.mediaFormatStore.loading,
+                    (): void => {
+                        this.currentSelection = this.convertFormatOptionsToSelection(
+                            this.mediaFormatStore.getFormatOptions(formatKey)
+                        );
+                    }
+                );
+            }
         }));
+    }
+
+    convertSelectionToFormatOptions(selection: SelectionData) {
+        return {
+            cropX: selection.left,
+            cropY: selection.top,
+            cropWidth: selection.width,
+            cropHeight: selection.height,
+        };
+    }
+
+    convertFormatOptionsToSelection(formatOption: ?MediaFormat) {
+        if (!formatOption) {
+            return undefined;
+        }
+
+        return {
+            left: formatOption.cropX,
+            top: formatOption.cropY,
+            width: formatOption.cropWidth,
+            height: formatOption.cropHeight,
+        };
     }
 
     handleClose = () => {
@@ -53,11 +102,37 @@ export default class CropOverlay extends React.Component<Props> {
     };
 
     handleConfirm = () => {
-        this.props.onConfirm();
+        const {currentSelection, selectedFormat} = this;
+        const {onClose} = this.props;
+
+        if (!selectedFormat) {
+            throw new Error('Saving croppings is not possible without a format');
+        }
+
+        if (currentSelection) {
+            this.mediaFormatStore.updateFormatOptions(
+                selectedFormat.key,
+                this.convertSelectionToFormatOptions(currentSelection)
+            ).then(action(() => {
+                onClose();
+                this.dirty = false;
+            }));
+        } else {
+            onClose();
+        }
     };
 
     @action handleFormatChange = (formatKey: string) => {
         this.formatKey = formatKey;
+        const formatOptions = this.mediaFormatStore.getFormatOptions(formatKey);
+
+        this.currentSelection = formatOptions ? this.convertFormatOptionsToSelection(formatOptions) : undefined;
+        this.dirty = false;
+    };
+
+    @action handleSelectionChange = (currentSelection: Object) => {
+        this.currentSelection = currentSelection;
+        this.dirty = true;
     };
 
     render() {
@@ -66,6 +141,8 @@ export default class CropOverlay extends React.Component<Props> {
 
         return (
             <Overlay
+                confirmDisabled={!this.dirty}
+                confirmLoading={this.mediaFormatStore.saving}
                 confirmText={translate('sulu_admin.save')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
@@ -84,10 +161,12 @@ export default class CropOverlay extends React.Component<Props> {
                                 ))}
                             </SingleSelect>
                         </div>
-                        {selectedFormat && <ImageRectangleSelection
+                        {selectedFormat && !this.mediaFormatStore.loading && <ImageRectangleSelection
                             image={image}
                             minHeight={selectedFormat.scale.y}
                             minWidth={selectedFormat.scale.x}
+                            onChange={this.handleSelectionChange}
+                            value={this.currentSelection}
                         />}
                     </div>
                     : <Loader />

@@ -40,7 +40,7 @@ class MediaFormatController extends RestController implements ClassResourceInter
         $locale = $this->getRequestParameter($request, 'locale', true);
         $formatOptions = $this->getFormatOptionsManager()->getAll($id);
 
-        return $this->handleView($this->view($formatOptions));
+        return $this->handleView($this->view(count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
     }
 
     /**

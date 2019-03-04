@@ -55,6 +55,10 @@ jest.mock('../../../stores/FormatStore', () => ({
     loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
 }));
 
+jest.mock('../CropOverlay', () => function CropOverlay() {
+    return <div />;
+});
+
 beforeEach(() => {
     jest.resetModules();
 });
@@ -515,7 +519,7 @@ test('Should open and close crop overlay', (done) => {
     const MediaDetail = require('../MediaDetails').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
-    const resourceStore = new ResourceStore('media', 4, {locale: observable.box()});
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
@@ -549,6 +553,8 @@ test('Should open and close crop overlay', (done) => {
             mediaDetail.update();
             expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
             expect(mediaDetail.find('CropOverlay').prop('image')).toEqual('image.jpg');
+            expect(mediaDetail.find('CropOverlay').prop('id')).toEqual(4);
+            expect(mediaDetail.find('CropOverlay').prop('locale')).toEqual('de');
 
             mediaDetail.find('Button[icon="su-cut"]').prop('onClick')();
             mediaDetail.update();

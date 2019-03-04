@@ -65,6 +65,17 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'put_media_format',
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('fos_rest')) {
             $container->prependExtensionConfig(
                 'fos_rest',
@@ -100,6 +111,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             'routes' => [
                                 'list' => 'cget_media',
                                 'detail' => 'get_media',
+                            ],
+                        ],
+                        'media_formats' => [
+                            'routes' => [
+                                'list' => 'get_media_formats',
+                                'detail' => 'put_media_format',
                             ],
                         ],
                         'collections' => [

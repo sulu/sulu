@@ -106,13 +106,22 @@ class MediaDetails extends React.Component<Props> {
 
     render() {
         const {resourceStore} = this.props;
+        const {id, locale} = resourceStore;
+
+        if (!id) {
+            throw new Error('The "MediaDetails" view only works with an id!');
+        }
+
+        if (!locale) {
+            throw new Error('The "MediaDetails" view only works with an locale!');
+        }
 
         return (
             <div className={mediaDetailsStyles.mediaDetail}>
                 {this.formStore.loading
                     ? <Loader />
                     : <Grid>
-                        <Grid.Section className={mediaDetailsStyles.imageSection} size={4}>
+                        <Grid.Section className={mediaDetailsStyles.imageSection} colSpan={4}>
                             <Grid.Item>
                                 <SingleMediaUpload
                                     deletable={false}
@@ -140,7 +149,7 @@ class MediaDetails extends React.Component<Props> {
                                 </div>
                             </Grid.Item>
                         </Grid.Section>
-                        <Grid.Section size={8}>
+                        <Grid.Section colSpan={8}>
                             <Grid.Item className={mediaDetailsStyles.form}>
                                 <Form
                                     onSubmit={this.handleSubmit}
@@ -158,7 +167,9 @@ class MediaDetails extends React.Component<Props> {
                     resourceStore={resourceStore}
                 />
                 <CropOverlay
+                    id={id}
                     image={resourceStore.data.url}
+                    locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}
                     open={this.showCropOverlay}
