@@ -28,6 +28,7 @@ test('Closing the overlay should call the onClose callback', () => {
             image="test.jpg"
             locale="de"
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             open={true}
         />
     );
@@ -76,6 +77,7 @@ test('Select first non-internal image format as default and change dimensions of
             image="test.jpg"
             locale="en"
             onClose={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
         />
     );
@@ -144,7 +146,7 @@ test('Select first non-internal image format as default and change dimensions of
 });
 
 test('Save changes of format', () => {
-    const closeSpy = jest.fn();
+    const confirmSpy = jest.fn();
 
     const formats = [
         {
@@ -164,7 +166,8 @@ test('Save changes of format', () => {
             id={7}
             image="test.jpg"
             locale="en"
-            onClose={closeSpy}
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
             open={true}
         />
     );
@@ -222,11 +225,11 @@ test('Save changes of format', () => {
             'test1',
             {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20}
         );
-        expect(closeSpy).not.toBeCalled();
+        expect(confirmSpy).not.toBeCalled();
 
         return putPromise.then(() => {
             cropOverlay.update();
-            expect(closeSpy).toBeCalledWith();
+            expect(confirmSpy).toBeCalledWith();
             expect(cropOverlay.find('Overlay').prop('confirmDisabled')).toEqual(true);
         });
     });
@@ -254,6 +257,7 @@ test('Do not save if undefined is passed', () => {
             image="test.jpg"
             locale="en"
             onClose={closeSpy}
+            onConfirm={jest.fn()}
             open={true}
         />
     );

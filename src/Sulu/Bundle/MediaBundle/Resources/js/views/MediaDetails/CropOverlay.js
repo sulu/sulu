@@ -15,6 +15,7 @@ type Props = {|
     image: string,
     locale: string,
     onClose: () => void,
+    onConfirm: () => void,
     open: boolean,
 |};
 
@@ -103,7 +104,7 @@ export default class CropOverlay extends React.Component<Props> {
 
     handleConfirm = () => {
         const {currentSelection, selectedFormat} = this;
-        const {onClose} = this.props;
+        const {onClose, onConfirm} = this.props;
 
         if (!selectedFormat) {
             throw new Error('Saving croppings is not possible without a format');
@@ -114,7 +115,7 @@ export default class CropOverlay extends React.Component<Props> {
                 selectedFormat.key,
                 this.convertSelectionToFormatOptions(currentSelection)
             ).then(action(() => {
-                onClose();
+                onConfirm();
                 this.dirty = false;
             }));
         } else {
