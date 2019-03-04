@@ -69,7 +69,7 @@ class DoctrineInExpressionTest extends TestCase
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
         $result = preg_match(
-            sprintf('/^name\S{%s} IS NULL/', $this->uniqueIdLength),
+            '/^SuluCoreBundle_Example\.name IS NULL/',
             $statement
         );
 

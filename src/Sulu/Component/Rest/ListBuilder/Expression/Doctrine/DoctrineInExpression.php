@@ -63,7 +63,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
                 $statement .= ' OR ' . $this->field->getSelect() . ' IS NULL';
             }
         } elseif (false !== array_search(null, $this->getValues())) { // only null in values array
-            $statement .= $paramName . ' IS NULL';
+            $statement .= $this->field->getSelect() . ' IS NULL';
         }
 
         return $statement;
