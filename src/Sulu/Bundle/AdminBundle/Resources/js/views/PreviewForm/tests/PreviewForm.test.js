@@ -1,9 +1,8 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
 import mockReact from 'react';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {Route} from '../../../services';
 
 const React = mockReact;
 
@@ -40,16 +39,16 @@ beforeEach(() => {
 test('Should render Form view', () => {
     const resourceStore = new ResourceStore('snippet', 1);
 
-    const route: Route = ({
+    const route = {
         options: {
             previewCondition: 'nodeType == 1',
         },
-    }: any);
-    const router = ({
+    };
+    const router = {
         route: route,
-    }: any);
+    };
 
-    const PreviewForm = (require('../PreviewForm').default: any);
+    const PreviewForm = require('../PreviewForm').default;
 
     expect(render(
         <PreviewForm locales={[]} resourceStore={resourceStore} route={route} router={router} />
@@ -59,17 +58,17 @@ test('Should render Form view', () => {
 test('Should initialize preview sidebar per default when previewCondition is not set', () => {
     const resourceStore = new ResourceStore('snippet', 1);
 
-    const route: Route = ({
+    const route = {
         options: {},
-    }: any);
-    const router = ({
+    };
+    const router = {
         route: route,
-    }: any);
+    };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = (require('../PreviewForm').default: any);
-    const withSidebar = (require('../../../containers/Sidebar/withSidebar'): any);
-    const Form = (require('../../Form'): any);
+    const PreviewForm = require('../PreviewForm').default;
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
     // mount PreviewForm and call function that was passed to withSidebar
@@ -83,26 +82,26 @@ test('Should initialize preview sidebar per default when previewCondition is not
     expect(sidebarConfig.props.formStore).toBeDefined();
 
     // check if evalSync was called with correct parameters during function call
-    const jexl = (require('jexl'): any);
+    const jexl = require('jexl');
     expect(jexl.evalSync).not.toBeCalled();
 });
 
 test('Should initialize preview sidebar when previewCondition evaluates to true', () => {
     const resourceStore = new ResourceStore('snippet', 1);
 
-    const route: Route = ({
+    const route = {
         options: {
             previewCondition: 'nodeType == 1',
         },
-    }: any);
-    const router = ({
+    };
+    const router = {
         route: route,
-    }: any);
+    };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = (require('../PreviewForm').default: any);
-    const withSidebar = (require('../../../containers/Sidebar/withSidebar'): any);
-    const Form = (require('../../Form'): any);
+    const PreviewForm = require('../PreviewForm').default;
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
     // mount PreviewForm and call function that was passed to withSidebar
@@ -116,26 +115,26 @@ test('Should initialize preview sidebar when previewCondition evaluates to true'
     expect(sidebarConfig.props.formStore).toBeDefined();
 
     // check if evalSync was called with correct parameters during function call
-    const jexl = (require('jexl'): any);
+    const jexl = require('jexl');
     expect(jexl.evalSync).toBeCalledWith( 'nodeType == 1', {testKey: 'test-value'});
 });
 
 test('Should not initialize preview sidebar when previewCondition evaluates to true', () => {
     const resourceStore = new ResourceStore('snippet', 1);
 
-    const route: Route = ({
+    const route = {
         options: {
             previewCondition: 'nodeType == 2',
         },
-    }: any);
-    const router = ({
+    };
+    const router = {
         route: route,
-    }: any);
+    };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
-    const PreviewForm = (require('../PreviewForm').default: any);
-    const withSidebar = (require('../../../containers/Sidebar/withSidebar'): any);
-    const Form = (require('../../Form'): any);
+    const PreviewForm = require('../PreviewForm').default;
+    const withSidebar = require('../../../containers/Sidebar/withSidebar');
+    const Form = require('../../Form');
     const sidebarFunction = findWithHighOrderFunction(withSidebar, Form);
 
     // mount PreviewForm and call function that was passed to withSidebar
@@ -146,6 +145,6 @@ test('Should not initialize preview sidebar when previewCondition evaluates to t
     expect(sidebarConfig).toEqual(null);
 
     // check if evalSync was called with correct parameters during function call
-    const jexl = (require('jexl'): any);
+    const jexl = require('jexl');
     expect(jexl.evalSync).toBeCalledWith( 'nodeType == 2', {testKey: 'test-value'});
 });
