@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, computed, observable, when} from 'mobx';
 import {observer} from 'mobx-react';
 import {ImageRectangleSelection, Loader, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
@@ -162,13 +162,18 @@ export default class CropOverlay extends React.Component<Props> {
                                 ))}
                             </SingleSelect>
                         </div>
-                        {selectedFormat && !this.mediaFormatStore.loading && <ImageRectangleSelection
-                            image={image}
-                            minHeight={selectedFormat.scale.y}
-                            minWidth={selectedFormat.scale.x}
-                            onChange={this.handleSelectionChange}
-                            value={this.currentSelection}
-                        />}
+                        {selectedFormat && !this.mediaFormatStore.loading &&
+                            <Fragment>
+                                <ImageRectangleSelection
+                                    image={image}
+                                    minHeight={selectedFormat.scale.y}
+                                    minWidth={selectedFormat.scale.x}
+                                    onChange={this.handleSelectionChange}
+                                    value={this.currentSelection}
+                                />
+                                <p>({translate('sulu_media.double_click_crop_and_maximize')})</p>
+                            </Fragment>
+                        }
                     </div>
                     : <Loader />
                 }
