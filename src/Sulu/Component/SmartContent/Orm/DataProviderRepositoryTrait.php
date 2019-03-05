@@ -30,9 +30,14 @@ trait DataProviderRepositoryTrait
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+        if (array_key_exists('sortBy', $filters)) {
+            if (! is_array($filters['sortBy'])) {
+                $sortBy = [$filters['sortBy']];
+            } else {
+                $sortBy = $filters['sortBy'];
+            }
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, $alias, $locale);
         }
 
         $query = $queryBuilder->getQuery();
@@ -66,12 +71,17 @@ trait DataProviderRepositoryTrait
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+        if (array_key_exists('sortBy', $filters)) {
+            if (! is_array($filters['sortBy'])) {
+                $sortBy = [$filters['sortBy']];
+            } else {
+                $sortBy = $filters['sortBy'];
+            }
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, 'c', $locale);
 
-            foreach ($filters['sortBy'] as $sortColumn) {
-                $queryBuilder->addSelect($sortColumn);
+            foreach ($sortBy as $sortColumn) {
+                $queryBuilder->addSelect('c.'.$sortColumn);
             }
         }
 
@@ -373,7 +383,7 @@ trait DataProviderRepositoryTrait
                 $this->appendSortByJoins($queryBuilder, $alias, $locale);
             }
 
-            $queryBuilder->orderBy($column, $sortMethod);
+            $queryBuilder->orderBy($alias.'.'.$column, $sortMethod);
         }
     }
 
