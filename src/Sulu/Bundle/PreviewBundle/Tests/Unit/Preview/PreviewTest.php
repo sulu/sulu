@@ -371,8 +371,11 @@ class PreviewTest extends TestCase
         $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
         $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, null)->willReturn(
-            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
+            '<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>'
         );
+
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, true, null)
+            ->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
             $token,
@@ -472,8 +475,11 @@ class PreviewTest extends TestCase
         $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
         $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, 2)->willReturn(
-            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
+            '<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>'
         );
+
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, true, 2)
+            ->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
             $token,
@@ -528,7 +534,10 @@ class PreviewTest extends TestCase
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson)->shouldBeCalled();
 
         $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, false, null)
-            ->willReturn('<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>');
+            ->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, true, null)
+            ->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
             $token,
@@ -583,7 +592,10 @@ class PreviewTest extends TestCase
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson)->shouldBeCalled();
 
         $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, false, 2)
-            ->willReturn('<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>');
+            ->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
+
+        $this->renderer->render($this->object->reveal(), 1, $this->webspaceKey, $this->locale, true, 2)
+            ->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
             $token,

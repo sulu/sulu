@@ -1,0 +1,7 @@
+{% extends previewParentTemplate %}
+
+{% block content %}
+    {{ previewContentReplacer|raw }}
+    {{ parent() }}
+    {{ previewContentReplacer|raw }}
+{% endblock %}
