@@ -1,5 +1,6 @@
 @import '../../containers/Application/colors.scss';
-@import './variables.scss';
+
+$snackbarIconWidth: 60px;
 
 $snackbarErrorColor: $white;
 $snackbarErrorBackgroundColor: $roman;
@@ -18,7 +19,7 @@ $closeButtonBorderColor: $white;
 }
 
 .icon {
-    width: $snackbarWidth;
+    width: $snackbarIconWidth;
     font-size: 20px;
     display: flex;
     align-items: center;
