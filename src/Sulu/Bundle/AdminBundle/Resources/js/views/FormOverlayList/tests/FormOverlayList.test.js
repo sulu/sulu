@@ -8,9 +8,9 @@ import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Form from '../../../containers/Form';
-import ErrorSnackbar from '../ErrorSnackbar';
 import Router from '../../../services/Router';
 import type {Route} from '../../../services/Router';
+import Snackbar from '../../../components/Snackbar';
 
 const React = mockReact;
 
@@ -303,7 +303,7 @@ test('Should save ResoureFormStore, close overlay and reload List view on submit
     });
 });
 
-test('Should display ErrorSnackbar if an error happens during saving of ResourceFormStore', () => {
+test('Should display Snackbar if an error happens during saving of ResourceFormStore', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -335,15 +335,15 @@ test('Should display ErrorSnackbar if an error happens during saving of Resource
 
             formOverlayList.update();
             expect(formOverlayList.find(Overlay).exists()).toBeTruthy();
-            expect(formOverlayList.find(ErrorSnackbar).exists).toBeTruthy();
-            expect(formOverlayList.find(ErrorSnackbar).props().visible).toBeTruthy();
+            expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
+            expect(formOverlayList.find(Snackbar).props().visible).toBeTruthy();
 
             resolve();
         });
     });
 });
 
-test('Should hide ErrorSnackbar when closeClick callback of ErrorSnackbar is fired', () => {
+test('Should hide Snackbar when closeClick callback of Snackbar is fired', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -357,11 +357,11 @@ test('Should hide ErrorSnackbar when closeClick callback of ErrorSnackbar is fir
 
     formOverlayList.instance().formErrors.push('error 1');
     formOverlayList.update();
-    expect(formOverlayList.find(ErrorSnackbar).props().visible).toBeTruthy();
+    expect(formOverlayList.find(Snackbar).props().visible).toBeTruthy();
 
-    formOverlayList.find(ErrorSnackbar).props().onCloseClick();
+    formOverlayList.find(Snackbar).props().onCloseClick();
     formOverlayList.update();
-    expect(formOverlayList.find(ErrorSnackbar).props().visible).toBeFalsy();
+    expect(formOverlayList.find(Snackbar).props().visible).toBeFalsy();
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {

@@ -1,5 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
+$snackbarHeight: 60px;
 $snackbarIconWidth: 60px;
 
 $snackbarErrorColor: $white;
@@ -12,8 +13,8 @@ $closeButtonBorderColor: $white;
 .snackbar {
     position: absolute;
     top: 0;
-    bottom: 0;
     left: 0;
+    height: $snackbarHeight;
     z-index: 1;
     display: flex;
 }
@@ -55,12 +56,11 @@ $closeButtonBorderColor: $white;
     color: $snackbarErrorColor;
     display: flex;
     align-items: center;
-    will-change: top, bottom;
-    transition: top .15s, bottom .15s;
+    will-change: top;
+    transition: top .15s;
 
     &:not(.visible) {
         top: -100%;
-        bottom: 100%;
     }
 
     .icon {

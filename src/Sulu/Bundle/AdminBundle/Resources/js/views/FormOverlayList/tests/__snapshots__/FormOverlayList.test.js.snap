@@ -47,7 +47,7 @@ Array [
             class="form"
           >
             <div
-              class="snackbar"
+              class="snackbar error"
             >
               <span
                 aria-label="su-exclamation-triangle"

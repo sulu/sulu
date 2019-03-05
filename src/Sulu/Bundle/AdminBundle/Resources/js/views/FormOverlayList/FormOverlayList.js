@@ -10,8 +10,8 @@ import Form from '../../containers/Form';
 import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
 import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
+import Snackbar from '../../components/Snackbar';
 import formOverlayListStyles from './formOverlayList.scss';
-import ErrorSnackbar from './ErrorSnackbar';
 
 @observer
 export default class FormOverlayList extends React.Component<ViewProps> {
@@ -169,8 +169,9 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         title={overlayTitle}
                     >
                         <div className={formOverlayListStyles.form}>
-                            <ErrorSnackbar
+                            <Snackbar
                                 onCloseClick={this.handleErrorSnackbarClose}
+                                type="error"
                                 visible={!!this.formErrors.length}
                             />
                             <Form
