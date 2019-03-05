@@ -118,7 +118,14 @@ class Configuration implements ConfigurationInterface
                         ])
                     ->end()
                     ->arrayNode('types')
-                        ->prototype('scalar')->end()->defaultValue([
+                        ->prototype('array')
+                            ->children()
+                                ->scalarNode('type')->cannotBeEmpty()->isRequired()->end()
+                                ->arrayNode('mimeTypes')->requiresAtLeastOneElement()
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()->defaultValue([
                             [
                                 'type' => 'document',
                                 'mimeTypes' => ['*'],
