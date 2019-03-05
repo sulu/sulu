@@ -36,5 +36,6 @@
     "sulu_media.move_media": "Medien verschieben",
     "sulu_media.set_focus_point": "Fokuspunkt setzen",
     "sulu_media.crop": "Ausschnitte festlegen",
-    "sulu_media.double_click_crop_and_maximize": "Mit Doppelklick wird der Ausschnitt maximiert und zentriert"
+    "sulu_media.double_click_crop_and_maximize": "Mit Doppelklick wird der Ausschnitt maximiert und zentriert",
+    "sulu_media.min_size_notification": "Minimalgröße erreicht"
 }

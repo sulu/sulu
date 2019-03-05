@@ -3,6 +3,10 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import {RectangleSelection} from '../RectangleSelection';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 jest.mock('../../withContainerSize/withContainerSize');
 jest.mock('../../../services/DOM/afterElementsRendered');
 
@@ -16,13 +20,47 @@ test('The component should render with children', () => {
     expect(view).toMatchSnapshot();
 });
 
-test('The component should render with initial selection', () => {
+test('The component should render with value as selection', () => {
     const view = mount(
         <RectangleSelection
             containerHeight={1000}
             containerWidth={2000}
             onChange={jest.fn()}
             value={{width: 1, height: 2, top: 3, left: 4}}
+        >
+            <p>Lorem ipsum</p>
+        </RectangleSelection>
+    );
+
+    expect(view.render()).toMatchSnapshot();
+});
+
+test('The component should render with minimum size notification', () => {
+    const view = mount(
+        <RectangleSelection
+            containerHeight={1000}
+            containerWidth={2000}
+            minHeight={200}
+            minWidth={100}
+            onChange={jest.fn()}
+            value={{width: 100, height: 200, top: 30, left: 40}}
+        >
+            <p>Lorem ipsum</p>
+        </RectangleSelection>
+    );
+
+    expect(view.render()).toMatchSnapshot();
+});
+
+test('The component should render without minimum size notification', () => {
+    const view = mount(
+        <RectangleSelection
+            containerHeight={1000}
+            containerWidth={2000}
+            minHeight={100}
+            minWidth={100}
+            onChange={jest.fn()}
+            value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
         </RectangleSelection>

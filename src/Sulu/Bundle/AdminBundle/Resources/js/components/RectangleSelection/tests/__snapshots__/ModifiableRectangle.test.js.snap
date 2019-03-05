@@ -29,3 +29,26 @@ exports[`The component should render with correct positions 1`] = `
   />
 </div>
 `;
+
+exports[`The component should render with minimum size notification 1`] = `
+Array [
+  <div
+    class="minSizeNotification"
+    style="left:0px;top:100px;width:200px"
+  >
+    sulu_media.min_size_notification
+  </div>,
+  <div
+    class="rectangle"
+    style="left:0px;top:0px;width:200px;height:100px"
+  >
+    <div
+      class="resizeHandle"
+    />
+    <div
+      class="backdrop"
+      style="outline-width:0px"
+    />
+  </div>,
+]
+`;

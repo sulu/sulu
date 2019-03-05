@@ -113,7 +113,7 @@ export class RectangleSelection extends React.Component<Props> {
     };
 
     render() {
-        const {containerHeight, containerWidth, value = this.getMaximumSelection()} = this.props;
+        const {containerHeight, containerWidth, minHeight, minWidth, value = this.getMaximumSelection()} = this.props;
         const {height, left, top, width} = value;
 
         let backdropSize = 0;
@@ -129,6 +129,7 @@ export class RectangleSelection extends React.Component<Props> {
                     backdropSize={backdropSize}
                     height={height}
                     left={left}
+                    minSizeReached={height <= (minHeight || 0) && width <= (minWidth || 0)}
                     onChange={this.handleRectangleChange}
                     onDoubleClick={this.handleRectangleDoubleClick}
                     top={top}

@@ -3,8 +3,18 @@ import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import ModifiableRectangle from '../ModifiableRectangle';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('The component should render', () => {
     const view = render(<ModifiableRectangle height={100} width={200} />);
+
+    expect(view).toMatchSnapshot();
+});
+
+test('The component should render with minimum size notification', () => {
+    const view = render(<ModifiableRectangle height={100} minSizeReached={true} width={200} />);
 
     expect(view).toMatchSnapshot();
 });
@@ -19,7 +29,7 @@ test('The component should call the double click callback', () => {
     const clickSpy = jest.fn();
     const rectangle = shallow(<ModifiableRectangle height={100} onDoubleClick={clickSpy} width={200} />);
 
-    rectangle.simulate('dblclick');
+    rectangle.find('.rectangle').simulate('dblclick');
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });
 

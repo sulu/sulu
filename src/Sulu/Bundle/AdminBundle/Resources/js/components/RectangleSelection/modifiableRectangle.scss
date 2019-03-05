@@ -3,6 +3,7 @@
 $backdropColor: rgba($black, .6);
 $borderColor: $white;
 $borderSize: 2px;
+$minSizeNotificationColor: $white;
 
 .rectangle {
     position: absolute;
@@ -23,7 +24,7 @@ $borderSize: 2px;
     outline-style: solid;
 }
 
-.resizeHandle {
+.resize-handle {
     width: 20px;
     height: 20px;
     border-radius: 10px;
@@ -34,4 +35,12 @@ $borderSize: 2px;
     cursor: nwse-resize;
     box-shadow: 0 0 20px 0 rgba($black, .3);
     z-index: 2;
+}
+
+.min-size-notification {
+    position: absolute;
+    z-index: 2;
+    padding: 5px 15px 0 0;
+    color: $minSizeNotificationColor;
+    text-align: right;
 }
