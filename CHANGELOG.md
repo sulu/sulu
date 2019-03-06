@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
+    * BUGFIX      #4471  [AdminBundle]          Fix CKEditor preview for content that is not wrapped in an HTML tag
 
 * 1.6.25 (2019-02-28)
     * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
