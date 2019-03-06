@@ -39,7 +39,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
 
         const {locale, value} = this.props;
 
-        this.mediaSelectionStore = new MultiSelectionStore(MEDIA_RESOURCE_KEY, (value.ids: any), locale);
+        this.mediaSelectionStore = new MultiSelectionStore(MEDIA_RESOURCE_KEY, value.ids, locale);
         this.changeDisposer = reaction(
             () => (this.mediaSelectionStore.items.map((item) => item.id)),
             (loadedMediaIds: Array<number>) => {
@@ -59,7 +59,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
         newSelectedIds.sort();
         loadedSelectedIds.sort();
         if (!equals(newSelectedIds, loadedSelectedIds)) {
-            this.mediaSelectionStore.loadItems((newSelectedIds: any));
+            this.mediaSelectionStore.loadItems(newSelectedIds);
         }
     }
 

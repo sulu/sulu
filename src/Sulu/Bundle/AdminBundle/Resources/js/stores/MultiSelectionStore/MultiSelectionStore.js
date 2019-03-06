@@ -13,7 +13,7 @@ export default class MultiSelectionStore {
 
     constructor(
         resourceKey: string,
-        selectedItemIds: Array<string | number>,
+        selectedItemIds: $ReadOnlyArray<string | number>,
         locale: ?IObservableValue<string>,
         idFilterParameter: string = 'ids'
     ) {
@@ -42,7 +42,7 @@ export default class MultiSelectionStore {
         this.loading = loading;
     }
 
-    @action loadItems = (itemIds: ?Array<string | number>) => {
+    @action loadItems = (itemIds: ?$ReadOnlyArray<string | number>) => {
         if (!itemIds || itemIds.length === 0) {
             this.items = [];
             return;
