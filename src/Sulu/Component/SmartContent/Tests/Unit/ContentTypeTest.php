@@ -427,6 +427,41 @@ class ContentTypeTest extends TestCase
         );
     }
 
+    public function testGetContentDataNullTagsCategories()
+    {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal()
+        );
+
+        $property = $this->getContentDataProperty(
+            [
+                'dataSource' => '123-123-123',
+                'categories' => null,
+                'tags' => null,
+            ]
+        );
+
+        $pageData = $smartContent->getContentData($property);
+
+        $this->assertEquals(
+            [
+                ['uuid' => 1],
+                ['uuid' => 2],
+                ['uuid' => 3],
+                ['uuid' => 4],
+                ['uuid' => 5],
+                ['uuid' => 6],
+            ],
+            $pageData
+        );
+    }
+
     public function testGetContentDataPaged()
     {
         $smartContent = new SmartContent(
