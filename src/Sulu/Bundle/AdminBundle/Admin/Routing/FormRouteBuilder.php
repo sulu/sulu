@@ -13,6 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class FormRouteBuilder implements FormRouteBuilderInterface
 {
+    use RouteBuilderTrait;
+    use FormRouteBuilderTrait;
+
     const VIEW = 'sulu_admin.form';
 
     /**
@@ -27,99 +30,91 @@ class FormRouteBuilder implements FormRouteBuilderInterface
 
     public function setResourceKey(string $resourceKey): FormRouteBuilderInterface
     {
-        $this->route->setOption('resourceKey', $resourceKey);
+        $this->setResourceKeyToRoute($this->route, $resourceKey);
 
         return $this;
     }
 
     public function setFormKey(string $formKey): FormRouteBuilderInterface
     {
-        $this->route->setOption('formKey', $formKey);
+        $this->setFormKeyToRoute($this->route, $formKey);
 
         return $this;
     }
 
     public function addLocales(array $locales): FormRouteBuilderInterface
     {
-        $oldLocales = $this->route->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->setOption('locales', $newLocales);
+        $this->addLocalesToRoute($this->route, $locales);
 
         return $this;
     }
 
     public function setTabTitle(string $tabTitle): FormRouteBuilderInterface
     {
-        $this->route->setOption('tabTitle', $tabTitle);
+        $this->setTabTitleToRoute($this->route, $tabTitle);
 
         return $this;
     }
 
     public function setTabCondition(string $tabCondition): FormRouteBuilderInterface
     {
-        $this->route->setOption('tabCondition', $tabCondition);
+        $this->setTabConditionToRoute($this->route, $tabCondition);
 
         return $this;
     }
 
     public function setTabOrder(int $tabOrder): FormRouteBuilderInterface
     {
-        $this->route->setOption('tabOrder', $tabOrder);
+        $this->setTabOrderToRoute($this->route, $tabOrder);
 
         return $this;
     }
 
     public function setTabPriority(int $tabPriority): FormRouteBuilderInterface
     {
-        $this->route->setOption('tabPriority', $tabPriority);
+        $this->setTabPriorityToRoute($this->route, $tabPriority);
 
         return $this;
     }
 
     public function addToolbarActions(array $toolbarActions): FormRouteBuilderInterface
     {
-        $oldToolbarActions = $this->route->getOption('toolbarActions');
-        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
-        $this->route->setOption('toolbarActions', $newToolbarActions);
+        $this->addToolbarActionsToRoute($this->route, $toolbarActions);
 
         return $this;
     }
 
     public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): FormRouteBuilderInterface
     {
-        $oldRouterAttributesToFormStore = $this->route->getOption('routerAttributesToFormStore');
-        $newRouterAttributesToFormStore = $oldRouterAttributesToFormStore ? array_merge($oldRouterAttributesToFormStore, $routerAttributesToFormStore) : $routerAttributesToFormStore;
-        $this->route->setOption('routerAttributesToFormStore', $newRouterAttributesToFormStore);
+        $this->addRouterAttributesToFormStoreToRoute($this->route, $routerAttributesToFormStore);
 
         return $this;
     }
 
     public function addRouterAttributesToEditRoute(array $routerAttributesToEditRoute): FormRouteBuilderInterface
     {
-        $oldRouterAttributesToEditRoute = $this->route->getOption('routerAttributesToEditRoute');
-        $newRouterAttributesToEditRoute = $oldRouterAttributesToEditRoute ? array_merge($oldRouterAttributesToEditRoute, $routerAttributesToEditRoute) : $routerAttributesToEditRoute;
-        $this->route->setOption('routerAttributesToEditRoute', $newRouterAttributesToEditRoute);
+        $this->addRouterAttributesToEditRouteToRoute($this->route, $routerAttributesToEditRoute);
 
         return $this;
     }
 
     public function setEditRoute(string $editRoute): FormRouteBuilderInterface
     {
-        $this->route->setOption('editRoute', $editRoute);
+        $this->setEditRouteToRoute($this->route, $editRoute);
 
         return $this;
     }
 
     public function setBackRoute(string $backRoute): FormRouteBuilderInterface
     {
-        $this->route->setOption('backRoute', $backRoute);
+        $this->setBackRouteToRoute($this->route, $backRoute);
 
         return $this;
     }
 
     public function setIdQueryParameter(string $idQueryParameter): FormRouteBuilderInterface
     {
-        $this->route->setOption('idQueryParameter', $idQueryParameter);
+        $this->setIdQueryParameterToRoute($this->route, $idQueryParameter);
 
         return $this;
     }

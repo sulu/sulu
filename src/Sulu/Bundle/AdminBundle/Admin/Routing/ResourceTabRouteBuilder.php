@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 {
+    use RouteBuilderTrait;
+
     const VIEW = 'sulu_admin.resource_tabs';
 
     /**
@@ -27,23 +29,21 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 
     public function setResourceKey(string $resourceKey): ResourceTabRouteBuilderInterface
     {
-        $this->route->setOption('resourceKey', $resourceKey);
+        $this->setResourceKeyToRoute($this->route, $resourceKey);
 
         return $this;
     }
 
     public function addLocales(array $locales): ResourceTabRouteBuilderInterface
     {
-        $oldLocales = $this->route->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->setOption('locales', $newLocales);
+        $this->addLocalesToRoute($this->route, $locales);
 
         return $this;
     }
 
     public function setBackRoute(string $backRoute): ResourceTabRouteBuilderInterface
     {
-        $this->route->setOption('backRoute', $backRoute);
+        $this->setBackRoute($this->route, $backRoute);
 
         return $this;
     }

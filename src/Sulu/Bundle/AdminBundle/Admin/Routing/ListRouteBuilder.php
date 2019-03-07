@@ -13,6 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ListRouteBuilder implements ListRouteBuilderInterface
 {
+    use RouteBuilderTrait;
+    use ListRouteBuilderTrait;
+
     const VIEW = 'sulu_admin.list';
 
     /**
@@ -27,134 +30,112 @@ class ListRouteBuilder implements ListRouteBuilderInterface
 
     public function setResourceKey(string $resourceKey): ListRouteBuilderInterface
     {
-        $this->route->setOption('resourceKey', $resourceKey);
+        $this->setResourceKeyToRoute($this->route, $resourceKey);
 
         return $this;
     }
 
-    public function setListkey(string $listKey): ListRouteBuilderInterface
+    public function setListKey(string $listKey): ListRouteBuilderInterface
     {
-        $this->route->setOption('listKey', $listKey);
+        $this->setListKeyToRoute($this->route, $listKey);
 
         return $this;
     }
 
     public function setTitle(string $title): ListRouteBuilderInterface
     {
-        $this->route->setOption('title', $title);
+        $this->setTitleToRoute($this->route, $title);
 
         return $this;
     }
 
     public function setTabTitle(string $tabTitle): ListRouteBuilderInterface
     {
-        $this->route->setOption('tabTitle', $tabTitle);
+        $this->setTabTitleToRoute($this->route, $tabTitle);
 
         return $this;
     }
 
     public function setTabOrder(int $tabOrder): ListRouteBuilderInterface
     {
-        $this->route->setOption('tabOrder', $tabOrder);
+        $this->setTabOrderToRoute($this->route, $tabOrder);
 
         return $this;
     }
 
     public function setTabCondition(string $tabCondition): ListRouteBuilderInterface
     {
-        $this->route->setOption('tabCondition', $tabCondition);
+        $this->setTabConditionToRoute($this->route, $tabCondition);
 
         return $this;
     }
 
     public function addListAdapters(array $listAdapters): ListRouteBuilderInterface
     {
-        $oldListAdapters = $this->route->getOption('adapters');
-        $newListAdapters = $oldListAdapters ? array_merge($oldListAdapters, $listAdapters) : $listAdapters;
-        $this->route->setOption('adapters', $newListAdapters);
+        $this->addListAdaptersToRoute($this->route, $listAdapters);
 
         return $this;
     }
 
     public function addLocales(array $locales): ListRouteBuilderInterface
     {
-        $oldLocales = $this->route->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->setOption('locales', $newLocales);
+        $this->addLocalesToRoute($this->route, $locales);
 
         return $this;
     }
 
     public function setDefaultLocale(string $locale): ListRouteBuilderInterface
     {
-        $this->route->setAttributeDefault('locale', $locale);
+        $this->setDefaultLocaleToRoute($this->route, $locale);
 
         return $this;
     }
 
     public function addToolbarActions(array $toolbarActions): ListRouteBuilderInterface
     {
-        $oldToolbarActions = $this->route->getOption('toolbarActions');
-        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
-        $this->route->setOption('toolbarActions', $newToolbarActions);
+        $this->addToolbarActionsToRoute($this->route, $toolbarActions);
 
         return $this;
     }
 
     public function setAddRoute(string $addRoute): ListRouteBuilderInterface
     {
-        $this->route->setOption('addRoute', $addRoute);
+        $this->setAddRouteToRoute($this->route, $addRoute);
 
         return $this;
     }
 
     public function setEditRoute(string $editRoute): ListRouteBuilderInterface
     {
-        $this->route->setOption('editRoute', $editRoute);
+        $this->setEditRouteToRoute($this->route, $editRoute);
 
         return $this;
     }
 
     public function setBackRoute(string $backRoute): ListRouteBuilderInterface
     {
-        $this->route->setOption('backRoute', $backRoute);
+        $this->setBackRouteToRoute($this->route, $backRoute);
 
         return $this;
     }
 
     public function enableSearching(): ListRouteBuilderInterface
     {
-        $this->route->setOption('searchable', true);
+        $this->setSearchableToRoute($this->route, true);
 
         return $this;
     }
 
     public function disableSearching(): ListRouteBuilderInterface
     {
-        $this->route->setOption('searchable', false);
-
-        return $this;
-    }
-
-    public function enableMoving(): ListRouteBuilderInterface
-    {
-        $this->route->setOption('movable', true);
-
-        return $this;
-    }
-
-    public function disableMoving(): ListRouteBuilderInterface
-    {
-        $this->route->setOption('movable', false);
+        $this->setSearchableToRoute($this->route, false);
 
         return $this;
     }
 
     public function addRouterAttributesToListStore(array $routerAttributesToListStore): ListRouteBuilderInterface
     {
-        $oldRouterAttributesToListStore = $this->route->getOption('routerAttributesToListStore');
-        $newRouterAttributesToListStore = $oldRouterAttributesToListStore ? array_merge($oldRouterAttributesToListStore, $routerAttributesToListStore) : $routerAttributesToListStore;
-        $this->route->setOption('routerAttributesToListStore', $newRouterAttributesToListStore);
+        $this->addRouterAttributesToListStoreToRoute($this->route, $routerAttributesToListStore);
 
         return $this;
     }
