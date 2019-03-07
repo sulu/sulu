@@ -64,6 +64,11 @@ interface FormOverlayListRouteBuilderInterface
      */
     public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): self;
 
+    /**
+     * @param string[] $resourceStorePropertiesToListStore
+     */
+    public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): self;
+
     public function setParent(string $parent): self;
 
     public function getRoute(): Route;
