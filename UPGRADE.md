@@ -3,6 +3,7 @@
 ## dev-develop
 
 ### excluded query parameter of Media API
+
 The `excluded` query parameter which can be used to exclude specific ids from the media list returned by the Media API
 was renamed to `excludedIds` to increase the consistency within our APIs. 
 
