@@ -160,8 +160,8 @@ class Form extends React.Component<Props> {
 
         routerAttributesToFormStore = toJS(routerAttributesToFormStore);
         Object.keys(routerAttributesToFormStore).forEach((key) => {
-            const attributeName = routerAttributesToFormStore[key];
-            const formOptionKey = isNaN(key) ? key : routerAttributesToFormStore[key];
+            const formOptionKey = routerAttributesToFormStore[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToFormStore[key];
 
             formStoreOptions[formOptionKey] = attributes[attributeName];
         });

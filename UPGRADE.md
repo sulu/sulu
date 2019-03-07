@@ -7,6 +7,44 @@
 The `excluded` query parameter which can be used to exclude specific ids from the media list returned by the Media API
 was renamed to `excludedIds` to increase the consistency within our APIs. 
 
+### Router Attributes to List or Form Store switched
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+If you have use the `routerPropertiesToListStore` or `routerPropertiesToFormStore` options the properties where switched:
+
+**Before**
+
+```php
+    ->addRouterAttributesToListStore([
+        'listStoreProperty' => 'routeAttribute',
+    ]);
+```
+
+or
+
+```php
+    ->addRouterAttributesToFormStore([
+        'formStoreProperty' => 'routeAttribute',
+    ]);
+```
+
+**After**
+
+```php
+    ->addRouterAttributesToListStore([
+        'routeAttribute' => 'listStoreProperty',
+    ]);
+```
+
+or
+
+```php
+    ->addRouterAttributesToFormStore([
+        'routeAttribute' => 'formStoreProperty',
+    ]);
+```
+
 ### Endpoint configuration
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

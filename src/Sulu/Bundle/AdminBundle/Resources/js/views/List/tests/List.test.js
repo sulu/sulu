@@ -6,6 +6,7 @@ import TableAdapter from '../../../containers/List/adapters/TableAdapter';
 import listFieldTransformRegistry from '../../../containers/List/registries/ListFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
+import ResourceStore from '../../../stores/ResourceStore';
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
@@ -86,6 +87,19 @@ jest.mock(
             moving: false,
             movingSelection: false,
         });
+    })
+);
+
+jest.mock(
+    '../../../stores/ResourceStore/ResourceStore',
+    () => jest.fn(function(resourceKey, id) {
+        this.resourceKey = resourceKey;
+        this.id = id;
+        this.data = {
+            id: id,
+            title: 'Sulu rocks',
+            locale: 'de',
+        };
     })
 );
 
@@ -702,7 +716,7 @@ test('Should pass router attributes from router to the ListStore', () => {
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
-                routerAttributesToListStore: {'0': 'locale', 1: 'title', 'parentId': 'id'},
+                routerAttributesToListStore: {'0': 'locale', 1: 'title', 'id': 'parentId'},
             },
         },
     };
@@ -713,6 +727,31 @@ test('Should pass router attributes from router to the ListStore', () => {
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.parentId).toEqual('123-123-123');
     expect(listStore.options.title).toEqual('Sulu is awesome');
+});
+
+test('Should pass resourceStore properties from router to the ListStore', () => {
+    const List = require('../List').default;
+    const resourceStore = new ResourceStore('tests', '123-456-789');
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                apiOptions: {},
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                resourceStorePropertiesToListStore: {'0': 'locale', 1: 'title', 'id': 'parentId'},
+            },
+        },
+    };
+
+    const list = mount(<List resourceStore={resourceStore} router={router} />);
+    const listStore = list.instance().listStore;
+
+    expect(listStore.options.locale).toEqual('de');
+    expect(listStore.options.parentId).toEqual('123-456-789');
+    expect(listStore.options.title).toEqual('Sulu rocks');
 });
 
 test('Should pass router attributes array from router to the ListStore', () => {
