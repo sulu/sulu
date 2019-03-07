@@ -142,9 +142,7 @@ class ListRouteBuilder implements ListRouteBuilderInterface
 
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): ListRouteBuilderInterface
     {
-        $oldResourceStorePropertiesToListStore = $this->route->getOption('resourceStorePropertiesToListStore');
-        $newResourceStorePropertiesToListStore = $oldResourceStorePropertiesToListStore ? array_merge($oldResourceStorePropertiesToListStore, $resourceStorePropertiesToListStore) : $resourceStorePropertiesToListStore;
-        $this->route->setOption('resourceStorePropertiesToListStore', $newResourceStorePropertiesToListStore);
+        $this->addResourceStorePropertiesToListStoreToRoute($this->route, $resourceStorePropertiesToListStore);
 
         return $this;
     }

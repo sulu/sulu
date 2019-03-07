@@ -83,4 +83,14 @@ trait ListRouteBuilderTrait
         $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
         $route->setOption('toolbarActions', $newToolbarActions);
     }
+
+    private function addResourceStorePropertiesToListStoreToRoute(Route $route, array $resourceStorePropertiesToListStore): void
+    {
+        $oldResourceStorePropertiesToListStore = $route->getOption('resourceStorePropertiesToListStore');
+        $newResourceStorePropertiesToListStore = $oldResourceStorePropertiesToListStore
+            ? array_merge($oldResourceStorePropertiesToListStore, $resourceStorePropertiesToListStore)
+            : $resourceStorePropertiesToListStore;
+
+        $route->setOption('resourceStorePropertiesToListStore', $newResourceStorePropertiesToListStore);
+    }
 }
