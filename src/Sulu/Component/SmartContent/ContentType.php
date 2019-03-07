@@ -248,7 +248,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         if (!array_key_exists('tags', $filters) || null === $filters['tags']) {
             $filters['tags'] = [];
         }
-        if (!array_key_exists('categories', $filters)|| null === $filters['categories']) {
+        if (!array_key_exists('categories', $filters) || null === $filters['categories']) {
             $filters['categories'] = [];
         }
 
