@@ -60,6 +60,28 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($listBuilder, []);
     }
 
+    public function testInitializeListBuilderIds()
+    {
+        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
+            ->getMock();
+
+        $this->listRestHelper->expects($this->any())->method('getIds')->willReturn([2, 4, 6]);
+        $listBuilder->expects($this->once())->method('setIds')->with([2, 4, 6])->willReturnSelf();
+
+        $this->restHelper->initializeListBuilder($listBuilder, []);
+    }
+
+    public function testInitializeListBuilderExcludedIds()
+    {
+        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
+            ->getMock();
+
+        $this->listRestHelper->expects($this->any())->method('getExcludedIds')->willReturn([11, 22]);
+        $listBuilder->expects($this->once())->method('setExcludedIds')->with([11, 22])->willReturnSelf();
+
+        $this->restHelper->initializeListBuilder($listBuilder, []);
+    }
+
     public function testInitializeListBuilderAddFields()
     {
         $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')

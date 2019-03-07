@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
 import type {OverlayType} from '../ListOverlay';
@@ -14,7 +15,8 @@ type Props = {|
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     listKey: string,
-    disabledIds?: Array<string | number>,
+    disabledIds: Array<string | number>,
+    excludedIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItems: Array<Object>) => void,
@@ -27,22 +29,30 @@ type Props = {|
     title: string,
 |};
 
+@observer
 export default class MultiListOverlay extends React.Component<Props> {
-    listStore: ListStore;
-    page: IObservableValue<number> = observable.box(1);
-
     static defaultProps = {
         clearSelectionOnClose: false,
+        disabledIds: [],
+        excludedIds: [],
         overlayType: 'overlay',
         preSelectedItems: [],
     };
 
+    listStore: ListStore;
+    page: IObservableValue<number> = observable.box(1);
+    excludedIdsDisposer: () => void;
+
     constructor(props: Props) {
         super(props);
+
+        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
 
         const {listKey, locale, options, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
+        observableOptions.excludedIds = excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;
@@ -60,6 +70,7 @@ export default class MultiListOverlay extends React.Component<Props> {
 
     componentWillUnmount() {
         this.listStore.destroy();
+        this.excludedIdsDisposer();
     }
 
     handleConfirm = () => {

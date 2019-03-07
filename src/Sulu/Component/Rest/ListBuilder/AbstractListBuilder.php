@@ -60,6 +60,22 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $limit = null;
 
     /**
+     * Array of ids to which the result of the query is restricted.
+     * If null, the result is not restricted to specific ids.
+     *
+     * @var array|null
+     */
+    protected $ids = null;
+
+    /**
+     * Array of ids which are excluded from the result of the query.
+     * If null, no ids will be excluded from the result.
+     *
+     * @var array|null
+     */
+    protected $excludedIds = null;
+
+    /**
      * group by fields.
      *
      * @var array
@@ -266,6 +282,42 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function getCurrentPage()
     {
         return $this->page;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIds($ids)
+    {
+        $this->ids = $ids;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIds()
+    {
+        return $this->ids;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setExcludedIds($excludedIds)
+    {
+        $this->excludedIds = $excludedIds;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExcludedIds()
+    {
+        return $this->excludedIds;
     }
 
     /**

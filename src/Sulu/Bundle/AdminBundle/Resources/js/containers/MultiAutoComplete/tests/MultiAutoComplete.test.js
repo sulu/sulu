@@ -414,7 +414,7 @@ test('Search using store when new search value is retrieved from MultiAutoComple
     expect(multiAutoComplete.instance().searchStore.search).toBeCalledWith('James', []);
 });
 
-test('Search using store with excluded ids when new search value is retrieved from MultiAutoComplete component', () => {
+test('Search using store with excluded-ids when new search value is retrieved from MultiAutoComplete component', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
         this.searchResults = [];

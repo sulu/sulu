@@ -555,6 +555,74 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSetIds()
+    {
+        $this->doctrineListBuilder->setIds([11, 22]);
+
+        $this->queryBuilder->setParameter(Argument::containingString('id'), [11, 22])->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('SuluCoreBundle_Example.id IN (:id')
+        )->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetIdsEmpty()
+    {
+        $this->doctrineListBuilder->setIds([]);
+
+        $this->queryBuilder->andWhere(
+            Argument::containingString(' IS NULL')
+        )->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetIdsNull()
+    {
+        $this->doctrineListBuilder->setIds(null);
+
+        $this->queryBuilder->andWhere(
+            Argument::containingString('SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIds()
+    {
+        $this->doctrineListBuilder->setExcludedIds([55, 99]);
+
+        $this->queryBuilder->setParameter(Argument::containingString('id'), [55, 99])->shouldBeCalled();
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIdsEmpty()
+    {
+        $this->doctrineListBuilder->setExcludedIds([]);
+
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSetExcludedIdsNull()
+    {
+        $this->doctrineListBuilder->setExcludedIds(null);
+
+        $this->queryBuilder->andWhere(
+            Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
+        )->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testCount()
     {
         $this->doctrineListBuilder->setSelectFields(

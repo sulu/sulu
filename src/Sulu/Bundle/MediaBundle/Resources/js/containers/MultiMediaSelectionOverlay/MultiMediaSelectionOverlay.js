@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
@@ -21,18 +21,19 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
     };
 
     collectionId: IObservableValue<?string | number> = observable.box();
-    excludedIdString: IObservableValue<string>;
     mediaListStore: ListStore;
     collectionListStore: ListStore;
+    excludedIdsDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
-        this.excludedIdString = observable.box(props.excludedIds.sort().join(','));
+        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        this.excludedIdsDisposer = excludedIds.observe(() => this.mediaListStore.clear());
 
         this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
-            this.excludedIdString,
+            excludedIds,
             props.locale
         );
         this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
@@ -41,23 +42,10 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
         );
     }
 
-    @action componentDidUpdate() {
-        const newExcludedIdString = this.props.excludedIds.sort().join(',');
-
-        if (this.excludedIdString.get() !== newExcludedIdString) {
-            this.mediaListStore.clear();
-            this.excludedIdString.set(this.props.excludedIds.sort().join(','));
-        }
-    }
-
     componentWillUnmount() {
-        if (this.mediaListStore) {
-            this.mediaListStore.destroy();
-        }
-
-        if (this.collectionListStore) {
-            this.collectionListStore.destroy();
-        }
+        this.mediaListStore.destroy();
+        this.collectionListStore.destroy();
+        this.excludedIdsDisposer();
     }
 
     render() {

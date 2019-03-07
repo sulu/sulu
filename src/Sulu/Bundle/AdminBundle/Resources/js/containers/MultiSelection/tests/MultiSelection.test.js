@@ -14,14 +14,22 @@ jest.mock('../../../containers/List', () => function List() {
     return <div className="list" />;
 });
 
-jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(function(resourceKey, listKey) {
-    this.clearSelection = jest.fn();
-    this.destroy = jest.fn();
-    this.resourceKey = resourceKey;
-    this.listKey = listKey;
-    this.select = jest.fn();
-    this.setActive = jest.fn();
-}));
+jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
+    function(resourceKey, listKey, userSettingsKey, observableOptions) {
+        this.clearSelection = jest.fn();
+        this.destroy = jest.fn();
+        this.resourceKey = resourceKey;
+        this.listKey = listKey;
+        this.observableOptions = observableOptions;
+        this.select = jest.fn();
+        this.setActive = jest.fn();
+        this.clear = jest.fn();
+
+        mockExtendObservable(this, {
+            selections: [],
+        });
+    }
+));
 
 jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.set = jest.fn();
@@ -218,6 +226,8 @@ test('Should close an overlay using the confirm button', () => {
     );
 
     selection.find('Button[icon="su-plus"]').simulate('click');
+    const listStore = selection.find('MultiListOverlay').instance().listStore;
+    listStore.selections = [1];
 
     const confirmButton = document.querySelector('button.primary');
     if (confirmButton) {

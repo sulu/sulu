@@ -112,10 +112,8 @@ class MediaController extends AbstractMediaController implements
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->getFieldDescriptors($locale, false);
-        $ids = array_filter(explode(',', $request->get('ids')));
-        $excluded = array_filter(explode(',', $request->get('excluded')));
         $types = array_filter(explode(',', $request->get('types')));
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids, $excluded, $types);
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
         $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
         $count = $listBuilder->count();
@@ -141,7 +139,8 @@ class MediaController extends AbstractMediaController implements
             );
         }
 
-        if (0 < count($ids)) {
+        $ids = $listBuilder->getIds();
+        if (null != $ids) {
             $result = [];
             foreach ($listResponse as $item) {
                 $result[array_search($item['id'], $ids)] = $item;
@@ -170,13 +169,11 @@ class MediaController extends AbstractMediaController implements
      *
      * @param Request $request
      * @param FieldDescriptorInterface[] $fieldDescriptors
-     * @param array $ids
-     * @param array $excludedIds
      * @param array $types
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors, $ids, $excludedIds, $types)
+    private function getListBuilder(Request $request, array $fieldDescriptors, $types)
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -206,23 +203,6 @@ class MediaController extends AbstractMediaController implements
                 PermissionTypes::VIEW,
                 $this->getParameter('sulu.model.collection.class')
             );
-        }
-
-        // If no limit is set in request and limit is set by ids
-        $requestLimit = $request->get('limit');
-        $idsCount = count($ids);
-
-        if ($idsCount > 0) {
-            // correct request limit if more ids are requested
-            if (!$requestLimit && $idsCount > $listBuilder->getLimit()) {
-                $listBuilder->limit($idsCount);
-            }
-
-            $listBuilder->in($fieldDescriptors['id'], $ids);
-        }
-
-        if (count($excludedIds)) {
-            $listBuilder->notIn($fieldDescriptors['id'], $excludedIds);
         }
 
         // set the types

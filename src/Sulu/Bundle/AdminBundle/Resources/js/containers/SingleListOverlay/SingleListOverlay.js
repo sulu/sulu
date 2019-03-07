@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {autorun, observable} from 'mobx';
+import {autorun, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
 import type {OverlayType} from '../ListOverlay';
@@ -14,7 +15,8 @@ type Props = {|
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     listKey: string,
-    disabledIds?: Array<string | number>,
+    disabledIds: Array<string | number>,
+    excludedIds: Array<string | number>,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedItem: Object) => void,
@@ -27,22 +29,30 @@ type Props = {|
     title: string,
 |};
 
+@observer
 export default class SingleListOverlay extends React.Component<Props> {
-    listStore: ListStore;
-    page: IObservableValue<number> = observable.box(1);
-    selectionDisposer: () => void;
-
     static defaultProps = {
         clearSelectionOnClose: false,
+        disabledIds: [],
+        excludedIds: [],
         overlayType: 'overlay',
     };
+
+    page: IObservableValue<number> = observable.box(1);
+    listStore: ListStore;
+    excludedIdsDisposer: () => void;
+    selectionDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
+        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
+
         const {listKey, locale, options, preSelectedItem, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
+        observableOptions.excludedIds = excludedIds;
 
         if (locale) {
             observableOptions.locale = locale;
@@ -81,6 +91,7 @@ export default class SingleListOverlay extends React.Component<Props> {
 
     componentWillUnmount() {
         this.listStore.destroy();
+        this.excludedIdsDisposer();
         this.selectionDisposer();
     }
 

@@ -51,6 +51,31 @@ class ListRestHelper implements ListRestHelperInterface
     }
 
     /**
+     * Returns an array of ids to which the response should be restricted.
+     * If null is returned, entities in the response should not be restricted by their id.
+     *
+     * @return array
+     */
+    public function getIds()
+    {
+        $idsString = $this->getRequest()->get('ids');
+
+        return (null !== $idsString) ? array_filter(explode(',', $idsString)) : null;
+    }
+
+    /**
+     * Returns an array of ids which should be excluded from the response.
+     *
+     * @return array
+     */
+    public function getExcludedIds()
+    {
+        $excludedIdsString = $this->getRequest()->get('excludedIds');
+
+        return (null !== $excludedIdsString) ? array_filter(explode(',', $excludedIdsString)) : [];
+    }
+
+    /**
      * Returns the desired sort column.
      *
      * @return string
@@ -80,6 +105,12 @@ class ListRestHelper implements ListRestHelperInterface
         $default = 10;
         if ('csv' === $this->getRequest()->getRequestFormat()) {
             $default = null;
+        }
+
+        // set default limit to count of ids if result is restricted to specific ids
+        $ids = $this->getIds();
+        if (null != $ids) {
+            $default = count($ids);
         }
 
         return $this->getRequest()->get('limit', $default);

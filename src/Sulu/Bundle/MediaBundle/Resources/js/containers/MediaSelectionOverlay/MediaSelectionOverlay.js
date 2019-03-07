@@ -47,7 +47,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
 
     static createMediaListStore(
         collectionId: IObservableValue<?string | number>,
-        excludedIdString: IObservableValue<string>,
+        excludedIds: IObservableValue<?Array<number>>,
         locale: IObservableValue<string>
     ) {
         const options = {};
@@ -62,7 +62,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             'mimeType',
             'subVersion',
             'thumbnails',
-        ].join(',');
+        ];
 
         return new ListStore(
             MEDIA_RESOURCE_KEY,
@@ -71,7 +71,7 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
             {
                 page: observable.box(),
                 collection: collectionId,
-                excluded: excludedIdString,
+                excludedIds: excludedIds,
                 locale: locale,
             },
             options

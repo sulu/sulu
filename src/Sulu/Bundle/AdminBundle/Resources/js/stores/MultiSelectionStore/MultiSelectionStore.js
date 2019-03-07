@@ -4,7 +4,7 @@ import type {IObservableValue} from 'mobx';
 import {arrayMove} from '../../components';
 import {ResourceRequester} from '../../services';
 
-export default class SelectionStore {
+export default class MultiSelectionStore {
     @observable items: Array<Object> = [];
     @observable loading: boolean = false;
     resourceKey: string;

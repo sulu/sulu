@@ -59,11 +59,11 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
             $queryBuilder->setParameter($paramName, $values);
             $statement = $this->field->getSelect() . ' IN (:' . $paramName . ')';
 
-            if (array_search(null, $this->getValues())) {
+            if (false !== array_search(null, $this->getValues())) {
                 $statement .= ' OR ' . $this->field->getSelect() . ' IS NULL';
             }
-        } elseif (array_search(null, $this->getValues())) { // only null in values array
-            $statement .= $paramName . ' IS NULL';
+        } elseif (false !== array_search(null, $this->getValues())) { // only null in values array
+            $statement .= $this->field->getSelect() . ' IS NULL';
         }
 
         return $statement;

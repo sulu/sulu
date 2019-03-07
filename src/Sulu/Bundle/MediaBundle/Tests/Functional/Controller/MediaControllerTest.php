@@ -531,18 +531,18 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test GET all Media.
      */
-    public function testCgetExcluded()
+    public function testCgetExcludedIds()
     {
         $media = $this->createMedia('photo');
         $this->createMedia('photo1');
         $media2 = $this->createMedia('photo2');
         $this->createMedia('photo3');
         $client = $this->createAuthenticatedClient();
-        $excluded = implode(',', [$media->getId(), $media2->getId()]);
+        $excludedIds = implode(',', [$media->getId(), $media2->getId()]);
 
         $client->request(
             'GET',
-            '/api/media?locale=en-gb&excluded=' . $excluded
+            '/api/media?locale=en-gb&excludedIds=' . $excludedIds
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

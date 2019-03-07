@@ -243,7 +243,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
         $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
-        $listResponse = $this->prepareListResponse($request, $listBuilder, $locale);
+        $listResponse = $this->prepareListResponse($listBuilder, $locale);
 
         return new ListRepresentation(
             $listResponse,
@@ -259,28 +259,18 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Prepare list response.
      *
-     * @param Request $request
      * @param DoctrineListBuilder $listBuilder
      * @param string $locale
      *
      * @return array
      */
-    private function prepareListResponse(Request $request, DoctrineListBuilder $listBuilder, $locale)
+    private function prepareListResponse(DoctrineListBuilder $listBuilder, $locale)
     {
-        $idsParameter = $request->get('ids');
-        $ids = array_filter(explode(',', $idsParameter));
-        if (null !== $idsParameter && 0 === count($ids)) {
-            return [];
-        }
-
-        if (null !== $idsParameter) {
-            $listBuilder->in($this->fieldDescriptors['id'], $ids);
-        }
-
         $listResponse = $listBuilder->execute();
         $listResponse = $this->addAvatars($listResponse, $locale);
 
-        if (null !== $idsParameter) {
+        $ids = $listBuilder->getIds();
+        if (null !== $ids) {
             $comparator = $this->getComparator();
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
             @usort(

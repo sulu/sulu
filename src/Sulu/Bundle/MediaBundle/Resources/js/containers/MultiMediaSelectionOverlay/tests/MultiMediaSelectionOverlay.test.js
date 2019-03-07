@@ -14,12 +14,13 @@ jest.mock('../../MediaSelectionOverlay', () => {
     });
     MediaSelectionOverlay.createMediaListStore = jest.fn().mockReturnValue({
         destroy: jest.fn(),
+        clear: jest.fn(),
     });
 
     return MediaSelectionOverlay;
 });
 
-test('Should create list-stores with correct locale', () => {
+test('Should create list-stores with correct locale and excluded-ids', () => {
     const locale = observable.box('en');
     shallow(
         <MultiMediaSelectionOverlay
@@ -36,12 +37,32 @@ test('Should create list-stores with correct locale', () => {
         expect.anything(),
         locale
     );
-    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual('22,44');
+    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual([44, 22]);
+    expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
+});
+
+test('Should create list-stores without excluded-ids', () => {
+    const locale = observable.box('en');
+    shallow(
+        <MultiMediaSelectionOverlay
+            locale={locale}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    ).render();
+
+    expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale
+    );
+    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
     expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
 });
 
 test('Should pass correct props to media-selection-overlay', () => {
-    const mediaListStoreMock = jest.fn();
+    const mediaListStoreMock = {clear: jest.fn()};
     MediaSelectionOverlay.createMediaListStore.mockReturnValueOnce(mediaListStoreMock);
     const collectionListStoreMock = jest.fn();
     MediaSelectionOverlay.createCollectionListStore.mockReturnValueOnce(collectionListStoreMock);
