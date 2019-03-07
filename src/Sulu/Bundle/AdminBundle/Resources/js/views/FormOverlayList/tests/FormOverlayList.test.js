@@ -15,7 +15,12 @@ import Snackbar from '../../../components/Snackbar';
 const React = mockReact;
 
 jest.mock('../../List', () => class ListMock extends mockReact.Component<*> {
-    listStore = {};
+    listStore = {
+        options: {
+            webspace: 'test-webspace',
+            dimension: 'test-dimension',
+        },
+    };
 
     render() {
         return <div>list view mock</div>;
@@ -126,6 +131,7 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
                 routerAttributesToFormStore: {'0': 'category', 'id': 'parentId'},
+                listStorePropertiesToFormStore: {'0': 'webspace', 'dimension': 'dimensionId'},
             },
         },
     }: any);
@@ -136,10 +142,14 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {}, {
         category: 'category-id',
         parentId: 'test-id',
+        webspace: 'test-webspace',
+        dimensionId: 'test-dimension',
     });
     expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
+        webspace: 'test-webspace',
+        dimensionId: 'test-dimension',
     });
 });
 
@@ -155,6 +165,7 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
                 routerAttributesToFormStore: {'0': 'category', 'id': 'parentId'},
+                listStorePropertiesToFormStore: {'0': 'webspace', 'dimension': 'dimensionId'},
             },
         },
     }: any);
@@ -169,10 +180,14 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     expect(ResourceStore).toBeCalledWith('test-resource-key', 'item-id', {locale}, {
         category: 'category-id',
         parentId: 'test-id',
+        webspace: 'test-webspace',
+        dimensionId: 'test-dimension',
     });
     expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {
         category: 'category-id',
         parentId: 'test-id',
+        webspace: 'test-webspace',
+        dimensionId: 'test-dimension',
     });
 });
 

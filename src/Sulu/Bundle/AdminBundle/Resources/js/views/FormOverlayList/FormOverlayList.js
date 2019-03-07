@@ -76,6 +76,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         formKey,
                         resourceKey,
                         routerAttributesToFormStore = {},
+                        listStorePropertiesToFormStore = {},
                     },
                 },
             },
@@ -90,7 +91,12 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
-        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
+        const formStoreOptions = this.buildFormStoreOptions(
+            apiOptions,
+            attributes,
+            routerAttributesToFormStore,
+            listStorePropertiesToFormStore
+        );
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
@@ -107,7 +113,8 @@ export default class FormOverlayList extends React.Component<ViewProps> {
     buildFormStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToFormStore: {[string | number]: string}
+        routerAttributesToFormStore: {[string | number]: string},
+        listStorePropertiesToFormStore: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
@@ -117,6 +124,19 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             const attributeName = isNaN(key) ? key : routerAttributesToFormStore[key];
 
             formStoreOptions[formOptionKey] = attributes[attributeName];
+        });
+
+        listStorePropertiesToFormStore = toJS(listStorePropertiesToFormStore);
+
+        Object.keys(listStorePropertiesToFormStore).forEach((key) => {
+            const formOptionKey = listStorePropertiesToFormStore[key];
+            const attributeName = isNaN(key) ? key : listStorePropertiesToFormStore[key];
+
+            if (!this.listRef || !this.listRef.listStore || !this.listRef.listStore.options) {
+                return;
+            }
+
+            formStoreOptions[formOptionKey] = this.listRef.listStore.options[attributeName];
         });
 
         return formStoreOptions;

@@ -277,6 +277,23 @@ class FormOverlayListRouteBuilderTest extends TestCase
         );
     }
 
+    public function testBuildWithListStorePropertiesToFormStore()
+    {
+        $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->addListStorePropertiesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addListStorePropertiesToFormStore(['locale'])
+            ->getRoute();
+
+        $this->assertEquals(
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
+            $route->getOption('listStorePropertiesToFormStore')
+        );
+    }
+
     public function testBuildListSetParent()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
