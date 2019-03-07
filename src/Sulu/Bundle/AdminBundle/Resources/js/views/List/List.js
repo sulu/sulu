@@ -17,7 +17,7 @@ import listStyles from './list.scss';
 const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
-    resourceStore: ResourceStore,
+    resourceStore?: ResourceStore,
 };
 
 @observer
