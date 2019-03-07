@@ -71,5 +71,7 @@ interface FormOverlayListRouteBuilderInterface
 
     public function setParent(string $parent): self;
 
+    public function setOverlaySize(string $overlaySize): self;
+
     public function getRoute(): Route;
 }
