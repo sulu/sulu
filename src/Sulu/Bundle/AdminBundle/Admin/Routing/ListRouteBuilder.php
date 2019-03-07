@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ListRouteBuilder implements ListRouteBuilderInterface
 {
-    use RouteBuilderTrait;
     use ListRouteBuilderTrait;
+    use TabRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.list';
 

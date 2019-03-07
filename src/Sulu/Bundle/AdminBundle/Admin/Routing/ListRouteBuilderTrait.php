@@ -13,9 +13,19 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 trait ListRouteBuilderTrait
 {
+    private function setResourceKeyToRoute(Route $route, string $resourceKey): void
+    {
+        $route->setOption('resourceKey', $resourceKey);
+    }
+
     private function setListKeyToRoute(Route $route, string $listKey): void
     {
         $route->setOption('listKey', $listKey);
+    }
+
+    private function setTitleToRoute(Route $route, string $title): void
+    {
+        $route->setOption('title', $title);
     }
 
     private function addListAdaptersToRoute(Route $route, array $listAdapters): void
@@ -25,9 +35,19 @@ trait ListRouteBuilderTrait
         $route->setOption('adapters', $newListAdapters);
     }
 
+    private function setBackRouteToRoute(Route $route, string $backRoute): void
+    {
+        $route->setOption('backRoute', $backRoute);
+    }
+
     private function setAddRouteToRoute(Route $route, string $addRoute): void
     {
         $route->setOption('addRoute', $addRoute);
+    }
+
+    private function setEditRouteToRoute(Route $route, string $editRoute): void
+    {
+        $route->setOption('editRoute', $editRoute);
     }
 
     private function setSearchableToRoute(Route $route, bool $searchable): void
@@ -43,5 +63,24 @@ trait ListRouteBuilderTrait
             : $routerAttributesToListStore;
 
         $route->setOption('routerAttributesToListStore', $newRouterAttributesToListStore);
+    }
+
+    private function addLocalesToRoute(Route $route, array $locales): void
+    {
+        $oldLocales = $route->getOption('locales');
+        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
+        $route->setOption('locales', $newLocales);
+    }
+
+    private function setDefaultLocaleToRoute(Route $route, string $locale): void
+    {
+        $route->setAttributeDefault('locale', $locale);
+    }
+
+    private function addToolbarActionsToRoute(Route $route, array $toolbarActions): void
+    {
+        $oldToolbarActions = $route->getOption('toolbarActions');
+        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
+        $route->setOption('toolbarActions', $newToolbarActions);
     }
 }

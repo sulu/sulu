@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class FormRouteBuilder implements FormRouteBuilderInterface
 {
-    use RouteBuilderTrait;
     use FormRouteBuilderTrait;
+    use TabRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.form';
 

@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
 {
-    use RouteBuilderTrait;
     use FormRouteBuilderTrait;
+    use TabRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.preview_form';
 
