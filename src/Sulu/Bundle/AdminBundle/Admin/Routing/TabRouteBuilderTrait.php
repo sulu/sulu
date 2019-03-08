@@ -23,12 +23,12 @@ trait TabRouteBuilderTrait
         $route->setOption('tabCondition', $tabCondition);
     }
 
-    private function setTabOrderToRoute(Route $route, string $tabOrder): void
+    private function setTabOrderToRoute(Route $route, int $tabOrder): void
     {
         $route->setOption('tabOrder', $tabOrder);
     }
 
-    private function setTabPriorityToRoute(Route $route, string $tabPriority): void
+    private function setTabPriorityToRoute(Route $route, int $tabPriority): void
     {
         $route->setOption('tabPriority', $tabPriority);
     }

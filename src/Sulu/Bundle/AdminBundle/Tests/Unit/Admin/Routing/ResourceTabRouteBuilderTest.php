@@ -76,12 +76,12 @@ class ResourceTabRouteBuilderTest extends TestCase
 
         $route = $routeBuilder->getRoute();
 
-        $this->assertEquals($name, $route->getName());
-        $this->assertEquals($path, $route->getPath());
-        $this->assertEquals($resourceKey, $route->getOption('resourceKey'));
-        $this->assertEquals($backRoute, $route->getOption('backRoute'));
-        $this->assertEquals($titleProperty, $route->getOption('titleProperty'));
-        $this->assertEquals('sulu_admin.resource_tabs', $route->getView());
+        $this->assertSame($name, $route->getName());
+        $this->assertSame($path, $route->getPath());
+        $this->assertSame($resourceKey, $route->getOption('resourceKey'));
+        $this->assertSame($backRoute, $route->getOption('backRoute'));
+        $this->assertSame($titleProperty, $route->getOption('titleProperty'));
+        $this->assertSame('sulu_admin.resource_tabs', $route->getView());
     }
 
     public function testBuildResourceTabWithLocales()
@@ -92,7 +92,7 @@ class ResourceTabRouteBuilderTest extends TestCase
             ->addLocales(['nl', 'fr'])
             ->getRoute();
 
-        $this->assertEquals(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
+        $this->assertSame(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
     }
 
     public function testBuildResourceTabWithLocalesWithoutLocalePlaceholder()

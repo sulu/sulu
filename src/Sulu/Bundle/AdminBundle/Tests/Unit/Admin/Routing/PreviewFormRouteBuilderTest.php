@@ -74,8 +74,8 @@ class PreviewFormRouteBuilderTest extends TestCase
         string $formKey,
         ?string $tabTitle,
         ?string $tabCondition,
-        ?string $tabOrder,
-        ?string $tabPriority,
+        ?int $tabOrder,
+        ?int $tabPriority,
         ?string $editRoute,
         ?string $backRoute
     ) {
@@ -109,18 +109,18 @@ class PreviewFormRouteBuilderTest extends TestCase
 
         $route = $routeBuilder->getRoute();
 
-        $this->assertEquals($name, $route->getName());
-        $this->assertEquals($path, $route->getPath());
-        $this->assertEquals($resourceKey, $route->getOption('resourceKey'));
-        $this->assertEquals($formKey, $route->getOption('formKey'));
-        $this->assertEquals($tabTitle, $route->getOption('tabTitle'));
-        $this->assertEquals($tabCondition, $route->getOption('tabCondition'));
-        $this->assertEquals($tabOrder, $route->getOption('tabOrder'));
-        $this->assertEquals($tabPriority, $route->getOption('tabPriority'));
-        $this->assertEquals($editRoute, $route->getOption('editRoute'));
-        $this->assertEquals($backRoute, $route->getOption('backRoute'));
+        $this->assertSame($name, $route->getName());
+        $this->assertSame($path, $route->getPath());
+        $this->assertSame($resourceKey, $route->getOption('resourceKey'));
+        $this->assertSame($formKey, $route->getOption('formKey'));
+        $this->assertSame($tabTitle, $route->getOption('tabTitle'));
+        $this->assertSame($tabCondition, $route->getOption('tabCondition'));
+        $this->assertSame($tabOrder, $route->getOption('tabOrder'));
+        $this->assertSame($tabPriority, $route->getOption('tabPriority'));
+        $this->assertSame($editRoute, $route->getOption('editRoute'));
+        $this->assertSame($backRoute, $route->getOption('backRoute'));
         $this->assertNull($route->getParent());
-        $this->assertEquals('sulu_admin.preview_form', $route->getView());
+        $this->assertSame('sulu_admin.preview_form', $route->getView());
     }
 
     public function testBuildFormWithToolbarActions()
@@ -132,7 +132,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->addToolbarActions(['sulu_admin.delete'])
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['sulu_admin.save', 'sulu_admin.types', 'sulu_admin.delete'],
             $route->getOption('toolbarActions')
         );
@@ -147,7 +147,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->addRouterAttributesToFormStore(['locale'])
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToFormStore')
         );
@@ -162,7 +162,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->addRouterAttributesToEditRoute(['locale'])
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['webspace', 'parent', 'locale'],
             $route->getOption('routerAttributesToEditRoute')
         );
@@ -176,7 +176,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->setIdQueryParameter('contactId')
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             'contactId',
             $route->getOption('idQueryParameter')
         );
@@ -190,7 +190,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->setPreviewCondition('nodeType == 1')
             ->getRoute();
 
-        $this->assertEquals('nodeType == 1', $route->getOption('previewCondition'));
+        $this->assertSame('nodeType == 1', $route->getOption('previewCondition'));
     }
 
     public function testBuildFormWithLocales()
@@ -202,7 +202,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->addLocales(['nl', 'fr'])
             ->getRoute();
 
-        $this->assertEquals(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
+        $this->assertSame(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
     }
 
     public function testBuildFormWithLocalesWithoutLocalePlaceholder()

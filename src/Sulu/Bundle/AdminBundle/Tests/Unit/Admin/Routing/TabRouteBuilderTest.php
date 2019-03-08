@@ -47,8 +47,8 @@ class TabRouteBuilderTest extends TestCase
         $routeBuilder = (new TabRouteBuilder($name, $path));
         $route = $routeBuilder->getRoute();
 
-        $this->assertEquals($name, $route->getName());
-        $this->assertEquals($path, $route->getPath());
-        $this->assertEquals('sulu_admin.tabs', $route->getView());
+        $this->assertSame($name, $route->getName());
+        $this->assertSame($path, $route->getPath());
+        $this->assertSame('sulu_admin.tabs', $route->getView());
     }
 }
