@@ -81,7 +81,11 @@ trait DataProviderRepositoryTrait
             $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, 'c', $locale);
 
             foreach ($sortBy as $sortColumn) {
-                $queryBuilder->addSelect('c.'.$sortColumn);
+                if (strpos($sortColumn, '.') === false) {
+                    $queryBuilder->addSelect('c.'.$sortColumn);
+                } else {
+                    $queryBuilder->addSelect($sortColumn);
+                }
             }
         }
 
@@ -383,7 +387,11 @@ trait DataProviderRepositoryTrait
                 $this->appendSortByJoins($queryBuilder, $alias, $locale);
             }
 
-            $queryBuilder->orderBy($alias.'.'.$column, $sortMethod);
+            if (strpos($column, '.') === false) {
+                $queryBuilder->orderBy($alias.'.'.$column, $sortMethod);
+            } else {
+                $queryBuilder->orderBy($column, $sortMethod);
+            }
         }
     }
 
