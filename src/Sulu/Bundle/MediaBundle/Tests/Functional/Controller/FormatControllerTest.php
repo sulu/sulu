@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Imagine\Image\ImageInterface;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -40,7 +41,7 @@ class FormatControllerTest extends SuluTestCase
             [
                 'x' => 400,
                 'y' => 400,
-                'mode' => 'outbound',
+                'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
                 'retina' => false,
                 'forceRatio' => true,
             ],

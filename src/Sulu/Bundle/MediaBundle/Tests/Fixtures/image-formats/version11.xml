@@ -25,14 +25,14 @@
             <title lang="en">My 400 Format</title>
             <title lang="de">Mein 400 Format</title>
         </meta>
-        <scale x="400"/>
+        <scale x="400" mode="inset"/>
         <options>
             <option name="jpeg_quality">70</option>
         </options>
     </format>
 
     <format key="200x180-inset">
-        <scale x="200" y="180"/>
+        <scale x="200" y="180" mode="inset" />
     </format>
 
     <format key="3840x2160-retina">
