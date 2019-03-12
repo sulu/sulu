@@ -2,15 +2,13 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import type {IObservableValue} from 'mobx';
-import {action, computed, toJS, isObservableArray, observable, when} from 'mobx';
+import {action, computed, toJS, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
-import jexl from 'jexl';
 import Dialog from '../../components/Dialog';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, ResourceFormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
-import {withSidebar} from '../../containers/Sidebar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
@@ -31,7 +29,6 @@ class Form extends React.Component<Props> {
     @observable errors = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions = [];
-    @observable hasPreview: boolean = false;
     @observable showDirtyWarning = false;
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
@@ -189,8 +186,6 @@ class Form extends React.Component<Props> {
             router,
             this.locales
         ));
-
-        when(() => !this.resourceFormStore.loading, this.evaluatePreview);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -212,10 +207,6 @@ class Form extends React.Component<Props> {
         }
     }
 
-    @action setHasPreview = (hasPreview: boolean) => {
-        this.hasPreview = hasPreview;
-    };
-
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
     };
@@ -225,26 +216,6 @@ class Form extends React.Component<Props> {
             throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
         }
         this.form.submit(action);
-    };
-
-    evaluatePreview = (): void => {
-        const {
-            router: {
-                route: {
-                    options: {
-                        preview,
-                    },
-                },
-            },
-        } = this.props;
-
-        if (!preview) {
-            this.setHasPreview(false);
-
-            return;
-        }
-
-        jexl.eval(preview, this.resourceStore.data).then(this.setHasPreview);
     };
 
     handleSubmit = (actionParameter: ?string) => {
@@ -281,7 +252,6 @@ class Form extends React.Component<Props> {
         return this.resourceFormStore.save(saveOptions)
             .then((response) => {
                 this.showSuccessSnackbar();
-                this.evaluatePreview();
 
                 if (editRoute) {
                     router.navigate(
@@ -352,7 +322,7 @@ class Form extends React.Component<Props> {
     }
 }
 
-const FormWithToolbar = withToolbar(Form, function() {
+export default withToolbar(Form, function() {
     const {router} = this.props;
     const {backRoute} = router.route.options;
     const {errors, resourceStore, showSuccess} = this;
@@ -407,15 +377,4 @@ const FormWithToolbar = withToolbar(Form, function() {
         icons,
         showSuccess,
     };
-});
-
-export default withSidebar(FormWithToolbar, function() {
-    return this.hasPreview ? {
-        view: 'sulu_preview.preview',
-        sizes: ['medium', 'large'],
-        props: {
-            router: this.props.router,
-            formStore: this.resourceFormStore,
-        },
-    } : null;
 });

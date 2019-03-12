@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface FormRouteBuilderInterface
+interface PreviewFormRouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -50,6 +50,8 @@ interface FormRouteBuilderInterface
     public function setBackRoute(string $editRoute): self;
 
     public function setIdQueryParameter(string $idQueryParameter): self;
+
+    public function setPreviewCondition(string $previewCondition): self;
 
     public function setParent(string $parent): self;
 

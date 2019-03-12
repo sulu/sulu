@@ -94,15 +94,15 @@ class ListRouteBuilderTest extends TestCase
             ->setEditRoute($editRoute)
             ->getRoute();
 
-        $this->assertEquals($name, $route->getName());
-        $this->assertEquals($path, $route->getPath());
-        $this->assertEquals($resourceKey, $route->getOption('resourceKey'));
-        $this->assertEquals($listKey, $route->getOption('listKey'));
-        $this->assertEquals($title, $route->getOption('title'));
-        $this->assertEquals($listAdapters, $route->getOption('adapters'));
-        $this->assertEquals($addRoute, $route->getOption('addRoute'));
-        $this->assertEquals($editRoute, $route->getOption('editRoute'));
-        $this->assertEquals('sulu_admin.list', $route->getView());
+        $this->assertSame($name, $route->getName());
+        $this->assertSame($path, $route->getPath());
+        $this->assertSame($resourceKey, $route->getOption('resourceKey'));
+        $this->assertSame($listKey, $route->getOption('listKey'));
+        $this->assertSame($title, $route->getOption('title'));
+        $this->assertSame($listAdapters, $route->getOption('adapters'));
+        $this->assertSame($addRoute, $route->getOption('addRoute'));
+        $this->assertSame($editRoute, $route->getOption('editRoute'));
+        $this->assertSame('sulu_admin.list', $route->getView());
     }
 
     public function testBuildListRouteAddingAdaptersTwice()
@@ -114,7 +114,7 @@ class ListRouteBuilderTest extends TestCase
             ->addListAdapters(['tree'])
             ->getRoute();
 
-        $this->assertEquals(['table', 'column_list', 'tree'], $route->getOption('adapters'));
+        $this->assertSame(['table', 'column_list', 'tree'], $route->getOption('adapters'));
     }
 
     public function testBuildListWithLocales()
@@ -128,8 +128,8 @@ class ListRouteBuilderTest extends TestCase
             ->setDefaultLocale('de')
             ->getRoute();
 
-        $this->assertEquals(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
-        $this->assertEquals('de', $route->getAttributeDefault('locale'));
+        $this->assertSame(['de', 'en', 'nl', 'fr'], $route->getOption('locales'));
+        $this->assertSame('de', $route->getAttributeDefault('locale'));
     }
 
     public function testBuildListWithLocalesWithoutLocalePlaceholder()
@@ -206,7 +206,7 @@ class ListRouteBuilderTest extends TestCase
             ->addRouterAttributesToListStore(['locale'])
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToListStore')
         );
@@ -222,7 +222,7 @@ class ListRouteBuilderTest extends TestCase
             ->addResourceStorePropertiesToListStore(['locale'])
             ->getRoute();
 
-        $this->assertEquals(
+        $this->assertSame(
             ['id' => 'dimensionId', 'parent' => 'parentId', 'locale'],
             $route->getOption('resourceStorePropertiesToListStore')
         );
@@ -237,7 +237,7 @@ class ListRouteBuilderTest extends TestCase
             ->setParent('sulu_role.parent_view')
             ->getRoute();
 
-        $this->assertEquals('sulu_role.parent_view', $route->getParent());
+        $this->assertSame('sulu_role.parent_view', $route->getParent());
     }
 
     public function testBuildListSetTabTitle()
@@ -249,7 +249,7 @@ class ListRouteBuilderTest extends TestCase
             ->setTabTitle('sulu_role.title')
             ->getRoute();
 
-        $this->assertEquals('sulu_role.title', $route->getOption('tabTitle'));
+        $this->assertSame('sulu_role.title', $route->getOption('tabTitle'));
     }
 
     public function testBuildListSetTabOrder()
@@ -261,7 +261,7 @@ class ListRouteBuilderTest extends TestCase
             ->setTabOrder(5)
             ->getRoute();
 
-        $this->assertEquals(5, $route->getOption('tabOrder'));
+        $this->assertSame(5, $route->getOption('tabOrder'));
     }
 
     public function testBuildListSetTabCondition()
@@ -273,7 +273,7 @@ class ListRouteBuilderTest extends TestCase
             ->setTabCondition('state == 1')
             ->getRoute();
 
-        $this->assertEquals('state == 1', $route->getOption('tabCondition'));
+        $this->assertSame('state == 1', $route->getOption('tabCondition'));
     }
 
     public function testBuildListSetBackRoute()
@@ -285,7 +285,7 @@ class ListRouteBuilderTest extends TestCase
             ->setBackRoute('sulu_category.edit_form')
             ->getRoute();
 
-        $this->assertEquals('sulu_category.edit_form', $route->getOption('backRoute'));
+        $this->assertSame('sulu_category.edit_form', $route->getOption('backRoute'));
     }
 
     public function testBuildAddToolbarActions()
@@ -298,6 +298,6 @@ class ListRouteBuilderTest extends TestCase
             ->addToolbarActions(['sulu_admin.delete'])
             ->getRoute();
 
-        $this->assertEquals(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
+        $this->assertSame(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
     }
 }

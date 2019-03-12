@@ -92,7 +92,9 @@
         "transformIgnorePatterns": [
             "node_modules/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)/)"
         ],
-        "testPathIgnorePatterns": ["vendor/friendsofsymfony"],
+        "testPathIgnorePatterns": [
+            "vendor/friendsofsymfony"
+        ],
         "testURL": "http://localhost"
     }
 }

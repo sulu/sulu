@@ -129,6 +129,7 @@ export default class Preview extends React.Component<Props> {
             return;
         }
 
+        this.updatePreview.clear();
         this.previewStore.stop();
     }
 

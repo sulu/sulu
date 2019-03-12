@@ -9,7 +9,7 @@ export default function findWithHighOrderFunction(
         || !withHighOrderFunction.hasOwnProperty('mock')
         || withHighOrderFunction.mock.calls.length < 1
     ) {
-        throw new Error('withToolbar needs to be an mock');
+        throw new Error('withHighOrderFunction needs to be an mock');
     }
 
     for (const call of withHighOrderFunction.mock.calls) {
