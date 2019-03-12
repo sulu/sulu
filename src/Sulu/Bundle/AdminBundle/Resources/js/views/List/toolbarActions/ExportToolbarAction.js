@@ -5,7 +5,7 @@ import {translate} from '../../../utils/Translator';
 import Overlay from '../../../components/Overlay';
 import Form from '../../../components/Form';
 import SingleSelect from '../../../components/SingleSelect';
-import resourceEndpointRegistry from '../../../services/ResourceRequester/registries/ResourceEndpointRegistry';
+import resourceEndpointRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
 import {buildQueryString} from '../../../utils/Request';
 import exportToolbarActionStyles from './exportToolbarAction.scss';
 import AbstractToolbarAction from './AbstractToolbarAction';
@@ -32,7 +32,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
             >
                 <div className={exportToolbarActionStyles.overlay}>
                     <Form>
-                        <Form.Section size={6}>
+                        <Form.Section colSpan={6}>
                             <Form.Field
                                 description={translate('sulu_admin.delimiter_description')}
                                 label={translate('sulu_admin.delimiter')}
@@ -53,7 +53,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                                 </SingleSelect>
                             </Form.Field>
                         </Form.Section>
-                        <Form.Section size={6}>
+                        <Form.Section colSpan={6}>
                             <Form.Field
                                 description={translate('sulu_admin.escape_description')}
                                 label={translate('sulu_admin.escape')}
@@ -110,7 +110,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     };
 
     @action handleConfirm = () => {
-        window.location.assign(resourceEndpointRegistry.getEndpoint(this.listStore.resourceKey) + '.csv' +
+        window.location.assign(resourceEndpointRegistry.getListUrl(this.listStore.resourceKey) + '.csv' +
             buildQueryString(
                 {
                     flat: true,

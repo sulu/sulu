@@ -66,10 +66,10 @@ exports[`Render export dialog 1`] = `
                       class="grid grid"
                     >
                       <div
-                        class="section gridSection size size-6 space-before-0 space-after-0"
+                        class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
                       >
                         <div
-                          class="item gridItem size size-12 space-before-0 space-after-0"
+                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                         >
                           <div
                             class="field"
@@ -116,7 +116,7 @@ exports[`Render export dialog 1`] = `
                           </div>
                         </div>
                         <div
-                          class="item gridItem size size-12 space-before-0 space-after-0"
+                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                         >
                           <div
                             class="field"
@@ -164,10 +164,10 @@ exports[`Render export dialog 1`] = `
                         </div>
                       </div>
                       <div
-                        class="section gridSection size size-6 space-before-0 space-after-0"
+                        class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
                       >
                         <div
-                          class="item gridItem size size-12 space-before-0 space-after-0"
+                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                         >
                           <div
                             class="field"
@@ -214,7 +214,7 @@ exports[`Render export dialog 1`] = `
                           </div>
                         </div>
                         <div
-                          class="item gridItem size size-12 space-before-0 space-after-0"
+                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                         >
                           <div
                             class="field"
@@ -322,42 +322,42 @@ exports[`Render export dialog 1`] = `
                       className="grid grid"
                     >
                       <Section
-                        size={6}
+                        colSpan={6}
                       >
                         <Section
                           className="gridSection"
-                          size={6}
+                          colSpan={6}
                           spaceAfter={0}
                           spaceBefore={0}
                         >
                           <BaseItem
                             className="section gridSection"
-                            size={6}
+                            colSpan={6}
                             spaceAfter={0}
                             spaceBefore={0}
                           >
                             <div
-                              className="section gridSection size size-6 space-before-0 space-after-0"
+                              className="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
                             >
                               <Field
+                                colSpan={12}
                                 required={false}
-                                size={12}
                                 spaceAfter={0}
                               >
                                 <Item
                                   className="gridItem"
-                                  size={12}
+                                  colSpan={12}
                                   spaceAfter={0}
                                   spaceBefore={0}
                                 >
                                   <BaseItem
                                     className="item gridItem"
-                                    size={12}
+                                    colSpan={12}
                                     spaceAfter={0}
                                     spaceBefore={0}
                                   >
                                     <div
-                                      className="item gridItem size size-12 space-before-0 space-after-0"
+                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                                     >
                                       <div
                                         className="field"
@@ -480,24 +480,24 @@ exports[`Render export dialog 1`] = `
                                 </Item>
                               </Field>
                               <Field
+                                colSpan={12}
                                 required={false}
-                                size={12}
                                 spaceAfter={0}
                               >
                                 <Item
                                   className="gridItem"
-                                  size={12}
+                                  colSpan={12}
                                   spaceAfter={0}
                                   spaceBefore={0}
                                 >
                                   <BaseItem
                                     className="item gridItem"
-                                    size={12}
+                                    colSpan={12}
                                     spaceAfter={0}
                                     spaceBefore={0}
                                   >
                                     <div
-                                      className="item gridItem size size-12 space-before-0 space-after-0"
+                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                                     >
                                       <div
                                         className="field"
@@ -624,42 +624,42 @@ exports[`Render export dialog 1`] = `
                         </Section>
                       </Section>
                       <Section
-                        size={6}
+                        colSpan={6}
                       >
                         <Section
                           className="gridSection"
-                          size={6}
+                          colSpan={6}
                           spaceAfter={0}
                           spaceBefore={0}
                         >
                           <BaseItem
                             className="section gridSection"
-                            size={6}
+                            colSpan={6}
                             spaceAfter={0}
                             spaceBefore={0}
                           >
                             <div
-                              className="section gridSection size size-6 space-before-0 space-after-0"
+                              className="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
                             >
                               <Field
+                                colSpan={12}
                                 required={false}
-                                size={12}
                                 spaceAfter={0}
                               >
                                 <Item
                                   className="gridItem"
-                                  size={12}
+                                  colSpan={12}
                                   spaceAfter={0}
                                   spaceBefore={0}
                                 >
                                   <BaseItem
                                     className="item gridItem"
-                                    size={12}
+                                    colSpan={12}
                                     spaceAfter={0}
                                     spaceBefore={0}
                                   >
                                     <div
-                                      className="item gridItem size size-12 space-before-0 space-after-0"
+                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                                     >
                                       <div
                                         className="field"
@@ -782,24 +782,24 @@ exports[`Render export dialog 1`] = `
                                 </Item>
                               </Field>
                               <Field
+                                colSpan={12}
                                 required={false}
-                                size={12}
                                 spaceAfter={0}
                               >
                                 <Item
                                   className="gridItem"
-                                  size={12}
+                                  colSpan={12}
                                   spaceAfter={0}
                                   spaceBefore={0}
                                 >
                                   <BaseItem
                                     className="item gridItem"
-                                    size={12}
+                                    colSpan={12}
                                     spaceAfter={0}
                                     spaceBefore={0}
                                   >
                                     <div
-                                      className="item gridItem size size-12 space-before-0 space-after-0"
+                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
                                     >
                                       <div
                                         className="field"
