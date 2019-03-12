@@ -6,7 +6,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue({
         then: jest.fn(),
     }),
-    put: jest.fn().mockReturnValue({
+    patch: jest.fn().mockReturnValue({
         then: jest.fn(),
     }),
 }));
@@ -30,7 +30,7 @@ test('Load media formats', () => {
     });
 });
 
-test('Update a media format', () => {
+test('Update media formats', () => {
     const mediaFormats = {
         '300x': {
             cropX: 300,
@@ -40,22 +40,30 @@ test('Update a media format', () => {
             cropX: 100,
             cropY: 100,
         },
+        '300x300': {
+            cropX: 300,
+            cropY: 300,
+        },
     };
     const listPromise = Promise.resolve(mediaFormats);
     ResourceRequester.getList.mockReturnValue(listPromise);
     const mediaFormatStore = new MediaFormatStore(4, 'de');
 
     return listPromise.then(() => {
-        const cropData = {cropX: 60, cropY: 120, cropHeight: 100, cropWidth: 200};
-        const putPromise = Promise.resolve(cropData);
-        ResourceRequester.put.mockReturnValue(putPromise);
-        mediaFormatStore.updateFormatOptions('x300', cropData);
+        const cropData = {
+            '300x': {cropX: 60, cropY: 120, cropHeight: 100, cropWidth: 200},
+            'x300': {cropX: 30, cropY: 140, cropHeight: 120, cropWidth: 220},
+        };
+        const patchPromise = Promise.resolve(cropData);
+        ResourceRequester.patch.mockReturnValue(patchPromise);
+        mediaFormatStore.updateFormatOptions(cropData);
 
         expect(mediaFormatStore.saving).toEqual(true);
-        return putPromise.then(() => {
+        return patchPromise.then(() => {
             expect(mediaFormatStore.saving).toEqual(false);
-            expect(mediaFormatStore.getFormatOptions('x300')).toEqual(cropData);
-            expect(mediaFormatStore.getFormatOptions('300x')).toEqual(mediaFormats['300x']);
+            expect(mediaFormatStore.getFormatOptions('x300')).toEqual(cropData['x300']);
+            expect(mediaFormatStore.getFormatOptions('300x')).toEqual(cropData['300x']);
+            expect(mediaFormatStore.getFormatOptions('300x300')).toEqual(mediaFormats['300x300']);
         });
     });
 });

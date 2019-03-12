@@ -27,14 +27,14 @@ export default class MediaFormatStore
         return this.mediaFormats[formatKey];
     }
 
-    @action updateFormatOptions(formatKey: string, options: MediaFormat) {
+    @action updateFormatOptions(options: MediaFormats) {
         this.saving = true;
 
         return ResourceRequester
-            .put(RESOURCE_KEY, options, {id: this.id, key: formatKey, locale: this.locale})
+            .patch(RESOURCE_KEY, options, {id: this.id, locale: this.locale})
             .then(action((response) => {
                 this.saving = false;
-                this.mediaFormats[formatKey] = response;
+                this.mediaFormats = {...this.mediaFormats, ...response};
             }));
     }
 }
