@@ -37,7 +37,6 @@ class MediaFormatController extends RestController implements ClassResourceInter
      */
     public function cgetAction($id, Request $request)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
         $formatOptions = $this->getFormatOptionsManager()->getAll($id);
 
         return $this->handleView($this->view(count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
@@ -55,7 +54,6 @@ class MediaFormatController extends RestController implements ClassResourceInter
     public function putAction($id, $key, Request $request)
     {
         $options = $request->request->all();
-        $locale = $this->getRequestParameter($request, 'locale', true);
 
         if (empty($options)) {
             $this->getFormatOptionsManager()->delete($id, $key);
@@ -65,6 +63,18 @@ class MediaFormatController extends RestController implements ClassResourceInter
         $this->get('doctrine.orm.entity_manager')->flush();
 
         $formatOptions = $this->getFormatOptionsManager()->get($id, $key);
+
+        return $this->handleView($this->view($formatOptions));
+    }
+
+    public function cpatchAction($id, Request $request)
+    {
+        $formatOptions = $request->request->all();
+        foreach ($formatOptions as $formatKey => $formatOption) {
+            $this->getFormatOptionsManager()->save($id, $formatKey, $formatOption);
+        }
+
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($formatOptions));
     }
