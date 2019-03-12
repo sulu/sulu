@@ -13,6 +13,15 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterface
 {
+    use ListRouteBuilderTrait, FormRouteBuilderTrait {
+        ListRouteBuilderTrait::setResourceKeyToRoute insteadof FormRouteBuilderTrait;
+        ListRouteBuilderTrait::setBackRouteToRoute insteadof FormRouteBuilderTrait;
+        ListRouteBuilderTrait::setEditRouteToRoute insteadof FormRouteBuilderTrait;
+        ListRouteBuilderTrait::addLocalesToRoute insteadof FormRouteBuilderTrait;
+        ListRouteBuilderTrait::addToolbarActionsToRoute insteadof FormRouteBuilderTrait;
+    }
+    use TabRouteBuilderTrait;
+
     const VIEW = 'sulu_admin.form_overlay_list';
 
     /**
@@ -27,28 +36,28 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
 
     public function setResourceKey(string $resourceKey): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('resourceKey', $resourceKey);
+        $this->setResourceKeyToRoute($this->route, $resourceKey);
 
         return $this;
     }
 
     public function setListKey(string $listKey): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('listKey', $listKey);
+        $this->setListKeyToRoute($this->route, $listKey);
 
         return $this;
     }
 
     public function setFormKey(string $formKey): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('formKey', $formKey);
+        $this->setFormKeyToRoute($this->route, $formKey);
 
         return $this;
     }
 
     public function setTitle(string $title): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('title', $title);
+        $this->setTitleToRoute($this->route, $title);
 
         return $this;
     }
@@ -69,103 +78,91 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
 
     public function setTabTitle(string $tabTitle): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('tabTitle', $tabTitle);
+        $this->setTabTitleToRoute($this->route, $tabTitle);
 
         return $this;
     }
 
     public function setTabOrder(int $tabOrder): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('tabOrder', $tabOrder);
+        $this->setTabOrderToRoute($this->route, $tabOrder);
 
         return $this;
     }
 
     public function setTabCondition(string $tabCondition): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('tabCondition', $tabCondition);
+        $this->setTabConditionToRoute($this->route, $tabCondition);
 
         return $this;
     }
 
     public function addListAdapters(array $listAdapters): FormOverlayListRouteBuilderInterface
     {
-        $oldListAdapters = $this->route->getOption('adapters');
-        $newListAdapters = $oldListAdapters ? array_merge($oldListAdapters, $listAdapters) : $listAdapters;
-        $this->route->setOption('adapters', $newListAdapters);
+        $this->addListAdaptersToRoute($this->route, $listAdapters);
 
         return $this;
     }
 
     public function addLocales(array $locales): FormOverlayListRouteBuilderInterface
     {
-        $oldLocales = $this->route->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
-        $this->route->setOption('locales', $newLocales);
+        $this->addLocalesToRoute($this->route, $locales);
 
         return $this;
     }
 
     public function setDefaultLocale(string $locale): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setAttributeDefault('locale', $locale);
+        $this->setDefaultLocaleToRoute($this->route, $locale);
 
         return $this;
     }
 
     public function addToolbarActions(array $toolbarActions): FormOverlayListRouteBuilderInterface
     {
-        $oldToolbarActions = $this->route->getOption('toolbarActions');
-        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
-        $this->route->setOption('toolbarActions', $newToolbarActions);
+        $this->addToolbarActionsToRoute($this->route, $toolbarActions);
 
         return $this;
     }
 
     public function setBackRoute(string $backRoute): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('backRoute', $backRoute);
+        $this->setBackRouteToRoute($this->route, $backRoute);
 
         return $this;
     }
 
     public function enableSearching(): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('searchable', true);
+        $this->setSearchableToRoute($this->route, true);
 
         return $this;
     }
 
     public function disableSearching(): FormOverlayListRouteBuilderInterface
     {
-        $this->route->setOption('searchable', false);
+        $this->setSearchableToRoute($this->route, false);
 
         return $this;
     }
 
     public function addRouterAttributesToListStore(array $routerAttributesToListStore): FormOverlayListRouteBuilderInterface
     {
-        $oldRouterAttributesToListStore = $this->route->getOption('routerAttributesToListStore');
-        $newRouterAttributesToListStore = $oldRouterAttributesToListStore ? array_merge($oldRouterAttributesToListStore, $routerAttributesToListStore) : $routerAttributesToListStore;
-        $this->route->setOption('routerAttributesToListStore', $newRouterAttributesToListStore);
+        $this->addRouterAttributesToListStoreToRoute($this->route, $routerAttributesToListStore);
 
         return $this;
     }
 
     public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): FormOverlayListRouteBuilderInterface
     {
-        $oldRouterAttributesToFormStore = $this->route->getOption('routerAttributesToFormStore');
-        $newRouterAttributesToFormStore = $oldRouterAttributesToFormStore ? array_merge($oldRouterAttributesToFormStore, $routerAttributesToFormStore) : $routerAttributesToFormStore;
-        $this->route->setOption('routerAttributesToFormStore', $newRouterAttributesToFormStore);
+        $this->addRouterAttributesToFormStoreToRoute($this->route, $routerAttributesToFormStore);
 
         return $this;
     }
 
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): FormOverlayListRouteBuilderInterface
     {
-        $oldResourceStorePropertiesToListStore = $this->route->getOption('resourceStorePropertiesToListStore');
-        $newResourceStorePropertiesToListStore = $oldResourceStorePropertiesToListStore ? array_merge($oldResourceStorePropertiesToListStore, $resourceStorePropertiesToListStore) : $resourceStorePropertiesToListStore;
-        $this->route->setOption('resourceStorePropertiesToListStore', $newResourceStorePropertiesToListStore);
+        $this->addResourceStorePropertiesToListStoreToRoute($this->route, $resourceStorePropertiesToListStore);
 
         return $this;
     }
