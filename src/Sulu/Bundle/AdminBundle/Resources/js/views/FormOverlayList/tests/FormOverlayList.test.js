@@ -66,12 +66,15 @@ test('View should render with opened overlay', () => {
         route: {
             options: {
                 addOverlayTitle: 'app.add_overlay_title',
+                formKey: 'test-form-key',
             },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     expect(formOverlayList.render()).toMatchSnapshot();
@@ -229,12 +232,16 @@ test('Should submit Form container when Overlay is confirmed', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     const submitSpy = jest.fn();
@@ -249,12 +256,16 @@ test('Should destroy ResourceFormStore without saving when Overlay is closed', (
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     const saveSpy = jest.fn();
@@ -274,12 +285,16 @@ test('Should save ResoureFormStore, close overlay and reload List view on submit
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     const savePromise = Promise.resolve();
@@ -307,12 +322,16 @@ test('Should display Snackbar if an error happens during saving of ResourceFormS
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     const savePromise = Promise.reject('error');
@@ -347,12 +366,16 @@ test('Should hide Snackbar when closeClick callback of Snackbar is fired', () =>
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     formOverlayList.instance().formErrors.push('error 1');
@@ -368,12 +391,16 @@ test('Should destroy ResourceFormStore when component is unmounted', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
-            options: {},
+            options: {
+                formKey: 'test-form-key',
+            },
         },
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.instance().createFormOverlay(undefined);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
     const destroySpy = jest.fn();
