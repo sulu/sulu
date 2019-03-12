@@ -15,6 +15,7 @@ use PHPCR\PropertyInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -40,6 +41,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     {
         return [
             Events::PERSIST => 'handlePersist',
+            Events::PUBLISH => 'handlePublish',
             Events::HYDRATE => 'handleHydrate',
         ];
     }
@@ -62,6 +64,28 @@ class SecuritySubscriber implements EventSubscriberInterface
      * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
+    {
+        /** @var SecurityBehavior $document */
+        $document = $event->getDocument();
+
+        if (!$this->supports($document) || !$document->getPermissions()) {
+            return;
+        }
+
+        $node = $event->getNode();
+
+        foreach ($document->getPermissions() as $roleId => $permission) {
+            // TODO use PropertyEncoder, once it is refactored
+            $node->setProperty('sec:role-' . $roleId, $this->getAllowedPermissions($permission));
+        }
+    }
+
+    /**
+     * Adds the security information to the node.
+     *
+     * @param PublishEvent $event
+     */
+    public function handlePublish(PublishEvent $event)
     {
         /** @var SecurityBehavior $document */
         $document = $event->getDocument();
