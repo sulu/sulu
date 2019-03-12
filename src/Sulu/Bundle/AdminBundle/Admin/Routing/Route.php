@@ -105,6 +105,13 @@ class Route
         return $this->view;
     }
 
+    public function setView(string $view): self
+    {
+        $this->view = $view;
+
+        return $this;
+    }
+
     public function setOption(string $key, $value): self
     {
         $this->options[$key] = $value;
