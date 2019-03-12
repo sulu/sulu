@@ -8,7 +8,7 @@ export default class AddToolbarAction extends AbstractToolbarAction {
         return {
             icon: 'su-plus-circle',
             label: translate('sulu_admin.add'),
-            onClick: action(this.list.handleItemAdd),
+            onClick: action(this.list.addItem),
             type: 'button',
         };
     }

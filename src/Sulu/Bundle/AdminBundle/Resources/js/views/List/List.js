@@ -192,7 +192,7 @@ class List extends React.Component<Props> {
         this.listStore.destroy();
     }
 
-    handleItemAdd = (parentId: string | number) => {
+    addItem = (parentId: string | number) => {
         const {onItemAdd, router} = this.props;
         const {
             route: {
@@ -262,7 +262,7 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={onItemAdd || addRoute ? this.handleItemAdd : undefined}
+                    onItemAdd={onItemAdd || addRoute ? this.addItem : undefined}
                     onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
                     ref={this.setListRef}
                     searchable={searchable}
