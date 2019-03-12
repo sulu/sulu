@@ -42,7 +42,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
                 generationUrl,
                 {
                     parts,
-                    locale: formInspector.locale,
+                    locale: formInspector.locale ? formInspector.locale.get() : undefined,
                     ...formInspector.options,
                 }
             ).then((response) => {

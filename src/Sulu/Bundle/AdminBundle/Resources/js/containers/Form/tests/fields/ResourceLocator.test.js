@@ -12,7 +12,7 @@ import ResourceLocatorComponent from '../../../../components/ResourceLocator';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.id = id;
-    this.locale = observableOptions.locale ? observableOptions.locale.get() : undefined;
+    this.locale = observableOptions.locale;
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
