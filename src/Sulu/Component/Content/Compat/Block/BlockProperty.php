@@ -224,7 +224,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
                 $subName = $subProperty->getName();
                 $subValue = $item[$subName];
 
-                if ($value instanceof PropertyValue) {
+                if ($subValue instanceof PropertyValue) {
                     $subValueProperty = new PropertyValue($subName, $subValue);
                     $subProperty->setPropertyValue($subValueProperty);
                     $item[$subName] = $subValueProperty;
