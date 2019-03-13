@@ -8,9 +8,11 @@ $textEditorDarkBackgroundColor: $dustyGray;
 $textEditorBorderColor: $textEditorBackgroundColor;
 $textEditorDarkBorderColor: $textEditorDarkBackgroundColor;
 $textEditorAccentColor: $shakespeare;
-$textEditorLightAccentColor: #e5f4f7;
+$textEditorLightAccentColor: $iceberg;
 $textEditorWhiteHover: $mercury;
 $textEditorPanelBackground: $white;
+$textEditorLinkColor: $blue;
+$textEditorLinkButtonColor: $black;
 
 :global {
     :root {
@@ -94,7 +96,7 @@ $textEditorPanelBackground: $white;
             a,
             sulu\:link,
             sulu\:media {
-                color: blue !important;
+                color: $textEditorLinkColor !important;
                 text-decoration: underline !important;
             }
             /* stylelint-enable */
@@ -120,7 +122,7 @@ $textEditorPanelBackground: $white;
 
             .ck-button__label {
                 overflow: hidden;
-                color: blue !important;
+                color: $textEditorLinkColor !important;
                 cursor: pointer;
 
                 &:hover {
@@ -132,7 +134,7 @@ $textEditorPanelBackground: $white;
                 pointer-events: none;
 
                 .ck-button__label {
-                    color: black !important;
+                    color: $textEditorLinkButtonColor !important;
                     cursor: default;
                     text-decoration: none !important;
                 }
