@@ -77,12 +77,13 @@ class List extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "adapters" option');
         }
 
+        this.locale = locale ? locale : observable.box();
+
         const observableOptions = {};
 
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
-        this.locale = locale ? locale : observable.box();
         if (locales) {
             router.bind('locale', this.locale);
             observableOptions.locale = this.locale;

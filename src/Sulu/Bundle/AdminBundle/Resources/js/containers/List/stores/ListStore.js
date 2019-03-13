@@ -290,7 +290,7 @@ export default class ListStore {
         }
     };
 
-    @action reset = () => {
+    @action reset() {
         const page = this.getPage();
 
         this.clear();
@@ -301,11 +301,11 @@ export default class ListStore {
         if (page && page > 1) {
             this.setPage(1);
         }
-    };
+    }
 
-    @action reload = () => {
+    @action reload() {
         this.setShouldReload(true);
-    };
+    }
 
     findById(id: string | number): ?Object {
         return this.structureStrategy.findById(id);
