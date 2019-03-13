@@ -108,6 +108,7 @@ test('Should pass correct props to List view', () => {
     const list = formOverlayList.find(List);
 
     expect(list.props()).toEqual(expect.objectContaining(formOverlayList.props()));
+    expect(list.props().locale).toBeDefined();
     expect(list.props().onItemAdd).toBeDefined();
     expect(list.props().onItemClick).toBeDefined();
 });
@@ -129,9 +130,12 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    const locale = observable.box('en');
+    formOverlayList.instance().locale = locale;
+
     formOverlayList.find(List).props().onItemAdd();
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {}, {
+    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {locale}, {
         category: 'category-id',
         parentId: 'test-id',
     });
@@ -160,11 +164,11 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
 
     const locale = observable.box('en');
-    formOverlayList.find(List).instance().locale = locale;
+    formOverlayList.instance().locale = locale;
 
     formOverlayList.find(List).props().onItemClick('item-id');
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', 'item-id', {locale: locale}, {
+    expect(ResourceStore).toBeCalledWith('test-resource-key', 'item-id', {locale}, {
         category: 'category-id',
         parentId: 'test-id',
     });

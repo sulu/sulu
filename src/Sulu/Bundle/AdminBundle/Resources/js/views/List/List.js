@@ -17,6 +17,7 @@ import listStyles from './list.scss';
 const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
+    locale?: IObservableValue<string>,
     resourceStore?: ResourceStore,
     onItemAdd?: (parentId: string | number) => void,
     onItemClick?: (itemId: string | number) => void,
@@ -25,7 +26,7 @@ type Props = ViewProps & {
 @observer
 class List extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
-    locale: IObservableValue<string> = observable.box();
+    locale: IObservableValue<string>;
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
     @observable toolbarActions = [];
@@ -48,7 +49,7 @@ class List extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const router = this.props.router;
+        const {locale, router} = this.props;
         const {
             attributes,
             route: {
@@ -81,6 +82,7 @@ class List extends React.Component<Props> {
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
+        this.locale = locale ? locale : observable.box();
         if (locales) {
             router.bind('locale', this.locale);
             observableOptions.locale = this.locale;

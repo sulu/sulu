@@ -899,6 +899,27 @@ test('Should pass locale and page observables to the ListStore', () => {
     expect(listStore.observableOptions).toHaveProperty('locale');
 });
 
+test('Should pass locale observable from props to the ListStore if it is set', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const locale = observable.box('ru');
+    const list = mount(<List locale={locale} router={router} />);
+    const listStore = list.instance().listStore;
+
+    expect(listStore.observableOptions.locale).toEqual(locale);
+});
+
 test('Should not pass the locale observable to the ListStore if no locales are defined', () => {
     const List = require('../List').default;
     const router = {
@@ -933,7 +954,7 @@ test('Should fire reload method of ListStore when reload method is called', () =
     };
 
     const listInstance = mount(<List router={router} />).instance();
-    listInstance.reload()
+    listInstance.reload();
 
     expect(listInstance.listStore.reload).toBeCalled();
 });

@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
 import type {ElementRef} from 'react';
+import type {IObservableValue} from 'mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
@@ -16,6 +17,7 @@ import formOverlayListStyles from './formOverlayList.scss';
 @observer
 export default class FormOverlayList extends React.Component<ViewProps> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
+    locale: IObservableValue<string> = observable.box();
 
     listRef: ?ElementRef<typeof List>;
     formRef: ?ElementRef<typeof Form>;
@@ -83,13 +85,8 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             this.formStore.destroy();
         }
 
-        const observableOptions = {};
-        if (this.listRef && this.listRef.locale && this.listRef.locale.get()) {
-            observableOptions.locale = this.listRef.locale;
-        }
-
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
-        const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
+        const resourceStore = new ResourceStore(resourceKey, itemId, {locale: this.locale}, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
 
@@ -153,6 +150,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             <Fragment>
                 <List
                     {...this.props}
+                    locale={this.locale}
                     onItemAdd={formKey && this.handleItemAdd}
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setListRef}
