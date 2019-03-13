@@ -3,15 +3,15 @@ import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {ResourceRequester} from '../../services';
 
-export default class SingleSelectionStore {
-    @observable item: ?Object;
+export default class SingleSelectionStore<T, U: {id: T} = Object> {
+    @observable item: ?U;
     @observable loading: boolean = false;
     resourceKey: string;
     locale: ?IObservableValue<string>;
 
     constructor(
         resourceKey: string,
-        selectedItemId: ?string | number,
+        selectedItemId: ?T,
         locale: ?IObservableValue<string>
     ) {
         this.resourceKey = resourceKey;
@@ -21,7 +21,7 @@ export default class SingleSelectionStore {
         }
     }
 
-    @action set(item: Object) {
+    @action set(item: U) {
         this.item = item;
     }
 
@@ -33,7 +33,7 @@ export default class SingleSelectionStore {
         this.loading = loading;
     }
 
-    @action loadItem = (itemId: ?string | number) => {
+    @action loadItem(itemId: ?T) {
         if (!itemId) {
             this.item = undefined;
             return;
@@ -47,5 +47,5 @@ export default class SingleSelectionStore {
             this.item = data;
             this.setLoading(false);
         }));
-    };
+    }
 }

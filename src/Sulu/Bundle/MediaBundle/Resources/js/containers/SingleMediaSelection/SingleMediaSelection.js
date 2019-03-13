@@ -8,6 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import type {Media} from '../../types';
 import type {Value} from './types';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 
@@ -30,7 +31,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
         value: {id: undefined},
     };
 
-    singleMediaSelectionStore: SingleSelectionStore;
+    singleMediaSelectionStore: SingleSelectionStore<number, Media>;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;

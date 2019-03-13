@@ -4,8 +4,8 @@ import type {IObservableValue} from 'mobx';
 import {arrayMove} from '../../components';
 import {ResourceRequester} from '../../services';
 
-export default class MultiSelectionStore {
-    @observable items: Array<Object> = [];
+export default class MultiSelectionStore<T = string | number, U: {id: T} = Object> {
+    @observable items: Array<U> = [];
     @observable loading: boolean = false;
     resourceKey: string;
     locale: ?IObservableValue<string>;
@@ -13,7 +13,7 @@ export default class MultiSelectionStore {
 
     constructor(
         resourceKey: string,
-        selectedItemIds: $ReadOnlyArray<string | number>,
+        selectedItemIds: Array<T>,
         locale: ?IObservableValue<string>,
         idFilterParameter: string = 'ids'
     ) {
@@ -25,11 +25,11 @@ export default class MultiSelectionStore {
         }
     }
 
-    @action set(items: Array<Object>) {
+    @action set(items: Array<U>) {
         this.items = items;
     }
 
-    @action removeById(id: string | number) {
+    @action removeById(id: T) {
         // TODO use metadata instead of hardcoded id
         this.items.splice(this.items.findIndex((item) => item.id === id), 1);
     }
@@ -42,7 +42,7 @@ export default class MultiSelectionStore {
         this.loading = loading;
     }
 
-    @action loadItems = (itemIds: ?$ReadOnlyArray<string | number>) => {
+    @action loadItems(itemIds: ?Array<T>) {
         if (!itemIds || itemIds.length === 0) {
             this.items = [];
             return;
@@ -58,5 +58,5 @@ export default class MultiSelectionStore {
             this.items = data._embedded[this.resourceKey];
             this.setLoading(false);
         }));
-    };
+    }
 }

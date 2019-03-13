@@ -9,6 +9,7 @@ import type {IObservableValue} from 'mobx';
 import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import type {Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {Value} from './types';
 
@@ -29,7 +30,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
         value: {ids: []},
     };
 
-    mediaSelectionStore: MultiSelectionStore;
+    mediaSelectionStore: MultiSelectionStore<number, Media>;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
