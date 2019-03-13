@@ -32,6 +32,7 @@ export default class ListStore {
     @observable copying: boolean = false;
     @observable ordering: boolean = false;
     @observable schemaLoading: boolean = true;
+    @observable shouldReload: boolean = false;
     @observable loadingStrategy: LoadingStrategyInterface;
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
@@ -126,7 +127,15 @@ export default class ListStore {
         this.observableOptions = observableOptions;
         this.options = options;
         this.initialSelectionIds = selectionIds;
-        this.sendRequestDisposer = autorun(this.sendRequest);
+
+        this.sendRequestDisposer = autorun(() => {
+            if (this.shouldReload) {
+                // changing the value of the reload flag will retrigger this autorun and send the request
+                this.setShouldReload(false);
+            } else {
+                this.sendRequest();
+            }
+        });
 
         const callResetForChangedObservable = (change: IValueWillChange<*>) => {
             if (this.initialized && change.object.get() !== change.newValue) {
@@ -294,15 +303,9 @@ export default class ListStore {
         }
     };
 
-    @action reload() {
-        const page = this.getPage();
-
-        this.reset();
-
-        if (!page || page === 1) {
-            this.sendRequest();
-        }
-    }
+    @action reload = () => {
+        this.setShouldReload(true);
+    };
 
     findById(id: string | number): ?Object {
         return this.structureStrategy.findById(id);
@@ -472,6 +475,10 @@ export default class ListStore {
 
     @action setDataLoading(dataLoading: boolean) {
         this.dataLoading = dataLoading;
+    }
+
+    @action setShouldReload(shouldReload: boolean) {
+        this.shouldReload = shouldReload;
     }
 
     getPage() {

@@ -24,6 +24,7 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
         this.select = jest.fn();
         this.setActive = jest.fn();
         this.selections = [];
+        this.reset = jest.fn();
         this.reload = jest.fn();
         this.loading = false;
     }
@@ -240,14 +241,17 @@ test('Should reload on open if reloadOnOpen is set to true', () => {
         />
     );
 
+    listStore.reset.mockReset();
     listStore.reload.mockReset();
 
+    expect(listStore.reset).not.toBeCalled();
     expect(listStore.reload).not.toBeCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
+    expect(listStore.reset).toBeCalledWith();
     expect(listStore.reload).toBeCalledWith();
 });
 
@@ -268,14 +272,17 @@ test('Should not reload on open if reloadOnOpen is set to true but listStore is 
         />
     );
 
+    listStore.reset.mockReset();
     listStore.reload.mockReset();
 
+    expect(listStore.reset).not.toBeCalled();
     expect(listStore.reload).not.toBeCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
+    expect(listStore.reset).not.toBeCalled();
     expect(listStore.reload).not.toBeCalled();
 });
 
@@ -294,14 +301,17 @@ test('Should not reload on open if reloadOnOpen is not set', () => {
         />
     );
 
+    listStore.reset.mockReset();
     listStore.reload.mockReset();
 
+    expect(listStore.reset).not.toBeCalled();
     expect(listStore.reload).not.toBeCalled();
 
     listOverlay.setProps({
         open: true,
     });
 
+    expect(listStore.reset).not.toBeCalled();
     expect(listStore.reload).not.toBeCalled();
 });
 

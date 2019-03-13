@@ -78,6 +78,7 @@ jest.mock(
             },
         };
         this.destroy = jest.fn();
+        this.reset = jest.fn();
         this.reload = jest.fn();
         this.clearSelection = jest.fn();
         this.remove = jest.fn();

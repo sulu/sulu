@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, computed, toJS} from 'mobx';
+import {runInAction, autorun, computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import equals from 'fast-deep-equal';
@@ -59,7 +59,10 @@ export default class ListOverlay extends React.Component<Props> {
         const {clearSelectionOnClose, open, reloadOnOpen} = this.props;
 
         if (!this.listStore.loading && reloadOnOpen && prevProps.open === false && open === true) {
-            this.listStore.reload();
+            runInAction(() => {
+                this.listStore.reset();
+                this.listStore.reload();
+            });
         }
 
         if (clearSelectionOnClose && prevProps.open === true && open === false) {
