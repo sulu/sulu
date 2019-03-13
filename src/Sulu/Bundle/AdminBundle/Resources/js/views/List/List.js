@@ -17,13 +17,16 @@ import listStyles from './list.scss';
 const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
+    locale?: IObservableValue<string>,
     resourceStore?: ResourceStore,
+    onItemAdd?: (parentId: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
 };
 
 @observer
 class List extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
-    locale: IObservableValue<string> = observable.box();
+    locale: IObservableValue<string>;
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
     @observable toolbarActions = [];
@@ -46,7 +49,7 @@ class List extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const router = this.props.router;
+        const {locale, router} = this.props;
         const {
             attributes,
             route: {
@@ -73,6 +76,8 @@ class List extends React.Component<Props> {
         if (!adapters) {
             throw new Error('The route does not define the mandatory "adapters" option');
         }
+
+        this.locale = locale ? locale : observable.box();
 
         const observableOptions = {};
 
@@ -190,8 +195,8 @@ class List extends React.Component<Props> {
         this.listStore.destroy();
     }
 
-    addItem = (rowId: string | number) => {
-        const {router} = this.props;
+    addItem = (parentId: string | number) => {
+        const {onItemAdd, router} = this.props;
         const {
             route: {
                 options: {
@@ -200,7 +205,30 @@ class List extends React.Component<Props> {
             },
         } = router;
 
-        router.navigate(addRoute, {locale: this.locale.get(), parentId: rowId});
+        if (onItemAdd) {
+            onItemAdd(parentId);
+            return;
+        }
+
+        router.navigate(addRoute, {locale: this.locale.get(), parentId});
+    };
+
+    handleItemClick = (itemId: string | number) => {
+        const {onItemClick, router} = this.props;
+        const {
+            route: {
+                options: {
+                    editRoute,
+                },
+            },
+        } = router;
+
+        if (onItemClick) {
+            onItemClick(itemId);
+            return;
+        }
+
+        router.navigate(editRoute, {id: itemId, locale: this.locale.get()});
     };
 
     requestSelectionDelete = () => {
@@ -211,9 +239,8 @@ class List extends React.Component<Props> {
         this.list.requestSelectionDelete();
     };
 
-    handleEditClick = (rowId: string | number) => {
-        const {router} = this.props;
-        router.navigate(router.route.options.editRoute, {id: rowId, locale: this.locale.get()});
+    reload = () => {
+        this.listStore.reload();
     };
 
     setListRef = (list: ?ElementRef<typeof ListContainer>) => {
@@ -222,24 +249,28 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            route: {
-                options: {
-                    adapters,
-                    addRoute,
-                    editRoute,
-                    searchable,
-                    title,
+            onItemAdd,
+            onItemClick,
+            router: {
+                route: {
+                    options: {
+                        adapters,
+                        addRoute,
+                        editRoute,
+                        searchable,
+                        title,
+                    },
                 },
             },
-        } = this.props.router;
+        } = this.props;
 
         return (
             <div>
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
-                    onItemAdd={addRoute && this.addItem}
-                    onItemClick={editRoute && this.handleEditClick}
+                    onItemAdd={onItemAdd || addRoute ? this.addItem : undefined}
+                    onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
                     ref={this.setListRef}
                     searchable={searchable}
                     store={this.listStore}

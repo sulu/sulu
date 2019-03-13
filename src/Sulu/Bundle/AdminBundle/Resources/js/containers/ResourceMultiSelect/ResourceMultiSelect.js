@@ -19,7 +19,7 @@ type Props<T: string | number> = {|
 |};
 
 @observer
-export default class MultiSelect<T: string | number> extends React.Component<Props<T>> {
+export default class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         apiOptions: {},
         disabled: false,

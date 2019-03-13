@@ -2,10 +2,10 @@
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
+import Snackbar from '../Snackbar';
 import Button from './Button';
 import Controls from './Controls';
 import Dropdown from './Dropdown';
-import Snackbar from './Snackbar';
 import Items from './Items';
 import Icons from './Icons';
 import Toggler from './Toggler';

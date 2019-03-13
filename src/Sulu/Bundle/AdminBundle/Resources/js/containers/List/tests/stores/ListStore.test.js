@@ -932,7 +932,7 @@ test('Clear the data', () => {
     expect(structureStrategy.clear).toBeCalled();
 });
 
-test('Should reset the data array and set page to 1 when the reload method is called', (done) => {
+test('Should reload data but not change the page or the active item when the reload method is called', (done) => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
@@ -967,10 +967,9 @@ test('Should reset the data array and set page to 1 when the reload method is ca
             expect(page.get()).toBe(3);
 
             listStore.reload();
-            expect(structureStrategy.clear).toBeCalled();
-            expect(listStore.active.get()).toBe(undefined);
 
-            expect(page.get()).toBe(1);
+            expect(listStore.active.get()).toBe(1);
+            expect(page.get()).toBe(3);
             expect(loadingStrategy.load).toBeCalled();
 
             listStore.destroy();

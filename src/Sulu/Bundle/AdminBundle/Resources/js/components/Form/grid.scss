@@ -9,7 +9,7 @@
 .grid-section {
     margin-bottom: -$fieldMarginBottom;
 
-    & .grid-section:last-child {
+    &:last-child {
         margin-bottom: 0;
     }
 

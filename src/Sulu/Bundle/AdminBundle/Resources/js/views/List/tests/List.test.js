@@ -78,6 +78,7 @@ jest.mock(
             },
         };
         this.destroy = jest.fn();
+        this.reset = jest.fn();
         this.reload = jest.fn();
         this.clearSelection = jest.fn();
         this.remove = jest.fn();
@@ -234,7 +235,24 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
     expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
 });
 
-test('Should pass the onItemClick callback when an editRoute has been passed', () => {
+test('Should pass the onItemClick callback if onItemClick prop is set', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    const list = shallow(<List onItemClick={jest.fn()} router={router} />);
+    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+});
+
+test('Should not pass the onItemClick callback if no editRoute has been passed and no onItemClick prop is set', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -274,7 +292,29 @@ test('Should render the list with the add icon if a addRoute has been passed', (
     expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
 });
 
-test('Should render the list without the add icon if a addRoute has been passed', () => {
+test('Should render the list with the add icon if onItemAdd prop is set', () => {
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['tree_table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+                toolbarActions: ['sulu_admin.add'],
+            },
+        },
+    };
+
+    const list = shallow(<List onItemAdd={jest.fn()} router={router} />);
+    expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+});
+
+test('Should render the list without add icon if no addRoute has been passed and onItemAdd prop is not set', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -512,7 +552,7 @@ test('Should navigate when add button is clicked and locales have been passed in
     expect(router.navigate).toBeCalledWith('addRoute', {locale: 'de'});
 });
 
-test('Should navigate without locale when pencil button is clicked', () => {
+test('Should navigate without locale when add button is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -539,6 +579,37 @@ test('Should navigate without locale when pencil button is clicked', () => {
     toolbarConfig.items[0].onClick();
 
     expect(router.navigate).toBeCalledWith('addRoute', {});
+});
+
+test('Should fire callback instead of navigate when onItemAdd prop is set and add button is clicked', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
+    toolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                addRoute: 'addRoute',
+                listKey: 'test',
+                resourceKey: 'test',
+                toolbarActions: ['sulu_admin.add'],
+            },
+        },
+    };
+    const itemAddCallback = jest.fn();
+
+    const list = mount(<List onItemAdd={itemAddCallback} router={router} />);
+    const toolbarConfig = toolbarFunction.call(list.instance());
+
+    toolbarConfig.items[0].onClick();
+
+    expect(itemAddCallback).toBeCalledWith(undefined);
+    expect(router.navigate).not.toBeCalled();
 });
 
 test('Should navigate when pencil button is clicked and locales have been passed in options', () => {
@@ -585,6 +656,30 @@ test('Should navigate without locale when pencil button is clicked', () => {
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
+});
+
+test('Should fire callback instead of navigate when onItemClick prop is set and pencil button is clicked', () => {
+    const onItemClickCallback = jest.fn();
+
+    const List = require('../List').default;
+    const router = {
+        navigate: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                editRoute: 'editRoute',
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List onItemClick={onItemClickCallback} router={router} />);
+    list.find('ButtonCell button').at(0).simulate('click');
+
+    expect(onItemClickCallback).toBeCalledWith(1);
+    expect(router.navigate).not.toBeCalled();
 });
 
 test('Should load the route attributes from the ListStore', () => {
@@ -804,6 +899,27 @@ test('Should pass locale and page observables to the ListStore', () => {
     expect(listStore.observableOptions).toHaveProperty('locale');
 });
 
+test('Should pass locale observable from props to the ListStore if it is set', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const locale = observable.box('ru');
+    const list = mount(<List locale={locale} router={router} />);
+    const listStore = list.instance().listStore;
+
+    expect(listStore.observableOptions.locale).toEqual(locale);
+});
+
 test('Should not pass the locale observable to the ListStore if no locales are defined', () => {
     const List = require('../List').default;
     const router = {
@@ -822,6 +938,25 @@ test('Should not pass the locale observable to the ListStore if no locales are d
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).not.toHaveProperty('locale');
+});
+
+test('Should fire reload method of ListStore when reload method is called', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const listInstance = mount(<List router={router} />).instance();
+    listInstance.reload();
+
+    expect(listInstance.listStore.reload).toBeCalled();
 });
 
 test('Should delete selected items when delete button is clicked', () => {
