@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import {observable, action, observe} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import SingleMediaSelection from 'sulu-media-bundle/containers/SingleMediaSelection';
 import type {Value as MediaValue} from 'sulu-media-bundle/containers/SingleMediaSelection/types';
@@ -103,12 +103,6 @@ export default class MediaLinkPlugin {
     @observable open: boolean = false;
     setValue: (value: MediaLinkValueType) => void = () => {};
     currentValue: MediaLinkValueType = null;
-
-    constructor(onChange: () => void) {
-        observe(this, 'open', () => {
-            onChange();
-        });
-    }
 
     @action handleChange = (value: MediaLinkValueType): void => {
         this.setValue(value);

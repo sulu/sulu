@@ -1,6 +1,7 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
+import {observer} from 'mobx-react';
 import log from 'loglevel';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
@@ -34,6 +35,7 @@ type Props = {|
  * Implementation is based upon the official ck-editor component:
  * https://github.com/ckeditor/ckeditor5-react/blob/089e28eafa64baf273c5e3690b08c1f8ee5ebbe5/src/ckeditor.jsx
  */
+@observer
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
@@ -53,9 +55,9 @@ export default class CKEditor5 extends React.Component<Props> {
 
         this.editorInstance = null;
 
-        this.externalLinkPlugin = new ExternalLinkPlugin(this.handleChange);
-        this.internalLinkPlugin = new InternalLinkPlugin(this.handleChange);
-        this.mediaLinkPlugin = new MediaLinkPlugin(this.handleChange);
+        this.externalLinkPlugin = new ExternalLinkPlugin();
+        this.internalLinkPlugin = new InternalLinkPlugin();
+        this.mediaLinkPlugin = new MediaLinkPlugin();
     }
 
     setContainerRef = (containerRef: ?ElementRef<'div'>) => {
@@ -79,10 +81,6 @@ export default class CKEditor5 extends React.Component<Props> {
             }
         }
     }
-
-    handleChange = (): void => {
-        this.forceUpdate();
-    };
 
     componentDidMount() {
         const {formats} = this.props;
@@ -234,24 +232,22 @@ export default class CKEditor5 extends React.Component<Props> {
 
     render() {
         return (
-            <React.Fragment>
+            <Fragment>
                 <div ref={this.setContainerRef} />
 
                 <ExternalLinkPluginComponent
                     open={this.externalLinkPlugin.open}
                     plugin={this.externalLinkPlugin}
                 />
-
                 <InternalLinkPluginComponent
                     open={this.internalLinkPlugin.open}
                     plugin={this.internalLinkPlugin}
                 />
-
                 <MediaLinkPluginComponent
                     open={this.mediaLinkPlugin.open}
                     plugin={this.mediaLinkPlugin}
                 />
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

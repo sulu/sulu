@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import {observable, action, observe} from 'mobx';
+import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../../../utils/Translator';
 import SingleSelect from '../../../SingleSelect';
@@ -122,12 +122,6 @@ export default class ExternalLinkPlugin {
     @observable open: boolean = false;
     setValue: (value: ExternalLinkValueType) => void = () => {};
     currentValue: ExternalLinkValueType = null;
-
-    constructor(onChange: () => void) {
-        observe(this, 'open', () => {
-            onChange();
-        });
-    }
 
     @action handleChange = (value: ExternalLinkValueType): void => {
         this.setValue(value);

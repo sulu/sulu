@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import {observable, action, observe} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import linkTypeConfigStore from '../../../../stores/LinkTypeConfigStore';
 import SingleSelection from '../../../../containers/SingleSelection';
@@ -166,7 +166,6 @@ export class InternalLinkPluginComponent extends React.Component<Props> {
                     <Form.Field error={this.selectedResourceError} label="Page" required={true}>
                         <SingleSelection
                             adapter={adapter}
-                            datagridKey={resourceKey}
                             displayProperties={['title']}
                             emptyText="Keine Seite ausgewählt"
                             icon="su-document"
@@ -196,12 +195,6 @@ export default class InternalLinkPlugin {
     @observable open: boolean = false;
     setValue: (value: InternalLinkValueType) => void = () => {};
     currentValue: InternalLinkValueType = null;
-
-    constructor(onChange: () => void) {
-        observe(this, 'open', () => {
-            onChange();
-        });
-    }
 
     @action handleChange = (value: InternalLinkValueType): void => {
         this.setValue(value);
