@@ -130,12 +130,9 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }: any);
 
     const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    const locale = observable.box('en');
-    formOverlayList.instance().locale = locale;
-
     formOverlayList.find(List).props().onItemAdd();
 
-    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {locale}, {
+    expect(ResourceStore).toBeCalledWith('test-resource-key', undefined, {}, {
         category: 'category-id',
         parentId: 'test-id',
     });

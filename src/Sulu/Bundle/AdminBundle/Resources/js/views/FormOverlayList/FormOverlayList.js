@@ -85,8 +85,13 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             this.formStore.destroy();
         }
 
+        const observableOptions = {};
+        if (this.locale.get()) {
+            observableOptions.locale = this.locale;
+        }
+
         const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
-        const resourceStore = new ResourceStore(resourceKey, itemId, {locale: this.locale}, formStoreOptions);
+        const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
 
