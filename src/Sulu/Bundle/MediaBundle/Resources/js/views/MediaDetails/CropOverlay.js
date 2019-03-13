@@ -139,7 +139,7 @@ export default class CropOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {availableFormats, selectedFormat} = this;
+        const {availableFormats, mediaFormatStore, selectedFormat} = this;
         const {image, open} = this.props;
 
         return (
@@ -159,12 +159,17 @@ export default class CropOverlay extends React.Component<Props> {
                             <SingleSelect onChange={this.handleFormatChange} value={this.formatKey}>
                                 {availableFormats.map((format) => (
                                     <SingleSelect.Option key={format.key} value={format.key}>
-                                        {format.title}
+                                        {format.title +
+                                            (mediaFormatStore.getFormatOptions(format.key)
+                                                ? ' (' + translate('sulu_media.cropped') + ')'
+                                                : ''
+                                            )
+                                        }
                                     </SingleSelect.Option>
                                 ))}
                             </SingleSelect>
                         </div>
-                        {selectedFormat && !this.mediaFormatStore.loading &&
+                        {selectedFormat && !mediaFormatStore.loading &&
                             <Fragment>
                                 <ImageRectangleSelection
                                     image={image}

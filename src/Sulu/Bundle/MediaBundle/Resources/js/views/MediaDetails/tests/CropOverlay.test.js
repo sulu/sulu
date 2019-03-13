@@ -341,3 +341,68 @@ test('Save changes of formats', () => {
         });
     });
 });
+
+test('Show which formats have already been cropped', () => {
+    const confirmSpy = jest.fn();
+
+    const formats = [
+        {
+            key: 'test1',
+            scale: {
+                x: 400,
+                y: 500,
+            },
+            title: 'Test 1',
+        },
+        {
+            key: 'test2',
+            scale: {
+                x: 300,
+                y: 200,
+            },
+            title: 'Test 2',
+        },
+        {
+            key: 'test3',
+            scale: {
+                x: 600,
+                y: 400,
+            },
+            title: 'Test 3',
+        },
+    ];
+
+    const formatsPromise = Promise.resolve(formats);
+    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+
+    const cropOverlay = shallow(
+        <CropOverlay
+            id={7}
+            image="test.jpg"
+            locale="en"
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={true}
+        />
+    );
+
+    const cropData = {
+        'test1': {
+            cropHeight: 30,
+            cropWidth: 60,
+            cropX: 100,
+            cropY: 10,
+        },
+    };
+
+    cropOverlay.instance().mediaFormatStore.getFormatOptions.mockImplementation((formatKey) => {
+        return cropData[formatKey];
+    });
+
+    return formatsPromise.then(() => {
+        cropOverlay.update();
+        expect(cropOverlay.find('Option[value="test1"]').prop('children')).toEqual('Test 1 (sulu_media.cropped)');
+        expect(cropOverlay.find('Option[value="test2"]').prop('children')).toEqual('Test 2');
+        expect(cropOverlay.find('Option[value="test3"]').prop('children')).toEqual('Test 3');
+    });
+});
