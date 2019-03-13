@@ -304,7 +304,7 @@ test('Should save ResoureFormStore, close overlay and reload List view on submit
     formOverlayList.instance().formStore.destroy = destroySpy;
 
     const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().listStore.sendRequest = reloadSpy;
+    formOverlayList.find(List).instance().reload = reloadSpy;
 
     formOverlayList.find(Form).props().onSubmit();
 
@@ -341,7 +341,7 @@ test('Should display Snackbar if an error happens during saving of ResourceFormS
     formOverlayList.instance().formStore.destroy = destroySpy;
 
     const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().listStore.sendRequest = reloadSpy;
+    formOverlayList.find(List).instance().reload = reloadSpy;
 
     formOverlayList.find(Form).props().onSubmit();
 

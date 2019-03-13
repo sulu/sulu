@@ -52,7 +52,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             .then(() => {
                 this.destroyFormOverlay();
                 if (this.listRef) {
-                    this.listRef.listStore.sendRequest();
+                    this.listRef.reload();
                 }
             })
             .catch(action((error) => {

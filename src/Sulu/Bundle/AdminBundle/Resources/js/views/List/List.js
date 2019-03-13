@@ -236,6 +236,10 @@ class List extends React.Component<Props> {
         this.list.requestSelectionDelete();
     };
 
+    reload = () => {
+        this.listStore.reload();
+    };
+
     setListRef = (list: ?ElementRef<typeof ListContainer>) => {
         this.list = list;
     };

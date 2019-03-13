@@ -235,7 +235,24 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
     expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
 });
 
-test('Should pass the onItemClick callback when an editRoute has been passed', () => {
+test('Should pass the onItemClick callback if onItemClick prop is set', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    const list = shallow(<List onItemClick={jest.fn()} router={router} />);
+    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+});
+
+test('Should not pass the onItemClick callback if no editRoute has been passed and no onItemClick prop is set', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -900,6 +917,25 @@ test('Should not pass the locale observable to the ListStore if no locales are d
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).not.toHaveProperty('locale');
+});
+
+test('Should fire reload method of ListStore when reload method is called', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const listInstance = mount(<List router={router} />).instance();
+    listInstance.reload()
+
+    expect(listInstance.listStore.reload).toBeCalled();
 });
 
 test('Should delete selected items when delete button is clicked', () => {
