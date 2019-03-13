@@ -5,9 +5,10 @@ import type {IObservableValue} from 'mobx';
 import {action, observable, reaction, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
-import SingleMediaSelectionStore from '../../stores/SingleMediaSelectionStore';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import type {Media} from '../../types';
 import type {Value} from './types';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 
@@ -19,6 +20,7 @@ type Props = {|
     value: Value,
 |}
 
+const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 
 @observer
@@ -29,7 +31,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
         value: {id: undefined},
     };
 
-    singleMediaSelectionStore: SingleMediaSelectionStore;
+    singleMediaSelectionStore: SingleSelectionStore<number, Media>;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
@@ -39,9 +41,9 @@ export default class SingleMediaSelection extends React.Component<Props> {
 
         const {locale, value} = this.props;
 
-        this.singleMediaSelectionStore = new SingleMediaSelectionStore(value.id, locale);
+        this.singleMediaSelectionStore = new SingleSelectionStore(MEDIA_RESOURCE_KEY, value.id, locale);
         this.changeDisposer = reaction(
-            () => (this.singleMediaSelectionStore.selectedMediaId),
+            () => (this.singleMediaSelectionStore.item ? this.singleMediaSelectionStore.item.id : undefined),
             (loadedMediaId: ?number) => {
                 const {onChange, value} = this.props;
 
@@ -53,16 +55,11 @@ export default class SingleMediaSelection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const {
-            locale,
-            value,
-        } = this.props;
+        const newId = toJS(this.props.value.id);
+        const loadedId = this.singleMediaSelectionStore.item ? this.singleMediaSelectionStore.item.id : undefined;
 
-        const newSelectedId = toJS(value.id);
-        const loadedSelectedId = toJS(this.singleMediaSelectionStore.selectedMediaId);
-
-        if (loadedSelectedId !== newSelectedId) {
-            this.singleMediaSelectionStore.loadSelectedMedia(newSelectedId, locale);
+        if (loadedId !== newId) {
+            this.singleMediaSelectionStore.loadItem(newId);
         }
     }
 
@@ -103,8 +100,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
         } = this.props;
         const {
             loading,
-            selectedMedia,
-            selectedMediaId,
+            item: media,
         } = this.singleMediaSelectionStore;
 
         return (
@@ -117,30 +113,30 @@ export default class SingleMediaSelection extends React.Component<Props> {
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
-                    onRemove={selectedMedia ? this.handleRemove : undefined}
+                    onRemove={media ? this.handleRemove : undefined}
                     valid={valid}
                 >
-                    {selectedMedia &&
+                    {media &&
                         <div className={singleMediaSelectionStyle.mediaItem}>
-                            {selectedMedia.thumbnails[THUMBNAIL_SIZE]
+                            {media.thumbnails[THUMBNAIL_SIZE]
                                 ? <img
-                                    alt={selectedMedia.title}
+                                    alt={media.title}
                                     className={singleMediaSelectionStyle.thumbnailImage}
-                                    src={selectedMedia.thumbnails[THUMBNAIL_SIZE]}
+                                    src={media.thumbnails[THUMBNAIL_SIZE]}
                                 />
                                 : <MimeTypeIndicator
                                     height={19}
                                     iconSize={14}
-                                    mimeType={selectedMedia.mimeType}
+                                    mimeType={media.mimeType}
                                     width={19}
                                 />
                             }
-                            <div className={singleMediaSelectionStyle.mediaTitle}>{selectedMedia.title}</div>
+                            <div className={singleMediaSelectionStyle.mediaTitle}>{media.title}</div>
                         </div>
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay
-                    excludedIds={selectedMediaId ? [selectedMediaId] : []}
+                    excludedIds={media ? [media.id] : []}
                     locale={locale}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}

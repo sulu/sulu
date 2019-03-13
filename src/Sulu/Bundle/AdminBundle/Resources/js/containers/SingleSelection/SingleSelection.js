@@ -31,7 +31,7 @@ export default class SingleSelection extends React.Component<Props> {
         icon: 'su-plus',
     };
 
-    singleSelectionStore: SingleSelectionStore;
+    singleSelectionStore: SingleSelectionStore<string | number>;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;

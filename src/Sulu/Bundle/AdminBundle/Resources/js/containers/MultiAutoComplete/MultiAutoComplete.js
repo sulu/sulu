@@ -32,7 +32,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
     };
 
     searchStore: SearchStore;
-    selectionStore: MultiSelectionStore;
+    selectionStore: MultiSelectionStore<string | number>;
     changeDisposer: () => *;
 
     constructor(props: Props) {

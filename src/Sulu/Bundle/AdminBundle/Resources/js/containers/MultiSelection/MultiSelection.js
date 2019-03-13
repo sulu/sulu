@@ -34,7 +34,7 @@ export default class MultiSelection extends React.Component<Props> {
         value: [],
     };
 
-    selectionStore: MultiSelectionStore;
+    selectionStore: MultiSelectionStore<string | number>;
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
