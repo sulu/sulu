@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {when, runInAction} from 'mobx';
+import {action, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
@@ -42,14 +42,11 @@ export default class MediaCollection extends React.Component<Props> {
         this.props.onCollectionNavigate(collectionId);
     };
 
-    handleUpload = (media: Array<Object>) => {
+    @action handleUpload = (media: Array<Object>) => {
         const {mediaListStore} = this.props;
 
-        // reset list to first page and reload in single action to avoid multiple requests
-        runInAction(() => {
-            mediaListStore.reset();
-            mediaListStore.reload();
-        });
+        mediaListStore.reset();
+        mediaListStore.reload();
 
         when(
             () => !mediaListStore.loading,
