@@ -21,6 +21,10 @@ jest.mock('../../../../containers/Form', () => ({
             this.resourceStore = resourceStore;
         }
 
+        get id() {
+            return this.resourceStore.id;
+        }
+
         changeType = jest.fn();
         setType = jest.fn();
     },
@@ -92,6 +96,32 @@ test('Return item config with loading select', () => {
     }));
 });
 
+test('Do not set the first value as default if nothing is given but data has not been loaded yet', () => {
+    const typeToolbarAction = createTypeToolbarAction();
+    typeToolbarAction.resourceFormStore.resourceStore.id = 5;
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.types = {
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+    };
+
+    const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+
+    if (toolbarItemConfig.type !== 'select') {
+        throw new Error(
+            'The returned toolbar item must be of type "select", but "' + toolbarItemConfig.type + '" was given!'
+        );
+    }
+
+    expect(typeToolbarAction.resourceFormStore.setType).not.toBeCalled();
+});
+
 test('Set the first value as default if nothing is given', () => {
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.typesLoading = false;
@@ -117,7 +147,7 @@ test('Set the first value as default if nothing is given', () => {
     expect(typeToolbarAction.resourceFormStore.setType).toBeCalledWith('default');
 });
 
-test('Change the type of the FormStore when another type is selcted', () => {
+test('Change the type of the FormStore when another type is selected', () => {
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.typesLoading = false;
     typeToolbarAction.resourceFormStore.type = 'default';

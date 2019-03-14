@@ -6,7 +6,7 @@ export default class TypeToolbarAction extends AbstractToolbarAction {
     getToolbarItemConfig(): ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
         const formKeys = Object.keys(formTypes);
-        if (formKeys.length > 0 && !this.resourceFormStore.type) {
+        if (!this.resourceFormStore.id && formKeys.length > 0 && !this.resourceFormStore.type) {
             this.resourceFormStore.setType(formKeys[0]);
         }
 
