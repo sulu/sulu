@@ -67,3 +67,42 @@ test('Update media formats', () => {
         });
     });
 });
+
+test('Delete empty media formats', () => {
+    const mediaFormats = {
+        '300x': {
+            cropX: 300,
+            cropY: 100,
+        },
+        'x300': {
+            cropX: 100,
+            cropY: 100,
+        },
+        '300x300': {
+            cropX: 300,
+            cropY: 300,
+        },
+    };
+    const listPromise = Promise.resolve(mediaFormats);
+    ResourceRequester.getList.mockReturnValue(listPromise);
+    const mediaFormatStore = new MediaFormatStore(4, 'de');
+
+    return listPromise.then(() => {
+        const cropData = {
+            '300x': {cropX: 60, cropY: 120, cropHeight: 100, cropWidth: 200},
+            'x300': {},
+        };
+        const patchPromise = Promise.resolve(cropData);
+        ResourceRequester.patch.mockReturnValue(patchPromise);
+        // $FlowFixMe
+        mediaFormatStore.updateFormatOptions(cropData);
+
+        expect(mediaFormatStore.saving).toEqual(true);
+        return patchPromise.then(() => {
+            expect(mediaFormatStore.saving).toEqual(false);
+            expect(mediaFormatStore.getFormatOptions('x300')).toEqual(undefined);
+            expect(mediaFormatStore.getFormatOptions('300x')).toEqual(cropData['300x']);
+            expect(mediaFormatStore.getFormatOptions('300x300')).toEqual(mediaFormats['300x300']);
+        });
+    });
+});

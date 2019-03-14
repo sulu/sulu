@@ -17,7 +17,7 @@ type Props = {
     containerWidth: number,
     minWidth?: number,
     minHeight?: number,
-    onChange: (s: SelectionData) => void,
+    onChange: (s: ?SelectionData) => void,
     round: boolean,
     value: SelectionData | typeof undefined,
 };
@@ -98,7 +98,7 @@ export class RectangleSelection extends React.Component<Props> {
     handleRectangleDoubleClick = () => {
         const {onChange} = this.props;
 
-        onChange(this.getMaximumSelection());
+        onChange(undefined);
     };
 
     handleRectangleChange = (change: RectangleChange) => {

@@ -71,6 +71,11 @@ class MediaFormatController extends RestController implements ClassResourceInter
     {
         $formatOptions = $request->request->all();
         foreach ($formatOptions as $formatKey => $formatOption) {
+            if (empty($formatOption)) {
+                $this->getFormatOptionsManager()->delete($id, $formatKey);
+                continue;
+            }
+
             $this->getFormatOptionsManager()->save($id, $formatKey, $formatOption);
         }
 

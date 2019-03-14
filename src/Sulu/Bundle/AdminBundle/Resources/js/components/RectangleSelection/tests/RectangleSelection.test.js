@@ -69,6 +69,27 @@ test('The component should render without minimum size notification', () => {
     expect(view.render()).toMatchSnapshot();
 });
 
+test('The component should reset the value if modifiable rectangle is doubleclicked', () => {
+    const changeSpy = jest.fn();
+
+    const view = mount(
+        <RectangleSelection
+            containerHeight={1000}
+            containerWidth={2000}
+            minHeight={100}
+            minWidth={100}
+            onChange={changeSpy}
+            value={{width: 100, height: 200, top: 30, left: 40}}
+        >
+            <p>Lorem ipsum</p>
+        </RectangleSelection>
+    );
+
+    view.find('ModifiableRectangle').prop('onDoubleClick')();
+
+    expect(changeSpy).toBeCalledWith(undefined);
+});
+
 test('The component should center and maximize the selection when a minHeight and minWidth is given', () => {
     const view = mount(
         <RectangleSelection

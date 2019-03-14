@@ -14,7 +14,7 @@ type Props = {|
     image: string,
     minWidth?: number,
     minHeight?: number,
-    onChange: (s: SelectionData) => void,
+    onChange: (s: ?SelectionData) => void,
     value: ?SelectionData,
 |};
 
@@ -78,9 +78,9 @@ export class ImageRectangleSelection extends React.Component<Props> {
         return imageHeightToWidth > containerHeightToWidth;
     }
 
-    handleRectangleSelectionChange = (data: SelectionData) => {
+    handleRectangleSelectionChange = (data: ?SelectionData) => {
         const {onChange} = this.props;
-        onChange(this.rounding.normalize(this.scaledDataToNatural(data)));
+        onChange(data ? this.rounding.normalize(this.scaledDataToNatural(data)) : undefined);
     };
 
     render() {

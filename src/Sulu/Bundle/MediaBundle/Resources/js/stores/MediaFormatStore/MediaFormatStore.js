@@ -25,7 +25,7 @@ export default class MediaFormatStore
 
     getFormatOptions(formatKey: string): ?MediaFormat {
         if (!this.mediaFormats) {
-            return;
+            return undefined;
         }
 
         return this.mediaFormats[formatKey];
@@ -38,7 +38,18 @@ export default class MediaFormatStore
             .patch(RESOURCE_KEY, options, {id: this.id, locale: this.locale})
             .then(action((response) => {
                 this.saving = false;
-                this.mediaFormats = {...this.mediaFormats, ...response};
+                const mediaFormats = {...this.mediaFormats, ...response};
+                this.mediaFormats = Object.keys(mediaFormats).reduce((newMediaFormats, mediaFormatKey) => {
+                    const mediaFormat = mediaFormats[mediaFormatKey];
+
+                    if (Object.keys(mediaFormat).length === 0) {
+                        return newMediaFormats;
+                    }
+
+                    newMediaFormats[mediaFormatKey] = mediaFormat;
+
+                    return newMediaFormats;
+                }, {});
             }));
     }
 }

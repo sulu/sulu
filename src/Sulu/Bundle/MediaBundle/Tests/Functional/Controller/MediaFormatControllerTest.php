@@ -156,12 +156,7 @@ class MediaFormatControllerTest extends SuluTestCase
             'PATCH',
             sprintf('/api/media/%d/formats', $this->media->getId()),
             [
-                'big-squared' => [
-                    'cropX' => 40,
-                    'cropY' => 41,
-                    'cropHeight' => 42,
-                    'cropWidth' => 43,
-                ],
+                'big-squared' => [],
                 'small-inset' => [
                     'cropX' => 50,
                     'cropY' => 51,
@@ -179,11 +174,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertNotNull($response->{'big-squared'});
-        $this->assertEquals(40, $response->{'big-squared'}->cropX);
-        $this->assertEquals(41, $response->{'big-squared'}->cropY);
-        $this->assertEquals(42, $response->{'big-squared'}->cropHeight);
-        $this->assertEquals(43, $response->{'big-squared'}->cropWidth);
+        $this->assertObjectNotHasAttribute('big-squared', $response);
 
         $this->assertNotNull($response->{'small-inset'});
         $this->assertEquals(50, $response->{'small-inset'}->cropX);

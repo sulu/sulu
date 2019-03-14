@@ -80,7 +80,11 @@ export default class CropOverlay extends React.Component<Props> {
         }));
     }
 
-    convertSelectionToFormatOptions(selection: SelectionData) {
+    convertSelectionToFormatOptions(selection: ?SelectionData) {
+        if (!selection) {
+            return {};
+        }
+
         return {
             cropX: selection.left,
             cropY: selection.top,

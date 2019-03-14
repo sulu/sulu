@@ -70,6 +70,34 @@ test('The component should render with initial selection', () => {
     expect(view.render()).toMatchSnapshot();
 });
 
+test('The component should pass a value of undefined', () => {
+    const changeSpy = jest.fn();
+
+    const view = mount(
+        <ImageRectangleSelection
+            containerHeight={360}
+            containerWidth={640}
+            image="//:0"
+            minHeight={300}
+            minWidth={600}
+            onChange={changeSpy}
+            value={{width: 1500, height: 800, top: 200, left: 300}}
+        />
+    );
+
+    const onImageLoad = view.instance().image.onload;
+    view.instance().image = {
+        naturalWidth: 1920,
+        naturalHeight: 1080,
+    };
+    onImageLoad();
+    view.update();
+
+    view.find('RectangleSelection').prop('onChange')(undefined);
+
+    expect(changeSpy).toBeCalledWith(undefined);
+});
+
 test('The component should render with minWidth and minHeight', () => {
     const view = mount(
         <ImageRectangleSelection
