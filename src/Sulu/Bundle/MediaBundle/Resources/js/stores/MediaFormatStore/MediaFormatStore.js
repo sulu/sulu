@@ -9,7 +9,7 @@ export default class MediaFormatStore
 {
     id: string | number;
     locale: string;
-    @observable mediaFormats: MediaFormats;
+    @observable mediaFormats: ?MediaFormats;
     @observable loading: boolean;
     @observable saving: boolean;
 
@@ -24,6 +24,10 @@ export default class MediaFormatStore
     }
 
     getFormatOptions(formatKey: string): ?MediaFormat {
+        if (!this.mediaFormats) {
+            return;
+        }
+
         return this.mediaFormats[formatKey];
     }
 
