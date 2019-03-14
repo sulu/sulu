@@ -13,6 +13,7 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../../containers/SingleMediaUpload';
 import mediaDetailsStyles from './mediaDetails.scss';
 import FocusPointOverlay from './FocusPointOverlay';
+import CropOverlay from './CropOverlay';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const FORM_KEY = 'media_details';
@@ -27,6 +28,7 @@ class MediaDetails extends React.Component<Props> {
     form: ?ElementRef<typeof Form>;
     formStore: ResourceFormStore;
     @observable showFocusPointOverlay: boolean = false;
+    @observable showCropOverlay: boolean = false;
     showSuccess: IObservableValue<boolean> = observable.box(false);
 
     constructor(props: Props) {
@@ -76,6 +78,19 @@ class MediaDetails extends React.Component<Props> {
         this.props.resourceStore.setMultiple(media);
     };
 
+    @action handleCropButtonClick = () => {
+        this.showCropOverlay = true;
+    };
+
+    @action handleCropOverlayClose = () => {
+        this.showCropOverlay = false;
+    };
+
+    @action handleCropOverlayConfirm = () => {
+        this.showCropOverlay = false;
+        this.showSuccessSnackbar();
+    };
+
     @action handleFocusPointButtonClick = () => {
         this.showFocusPointOverlay = true;
     };
@@ -91,13 +106,22 @@ class MediaDetails extends React.Component<Props> {
 
     render() {
         const {resourceStore} = this.props;
+        const {id, locale} = resourceStore;
+
+        if (!id) {
+            throw new Error('The "MediaDetails" view only works with an id!');
+        }
+
+        if (!locale) {
+            throw new Error('The "MediaDetails" view only works with an locale!');
+        }
 
         return (
             <div className={mediaDetailsStyles.mediaDetail}>
                 {this.formStore.loading
                     ? <Loader />
                     : <Grid>
-                        <Grid.Section className={mediaDetailsStyles.imageSection} size={4}>
+                        <Grid.Section className={mediaDetailsStyles.imageSection} colSpan={4}>
                             <Grid.Item>
                                 <SingleMediaUpload
                                     deletable={false}
@@ -115,10 +139,17 @@ class MediaDetails extends React.Component<Props> {
                                     >
                                         {translate('sulu_media.set_focus_point')}
                                     </Button>
+                                    <Button
+                                        icon="su-cut"
+                                        onClick={this.handleCropButtonClick}
+                                        skin="link"
+                                    >
+                                        {translate('sulu_media.crop')}
+                                    </Button>
                                 </div>
                             </Grid.Item>
                         </Grid.Section>
-                        <Grid.Section size={8}>
+                        <Grid.Section colSpan={8}>
                             <Grid.Item className={mediaDetailsStyles.form}>
                                 <Form
                                     onSubmit={this.handleSubmit}
@@ -134,6 +165,14 @@ class MediaDetails extends React.Component<Props> {
                     onConfirm={this.handleFocusPointOverlayConfirm}
                     open={this.showFocusPointOverlay}
                     resourceStore={resourceStore}
+                />
+                <CropOverlay
+                    id={id}
+                    image={resourceStore.data.url}
+                    locale={locale.get()}
+                    onClose={this.handleCropOverlayClose}
+                    onConfirm={this.handleCropOverlayConfirm}
+                    open={this.showCropOverlay}
                 />
             </div>
         );

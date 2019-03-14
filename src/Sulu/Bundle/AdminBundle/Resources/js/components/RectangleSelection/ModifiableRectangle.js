@@ -1,7 +1,8 @@
 // @flow
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import React from 'react';
+import React, {Fragment} from 'react';
+import {translate} from '../../utils/Translator';
 import type {RectangleChange} from './types';
 import modifiableRectangleStyles from './modifiableRectangle.scss';
 
@@ -11,6 +12,7 @@ type Props = {
     width: number,
     height: number,
     backdropSize: number,
+    minSizeReached: boolean,
     onChange?: (r: RectangleChange) => void,
     onDoubleClick?: () => void,
 };
@@ -89,29 +91,34 @@ export default class ModifiableRectangle extends React.Component<Props> {
     handleDoubleClick = this.props.onDoubleClick;
 
     render() {
-        const style = {
-            left: this.props.left + 'px',
-            top: this.props.top + 'px',
-            width: this.props.width + 'px',
-            height: this.props.height + 'px',
-        };
+        const {height, left, minSizeReached, top, width} = this.props;
 
         return (
-            <div
-                className={modifiableRectangleStyles.rectangle}
-                onDoubleClick={this.handleDoubleClick}
-                onMouseDown={this.handleMoveMouseDown}
-                style={style}
-            >
+            <Fragment>
+                {minSizeReached &&
+                    <div
+                        className={modifiableRectangleStyles.minSizeNotification}
+                        style={{left: left + 'px', top: top + height + 'px', width: width + 'px'}}
+                    >
+                        {translate('sulu_media.min_size_notification')}
+                    </div>
+                }
                 <div
-                    className={modifiableRectangleStyles.resizeHandle}
-                    onMouseDown={this.handleResizeMouseDown}
-                />
-                <div
-                    className={modifiableRectangleStyles.backdrop}
-                    style={{outlineWidth: this.props.backdropSize + 'px'}}
-                />
-            </div>
+                    className={modifiableRectangleStyles.rectangle}
+                    onDoubleClick={this.handleDoubleClick}
+                    onMouseDown={this.handleMoveMouseDown}
+                    style={{left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px'}}
+                >
+                    <div
+                        className={modifiableRectangleStyles.resizeHandle}
+                        onMouseDown={this.handleResizeMouseDown}
+                    />
+                    <div
+                        className={modifiableRectangleStyles.backdrop}
+                        style={{outlineWidth: this.props.backdropSize + 'px'}}
+                    />
+                </div>
+            </Fragment>
         );
     }
 }

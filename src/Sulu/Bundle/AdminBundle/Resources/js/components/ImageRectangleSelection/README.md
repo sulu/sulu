@@ -7,10 +7,22 @@ This component loads an image, makes sure it takes up the maximum width and heig
 without distorting the image and renders a selection component on top of it.
 
 ```javascript
+const initialSelection = {width: 1000, height: 800, top: 200, left: 300};
+
+initialState = {
+    selection: initialSelection,
+};
+
+const handleChange = (selection) => {
+    setState({selection});
+}
+
 <div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageRectangleSelection
-        initialSelection={{width: 1000, height: 800, top: 200, left: 300}}
-        src="https://unsplash.it/1920/1080" />
+        image="https://unsplash.it/1920/1080"
+        onChange={handleChange}
+        value={state.selection}
+    />
 </div>
 ```
 
@@ -18,23 +30,31 @@ Like with the `RectangleSelection`, if both the `minWidth` and `minHeight` prope
 the ratio between these two is enforced on the selection.
 
 ```javascript
-initialState = {selection: {}};
+initialState = {selection: undefined};
+
+const handleChange = (selection) => {
+    setState({selection});
+}
+
 <div>
     <div style={{width: 800, height: 300, background: '#e8e8e8'}}>
         <ImageRectangleSelection
+            image="https://unsplash.it/1920/1080"
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             minWidth={100}
             minHeight={60}
-            src="https://unsplash.it/1920/1080"
-            onChange={s => setState({selection: s})}
+            onChange={handleChange}
+            value={state.selection}
         />
     </div>
     
-    <p>
-        Width: {state.selection.width}, 
-        Height: {state.selection.height}, 
-        Top: {state.selection.top}, 
-        Left: {state.selection.left}
-    </p>
+    {state.selection &&
+        <p>
+            Width: {state.selection.width},
+            Height: {state.selection.height},
+            Top: {state.selection.top},
+            Left: {state.selection.left}
+        </p>
+    }
 </div>
 ```

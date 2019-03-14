@@ -8,16 +8,15 @@ import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
 
-type Props = {
-    /** Determines the position at which the selection box is rendered at the beginning. */
-    initialSelection?: SelectionData,
+type Props = {|
+    containerHeight: number,
+    containerWidth: number,
+    image: string,
     minWidth?: number,
     minHeight?: number,
-    onChange?: (s: SelectionData) => void,
-    src: string,
-    containerWidth: number,
-    containerHeight: number,
-};
+    onChange: (s: ?SelectionData) => void,
+    value: ?SelectionData,
+|};
 
 @observer
 export class ImageRectangleSelection extends React.Component<Props> {
@@ -53,8 +52,8 @@ export class ImageRectangleSelection extends React.Component<Props> {
 
         this.image = new Image();
         this.image.onload = action(() => this.imageLoaded = true);
-        this.image.onerror = () => log.error('Failed to preload image "' + this.props.src + '"');
-        this.image.src = this.props.src;
+        this.image.onerror = () => log.error('Failed to preload image "' + this.props.image + '"');
+        this.image.src = this.props.image;
     }
 
     @computed get imageResizedHeight(): number {
@@ -79,11 +78,9 @@ export class ImageRectangleSelection extends React.Component<Props> {
         return imageHeightToWidth > containerHeightToWidth;
     }
 
-    handleRectangleSelectionChange = (data: SelectionData) => {
-        if (this.props.onChange) {
-            const onChange = this.props.onChange;
-            onChange(this.rounding.normalize(this.scaledDataToNatural(data)));
-        }
+    handleRectangleSelectionChange = (data: ?SelectionData) => {
+        const {onChange} = this.props;
+        onChange(data ? this.rounding.normalize(this.scaledDataToNatural(data)) : undefined);
     };
 
     render() {
@@ -93,19 +90,19 @@ export class ImageRectangleSelection extends React.Component<Props> {
 
         const minWidth = this.props.minWidth ? this.naturalHorizontalToScaled(this.props.minWidth) : null;
         const minHeight = this.props.minHeight ? this.naturalVerticalToScaled(this.props.minHeight) : null;
-        const initialSelection = this.props.initialSelection ?
-            this.naturalDataToScaled(this.props.initialSelection) : null;
+        const value = this.props.value ? this.naturalDataToScaled(this.props.value) : undefined;
+
         return (
             <RectangleSelection
-                initialSelection={initialSelection}
                 minHeight={minHeight}
                 minWidth={minWidth}
                 onChange={this.handleRectangleSelectionChange}
                 round={false}
+                value={value}
             >
                 <img
                     height={this.imageResizedHeight}
-                    src={this.props.src}
+                    src={this.props.image}
                     width={this.imageResizedWidth}
                 />
             </RectangleSelection>

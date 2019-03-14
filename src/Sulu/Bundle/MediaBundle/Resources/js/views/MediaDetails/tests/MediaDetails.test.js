@@ -29,14 +29,11 @@ jest.mock('sulu-admin-bundle/services/Initializer', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.save':
-                return 'Save';
-            case 'sulu_media.upload_or_replace':
-                return 'Upload or replace';
-        }
-    },
+    translate: (key) => key,
+}));
+
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -53,6 +50,14 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.upload = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
 }));
+
+jest.mock('../../../stores/FormatStore', () => ({
+    loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
+}));
+
+jest.mock('../CropOverlay', () => function CropOverlay() {
+    return <div />;
+});
 
 beforeEach(() => {
     jest.resetModules();
@@ -285,7 +290,7 @@ test('Should initialize the ResourceStore with a schema', () => {
 
 test('Should render save button disabled only if form is not dirty', () => {
     function getSaveItem() {
-        return toolbarFunction.call(form).items.find((item) => item.label === 'Save');
+        return toolbarFunction.call(form).items.find((item) => item.label === 'sulu_admin.save');
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
@@ -488,7 +493,7 @@ test('Should save focus point overlay', (done) => {
             expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(true);
 
             mediaDetails.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
-            mediaDetails.find('Overlay').prop('onConfirm')();
+            mediaDetails.find('FocusPointOverlay Overlay').prop('onConfirm')();
 
             expect(ResourceRequester.put).toBeCalledWith(
                 'media',
@@ -502,6 +507,63 @@ test('Should save focus point overlay', (done) => {
                 expect(mediaDetails.find('FocusPointOverlay').prop('open')).toEqual(false);
                 done();
             });
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
+test('Should open and close crop overlay', (done) => {
+    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const MediaDetail = require('../MediaDetails').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = false;
+    resourceStore.data.url = 'image.jpg';
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const metadataPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaDetail = mount(<MediaDetail resourceStore={resourceStore} router={router} />);
+
+    Promise.all([schemaTypesPromise, metadataPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
+            expect(mediaDetail.find('CropOverlay').prop('image')).toEqual('image.jpg');
+            expect(mediaDetail.find('CropOverlay').prop('id')).toEqual(4);
+            expect(mediaDetail.find('CropOverlay').prop('locale')).toEqual('de');
+
+            mediaDetail.find('Button[icon="su-cut"]').prop('onClick')();
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(true);
+
+            mediaDetail.find('CropOverlay').prop('onClose')();
+            mediaDetail.update();
+            expect(mediaDetail.find('CropOverlay').prop('open')).toEqual(false);
+            done();
         });
     });
 

@@ -15,5 +15,6 @@ exports[`Render a loading MediaDetails view 1`] = `
       class="doubleBounce2"
     />
   </div>
+  <div />
 </div>
 `;

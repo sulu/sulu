@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`The component should calculate the selection with respect to the image 1`] = `
+<div
+  class="selection"
+>
+  <img
+    height="360"
+    src="//:0"
+    width="640"
+  />
+  <div
+    class="rectangle"
+    style="left: 0px; top: 0px; width: 640px; height: 360px;"
+  >
+    <div
+      class="resizeHandle"
+    />
+    <div
+      class="backdrop"
+      style="outline-width: 640px;"
+    />
+  </div>
+</div>
+`;
+
 exports[`The component should render with image source 1`] = `
 <div
   class="selection"

@@ -16,6 +16,10 @@ export default class ResourceRequester {
         return Requester.put(resourceRouteRegistry.getDetailUrl(resourceKey, {...parameters}), data);
     }
 
+    static patch(resourceKey: string, data: Object, parameters: ?Object) {
+        return Requester.patch(resourceRouteRegistry.getDetailUrl(resourceKey, {...parameters}), data);
+    }
+
     static patchList(resourceKey: string, data: Array<Object>) {
         return Requester.patch(resourceRouteRegistry.getListUrl(resourceKey), data);
     }

@@ -6,6 +6,7 @@ import resourceRouteRegistry from '../registries/ResourceRouteRegistry';
 
 jest.mock('../../Requester/Requester', () => ({
     get: jest.fn(),
+    patch: jest.fn(),
     put: jest.fn(),
     post: jest.fn(),
     delete: jest.fn(),
@@ -94,6 +95,27 @@ test('Should send a put request with passed options as query parameters', () => 
     ResourceRequester.put('snippets', data, options);
     expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {action: 'publish', id: 5, locale: 'en'});
     expect(Requester.put).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
+});
+
+test('Should send a patch request and return the promise', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5');
+    const promise = {};
+    const data = {title: 'Title'};
+    Requester.patch.mockReturnValue(promise);
+    const result = ResourceRequester.patch('snippets', data, {id: 5});
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {id: 5});
+    expect(Requester.patch).toBeCalledWith('/snippets/5', data);
+    expect(result).toBe(promise);
+});
+
+test('Should send a patch request with passed options as query parameters', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/snippets/5?locale=en&action=publish');
+    const data = {slogan: 'Slogan'};
+    const options = {action: 'publish', id: 5, locale: 'en'};
+    Requester.patch.mockReturnValue({});
+    ResourceRequester.patch('snippets', data, options);
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('snippets', {action: 'publish', id: 5, locale: 'en'});
+    expect(Requester.patch).toBeCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
 test('Should send a delete request and return the promise', () => {

@@ -1,5 +1,4 @@
 // @flow
-import {action, observable} from 'mobx';
 import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -13,16 +12,14 @@ import SizeNormalizer from './normalizers/SizeNormalizer';
 import rectangleSelectionStyles from './rectangleSelection.scss';
 
 type Props = {
-    /** Determines the position at which the selection box is rendered at the beginning */
-    initialSelection?: SelectionData,
-    minWidth?: number,
-    minHeight?: number,
-    /** Determines whether or not the data gets rounded */
-    round: boolean,
-    onChange?: (s: SelectionData) => void,
     children?: Node,
     containerHeight: number,
     containerWidth: number,
+    minWidth?: number,
+    minHeight?: number,
+    onChange: (s: ?SelectionData) => void,
+    round: boolean,
+    value: SelectionData | typeof undefined,
 };
 
 @observer
@@ -31,15 +28,7 @@ export class RectangleSelection extends React.Component<Props> {
         round: true,
     };
 
-    @observable selection: SelectionData = {top: 0, left: 0, width: 0, height: 0};
     normalizers: Array<Normalizer> = [];
-
-    static selectionsAreEqual(selection1: SelectionData, selection2: SelectionData) {
-        return selection1.width === selection2.width
-            && selection1.height === selection2.height
-            && selection1.top === selection2.top
-            && selection1.left === selection2.left;
-    }
 
     static createNormalizers(props: Props): Array<Normalizer> {
         if (!props.containerWidth || !props.containerHeight) {
@@ -62,6 +51,7 @@ export class RectangleSelection extends React.Component<Props> {
                 props.minHeight
             ));
         }
+
         if (props.round) {
             normalizers.push(new RoundingNormalizer());
         }
@@ -79,54 +69,19 @@ export class RectangleSelection extends React.Component<Props> {
         this.normalizers = RectangleSelection.createNormalizers(nextProps);
     }
 
-    containerDidMount = () => {
-        this.setInitialSelection();
-    };
-
-    componentWillUpdate = () => {
-        this.setSelection(this.selection);
-    };
-
-    setInitialSelection = () => {
-        if (this.props.initialSelection) {
-            this.setSelection(this.props.initialSelection);
-        } else {
-            this.maximizeSelection();
-        }
-    };
-
-    @action setSelection(selection: SelectionData) {
-        selection = this.normalize(selection);
-        if (RectangleSelection.selectionsAreEqual(selection, this.selection)) {
-            return;
-        }
-
-        this.selection = selection;
-        if (this.props.onChange) {
-            this.props.onChange(selection);
-        }
-    }
-
     normalize(selection: SelectionData): SelectionData {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
     }
 
-    applySelectionChange = (change: RectangleChange) => {
-        this.setSelection({
-            left: this.selection.left + change.left,
-            top: this.selection.top + change.top,
-            height: this.selection.height + change.height,
-            width: this.selection.width + change.width,
-        });
-    };
+    getMaximumSelection = (): SelectionData => {
+        const {containerWidth, containerHeight} = this.props;
 
-    maximizeSelection = () => {
-        this.setSelection(this.centerSelection(this.normalize({
-            width: this.props.containerWidth,
-            height: this.props.containerHeight,
+        return this.centerSelection(this.normalize({
+            width: containerWidth,
+            height: containerHeight,
             left: 0,
             top: 0,
-        })));
+        }));
     };
 
     centerSelection(selection: SelectionData): SelectionData {
@@ -140,14 +95,31 @@ export class RectangleSelection extends React.Component<Props> {
         return selection;
     }
 
-    handleRectangleDoubleClick = this.maximizeSelection;
-    handleRectangleChange = this.applySelectionChange;
+    handleRectangleDoubleClick = () => {
+        const {onChange} = this.props;
+
+        onChange(undefined);
+    };
+
+    handleRectangleChange = (change: RectangleChange) => {
+        const {onChange, value = this.getMaximumSelection()} = this.props;
+
+        onChange(this.normalize({
+            left: value.left + change.left,
+            top: value.top + change.top,
+            height: value.height + change.height,
+            width: value.width + change.width,
+        }));
+    };
 
     render() {
+        const {containerHeight, containerWidth, minHeight, minWidth, value = this.getMaximumSelection()} = this.props;
+        const {height, left, top, width} = value;
+
         let backdropSize = 0;
 
-        if (this.props.containerHeight && this.props.containerWidth) {
-            backdropSize = Math.max(this.props.containerHeight, this.props.containerWidth);
+        if (containerHeight && containerWidth) {
+            backdropSize = Math.max(containerHeight, containerWidth);
         }
 
         return (
@@ -155,12 +127,13 @@ export class RectangleSelection extends React.Component<Props> {
                 {this.props.children}
                 <ModifiableRectangle
                     backdropSize={backdropSize}
-                    height={this.selection.height}
-                    left={this.selection.left}
+                    height={height}
+                    left={left}
+                    minSizeReached={height <= (minHeight || 0) && width <= (minWidth || 0)}
                     onChange={this.handleRectangleChange}
                     onDoubleClick={this.handleRectangleDoubleClick}
-                    top={this.selection.top}
-                    width={this.selection.width}
+                    top={top}
+                    width={width}
                 />
             </div>
         );

@@ -45,10 +45,17 @@ const types = {
     }
 };
 
+const formInspector = {
+    getSchemaEntryByPath: () => ({types}),
+    isFieldModified: () => {},
+};
+
 <FieldBlocks
-    types={types}
-    value={state.value}
+    defaultType="default"
+    formInspector={formInspector}
     onChange={onChange}
     onFinish={() => alert('Some field in the block lost its focus')}
+    types={types}
+    value={state.value}
 />
 ```
