@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>analytics</key>
+
+    <properties>
+        <property
+            name="title"
+            visibility="always"
+            translation="sulu_admin.title"
+        />
+        <property
+            name="type"
+            visibility="always"
+            translation="sulu_admin.type"
+        />
+    </properties>
+</list>

@@ -31,6 +31,26 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             'exception_controller' => 'sulu_website.exception.controller:showAction',
         ]);
 
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/lists',
+                        ],
+                    ],
+                    'resources' => [
+                        'analytics' => [
+                            'routes' => [
+                                'list' => 'cget_webspace_analytics',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
             return;
         }

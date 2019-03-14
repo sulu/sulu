@@ -30,6 +30,7 @@
     <services>
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_security.security_checker" />
 

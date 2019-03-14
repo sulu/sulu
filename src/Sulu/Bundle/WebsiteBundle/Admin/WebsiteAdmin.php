@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -20,6 +21,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebsiteAdmin extends Admin
 {
+    const ANALYTICS_LIST_ROUTE = 'sulu_webspace.analytics_list';
+
     /**
      * Returns security context for analytics in given webspace.
      *
@@ -33,6 +36,11 @@ class WebsiteAdmin extends Admin
     }
 
     /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -43,11 +51,28 @@ class WebsiteAdmin extends Admin
     private $securityChecker;
 
     public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker
     ) {
+        $this->routeBuilderFactory = $routeBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
+    }
+
+    public function getRoutes(): array
+    {
+        return [
+            $this->routeBuilderFactory->createListRouteBuilder(static::ANALYTICS_LIST_ROUTE, '/analytics')
+                ->setResourceKey('analytics')
+                ->setListKey('analytics')
+                ->addListAdapters(['table'])
+                ->addRouterAttributesToListStore(['webspace'])
+                ->disableSearching()
+                ->setTabTitle('sulu_website.analytics')
+                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                ->getRoute(),
+        ];
     }
 
     /**

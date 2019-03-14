@@ -33,7 +33,7 @@ class PageAdmin extends Admin
 
     const WEBSPACE_TABS_ROUTE = 'sulu_page.webspaces';
 
-    const PAGES_ROUTE = 'sulu_page.pages_datagrid';
+    const PAGES_ROUTE = 'sulu_page.pages_list';
 
     const ADD_FORM_ROUTE = 'sulu_page.page_add_form';
 
