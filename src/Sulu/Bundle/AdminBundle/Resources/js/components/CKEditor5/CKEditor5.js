@@ -15,6 +15,7 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
+import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import './ckeditor5.scss';
 
 type Props = {|
@@ -80,6 +81,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     EssentialsPlugin,
                     HeadingPlugin,
                     ItalicPlugin,
+                    ExternalLinkPlugin,
                     ListPlugin,
                     ParagraphPlugin,
                     StrikethroughPlugin,
@@ -104,6 +106,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     'numberedlist',
                     '|',
                     'insertTable',
+                    '|',
+                    'externalLink',
                 ],
                 heading: {
                     options: [

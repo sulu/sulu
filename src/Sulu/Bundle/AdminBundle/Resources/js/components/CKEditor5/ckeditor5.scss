@@ -11,6 +11,7 @@ $textEditorAccentColor: $shakespeare;
 $textEditorLightAccentColor: #e5f4f7;
 $textEditorWhiteHover: $mercury;
 $textEditorPanelBackground: $white;
+$textEditorLinkColor: $blue;
 
 :global {
     :root {
@@ -89,6 +90,11 @@ $textEditorPanelBackground: $white;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
+
+            a {
+                color: $textEditorLinkColor !important;
+                text-decoration: underline !important;
+            }
         }
 
         .ck-widget.table {
