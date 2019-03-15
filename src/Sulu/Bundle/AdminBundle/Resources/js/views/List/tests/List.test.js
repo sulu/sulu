@@ -8,7 +8,8 @@ import StringFieldTransformer from '../../../containers/List/fieldTransformers/S
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 
 jest.mock('../../../services/ResourceRequester/registries/ResourceRouteRegistry', () => ({
-    getListUrl: jest.fn().mockReturnValue('testfile'),
+    getListUrl: jest.fn()
+        .mockReturnValue('testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'),
 }));
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
@@ -107,7 +108,7 @@ jest.mock('../../../containers/List/registries/ListFieldTransformerRegistry', ()
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate: function (key) {
         switch (key) {
             case 'sulu_admin.page':
                 return 'Page';
@@ -156,7 +157,7 @@ test('Should render the list with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router}/>);
     expect(list).toMatchSnapshot();
 });
 
@@ -175,7 +176,7 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router}/>);
     expect(list).toMatchSnapshot();
 });
 
@@ -198,7 +199,7 @@ test('Should pass correct props to move list overlay', () => {
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
 
     expect(list.find('SingleListOverlay').props()).toEqual(expect.objectContaining({
         listKey: 'snippets_list',
@@ -222,7 +223,7 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
     expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
 });
 
@@ -239,7 +240,7 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
     expect(list.find('List').prop('onItemClick')).not.toBeInstanceOf(Function);
 });
 
@@ -262,7 +263,7 @@ test('Should render the list with the add icon if a addRoute has been passed', (
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
     expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
 });
 
@@ -279,7 +280,7 @@ test('Should render the list without the add icon if a addRoute has been passed'
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
     expect(list.find('List').prop('onItemAdd')).not.toBeInstanceOf(Function);
 });
 
@@ -297,7 +298,7 @@ test('Should render the list non-searchable if the searchable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List router={router}/>);
     expect(list.find('List').prop('searchable')).toEqual(false);
 });
 
@@ -309,7 +310,7 @@ test('Should throw an error when no resourceKey is defined in the route options'
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "resourceKey" option/);
+    expect(() => render(<List router={router}/>)).toThrow(/mandatory "resourceKey" option/);
 });
 
 test('Should throw an error when no listKey is defined in the route options', () => {
@@ -322,7 +323,7 @@ test('Should throw an error when no listKey is defined in the route options', ()
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "listKey" option/);
+    expect(() => render(<List router={router}/>)).toThrow(/mandatory "listKey" option/);
 });
 
 test('Should destroy the store on unmount', () => {
@@ -339,7 +340,7 @@ test('Should destroy the store on unmount', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const page = router.bind.mock.calls[0][1];
     const locale = router.bind.mock.calls[1][1];
 
@@ -377,9 +378,9 @@ test('Should navigate to defined route on back button click', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     list.instance().locale = {
-        get: function() {
+        get: function () {
             return 'de';
         },
     };
@@ -407,7 +408,7 @@ test('Should navigate to defined route on back button click without locale', () 
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     toolbarConfig.backButton.onClick();
@@ -431,7 +432,7 @@ test('Should not render back button when no backRoute is configured', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     expect(toolbarConfig.backButton).toBe(undefined);
@@ -457,7 +458,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     expect(toolbarConfig.items).toEqual(
@@ -491,9 +492,9 @@ test('Should navigate when add button is clicked and locales have been passed in
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     list.instance().locale = {
-        get: function() {
+        get: function () {
             return 'de';
         },
     };
@@ -525,7 +526,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const toolbarConfig = toolbarFunction.call(list.instance());
 
     toolbarConfig.items[0].onClick();
@@ -549,9 +550,9 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     list.instance().locale = {
-        get: function() {
+        get: function () {
             return 'de';
         },
     };
@@ -574,7 +575,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     list.find('ButtonCell button').at(0).simulate('click');
     expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
 });
@@ -624,7 +625,7 @@ test('Should render the delete item enabled only if something is selected', () =
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     let toolbarConfig, item;
@@ -654,9 +655,9 @@ test('Should render the locale dropdown with the options from router', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     list.instance().locale = {
-        get: function() {
+        get: function () {
             return 'de';
         },
     };
@@ -686,7 +687,7 @@ test('Should pass apiOptions from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     expect(listStore.options.webspace).toEqual('example');
@@ -713,7 +714,7 @@ test('Should pass router attributes from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     expect(listStore.options.locale).toEqual('en');
@@ -742,7 +743,7 @@ test('Should pass router attributes array from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     expect(listStore.options.locale).toEqual('en');
@@ -764,7 +765,7 @@ test('Should pass locale and page observables to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     expect(listStore.observableOptions).toHaveProperty('page');
@@ -784,7 +785,7 @@ test('Should not pass the locale observable to the ListStore if no locales are d
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
 
     expect(listStore.observableOptions).toHaveProperty('page');
@@ -814,7 +815,7 @@ test('Should delete selected items when delete button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
     listStore.selectionIds.push(1, 4, 6);
 
@@ -849,7 +850,7 @@ test('Should make move overlay disappear if cancel is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
     listStore.selectionIds.push(1, 4, 6);
 
@@ -888,7 +889,7 @@ test('Should move items after move overlay was confirmed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
     listStore.selectionIds.push(1, 4, 6);
 
@@ -940,7 +941,7 @@ test('Export dialog should open when the button is pressed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
     listStore.selectionIds.push(1, 4, 6);
 
@@ -976,7 +977,7 @@ test('Render export dialog', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const list = mount(<List router={router}/>);
     const listStore = list.instance().listStore;
     listStore.selectionIds.push(1, 4, 6);
 
@@ -985,7 +986,7 @@ test('Render export dialog', () => {
     getExportItem().onClick();
     list.update();
 
-    expect(list.find('Overlay').find({confirmText: 'Export'})).toMatchSnapshot();
+    expect(list.find('Overlay').find({confirmText: 'Export'}).render()).toMatchSnapshot();
 });
 
 test('Export method should be called when the export-button is pressed', () => {
@@ -1010,6 +1011,7 @@ test('Export method should be called when the export-button is pressed', () => {
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
+                locales: ['de', 'en'],
             },
         },
     };
@@ -1023,10 +1025,17 @@ test('Export method should be called when the export-button is pressed', () => {
     list.update();
 
     list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
-    expect(resourceRouteRegistry.getListUrl).toBeCalledWith('test');
-
+    expect(resourceRouteRegistry.getListUrl).toBeCalledWith('test', {
+        _format: 'csv',
+        locale: list.instance().locale,
+        flat: true,
+        delimiter: ';',
+        escape: '\\',
+        enclosure: '"',
+        newLine: '\\n',
+    });
     expect(window.location.assign).toBeCalledWith(
-        'testfile.csv?flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
+        'testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
     );
 
     expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);

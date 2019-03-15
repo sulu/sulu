@@ -5,8 +5,7 @@ import {translate} from '../../../utils/Translator';
 import Overlay from '../../../components/Overlay';
 import Form from '../../../components/Form';
 import SingleSelect from '../../../components/SingleSelect';
-import resourceEndpointRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
-import {buildQueryString} from '../../../utils/Request';
+import resourceRouteRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
 import exportToolbarActionStyles from './exportToolbarAction.scss';
 import AbstractToolbarAction from './AbstractToolbarAction';
 
@@ -40,7 +39,9 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                                 <SingleSelect onChange={this.handleDelimiterChanged} value={this.delimiter}>
                                     <SingleSelect.Option value=";">;</SingleSelect.Option>
                                     <SingleSelect.Option value=",">,</SingleSelect.Option>
-                                    <SingleSelect.Option value={'\\t'}>\t</SingleSelect.Option>
+                                    <SingleSelect.Option value="tab">
+                                        {translate('sulu_admin.delimiter_tab')}
+                                    </SingleSelect.Option>
                                 </SingleSelect>
                             </Form.Field>
                             <Form.Field
@@ -49,7 +50,9 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                             >
                                 <SingleSelect onChange={this.handleEnclosureChanged} value={this.enclosure}>
                                     <SingleSelect.Option value={'"'}>&quot;</SingleSelect.Option>
-                                    <SingleSelect.Option value=" ">&nbsp;</SingleSelect.Option>
+                                    <SingleSelect.Option value="space">
+                                        {translate('sulu_admin.enclosure_space')}
+                                    </SingleSelect.Option>
                                 </SingleSelect>
                             </Form.Field>
                         </Form.Section>
@@ -76,7 +79,6 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                         </Form.Section>
                     </Form>
                 </div>
-
             </Overlay>
         );
     }
@@ -110,16 +112,15 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     };
 
     @action handleConfirm = () => {
-        window.location.assign(resourceEndpointRegistry.getListUrl(this.listStore.resourceKey) + '.csv' +
-            buildQueryString(
-                {
-                    flat: true,
-                    delimiter: this.delimiter,
-                    escape: this.escape,
-                    enclosure: this.enclosure,
-                    newLine: this.newLine,
-                }
-            ));
+        window.location.assign(resourceRouteRegistry.getListUrl(this.listStore.resourceKey, {
+            _format: 'csv',
+            locale: this.list.locale,
+            flat: true,
+            delimiter: this.delimiter,
+            escape: this.escape,
+            enclosure: this.enclosure,
+            newLine: this.newLine,
+        }));
         this.showOverlay = false;
     };
 }

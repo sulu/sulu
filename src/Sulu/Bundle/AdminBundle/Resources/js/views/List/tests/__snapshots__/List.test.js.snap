@@ -1,973 +1,252 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render export dialog 1`] = `
-<Overlay
-  actions={Array []}
-  confirmDisabled={false}
-  confirmLoading={false}
-  confirmText="Export"
-  key="sulu_admin.export"
-  onClose={[Function]}
-  onConfirm={[Function]}
-  open={true}
-  size="small"
->
-  <Backdrop
-    fixed={true}
-    local={false}
-    onClick={[Function]}
-    open={true}
-    visible={true}
+Array [
+  <div
+    class="backdrop visible fixed"
+  />,
+  <div
+    class="container"
   >
-    <Portal>
-      <Portal
-        containerInfo={
-          <div>
-            <div
-              class="backdrop visible fixed"
-            />
-          </div>
-        }
+    <div
+      class="overlay small"
+    >
+      <section
+        class="content"
       >
-        <div
-          className="backdrop visible fixed"
-          onClick={[Function]}
-        />
-      </Portal>
-    </Portal>
-  </Backdrop>
-  <Portal>
-    <Portal
-      containerInfo={
-        <div>
+        <header>
+          <h2 />
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </header>
+        <article>
           <div
-            class="container"
+            class="overlay"
           >
             <div
-              class="overlay small"
+              class="grid grid"
             >
-              <section
-                class="content"
+              <div
+                class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
               >
-                <header>
-                  <h2 />
-                  <span
-                    aria-label="su-times"
-                    class="su-times clickable icon"
-                    role="button"
-                    tabindex="0"
-                  />
-                </header>
-                <article>
+                <div
+                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+                >
                   <div
-                    class="overlay"
+                    class="field"
                   >
                     <div
-                      class="grid grid"
+                      class="select"
                     >
-                      <div
-                        class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
+                      <button
+                        class="displayValue default"
+                        type="button"
                       >
                         <div
-                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+                          aria-label=";"
+                          class="croppedText"
+                          title=";"
                         >
                           <div
-                            class="field"
+                            aria-hidden="true"
+                            class="front"
                           >
-                            <div
-                              class="select"
-                            >
-                              <button
-                                class="displayValue default"
-                                type="button"
-                              >
-                                <div
-                                  aria-label=";"
-                                  class="croppedText"
-                                  title=";"
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    ;
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span />
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    ;
-                                  </div>
-                                </div>
-                                <span
-                                  aria-label="su-angle-down"
-                                  class="su-angle-down toggle"
-                                />
-                              </button>
-                            </div>
-                            <label
-                              class="errorLabel"
-                            />
+                            ;
                           </div>
-                        </div>
-                        <div
-                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                        >
                           <div
-                            class="field"
+                            aria-hidden="true"
+                            class="back"
                           >
-                            <div
-                              class="select"
-                            >
-                              <button
-                                class="displayValue default"
-                                type="button"
-                              >
-                                <div
-                                  aria-label="\\""
-                                  class="croppedText"
-                                  title="\\""
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    "
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span />
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    "
-                                  </div>
-                                </div>
-                                <span
-                                  aria-label="su-angle-down"
-                                  class="su-angle-down toggle"
-                                />
-                              </button>
-                            </div>
-                            <label
-                              class="errorLabel"
-                            />
+                            <span />
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
-                      >
-                        <div
-                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                        >
                           <div
-                            class="field"
+                            class="whole"
                           >
-                            <div
-                              class="select"
-                            >
-                              <button
-                                class="displayValue default"
-                                type="button"
-                              >
-                                <div
-                                  aria-label="\\\\"
-                                  class="croppedText"
-                                  title="\\\\"
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    \\
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span />
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    \\
-                                  </div>
-                                </div>
-                                <span
-                                  aria-label="su-angle-down"
-                                  class="su-angle-down toggle"
-                                />
-                              </button>
-                            </div>
-                            <label
-                              class="errorLabel"
-                            />
+                            ;
                           </div>
                         </div>
-                        <div
-                          class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                        >
-                          <div
-                            class="field"
-                          >
-                            <div
-                              class="select"
-                            >
-                              <button
-                                class="displayValue default"
-                                type="button"
-                              >
-                                <div
-                                  aria-label="\\\\n"
-                                  class="croppedText"
-                                  title="\\\\n"
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    \\
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span>
-                                      n
-                                    </span>
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    \\n
-                                  </div>
-                                </div>
-                                <span
-                                  aria-label="su-angle-down"
-                                  class="su-angle-down toggle"
-                                />
-                              </button>
-                            </div>
-                            <label
-                              class="errorLabel"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down toggle"
+                        />
+                      </button>
                     </div>
+                    <label
+                      class="errorLabel"
+                    />
                   </div>
-                </article>
-                <footer>
-                  <button
-                    class="button primary"
-                    type="button"
+                </div>
+                <div
+                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+                >
+                  <div
+                    class="field"
                   >
-                    <span
-                      class="text"
+                    <div
+                      class="select"
                     >
-                      Export
-                    </span>
-                  </button>
-                </footer>
-              </section>
+                      <button
+                        class="displayValue default"
+                        type="button"
+                      >
+                        <div
+                          aria-label="\\""
+                          class="croppedText"
+                          title="\\""
+                        >
+                          <div
+                            aria-hidden="true"
+                            class="front"
+                          >
+                            "
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            class="back"
+                          >
+                            <span />
+                          </div>
+                          <div
+                            class="whole"
+                          >
+                            "
+                          </div>
+                        </div>
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down toggle"
+                        />
+                      </button>
+                    </div>
+                    <label
+                      class="errorLabel"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
+              >
+                <div
+                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+                >
+                  <div
+                    class="field"
+                  >
+                    <div
+                      class="select"
+                    >
+                      <button
+                        class="displayValue default"
+                        type="button"
+                      >
+                        <div
+                          aria-label="\\\\"
+                          class="croppedText"
+                          title="\\\\"
+                        >
+                          <div
+                            aria-hidden="true"
+                            class="front"
+                          >
+                            \\
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            class="back"
+                          >
+                            <span />
+                          </div>
+                          <div
+                            class="whole"
+                          >
+                            \\
+                          </div>
+                        </div>
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down toggle"
+                        />
+                      </button>
+                    </div>
+                    <label
+                      class="errorLabel"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+                >
+                  <div
+                    class="field"
+                  >
+                    <div
+                      class="select"
+                    >
+                      <button
+                        class="displayValue default"
+                        type="button"
+                      >
+                        <div
+                          aria-label="\\\\n"
+                          class="croppedText"
+                          title="\\\\n"
+                        >
+                          <div
+                            aria-hidden="true"
+                            class="front"
+                          >
+                            \\
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            class="back"
+                          >
+                            <span>
+                              n
+                            </span>
+                          </div>
+                          <div
+                            class="whole"
+                          >
+                            \\n
+                          </div>
+                        </div>
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down toggle"
+                        />
+                      </button>
+                    </div>
+                    <label
+                      class="errorLabel"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      }
-    >
-      <div
-        className="container"
-        onTransitionEnd={[Function]}
-      >
-        <div
-          className="overlay small"
-        >
-          <section
-            className="content"
+        </article>
+        <footer>
+          <button
+            class="button primary"
+            type="button"
           >
-            <header>
-              <h2 />
-              <Icon
-                className="icon"
-                name="su-times"
-                onClick={[Function]}
-              >
-                <span
-                  aria-label="su-times"
-                  className="su-times clickable icon"
-                  onClick={[Function]}
-                  role="button"
-                  tabIndex={0}
-                />
-              </Icon>
-            </header>
-            <article>
-              <div
-                className="overlay"
-              >
-                <Form>
-                  <Grid
-                    className="grid"
-                  >
-                    <div
-                      className="grid grid"
-                    >
-                      <Section
-                        colSpan={6}
-                      >
-                        <Section
-                          className="gridSection"
-                          colSpan={6}
-                          spaceAfter={0}
-                          spaceBefore={0}
-                        >
-                          <BaseItem
-                            className="section gridSection"
-                            colSpan={6}
-                            spaceAfter={0}
-                            spaceBefore={0}
-                          >
-                            <div
-                              className="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
-                            >
-                              <Field
-                                colSpan={12}
-                                required={false}
-                                spaceAfter={0}
-                              >
-                                <Item
-                                  className="gridItem"
-                                  colSpan={12}
-                                  spaceAfter={0}
-                                  spaceBefore={0}
-                                >
-                                  <BaseItem
-                                    className="item gridItem"
-                                    colSpan={12}
-                                    spaceAfter={0}
-                                    spaceBefore={0}
-                                  >
-                                    <div
-                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                                    >
-                                      <div
-                                        className="field"
-                                      >
-                                        <SingleSelect
-                                          disabled={false}
-                                          onChange={[Function]}
-                                          skin="default"
-                                          value=";"
-                                        >
-                                          <Select
-                                            closeOnSelect={true}
-                                            disabled={false}
-                                            displayValue=";"
-                                            isOptionSelected={[Function]}
-                                            onSelect={[Function]}
-                                            skin="default"
-                                          >
-                                            <div
-                                              className="select"
-                                            >
-                                              <DisplayValue
-                                                disabled={false}
-                                                displayValueRef={[Function]}
-                                                onClick={[Function]}
-                                                skin="default"
-                                              >
-                                                <button
-                                                  className="displayValue default"
-                                                  disabled={false}
-                                                  onClick={[Function]}
-                                                  type="button"
-                                                >
-                                                  <CroppedText>
-                                                    <div
-                                                      aria-label=";"
-                                                      className="croppedText"
-                                                      title=";"
-                                                    >
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="front"
-                                                      >
-                                                        ;
-                                                      </div>
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        className="whole"
-                                                      >
-                                                        ;
-                                                      </div>
-                                                    </div>
-                                                  </CroppedText>
-                                                  <Icon
-                                                    className="toggle"
-                                                    name="su-angle-down"
-                                                  >
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      className="su-angle-down toggle"
-                                                    />
-                                                  </Icon>
-                                                </button>
-                                              </DisplayValue>
-                                              <Popover
-                                                anchorElement={
-                                                  <button
-                                                    class="displayValue default"
-                                                    type="button"
-                                                  >
-                                                    <div
-                                                      aria-label=";"
-                                                      class="croppedText"
-                                                      title=";"
-                                                    >
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="front"
-                                                      >
-                                                        ;
-                                                      </div>
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        class="whole"
-                                                      >
-                                                        ;
-                                                      </div>
-                                                    </div>
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      class="su-angle-down toggle"
-                                                    />
-                                                  </button>
-                                                }
-                                                backdrop={true}
-                                                horizontalOffset={-20}
-                                                onClose={[Function]}
-                                                open={false}
-                                                verticalOffset={2}
-                                              />
-                                            </div>
-                                          </Select>
-                                        </SingleSelect>
-                                        <label
-                                          className="errorLabel"
-                                        />
-                                      </div>
-                                    </div>
-                                  </BaseItem>
-                                </Item>
-                              </Field>
-                              <Field
-                                colSpan={12}
-                                required={false}
-                                spaceAfter={0}
-                              >
-                                <Item
-                                  className="gridItem"
-                                  colSpan={12}
-                                  spaceAfter={0}
-                                  spaceBefore={0}
-                                >
-                                  <BaseItem
-                                    className="item gridItem"
-                                    colSpan={12}
-                                    spaceAfter={0}
-                                    spaceBefore={0}
-                                  >
-                                    <div
-                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                                    >
-                                      <div
-                                        className="field"
-                                      >
-                                        <SingleSelect
-                                          disabled={false}
-                                          onChange={[Function]}
-                                          skin="default"
-                                          value="\\""
-                                        >
-                                          <Select
-                                            closeOnSelect={true}
-                                            disabled={false}
-                                            displayValue="\\""
-                                            isOptionSelected={[Function]}
-                                            onSelect={[Function]}
-                                            skin="default"
-                                          >
-                                            <div
-                                              className="select"
-                                            >
-                                              <DisplayValue
-                                                disabled={false}
-                                                displayValueRef={[Function]}
-                                                onClick={[Function]}
-                                                skin="default"
-                                              >
-                                                <button
-                                                  className="displayValue default"
-                                                  disabled={false}
-                                                  onClick={[Function]}
-                                                  type="button"
-                                                >
-                                                  <CroppedText>
-                                                    <div
-                                                      aria-label="\\""
-                                                      className="croppedText"
-                                                      title="\\""
-                                                    >
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="front"
-                                                      >
-                                                        "
-                                                      </div>
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        className="whole"
-                                                      >
-                                                        "
-                                                      </div>
-                                                    </div>
-                                                  </CroppedText>
-                                                  <Icon
-                                                    className="toggle"
-                                                    name="su-angle-down"
-                                                  >
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      className="su-angle-down toggle"
-                                                    />
-                                                  </Icon>
-                                                </button>
-                                              </DisplayValue>
-                                              <Popover
-                                                anchorElement={
-                                                  <button
-                                                    class="displayValue default"
-                                                    type="button"
-                                                  >
-                                                    <div
-                                                      aria-label="\\""
-                                                      class="croppedText"
-                                                      title="\\""
-                                                    >
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="front"
-                                                      >
-                                                        "
-                                                      </div>
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        class="whole"
-                                                      >
-                                                        "
-                                                      </div>
-                                                    </div>
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      class="su-angle-down toggle"
-                                                    />
-                                                  </button>
-                                                }
-                                                backdrop={true}
-                                                horizontalOffset={-20}
-                                                onClose={[Function]}
-                                                open={false}
-                                                verticalOffset={2}
-                                              />
-                                            </div>
-                                          </Select>
-                                        </SingleSelect>
-                                        <label
-                                          className="errorLabel"
-                                        />
-                                      </div>
-                                    </div>
-                                  </BaseItem>
-                                </Item>
-                              </Field>
-                            </div>
-                          </BaseItem>
-                        </Section>
-                      </Section>
-                      <Section
-                        colSpan={6}
-                      >
-                        <Section
-                          className="gridSection"
-                          colSpan={6}
-                          spaceAfter={0}
-                          spaceBefore={0}
-                        >
-                          <BaseItem
-                            className="section gridSection"
-                            colSpan={6}
-                            spaceAfter={0}
-                            spaceBefore={0}
-                          >
-                            <div
-                              className="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
-                            >
-                              <Field
-                                colSpan={12}
-                                required={false}
-                                spaceAfter={0}
-                              >
-                                <Item
-                                  className="gridItem"
-                                  colSpan={12}
-                                  spaceAfter={0}
-                                  spaceBefore={0}
-                                >
-                                  <BaseItem
-                                    className="item gridItem"
-                                    colSpan={12}
-                                    spaceAfter={0}
-                                    spaceBefore={0}
-                                  >
-                                    <div
-                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                                    >
-                                      <div
-                                        className="field"
-                                      >
-                                        <SingleSelect
-                                          disabled={false}
-                                          onChange={[Function]}
-                                          skin="default"
-                                          value="\\\\"
-                                        >
-                                          <Select
-                                            closeOnSelect={true}
-                                            disabled={false}
-                                            displayValue="\\\\"
-                                            isOptionSelected={[Function]}
-                                            onSelect={[Function]}
-                                            skin="default"
-                                          >
-                                            <div
-                                              className="select"
-                                            >
-                                              <DisplayValue
-                                                disabled={false}
-                                                displayValueRef={[Function]}
-                                                onClick={[Function]}
-                                                skin="default"
-                                              >
-                                                <button
-                                                  className="displayValue default"
-                                                  disabled={false}
-                                                  onClick={[Function]}
-                                                  type="button"
-                                                >
-                                                  <CroppedText>
-                                                    <div
-                                                      aria-label="\\\\"
-                                                      className="croppedText"
-                                                      title="\\\\"
-                                                    >
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="front"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        className="whole"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                    </div>
-                                                  </CroppedText>
-                                                  <Icon
-                                                    className="toggle"
-                                                    name="su-angle-down"
-                                                  >
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      className="su-angle-down toggle"
-                                                    />
-                                                  </Icon>
-                                                </button>
-                                              </DisplayValue>
-                                              <Popover
-                                                anchorElement={
-                                                  <button
-                                                    class="displayValue default"
-                                                    type="button"
-                                                  >
-                                                    <div
-                                                      aria-label="\\\\"
-                                                      class="croppedText"
-                                                      title="\\\\"
-                                                    >
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="front"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="back"
-                                                      >
-                                                        <span />
-                                                      </div>
-                                                      <div
-                                                        class="whole"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                    </div>
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      class="su-angle-down toggle"
-                                                    />
-                                                  </button>
-                                                }
-                                                backdrop={true}
-                                                horizontalOffset={-20}
-                                                onClose={[Function]}
-                                                open={false}
-                                                verticalOffset={2}
-                                              />
-                                            </div>
-                                          </Select>
-                                        </SingleSelect>
-                                        <label
-                                          className="errorLabel"
-                                        />
-                                      </div>
-                                    </div>
-                                  </BaseItem>
-                                </Item>
-                              </Field>
-                              <Field
-                                colSpan={12}
-                                required={false}
-                                spaceAfter={0}
-                              >
-                                <Item
-                                  className="gridItem"
-                                  colSpan={12}
-                                  spaceAfter={0}
-                                  spaceBefore={0}
-                                >
-                                  <BaseItem
-                                    className="item gridItem"
-                                    colSpan={12}
-                                    spaceAfter={0}
-                                    spaceBefore={0}
-                                  >
-                                    <div
-                                      className="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-                                    >
-                                      <div
-                                        className="field"
-                                      >
-                                        <SingleSelect
-                                          disabled={false}
-                                          onChange={[Function]}
-                                          skin="default"
-                                          value="\\\\n"
-                                        >
-                                          <Select
-                                            closeOnSelect={true}
-                                            disabled={false}
-                                            displayValue="\\\\n"
-                                            isOptionSelected={[Function]}
-                                            onSelect={[Function]}
-                                            skin="default"
-                                          >
-                                            <div
-                                              className="select"
-                                            >
-                                              <DisplayValue
-                                                disabled={false}
-                                                displayValueRef={[Function]}
-                                                onClick={[Function]}
-                                                skin="default"
-                                              >
-                                                <button
-                                                  className="displayValue default"
-                                                  disabled={false}
-                                                  onClick={[Function]}
-                                                  type="button"
-                                                >
-                                                  <CroppedText>
-                                                    <div
-                                                      aria-label="\\\\n"
-                                                      className="croppedText"
-                                                      title="\\\\n"
-                                                    >
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="front"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                      <div
-                                                        aria-hidden={true}
-                                                        className="back"
-                                                      >
-                                                        <span>
-                                                          n
-                                                        </span>
-                                                      </div>
-                                                      <div
-                                                        className="whole"
-                                                      >
-                                                        \\n
-                                                      </div>
-                                                    </div>
-                                                  </CroppedText>
-                                                  <Icon
-                                                    className="toggle"
-                                                    name="su-angle-down"
-                                                  >
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      className="su-angle-down toggle"
-                                                    />
-                                                  </Icon>
-                                                </button>
-                                              </DisplayValue>
-                                              <Popover
-                                                anchorElement={
-                                                  <button
-                                                    class="displayValue default"
-                                                    type="button"
-                                                  >
-                                                    <div
-                                                      aria-label="\\\\n"
-                                                      class="croppedText"
-                                                      title="\\\\n"
-                                                    >
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="front"
-                                                      >
-                                                        \\
-                                                      </div>
-                                                      <div
-                                                        aria-hidden="true"
-                                                        class="back"
-                                                      >
-                                                        <span>
-                                                          n
-                                                        </span>
-                                                      </div>
-                                                      <div
-                                                        class="whole"
-                                                      >
-                                                        \\n
-                                                      </div>
-                                                    </div>
-                                                    <span
-                                                      aria-label="su-angle-down"
-                                                      class="su-angle-down toggle"
-                                                    />
-                                                  </button>
-                                                }
-                                                backdrop={true}
-                                                horizontalOffset={-20}
-                                                onClose={[Function]}
-                                                open={false}
-                                                verticalOffset={2}
-                                              />
-                                            </div>
-                                          </Select>
-                                        </SingleSelect>
-                                        <label
-                                          className="errorLabel"
-                                        />
-                                      </div>
-                                    </div>
-                                  </BaseItem>
-                                </Item>
-                              </Field>
-                            </div>
-                          </BaseItem>
-                        </Section>
-                      </Section>
-                    </div>
-                  </Grid>
-                </Form>
-              </div>
-            </article>
-            <footer>
-              <Actions
-                actions={Array []}
-              />
-              <Button
-                active={false}
-                disabled={false}
-                loading={false}
-                onClick={[Function]}
-                showDropdownIcon={false}
-                size="large"
-                skin="primary"
-                type="button"
-              >
-                <button
-                  className="button primary"
-                  disabled={false}
-                  onClick={[Function]}
-                  type="button"
-                >
-                  <span
-                    className="text"
-                  >
-                    Export
-                  </span>
-                </button>
-              </Button>
-            </footer>
-          </section>
-        </div>
-      </div>
-    </Portal>
-  </Portal>
-</Overlay>
+            <span
+              class="text"
+            >
+              Export
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
 `;
 
 exports[`Should render the list with a title 1`] = `

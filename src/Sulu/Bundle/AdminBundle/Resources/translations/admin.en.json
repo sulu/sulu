@@ -115,7 +115,7 @@
     "sulu_admin.delimiter_description": "Character for column separation.",
     "sulu_admin.enclosure_description": "Enclose multiple word entries.",
     "sulu_admin.escape_description": "Add-on for special characters.",
-    "sulu_admin.new_line_description": "Character for line brake."
-
-
+    "sulu_admin.new_line_description": "Character for line brake.",
+    "sulu_admin.delimiter_tab": "Tab",
+    "sulu_admin.enclosure_space": "Space"
 }
