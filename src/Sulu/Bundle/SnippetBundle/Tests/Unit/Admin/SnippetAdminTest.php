@@ -77,7 +77,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeEquals([
             'title' => 'sulu_snippet.snippets',
-            'toolbarActions' => ['sulu_admin.add', 'sulu_admin.delete'],
+            'toolbarActions' => ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
             'resourceKey' => 'snippets',
             'listKey' => 'snippets',
             'adapters' => ['table'],
