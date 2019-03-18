@@ -1,8 +1,16 @@
 // @flow
 import Command from '@ckeditor/ckeditor5-core/src/command';
 import CKEditor5 from '../../CKEditor5';
-import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, hasExternalLinkAttribute} from './utils';
+import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './constants';
 import type {ExternalLinkEventInfo} from './types';
+
+function hasExternalLinkAttribute(node: ?Object) {
+    if (!node || !node.hasAttribute) {
+        return false;
+    }
+
+    return node.hasAttribute(LINK_HREF_ATTRIBUTE) || node.hasAttribute(LINK_TARGET_ATTRIBUTE);
+}
 
 export default class ExternalLinkCommand extends Command {
     isEnabled: boolean = true;

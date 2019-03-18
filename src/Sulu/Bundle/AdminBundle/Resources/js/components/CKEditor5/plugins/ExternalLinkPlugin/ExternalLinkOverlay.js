@@ -6,7 +6,6 @@ import Form from '../../../Form';
 import SingleSelect from '../../../SingleSelect';
 import Url from '../../../Url';
 import {translate} from '../../../../utils/Translator';
-import type {ExternalLinkEventInfo} from './types';
 
 type Props = {|
     onCancel: () => void,

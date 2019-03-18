@@ -1,6 +1,6 @@
 // @flow
 import Command from '@ckeditor/ckeditor5-core/src/command';
-import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './utils';
+import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './constants';
 
 export default class ExternalUnlinkCommand extends Command {
     execute() {
