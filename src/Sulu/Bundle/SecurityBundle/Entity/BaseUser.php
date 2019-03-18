@@ -19,13 +19,15 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
  * User.
  *
  * @ExclusionPolicy("all")
  */
-abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
+abstract class BaseUser extends ApiEntity implements UserInterface, Serializable, EquatableInterface
 {
     /**
      * @var string
@@ -289,6 +291,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
         return serialize(
             [
                 $this->id,
+                $this->password,
+                $this->salt,
+                $this->username,
+                $this->locked,
+                $this->enabled,
             ]
         );
     }
@@ -302,7 +309,9 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->id) = unserialize($serialized);
+        list(
+            $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
+        ) = unserialize($serialized);
     }
 
     /**
@@ -515,5 +524,19 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getPasswordResetTokenEmailsSent()
     {
         return $this->passwordResetTokenEmailsSent;
+    }
+
+    public function isEqualTo(SymfonyUserInterface $user)
+    {
+        if (!$user instanceof self) {
+            return false;
+        }
+
+        return $this->id === $user->getId()
+            && $this->password === $user->getPassword()
+            && $this->salt === $user->getSalt()
+            && $this->username === $user->getUsername()
+            && $this->locked === $user->getLocked()
+            && $this->enabled === $user->getEnabled();
     }
 }
