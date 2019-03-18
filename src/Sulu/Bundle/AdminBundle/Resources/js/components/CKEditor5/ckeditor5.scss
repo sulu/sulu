@@ -90,11 +90,6 @@ $textEditorLinkColor: $blue;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-
-            a {
-                color: $textEditorLinkColor !important;
-                text-decoration: underline !important;
-            }
         }
 
         .ck-widget.table {
@@ -108,6 +103,13 @@ $textEditorLinkColor: $blue;
         &.disabled {
             opacity: .5;
             pointer-events: none;
+        }
+    }
+
+    .ck {
+        a {
+            color: $textEditorLinkColor !important;
+            text-decoration: underline !important;
         }
     }
 }

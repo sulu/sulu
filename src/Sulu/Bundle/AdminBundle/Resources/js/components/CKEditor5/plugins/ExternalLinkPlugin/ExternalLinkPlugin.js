@@ -31,6 +31,7 @@ export default class ExternalLinkPlugin extends Plugin {
         this.editor.sourceElement.appendChild(this.externalLinkOverlayElement);
         this.balloon = this.editor.plugins.get(ContextualBalloon);
         this.balloonView = new ExternalLinkBalloonView(this.editor.locale);
+        this.balloonView.bind('href').to(this, 'href');
 
         this.listenTo(this.balloonView, 'externalUnlink', () => {
             this.editor.execute('externalUnlink');
@@ -137,6 +138,7 @@ export default class ExternalLinkPlugin extends Plugin {
             this.hideBalloon();
 
             if (externalLink) {
+                this.set('href', externalLink.getAttribute('href'));
                 this.balloon.add({
                     position: {target: view.domConverter.mapViewToDom(externalLink)},
                     view: this.balloonView,

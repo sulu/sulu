@@ -10,6 +10,23 @@ export default class ExternalLinkBalloonView extends View {
     constructor(locale: string) {
         super(locale);
 
+        const previewButtonView = new ButtonView(this.locale);
+
+        previewButtonView.set({
+            withText: true,
+        });
+
+        previewButtonView.extendTemplate({
+            attributes: {
+                href: this.bindTemplate.to('href'),
+                target: '_blank',
+            },
+        });
+
+        previewButtonView.bind('label').to(this, 'href');
+        previewButtonView.template.tag = 'a';
+        previewButtonView.template.eventListeners = {};
+
         const editButtonView = new ButtonView(this.locale);
         editButtonView.set({
             icon: pencilIcon,
@@ -26,6 +43,7 @@ export default class ExternalLinkBalloonView extends View {
         this.setTemplate({
             tag: 'div',
             children: [
+                previewButtonView,
                 editButtonView,
                 unlinkButtonView,
             ],
