@@ -117,5 +117,5 @@
     "sulu_admin.escape_description": "Add-on for special characters.",
     "sulu_admin.new_line_description": "Character for line brake.",
     "sulu_admin.delimiter_tab": "Tab",
-    "sulu_admin.enclosure_space": "Space"
+    "sulu_admin.enclosure_nothing": "Nothing"
 }

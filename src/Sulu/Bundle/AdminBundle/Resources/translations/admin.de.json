@@ -117,5 +117,5 @@
     "sulu_admin.escape_description": "Zusatz bei Sonderzeichen.",
     "sulu_admin.new_line_description": "Zeichen für den Zeilenumbruch.",
     "sulu_admin.delimiter_tab": "Tab",
-    "sulu_admin.enclosure_space": "Leerzeichen"
+    "sulu_admin.enclosure_nothing": "Nichts"
 }

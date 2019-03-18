@@ -50,8 +50,8 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                             >
                                 <SingleSelect onChange={this.handleEnclosureChanged} value={this.enclosure}>
                                     <SingleSelect.Option value={'"'}>&quot;</SingleSelect.Option>
-                                    <SingleSelect.Option value="space">
-                                        {translate('sulu_admin.enclosure_space')}
+                                    <SingleSelect.Option value="">
+                                        {translate('sulu_admin.enclosure_nothing')}
                                     </SingleSelect.Option>
                                 </SingleSelect>
                             </Form.Field>
