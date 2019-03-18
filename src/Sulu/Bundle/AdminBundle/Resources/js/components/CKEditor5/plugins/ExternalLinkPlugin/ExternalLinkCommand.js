@@ -1,10 +1,17 @@
 // @flow
 import Command from '@ckeditor/ckeditor5-core/src/command';
+import CKEditor5 from '../../CKEditor5';
 import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, hasExternalLinkAttribute} from './utils';
 import type {ExternalLinkEventInfo} from './types';
 
 export default class ExternalLinkCommand extends Command {
-    isEnabled: boolean;
+    isEnabled: boolean = true;
+
+    constructor(editor: CKEditor5) {
+        super(editor);
+
+        this.set('buttonEnabled', true);
+    }
 
     execute(eventInfo: ExternalLinkEventInfo) {
         this.editor.model.change((writer) => {
@@ -14,10 +21,14 @@ export default class ExternalLinkCommand extends Command {
             };
 
             const {selection} = eventInfo;
+            const firstPosition = selection ? selection.getFirstPosition() : undefined;
+
             if (selection && !selection.isCollapsed) {
                 for (const range of selection.getRanges()) {
                     writer.setAttributes(externalLinkAttributes, range);
                 }
+            } else if (firstPosition && hasExternalLinkAttribute(firstPosition.textNode)) {
+                writer.setAttributes(externalLinkAttributes, firstPosition.textNode);
             } else {
                 const externalLink = writer.createText(eventInfo.url, externalLinkAttributes);
                 this.editor.model.insertContent(externalLink);
@@ -30,7 +41,7 @@ export default class ExternalLinkCommand extends Command {
         const firstPosition = selection.getFirstPosition();
 
         if (firstPosition && firstPosition.textNode && hasExternalLinkAttribute(firstPosition.textNode)) {
-            this.isEnabled = false;
+            this.buttonEnabled = false;
             return;
         }
 
@@ -43,10 +54,10 @@ export default class ExternalLinkCommand extends Command {
                 continue;
             }
 
-            this.isEnabled = false;
+            this.buttonEnabled = false;
             return;
         }
 
-        this.isEnabled = true;
+        this.buttonEnabled = true;
     }
 }

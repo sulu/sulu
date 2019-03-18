@@ -13,13 +13,18 @@ import ExternalLinkCommand from './ExternalLinkCommand';
 import ExternalLinkOverlay from './ExternalLinkOverlay';
 import ExternalLinkBalloonView from './ExternalLinkBalloonView';
 import ExternalUnlinkCommand from './ExternalUnlinkCommand';
+import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './utils';
 import type {ExternalLinkEventInfo} from './types';
 
 // eslint-disable-next-line max-len
 const LINK_ICON = '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11.077 15l.991-1.416a.75.75 0 1 1 1.229.86l-1.148 1.64a.748.748 0 0 1-.217.206 5.251 5.251 0 0 1-8.503-5.955c.02-.095.06-.189.12-.274l1.147-1.639a.75.75 0 1 1 1.228.86L4.933 10.7l.006.003a3.75 3.75 0 0 0 6.132 4.294l.006.004zm5.494-5.335a.748.748 0 0 1-.12.274l-1.147 1.639a.75.75 0 1 1-1.228-.86l.86-1.23a3.75 3.75 0 0 0-6.144-4.301l-.86 1.229a.75.75 0 0 1-1.229-.86l1.148-1.64a.748.748 0 0 1 .217-.206 5.251 5.251 0 0 1 8.503 5.955zm-4.563-2.532a.75.75 0 0 1 .184 1.045l-3.155 4.505a.75.75 0 1 1-1.229-.86l3.155-4.506a.75.75 0 0 1 1.045-.184z" fill="#000" fill-rule="evenodd"/></svg>';
 
+const DEFAULT_TARGET = '_blank';
+
 export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
+    @observable target: ?string = DEFAULT_TARGET;
+    @observable url: ?string;
     balloon: ContextualBalloon;
 
     init() {
@@ -33,6 +38,18 @@ export default class ExternalLinkPlugin extends Plugin {
             this.hideBalloon();
         });
 
+        this.listenTo(this.balloonView, 'externalLink', action(() => {
+            this.selection = this.editor.model.document.selection;
+            const firstPosition = this.selection.getFirstPosition();
+            const node = firstPosition.textNode;
+
+            this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
+            this.url = node.getAttribute(LINK_HREF_ATTRIBUTE);
+
+            this.open = true;
+            this.hideBalloon();
+        }));
+
         render(
             (
                 <Observer>
@@ -40,7 +57,11 @@ export default class ExternalLinkPlugin extends Plugin {
                         <ExternalLinkOverlay
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
+                            onTargetChange={this.handleTargetChange}
+                            onUrlChange={this.handleUrlChange}
                             open={this.open}
+                            target={this.target}
+                            url={this.url}
                         />
                     )}
                 </Observer>
@@ -54,7 +75,7 @@ export default class ExternalLinkPlugin extends Plugin {
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
             const button = new ButtonView(locale);
 
-            button.bind('isEnabled').to(this.editor.commands.get('externalLink'));
+            button.bind('isEnabled').to(this.editor.commands.get('externalLink'), 'buttonEnabled');
 
             button.set({
                 icon: LINK_ICON,
@@ -63,6 +84,8 @@ export default class ExternalLinkPlugin extends Plugin {
             button.on('execute', action(() => {
                 this.selection = this.editor.model.document.selection;
                 this.open = true;
+                this.target = DEFAULT_TARGET;
+                this.url = undefined;
             }));
 
             return button;
@@ -129,13 +152,21 @@ export default class ExternalLinkPlugin extends Plugin {
         }
     }
 
-    @action handleOverlayConfirm = (eventInfo: ExternalLinkEventInfo) => {
-        this.editor.execute('externalLink', {...eventInfo, selection: this.selection});
+    @action handleOverlayConfirm = () => {
+        this.editor.execute('externalLink', {selection: this.selection, target: this.target, url: this.url});
         this.open = false;
     };
 
     @action handleOverlayClose = () => {
         this.open = false;
+    };
+
+    @action handleTargetChange = (target: ?string) => {
+        this.target = target;
+    };
+
+    @action handleUrlChange = (url: ?string) => {
+        this.url = url;
     };
 
     destroy() {
