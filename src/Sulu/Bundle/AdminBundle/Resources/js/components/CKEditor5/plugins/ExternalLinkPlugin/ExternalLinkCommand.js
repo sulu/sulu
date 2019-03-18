@@ -1,9 +1,7 @@
 // @flow
 import Command from '@ckeditor/ckeditor5-core/src/command';
+import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, hasExternalLinkAttribute} from './utils';
 import type {ExternalLinkEventInfo} from './types';
-
-const LINK_HREF_ATTRIBUTE = 'linkHref';
-const LINK_TARGET_ATTRIBUTE = 'linkTarget';
 
 export default class ExternalLinkCommand extends Command {
     isEnabled: boolean;
@@ -31,7 +29,7 @@ export default class ExternalLinkCommand extends Command {
         const selection = this.editor.model.document.selection;
         const firstPosition = selection.getFirstPosition();
 
-        if (firstPosition && firstPosition.textNode && this.hasExternalLinkAttribute(firstPosition.textNode)) {
+        if (firstPosition && firstPosition.textNode && hasExternalLinkAttribute(firstPosition.textNode)) {
             this.isEnabled = false;
             return;
         }
@@ -41,7 +39,7 @@ export default class ExternalLinkCommand extends Command {
         for (const item of range.getItems()) {
             const textNode = item.textNode;
 
-            if (!textNode || !this.hasExternalLinkAttribute(textNode)) {
+            if (!textNode || !hasExternalLinkAttribute(textNode)) {
                 continue;
             }
 
@@ -50,9 +48,5 @@ export default class ExternalLinkCommand extends Command {
         }
 
         this.isEnabled = true;
-    }
-
-    hasExternalLinkAttribute(textNode: Object) {
-        return textNode.hasAttribute(LINK_HREF_ATTRIBUTE) || textNode.hasAttribute(LINK_TARGET_ATTRIBUTE);
     }
 }

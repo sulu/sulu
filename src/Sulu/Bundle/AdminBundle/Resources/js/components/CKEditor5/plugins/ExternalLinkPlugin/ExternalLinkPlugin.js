@@ -6,9 +6,13 @@ import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import {downcastAttributeToElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
 import {upcastAttributeToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
+import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
 import {render, unmountComponentAtNode} from 'react-dom';
-import ExternalLinkOverlay from './ExternalLinkOverlay';
 import ExternalLinkCommand from './ExternalLinkCommand';
+import ExternalLinkOverlay from './ExternalLinkOverlay';
+import ExternalLinkBalloonView from './ExternalLinkBalloonView';
+import ExternalUnlinkCommand from './ExternalUnlinkCommand';
 import type {ExternalLinkEventInfo} from './types';
 
 // eslint-disable-next-line max-len
@@ -16,10 +20,18 @@ const LINK_ICON = '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http:/
 
 export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
+    balloon: ContextualBalloon;
 
     init() {
         this.externalLinkOverlayElement = document.createElement('div');
         this.editor.sourceElement.appendChild(this.externalLinkOverlayElement);
+        this.balloon = this.editor.plugins.get(ContextualBalloon);
+        this.balloonView = new ExternalLinkBalloonView(this.editor.locale);
+
+        this.listenTo(this.balloonView, 'externalUnlink', () => {
+            this.editor.execute('externalUnlink');
+            this.hideBalloon();
+        });
 
         render(
             (
@@ -37,6 +49,7 @@ export default class ExternalLinkPlugin extends Plugin {
         );
 
         this.editor.commands.add('externalLink', new ExternalLinkCommand(this.editor));
+        this.editor.commands.add('externalUnlink', new ExternalUnlinkCommand(this.editor));
 
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
             const button = new ButtonView(locale);
@@ -87,6 +100,33 @@ export default class ExternalLinkPlugin extends Plugin {
                 return writer.createAttributeElement('a', {href: attributeValue});
             },
         }));
+
+        const view = this.editor.editing.view;
+        view.addObserver(ClickObserver);
+
+        this.listenTo(view.document, 'click', () => {
+            const selection = this.editor.editing.view.document.selection;
+            const firstPosition = selection.getFirstPosition();
+
+            const externalLink = firstPosition.getAncestors().find(
+                (ancestor) => ancestor.is('attributeElement') && ancestor.name === 'a'
+            );
+
+            this.hideBalloon();
+
+            if (externalLink) {
+                this.balloon.add({
+                    position: {target: view.domConverter.mapViewToDom(externalLink)},
+                    view: this.balloonView,
+                });
+            }
+        });
+    }
+
+    hideBalloon() {
+        if (this.balloon.hasView(this.balloonView)) {
+            this.balloon.remove(this.balloonView);
+        }
     }
 
     @action handleOverlayConfirm = (eventInfo: ExternalLinkEventInfo) => {
