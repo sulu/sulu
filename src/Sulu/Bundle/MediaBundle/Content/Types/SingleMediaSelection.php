@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -48,7 +49,13 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
             return null;
         }
 
-        return $this->mediaManager->getById($data['id'], $property->getStructure()->getLanguageCode());
+        try {
+            $entity = $this->mediaManager->getById($data['id'], $property->getStructure()->getLanguageCode());
+        } catch (MediaNotFoundException $e) {
+            return null;
+        }
+
+        return $entity;
     }
 
     /**
