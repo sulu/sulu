@@ -34,7 +34,6 @@ class ContentTypesDumpCommandTest extends SuluTestCase
 
         $command = new ContentTypesDumpCommand();
         $command->setApplication($application);
-        $command->setContainer($this->getContainer());
         $this->tester = new CommandTester($command);
     }
 

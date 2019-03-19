@@ -13,25 +13,52 @@ namespace Sulu\Bundle\RouteBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Update the routes for all entities which will be returned by the repository of given entity service.
  */
-class UpdateRouteCommand extends ContainerAwareCommand
+class UpdateRouteCommand extends Command
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var RouteManagerInterface
+     */
+    private $routeManager;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        RouteManagerInterface $routeManager
+    ) {
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->routeManager = $routeManager;
+        parent::__construct('sulu:route:update');
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('sulu:route:update')
-            ->addArgument('entity', InputArgument::REQUIRED)
+        $this->addArgument('entity', InputArgument::REQUIRED)
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', 1000)
             ->setDescription('Update the routes for all entities.')
@@ -49,15 +76,12 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('translator')->setLocale($input->getArgument('locale'));
+        $this->translator->setLocale($input->getArgument('locale'));
 
         $batchSize = $input->getOption('batch-size');
 
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $routeManager = $this->getContainer()->get('sulu_route.manager.route_manager');
         /** @var EntityRepository $repository */
-        $repository = $entityManager->getRepository($input->getArgument('entity'));
+        $repository = $this->entityManager->getRepository($input->getArgument('entity'));
 
         $query = $repository->createQueryBuilder('entity')->select('count(entity.id)')->getQuery();
         $result = $query->getResult();
@@ -80,24 +104,24 @@ EOT
             $entity = $item[0];
 
             if (null !== $entity->getRoute()) {
-                $routeManager->update($entity);
+                $this->routeManager->update($entity);
             } else {
-                $entityManager->persist($routeManager->create($entity));
+                $this->entityManager->persist($this->routeManager->create($entity));
             }
 
             $progressBar->advance();
             $entity = null;
 
             if (0 === ($index++ % $batchSize)) {
-                $entityManager->flush();
+                $this->entityManager->flush();
 
                 // trigger garbage collect
-                $entityManager->clear();
+                $this->entityManager->clear();
             }
         }
 
         // flush the rest of the entities
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         //$progressBar->finish();
         $output->writeln('');

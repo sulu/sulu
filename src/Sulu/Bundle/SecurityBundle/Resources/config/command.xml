@@ -4,10 +4,26 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_security.command.create_role" class="Sulu\Bundle\SecurityBundle\Command\CreateRoleCommand">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+
             <tag name="console.command" />
+            <tag name="sulu.context" context="admin"/>
         </service>
+
         <service id="sulu_security.command.create_user" class="Sulu\Bundle\SecurityBundle\Command\CreateUserCommand">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu.repository.user"/>
+            <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.core.localization_manager"/>
+            <argument type="service" id="sulu_security.salt_generator"/>
+            <argument type="service" id="security.encoder_factory"/>
+            <argument>%sulu_core.locales%</argument>
+
             <tag name="console.command" />
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

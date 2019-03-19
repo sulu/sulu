@@ -33,7 +33,11 @@ class CreateRoleCommandTest extends SuluTestCase
         $loadFixturesCommandTester = new CommandTester($loadFixturesCommand);
         $loadFixturesCommandTester->execute([], ['interactive' => false]);
 
-        $createUserCommand = new CreateRoleCommand();
+        $createUserCommand = new CreateRoleCommand(
+            $this->getContainer()->get('doctrine.orm.entity_manager'),
+            $this->getContainer()->get('sulu.repository.role'),
+            $this->getContainer()->get('sulu_admin.admin_pool')
+        );
         $createUserCommand->setApplication($application);
         $this->tester = new CommandTester($createUserCommand);
     }

@@ -4,12 +4,25 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_snippet.command.export" class="Sulu\Bundle\SnippetBundle\Command\SnippetExportCommand">
+            <argument type="service" id="sulu_snippet.export.snippet"/>
+
             <tag name="console.command" />
         </service>
+
         <service id="sulu_snippet.command.import" class="Sulu\Bundle\SnippetBundle\Command\SnippetImportCommand">
+            <argument type="service" id="sulu_snippet.import.snippet"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+
             <tag name="console.command" />
         </service>
+
         <service id="sulu_snippet.command.locale_copy" class="Sulu\Bundle\SnippetBundle\Command\SnippetLocaleCopyCommand">
+             <argument type="service" id="sulu_snippet.repository"/>
+             <argument type="service" id="sulu.content.mapper"/>
+             <argument type="service" id="doctrine_phpcr.session"/>
+             <argument type="service" id="sulu_document_manager.document_manager"/>
+             <argument>%sulu.content.language.namespace%</argument>
+            
             <tag name="console.command" />
         </service>
     </services>

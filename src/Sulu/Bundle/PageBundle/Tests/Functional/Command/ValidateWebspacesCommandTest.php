@@ -34,9 +34,15 @@ class ValidateWebspacesCommandTest extends SuluTestCase
         $application = new Application();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
-        $command = new ValidateWebspacesCommand();
+        $command = new ValidateWebspacesCommand(
+            $this->getContainer()->get('twig'),
+            $this->getContainer()->get('sulu_page.structure.factory'),
+            $this->getContainer()->get('sulu_page.controller_name_converter'),
+            $this->getContainer()->get('sulu.content.structure_manager'),
+            $this->getContainer()->get('sulu.content.webspace_structure_provider'),
+            $this->getContainer()->get('sulu_core.webspace.webspace_manager')
+        );
         $command->setApplication($application);
-        $command->setContainer($this->getContainer());
         $this->tester = new CommandTester($command);
     }
 

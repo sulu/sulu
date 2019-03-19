@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Psr\Log\NullLogger;
+use Sulu\Component\Snippet\Import\SnippetImportInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,12 +25,28 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * Import snippets translations in a specific format.
  */
-class SnippetImportCommand extends ContainerAwareCommand
+class SnippetImportCommand extends Command
 {
+    /**
+     * @var SnippetImportInterface
+     */
+    private $snippetImporter;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(SnippetImportInterface $snippetImporter, LoggerInterface $logger = null)
+    {
+        $this->snippetImporter = $snippetImporter;
+        $this->logger = $logger ?: new NullLogger();
+        parent::__construct('sulu:snippet:import');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:snippet:import')
-            ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
+        $this->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->setDescription('Import Snippets');
@@ -67,8 +85,7 @@ class SnippetImportCommand extends ContainerAwareCommand
 
         $output->writeln('<info>Continue!</info>');
 
-        $webspaceImporter = $this->getContainer()->get('sulu_snippet.import.snippet');
-        $import = $webspaceImporter->import(
+        $import = $this->snippetImporter->import(
             $locale,
             $filePath,
             $output,
@@ -92,9 +109,6 @@ class SnippetImportCommand extends ContainerAwareCommand
      */
     protected function printExceptions($import, $output = null)
     {
-        /** @var LoggerInterface $logger */
-        $logger = $this->getContainer()->get('logger');
-
         if (null === $output) {
             $output = new NullOutput();
         }
@@ -115,7 +129,7 @@ class SnippetImportCommand extends ContainerAwareCommand
         // If more than 20 exceptions write only into log.
         if (count($import->exceptionStore['ignore']) > 20) {
             foreach ($import->exceptionStore['ignore'] as $msg) {
-                $logger->info($msg);
+                $this->logger->info($msg);
             }
 
             return;
@@ -123,7 +137,7 @@ class SnippetImportCommand extends ContainerAwareCommand
 
         foreach ($import->exceptionStore['ignore'] as $msg) {
             $output->writeln('<comment>' . $msg . '</comment>');
-            $logger->info($msg);
+            $this->logger->info($msg);
         }
     }
 }

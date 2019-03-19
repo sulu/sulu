@@ -11,36 +11,43 @@
 
 namespace Sulu\Bundle\MediaBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class InitCommand extends ContainerAwareCommand
+class InitCommand extends Command
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var string
+     */
+    private $formatCacheDir;
+
+    public function __construct(Filesystem $filesystem, string $formatCacheDir)
+    {
+        $this->filesystem = $filesystem;
+        $this->formatCacheDir = $formatCacheDir;
+        parent::__construct('sulu:media:init');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:media:init')
-            ->setDescription('Init Sulu Media Bundle');
+        $this->setDescription('Init Sulu Media Bundle');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $baseDir = dirname($this->getContainer()->get('kernel')->getRootDir());
+        $output->writeln('Create Media Cache dir in ' . $this->formatCacheDir);
 
-        /** @var Filesystem $filesystem */
-        $filesystem = $this->getContainer()->get('filesystem');
-
-        $output->writeln('Create media dirs in ' . $baseDir);
-
-        $mediaCacheDir = $this->getContainer()->getParameter('sulu_media.format_cache.path');
-
-        $output->writeln('Create Media Cache dir in ' . $mediaCacheDir);
-
-        if (!is_dir($mediaCacheDir)) {
-            $filesystem->mkdir($mediaCacheDir);
+        if (!is_dir($this->formatCacheDir)) {
+            $this->filesystem->mkdir($this->formatCacheDir);
         } else {
-            $output->writeLn('Directory ' . $mediaCacheDir . ' already exists');
+            $output->writeLn('Directory "' . $this->formatCacheDir . '"" already exists');
         }
     }
 }

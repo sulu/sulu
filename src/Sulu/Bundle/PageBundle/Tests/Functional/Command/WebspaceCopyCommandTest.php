@@ -45,9 +45,13 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentRegistry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
 
-        $command = new WebspaceCopyCommand();
+        $command = new WebspaceCopyCommand(
+            $this->getContainer()->get('sulu_document_manager.document_manager'),
+            $this->getContainer()->get('sulu.phpcr.session'),
+            $this->getContainer()->get('sulu_document_manager.document_inspector'),
+            $this->getContainer()->get('sulu_markup.parser.html_extractor')
+        );
         $command->setApplication($application);
-        $command->setContainer($this->getContainer());
         $this->tester = new CommandTester($command);
 
         $this->setupPages();

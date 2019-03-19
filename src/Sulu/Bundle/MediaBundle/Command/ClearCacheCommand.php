@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Command;
 
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,12 +20,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Clears the media cache.
  */
-class ClearCacheCommand extends ContainerAwareCommand
+class ClearCacheCommand extends Command
 {
+    /**
+     * @var FormatCacheClearerInterface
+     */
+    private $cacheClearer;
+
+    public function __construct(FormatCacheClearerInterface $cacheClearer)
+    {
+        $this->cacheClearer = $cacheClearer;
+        parent::__construct('sulu:media:format:cache:clear');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:media:format:cache:clear')
-            ->setDescription('Clear all or the given Sulu media format cache')
+        $this->setDescription('Clear all or the given Sulu media format cache')
             ->addArgument('cache', InputArgument::OPTIONAL, 'Optional alias to clear the specific cache')
         ;
     }
@@ -33,10 +43,9 @@ class ClearCacheCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var FormatCacheClearerInterface $cacheClearer */
-        $cacheClearer = $this->getContainer()->get('sulu_media.format_cache_clearer');
         $cache = $input->getArgument('cache');
 
         $output->writeln('Clearing the Sulu media format cache.');
-        $cacheClearer->clear($cache);
+        $this->cacheClearer->clear($cache);
     }
 }

@@ -2,12 +2,20 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_media.command.init" class="Sulu\Bundle\MediaBundle\Command\InitCommand">
+            <argument type="service" id="filesystem"/>
+            <argument>%sulu_media.format_cache.path%</argument>
+
             <tag name="console.command"/>
         </service>
         <service id="sulu_media.command.clear_cache" class="Sulu\Bundle\MediaBundle\Command\ClearCacheCommand">
+            <argument type="service" id="sulu_media.format_cache_clearer"/>
+
             <tag name="console.command"/>
         </service>
         <service id="sulu_media.command.type_update" class="Sulu\Bundle\MediaBundle\Command\MediaTypeUpdateCommand">
+            <argument type="service" id="sulu_media.type_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
             <tag name="console.command"/>
         </service>
     </services>

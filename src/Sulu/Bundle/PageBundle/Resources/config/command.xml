@@ -24,6 +24,10 @@
 
         <service id="sulu_page.command.copy_locale"
                  class="Sulu\Bundle\PageBundle\Command\ContentLocaleCopyCommand">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="doctrine_phpcr.session"/>
+            <argument>%sulu.content.language.namespace%</argument>
+
             <tag name="console.command"/>
         </service>
 
@@ -34,36 +38,63 @@
 
         <service id="sulu_page.command.phpcr_init"
                  class="Sulu\Bundle\PageBundle\Command\PHPCRInitCommand">
+            <argument type="service" id="sulu_page.document_manager.content_initializer"/>
+
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.validate_pages"
                  class="Sulu\Bundle\PageBundle\Command\ValidatePagesCommand">
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.webspace_structure_provider"/>
+
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.validate_webspaces"
                  class="Sulu\Bundle\PageBundle\Command\ValidateWebspacesCommand">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="sulu_page.structure.factory"/>
+            <argument type="service" id="sulu_page.controller_name_converter"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.webspace_structure_provider"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="liip_theme.active_theme" on-invalid="null"/>
+            
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.webspace_copy"
                  class="Sulu\Bundle\PageBundle\Command\WebspaceCopyCommand">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_markup.parser.html_extractor"/>
+
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.webspace_export"
                  class="Sulu\Bundle\PageBundle\Command\WebspaceExportCommand">
+             <argument type="service" id="sulu_page.export.webspace"/>
+
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.webspace_import"
                  class="Sulu\Bundle\PageBundle\Command\WebspaceImportCommand">
+            <argument type="service" id="sulu_page.import.webspace"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+
             <tag name="console.command"/>
         </service>
 
         <service id="sulu_page.command.webspace_init"
                  class="Sulu\Bundle\PageBundle\Command\WebspacesInitCommand">
+            <argument type="service" id="sulu_core.webspace.document_manager.webspace_initializer"/>
+
             <tag name="console.command"/>
         </service>
 

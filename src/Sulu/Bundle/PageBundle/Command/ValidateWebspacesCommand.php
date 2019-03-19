@@ -13,17 +13,18 @@ namespace Sulu\Bundle\PageBundle\Command;
 
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Validates pages.
  */
-class ValidateWebspacesCommand extends ContainerAwareCommand
+class ValidateWebspacesCommand extends Command
 {
     /**
      * @var OutputInterface
@@ -65,29 +66,41 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
      */
     private $activeTheme;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    public function __construct(
+        \Twig_Environment $twig,
+        StructureMetadataFactoryInterface $structureMetadataFactory,
+        ControllerNameParser $controllerNameConverter,
+        StructureManagerInterface $structureManager,
+        WebspaceStructureProvider $structureProvider,
+        WebspaceManagerInterface $webspaceManager,
+        ?string $activeTheme = null
+    ) {
+        $this->twig = $twig;
+        $this->structureMetadataFactory = $structureMetadataFactory;
+        $this->controllerNameConverter = $controllerNameConverter;
+        $this->structureManager = $structureManager;
+        $this->structureProvider = $structureProvider;
+        $this->activeTheme = $activeTheme;
+        $this->webspaceManager = $webspaceManager;
+        parent::__construct('sulu:content:validate:webspaces');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:content:validate:webspaces')
-            ->setDescription('Dumps webspaces and will show an error when template could not be loaded');
+        $this->setDescription('Dumps webspaces and will show an error when template could not be loaded');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->twig = $this->getContainer()->get('twig');
-        $this->structureMetadataFactory = $this->getContainer()->get('sulu_page.structure.factory');
-        $this->controllerNameConverter = $this->getContainer()->get('sulu_page.controller_name_converter');
-        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
-        $this->structureProvider = $this->getContainer()->get('sulu.content.webspace_structure_provider');
-
-        if ($this->getContainer()->has('liip_theme.active_theme')) {
-            $this->activeTheme = $this->getContainer()->get('liip_theme.active_theme');
-        }
-
-        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
 
         /** @var Webspace[] $webspaces */
-        $webspaces = $webspaceManager->getWebspaceCollection();
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
 
         $messages = '';
 

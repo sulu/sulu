@@ -4,6 +4,10 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_route.command.update_route" class="Sulu\Bundle\RouteBundle\Command\UpdateRouteCommand">
+            <argument type="service" id="translator"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_route.manager.route_manager"/>
+
             <tag name="console.command" />
         </service>
     </services>

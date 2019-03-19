@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Jackalope\Query\QueryManager;
-use Jackalope\Session;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Copy internationalized properties from one locale to another.
  */
-class SnippetLocaleCopyCommand extends ContainerAwareCommand
+class SnippetLocaleCopyCommand extends Command
 {
     /**
      * The namespace for languages.
@@ -47,7 +47,7 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
     private $contentMapper;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -66,12 +66,26 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
      */
     private $output;
 
+    public function __construct(
+        SnippetRepository $snippetRepository,
+        ContentMapperInterface $contentMapper,
+        SessionInterface $session,
+        DocumentManagerInterface $documentManager,
+        string $languageNamespace
+    ) {
+        $this->languageNamespace = $languageNamespace;
+        $this->snippetRepository = $snippetRepository;
+        $this->contentMapper = $contentMapper;
+        $this->session = $session;
+        $this->documentManager = $documentManager;
+        parent::__construct('sulu:snippet:locale-copy');
+    }
+
     /**
      * {@inheritdoc}
      */
     public function configure()
     {
-        $this->setName('sulu:snippet:locale-copy');
         $this->setDescription('Copy snippet nodes from one locale to another');
         $this->setHelp(
             <<<'EOT'
@@ -103,12 +117,7 @@ EOT
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
-        $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
-        $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
-        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $this->output = $output;
 

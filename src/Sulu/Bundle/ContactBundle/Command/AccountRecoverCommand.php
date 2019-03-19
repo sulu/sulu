@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Command;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,12 +22,28 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Command for recovering nested tree of accounts.
  * This command is fixing wrong left/right and depths (see -d) assignments of the nested tree.
  */
-class AccountRecoverCommand extends ContainerAwareCommand
+class AccountRecoverCommand extends Command
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var AccountRepositoryInterface
+     */
+    private $accountRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, AccountRepositoryInterface $accountRepository)
+    {
+        $this->entityManager = $entityManager;
+        $this->accountRepository = $accountRepository;
+        parent::__construct('sulu:contacts:accounts:recover');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:contacts:accounts:recover')
-            ->addOption(
+        $this->addOption(
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
@@ -49,11 +65,11 @@ class AccountRecoverCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $force = $input->getOption('force');
         $fixDepth = $input->getOption('fix-depth');
 
-        $repo = $this->getEntityRepository();
+        $repo = $this->accountRepository;
         $verify = $repo->verify();
 
         $success = false;
@@ -123,7 +139,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     private function findInitialWrongDepthGap()
     {
         // get nodes where difference to parents depth > 1
-        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
+        $qb = $this->accountRepository->createQueryBuilder('c2')
             ->select('count(c2.id) as results')
             ->join('c2.parent', 'c1')
             ->where('(c2.depth - 1) <> c1.depth');
@@ -140,7 +156,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
     private function findNodesWithoutParents()
     {
         // get nodes that have no parent but depth > 0
-        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
+        $qb = $this->accountRepository->createQueryBuilder('c2')
             ->select('count(c2.id)')
             ->leftJoin('c2.parent', 'c1')
             ->where('c2.depth <> 0 AND c2.parent IS NULL');
@@ -162,7 +178,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
                 SET c2.depth = (c1.depth + 1)
                 WHERE ( c2.depth - 1 ) <> c1.depth';
 
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->entityManager->getConnection()->prepare($sql);
         if ($statement->execute()) {
             return $statement->rowCount();
         }
@@ -176,27 +192,11 @@ class AccountRecoverCommand extends ContainerAwareCommand
     private function fixNodesWithoutParents()
     {
         // fix nodes that have no parent but depth > 0
-        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
+        $qb = $this->accountRepository->createQueryBuilder('c2')
             ->update()
             ->set('c2.depth', 0)
             ->where('c2.parent IS NULL AND depth != 0');
 
         $qb->getQuery()->execute();
-    }
-
-    /**
-     * @return EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @return AccountRepositoryInterface
-     */
-    private function getEntityRepository()
-    {
-        return $this->getContainer()->get('sulu.repository.account');
     }
 }

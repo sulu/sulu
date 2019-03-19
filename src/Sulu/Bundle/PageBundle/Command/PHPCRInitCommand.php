@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,12 +22,22 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @deprecated use sulu:document:initialize instead
  */
-class PHPCRInitCommand extends ContainerAwareCommand
+class PHPCRInitCommand extends Command
 {
+    /**
+     * @var InitializerInterface
+     */
+    private $contentInitializer;
+
+    public function __construct(InitializerInterface $contentInitializer)
+    {
+        $this->contentInitializer = $contentInitializer;
+        parent::__construct('sulu:phpcr:init');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:phpcr:init')
-            ->addOption('clear', 'c', InputOption::VALUE_OPTIONAL, '', false)
+        $this->addOption('clear', 'c', InputOption::VALUE_OPTIONAL, '', false)
             ->setDescription('initiate phpcr repository (deprecated)');
     }
 
@@ -39,6 +50,6 @@ class PHPCRInitCommand extends ContainerAwareCommand
                 true
             )
         );
-        $this->getContainer()->get('sulu_page.document_manager.content_initializer')->initialize($output);
+        $this->contentInitializer->initialize($output);
     }
 }

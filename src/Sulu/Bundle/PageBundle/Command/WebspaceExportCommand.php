@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Sulu\Component\Content\Export\WebspaceInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Sulu\Component\Content\Export\WebspaceExportInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,12 +22,22 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * Export a webspace in a specific format.
  */
-class WebspaceExportCommand extends ContainerAwareCommand
+class WebspaceExportCommand extends Command
 {
+    /**
+     * @var WebspaceExportInterface
+     */
+    private $webspaceExporter;
+
+    public function __construct(WebspaceExportInterface $webspaceExporter)
+    {
+        $this->webspaceExporter = $webspaceExporter;
+        parent::__construct('sulu:webspaces:export');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:webspaces:export')
-            ->addArgument('target', InputArgument::REQUIRED, 'export.xliff')
+        $this->addArgument('target', InputArgument::REQUIRED, 'export.xliff')
             ->addArgument('webspace', InputArgument::REQUIRED)
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
@@ -82,10 +92,7 @@ class WebspaceExportCommand extends ContainerAwareCommand
             $ignoredNodes = explode(',', $ignoredNodes);
         }
 
-        /** @var WebspaceInterface $webspaceExporter */
-        $webspaceExporter = $this->getContainer()->get('sulu_page.export.webspace');
-
-        $file = $webspaceExporter->export(
+        $file = $this->webspaceExporter->export(
             $webspaceKey,
             $locale,
             $output,

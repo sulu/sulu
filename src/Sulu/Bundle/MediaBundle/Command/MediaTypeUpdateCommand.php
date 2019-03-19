@@ -11,30 +11,50 @@
 
 namespace Sulu\Bundle\MediaBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MediaTypeUpdateCommand extends ContainerAwareCommand
+class MediaTypeUpdateCommand extends Command
 {
+    /**
+     * @var TypeManagerInterface
+     */
+    private $mediaTypeManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * MediaTypeUpdateCommand constructor.
+     *
+     * @param TypeManagerInterface $mediaTypeManager
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(TypeManagerInterface $mediaTypeManager, EntityManagerInterface $entityManager)
+    {
+        $this->mediaTypeManager = $mediaTypeManager;
+        $this->entityManager = $entityManager;
+        parent::__construct('sulu:media:type:update');
+    }
+
     protected function configure()
     {
-        $this->setName('sulu:media:type:update')
-            ->setDescription('Update all media type by the set configuration');
+        $this->setDescription('Update all media type by the set configuration');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $em = $this->entityManager;
         $repo = $em->getRepository('SuluMediaBundle:Media');
         $medias = $repo->findAll();
-        /** @var TypeManagerInterface $typeManager */
-        $typeManager = $this->getContainer()->get('sulu_media.type_manager');
         $counter = 0;
         /** @var MediaInterface $media */
         foreach ($medias as $media) {
@@ -43,10 +63,10 @@ class MediaTypeUpdateCommand extends ContainerAwareCommand
                 /** @var FileVersion $fileVersion */
                 foreach ($file->getFileVersions() as $fileVersion) {
                     if ($fileVersion->getVersion() == $file->getVersion()) {
-                        $mediaTypeId = $typeManager->getMediaType($fileVersion->getMimeType());
+                        $mediaTypeId = $this->mediaTypeManager->getMediaType($fileVersion->getMimeType());
                         if ($media->getType()->getId() != $mediaTypeId) {
                             $oldType = $media->getType();
-                            $newType = $typeManager->get($mediaTypeId);
+                            $newType = $this->mediaTypeManager->get($mediaTypeId);
                             $media->setType($newType);
                             $em->persist($media);
                             ++$counter;

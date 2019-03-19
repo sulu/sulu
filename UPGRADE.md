@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Commands changed
+
+The Sulu commands were refactored to use the `Command` class instead of the `ContainerAwareCommand` class, because some
+services are private and cannot be used anymore without using dependency injection. If you have overridden a command
+before, you have to specify the constructor arguments correctly now.
+
 ### Moved preview functionality of Form view
 
 **This change only affects you if you have used a 2.0.0 alpha release before**

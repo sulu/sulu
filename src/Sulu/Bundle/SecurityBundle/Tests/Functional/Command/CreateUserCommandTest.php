@@ -39,7 +39,16 @@ class CreateUserCommandTest extends SuluTestCase
         $loadFixturesCommandTester = new CommandTester($loadFixturesCommand);
         $loadFixturesCommandTester->execute([], ['interactive' => false]);
 
-        $this->command = new CreateUserCommand();
+        $this->command = new CreateUserCommand(
+            $this->getContainer()->get('doctrine.orm.entity_manager'),
+            $this->getContainer()->get('sulu.repository.user'),
+            $this->getContainer()->get('sulu.repository.role'),
+            $this->getContainer()->get('sulu.repository.contact'),
+            $this->getContainer()->get('sulu.core.localization_manager'),
+            $this->getContainer()->get('sulu_security.salt_generator'),
+            $this->getContainer()->get('sulu_security.encoder_factory'),
+            $this->getContainer()->getParameter('sulu_core.locales')
+        );
         $this->command->setApplication($application);
         $this->tester = new CommandTester($this->command);
     }

@@ -11,30 +11,95 @@
 
 namespace Sulu\Bundle\SecurityBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Persistence\Repository\RepositoryInterface;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
-class CreateUserCommand extends ContainerAwareCommand
+class CreateUserCommand extends Command
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
+     * @var ContactRepositoryInterface
+     */
+    private $contactRepository;
+
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    /**
+     * @var SaltGenerator
+     */
+    private $saltGenerator;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $encoderFactory;
+
+    /**
+     * @var string[]
+     */
+    private $locales;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        RoleRepositoryInterface $roleRepository,
+        ContactRepositoryInterface $contactRepository,
+        LocalizationManagerInterface $localizationManager,
+        SaltGenerator $saltGenerator, EncoderFactoryInterface
+        $encoderFactory,
+        array $locales
+    ) {
+        $this->entityManager = $entityManager;
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+        $this->contactRepository = $contactRepository;
+        $this->localizationManager = $localizationManager;
+        $this->saltGenerator = $saltGenerator;
+        $this->encoderFactory = $encoderFactory;
+        $this->locales = $locales;
+        parent::__construct('sulu:security:user:create');
+    }
+
     /**
      * @see Command
      */
     protected function configure()
     {
-        $this->setName('sulu:security:user:create')
-            ->setDescription('Create a user.')
+        $this->setDescription('Create a user.')
             ->setDefinition(
                 [
                     new InputArgument('username', InputArgument::REQUIRED, 'The username'),
@@ -53,9 +118,8 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $localizations = $this->getContainer()->get('sulu.core.localization_manager')->getLocalizations();
+        $localizations = $this->localizationManager->getLocalizations();
         $locales = [];
-        $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
         foreach ($localizations as $localization) {
             /* @var Localization $localization */
@@ -70,11 +134,9 @@ class CreateUserCommand extends ContainerAwareCommand
         $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
 
-        $doctrine = $this->getDoctrine();
-        $em = $doctrine->getManager();
         $user = $this->getUser();
 
-        $existing = $doctrine->getRepository(get_class($user))->findOneBy(['username' => $username]);
+        $existing = $this->userRepository->findOneBy(['username' => $username]);
 
         if ($existing) {
             $output->writeln(sprintf('<error>User "%s" already exists</error>',
@@ -84,24 +146,22 @@ class CreateUserCommand extends ContainerAwareCommand
             return 1;
         }
 
-        if (!in_array($locale, $userLocales)) {
+        if (!in_array($locale, $this->locales)) {
             $output->writeln(sprintf(
                 'Given locale "%s" is invalid, must be one of "%s"',
-                $locale, implode('", "', $userLocales)
+                $locale, implode('", "', $this->locales)
             ));
 
             return 1;
         }
 
-        /** @var RepositoryInterface $contactRepository */
-        $contactRepository = $this->getContainer()->get('sulu.repository.contact');
         /** @var ContactInterface $contact */
-        $contact = $contactRepository->createNew();
+        $contact = $this->contactRepository->createNew();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
 
-        $em->persist($contact);
-        $em->flush();
+        $this->entityManager->persist($contact);
+        $this->entityManager->flush();
 
         $user->setContact($contact);
         $user->setUsername($username);
@@ -110,10 +170,8 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLocale($locale);
         $user->setEmail($email);
 
-        /* @var RoleRepositoryInterface $contactRepository */
-        $roleRepository = $this->getContainer()->get('sulu.repository.role');
         /** @var RoleInterface $role */
-        $role = $roleRepository->findOneBy(['name' => $roleName]);
+        $role = $this->roleRepository->findOneBy(['name' => $roleName]);
 
         if (!$role) {
             $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
@@ -128,10 +186,10 @@ class CreateUserCommand extends ContainerAwareCommand
         $userRole->setRole($role);
         $userRole->setUser($user);
         $userRole->setLocale(json_encode($locales)); // set all locales
-        $em->persist($userRole);
+        $this->entityManager->persist($userRole);
 
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $output->writeln(
             sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
@@ -146,10 +204,7 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function getUser()
     {
-        /** @var RepositoryInterface $userRepository */
-        $userRepository = $this->getContainer()->get('sulu.repository.user');
-
-        return $userRepository->createNew();
+        return $this->userRepository->createNew();
     }
 
     /**
@@ -159,11 +214,8 @@ class CreateUserCommand extends ContainerAwareCommand
     {
         $roleNames = $this->getRoleNames();
         $helper = $this->getHelper('question');
-        $doctrine = $this->getDoctrine();
-        $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
-        /* @var RepositoryInterface $contactRepository */
-        $userRepository = $this->getContainer()->get('sulu.repository.user');
+        $userRepository = $this->userRepository;
 
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
@@ -241,7 +293,7 @@ class CreateUserCommand extends ContainerAwareCommand
         }
 
         if (!$input->getArgument('locale')) {
-            $question = new ChoiceQuestion('Please choose a locale', $userLocales);
+            $question = new ChoiceQuestion('Please choose a locale', $this->locales);
             $value = $helper->ask($input, $output, $question);
             $input->setArgument('locale', $value);
         }
@@ -281,7 +333,7 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     private function generateSalt()
     {
-        return $this->getContainer()->get('sulu_security.salt_generator')->getRandomSalt();
+        return $this->saltGenerator->getRandomSalt();
     }
 
     /**
@@ -296,7 +348,7 @@ class CreateUserCommand extends ContainerAwareCommand
     private function encodePassword($user, $password, $salt)
     {
         /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
+        $encoder = $this->encoderFactory->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
     }
@@ -310,7 +362,7 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     private function getRoleNames()
     {
-        $roleNames = $this->getContainer()->get('sulu.repository.role')->getRoleNames();
+        $roleNames = $this->roleRepository->getRoleNames();
 
         if (empty($roleNames)) {
             throw new \RuntimeException(sprintf(
@@ -319,15 +371,5 @@ class CreateUserCommand extends ContainerAwareCommand
         }
 
         return $roleNames;
-    }
-
-    /**
-     * Return the doctrine service.
-     *
-     * @return \Doctrine\Common\Persistence\ManagerRegistry
-     */
-    private function getDoctrine()
-    {
-        return $this->getContainer()->get('doctrine');
     }
 }

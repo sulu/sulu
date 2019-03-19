@@ -41,9 +41,12 @@ class ContentLocaleCopyCommandTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentRegistry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
 
-        $command = new ContentLocaleCopyCommand();
+        $command = new ContentLocaleCopyCommand(
+            $this->getContainer()->get('sulu.content.mapper'),
+            $this->getContainer()->get('doctrine_phpcr.session'),
+            $this->getContainer()->getParameter('sulu.content.language.namespace')
+        );
         $command->setApplication($application);
-        $command->setContainer($this->getContainer());
         $this->tester = new CommandTester($command);
     }
 

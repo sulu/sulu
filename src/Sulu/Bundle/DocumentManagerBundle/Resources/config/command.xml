@@ -19,8 +19,9 @@
         </service>
 
         <service id="sulu_document_manager.command.subscriber_debug" class="Sulu\Bundle\DocumentManagerBundle\Command\SubscriberDebugCommand">
+            <argument type="service" id="sulu_document_manager.event_dispatcher"/>
+
             <tag name="console.command" />
         </service>
-
     </services>
 </container>
