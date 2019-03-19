@@ -90,6 +90,7 @@ class CategoryAdmin extends Admin
         $listToolbarActions = [
             'sulu_admin.add',
             'sulu_admin.delete',
+            'sulu_admin.export',
             'sulu_admin.move',
         ];
 

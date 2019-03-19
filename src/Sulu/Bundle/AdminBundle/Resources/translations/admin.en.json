@@ -106,5 +106,17 @@
     "sulu_admin.heading5": "Heading 5",
     "sulu_admin.heading6": "Heading 6",
     "sulu_admin.dirty_warning_dialog_title": "Leave form?",
-    "sulu_admin.dirty_warning_dialog_text": "Changes you made will not be saved."
+    "sulu_admin.dirty_warning_dialog_text": "Changes you made will not be saved.",
+    "sulu_admin.export": "Export",
+    "sulu_admin.export_overlay_title": "Configure data format",
+    "sulu_admin.delimiter": "Delimiter",
+    "sulu_admin.enclosure": "Enclosure",
+    "sulu_admin.escape": "Escape",
+    "sulu_admin.new_line": "New line",
+    "sulu_admin.delimiter_description": "Character for column separation.",
+    "sulu_admin.enclosure_description": "Enclose multiple word entries.",
+    "sulu_admin.escape_description": "Add-on for special characters.",
+    "sulu_admin.new_line_description": "Character for line brake.",
+    "sulu_admin.delimiter_tab": "Tab",
+    "sulu_admin.enclosure_nothing": "Nothing"
 }

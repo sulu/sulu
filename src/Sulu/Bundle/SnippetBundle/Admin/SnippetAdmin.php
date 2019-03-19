@@ -117,6 +117,7 @@ class SnippetAdmin extends Admin
         $listToolbarActions = [
             'sulu_admin.add',
             'sulu_admin.delete',
+            'sulu_admin.export',
         ];
 
         return [
