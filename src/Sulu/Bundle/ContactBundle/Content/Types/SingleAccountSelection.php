@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
-
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -34,8 +33,7 @@ class SingleAccountSelection extends SimpleContentType implements PreResolvableC
     public function __construct(
         AccountManager $accountManager,
         ReferenceStoreInterface $accountReferenceStore
-    )
-    {
+    ) {
         $this->accountManager = $accountManager;
         $this->accountReferenceStore = $accountReferenceStore;
 
