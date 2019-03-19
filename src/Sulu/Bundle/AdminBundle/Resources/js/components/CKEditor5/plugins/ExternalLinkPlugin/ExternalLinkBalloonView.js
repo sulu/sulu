@@ -1,7 +1,8 @@
 // @flow
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import View from '@ckeditor/ckeditor5-ui/src/view';
-import pencilIcon from '@ckeditor/ckeditor5-core/theme/icons/pencil.svg';
+// $FlowFixMe
+import editIcon from '!!raw-loader!./edit.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 // $FlowFixMe
 import unlinkIcon from '!!raw-loader!./unlink.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -28,7 +29,7 @@ export default class ExternalLinkBalloonView extends View {
 
         const editButtonView = new ButtonView(this.locale);
         editButtonView.set({
-            icon: pencilIcon,
+            icon: editIcon,
         });
 
         const unlinkButtonView = new ButtonView(this.locale);
