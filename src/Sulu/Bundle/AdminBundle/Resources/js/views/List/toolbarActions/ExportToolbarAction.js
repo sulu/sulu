@@ -39,7 +39,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
                                 <SingleSelect onChange={this.handleDelimiterChanged} value={this.delimiter}>
                                     <SingleSelect.Option value=";">;</SingleSelect.Option>
                                     <SingleSelect.Option value=",">,</SingleSelect.Option>
-                                    <SingleSelect.Option value="tab">
+                                    <SingleSelect.Option value="\t">
                                         {translate('sulu_admin.delimiter_tab')}
                                     </SingleSelect.Option>
                                 </SingleSelect>
@@ -85,6 +85,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
 
     getToolbarItemConfig() {
         return {
+            disabled: this.listStore.data.length === 0,
             icon: 'su-download',
             label: translate('sulu_admin.export'),
             onClick: action(() => {
@@ -101,12 +102,15 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     @action handleDelimiterChanged = (value: string) => {
         this.delimiter = value;
     };
+
     @action handleEnclosureChanged = (value: string) => {
         this.enclosure = value;
     };
+
     @action handleEscapeChanged = (value: string) => {
         this.escape = value;
     };
+
     @action handleNewLineChanged = (value: string) => {
         this.newLine = value;
     };
@@ -114,7 +118,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
     @action handleConfirm = () => {
         window.location.assign(resourceRouteRegistry.getListUrl(this.listStore.resourceKey, {
             _format: 'csv',
-            locale: this.list.locale,
+            locale: this.list.locale.get(),
             flat: true,
             delimiter: this.delimiter,
             escape: this.escape,
