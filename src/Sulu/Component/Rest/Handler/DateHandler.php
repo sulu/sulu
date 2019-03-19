@@ -34,7 +34,19 @@ class DateHandler implements SubscribingHandlerInterface
                 'method' => 'deserialize',
             ],
             [
+                'type' => 'DateTimeImmutable',
+                'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
+                'format' => 'array',
+                'method' => 'deserialize',
+            ],
+            [
                 'type' => 'DateTime',
+                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'format' => 'array',
+                'method' => 'serialize',
+            ],
+            [
+                'type' => 'DateTimeImmutable',
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'array',
                 'method' => 'serialize',
