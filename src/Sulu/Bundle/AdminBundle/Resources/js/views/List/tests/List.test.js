@@ -1027,7 +1027,7 @@ test('Export method should be called when the export-button is pressed', () => {
     list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
     expect(resourceRouteRegistry.getListUrl).toBeCalledWith('test', {
         _format: 'csv',
-        locale: list.instance().locale,
+        locale: list.instance().locale.get(),
         flat: true,
         delimiter: ';',
         escape: '\\',
