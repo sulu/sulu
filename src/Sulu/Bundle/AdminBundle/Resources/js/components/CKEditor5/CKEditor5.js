@@ -101,8 +101,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     'alignment:justify',
                     'bulletedlist',
                     'numberedlist',
-                    'insertTable',
                     'externalLink',
+                    'insertTable',
                 ],
                 heading: {
                     options: [
