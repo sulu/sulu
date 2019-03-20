@@ -635,3 +635,30 @@ test('Should call disposer when component unmounts', () => {
 
     expect(changeDisposerSpy).toBeCalledWith();
 });
+
+test('Construct SearchStore with correct parameters on mount', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {});
+
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementation(function() {
+        mockExtendObservable(this, {
+            items: [],
+        });
+    });
+
+    shallow(
+        <MultiAutoComplete
+            allowAdd={true}
+            displayProperty="name"
+            idProperty="name"
+            onChange={jest.fn()}
+            options={{country: 'US'}}
+            resourceKey="contact"
+            searchProperties={['firstName', 'lastName']}
+            value={undefined}
+        />
+    );
+
+    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'});
+});
