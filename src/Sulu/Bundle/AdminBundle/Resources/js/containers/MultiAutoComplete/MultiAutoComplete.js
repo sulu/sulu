@@ -17,6 +17,7 @@ type Props = {|
     idProperty: string,
     locale?: ?IObservableValue<string>,
     onChange: (value: Array<string | number>) => void,
+    options: Object,
     resourceKey: string,
     searchProperties: Array<string>,
     value: ?Array<string | number>,
@@ -29,6 +30,7 @@ export default class MultiAutoComplete extends React.Component<Props> {
         disabled: false,
         filterParameter: 'ids',
         idProperty: 'id',
+        options: {},
     };
 
     searchStore: SearchStore;
@@ -42,12 +44,13 @@ export default class MultiAutoComplete extends React.Component<Props> {
             filterParameter,
             idProperty,
             locale,
+            options,
             resourceKey,
             searchProperties,
             value,
         } = this.props;
 
-        this.searchStore = new SearchStore(resourceKey, searchProperties);
+        this.searchStore = new SearchStore(resourceKey, searchProperties, options);
         this.selectionStore = new MultiSelectionStore(resourceKey, value || [], locale, filterParameter);
         this.changeDisposer = reaction(
             () => (this.selectionStore.items.map((item) => item[idProperty])),

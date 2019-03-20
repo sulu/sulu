@@ -6,12 +6,14 @@ import ResourceRequester from '../../services/ResourceRequester';
 export default class SearchStore {
     resourceKey: string;
     searchProperties: Array<string>;
+    options: Object;
     @observable searchResults: Array<Object> = [];
     @observable loading: boolean = false;
 
-    constructor(resourceKey: string, searchProperties: Array<string>) {
+    constructor(resourceKey: string, searchProperties: Array<string>, options: Object = {}) {
         this.resourceKey = resourceKey;
         this.searchProperties = searchProperties;
+        this.options = options;
     }
 
     @action clearSearchResults = () => {
@@ -29,6 +31,7 @@ export default class SearchStore {
         this.loading = true;
 
         return ResourceRequester.getList(resourceKey, {
+            ...this.options,
             excludedIds,
             limit: 10,
             page: 1,

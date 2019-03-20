@@ -10,6 +10,7 @@ type Props = {|
     id?: string,
     searchProperties: Array<string>,
     onChange: (value: ?Object) => void,
+    options: Object,
     resourceKey: string,
     value: ?Object,
 |};
@@ -18,6 +19,7 @@ type Props = {|
 export default class SingleAutoComplete extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        options: {},
     };
 
     searchStore: SearchStore;
@@ -25,9 +27,9 @@ export default class SingleAutoComplete extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {resourceKey, searchProperties} = this.props;
+        const {options, resourceKey, searchProperties} = this.props;
 
-        this.searchStore = new SearchStore(resourceKey, searchProperties);
+        this.searchStore = new SearchStore(resourceKey, searchProperties, options);
     }
 
     handleChange = (value: ?Object) => {
