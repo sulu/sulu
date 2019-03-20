@@ -147,3 +147,25 @@ test('Call onChange and clear search result when chosen option has changed', () 
     expect(changeSpy).toBeCalledWith(data);
     expect(singleAutoComplete.instance().searchStore.clearSearchResults).toBeCalledWith();
 });
+
+test('Construct SearchStore with correct parameters on mount', () => {
+    // $FlowFixMe
+    SearchStore.mockImplementation(function() {
+        this.searchResults = [];
+        this.loading = false;
+        this.search = jest.fn();
+    });
+
+    shallow(
+        <SingleAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            options={{country: 'US'}}
+            resourceKey="contact"
+            searchProperties={['firstName', 'lastName']}
+            value={undefined}
+        />
+    );
+
+    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'});
+});
