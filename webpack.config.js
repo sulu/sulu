@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* eslint-disable import/no-nodejs-modules*/
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
@@ -7,6 +8,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
+
+const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
@@ -72,7 +75,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     test: /\.js$/,
                     exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
-                    use: 'babel-loader',
+                    use: {
+                        loader: 'babel-loader',
+                        options: babelConfig,
+                    },
                 },
                 {
                     test: /\.css/,

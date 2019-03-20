@@ -140,10 +140,12 @@ test('Set data on editor when value is updated', () => {
                 on: jest.fn(),
             },
         },
-        element: {
-            classList: {
-                add: jest.fn(),
-                remove: jest.fn(),
+        ui: {
+            element: {
+                classList: {
+                    add: jest.fn(),
+                    remove: jest.fn(),
+                },
             },
         },
         getData: jest.fn(),
@@ -176,10 +178,12 @@ test('Do not set data on editor when value is not changed when props change', ()
                 on: jest.fn(),
             },
         },
-        element: {
-            classList: {
-                add: jest.fn(),
-                remove: jest.fn(),
+        ui: {
+            element: {
+                classList: {
+                    add: jest.fn(),
+                    remove: jest.fn(),
+                },
             },
         },
         getData: jest.fn().mockReturnValue('<p>Test</p>'),
@@ -213,10 +217,12 @@ test('Do not set data on editor when value and editorData is undefined', () => {
                 on: jest.fn(),
             },
         },
-        element: {
-            classList: {
-                add: jest.fn(),
-                remove: jest.fn(),
+        ui: {
+            element: {
+                classList: {
+                    add: jest.fn(),
+                    remove: jest.fn(),
+                },
             },
         },
         getData: jest.fn().mockReturnValue(),
@@ -250,9 +256,11 @@ test('Set disabled class and isReadOnly property to CKEditor5', () => {
                 on: jest.fn(),
             },
         },
-        element: {
-            classList: {
-                add: jest.fn(),
+        ui: {
+            element: {
+                classList: {
+                    add: jest.fn(),
+                },
             },
         },
         isReadOnly: false,
@@ -266,7 +274,7 @@ test('Set disabled class and isReadOnly property to CKEditor5', () => {
 
     return editorPromise.then(() => {
         expect(ClassicEditor.create).toBeCalled();
-        expect(editor.element.classList.add).toBeCalledWith('disabled');
+        expect(editor.ui.element.classList.add).toBeCalledWith('disabled');
         expect(editor.isReadOnly).toEqual(true);
     });
 });
