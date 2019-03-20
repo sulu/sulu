@@ -123,14 +123,11 @@ class TemplateAttributeResolverTest extends TestCase
         $this->webspace->getKey()->willReturn($webspacePortalKey);
         $this->webspace->getName()->willReturn($webspacePortalName);
 
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn(Localization::createFromString('de'));
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
         $this->requestAnalyzer->getResourceLocator()->willReturn('/test');
         $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal());
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
-        $this->requestAnalyzer->getGetParameters()->willReturn([]);
-        $this->requestAnalyzer->getPostParameters()->willReturn([]);
         $this->requestAnalyzer->getAnalyticsKey()->willReturn('123-123-123');
 
         $this->request->get('_route')->willReturn('test');
@@ -175,14 +172,11 @@ class TemplateAttributeResolverTest extends TestCase
                 'webspaceKey' => 'sulu_io',
                 'webspaceName' => 'Sulu',
                 'defaultLocale' => 'en',
-                'locale' => 'de',
                 'portalKey' => 'sulu_io',
                 'portalName' => 'Sulu',
                 'portalUrl' => 'sulu.io/de',
                 'resourceLocatorPrefix' => '/de',
                 'resourceLocator' => '/test',
-                'get' => [],
-                'post' => [],
                 'analyticsKey' => '123-123-123',
             ],
         ], $resolved);

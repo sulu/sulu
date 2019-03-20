@@ -130,20 +130,6 @@ interface RequestAnalyzerInterface
     public function getResourceLocatorPrefix();
 
     /**
-     * Returns the post parameters.
-     *
-     * @return array
-     */
-    public function getPostParameters();
-
-    /**
-     * Returns the get parameters.
-     *
-     * @return array
-     */
-    public function getGetParameters();
-
-    /**
      * Returns the analytics key.
      *
      * @return string

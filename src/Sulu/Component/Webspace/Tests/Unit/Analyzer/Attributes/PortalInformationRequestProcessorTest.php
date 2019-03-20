@@ -87,8 +87,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals($expected['resource_locator'], $attributes->getAttribute('resourceLocator'));
         $this->assertEquals($expected['resource_locator_prefix'], $attributes->getAttribute('resourceLocatorPrefix'));
         $this->assertEquals($expected['url_expression'], $attributes->getAttribute('urlExpression'));
-        $this->assertEquals(['post' => 1], $attributes->getAttribute('postParameter'));
-        $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
     /**
@@ -146,8 +144,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals($expected['resource_locator'], $attributes->getAttribute('resourceLocator'));
         $this->assertEquals($expected['resource_locator_prefix'], $attributes->getAttribute('resourceLocatorPrefix'));
         $this->assertEquals($expected['url_expression'], $attributes->getAttribute('urlExpression'));
-        $this->assertEquals(['post' => 1], $attributes->getAttribute('postParameter'));
-        $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
     /**
@@ -204,8 +200,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals($expected['resource_locator'], $attributes->getAttribute('resourceLocator'));
         $this->assertEquals($expected['resource_locator_prefix'], $attributes->getAttribute('resourceLocatorPrefix'));
         $this->assertEquals($expected['format'], $attributes->getAttribute('format'));
-        $this->assertEquals(['post' => 1], $attributes->getAttribute('postParameter'));
-        $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
     public function testValidate()
