@@ -15,6 +15,7 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
+import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import './ckeditor5.scss';
 
 type Props = {|
@@ -57,9 +58,9 @@ export default class CKEditor5 extends React.Component<Props> {
 
             this.editorInstance.isReadOnly = disabled;
             if (disabled) {
-                this.editorInstance.element.classList.add('disabled');
+                this.editorInstance.ui.element.classList.add('disabled');
             } else {
-                this.editorInstance.element.classList.remove('disabled');
+                this.editorInstance.ui.element.classList.remove('disabled');
             }
 
             const editorData = this.getEditorData();
@@ -80,6 +81,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     EssentialsPlugin,
                     HeadingPlugin,
                     ItalicPlugin,
+                    ExternalLinkPlugin,
                     ListPlugin,
                     ParagraphPlugin,
                     StrikethroughPlugin,
@@ -89,20 +91,17 @@ export default class CKEditor5 extends React.Component<Props> {
                 ],
                 toolbar: [
                     'heading',
-                    '|',
                     'bold',
                     'italic',
                     'underline',
                     'strikethrough',
-                    '|',
                     'alignment:left',
                     'alignment:center',
                     'alignment:right',
                     'alignment:justify',
-                    '|',
                     'bulletedlist',
                     'numberedlist',
-                    '|',
+                    'externalLink',
                     'insertTable',
                 ],
                 heading: {
@@ -177,7 +176,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
                 this.editorInstance.isReadOnly = disabled;
                 if (disabled) {
-                    this.editorInstance.element.classList.add('disabled');
+                    this.editorInstance.ui.element.classList.add('disabled');
                 }
 
                 if (onBlur) {

@@ -11,6 +11,7 @@ $textEditorAccentColor: $shakespeare;
 $textEditorLightAccentColor: #e5f4f7;
 $textEditorWhiteHover: $mercury;
 $textEditorPanelBackground: $white;
+$textEditorLinkColor: $blue;
 
 :global {
     :root {
@@ -102,6 +103,19 @@ $textEditorPanelBackground: $white;
         &.disabled {
             opacity: .5;
             pointer-events: none;
+        }
+    }
+
+    .ck {
+        a {
+            color: $textEditorLinkColor !important;
+            text-decoration: underline !important;
+        }
+    }
+
+    .ck-preview-button {
+        .ck-button__label {
+            cursor: pointer !important;
         }
     }
 }

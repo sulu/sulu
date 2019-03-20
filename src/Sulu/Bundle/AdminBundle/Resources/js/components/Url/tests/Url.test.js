@@ -128,7 +128,7 @@ test('Call onChange callback when path was changed', () => {
     expect(changeSpy).toBeCalledWith('https://sulu.at');
 });
 
-test('Do not call onChange callback when path was changed but not blurred', () => {
+test('Call onChange callback when path was changed but not blurred', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
@@ -137,7 +137,19 @@ test('Do not call onChange callback when path was changed but not blurred', () =
         },
     });
 
-    expect(changeSpy).not.toBeCalled();
+    expect(changeSpy).toBeCalledWith('https://sulu.at');
+});
+
+test('Call onChange callback with undefined when path was changed to invalid url but not blurred', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: 'sulu.a',
+        },
+    });
+
+    expect(changeSpy).toBeCalledWith(undefined);
 });
 
 test('Call onChange callback with undefined if URL is not valid but leave the current value', () => {

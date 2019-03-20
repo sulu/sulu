@@ -1,5 +1,5 @@
 // @flow
-import createHistory from 'history/createHashHistory';
+import {createHashHistory} from 'history';
 import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
@@ -249,7 +249,7 @@ function processConfig(config: Object) {
 }
 
 function startApplication() {
-    const router = new Router(createHistory());
+    const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
 
     initializer.initialize().then(() => {

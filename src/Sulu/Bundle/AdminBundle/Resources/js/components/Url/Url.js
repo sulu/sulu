@@ -72,8 +72,7 @@ export default class Url extends React.Component<Props> {
             return;
         }
 
-        this.validUrl = this.isValidUrl(this.url);
-        onChange(this.validUrl ? this.url : undefined);
+        onChange(this.isValidUrl(this.url) ? this.url : undefined);
     };
 
     @action setUrl(url: ?string) {
@@ -141,10 +140,14 @@ export default class Url extends React.Component<Props> {
             this.protocol = protocol;
             this.path = path.substring(this.protocol.length);
         }
+
+        this.callChangeCallback();
     };
 
     @action handlePathBlur = () => {
         const {onBlur, value} = this.props;
+
+        this.validUrl = this.isValidUrl(this.url);
 
         if (this.url !== value) {
             this.callChangeCallback();
