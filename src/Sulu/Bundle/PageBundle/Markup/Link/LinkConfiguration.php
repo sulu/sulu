@@ -11,43 +11,19 @@
 
 namespace Sulu\Bundle\PageBundle\Markup\Link;
 
-/**
- * Contains configuration for teaser provider.
- */
-class LinkConfiguration implements \JsonSerializable
+use JMS\Serializer\Annotation\Groups;
+
+class LinkConfiguration
 {
     /**
      * @var string
+     * @Groups({"frontend"})
      */
-    protected $title;
+    private $title;
 
-    /**
-     * @var string
-     */
-    protected $component;
-
-    /**
-     * @var array
-     */
-    protected $componentOptions;
-
-    /**
-     * @var array
-     */
-    private $slideOptions;
-
-    /**
-     * @param string $title
-     * @param string $component
-     * @param array $componentOptions
-     * @param array $slideOptions
-     */
-    public function __construct($title, $component, array $componentOptions = [], array $slideOptions = [])
+    public function __construct(string $title)
     {
         $this->title = $title;
-        $this->component = $component;
-        $this->componentOptions = $componentOptions;
-        $this->slideOptions = $slideOptions;
     }
 
     /**
@@ -58,48 +34,5 @@ class LinkConfiguration implements \JsonSerializable
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Returns component-name.
-     *
-     * @return string
-     */
-    public function getComponent()
-    {
-        return $this->component;
-    }
-
-    /**
-     * Returns component-options.
-     *
-     * @return array
-     */
-    public function getComponentOptions()
-    {
-        return $this->componentOptions;
-    }
-
-    /**
-     * Returns slide-options.
-     *
-     * @return array
-     */
-    public function getSlideOptions()
-    {
-        return $this->slideOptions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'title' => $this->title,
-            'component' => $this->component,
-            'componentOptions' => $this->componentOptions,
-            'slideOptions' => $this->slideOptions,
-        ];
     }
 }

@@ -21,6 +21,7 @@ use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PageLinkProviderTest extends TestCase
 {
@@ -43,6 +44,11 @@ class PageLinkProviderTest extends TestCase
      * @var RequestStack
      */
     protected $requestStack;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * @var string
@@ -75,6 +81,7 @@ class PageLinkProviderTest extends TestCase
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->request->getScheme()->willReturn($this->scheme);
 
@@ -82,16 +89,17 @@ class PageLinkProviderTest extends TestCase
             $this->contentRepository->reveal(),
             $this->webspaceManager->reveal(),
             $this->requestStack->reveal(),
+            $this->translator->reveal(),
             $this->environment
         );
     }
 
     public function testGetConfiguration()
     {
+        $this->translator->trans('sulu_page.pages', [], 'admin')->willReturn('Pages');
         $configuration = $this->pageLinkProvider->getConfiguration();
 
-        $this->assertEquals('content.ckeditor.page-link', $configuration->getTitle());
-        $this->assertEquals('ckeditor/link/page@sulupage', $configuration->getComponent());
+        $this->assertEquals('Pages', $configuration->getTitle());
     }
 
     public function testPreload()

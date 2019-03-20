@@ -1,5 +1,9 @@
 // @flow
+import {when} from 'mobx';
 import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {translate} from 'sulu-admin-bundle/utils';
+// TODO move CKEditor5 to containers, because components are not allowed to have registries
+import {internalLinkTypeRegistry} from 'sulu-admin-bundle/components/CKEditor5';
 import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
@@ -47,6 +51,13 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         FIELD_TYPE_SINGLE_MEDIA_SELECTION,
         new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl),
         2048
+    );
+
+    when(
+        () => !!initializer.initializedTranslationsLocale,
+        (): void => {
+            internalLinkTypeRegistry.add('media', translate('sulu_media.media'));
+        }
     );
 });
 

@@ -24,6 +24,7 @@ use Sulu\Component\Content\Repository\Mapping\Mapping;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class LinkTagTest extends TestCase
 {
@@ -46,6 +47,11 @@ class LinkTagTest extends TestCase
      * @var Request
      */
     private $request;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var string
@@ -72,12 +78,17 @@ class LinkTagTest extends TestCase
         $this->request->getScheme()->willReturn('http');
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
 
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+
+        $this->environment = 'prod';
+
         $this->linkProviderPool = new LinkProviderPool(
             [
                 'page' => new PageLinkProvider(
                     $this->contentRepository->reveal(),
                     $this->webspaceManager->reveal(),
                     $this->requestStack->reveal(),
+                    $this->translator->reveal(),
                     $this->environment
                 ),
             ]

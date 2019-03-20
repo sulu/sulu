@@ -18,6 +18,7 @@
             <argument type="service" id="sulu_page.content_repository"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.link.provider" alias="page"/>

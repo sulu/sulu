@@ -24,6 +24,8 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+// TODO move CKEditor5 to containers, because components are not allowed to have registries
+import {internalLinkTypeRegistry} from './components/CKEditor5';
 import {
     BoolFieldTransformer,
     BytesFieldTransformer,
@@ -84,7 +86,6 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 
-// $FlowFixMe
 configure({enforceActions: 'observed'});
 
 if (!window.ResizeObserver) {
@@ -125,6 +126,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListFieldTransformers();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
+        registerInternalLinkTypes(config.internalLinkTypes);
         registerFormToolbarActions();
         registerListToolbarActions();
         registerViews();
@@ -220,6 +222,13 @@ function registerBlockPreviewTransformers() {
 
 function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
+}
+
+function registerInternalLinkTypes(internalLinkTypes) {
+    for (const internalLinkTypeKey in internalLinkTypes) {
+        const internalLinkType = internalLinkTypes[internalLinkTypeKey];
+        internalLinkTypeRegistry.add(internalLinkTypeKey, internalLinkType.title);
+    }
 }
 
 function registerFormToolbarActions() {
