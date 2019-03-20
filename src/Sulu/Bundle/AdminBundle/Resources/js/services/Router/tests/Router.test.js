@@ -1,6 +1,6 @@
 // @flow
 import 'url-search-params-polyfill';
-import createHistory from 'history/createMemoryHistory';
+import {createMemoryHistory} from 'history';
 import {extendObservable, observable, isObservable} from 'mobx';
 import Router from '../Router';
 import routeRegistry from '../registries/RouteRegistry';
@@ -29,7 +29,7 @@ test('Navigate to route using state', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
@@ -61,7 +61,7 @@ test('Redirect to route using state', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('test', {uuid: 'some-uuid'});
@@ -88,7 +88,7 @@ test('Navigate to route with search parameters using state', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', page: 1, sort: 'title'});
@@ -112,7 +112,7 @@ test('Navigate to route without parameters using state', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
@@ -131,7 +131,7 @@ test('Navigate to route with default attribute', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('list');
@@ -153,7 +153,7 @@ test('Navigate to route without default attribute when observable is changed', (
 
     const locale = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('locale', locale);
@@ -180,7 +180,7 @@ test('Apply updateAttributesHooks before applying default attributes but after p
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.addUpdateAttributesHook((route) => {
@@ -220,7 +220,7 @@ test('Apply attribute defaults if value of passed attribute is undefined', () =>
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.handleNavigation('webspace_overview', {locale: 'en', webspace: undefined}, router.navigate);
@@ -243,7 +243,7 @@ test('Update observable attribute on route change', () => {
 
     const locale = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('locale', locale);
@@ -271,7 +271,7 @@ test('Update boolean observable attribute on route change', () => {
 
     const exclude = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('exclude', exclude);
@@ -296,7 +296,7 @@ test('Navigate to route using URL', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     history.push('/pages/some-uuid/value');
@@ -320,7 +320,7 @@ test('Navigate to route using URL with search parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     history.push('/pages/some-uuid/value?page=1&sort=date');
@@ -344,7 +344,7 @@ test('Navigate to route changing only parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
@@ -364,7 +364,7 @@ test('Navigate to route by adding parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
@@ -384,7 +384,7 @@ test('Navigate to route by removing parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', value: 'test'});
@@ -404,7 +404,7 @@ test('Navigate to route changing only search parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', sort: 'date'});
@@ -426,7 +426,7 @@ test('Navigate to route by adding search parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', sort: 'date'});
@@ -448,7 +448,7 @@ test('Navigate to route by removing search parameters', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', sort: 'date', order: 'asc'});
@@ -476,7 +476,7 @@ test('Navigate to route and let history react', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page');
@@ -494,7 +494,7 @@ test('Do not navigate if all parameters are equal', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid'});
@@ -515,7 +515,7 @@ test('Use current route from URL', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     history.push('/page');
 
     const router = new Router(history);
@@ -535,7 +535,7 @@ test('Binding should update passed observable', () => {
 
     const value = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('page', value);
@@ -556,7 +556,7 @@ test('Binding should update state in router', () => {
 
     const page = observable.box(1);
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('list', {page: 1});
@@ -579,7 +579,7 @@ test('Binding should set default attribute', () => {
 
     const locale = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('locale', locale, 'en');
@@ -600,7 +600,7 @@ test('Binding should update URL with fixed attributes', () => {
 
     const uuid = observable.box(1);
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 1, locale: 'de'});
@@ -624,7 +624,7 @@ test('Binding should update URL with fixed attributes as string if not a number'
 
     const uuid = observable.box('old-uuid');
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', locale: 'de'});
@@ -649,7 +649,7 @@ test('Binding should update state in router with other default bindings', () => 
     const page = observable.box();
     const locale = observable.box('en');
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('page', page, '1');
@@ -673,7 +673,7 @@ test('Do not add parameter to URL if undefined', () => {
 
     const value = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('page', value);
@@ -693,7 +693,7 @@ test('Set state to undefined if parameter is removed from URL', () => {
 
     const value = observable.box(5);
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('page', value);
@@ -713,7 +713,7 @@ test('Bound query should update state to default value if removed from URL', () 
 
     const value = observable.box(5);
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.bind('page', value, '1');
@@ -733,7 +733,7 @@ test('Bound query should omit URL parameter if set to default value', () => {
 
     const value = observable.box('5');
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
     router.navigate('list');
 
@@ -754,7 +754,7 @@ test('Bound query should initially not be set to undefined in URL', () => {
 
     const value = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     history.push('/list');
     const router = new Router(history);
     router.bind('page', value, '1');
@@ -774,7 +774,7 @@ test('Binding should be set to initial passed value from URL', () => {
 
     const value = observable.box();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     history.push('/list?page=2');
     const router = new Router(history);
     router.bind('page', value, 1);
@@ -800,7 +800,7 @@ test('Binding should not be set to initial passed value from URL if values alrea
         set: jest.fn(),
     };
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     history.push('/list?page=2');
     const router = new Router(history);
     router.bind('page', value, 1);
@@ -825,7 +825,7 @@ test('Binding should not be updated if only data type changes', () => {
         intercept: jest.fn(),
     }))();
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
     router.bind('page', page);
 
@@ -878,7 +878,7 @@ test('Navigate to child route using state', () => {
         'sulu_snippet.form.taxonomy': taxonomyRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('sulu_snippet.form.details', {uuid: 'some-uuid'});
@@ -941,7 +941,7 @@ test('Navigate to child route using URL', () => {
         'sulu_snippet.form.taxonomy': taxonomyRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     history.push('/snippets/some-uuid/details');
@@ -984,7 +984,7 @@ test('Navigating should store the old route information', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'page-uuid', locale: 'en'});
@@ -1026,7 +1026,7 @@ test('Navigating to route with defaults should store the old route information o
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'page-uuid'});
@@ -1062,7 +1062,7 @@ test('Restore should navigate to the given route with the stored data', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('snippet', {uuid: 'snippet-uuid', locale: 'de'});
@@ -1097,7 +1097,7 @@ test('Restore should navigate to the given route with passed data being merged',
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('snippet', {uuid: 'uuid', test: 'other-test', locale: 'en', parameter: 'other-value'});
@@ -1124,7 +1124,7 @@ test('Restore should just navigate if no history is available', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.restore('page', {uuid: 'page-uuid', locale: 'de'});
@@ -1146,7 +1146,7 @@ test('Restore should not create a new history entry', () => {
         },
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'page-uuid', locale: 'de'});
@@ -1159,7 +1159,7 @@ test('Restore should not create a new history entry', () => {
 });
 
 test('Add and remove updateRouteHooks', () => {
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     const updateRouteHook1 = jest.fn();
@@ -1192,7 +1192,7 @@ test('Cancel navigation if an updateRouteHook returns false', () => {
         webspace_overview: webspaceOverviewRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     const updateRouteHook1 = jest.fn().mockReturnValue(false);
@@ -1229,7 +1229,7 @@ test('Navigate if all updateRouteHooks return true', () => {
         webspace_overview: webspaceOverviewRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     const updateRouteHook1 = jest.fn().mockReturnValue(true);
@@ -1270,7 +1270,7 @@ test('Redirect if all updateRouteHooks return true', () => {
         webspace_overview: webspaceOverviewRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     const updateRouteHook1 = jest.fn().mockReturnValue(true);
@@ -1311,7 +1311,7 @@ test('Restore if all updateRouteHooks return true', () => {
         webspace_overview: webspaceOverviewRoute,
     });
 
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     const updateRouteHook1 = jest.fn().mockReturnValue(true);
@@ -1339,7 +1339,7 @@ test('Restore if all updateRouteHooks return true', () => {
 });
 
 test('Ask for confirmation to close window if a updateRouteHooks prevents it', () => {
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());
@@ -1362,7 +1362,7 @@ test('Ask for confirmation to close window if a updateRouteHooks prevents it', (
 });
 
 test('Do not ask for confirmation to close window if no updateRouteHooks prevents it', () => {
-    const history = createHistory();
+    const history = createMemoryHistory();
     const router = new Router(history);
 
     expect(window.addEventListener).toBeCalledWith('beforeunload', expect.anything());

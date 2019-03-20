@@ -58,9 +58,9 @@ export default class CKEditor5 extends React.Component<Props> {
 
             this.editorInstance.isReadOnly = disabled;
             if (disabled) {
-                this.editorInstance.element.classList.add('disabled');
+                this.editorInstance.ui.element.classList.add('disabled');
             } else {
-                this.editorInstance.element.classList.remove('disabled');
+                this.editorInstance.ui.element.classList.remove('disabled');
             }
 
             const editorData = this.getEditorData();
@@ -181,7 +181,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
                 this.editorInstance.isReadOnly = disabled;
                 if (disabled) {
-                    this.editorInstance.element.classList.add('disabled');
+                    this.editorInstance.ui.element.classList.add('disabled');
                 }
 
                 if (onBlur) {

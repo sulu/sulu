@@ -3,8 +3,6 @@ import React from 'react';
 import {Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import {downcastAttributeToElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
-import {upcastAttributeToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
@@ -93,35 +91,35 @@ export default class ExternalLinkPlugin extends Plugin {
         this.editor.model.schema.extend('$text', {allowAttributes: 'linkTarget'});
         this.editor.model.schema.extend('$text', {allowAttributes: 'linkHref'});
 
-        this.editor.conversion.for('upcast').add(upcastAttributeToAttribute({
+        this.editor.conversion.for('upcast').attributeToAttribute({
             view: {
                 name: 'a',
                 key: 'target',
             },
             model: 'linkTarget',
-        }));
+        });
 
-        this.editor.conversion.for('downcast').add(downcastAttributeToElement({
+        this.editor.conversion.for('downcast').attributeToElement({
             model: 'linkTarget',
             view: (attributeValue, writer) => {
                 return writer.createAttributeElement('a', {target: attributeValue});
             },
-        }));
+        });
 
-        this.editor.conversion.for('upcast').add(upcastAttributeToAttribute({
+        this.editor.conversion.for('upcast').attributeToAttribute({
             view: {
                 name: 'a',
                 key: 'href',
             },
             model: 'linkHref',
-        }));
+        });
 
-        this.editor.conversion.for('downcast').add(downcastAttributeToElement({
+        this.editor.conversion.for('downcast').attributeToElement({
             model: 'linkHref',
             view: (attributeValue, writer) => {
                 return writer.createAttributeElement('a', {href: attributeValue});
             },
-        }));
+        });
 
         const view = this.editor.editing.view;
         view.addObserver(ClickObserver);
