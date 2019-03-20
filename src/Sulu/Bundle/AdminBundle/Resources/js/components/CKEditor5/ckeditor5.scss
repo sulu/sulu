@@ -112,4 +112,10 @@ $textEditorLinkColor: $blue;
             text-decoration: underline !important;
         }
     }
+
+    .ck-preview-button {
+        .ck-button__label {
+            cursor: pointer !important;
+        }
+    }
 }

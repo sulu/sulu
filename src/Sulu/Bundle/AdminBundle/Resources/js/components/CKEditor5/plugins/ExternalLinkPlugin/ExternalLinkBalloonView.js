@@ -13,6 +13,7 @@ export default class ExternalLinkBalloonView extends View {
         const previewButtonView = new ButtonView(this.locale);
 
         previewButtonView.set({
+            class: 'ck-preview-button',
             withText: true,
         });
 
