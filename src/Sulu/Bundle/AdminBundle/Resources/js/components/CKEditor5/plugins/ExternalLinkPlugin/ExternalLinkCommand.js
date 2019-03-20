@@ -30,13 +30,14 @@ export default class ExternalLinkCommand extends Command {
 
             const {selection} = eventInfo;
             const firstPosition = selection ? selection.getFirstPosition() : undefined;
+            const textNode = firstPosition ? firstPosition.textNode || firstPosition.nodeBefore : undefined;
 
             if (selection && !selection.isCollapsed) {
                 for (const range of selection.getRanges()) {
                     writer.setAttributes(externalLinkAttributes, range);
                 }
-            } else if (firstPosition && hasExternalLinkAttribute(firstPosition.textNode)) {
-                writer.setAttributes(externalLinkAttributes, firstPosition.textNode);
+            } else if (hasExternalLinkAttribute(textNode)) {
+                writer.setAttributes(externalLinkAttributes, textNode);
             } else {
                 const externalLink = writer.createText(eventInfo.url, externalLinkAttributes);
                 this.editor.model.insertContent(externalLink);

@@ -38,7 +38,7 @@ export default class ExternalLinkPlugin extends Plugin {
         this.listenTo(this.balloonView, 'externalLink', action(() => {
             this.selection = this.editor.model.document.selection;
             const firstPosition = this.selection.getFirstPosition();
-            const node = firstPosition.textNode;
+            const node = firstPosition.textNode || firstPosition.nodeBefore;
 
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
             this.url = node.getAttribute(LINK_HREF_ATTRIBUTE);

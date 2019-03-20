@@ -7,9 +7,10 @@ export default class ExternalUnlinkCommand extends Command {
         this.editor.model.change((writer) => {
             const selection = this.editor.model.document.selection;
             const firstPosition = selection.getFirstPosition();
+            const textNode = firstPosition.textNode || firstPosition.nodeBefore;
 
-            writer.removeAttribute(LINK_HREF_ATTRIBUTE, firstPosition.textNode);
-            writer.removeAttribute(LINK_TARGET_ATTRIBUTE, firstPosition.textNode);
+            writer.removeAttribute(LINK_HREF_ATTRIBUTE, textNode);
+            writer.removeAttribute(LINK_TARGET_ATTRIBUTE, textNode);
         });
     }
 }
