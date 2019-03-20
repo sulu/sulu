@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Resolves the request_analyzer to an array.
@@ -30,18 +29,11 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        RequestStack $requestStack,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
-        $this->requestStack = $requestStack;
         $this->environment = $environment;
     }
 
@@ -64,7 +56,9 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         return [
             'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
+                'webspaceName' => $requestAnalyzer->getWebspace()->getName(),
                 'portalKey' => $requestAnalyzer->getPortal()->getKey(),
+                'portalName' => $requestAnalyzer->getPortal()->getName(),
                 'defaultLocale' => $defaultLocale,
                 'locale' => $currentLocale,
                 'portalUrl' => $requestAnalyzer->getPortalUrl(),
