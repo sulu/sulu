@@ -15,7 +15,7 @@ import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './constants';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
-const DEFAULT_TARGET = '_blank';
+const DEFAULT_TARGET = '_self';
 
 export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
