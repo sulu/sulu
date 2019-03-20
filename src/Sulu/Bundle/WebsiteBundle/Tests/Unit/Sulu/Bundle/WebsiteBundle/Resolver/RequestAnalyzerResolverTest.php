@@ -88,9 +88,11 @@ class RequestAnalyzerResolverTest extends TestCase
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
+        $webspace->setName('Sulu');
 
         $portal = new Portal();
         $portal->setKey('sulu_io_portal');
+        $portal->setName('Sulu Portal');
         $locale = new Localization();
         $locale->setLanguage('de');
         $locale->setDefault(true);
@@ -121,7 +123,9 @@ class RequestAnalyzerResolverTest extends TestCase
             [
                 'request' => [
                     'webspaceKey' => 'sulu_io',
+                    'webspaceName' => 'Sulu',
                     'portalKey' => 'sulu_io_portal',
+                    'portalName' => 'Sulu Portal',
                     'locale' => 'de_at',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',

@@ -151,7 +151,6 @@
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="request_stack"/>
             <argument>%kernel.environment%</argument>
         </service>
 
