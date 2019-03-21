@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import SingleSelection from '../../../SingleSelection';
-import {translate} from '../../../../utils/Translator';
-import Dialog from '../../../../components/Dialog';
-import Form from '../../../../components/Form';
-import SingleSelect from '../../../../components/SingleSelect';
-import type {InternalLinkTypeOverlayProps} from './types';
+import SingleSelection from '../../../../SingleSelection';
+import {translate} from '../../../../../utils/Translator';
+import Dialog from '../../../../../components/Dialog';
+import Form from '../../../../../components/Form';
+import SingleSelect from '../../../../../components/SingleSelect';
+import type {InternalLinkTypeOverlayProps} from '../types';
 
 export default class InternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
     render() {

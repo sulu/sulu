@@ -5,8 +5,11 @@ import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
     fieldRegistry,
+    internalLinkTypeRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils';
+import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import {
@@ -53,8 +56,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     when(
         () => !!initializer.initializedTranslationsLocale,
         (): void => {
-            // TODO use correct component
-            // internalLinkTypeRegistry.add('media', InternalLinkTypeOverlay, translate('sulu_media.media'), {});
+            internalLinkTypeRegistry.add('media', MediaInternalLinkTypeOverlay, translate('sulu_media.media'));
         }
     );
 });
