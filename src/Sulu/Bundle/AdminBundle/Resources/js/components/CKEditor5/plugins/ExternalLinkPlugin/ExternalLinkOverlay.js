@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import {observer} from 'mobx-react';
 import Dialog from '../../../Dialog';
 import Form from '../../../Form';
 import SingleSelect from '../../../SingleSelect';
@@ -17,7 +16,6 @@ type Props = {|
     url: ?string,
 |};
 
-@observer
 export default class ExternalLinkOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
