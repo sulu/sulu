@@ -43,6 +43,7 @@ $singleItemSelectionBorderRadius: 3px;
     .item-container {
         display: flex;
         align-items: center;
+        text-align: left;
         height: 100%;
         flex-grow: 1;
         padding-left: 10px;

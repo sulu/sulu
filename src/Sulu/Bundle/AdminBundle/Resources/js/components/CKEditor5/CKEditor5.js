@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
+import type {IObservableValue} from 'mobx';
 import log from 'loglevel';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
@@ -22,6 +23,7 @@ import './ckeditor5.scss';
 type Props = {|
     disabled: boolean,
     formats: Array<string>,
+    locale?: ?IObservableValue<string>,
     onBlur: () => void,
     onChange: (value: ?string) => void,
     value: ?string,
@@ -72,7 +74,7 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentDidMount() {
-        const {formats} = this.props;
+        const {formats, locale} = this.props;
 
         ClassicEditor
             .create(this.containerRef, {
@@ -151,6 +153,9 @@ export default class CKEditor5 extends React.Component<Props> {
                             class: 'ck-heading_heading6',
                         } : undefined,
                     ].filter((entry) => entry !== undefined),
+                },
+                internalLinks: {
+                    locale,
                 },
                 table: {
                     contentToolbar: [

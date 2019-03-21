@@ -25,7 +25,7 @@ import List, {
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 // TODO move CKEditor5 to containers, because components are not allowed to have registries
-import {internalLinkTypeRegistry} from './components/CKEditor5';
+import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './components/CKEditor5';
 import {
     BoolFieldTransformer,
     BytesFieldTransformer,
@@ -227,7 +227,19 @@ function registerTextEditors() {
 function registerInternalLinkTypes(internalLinkTypes) {
     for (const internalLinkTypeKey in internalLinkTypes) {
         const internalLinkType = internalLinkTypes[internalLinkTypeKey];
-        internalLinkTypeRegistry.add(internalLinkTypeKey, internalLinkType.title);
+        internalLinkTypeRegistry.add(
+            internalLinkTypeKey,
+            InternalLinkTypeOverlay,
+            internalLinkType.title,
+            {
+                displayProperties: internalLinkType.displayProperties,
+                emptyText: internalLinkType.emptyText,
+                icon: internalLinkType.icon,
+                listAdapter: internalLinkType.listAdapter,
+                overlayTitle: internalLinkType.overlayTitle,
+                resourceKey: internalLinkType.resourceKey,
+            }
+        );
     }
 }
 

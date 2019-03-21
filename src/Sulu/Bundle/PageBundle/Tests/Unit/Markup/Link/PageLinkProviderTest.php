@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\PageBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\PageBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
 use Sulu\Component\Content\Repository\Content;
@@ -97,9 +98,21 @@ class PageLinkProviderTest extends TestCase
     public function testGetConfiguration()
     {
         $this->translator->trans('sulu_page.pages', [], 'admin')->willReturn('Pages');
-        $configuration = $this->pageLinkProvider->getConfiguration();
+        $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')->willReturn('Choose page');
+        $this->translator->trans('sulu_page.no_page_selected', [], 'admin')->willReturn('No page selected');
 
-        $this->assertEquals('Pages', $configuration->getTitle());
+        $this->assertEquals(
+            new LinkConfiguration(
+                'Pages',
+                'pages',
+                'column_list',
+                ['title'],
+                'Choose page',
+                'No page selected',
+                'su-document'
+            ),
+            $this->pageLinkProvider->getConfiguration()
+        );
     }
 
     public function testPreload()

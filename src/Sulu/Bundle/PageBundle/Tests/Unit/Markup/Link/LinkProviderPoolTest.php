@@ -72,8 +72,24 @@ class LinkProviderPoolTest extends TestCase
     public function testGetConfiguration()
     {
         $configuration = [
-            'content' => new LinkConfiguration('sulu_test.content', 'content@sulutest'),
-            'media' => new LinkConfiguration('sulu_test.media', 'media@sulutest'),
+            'content' => new LinkConfiguration(
+                'Content',
+                'content',
+                'column_list',
+                ['title'],
+                'Title',
+                'Empty',
+                'su-document'
+            ),
+            'media' => new LinkConfiguration(
+                'Media',
+                'media',
+                'table',
+                ['title'],
+                'Title',
+                'Empty',
+                'su-document'
+            ),
         ];
 
         $this->providers['content']->getConfiguration()->willReturn($configuration['content']);

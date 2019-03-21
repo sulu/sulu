@@ -21,18 +21,57 @@ class LinkConfiguration
      */
     private $title;
 
-    public function __construct(string $title)
-    {
-        $this->title = $title;
-    }
+    /**
+     * @var string
+     * @Groups({"frontend"})
+     */
+    private $resourceKey;
 
     /**
-     * Returns title.
-     *
-     * @return string
+     * @var string
+     * @Groups({"frontend"})
      */
-    public function getTitle()
-    {
-        return $this->title;
+    private $listAdapter;
+
+    /**
+     * @var string[]
+     * @Groups({"frontend"})
+     */
+    private $displayProperties;
+
+    /**
+     * @var string
+     * @Groups({"frontend"})
+     */
+    private $overlayTitle;
+
+    /**
+     * @var string
+     * @Groups({"frontend"})
+     */
+    private $emptyText;
+
+    /**
+     * @var string
+     * @Groups({"frontend"})
+     */
+    private $icon;
+
+    public function __construct(
+        string $title,
+        string $resourceKey,
+        string $listAdapter,
+        array $displayProperties,
+        string $overlayTitle,
+        string $emptyText,
+        string $icon
+    ) {
+        $this->title = $title;
+        $this->resourceKey = $resourceKey;
+        $this->listAdapter = $listAdapter;
+        $this->displayProperties = $displayProperties;
+        $this->overlayTitle = $overlayTitle;
+        $this->emptyText = $emptyText;
+        $this->icon = $icon;
     }
 }

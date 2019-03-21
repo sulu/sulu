@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import CKEditor5 from '../CKEditor5';
@@ -30,7 +31,9 @@ test('Create a CKEditor5 instance', () => {
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
-    mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    const locale = observable.box('en');
+
+    mount(<CKEditor5 locale={locale} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
     expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
         heading: {
@@ -71,6 +74,9 @@ test('Create a CKEditor5 instance', () => {
                     view: 'h6',
                 },
             ],
+        },
+        internalLinks: {
+            locale,
         },
     }));
 });
@@ -122,6 +128,9 @@ test('Create a CKEditor5 instance with given formats', () => {
                     view: 'h3',
                 },
             ],
+        },
+        internalLinks: {
+            locale: undefined,
         },
     }));
 });
