@@ -229,8 +229,6 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
         $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
         $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
-        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
-        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
     /**
@@ -280,8 +278,6 @@ class RequestAnalyzerTest extends TestCase
             $this->requestAnalyzer->getResourceLocatorPrefix()
         );
         $this->assertEquals($expected['format'], $request->getRequestFormat());
-        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
-        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
     public function testAnalyzeNotExisting()
@@ -344,8 +340,6 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
         $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
         $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
-        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
-        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
     }
 
     public function testAnalyzeNoCurrentRequest()

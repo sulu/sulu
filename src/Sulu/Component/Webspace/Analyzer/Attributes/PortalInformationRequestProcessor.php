@@ -35,9 +35,6 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
 
         $attributes['portalInformation'] = $portalInformation;
 
-        $attributes['getParameter'] = $request->query->all();
-        $attributes['postParameter'] = $request->request->all();
-
         $attributes['matchType'] = $portalInformation->getType();
         $attributes['redirect'] = $portalInformation->getRedirect();
         $attributes['analyticsKey'] = $portalInformation->getAnalyticsKey();

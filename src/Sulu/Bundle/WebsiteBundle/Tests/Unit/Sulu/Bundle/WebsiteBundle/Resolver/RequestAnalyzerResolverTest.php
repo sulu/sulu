@@ -112,8 +112,6 @@ class RequestAnalyzerResolverTest extends TestCase
         $requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
         $requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getResourceLocator()->willReturn('/search');
-        $requestAnalyzer->getGetParameters()->willReturn(['p' => 1]);
-        $requestAnalyzer->getPostParameters()->willReturn([]);
         $requestAnalyzer->getPortal()->willReturn($portal);
         $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
@@ -126,13 +124,10 @@ class RequestAnalyzerResolverTest extends TestCase
                     'webspaceName' => 'Sulu',
                     'portalKey' => 'sulu_io_portal',
                     'portalName' => 'Sulu Portal',
-                    'locale' => 'de_at',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
-                    'get' => ['p' => 1],
-                    'post' => [],
                     'analyticsKey' => 'analyticsKey',
                 ],
             ],

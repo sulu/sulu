@@ -159,22 +159,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPostParameters()
-    {
-        return $this->getAttribute('postParameter', []);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGetParameters()
-    {
-        return $this->getAttribute('getParameter', []);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getAnalyticsKey()
     {
         return $this->getAttribute('analyticsKey', '');

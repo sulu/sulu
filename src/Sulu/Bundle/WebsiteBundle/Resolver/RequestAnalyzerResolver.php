@@ -29,10 +29,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
-    public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        $environment
-    ) {
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    {
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
@@ -46,13 +44,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocale() : null;
 
-        $currentLocale = null;
-        $currentLocalization = $requestAnalyzer->getCurrentLocalization();
-
-        if ($currentLocalization) {
-            $currentLocale = $currentLocalization->getLocale();
-        }
-
         return [
             'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
@@ -60,12 +51,9 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'portalKey' => $requestAnalyzer->getPortal()->getKey(),
                 'portalName' => $requestAnalyzer->getPortal()->getName(),
                 'defaultLocale' => $defaultLocale,
-                'locale' => $currentLocale,
                 'portalUrl' => $requestAnalyzer->getPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getResourceLocator(),
-                'get' => $requestAnalyzer->getGetParameters(),
-                'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
             ],
         ];

@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Removed sulu twig variables
+
+The following sulu twig variables are removed and its symfony equivilants should be used instead:
+
+| Before                 | After
+|------------------------|---------------------|
+| request.currentLocale  | app.request.locale  |
+| request.post           | app.request.request |
+| request.get            | app.request.get     |
+
 ### Commands changed
 
 The Sulu commands were refactored to use the `Command` class instead of the `ContainerAwareCommand` class, because some
