@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import CKEditor5Component from '../../../components/CKEditor5';
+import CKEditor5Component from '../../CKEditor5';
 import type {TextEditorProps} from '../types';
 
 export default class CKEditor5 extends React.Component<TextEditorProps> {

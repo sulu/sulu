@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import Dialog from '../../../Dialog';
-import Form from '../../../Form';
-import SingleSelect from '../../../SingleSelect';
-import Url from '../../../Url';
+import Dialog from '../../../../components/Dialog';
+import Form from '../../../../components/Form';
+import SingleSelect from '../../../../components/SingleSelect';
+import Url from '../../../../components/Url';
 import {translate} from '../../../../utils/Translator';
 
 type Props = {|

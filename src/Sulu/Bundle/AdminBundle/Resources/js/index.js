@@ -24,8 +24,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
-// TODO move CKEditor5 to containers, because components are not allowed to have registries
-import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './components/CKEditor5';
+import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './containers/CKEditor5';
 import {
     BoolFieldTransformer,
     BytesFieldTransformer,
