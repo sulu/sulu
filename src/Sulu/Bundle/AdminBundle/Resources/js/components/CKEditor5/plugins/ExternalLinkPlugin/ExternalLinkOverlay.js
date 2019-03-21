@@ -40,10 +40,10 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                 onCancel={onCancel}
                 onConfirm={this.handleConfirm}
                 open={open}
-                title="Link"
+                title={translate('sulu_admin.link')}
             >
                 <Form>
-                    <Form.Field label="Link target" required={true}>
+                    <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                         <SingleSelect onChange={onTargetChange} value={target}>
                             <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
                             <SingleSelect.Option value="_self">_self</SingleSelect.Option>
@@ -52,7 +52,7 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                         </SingleSelect>
                     </Form.Field>
 
-                    <Form.Field label="Link URL" required={true}>
+                    <Form.Field label={translate('sulu_admin.link_url')} required={true}>
                         <Url defaultProtocol="https://" onChange={onUrlChange} valid={true} value={url} />
                     </Form.Field>
                 </Form>
