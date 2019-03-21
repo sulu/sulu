@@ -17,18 +17,8 @@ type Props = {|
 |};
 
 export default class ExternalLinkOverlay extends React.Component<Props> {
-    constructor(props: Props) {
-        super(props);
-    }
-
-    handleConfirm = () => {
-        const {onConfirm} = this.props;
-
-        onConfirm();
-    };
-
     render() {
-        const {onCancel, onTargetChange, onUrlChange, open, target, url} = this.props;
+        const {onCancel, onConfirm, onTargetChange, onUrlChange, open, target, url} = this.props;
 
         return (
             <Dialog
@@ -36,7 +26,7 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                 confirmDisabled={!url}
                 confirmText={translate('sulu_admin.confirm')}
                 onCancel={onCancel}
-                onConfirm={this.handleConfirm}
+                onConfirm={onConfirm}
                 open={open}
                 title={translate('sulu_admin.link')}
             >
