@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.5
+    * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
     * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
     
 * 1.5.21 (2019-02-28)
