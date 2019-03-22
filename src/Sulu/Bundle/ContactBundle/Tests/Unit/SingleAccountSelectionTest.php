@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContactBundle\Util;
+namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
@@ -24,7 +24,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class SingleAccountelectionTest extends TestCase
+class SingleAccountSelectionTest extends TestCase
 {
     /**
      * @var SingleAccountSelection
