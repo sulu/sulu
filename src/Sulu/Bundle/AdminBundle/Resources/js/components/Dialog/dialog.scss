@@ -57,6 +57,7 @@ $transitionDuration: 300ms;
     border-radius: $borderRadius;
     background: $contentBackgroundColor;
     overflow: hidden;
+    position: relative;
 
     header {
         color: $titleColor;
