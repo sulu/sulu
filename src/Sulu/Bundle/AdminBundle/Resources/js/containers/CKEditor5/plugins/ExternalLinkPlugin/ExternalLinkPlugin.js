@@ -11,7 +11,7 @@ import ExternalLinkCommand from './ExternalLinkCommand';
 import ExternalLinkOverlay from './ExternalLinkOverlay';
 import ExternalLinkBalloonView from './ExternalLinkBalloonView';
 import ExternalUnlinkCommand from './ExternalUnlinkCommand';
-import {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE} from './constants';
+import {LINK_HREF_ATTRIBUTE, LINK_TAG, LINK_TARGET_ATTRIBUTE} from './constants';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -88,36 +88,36 @@ export default class ExternalLinkPlugin extends Plugin {
             return button;
         });
 
-        this.editor.model.schema.extend('$text', {allowAttributes: 'linkTarget'});
-        this.editor.model.schema.extend('$text', {allowAttributes: 'linkHref'});
+        this.editor.model.schema.extend('$text', {allowAttributes: LINK_TARGET_ATTRIBUTE});
+        this.editor.model.schema.extend('$text', {allowAttributes: LINK_HREF_ATTRIBUTE});
 
         this.editor.conversion.for('upcast').attributeToAttribute({
             view: {
-                name: 'a',
+                name: LINK_TAG,
                 key: 'target',
             },
-            model: 'linkTarget',
+            model: LINK_TARGET_ATTRIBUTE,
         });
 
         this.editor.conversion.for('downcast').attributeToElement({
-            model: 'linkTarget',
+            model: LINK_TARGET_ATTRIBUTE,
             view: (attributeValue, writer) => {
-                return writer.createAttributeElement('a', {target: attributeValue});
+                return writer.createAttributeElement(LINK_TAG, {target: attributeValue});
             },
         });
 
         this.editor.conversion.for('upcast').attributeToAttribute({
             view: {
-                name: 'a',
+                name: LINK_TAG,
                 key: 'href',
             },
-            model: 'linkHref',
+            model: LINK_HREF_ATTRIBUTE,
         });
 
         this.editor.conversion.for('downcast').attributeToElement({
-            model: 'linkHref',
+            model: LINK_HREF_ATTRIBUTE,
             view: (attributeValue, writer) => {
-                return writer.createAttributeElement('a', {href: attributeValue});
+                return writer.createAttributeElement(LINK_TAG, {href: attributeValue});
             },
         });
 
@@ -129,7 +129,7 @@ export default class ExternalLinkPlugin extends Plugin {
             const firstPosition = selection.getFirstPosition();
 
             const externalLink = firstPosition.getAncestors().find(
-                (ancestor) => ancestor.is('attributeElement') && ancestor.name === 'a'
+                (ancestor) => ancestor.is('attributeElement') && ancestor.name === LINK_TAG
             );
 
             this.hideBalloon();
