@@ -142,6 +142,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         addOverlayTitle,
                         editOverlayTitle,
                         formKey,
+                        overlaySize,
                     },
                 },
             },
@@ -168,7 +169,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         onClose={this.handleFormOverlayClose}
                         onConfirm={this.handleFormOverlayConfirm}
                         open={!!this.formStore}
-                        size="small"
+                        size={overlaySize ? overlaySize : 'small'}
                         title={overlayTitle}
                     >
                         <div className={formOverlayListStyles.form}>
