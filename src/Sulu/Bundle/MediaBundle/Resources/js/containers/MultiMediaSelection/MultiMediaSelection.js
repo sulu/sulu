@@ -134,7 +134,7 @@ export default class MultiMediaSelection extends React.Component<Props> {
                                 key={media.id}
                             >
                                 <div className={multiMediaSelectionStyle.mediaItem}>
-                                    {media.thumbnails[THUMBNAIL_SIZE]
+                                    {typeof media.thumbnails !== 'undefined' && media.thumbnails[THUMBNAIL_SIZE]
                                         ? <img
                                             alt={media.title}
                                             className={multiMediaSelectionStyle.thumbnailImage}
