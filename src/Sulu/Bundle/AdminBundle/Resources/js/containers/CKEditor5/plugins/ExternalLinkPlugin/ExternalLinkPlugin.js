@@ -7,11 +7,12 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
 import {render, unmountComponentAtNode} from 'react-dom';
-import ExternalLinkCommand from './ExternalLinkCommand';
+import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
+import LinkBalloonView from '../../LinkBalloonView';
+import LinkCommand from '../../LinkCommand';
 import ExternalLinkOverlay from './ExternalLinkOverlay';
-import ExternalLinkBalloonView from './ExternalLinkBalloonView';
-import ExternalUnlinkCommand from './ExternalUnlinkCommand';
-import {LINK_HREF_ATTRIBUTE, LINK_TAG, LINK_TARGET_ATTRIBUTE} from './constants';
+import UnlinkCommand from '../../UnlinkCommand';
+import {LINK_EVENT_TARGET, LINK_EVENT_URL, LINK_HREF_ATTRIBUTE, LINK_TAG, LINK_TARGET_ATTRIBUTE} from './constants';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -27,23 +28,22 @@ export default class ExternalLinkPlugin extends Plugin {
         this.externalLinkOverlayElement = document.createElement('div');
         this.editor.sourceElement.appendChild(this.externalLinkOverlayElement);
         this.balloon = this.editor.plugins.get(ContextualBalloon);
-        this.balloonView = new ExternalLinkBalloonView(this.editor.locale);
+        this.balloonView = new LinkBalloonView(this.editor.locale, true);
         this.balloonView.bind('href').to(this, 'href');
 
-        this.listenTo(this.balloonView, 'externalUnlink', () => {
+        this.listenTo(this.balloonView, 'unlink', () => {
             this.editor.execute('externalUnlink');
             this.hideBalloon();
         });
 
-        this.listenTo(this.balloonView, 'externalLink', action(() => {
+        this.listenTo(this.balloonView, 'link', action(() => {
             this.selection = this.editor.model.document.selection;
-            const firstPosition = this.selection.getFirstPosition();
-            const node = firstPosition.textNode || firstPosition.nodeBefore;
+            const node = findModelItemInSelection(this.editor);
 
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
             this.url = node.getAttribute(LINK_HREF_ATTRIBUTE);
-
             this.open = true;
+
             this.hideBalloon();
         }));
 
@@ -66,8 +66,18 @@ export default class ExternalLinkPlugin extends Plugin {
             this.externalLinkOverlayElement
         );
 
-        this.editor.commands.add('externalLink', new ExternalLinkCommand(this.editor));
-        this.editor.commands.add('externalUnlink', new ExternalUnlinkCommand(this.editor));
+        this.editor.commands.add(
+            'externalLink',
+            new LinkCommand(
+                this.editor,
+                {[LINK_HREF_ATTRIBUTE]: LINK_EVENT_URL, [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET},
+                LINK_EVENT_URL
+            )
+        );
+        this.editor.commands.add(
+            'externalUnlink',
+            new UnlinkCommand(this.editor, [LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE])
+        );
 
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
             const button = new ButtonView(locale);
@@ -88,49 +98,14 @@ export default class ExternalLinkPlugin extends Plugin {
             return button;
         });
 
-        this.editor.model.schema.extend('$text', {allowAttributes: LINK_TARGET_ATTRIBUTE});
-        this.editor.model.schema.extend('$text', {allowAttributes: LINK_HREF_ATTRIBUTE});
-
-        this.editor.conversion.for('upcast').attributeToAttribute({
-            view: {
-                name: LINK_TAG,
-                key: 'target',
-            },
-            model: LINK_TARGET_ATTRIBUTE,
-        });
-
-        this.editor.conversion.for('downcast').attributeToElement({
-            model: LINK_TARGET_ATTRIBUTE,
-            view: (attributeValue, writer) => {
-                return writer.createAttributeElement(LINK_TAG, {target: attributeValue});
-            },
-        });
-
-        this.editor.conversion.for('upcast').attributeToAttribute({
-            view: {
-                name: LINK_TAG,
-                key: 'href',
-            },
-            model: LINK_HREF_ATTRIBUTE,
-        });
-
-        this.editor.conversion.for('downcast').attributeToElement({
-            model: LINK_HREF_ATTRIBUTE,
-            view: (attributeValue, writer) => {
-                return writer.createAttributeElement(LINK_TAG, {href: attributeValue});
-            },
-        });
+        addLinkConversion(this.editor, LINK_TAG, LINK_TARGET_ATTRIBUTE, 'target');
+        addLinkConversion(this.editor, LINK_TAG, LINK_HREF_ATTRIBUTE, 'href');
 
         const view = this.editor.editing.view;
         view.addObserver(ClickObserver);
 
         this.listenTo(view.document, 'click', () => {
-            const selection = this.editor.editing.view.document.selection;
-            const firstPosition = selection.getFirstPosition();
-
-            const externalLink = firstPosition.getAncestors().find(
-                (ancestor) => ancestor.is('attributeElement') && ancestor.name === LINK_TAG
-            );
+            const externalLink = findViewLinkItemInSelection(this.editor, LINK_TAG);
 
             this.hideBalloon();
 
@@ -151,7 +126,10 @@ export default class ExternalLinkPlugin extends Plugin {
     }
 
     @action handleOverlayConfirm = () => {
-        this.editor.execute('externalLink', {selection: this.selection, target: this.target, url: this.url});
+        this.editor.execute(
+            'externalLink',
+            {selection: this.selection, [LINK_EVENT_TARGET]: this.target, [LINK_EVENT_URL]: this.url}
+        );
         this.open = false;
     };
 

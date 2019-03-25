@@ -6,7 +6,7 @@ export type InternalLinkTypeOverlayProps = {|
     locale: ?IObservableValue<string>,
     onCancel: () => void,
     onConfirm: () => void,
-    onIdChange: (id: ?string | number) => void,
+    onResourceChange: (id: ?string | number, item: ?Object) => void,
     onTargetChange: (target: string) => void,
     open: boolean,
     options: ?Object,

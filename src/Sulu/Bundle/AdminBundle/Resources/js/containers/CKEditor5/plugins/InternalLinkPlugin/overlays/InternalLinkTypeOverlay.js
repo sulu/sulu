@@ -9,7 +9,7 @@ import type {InternalLinkTypeOverlayProps} from '../types';
 
 export default class InternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
     render() {
-        const {id, locale, onCancel, onConfirm, onTargetChange, onIdChange, open, options, target} = this.props;
+        const {id, locale, onCancel, onConfirm, onTargetChange, onResourceChange, open, options, target} = this.props;
 
         if (!options) {
             throw new Error('The InternalLinkTypeOverlay needs some options in order to work!');
@@ -44,7 +44,7 @@ export default class InternalLinkTypeOverlay extends React.Component<InternalLin
                             icon={icon}
                             listKey={resourceKey}
                             locale={locale}
-                            onChange={onIdChange}
+                            onChange={onResourceChange}
                             overlayTitle={overlayTitle}
                             resourceKey={resourceKey}
                             value={id}

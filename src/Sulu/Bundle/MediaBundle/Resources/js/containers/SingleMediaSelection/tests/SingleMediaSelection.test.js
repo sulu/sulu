@@ -148,7 +148,7 @@ test('Should call given onChange handler if value of selection store changes', (
         mimeType: 'image/jpeg',
         thumbnails: {},
     };
-    expect(changeSpy).toBeCalledWith({id: 77});
+    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
 });
 
 test('Should not call onChange callback if an unrelated observable that is accessed in the callback changes', () => {
@@ -171,7 +171,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     singleMediaSelectionInstance.singleMediaSelectionStore.item = {id: 77, thumbnails: {}};
-    expect(changeSpy).toBeCalledWith({id: 77});
+    expect(changeSpy).toBeCalledWith({id: 77}, singleMediaSelectionInstance.singleMediaSelectionStore.item);
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes

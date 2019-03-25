@@ -107,10 +107,13 @@ $textEditorLinkColor: $blue;
     }
 
     .ck {
-        a {
+        /* stylelint-disable selector-type-no-unknown */
+        a,
+        sulu\:link {
             color: $textEditorLinkColor !important;
             text-decoration: underline !important;
         }
+        /* stylelint-enable */
     }
 
     .ck-preview-button {

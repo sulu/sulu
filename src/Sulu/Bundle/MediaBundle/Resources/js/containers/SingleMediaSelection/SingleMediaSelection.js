@@ -15,7 +15,7 @@ import singleMediaSelectionStyle from './singleMediaSelection.scss';
 type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
-    onChange: (selectedIds: Value) => void,
+    onChange: (selectedId: Value, media: ?Media) => void,
     valid: boolean,
     value: Value,
 |}
@@ -48,7 +48,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (value.id !== loadedMediaId) {
-                    onChange({id: loadedMediaId});
+                    onChange({id: loadedMediaId}, this.singleMediaSelectionStore.item);
                 }
             }
         );

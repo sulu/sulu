@@ -7,12 +7,13 @@ import {translate} from 'sulu-admin-bundle/utils';
 import type {InternalLinkTypeOverlayProps} from 'sulu-admin-bundle/types';
 import SingleMediaSelection from '../../../../SingleMediaSelection';
 import type {Value} from '../../../../SingleMediaSelection/types';
+import type {Media} from '../../../../../types';
 
 export default class MediaInternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
-    handleChange = (value: Value) => {
-        const {onIdChange} = this.props;
+    handleChange = (value: Value, media: ?Media) => {
+        const {onResourceChange} = this.props;
 
-        onIdChange(value.id);
+        onResourceChange(value.id, media);
     };
 
     render() {
