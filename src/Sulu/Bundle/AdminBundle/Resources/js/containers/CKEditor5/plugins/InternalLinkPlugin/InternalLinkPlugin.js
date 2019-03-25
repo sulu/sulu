@@ -98,13 +98,12 @@ export default class InternalLinkPlugin extends Plugin {
             const dropdownButton = createDropdown(locale);
             const list = new ListView(locale);
 
-            dropdownButton.buttonView.set({
-                icon: linkIcon,
-            });
+            dropdownButton.buttonView.set({icon: linkIcon});
 
             internalLinkTypeRegistry.getKeys().forEach((key) => {
                 const button = new ButtonView(locale);
                 button.set({
+                    class: 'ck-link-button',
                     label: internalLinkTypeRegistry.getTitle(key),
                     withText: true,
                 });
