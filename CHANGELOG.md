@@ -1,6 +1,12 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.26 (2019-03-26)
+    * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
+    * BUGFIX      #4471  [AdminBundle]          Fix CKEditor preview for content that is not wrapped in an HTML tag
+    * HOTFIX      #4491  [ContentBundle]        Set ghost-locale to first available-locale if locale not exists in webspace
+    * BUGFIX      #4433  [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
+
 * 1.6.25 (2019-02-28)
     * BUGFIX      #4434  [SnippetBundle]        Fix translation for snippet taxonomies
     * BUGFIX      #4414  [SearchBundle]         Add massive search bundle 0.17 as allowed version
@@ -277,6 +283,10 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.22 (2019-03-26)
+    * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
+    * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
+    
 * 1.5.21 (2019-02-28)
     * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
     * BUGFIX      #4376 [SecurityBundle]        Exclude role permissions in user API to improve performance

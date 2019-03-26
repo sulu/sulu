@@ -383,6 +383,21 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
+    public function testFindByWebspaceRootNonExistingLocale()
+    {
+        $this->createPage('test-1', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot('fr', 'sulu_io', MappingBuilder::create()->getMapping());
+
+        $this->assertCount(1, $result);
+
+        $this->assertNotNull($result[0]->getId());
+        $this->assertEquals('/test-1', $result[0]->getPath());
+        $this->assertEquals('ghost', $result[0]->getLocalizationType()->getName());
+        $this->assertEquals('de', $result[0]->getLocalizationType()->getValue());
+        $this->assertEquals('fr', $result[0]->getLocale());
+    }
+
     public function testFindByWebspaceRootMapping()
     {
         $this->createPage('test-1', 'de');

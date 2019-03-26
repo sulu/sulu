@@ -302,7 +302,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     {
         list(
             $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
-            ) = unserialize($serialized);
+        ) = unserialize($serialized);
     }
 
     /**
