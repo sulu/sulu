@@ -47,6 +47,24 @@ test('Component should render with selected media', () => {
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
+test('Component should render with selected media without thumbnails with MimeTypeIndicator', () => {
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementationOnce(function() {
+        this.item = {
+            id: 33,
+            title: 'test media',
+            mimeType: 'application/pdf',
+        };
+    });
+
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
+    );
+
+    expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
+    expect(singleMediaSelection.render()).toMatchSnapshot();
+});
+
 test('Click on media-button should open an overlay', () => {
     const singleMediaSelection = mount(
         <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
