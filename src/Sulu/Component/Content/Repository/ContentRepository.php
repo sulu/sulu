@@ -592,11 +592,15 @@ class ContentRepository implements ContentRepositoryInterface
         $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
 
         $originalLocale = $locale;
+        $availableLocales = $this->resolveAvailableLocales($row);
         $ghostLocale = $this->localizationFinder->findAvailableLocale(
             $webspaceKey,
-            $this->resolveAvailableLocales($row),
+            $availableLocales,
             $locale
         );
+        if (null === $ghostLocale) {
+            $ghostLocale = reset($availableLocales);
+        }
 
         $type = null;
         if ($row->getValue('shadowOn')) {
