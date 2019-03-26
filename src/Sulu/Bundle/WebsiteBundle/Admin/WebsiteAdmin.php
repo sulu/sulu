@@ -71,6 +71,7 @@ class WebsiteAdmin extends Admin
                 ->disableSearching()
                 ->setTabTitle('sulu_website.analytics')
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                ->addRerenderAttribute('webspace')
                 ->getRoute(),
         ];
     }

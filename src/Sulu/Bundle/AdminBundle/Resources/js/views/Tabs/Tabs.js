@@ -1,5 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
+import type {Node} from 'react';
 import {autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import TabsComponent from '../../components/Tabs';
@@ -9,12 +10,18 @@ import {translate} from '../../utils/Translator';
 import tabsStyles from './tabs.scss';
 
 type Props = ViewProps & {
+    childrenProps: *,
+    header?: Node,
     routeChildren?: Array<Route>,
     selectedIndex?: number,
 };
 
 @observer
 export default class Tabs extends React.Component<Props> {
+    static defaultProps = {
+        childrenProps: {},
+    };
+
     redirectToRouteWithHighestPriorityDisposer: () => void;
 
     constructor(props: Props) {
@@ -93,14 +100,14 @@ export default class Tabs extends React.Component<Props> {
     };
 
     render() {
-        const {children, selectedIndex} = this.props;
+        const {children, childrenProps, header, selectedIndex} = this.props;
 
-        const ChildComponent = children ? children() : null;
+        const childComponent = children ? children(childrenProps) : null;
 
         const selectedTabIndex = selectedIndex !== undefined
             ? selectedIndex
-            : ChildComponent
-                ? this.sortedTabRoutes.findIndex((childRoute) => childRoute === ChildComponent.props.route)
+            : childComponent
+                ? this.sortedTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
                 : undefined;
 
         return (
@@ -117,7 +124,8 @@ export default class Tabs extends React.Component<Props> {
                         })}
                     </TabsComponent>
                 </div>
-                {ChildComponent}
+                {header}
+                {childComponent}
             </Fragment>
         );
     }

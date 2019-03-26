@@ -9,6 +9,7 @@ import EditToolbarAction from './views/Form/toolbarActions/EditToolbarAction';
 import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAction';
 import PageTabs from './views/PageTabs';
 import WebspaceOverview from './views/WebspaceOverview';
+import WebspaceTabs from './views/WebspaceTabs';
 
 initializer.addUpdateConfigHook('sulu_page', (config: Object) => {
     WebspaceOverview.clearCacheEndpoint = config.endpoints.clearCache;
@@ -16,6 +17,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object) => {
 
 viewRegistry.add('sulu_page.page_tabs', PageTabs);
 viewRegistry.add('sulu_page.webspace_overview', WebspaceOverview);
+viewRegistry.add('sulu_page.webspace_tabs', WebspaceTabs);
 
 fieldRegistry.add('search_result', SearchResult);
 fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);

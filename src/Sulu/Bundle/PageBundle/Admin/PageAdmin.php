@@ -114,8 +114,7 @@ class PageAdmin extends Admin
         $routerAttributesToFormStore = ['parentId', 'webspace'];
 
         return [
-            $this->routeBuilderFactory->createTabRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace')
-                ->getRoute()
+            (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey()),
             (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())

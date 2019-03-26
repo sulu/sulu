@@ -33,3 +33,56 @@ Array [
   </h1>,
 ]
 `;
+
+exports[`Should render the children with the passed props 1`] = `
+Array [
+  <div
+    class="tabsContainer"
+  >
+    <ul
+      class="tabs"
+    >
+      <li
+        class="tab"
+      >
+        <button
+          title="tabTitle1"
+        >
+          tabTitle1
+        </button>
+      </li>
+    </ul>
+  </div>,
+  <h2>
+    Value
+  </h2>,
+]
+`;
+
+exports[`Should render the header between children and tabs 1`] = `
+Array [
+  <div
+    class="tabsContainer"
+  >
+    <ul
+      class="tabs"
+    >
+      <li
+        class="tab"
+      >
+        <button
+          title="tabTitle1"
+        >
+          tabTitle1
+        </button>
+      </li>
+    </ul>
+  </div>,
+  <h1>
+    Header
+  </h1>,
+  <h2>
+    Child
+  </h2>,
+]
+`;

@@ -126,12 +126,12 @@ export default class ResourceTabs extends React.Component<Props> {
     render() {
         const {children} = this.props;
 
-        const ChildComponent = children
+        const childComponent = children
             ? children({locales: this.locales, resourceStore: this.resourceStore})
             : null;
 
-        const selectedRouteIndex = ChildComponent
-            ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === ChildComponent.props.route)
+        const selectedRouteIndex = childComponent
+            ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
             : undefined;
 
         const selectedRoute = selectedRouteIndex !== undefined ? this.visibleTabRoutes[selectedRouteIndex] : undefined;
@@ -144,7 +144,7 @@ export default class ResourceTabs extends React.Component<Props> {
                             {this.sortedTabRoutes[0] !== selectedRoute && this.title &&
                                 <h1>{this.title}</h1>
                             }
-                            {ChildComponent}
+                            {childComponent}
                         </Fragment>
                     )}
                 </Tabs>
