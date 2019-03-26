@@ -123,6 +123,7 @@ class WebspaceOverview extends React.Component<Props> {
         });
 
         this.webspaceKeyDisposer = intercept(webspaceKey, '', (change) => {
+            this.listStore.destroy();
             this.listStore.active.set(undefined);
             return change;
         });

@@ -319,6 +319,32 @@ test('Should load webspace and active route attribute from listStore and userSto
     expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'webspace_overview_abc');
 });
 
+test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
+    const WebspaceOverview = require('../WebspaceOverview').default;
+
+    const webspaceKey = observable.box('sulu');
+
+    // $FlowFixMe
+    const webspace = {
+        key: 'sulu',
+        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
+    };
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+    );
+
+    webspaceKey.set('sulu_blog');
+
+    expect(webspaceOverview.instance().listStore.destroy).toBeCalledWith();
+    expect(webspaceOverview.instance().listStore.active.set).toBeCalledWith(undefined);
+});
+
 test('Should bind router', () => {
     const WebspaceOverview = require('../WebspaceOverview').default;
 

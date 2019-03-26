@@ -295,7 +295,6 @@ export default class ListStore {
 
         this.clear();
 
-        this.setActive(undefined);
         this.pageCount = 0;
 
         if (page && page > 1) {
