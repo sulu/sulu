@@ -177,3 +177,193 @@ Array [
   </div>,
 ]
 `;
+
+exports[`Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator 1`] = `
+Array [
+  <div
+    class="multiItemSelectionClass"
+  >
+    <div
+      class="header"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-image"
+          class="su-image"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        3 sulu_media.media_selected_plural
+      </div>
+    </div>
+    <ul
+      class="list"
+    >
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              1
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div
+              class="mediaItem"
+            >
+              <div
+                class="mimeTypeIndicator"
+                style="color:#fff;font-size:16px;background-color:#585858;width:25px;height:25px"
+              >
+                <span
+                  aria-label="fa-file-code-o"
+                  class="fa fa-file-code-o"
+                />
+              </div>
+              <div
+                class="mediaTitle"
+              >
+                Media 1
+              </div>
+            </div>
+          </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </li>
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              2
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div
+              class="mediaItem"
+            >
+              <div
+                class="mimeTypeIndicator"
+                style="color:#fff;font-size:16px;background-color:#bb0806;width:25px;height:25px"
+              >
+                <span
+                  aria-label="fa-file-pdf-o"
+                  class="fa fa-file-pdf-o"
+                />
+              </div>
+              <div
+                class="mediaTitle"
+              >
+                Media 2
+              </div>
+            </div>
+          </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </li>
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              3
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div
+              class="mediaItem"
+            >
+              <div
+                class="mimeTypeIndicator"
+                style="color:#fff;font-size:16px;background-color:#00723a;width:25px;height:25px"
+              >
+                <span
+                  aria-label="fa-file-excel-o"
+                  class="fa fa-file-excel-o"
+                />
+              </div>
+              <div
+                class="mediaTitle"
+              >
+                Media 3
+              </div>
+            </div>
+          </div>
+          <button
+            class="removeButton"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;

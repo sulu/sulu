@@ -52,6 +52,62 @@ Array [
 ]
 `;
 
+exports[`Component should render with selected media without thumbnails with MimeTypeIndicator 1`] = `
+Array [
+  <div
+    class="singleItemSelection"
+  >
+    <button
+      class="button"
+      type="button"
+    >
+      <span
+        aria-label="su-image"
+        class="su-image"
+      />
+    </button>
+    <div
+      class="itemContainer"
+    >
+      <div
+        class="item"
+      >
+        <div
+          class="mediaItem"
+        >
+          <div
+            class="mimeTypeIndicator"
+            style="color:#fff;font-size:14px;background-color:#bb0806;width:19px;height:19px"
+          >
+            <span
+              aria-label="fa-file-pdf-o"
+              class="fa fa-file-pdf-o"
+            />
+          </div>
+          <div
+            class="mediaTitle"
+          >
+            test media
+          </div>
+        </div>
+      </div>
+      <button
+        class="removeButton"
+        type="button"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt"
+        />
+      </button>
+    </div>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;
+
 exports[`Component should render without selected media 1`] = `
 Array [
   <div

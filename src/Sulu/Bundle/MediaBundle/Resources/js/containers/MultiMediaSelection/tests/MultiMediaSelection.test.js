@@ -52,6 +52,33 @@ test('Render a MultiMediaSelection field', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {
+                id: 1,
+                title: 'Media 1',
+                mimeType: 'application/json',
+            },
+            {
+                id: 2,
+                title: 'Media 2',
+                mimeType: 'application/pdf',
+            },
+            {
+                id: 3,
+                title: 'Media 3',
+                mimeType: 'application/vnd.ms-excel',
+            },
+        ];
+    });
+
+    expect(render(
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+    )).toMatchSnapshot();
+});
+
 test('The MultiMediaSelection should have 3 child-items', () => {
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function() {

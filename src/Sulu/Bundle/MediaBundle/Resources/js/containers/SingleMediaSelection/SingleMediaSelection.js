@@ -118,7 +118,7 @@ export default class SingleMediaSelection extends React.Component<Props> {
                 >
                     {media &&
                         <div className={singleMediaSelectionStyle.mediaItem}>
-                            {media.thumbnails[THUMBNAIL_SIZE]
+                            {media.thumbnails && media.thumbnails[THUMBNAIL_SIZE]
                                 ? <img
                                     alt={media.title}
                                     className={singleMediaSelectionStyle.thumbnailImage}
