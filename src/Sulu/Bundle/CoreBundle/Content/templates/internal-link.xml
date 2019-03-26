@@ -19,7 +19,7 @@
             </meta>
         </property>
 
-        <property name="internal_link" type="single_internal_link">
+        <property name="internal_link" type="single_page_selection">
             <meta>
                 <title lang="de">Interner Knoten</title>
                 <title lang="en">Internal Node</title>

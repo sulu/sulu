@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
-use Sulu\Bundle\PageBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -27,7 +27,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * content type for internal links selection.
  */
-class InternalLinks extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class PageSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
      * @var ContentQueryExecutorInterface
@@ -143,7 +143,7 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
     public function getContentData(PropertyInterface $property)
     {
         $data = $property->getValue();
-        $container = new InternalLinksContainer(
+        $container = new PageSelectionContainer(
             isset($data) ? $data : [],
             $this->contentQueryExecutor,
             $this->contentQueryBuilder,

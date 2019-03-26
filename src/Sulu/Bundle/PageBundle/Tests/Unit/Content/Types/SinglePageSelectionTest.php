@@ -13,11 +13,11 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Types;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class SingleInternalLinkTest extends TestCase
+class SinglePageSelectionTest extends TestCase
 {
     /**
      * @var PropertyInterface
@@ -30,7 +30,7 @@ class SingleInternalLinkTest extends TestCase
     private $referenceStore;
 
     /**
-     * @var SingleInternalLink
+     * @var SinglePageSelection
      */
     private $type;
 
@@ -41,7 +41,7 @@ class SingleInternalLinkTest extends TestCase
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
-        $this->type = new SingleInternalLink(
+        $this->type = new SinglePageSelection(
             $this->referenceStore->reveal(),
             'some_template.html.twig'
         );

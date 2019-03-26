@@ -12,14 +12,14 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\PageBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 
-class InternalLinksContainerTest extends TestCase
+class PageSelectionContainerTest extends TestCase
 {
     /**
-     * @var InternalLinksContainer
+     * @var PageSelectionContainer
      */
     private $container;
 
@@ -41,7 +41,7 @@ class InternalLinksContainerTest extends TestCase
 
     public function testGetDataDraftAndPublished()
     {
-        $this->container = new InternalLinksContainer(
+        $this->container = new PageSelectionContainer(
             [2, 3, 1],
             $this->executor->reveal(),
             $this->builder->reveal(),
@@ -61,7 +61,7 @@ class InternalLinksContainerTest extends TestCase
 
     public function testGetDataOnlyPublished()
     {
-        $this->container = new InternalLinksContainer(
+        $this->container = new PageSelectionContainer(
             [2, 3, 1],
             $this->executor->reveal(),
             $this->builder->reveal(),
@@ -85,7 +85,7 @@ class InternalLinksContainerTest extends TestCase
             [['uuid' => 1], ['uuid' => 2], ['uuid' => 3]]
         );
 
-        $this->container = new InternalLinksContainer(
+        $this->container = new PageSelectionContainer(
             [2, 3, 1],
             $this->executor->reveal(),
             $this->builder->reveal(),

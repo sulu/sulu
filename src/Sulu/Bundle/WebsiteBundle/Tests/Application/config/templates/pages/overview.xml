@@ -20,7 +20,7 @@
         <property name="article" type="text_area" mandatory="false"/>
         <property name="blog" type="text_area" mandatory="false"/>
         <property name="external_url" type="url" mandatory="false" />
-        <property name="internal_link" type="internal_links" mandatory="false" />
+        <property name="internal_link" type="page_selection" mandatory="false" />
     </properties>
 </template>
 

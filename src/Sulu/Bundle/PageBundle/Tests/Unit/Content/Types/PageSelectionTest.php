@@ -16,14 +16,14 @@ use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Sulu\Bundle\PageBundle\Content\Types\InternalLinks;
+use Sulu\Bundle\PageBundle\Content\Types\PageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 
-class InternalLinksTest extends TestCase
+class PageSelectionTest extends TestCase
 {
     /**
      * @var ContentQueryExecutorInterface
@@ -61,7 +61,7 @@ class InternalLinksTest extends TestCase
 
     public function testWriteWithNoneExistingUUID()
     {
-        $internalLinks = new InternalLinks(
+        $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
             false
@@ -84,12 +84,12 @@ class InternalLinksTest extends TestCase
         $this->property->getName()->willReturn('property');
         $this->property->getValue()->willReturn(['123-123-123', '123-456-789', 'not existing']);
 
-        $internalLinks->write($node->reveal(), $this->property->reveal(), 1, 'test', 'de', null);
+        $pageSelection->write($node->reveal(), $this->property->reveal(), 1, 'test', 'de', null);
     }
 
     public function testGetContentData()
     {
-        $internalLinks = new InternalLinks(
+        $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
             false
@@ -106,12 +106,12 @@ class InternalLinksTest extends TestCase
             ->shouldBeCalled();
         $this->contentQueryExecutor->execute('default', ['en'], $this->contentQueryBuilder->reveal())->willReturn([]);
 
-        $internalLinks->getContentData($this->property->reveal());
+        $pageSelection->getContentData($this->property->reveal());
     }
 
     public function testPreResolve()
     {
-        $internalLinks = new InternalLinks(
+        $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(),
             $this->referenceStore->reveal(),
@@ -125,7 +125,7 @@ class InternalLinksTest extends TestCase
         $structure->getLanguageCode()->willReturn('en');
         $this->property->getStructure()->willReturn($structure->reveal());
 
-        $internalLinks->preResolve($this->property->reveal());
+        $pageSelection->preResolve($this->property->reveal());
 
         $this->referenceStore->add('123-123-123')->shouldBeCalled();
     }

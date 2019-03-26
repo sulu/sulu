@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PageBundle\Repository;
 
 use PHPCR\RepositoryException;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\PageBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
@@ -295,7 +295,7 @@ class NodeRepository implements NodeRepositoryInterface
         $idString = '';
 
         if (!empty($ids)) {
-            $container = new InternalLinksContainer(
+            $container = new PageSelectionContainer(
                 $ids,
                 $this->queryExecutor,
                 $this->queryBuilder,

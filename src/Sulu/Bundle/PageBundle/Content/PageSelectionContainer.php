@@ -18,9 +18,9 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
- * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures.
+ * Container for PageSelection, holds the config for a internal links, and lazy loads the structures.
  */
-class InternalLinksContainer implements ArrayableInterface
+class PageSelectionContainer implements ArrayableInterface
 {
     /**
      * The content mapper, which is needed for lazy loading.

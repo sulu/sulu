@@ -71,7 +71,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     ],
                     'field_type_options' => [
                         'selection' => [
-                            'internal_links' => [
+                            'page_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [
@@ -87,7 +87,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                             ],
                         ],
                         'single_selection' => [
-                            'single_internal_link' => [
+                            'single_page_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
                                 'types' => [

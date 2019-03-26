@@ -48,13 +48,13 @@ class ContentTypesDumpCommandTest extends SuluTestCase
         $this->assertContains('color', $output);
         $this->assertContains('date', $output);
         $this->assertContains('email', $output);
-        $this->assertContains('internal_link', $output);
+        $this->assertContains('page_selection', $output);
         $this->assertContains('select', $output);
         $this->assertContains('number', $output);
         $this->assertContains('password', $output);
         $this->assertContains('phone', $output);
         $this->assertContains('resource_locator', $output);
-        $this->assertContains('single_internal_link', $output);
+        $this->assertContains('single_page_selection', $output);
         $this->assertContains('single_select', $output);
         $this->assertContains('text_area', $output);
         $this->assertContains('text_editor', $output);

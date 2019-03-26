@@ -437,16 +437,16 @@ class WebspaceCopyCommand extends Command
                     $localeDestination
                 );
                 break;
-            case 'internal_links':
-                $this->updateInternalLinks(
+            case 'page_selection':
+                $this->updatePageSelection(
                     $structureArray,
                     $property,
                     $localeSource,
                     $localeDestination
                 );
                 break;
-            case 'single_internal_link':
-                $this->updateSingleInternalLink(
+            case 'single_page_selection':
+                $this->updateSinglePageSelection(
                     $structureArray,
                     $property,
                     $localeSource,
@@ -542,8 +542,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * Updates references in structure for content type `single_internal_link`.
-     *
      * @param array $structureArray
      * @param PropertyMetadata $property
      * @param string $localeSource
@@ -596,14 +594,14 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * Updates references in structure for content type `internal_links`.
+     * Updates references in structure for content type `page_selection`.
      *
      * @param array $structureArray
      * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
-    protected function updateInternalLinks(
+    protected function updatePageSelection(
         array &$structureArray,
         PropertyMetadata $property,
         $localeSource,
@@ -629,14 +627,14 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * Updates references in structure for content type `single_internal_link`.
+     * Updates references in structure for content type `single_page_selection`.
      *
      * @param array $structureArray
      * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
-    protected function updateSingleInternalLink(
+    protected function updateSinglePageSelection(
         array &$structureArray,
         PropertyMetadata $property,
         $localeSource,
