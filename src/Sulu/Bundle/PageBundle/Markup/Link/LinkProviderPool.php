@@ -59,6 +59,6 @@ class LinkProviderPool implements LinkProviderPoolInterface
             $configuration[$name] = $provider->getConfiguration();
         }
 
-        return $configuration;
+        return array_filter($configuration);
     }
 }

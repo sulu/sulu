@@ -19,7 +19,7 @@ interface LinkProviderInterface
     /**
      * Return configuration for content-type.
      *
-     * @return LinkConfiguration
+     * @return ?LinkConfiguration
      */
     public function getConfiguration();
 

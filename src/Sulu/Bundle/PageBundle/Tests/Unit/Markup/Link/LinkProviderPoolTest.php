@@ -35,6 +35,7 @@ class LinkProviderPoolTest extends TestCase
         $this->providers = [
             'content' => $this->prophesize(LinkProviderInterface::class),
             'media' => $this->prophesize(LinkProviderInterface::class),
+            'page' => $this->prophesize(LinkProviderInterface::class),
         ];
 
         $this->pool = new LinkProviderPool(
@@ -94,6 +95,7 @@ class LinkProviderPoolTest extends TestCase
 
         $this->providers['content']->getConfiguration()->willReturn($configuration['content']);
         $this->providers['media']->getConfiguration()->willReturn($configuration['media']);
+        $this->providers['page']->getConfiguration()->willReturn(null);
 
         $this->assertEquals($configuration, $this->pool->getConfiguration());
     }
