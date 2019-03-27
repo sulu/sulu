@@ -56,7 +56,7 @@
             <argument>%sulu_document_manager.namespace_mapping%</argument>
         </service>
 
-        <service id="sulu_document_manager.property_encoder" class="Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder" public="false">
+        <service id="sulu_document_manager.property_encoder" class="Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder" public="true">
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
 

@@ -54,8 +54,10 @@ export default class InternalLinkPlugin extends Plugin {
             this.selection = this.editor.model.document.selection;
             const node = findModelItemInSelection(this.editor);
 
+            const id = node.getAttribute(LINK_HREF_ATTRIBUTE);
+
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
-            this.id = node.getAttribute(LINK_HREF_ATTRIBUTE);
+            this.id = !isNaN(id) ? parseInt(id) : id;
             this.openOverlay = node.getAttribute(LINK_PROVIDER_ATTRIBUTE);
 
             this.hideBalloon();
