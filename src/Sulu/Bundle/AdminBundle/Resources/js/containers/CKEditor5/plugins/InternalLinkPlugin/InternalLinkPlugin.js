@@ -20,6 +20,18 @@ import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no
 
 const DEFAULT_TARGET = '_self';
 
+const LINK_EVENT_TARGET = 'target';
+const LINK_EVENT_ID = 'id';
+const LINK_EVENT_PROVIDER = 'provider';
+const LINK_EVENT_TITLE = 'title';
+
+const LINK_HREF_ATTRIBUTE = 'internalLinkHref';
+const LINK_TARGET_ATTRIBUTE = 'internalLinkTarget';
+const LINK_PROVIDER_ATTRIBUTE = 'internalLinkProvider';
+const LINK_VALIDATION_STATE_ATTRIBUTE = 'validationState';
+
+const LINK_TAG = 'sulu:link';
+
 export default class InternalLinkPlugin extends Plugin {
     @observable openOverlay: ?string = undefined;
     @observable target: ?string = DEFAULT_TARGET;
@@ -34,7 +46,7 @@ export default class InternalLinkPlugin extends Plugin {
         this.balloonView = new LinkBalloonView(this.editor.locale);
 
         this.listenTo(this.balloonView, 'unlink', () => {
-            this.editor.execute('internalUnlink'); // TODO do not hardcode?
+            this.editor.execute('internalUnlink');
             this.hideBalloon();
         });
 
@@ -42,9 +54,9 @@ export default class InternalLinkPlugin extends Plugin {
             this.selection = this.editor.model.document.selection;
             const node = findModelItemInSelection(this.editor);
 
-            this.target = node.getAttribute('internalLinkTarget'); // TODO do not hardcode?
-            this.id = node.getAttribute('internalLinkHref'); // TODO do not hardcode?
-            this.openOverlay = node.getAttribute('provider'); // TODO do not hardcode?
+            this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
+            this.id = node.getAttribute(LINK_HREF_ATTRIBUTE);
+            this.openOverlay = node.getAttribute(LINK_PROVIDER_ATTRIBUTE);
 
             this.hideBalloon();
         }));
@@ -85,13 +97,20 @@ export default class InternalLinkPlugin extends Plugin {
             'internalLink',
             new LinkCommand(
                 this.editor,
-                {'internalLinkHref': 'id', 'internalLinkTarget': 'target'}, // TODO do not hardcode?
-                'title' // TODO do not hardcode?
+                {
+                    [LINK_HREF_ATTRIBUTE]: LINK_EVENT_ID,
+                    [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET,
+                    [LINK_PROVIDER_ATTRIBUTE]: LINK_EVENT_PROVIDER,
+                },
+                LINK_EVENT_TITLE
             )
         );
         this.editor.commands.add(
             'internalUnlink',
-            new UnlinkCommand(this.editor, ['internalLinkTarget', 'internalLinkHref', 'validationState', 'provider']) // TODO do not hardcode?
+            new UnlinkCommand(
+                this.editor,
+                [LINK_TARGET_ATTRIBUTE, LINK_HREF_ATTRIBUTE, LINK_VALIDATION_STATE_ATTRIBUTE, LINK_PROVIDER_ATTRIBUTE]
+            )
         );
 
         this.editor.ui.componentFactory.add('internalLink', (locale) => {
@@ -135,16 +154,16 @@ export default class InternalLinkPlugin extends Plugin {
             return dropdownButton;
         });
 
-        addLinkConversion(this.editor, 'sulu:link', 'validationState', 'sulu:validation-state'); // TODO do not hardcode?
-        addLinkConversion(this.editor, 'sulu:link', 'provider', 'provider'); // TODO do not hardcode?
-        addLinkConversion(this.editor, 'sulu:link', 'internalLinkTarget', 'target'); // TODO do not hardcode?
-        addLinkConversion(this.editor, 'sulu:link', 'internalLinkHref', 'href'); // TODO do not hardcode?
+        addLinkConversion(this.editor, LINK_TAG, LINK_VALIDATION_STATE_ATTRIBUTE, 'sulu:validation-state');
+        addLinkConversion(this.editor, LINK_TAG, LINK_PROVIDER_ATTRIBUTE, 'provider');
+        addLinkConversion(this.editor, LINK_TAG, LINK_TARGET_ATTRIBUTE, 'target');
+        addLinkConversion(this.editor, LINK_TAG, LINK_HREF_ATTRIBUTE, 'href');
 
         const view = this.editor.editing.view;
         view.addObserver(ClickObserver);
 
         this.listenTo(view.document, 'click', () => {
-            const externalLink = findViewLinkItemInSelection(this.editor, 'sulu:link'); // TODO do not hardcode?
+            const externalLink = findViewLinkItemInSelection(this.editor, LINK_TAG);
 
             this.hideBalloon();
 
@@ -165,8 +184,14 @@ export default class InternalLinkPlugin extends Plugin {
 
     @action handleOverlayConfirm = () => {
         this.editor.execute(
-            'internalLink', // TODO do not hardcode?
-            {id: this.id, provider: this.openOverlay, selection: this.selection, target: this.target, title: this.title}
+            'internalLink',
+            {
+                [LINK_EVENT_ID]: this.id,
+                [LINK_EVENT_PROVIDER]: this.openOverlay,
+                selection: this.selection,
+                [LINK_EVENT_TARGET]: this.target,
+                [LINK_EVENT_TITLE]: this.title,
+            }
         );
         this.openOverlay = undefined;
     };

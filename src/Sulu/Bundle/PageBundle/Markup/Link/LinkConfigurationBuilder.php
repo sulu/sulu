@@ -105,7 +105,8 @@ class LinkConfigurationBuilder
         return $this;
     }
 
-    public function getLinkConfiguration() {
+    public function getLinkConfiguration(): LinkConfiguration
+    {
         return new LinkConfiguration(
             $this->title,
             $this->resourceKey,
@@ -113,7 +114,7 @@ class LinkConfigurationBuilder
             $this->displayProperties,
             $this->overlayTitle,
             $this->emptyText,
-            $this->icon,
+            $this->icon
         );
     }
 }

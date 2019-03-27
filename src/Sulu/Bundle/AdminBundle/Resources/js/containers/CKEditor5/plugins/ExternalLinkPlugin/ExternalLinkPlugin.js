@@ -12,11 +12,18 @@ import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import ExternalLinkOverlay from './ExternalLinkOverlay';
 import UnlinkCommand from '../../UnlinkCommand';
-import {LINK_EVENT_TARGET, LINK_EVENT_URL, LINK_HREF_ATTRIBUTE, LINK_TAG, LINK_TARGET_ATTRIBUTE} from './constants';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
 const DEFAULT_TARGET = '_self';
+
+const LINK_EVENT_TARGET = 'target';
+const LINK_EVENT_URL = 'url';
+
+const LINK_HREF_ATTRIBUTE = 'externalLinkHref';
+const LINK_TARGET_ATTRIBUTE = 'externalLinkTarget';
+
+const LINK_TAG = 'a';
 
 export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
