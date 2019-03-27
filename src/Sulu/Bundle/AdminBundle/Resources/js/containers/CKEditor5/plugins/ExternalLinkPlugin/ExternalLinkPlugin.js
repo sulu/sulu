@@ -82,7 +82,13 @@ export default class ExternalLinkPlugin extends Plugin {
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
             const button = new ButtonView(locale);
 
-            button.bind('isEnabled').to(this.editor.commands.get('externalLink'), 'buttonEnabled');
+            button.bind('isEnabled').to(
+                this.editor.commands.get('internalLink'),
+                'buttonEnabled',
+                this.editor.commands.get('externalLink'),
+                'buttonEnabled',
+                (internalLinkEnabled, externalLinkEnabled) => internalLinkEnabled && externalLinkEnabled
+            );
 
             button.set({icon: linkIcon});
 
