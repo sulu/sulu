@@ -91,7 +91,7 @@ export default class InternalLinkPlugin extends Plugin {
         );
         this.editor.commands.add(
             'internalUnlink',
-            new UnlinkCommand(this.editor, ['internalLinkTarget', 'internalLinkHref']) // TODO do not hardcode?
+            new UnlinkCommand(this.editor, ['internalLinkTarget', 'internalLinkHref', 'validationState', 'provider']) // TODO do not hardcode?
         );
 
         this.editor.ui.componentFactory.add('internalLink', (locale) => {
@@ -135,7 +135,8 @@ export default class InternalLinkPlugin extends Plugin {
             return dropdownButton;
         });
 
-        addLinkConversion(this.editor, 'sulu:link', 'provider', 'provider');
+        addLinkConversion(this.editor, 'sulu:link', 'validationState', 'sulu:validation-state'); // TODO do not hardcode?
+        addLinkConversion(this.editor, 'sulu:link', 'provider', 'provider'); // TODO do not hardcode?
         addLinkConversion(this.editor, 'sulu:link', 'internalLinkTarget', 'target'); // TODO do not hardcode?
         addLinkConversion(this.editor, 'sulu:link', 'internalLinkHref', 'href'); // TODO do not hardcode?
 

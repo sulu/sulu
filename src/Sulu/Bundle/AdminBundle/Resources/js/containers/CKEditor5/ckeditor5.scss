@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$textEditorfontSize: 12px;
+$textEditorFontSize: 12px;
 $textEditorButtonMinSize: 20px;
 $textEditorBorderRadius: 3px;
 $textEditorBackgroundColor: $silver;
@@ -12,12 +12,14 @@ $textEditorLightAccentColor: #e5f4f7;
 $textEditorWhiteHover: $mercury;
 $textEditorPanelBackground: $white;
 $textEditorLinkColor: $blue;
+$textEditorRemovedLinkColor: $roman;
+$textEditorUnpublishedLinkColor: $gold;
 
 :global {
     :root {
         /* font size */
-        --ck-font-size-base: $textEditorfontSize;
-        --ck-icon-size: $textEditorfontSize;
+        --ck-font-size-base: $textEditorFontSize;
+        --ck-icon-size: $textEditorFontSize;
 
         /* shadows */
         --ck-color-shadow-inner: none;
@@ -112,6 +114,20 @@ $textEditorLinkColor: $blue;
         sulu\:link {
             color: $textEditorLinkColor !important;
             text-decoration: underline !important;
+        }
+
+        sulu\:link[sulu\:validation-state='removed'] {
+            color: $textEditorRemovedLinkColor !important;
+            text-decoration: line-through !important;
+        }
+
+        sulu\:link[sulu\:validation-state='unpublished']::before {
+            color: $textEditorUnpublishedLinkColor;
+            content: '•';
+            display: inline-block;
+            font-size: 20px;
+            line-height: $textEditorFontSize;
+            vertical-align: middle;
         }
         /* stylelint-enable */
     }

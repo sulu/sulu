@@ -67,15 +67,15 @@ class PageLinkProvider implements LinkProviderInterface
      */
     public function getConfiguration()
     {
-        return new LinkConfiguration(
-            $this->translator->trans('sulu_page.pages', [], 'admin'),
-            'pages',
-            'column_list',
-            ['title'],
-            $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin'),
-            $this->translator->trans('sulu_page.no_page_selected', [], 'admin'),
-            'su-document'
-        );
+        return LinkConfigurationBuilder::create()
+            ->setTitle($this->translator->trans('sulu_page.pages', [], 'admin'))
+            ->setResourceKey('pages')
+            ->setListAdapter('column_list')
+            ->setDisplayProperties(['title'])
+            ->setOverlayTitle($this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin'))
+            ->setEmptyText($this->translator->trans('sulu_page.no_page_selected', [], 'admin'))
+            ->setIcon('su-document')
+            ->getLinkConfiguration();
     }
 
     /**
