@@ -37,6 +37,24 @@ The following parameters where removed:
 
 Instead you need now create a service with the same id to overwrite the class.
 
+### Markup LinkConfiguration
+
+The `LinkConfiguration`, which has to be provided by any class implementing the `LinkProviderInterface`, changed,
+because there are different arguments to pass now. You can also use the `LinkConfigurationBuilder`, which will guide you
+through the process.
+
+### sulu:media Markup Tag
+
+Previously the `sulu:media` tag was used to link different media in the text editor. There is also a `sulu:link` tag,
+which has a concept of providers, to load different type of resources. Since this is used for pages and in our
+ArticleBundle we have decided to remove the `sulu:media` tag and embed it in the `sulu:link` tag as well. This has an
+impact on your data in PHPCR, since the `sulu:media` tags have to be replaced. This was implemented in a PHPCR migration
+so just make sure you execute the migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
 ### Removed sulu twig variables
 
 The following sulu twig variables are removed and its symfony equivilants should be used instead:
