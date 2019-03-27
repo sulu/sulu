@@ -53,7 +53,7 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
-                if (is_string($propertyValue) && strpos($propertyValue, '<sulu:media') !== false) {
+                if (is_string($propertyValue) && false !== strpos($propertyValue, '<sulu:media')) {
                     $newPropertyValue = preg_replace_callback(
                         '/<sulu:media (.*?)>(.*?)<\/sulu:media>/',
                         function($match) {
@@ -80,7 +80,7 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
-                if (is_string($propertyValue) && strpos($propertyValue, '<sulu:link provider="media"') !== false) {
+                if (is_string($propertyValue) && false !== strpos($propertyValue, '<sulu:link provider="media"')) {
                     $newPropertyValue = preg_replace_callback(
                         '/<sulu:link provider="media" target="_self" href="(.*?)">(.*?)<\/sulu:link>/',
                         function($match) {
