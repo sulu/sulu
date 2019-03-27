@@ -84,9 +84,7 @@ export default class ExternalLinkPlugin extends Plugin {
 
             button.bind('isEnabled').to(this.editor.commands.get('externalLink'), 'buttonEnabled');
 
-            button.set({
-                icon: linkIcon,
-            });
+            button.set({icon: linkIcon});
 
             button.on('execute', action(() => {
                 this.selection = this.editor.model.document.selection;

@@ -98,6 +98,7 @@ export default class InternalLinkPlugin extends Plugin {
             const dropdownButton = createDropdown(locale);
             const list = new ListView(locale);
 
+            dropdownButton.bind('isEnabled').to(this.editor.commands.get('internalLink'), 'buttonEnabled');
             dropdownButton.buttonView.set({icon: linkIcon});
 
             internalLinkTypeRegistry.getKeys().forEach((key) => {
