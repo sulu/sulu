@@ -23,7 +23,7 @@ class CacheEvent extends Event
      * @var Request
      */
     private $request;
-    
+
     /**
      * @param Request $request the request being processed
      */
@@ -31,7 +31,7 @@ class CacheEvent extends Event
     {
         $this->request = $request;
     }
-    
+
     /**
      * Get the request that is being processed.
      *
