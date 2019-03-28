@@ -2,6 +2,7 @@
 import React from 'react';
 import Dialog from '../../../../components/Dialog';
 import Form from '../../../../components/Form';
+import Input from '../../../../components/Input';
 import SingleSelect from '../../../../components/SingleSelect';
 import Url from '../../../../components/Url';
 import {translate} from '../../../../utils/Translator';
@@ -10,15 +11,17 @@ type Props = {|
     onCancel: () => void,
     onConfirm: () => void,
     onTargetChange: (target: string) => void,
+    onTitleChange: (title: ?string) => void,
     onUrlChange: (url: ?string) => void,
     open: boolean,
     target: ?string,
+    title: ?string,
     url: ?string,
 |};
 
 export default class ExternalLinkOverlay extends React.Component<Props> {
     render() {
-        const {onCancel, onConfirm, onTargetChange, onUrlChange, open, target, url} = this.props;
+        const {onCancel, onConfirm, onTargetChange, onTitleChange, onUrlChange, open, target, title, url} = this.props;
 
         return (
             <Dialog
@@ -31,6 +34,10 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                 title={translate('sulu_admin.link')}
             >
                 <Form>
+                    <Form.Field label={translate('sulu_admin.link_title')}>
+                        <Input onChange={onTitleChange} value={title} />
+                    </Form.Field>
+
                     <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                         <SingleSelect onChange={onTargetChange} value={target}>
                             <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>

@@ -18,16 +18,19 @@ import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no
 const DEFAULT_TARGET = '_self';
 
 const LINK_EVENT_TARGET = 'target';
+const LINK_EVENT_TITLE = 'title';
 const LINK_EVENT_URL = 'url';
 
 const LINK_HREF_ATTRIBUTE = 'externalLinkHref';
 const LINK_TARGET_ATTRIBUTE = 'externalLinkTarget';
+const LINK_TITLE_ATTRIBUTE = 'externalLinkTitle';
 
 const LINK_TAG = 'a';
 
 export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
     @observable target: ?string = DEFAULT_TARGET;
+    @observable title: ?string;
     @observable url: ?string;
     balloon: ContextualBalloon;
 
@@ -48,6 +51,7 @@ export default class ExternalLinkPlugin extends Plugin {
             const node = findModelItemInSelection(this.editor);
 
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
+            this.title = node.getAttribute(LINK_TITLE_ATTRIBUTE);
             this.url = node.getAttribute(LINK_HREF_ATTRIBUTE);
             this.open = true;
 
@@ -62,9 +66,11 @@ export default class ExternalLinkPlugin extends Plugin {
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onTargetChange={this.handleTargetChange}
+                            onTitleChange={this.handleTitleChange}
                             onUrlChange={this.handleUrlChange}
                             open={this.open}
                             target={this.target}
+                            title={this.title}
                             url={this.url}
                         />
                     )}
@@ -77,13 +83,17 @@ export default class ExternalLinkPlugin extends Plugin {
             'externalLink',
             new LinkCommand(
                 this.editor,
-                {[LINK_HREF_ATTRIBUTE]: LINK_EVENT_URL, [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET},
+                {
+                    [LINK_HREF_ATTRIBUTE]: LINK_EVENT_URL,
+                    [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET,
+                    [LINK_TITLE_ATTRIBUTE]: LINK_EVENT_TITLE,
+                },
                 LINK_EVENT_URL
             )
         );
         this.editor.commands.add(
             'externalUnlink',
-            new UnlinkCommand(this.editor, [LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE])
+            new UnlinkCommand(this.editor, [LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, LINK_TITLE_ATTRIBUTE])
         );
 
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
@@ -103,6 +113,7 @@ export default class ExternalLinkPlugin extends Plugin {
                 this.selection = this.editor.model.document.selection;
                 this.open = true;
                 this.target = DEFAULT_TARGET;
+                this.title = undefined;
                 this.url = undefined;
             }));
 
@@ -111,6 +122,7 @@ export default class ExternalLinkPlugin extends Plugin {
 
         addLinkConversion(this.editor, LINK_TAG, LINK_TARGET_ATTRIBUTE, 'target');
         addLinkConversion(this.editor, LINK_TAG, LINK_HREF_ATTRIBUTE, 'href');
+        addLinkConversion(this.editor, LINK_TAG, LINK_TITLE_ATTRIBUTE, 'title');
 
         const view = this.editor.editing.view;
         view.addObserver(ClickObserver);
@@ -139,7 +151,12 @@ export default class ExternalLinkPlugin extends Plugin {
     @action handleOverlayConfirm = () => {
         this.editor.execute(
             'externalLink',
-            {selection: this.selection, [LINK_EVENT_TARGET]: this.target, [LINK_EVENT_URL]: this.url}
+            {
+                selection: this.selection,
+                [LINK_EVENT_TARGET]: this.target,
+                [LINK_EVENT_TITLE]: this.title,
+                [LINK_EVENT_URL]: this.url
+            }
         );
         this.open = false;
     };
@@ -150,6 +167,10 @@ export default class ExternalLinkPlugin extends Plugin {
 
     @action handleTargetChange = (target: ?string) => {
         this.target = target;
+    };
+
+    @action handleTitleChange = (title: ?string) => {
+        this.title = title;
     };
 
     @action handleUrlChange = (url: ?string) => {

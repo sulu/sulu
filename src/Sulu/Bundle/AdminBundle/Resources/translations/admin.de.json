@@ -120,6 +120,7 @@
     "sulu_admin.delimiter_tab": "Tab",
     "sulu_admin.enclosure_nothing": "Nichts",
     "sulu_admin.link": "Link",
+    "sulu_admin.link_title": "Alternativer Titel",
     "sulu_admin.link_target": "Link Ziel",
     "sulu_admin.link_url": "Link URL"
 }
