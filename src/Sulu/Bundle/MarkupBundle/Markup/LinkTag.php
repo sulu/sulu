@@ -15,9 +15,6 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 
-/**
- * Extends the sulu markup with the "sulu:link" tag.
- */
 class LinkTag implements TagInterface
 {
     const VALIDATE_UNPUBLISHED = 'unpublished';

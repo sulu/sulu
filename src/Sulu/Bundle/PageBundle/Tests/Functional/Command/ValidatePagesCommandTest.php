@@ -197,7 +197,7 @@ class ValidatePagesCommandTest extends SuluTestCase
                 'title' => 'Node4',
                 'article' => [
                     [
-                        'text' => '<p><sulu:link href="' . $page1->getUuid() . '" provider="page" target="_self" title="Link-Title">Link-Title</sulu:link></p>',
+                        'text' => '<p><sulu-link href="' . $page1->getUuid() . '" provider="page" target="_self" title="Link-Title">Link-Title</sulu-link></p>',
                         'title' => 'Node4 block',
                         'type' => 'textEditor',
                     ],

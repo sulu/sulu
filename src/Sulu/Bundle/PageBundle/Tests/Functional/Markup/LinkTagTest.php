@@ -101,32 +101,32 @@ class LinkTagTest extends TestCase
     {
         return [
             [
-                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>',
+                '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'content' => 'Test-Content'],
                 '<a href="/de/test" title="Test-Title">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title"/>',
+                '<sulu-link href="123-123-123" title="Test-Title"/>',
                 ['href' => '123-123-123', 'title' => 'Test-Title'],
                 '<a href="/de/test" title="Test-Title">Pagetitle</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title"></sulu:link>',
+                '<sulu-link href="123-123-123" title="Test-Title"></sulu-link>',
                 ['href' => '123-123-123', 'title' => 'Test-Title'],
                 '<a href="/de/test" title="Test-Title">Pagetitle</a>',
             ],
             [
-                '<sulu:link href="123-123-123">Test-Content</sulu:link>',
+                '<sulu-link href="123-123-123">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'content' => 'Test-Content'],
                 '<a href="/de/test" title="Pagetitle">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" target="_blank">Test-Content</sulu:link>',
+                '<sulu-link href="123-123-123" title="Test-Title" target="_blank">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'target' => '_blank', 'content' => 'Test-Content'],
                 '<a href="/de/test" title="Test-Title" target="_blank">Test-Content</a>',
             ],
             [
-                '<sulu:link href="123-123-123" title="Test-Title" target="_self">Test-Content</sulu:link>',
+                '<sulu-link href="123-123-123" title="Test-Title" target="_self">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'target' => '_self', 'content' => 'Test-Content'],
                 '<a href="/de/test" title="Test-Title" target="_self">Test-Content</a>',
             ],
@@ -181,10 +181,10 @@ class LinkTagTest extends TestCase
             'http'
         )->willReturn('/de' . $content2->getUrl());
 
-        $tag1 = '<sulu:link href="123-123-123">Test-Content</sulu:link>';
-        $tag2 = '<sulu:link href="123-123-123" title="Test-Title"/>';
-        $tag3 = '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>';
-        $tag4 = '<sulu:link href="123-123-123" title="Test-Title" target="_blank">Test-Content</sulu:link>';
+        $tag1 = '<sulu-link href="123-123-123">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="123-123-123" title="Test-Title"/>';
+        $tag3 = '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>';
+        $tag4 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank">Test-Content</sulu-link>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -217,10 +217,10 @@ class LinkTagTest extends TestCase
         $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
             ->willReturn([])->shouldBeCalledTimes(1);
 
-        $tag1 = '<sulu:link href="123-123-123">Test-Content</sulu:link>';
-        $tag2 = '<sulu:link href="123-123-123" title="Test-Title"/>';
-        $tag3 = '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>';
-        $tag4 = '<sulu:link href="123-123-123"/>';
+        $tag1 = '<sulu-link href="123-123-123">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="123-123-123" title="Test-Title"/>';
+        $tag3 = '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>';
+        $tag4 = '<sulu-link href="123-123-123"/>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -251,7 +251,7 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -270,7 +270,7 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -280,7 +280,7 @@ class LinkTagTest extends TestCase
         );
 
         $this->assertEquals(
-            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED],
+            ['<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>' => LinkTag::VALIDATE_REMOVED],
             $result
         );
     }
@@ -293,12 +293,12 @@ class LinkTagTest extends TestCase
 
         $result = $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
                 ],
-                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => [
+                '<sulu-link href="312-312-312" title="Test-Title">Test-Content</sulu-link>' => [
                     'href' => '312-312-312',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
@@ -309,7 +309,7 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED,
+                '<sulu-link href="312-312-312" title="Test-Title">Test-Content</sulu-link>' => LinkTag::VALIDATE_REMOVED,
             ],
             $result
         );

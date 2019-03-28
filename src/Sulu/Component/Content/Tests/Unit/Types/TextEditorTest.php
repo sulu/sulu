@@ -62,7 +62,7 @@ class TextEditorTest extends TestCase
     public function testRead()
     {
         $content = <<<'EOT'
-<sulu:link href="123">Hello Hikaro Sulu</sulu:link>
+<sulu-link href="123">Hello Hikaro Sulu</sulu-link>
 EOT;
 
         $this->property->getName()->willReturn('i18n:de-description');
@@ -72,7 +72,7 @@ EOT;
 
         $this->property->setValue(
             <<<'EOT'
-<sulu:link href="123">Hello Hikaro Sulu</sulu:link>
+<sulu-link href="123">Hello Hikaro Sulu</sulu-link>
 EOT
         )->shouldBeCalled();
 
@@ -82,9 +82,9 @@ EOT
     public function testReadInvalid()
     {
         $content = <<<'EOT'
-<sulu:link href="123">Hello</sulu:link>
-<sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789">Sulu</sulu:link>
+<sulu-link href="123">Hello</sulu-link>
+<sulu-link href="456">Hikaro</sulu-link>
+<sulu-link href="789">Sulu</sulu-link>
 EOT;
 
         $this->property->getName()->willReturn('i18n:de-description');
@@ -92,16 +92,16 @@ EOT;
 
         $this->markupParser->validate($content, 'de')->willReturn(
             [
-                '<sulu:link href="123">Hello</sulu:link>' => self::VALIDATE_REMOVED,
-                '<sulu:link href="789">Sulu</sulu:link>' => self::VALIDATE_UNPUBLISHED,
+                '<sulu-link href="123">Hello</sulu-link>' => self::VALIDATE_REMOVED,
+                '<sulu-link href="789">Sulu</sulu-link>' => self::VALIDATE_UNPUBLISHED,
             ]
         );
 
         $this->property->setValue(
             <<<'EOT'
-<sulu:link href="123" sulu:validation-state="removed">Hello</sulu:link>
-<sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789" sulu:validation-state="unpublished">Sulu</sulu:link>
+<sulu-link href="123" sulu:validation-state="removed">Hello</sulu-link>
+<sulu-link href="456">Hikaro</sulu-link>
+<sulu-link href="789" sulu:validation-state="unpublished">Sulu</sulu-link>
 EOT
         )->shouldBeCalled();
 
@@ -111,17 +111,17 @@ EOT
     public function testWrite()
     {
         $content = <<<'EOT'
-<sulu:link href="123">Hello</sulu:link>
-<sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789">Sulu</sulu:link>
+<sulu-link href="123">Hello</sulu-link>
+<sulu-link href="456">Hikaro</sulu-link>
+<sulu-link href="789">Sulu</sulu-link>
 EOT;
 
         $this->property->getName()->willReturn('i18n:de-description');
         $this->property->getValue()->willReturn(
             <<<'EOT'
-<sulu:link href="123" sulu:validation-state="removed">Hello</sulu:link>
-<sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789" sulu:validation-state="unpublished">Sulu</sulu:link>
+<sulu-link href="123" sulu:validation-state="removed">Hello</sulu-link>
+<sulu-link href="456">Hikaro</sulu-link>
+<sulu-link href="789" sulu:validation-state="unpublished">Sulu</sulu-link>
 EOT
         );
 

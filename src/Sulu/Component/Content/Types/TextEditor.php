@@ -22,7 +22,7 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextEditor extends SimpleContentType
 {
-    const INVALID_REGEX = '/(<%s:[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s:[^\/>]*>)/';
+    const INVALID_REGEX = '/(<%s-[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s-[^\/>]*>)/';
 
     /**
      * @var MarkupParserInterface

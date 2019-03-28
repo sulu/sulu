@@ -33,7 +33,7 @@ const LINK_PROVIDER_ATTRIBUTE = 'internalLinkProvider';
 const LINK_TITLE_ATTRIBUTE = 'internalLinkTitle';
 const LINK_VALIDATION_STATE_ATTRIBUTE = 'validationState';
 
-const LINK_TAG = 'sulu:link';
+const LINK_TAG = 'sulu-link';
 
 export default class InternalLinkPlugin extends Plugin {
     @observable openOverlay: ?string = undefined;

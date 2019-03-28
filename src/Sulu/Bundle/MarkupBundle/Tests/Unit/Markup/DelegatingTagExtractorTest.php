@@ -54,8 +54,8 @@ class DelegatingTagExtractorTest extends TestCase
 
         $extractors[0]->extract($this->html)->willReturn(
             [
-                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
-                new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
+                new TagMatchGroup('sulu', 'link', ['<sulu-link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'media', ['<sulu-media id="1"/>' => ['content' => '', 'id' => 1]]),
             ]
         )->shouldBeCalledTimes(1);
         $extractors[1]->extract($this->html)->willReturn(
@@ -65,7 +65,7 @@ class DelegatingTagExtractorTest extends TestCase
                     'link',
                     ['<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123']]
                 ),
-                new TagMatchGroup('test', 'test', ['<test:test/>' => ['content' => '']]),
+                new TagMatchGroup('test', 'test', ['<test-test/>' => ['content' => '']]),
             ]
         )->shouldBeCalledTimes(1);
 
@@ -80,14 +80,14 @@ class DelegatingTagExtractorTest extends TestCase
 
         $this->assertEquals(
             [
-                new TagMatchGroup('sulu', 'link', ['<sulu:link/>' => ['content' => '']]),
-                new TagMatchGroup('sulu', 'media', ['<sulu:media id="1"/>' => ['content' => '', 'id' => 1]]),
+                new TagMatchGroup('sulu', 'link', ['<sulu-link/>' => ['content' => '']]),
+                new TagMatchGroup('sulu', 'media', ['<sulu-media id="1"/>' => ['content' => '', 'id' => 1]]),
                 new TagMatchGroup(
                     'test',
                     'link',
                     ['<test:link href="123-123-123/>' => ['content' => '', 'href' => '123-123-123']]
                 ),
-                new TagMatchGroup('test', 'test', ['<test:test/>' => ['content' => '']]),
+                new TagMatchGroup('test', 'test', ['<test-test/>' => ['content' => '']]),
             ],
             $extractor->extract($this->html)
         );

@@ -53,16 +53,32 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
-                if (is_string($propertyValue) && false !== strpos($propertyValue, '<sulu:media')) {
-                    $newPropertyValue = preg_replace_callback(
-                        '/<sulu:media (.*?)>(.*?)<\/sulu:media>/',
-                        function($match) {
-                            return '<sulu:link provider="media" target="_self" ' . str_replace('id=', 'href=', $match[1]) . '>' . $match[2] . '</sulu:link>';
-                        },
-                        $propertyValue
-                    );
 
-                    $property->setValue($newPropertyValue);
+                if (is_string($propertyValue)) {
+                    if (false !== strpos($propertyValue, '<sulu:media')) {
+                        $propertyValue = preg_replace_callback(
+                            '/<sulu:media (.*?)>(.*?)<\/sulu:media>/',
+                            function($match) {
+                                return '<sulu-link provider="media" target="_self" '
+                                    . str_replace('id=', 'href=', $match[1]) . '>'
+                                    . $match[2]
+                                    . '</sulu-link>';
+                            },
+                            $propertyValue
+                        );
+                    }
+
+                    if (false !== strpos($propertyValue, '<sulu:')) {
+                        $propertyValue = preg_replace(
+                            '/<sulu:(.*?) (.*?)>(.*?)<\/sulu:(.*?)>/',
+                            '<sulu-$1 $2>$3</sulu-$4>',
+                            $propertyValue
+                        );
+                    }
+
+                    if ($propertyValue !== $property->getValue()) {
+                        $property->setValue($propertyValue);
+                    }
                 }
             }
         }
@@ -80,16 +96,29 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
-                if (is_string($propertyValue) && false !== strpos($propertyValue, '<sulu:link provider="media"')) {
-                    $newPropertyValue = preg_replace_callback(
-                        '/<sulu:link provider="media" target="_self" href="(.*?)">(.*?)<\/sulu:link>/',
-                        function($match) {
-                            return '<sulu:media id="' . $match[1] . '">' . $match[2] . '</sulu:media>';
-                        },
-                        $propertyValue
-                    );
 
-                    $property->setValue($newPropertyValue);
+                if (is_string($propertyValue)) {
+                    if (false !== strpos($propertyValue, '<sulu-link provider="media"')) {
+                        $propertyValue = preg_replace_callback(
+                            '/<sulu-link provider="media" target="_self" href="(.*?)">(.*?)<\/sulu-link>/',
+                            function($match) {
+                                return '<sulu:media id="' . $match[1] . '">' . $match[2] . '</sulu:media>';
+                            },
+                            $propertyValue
+                        );
+                    }
+
+                    if (false !== strpos($propertyValue, '<sulu-')) {
+                        $propertyValue = preg_replace(
+                            '/<sulu-(.*?) (.*?)>(.*?)<\/sulu-(.*?)>/',
+                            '<sulu:$1 $2>$3</sulu:$4>',
+                            $propertyValue
+                        );
+                    }
+
+                    if ($propertyValue !== $property->getValue()) {
+                        $property->setValue($propertyValue);
+                    }
                 }
             }
         }

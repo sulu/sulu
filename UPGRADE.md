@@ -43,6 +43,11 @@ The `LinkConfiguration`, which has to be provided by any class implementing the 
 because there are different arguments to pass now. You can also use the `LinkConfigurationBuilder`, which will guide you
 through the process.
 
+### sulu:link Markup Tag
+
+The `sulu:link` tag made problems in some cases, because other tools could not handle the colon in its name. So we have
+replace it by a dash. The tag therefore is called `sulu-link` from now on.
+
 ### sulu:media Markup Tag
 
 Previously the `sulu:media` tag was used to link different media in the text editor. There is also a `sulu:link` tag,

@@ -69,16 +69,16 @@ class HtmlMarkupParserTest extends TestCase
     public function testParse()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
+            ['<sulu-link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test" />
+        <sulu-link href="123-123-123" title="test" />
     </body>
 </html>
 EOT;
@@ -92,22 +92,22 @@ EOT;
     {
         $this->linkTag->parseAll(
             [
-                '<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test'],
-                '<sulu:link href="312-312-312" title="test" />' => ['href' => '312-312-312', 'title' => 'test'],
+                '<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test'],
+                '<sulu-link href="312-312-312" title="test" />' => ['href' => '312-312-312', 'title' => 'test'],
             ],
             'de'
         )->willReturn(
             [
-                '<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>',
-                '<sulu:link href="312-312-312" title="test" />' => '<a href="/test-2" title="test">page-2 title</a>',
+                '<sulu-link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>',
+                '<sulu-link href="312-312-312" title="test" />' => '<a href="/test-2" title="test">page-2 title</a>',
             ]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test" />
-        <sulu:link href="312-312-312" title="test" />
+        <sulu-link href="123-123-123" title="test" />
+        <sulu-link href="312-312-312" title="test" />
     </body>
 </html>
 EOT;
@@ -121,17 +121,17 @@ EOT;
     public function testParseSame()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
+            ['<sulu-link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         )->shouldBeCalledTimes(1);
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test" />
-        <sulu:link href="123-123-123" title="test" />
+        <sulu-link href="123-123-123" title="test" />
+        <sulu-link href="123-123-123" title="test" />
     </body>
 </html>
 EOT;
@@ -139,29 +139,29 @@ EOT;
         $response = $this->parser->parse($content, 'de');
 
         $this->assertEquals(2, preg_match_all('/<a href="\/test" title="test">page title<\/a>/', $response));
-        $this->assertNotContains('<sulu:link href="123-123-123" title="test" />', $response);
+        $this->assertNotContains('<sulu-link href="123-123-123" title="test" />', $response);
     }
 
     public function testParseDifferentTags()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
+            ['<sulu-link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         );
         $this->mediaTag->parseAll(
-            ['<sulu:media src="1" title="test" />' => ['src' => '1', 'title' => 'test']],
+            ['<sulu-media src="1" title="test" />' => ['src' => '1', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:media src="1" title="test" />' => '<img src="/img/test.jpg" title="test"/>']
+            ['<sulu-media src="1" title="test" />' => '<img src="/img/test.jpg" title="test"/>']
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test" />
-        <sulu:media src="1" title="test" />
+        <sulu-link href="123-123-123" title="test" />
+        <sulu-media src="1" title="test" />
     </body>
 </html>
 EOT;
@@ -176,7 +176,7 @@ EOT;
     {
         $this->linkTag->parseAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="test">link content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -184,13 +184,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => '<a href="/test" title="test">link content</a>']
+            ['<sulu-link href="123-123-123" title="test">link content</sulu-link>' => '<a href="/test" title="test">link content</a>']
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu-link href="123-123-123" title="test">link content</sulu-link>
     </body>
 </html>
 EOT;
@@ -204,24 +204,24 @@ EOT;
     {
         $this->linkTag->parseAll(
             [
-                '<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => [
+                '<sulu-link href="123-123-123" title="test"><sulu-media id="1"/></sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
-                    'content' => '<sulu:media id="1"/>',
+                    'content' => '<sulu-media id="1"/>',
                 ],
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>' => '<a href="/test" title="test"><sulu:media id="1"/></a>']
+            ['<sulu-link href="123-123-123" title="test"><sulu-media id="1"/></sulu-link>' => '<a href="/test" title="test"><sulu-media id="1"/></a>']
         );
 
-        $this->mediaTag->parseAll(['<sulu:media id="1"/>' => ['id' => 1]], 'de')
-            ->willReturn(['<sulu:media id="1"/>' => '<img src="test.jpg"/>']);
+        $this->mediaTag->parseAll(['<sulu-media id="1"/>' => ['id' => 1]], 'de')
+            ->willReturn(['<sulu-media id="1"/>' => '<img src="test.jpg"/>']);
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test"><sulu:media id="1"/></sulu:link>
+        <sulu-link href="123-123-123" title="test"><sulu-media id="1"/></sulu-link>
     </body>
 </html>
 EOT;
@@ -235,7 +235,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="test">link content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -247,7 +247,7 @@ EOT;
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu-link href="123-123-123" title="test">link content</sulu-link>
     </body>
 </html>
 EOT;
@@ -261,7 +261,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="test">link content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -269,13 +269,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_UNPUBLISHED]
+            ['<sulu-link href="123-123-123" title="test">link content</sulu-link>' => self::VALIDATE_UNPUBLISHED]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu-link href="123-123-123" title="test">link content</sulu-link>
     </body>
 </html>
 EOT;
@@ -285,7 +285,7 @@ EOT;
         $this->assertCount(1, $response);
         $this->assertEquals(
             self::VALIDATE_UNPUBLISHED,
-            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
+            $response['<sulu-link href="123-123-123" title="test">link content</sulu-link>']
         );
     }
 
@@ -293,7 +293,7 @@ EOT;
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                '<sulu-link href="123-123-123" title="test">link content</sulu-link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
@@ -301,13 +301,13 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_REMOVED]
+            ['<sulu-link href="123-123-123" title="test">link content</sulu-link>' => self::VALIDATE_REMOVED]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+        <sulu-link href="123-123-123" title="test">link content</sulu-link>
     </body>
 </html>
 EOT;
@@ -317,30 +317,30 @@ EOT;
         $this->assertCount(1, $response);
         $this->assertEquals(
             self::VALIDATE_REMOVED,
-            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
+            $response['<sulu-link href="123-123-123" title="test">link content</sulu-link>']
         );
     }
 
     public function testValidateDifferentInvalidTags()
     {
         $this->linkTag->validateAll(
-            ['<sulu:link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']],
+            ['<sulu-link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test"/>' => self::VALIDATE_REMOVED]
+            ['<sulu-link href="123-123-123" title="test"/>' => self::VALIDATE_REMOVED]
         );
         $this->mediaTag->validateAll(
-            ['<sulu:media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']],
+            ['<sulu-media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:media src="1" title="test"/>' => self::VALIDATE_UNPUBLISHED]
+            ['<sulu-media src="1" title="test"/>' => self::VALIDATE_UNPUBLISHED]
         );
 
         $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test"/>
-        <sulu:media src="1" title="test"/>
+        <sulu-link href="123-123-123" title="test"/>
+        <sulu-media src="1" title="test"/>
     </body>
 </html>
 EOT;
@@ -350,11 +350,11 @@ EOT;
         $this->assertCount(2, $response);
         $this->assertEquals(
             self::VALIDATE_REMOVED,
-            $response['<sulu:link href="123-123-123" title="test"/>']
+            $response['<sulu-link href="123-123-123" title="test"/>']
         );
         $this->assertEquals(
             self::VALIDATE_UNPUBLISHED,
-            $response['<sulu:media src="1" title="test"/>']
+            $response['<sulu-media src="1" title="test"/>']
         );
     }
 }
