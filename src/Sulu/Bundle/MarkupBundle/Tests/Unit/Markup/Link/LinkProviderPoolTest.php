@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup\Link;
+namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkConfiguration;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPool;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\ProviderNotFoundException;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\ProviderNotFoundException;
 
 class LinkProviderPoolTest extends TestCase
 {

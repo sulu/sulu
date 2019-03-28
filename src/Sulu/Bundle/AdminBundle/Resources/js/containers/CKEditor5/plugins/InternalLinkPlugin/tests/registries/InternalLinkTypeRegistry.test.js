@@ -29,7 +29,7 @@ test('Add internal link type to InternalLinkTypeRegistry', () => {
         icon: 'icon',
         listAdapter: 'listAdapter',
         overlayTitle: 'overlayTitle',
-        resourceKey:  'resourceKey',
+        resourceKey: 'resourceKey',
     };
 
     internalLinkTypeRegistry.add('test1', Component, 'Test1', options);

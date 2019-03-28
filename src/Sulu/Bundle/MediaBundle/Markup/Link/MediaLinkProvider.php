@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Markup\Link;
 
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkItem;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderInterface;
 
 class MediaLinkProvider implements LinkProviderInterface
 {

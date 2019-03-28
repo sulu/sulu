@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup;
+namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkItem;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Bundle\PageBundle\Markup\LinkTag;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
 
 class LinkTagTest extends TestCase
 {

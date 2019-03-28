@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\PageBundle\Markup\Link;
 
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -18,9 +21,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Integrates pages into link-system.
- */
 class PageLinkProvider implements LinkProviderInterface
 {
     /**

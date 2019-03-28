@@ -23,7 +23,7 @@
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_page.smart_content.data_provider_pool" />
             <argument type="service" id="doctrine" />
-            <argument type="service" id="sulu_page.link_tag.provider_pool"/>
+            <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <argument>%kernel.environment%</argument>
             <argument>%sulu.version%</argument>
             <argument>%app.version%</argument>

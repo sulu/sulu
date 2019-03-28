@@ -13,10 +13,10 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Markup;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPool;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
-use Sulu\Bundle\PageBundle\Markup\LinkTag;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;

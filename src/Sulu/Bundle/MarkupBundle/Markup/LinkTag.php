@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Markup;
+namespace Sulu\Bundle\MarkupBundle\Markup;
 
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkItem;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
 
 /**
  * Extends the sulu markup with the "sulu:link" tag.
