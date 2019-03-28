@@ -8,9 +8,11 @@ export type InternalLinkTypeOverlayProps = {|
     onConfirm: () => void,
     onResourceChange: (id: ?string | number, item: ?Object) => void,
     onTargetChange: (target: string) => void,
+    onTitleChange: (title: ?string) => void,
     open: boolean,
     options: ?InternalLinkTypeOptions,
     target: ?string,
+    title: ?string,
 |};
 
 export type InternalLinkTypeOptions = {|
