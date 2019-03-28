@@ -23,7 +23,14 @@ test('Clear all information from InternalLinkTypeRegistry', () => {
 test('Add internal link type to InternalLinkTypeRegistry', () => {
     const Component = () => (<div />);
 
-    const options = {};
+    const options = {
+        displayProperties: ['title'],
+        emptyText: 'empty',
+        icon: 'icon',
+        listAdapter: 'listAdapter',
+        overlayTitle: 'overlayTitle',
+        resourceKey:  'resourceKey',
+    };
 
     internalLinkTypeRegistry.add('test1', Component, 'Test1', options);
     internalLinkTypeRegistry.add('test2', Component, 'Test2');

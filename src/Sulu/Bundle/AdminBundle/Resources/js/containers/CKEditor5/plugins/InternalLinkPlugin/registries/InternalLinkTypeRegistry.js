@@ -1,11 +1,11 @@
 // @flow
 import type {ComponentType} from 'react';
-import type {InternalLinkTypeOverlayProps} from '../types';
+import type {InternalLinkTypeOptions, InternalLinkTypeOverlayProps} from '../types';
 
 class InternalLinkTypeRegistry {
     overlays: {[string]: ComponentType<InternalLinkTypeOverlayProps>};
     titles: {[string]: string};
-    options: {[string]: ?Object};
+    options: {[string]: ?InternalLinkTypeOptions};
 
     constructor() {
         this.clear();
@@ -17,7 +17,12 @@ class InternalLinkTypeRegistry {
         this.options = {};
     }
 
-    add(name: string, overlay: ComponentType<InternalLinkTypeOverlayProps>, title: string, options: ?Object) {
+    add(
+        name: string,
+        overlay: ComponentType<InternalLinkTypeOverlayProps>,
+        title: string,
+        options: ?InternalLinkTypeOptions
+    ) {
         if (name in this.titles) {
             throw new Error('The key "' + name + '" has already been used for another internal link type');
         }
@@ -47,7 +52,7 @@ class InternalLinkTypeRegistry {
         return this.titles[name];
     }
 
-    getOptions(name: string): ?Object {
+    getOptions(name: string): ?InternalLinkTypeOptions {
         if (!(name in this.options)) {
             throw new Error('There are no options for an internal link type with the key "' + name + '" registered');
         }

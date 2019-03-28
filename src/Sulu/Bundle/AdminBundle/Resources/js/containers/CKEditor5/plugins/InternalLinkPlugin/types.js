@@ -9,6 +9,15 @@ export type InternalLinkTypeOverlayProps = {|
     onResourceChange: (id: ?string | number, item: ?Object) => void,
     onTargetChange: (target: string) => void,
     open: boolean,
-    options: ?Object,
+    options: ?InternalLinkTypeOptions,
     target: ?string,
+|};
+
+export type InternalLinkTypeOptions = {|
+    displayProperties: Array<string>,
+    emptyText: string,
+    icon: string,
+    listAdapter: string,
+    overlayTitle: string,
+    resourceKey: string,
 |};
