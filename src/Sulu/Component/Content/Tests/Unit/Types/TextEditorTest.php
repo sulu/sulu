@@ -99,9 +99,9 @@ EOT;
 
         $this->property->setValue(
             <<<'EOT'
-<sulu-link href="123" sulu:validation-state="removed">Hello</sulu-link>
+<sulu-link href="123" sulu-validation-state="removed">Hello</sulu-link>
 <sulu-link href="456">Hikaro</sulu-link>
-<sulu-link href="789" sulu:validation-state="unpublished">Sulu</sulu-link>
+<sulu-link href="789" sulu-validation-state="unpublished">Sulu</sulu-link>
 EOT
         )->shouldBeCalled();
 
@@ -119,9 +119,9 @@ EOT;
         $this->property->getName()->willReturn('i18n:de-description');
         $this->property->getValue()->willReturn(
             <<<'EOT'
-<sulu-link href="123" sulu:validation-state="removed">Hello</sulu-link>
+<sulu-link href="123" sulu-validation-state="removed">Hello</sulu-link>
 <sulu-link href="456">Hikaro</sulu-link>
-<sulu-link href="789" sulu:validation-state="unpublished">Sulu</sulu-link>
+<sulu-link href="789" sulu-validation-state="unpublished">Sulu</sulu-link>
 EOT
         );
 

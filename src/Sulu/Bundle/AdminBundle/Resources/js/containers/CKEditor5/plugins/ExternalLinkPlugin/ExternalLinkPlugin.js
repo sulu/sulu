@@ -155,7 +155,7 @@ export default class ExternalLinkPlugin extends Plugin {
                 selection: this.selection,
                 [LINK_EVENT_TARGET]: this.target,
                 [LINK_EVENT_TITLE]: this.title,
-                [LINK_EVENT_URL]: this.url
+                [LINK_EVENT_URL]: this.url,
             }
         );
         this.open = false;

@@ -307,8 +307,8 @@ class LinkTagTest extends TestCase
                 ]
             );
 
-        $tag1 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="unpublished">Test-Content</sulu-link>';
-        $tag2 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu:validation-state="removed">Test-Content</sulu-link>';
+        $tag1 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
 
         $result = $this->linkTag->parseAll(
             [

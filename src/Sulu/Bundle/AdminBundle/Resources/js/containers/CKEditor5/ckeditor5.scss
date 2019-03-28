@@ -116,12 +116,12 @@ $textEditorUnpublishedLinkColor: $gold;
             text-decoration: underline !important;
         }
 
-        sulu-link[sulu\:validation-state='removed'] {
+        sulu-link[sulu-validation-state='removed'] {
             color: $textEditorRemovedLinkColor !important;
             text-decoration: line-through !important;
         }
 
-        sulu-link[sulu\:validation-state='unpublished']::before {
+        sulu-link[sulu-validation-state='unpublished']::before {
             color: $textEditorUnpublishedLinkColor;
             content: '•';
             display: inline-block;

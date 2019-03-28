@@ -170,7 +170,7 @@ export default class InternalLinkPlugin extends Plugin {
             return dropdownButton;
         });
 
-        addLinkConversion(this.editor, LINK_TAG, LINK_VALIDATION_STATE_ATTRIBUTE, 'sulu:validation-state');
+        addLinkConversion(this.editor, LINK_TAG, LINK_VALIDATION_STATE_ATTRIBUTE, 'sulu-validation-state');
         addLinkConversion(this.editor, LINK_TAG, LINK_PROVIDER_ATTRIBUTE, 'provider');
         addLinkConversion(this.editor, LINK_TAG, LINK_TARGET_ATTRIBUTE, 'target');
         addLinkConversion(this.editor, LINK_TAG, LINK_TITLE_ATTRIBUTE, 'title');
