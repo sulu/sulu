@@ -12,12 +12,9 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
-use Sulu\Bundle\WebsiteBundle\Cache\CacheEvent;
-use Sulu\Bundle\WebsiteBundle\Cache\Events;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Handles http cache actions.
@@ -27,11 +24,9 @@ class CacheController extends Controller
     /**
      * Clear the whole http_cache for website.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function clearAction(Request $request)
+    public function clearAction()
     {
         if (!$this->checkLivePermissionForAllWebspaces()) {
             return new JsonResponse(null, 403);
