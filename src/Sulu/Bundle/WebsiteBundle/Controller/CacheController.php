@@ -39,9 +39,6 @@ class CacheController extends Controller
 
         $this->get('sulu_website.http_cache.clearer')->clear();
 
-        $cacheEvent = new CacheEvent($request);
-        $this->get('event_dispatcher')->dispatch(Events::POST_CLEAR, $cacheEvent);
-
         return new JsonResponse([], 200);
     }
 
