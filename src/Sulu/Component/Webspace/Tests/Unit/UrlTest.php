@@ -52,7 +52,6 @@ class UrlTest extends TestCase
             'redirect' => 'def',
             'url' => 'foo',
             'main' => true,
-            'analyticsKey' => 'analytics',
             'environment' => null,
         ];
 
@@ -62,7 +61,6 @@ class UrlTest extends TestCase
         $url->setSegment($expected['segment']);
         $url->setRedirect($expected['redirect']);
         $url->setMain($expected['main']);
-        $url->setAnalyticsKey($expected['analyticsKey']);
 
         $this->assertEquals($expected, $url->toArray());
     }

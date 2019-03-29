@@ -140,7 +140,6 @@ class WebsiteRequestProcessorTest extends TestCase
             '{host}',
             null,
             '{host}',
-            null,
             false,
             '{host}',
             -5
@@ -152,7 +151,6 @@ class WebsiteRequestProcessorTest extends TestCase
             $portal,
             $localization,
             'sulu.lo',
-            null,
             null,
             null,
             false,
@@ -198,7 +196,6 @@ class WebsiteRequestProcessorTest extends TestCase
             'sulu.lo/de',
             null,
             null,
-            null,
             false,
             'sulu.lo/de',
             5
@@ -210,7 +207,6 @@ class WebsiteRequestProcessorTest extends TestCase
             $portal,
             $localization,
             'sulu.lo',
-            null,
             null,
             null,
             false,

@@ -54,7 +54,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'portalUrl' => $requestAnalyzer->getPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getResourceLocator(),
-                'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
             ],
         ];
     }

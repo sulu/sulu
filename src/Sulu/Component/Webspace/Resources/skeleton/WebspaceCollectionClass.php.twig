@@ -111,7 +111,6 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setSegment('{{ url.segment }}');
         $url->setRedirect('{{ url.redirect }}');
         $url->setMain({{ url.main?'true':'false' }});
-        $url->setAnalyticsKey('{{ url.analyticsKey }}');
         $environment->addUrl($url);
 {% endfor %}
 {% for customUrl in environment.customUrls %}
@@ -152,11 +151,6 @@ class {{ cache_class }} extends {{ base_class }}
 {% endif %}
 {% if portalInformation.redirect %}
             '{{ portalInformation.redirect }}',
-{% else %}
-            null,
-{% endif %}
-{% if portalInformation.analyticsKey %}
-            '{{ portalInformation.analyticsKey }}',
 {% else %}
             null,
 {% endif %}

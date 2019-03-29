@@ -159,14 +159,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * {@inheritdoc}
      */
-    public function getAnalyticsKey()
-    {
-        return $this->getAttribute('analyticsKey', '');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getPortalInformation()
     {
         return $this->getAttribute('portalInformation');

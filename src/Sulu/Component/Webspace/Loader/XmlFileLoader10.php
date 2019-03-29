@@ -536,7 +536,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             $url->setSegment($this->getOptionalNodeAttribute($urlNode, 'segment'));
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
             $url->setMain($this->getOptionalNodeAttribute($urlNode, 'main', false));
-            $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
 
             $environment->addUrl($url);
         }

@@ -150,9 +150,8 @@ class WebspaceCollectionBuilder
         foreach ($environment->getUrls() as $url) {
             $urlAddress = $url->getUrl();
             $urlRedirect = $url->getRedirect();
-            $urlAnalyticsKey = $url->getAnalyticsKey();
             if (null == $urlRedirect) {
-                $this->buildUrls($portal, $environment, $url, $segments, $urlAddress, $urlAnalyticsKey);
+                $this->buildUrls($portal, $environment, $url, $segments, $urlAddress);
             } else {
                 // create the redirect
                 $this->buildUrlRedirect(
@@ -161,7 +160,6 @@ class WebspaceCollectionBuilder
                     $portal,
                     $urlAddress,
                     $urlRedirect,
-                    $urlAnalyticsKey,
                     $url
                 );
             }
@@ -177,7 +175,6 @@ class WebspaceCollectionBuilder
                 $urlAddress,
                 null,
                 null,
-                null,
                 false,
                 $urlAddress,
                 1
@@ -191,7 +188,6 @@ class WebspaceCollectionBuilder
      * @param Portal $portal
      * @param string $urlAddress
      * @param string $urlRedirect
-     * @param string $urlAnalyticsKey
      * @param Url $url
      */
     private function buildUrlRedirect(
@@ -200,7 +196,6 @@ class WebspaceCollectionBuilder
         Portal $portal,
         $urlAddress,
         $urlRedirect,
-        $urlAnalyticsKey,
         Url $url
     ) {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
@@ -211,7 +206,6 @@ class WebspaceCollectionBuilder
             $urlAddress,
             null,
             $urlRedirect,
-            $urlAnalyticsKey,
             $url->isMain(),
             $url->getUrl(),
             $this->urlReplacer->hasHostReplacer($urlAddress) ? 4 : 9
@@ -225,7 +219,6 @@ class WebspaceCollectionBuilder
      * @param string[] $replacers
      * @param string $urlAddress
      * @param Localization $localization
-     * @param string $urlAnalyticsKey
      * @param Url $url
      */
     private function buildUrlFullMatch(
@@ -235,7 +228,6 @@ class WebspaceCollectionBuilder
         $replacers,
         $urlAddress,
         Localization $localization,
-        $urlAnalyticsKey,
         Url $url
     ) {
         if (!empty($segments)) {
@@ -250,7 +242,6 @@ class WebspaceCollectionBuilder
                     $urlResult,
                     $segment,
                     null,
-                    $urlAnalyticsKey,
                     $url->isMain(),
                     $url->getUrl(),
                     $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
@@ -266,7 +257,6 @@ class WebspaceCollectionBuilder
                 $urlResult,
                 null,
                 null,
-                $urlAnalyticsKey,
                 $url->isMain(),
                 $url->getUrl(),
                 $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
@@ -278,14 +268,12 @@ class WebspaceCollectionBuilder
      * @param Portal $portal
      * @param Environment $environment
      * @param string $urlAddress
-     * @param string $urlAnalyticsKey
      * @param Url $url
      */
     private function buildUrlPartialMatch(
         Portal $portal,
         Environment $environment,
         $urlAddress,
-        $urlAnalyticsKey,
         Url $url
     ) {
         $replacers = [];
@@ -315,7 +303,6 @@ class WebspaceCollectionBuilder
                 $urlResult,
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,
-                $urlAnalyticsKey,
                 false, // partial matches cannot be main
                 $url->getUrl(),
                 $this->urlReplacer->hasHostReplacer($urlResult) ? 4 : 9
@@ -331,15 +318,13 @@ class WebspaceCollectionBuilder
      * @param $url
      * @param $segments
      * @param $urlAddress
-     * @param $urlAnalyticsKey
      */
     private function buildUrls(
         Portal $portal,
         Environment $environment,
         Url $url,
         $segments,
-        $urlAddress,
-        $urlAnalyticsKey
+        $urlAddress
     ) {
         if ($url->getLanguage()) {
             $language = $url->getLanguage();
@@ -353,7 +338,6 @@ class WebspaceCollectionBuilder
                 [],
                 $urlAddress,
                 $portal->getLocalization($locale),
-                $urlAnalyticsKey,
                 $url
             );
         } else {
@@ -375,7 +359,6 @@ class WebspaceCollectionBuilder
                     $replacers,
                     $urlAddress,
                     $localization,
-                    $urlAnalyticsKey,
                     $url
                 );
             }
@@ -383,7 +366,6 @@ class WebspaceCollectionBuilder
                 $portal,
                 $environment,
                 $urlAddress,
-                $urlAnalyticsKey,
                 $url
             );
         }

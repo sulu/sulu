@@ -128,7 +128,6 @@ class TemplateAttributeResolverTest extends TestCase
         $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal());
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
-        $this->requestAnalyzer->getAnalyticsKey()->willReturn('123-123-123');
 
         $this->request->get('_route')->willReturn('test');
         $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', 'prefix' => '/de']);
@@ -177,7 +176,6 @@ class TemplateAttributeResolverTest extends TestCase
                 'portalUrl' => 'sulu.io/de',
                 'resourceLocatorPrefix' => '/de',
                 'resourceLocator' => '/test',
-                'analyticsKey' => '123-123-123',
             ],
         ], $resolved);
     }
