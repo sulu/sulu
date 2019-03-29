@@ -457,7 +457,7 @@ class NodeControllerTest extends SuluTestCase
 
         $externalLinkPage = $this->createPageDocument();
         $externalLinkPage->setTitle('page');
-        $externalLinkPage->setStructureType('external-link');
+        $externalLinkPage->setStructureType('default');
         $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
         $externalLinkPage->setRedirectExternal('http://www.sulu.io');
         $externalLinkPage->setResourceSegment('/test');

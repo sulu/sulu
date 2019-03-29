@@ -1967,7 +1967,7 @@ class ContentMapperTest extends SuluTestCase
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal_link' => $structure1->getUuid(),
         ];
-        $result = $this->save($data2, 'internal-link', 'sulu_io', 'en', 1);
+        $result = $this->save($data2, 'internal_link', 'sulu_io', 'en', 1);
         $structure2 = $this->mapper->load($result->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
@@ -1981,7 +1981,7 @@ class ContentMapperTest extends SuluTestCase
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'external' => 'http://www.google.at',
         ];
-        $result = $this->save($data3, 'external-link', 'sulu_io', 'en', 1);
+        $result = $this->save($data3, 'default', 'sulu_io', 'en', 1);
         $structure3 = $this->mapper->load($result->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
@@ -2435,9 +2435,9 @@ class ContentMapperTest extends SuluTestCase
         // Change to Internal Link String
         $testSiteData['internal'] = $internalLink->getUuid();
         $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
-        $this->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
+        $this->save($testSiteData, 'internal_link', 'sulu_io', 'en', 1, true, $uuid);
 
-        $this->assertEquals('internal-link', $document->getStructureType());
+        $this->assertEquals('internal_link', $document->getStructureType());
     }
 
     /**
@@ -2543,14 +2543,16 @@ class ContentMapperTest extends SuluTestCase
             'nodeType' => RedirectType::INTERNAL,
         ];
 
-        $data = $this->save($data, 'internal-link', 'sulu_io', 'de', 1);
+        $data = $this->save($data, 'default', 'sulu_io', 'de', 1);
 
         $this->mapper->copyLanguage($data->getUuid(), 1, 'sulu_io', 'de', 'en');
 
         $result = $this->mapper->load($data->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals('Page-1', $result->title);
-        $this->assertEquals($page->getUuid(), $result->getPropertyValue('internal_link'));
+        $this->assertEquals(RedirectType::INTERNAL, $result->getNodeType());
+
+        $this->assertEquals($page->getUuid(), $result->getDocument()->getRedirectTarget()->getUuid());
     }
 
     /**
