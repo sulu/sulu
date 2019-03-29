@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Cache;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -59,7 +58,7 @@ class CacheClearer implements CacheClearerInterface
     private $proxyClient;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $eventDispatcher;
 
@@ -68,7 +67,7 @@ class CacheClearer implements CacheClearerInterface
      * @param $kernelEnvironment
      * @param $kernelRootDir
      * @param RequestStack $requestStack
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcherInterface $eventDispatcher
      * @param string $varDir
      * @param ProxyClientInterface $proxyClient
      */
