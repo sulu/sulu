@@ -45,7 +45,7 @@ class MediaLinkProvider implements LinkProviderInterface
     {
         $medias = $this->mediaRepository->findMediaDisplayInfo($hrefs, $locale);
 
-        return array_map(function($media) use ($published) {
+        return array_map(function($media) {
             return new LinkItem(
                 $media['id'],
                 $media['title'] ?? $media['defaultTitle'],
