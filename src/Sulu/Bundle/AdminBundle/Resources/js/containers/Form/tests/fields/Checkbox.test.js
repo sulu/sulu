@@ -40,6 +40,90 @@ test('Pass disabled correctly to Checkbox component', () => {
     expect(checkbox.find(CheckboxComponent).props().disabled).toEqual(true);
 });
 
+test('Should throw an exception if defaultValue is of wrong type', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const schemaOptions = {
+        default_value: {
+            value: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={(schemaOptions: any)}
+        />
+    )).toThrow(/"default_value"/);
+});
+
+test('Set default value of null should not call onChange', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+
+    const schemaOptions = {
+        default_value: {
+            value: null,
+        },
+    };
+
+    shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={(schemaOptions: any)}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Set default value if no value is passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+
+    const schemaOptions = {
+        default_value: {
+            value: false,
+        },
+    };
+
+    shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={(schemaOptions: any)}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith(false);
+});
+
+test('Do not set default value if a value is passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+
+    const schemaOptions = {
+        default_value: {
+            value: false,
+        },
+    };
+
+    shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={(schemaOptions: any)}
+            value={false}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
 test('Pass the value of true correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const checkbox = shallow(

@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>analytic_details</key>
+
+    <schema>
+        <anyOf>
+            <schema>
+                <properties>
+                    <property name="allDomains" value="true" />
+                </properties>
+            </schema>
+            <schema>
+                <properties>
+                    <property name="allDomains" value="false" />
+                    <property name="domains" mandatory="true" />
+                </properties>
+            </schema>
+        </anyOf>
+    </schema>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_admin.title</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+        </property>
+
+        <property name="allDomains" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_website.all_domains</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="domains" type="select" visibleCondition="allDomains != true">
+            <meta>
+                <title>sulu_website.domains</title>
+            </meta>
+            <params>
+                <param
+                    name="values"
+                    type="expression"
+                    value="service('sulu_website.url_select_helper').getValues()"
+                />
+            </params>
+        </property>
+
+        <property name="type" type="single_select" mandatory="true">
+            <meta>
+                <title>sulu_admin.type</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="google" value="google">
+                        <meta>
+                            <title>sulu_website.google_analytics</title>
+                        </meta>
+                    </param>
+                    <param name="google_tag_manager" value="google_tag_manager">
+                        <meta>
+                            <title>sulu_website.google_tag_manager</title>
+                        </meta>
+                    </param>
+                    <param name="custom" value="custom">
+                        <meta>
+                            <title>sulu_website.custom_analytics</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
+        </property>
+    </properties>
+</form>

@@ -40,10 +40,16 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
                             __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'resources' => [
                         'analytics' => [
                             'routes' => [
                                 'list' => 'cget_webspace_analytics',
+                                'detail' => 'get_webspace_analytics',
                             ],
                         ],
                     ],

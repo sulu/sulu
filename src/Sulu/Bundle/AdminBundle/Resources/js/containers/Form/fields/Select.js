@@ -5,10 +5,10 @@ import type {FieldTypeProps} from '../../../types';
 
 const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the Select FieldType';
 
-type Props = FieldTypeProps<Array<string | number>>;
+type Props = FieldTypeProps<?Array<string | number>>;
 
 export default class Select extends React.Component<Props> {
-    constructor(props: FieldTypeProps<Array<string | number>>) {
+    constructor(props: FieldTypeProps<?Array<string | number>>) {
         super(props);
 
         const {onChange, schemaOptions, value} = this.props;
@@ -47,7 +47,7 @@ export default class Select extends React.Component<Props> {
     handleChange = (value: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 
-        onChange(value);
+        onChange(value.length > 0 ? value : undefined);
         onFinish();
     };
 

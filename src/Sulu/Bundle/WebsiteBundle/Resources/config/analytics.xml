@@ -26,6 +26,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_website.analytics.repository"/>
             <argument type="service" id="sulu_website.domains.repository"/>
+            <argument>%kernel.environment%</argument>
         </service>
 
         <service id="sulu_website.analytics.response_listener"

@@ -23,6 +23,10 @@ class WebsiteAdmin extends Admin
 {
     const ANALYTICS_LIST_ROUTE = 'sulu_webspace.analytics_list';
 
+    const ANALYTICS_ADD_FORM_ROUTE = 'sulu_webspace.analytics_add_form';
+
+    const ANALYTICS_EDIT_FORM_ROUTE = 'sulu_webspace.analytics_edit_form';
+
     /**
      * Returns security context for analytics in given webspace.
      *
@@ -62,14 +66,23 @@ class WebsiteAdmin extends Admin
 
     public function getRoutes(): array
     {
+        $listToolbarActions = [
+            'sulu_admin.add',
+            'sulu_admin.delete',
+        ];
+
         return [
-            $this->routeBuilderFactory->createListRouteBuilder(static::ANALYTICS_LIST_ROUTE, '/analytics')
+            $this->routeBuilderFactory
+                ->createFormOverlayListRouteBuilder(static::ANALYTICS_LIST_ROUTE, '/analytics')
                 ->setResourceKey('analytics')
                 ->setListKey('analytics')
                 ->addListAdapters(['table'])
                 ->addRouterAttributesToListStore(['webspace'])
+                ->addRouterAttributesToFormStore(['webspace'])
                 ->disableSearching()
+                ->setFormKey('analytic_details')
                 ->setTabTitle('sulu_website.analytics')
+                ->addToolbarActions($listToolbarActions)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')
                 ->getRoute(),

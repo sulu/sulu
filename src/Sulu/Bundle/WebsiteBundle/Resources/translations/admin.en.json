@@ -1,3 +1,8 @@
 {
-    "sulu_website.analytics": "Analytics"
+    "sulu_website.analytics": "Analytics",
+    "sulu_website.all_domains": "All domains",
+    "sulu_website.domains": "Domains",
+    "sulu_website.google_analytics": "Google Analytics",
+    "sulu_website.google_tag_manager": "Google Tag Manager",
+    "sulu_website.custom_analytics": "Custom"
 }

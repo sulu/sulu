@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Analytics.
@@ -233,10 +234,18 @@ class Analytics
     /**
      * Get domains.
      *
-     * @return Collection|Domain[]
+     * @return Collection|Domain[]|null
+     *
+     * @VirtualProperty
      */
     public function getDomains()
     {
-        return $this->domains;
+        if (0 === count($this->domains)) {
+            return null;
+        }
+
+        return $this->domains->map(function(Domain $domain) {
+            return $domain->getUrl();
+        });
     }
 }

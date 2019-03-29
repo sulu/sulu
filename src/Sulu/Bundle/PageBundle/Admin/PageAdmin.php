@@ -121,7 +121,9 @@ class PageAdmin extends Admin
                 ->setOption('tabTitle', 'sulu_page.pages')
                 ->addRerenderAttribute('webspace')
                 ->setParent(static::WEBSPACE_TABS_ROUTE),
-            (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_page.page_tabs'))
+            (new Route(
+                static::ADD_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/add/:parentId', 'sulu_page.page_tabs'
+            ))
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
@@ -134,7 +136,7 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
-            (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_page.page_tabs'))
+            (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')

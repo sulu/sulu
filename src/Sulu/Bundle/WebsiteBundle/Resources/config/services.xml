@@ -232,5 +232,10 @@
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePool">
             <argument type="collection"/>
         </service>
+
+        <service id="sulu_website.url_select_helper" class="Sulu\Bundle\WebsiteBundle\Admin\Helper\UrlSelect">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%kernel.environment%</argument>
+        </service>
     </services>
 </container>
