@@ -18,9 +18,9 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for SingleInternalLink.
+ * ContentType for SinglePageSelection.
  */
-class SingleInternalLink extends SimpleContentType implements PreResolvableContentTypeInterface
+class SinglePageSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
      * @var ReferenceStoreInterface
@@ -32,7 +32,7 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
      */
     public function __construct(ReferenceStoreInterface $referenceStore)
     {
-        parent::__construct('SingleInternalLink', '');
+        parent::__construct('SinglePageSelection', '');
 
         $this->referenceStore = $referenceStore;
     }
@@ -51,7 +51,7 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         $value = $property->getValue();
 
         if (null !== $node->getIdentifier() && $value === $node->getIdentifier()) {
-            throw new \InvalidArgumentException('Internal link node cannot reference itself');
+            throw new \InvalidArgumentException('Single page selection node cannot reference itself');
         }
 
         parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);

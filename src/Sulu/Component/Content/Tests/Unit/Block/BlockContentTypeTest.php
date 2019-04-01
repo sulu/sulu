@@ -15,7 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
@@ -70,13 +70,13 @@ class BlockContentTypeTest extends TestCase
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
             ['text_area', new TextArea('not in use')],
-            ['internal_link', new SingleInternalLink(new ReferenceStore(), 'not in use')],
+            ['internal_link', new SinglePageSelection(new ReferenceStore(), 'not in use')],
             ['block', $this->blockContentType],
         ];
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine('not in use'));
         $this->contentTypeManager->get('text_area')->willReturn(new TextArea('not in use'));
-        $this->contentTypeManager->get('internal_link')->willReturn(new SingleInternalLink(new ReferenceStore(), 'not in use'));
+        $this->contentTypeManager->get('internal_link')->willReturn(new SinglePageSelection(new ReferenceStore(), 'not in use'));
         $this->contentTypeManager->get('block')->willReturn($this->blockContentType);
     }
 

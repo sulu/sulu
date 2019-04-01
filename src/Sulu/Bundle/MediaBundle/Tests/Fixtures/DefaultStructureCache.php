@@ -78,7 +78,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Metadata
                 'en' => 'Internal links',
             ],
             ],
-            'internal_links',
+            'page_selection',
             false,
             true,
             1,

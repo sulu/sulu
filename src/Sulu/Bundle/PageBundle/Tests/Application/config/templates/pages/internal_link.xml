@@ -1,19 +1,19 @@
 <?xml version="1.0" ?>
 
 <template xmlns="http://schemas.sulu.io/template/template"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
->
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
+          >
 
-    <key>internal_link_page</key>
+    <key>internal_link</key>
 
     <view>ClientWebsiteBundle:templates:animals</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <meta>
-        <title lang="de">Tiers</title>
-        <title lang="en">Animals</title>
+        <title lang="de">Internal Link</title>
+        <title lang="en">Internal Link</title>
     </meta>
 
     <properties>
@@ -26,7 +26,7 @@
             <tag name="sulu.rlp.part"/>
         </property>
 
-        <property name="url" type="resource_locator" mandatory="true">
+        <property name="url" type="resource_locator">
             <meta>
                 <title lang="de">Adresse</title>
                 <title lang="en">Resourcelocator</title>
@@ -35,6 +35,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="the_internal_link" type="single_page_selection"/>
+        <property name="internal_link" type="single_page_selection"/>
     </properties>
 </template>
+

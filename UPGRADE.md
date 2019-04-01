@@ -2,6 +2,41 @@
 
 ## dev-develop
 
+### Rename Internal Link and Single Internal Link Content Type
+
+The `single_internal_link` and `internal_links` content type were renamed.
+
+**Before**:
+
+```xml
+<property name="link" type="single_internal_link" />
+<property name="links" type="internal_links" />
+```
+
+**After**:
+
+```xml
+<property name="link" type="single_page_selection" />
+<property name="links" type="page_selection" />
+```
+
+### Removed container parameters
+
+The following parameters where removed:
+
+ - sulu.content.type.internal_links.class
+ - sulu.content.type.single_internal_link.class
+ - sulu.content.type.phone.class
+ - sulu.content.type.password.class
+ - sulu.content.type.url.class
+ - sulu.content.type.email.class
+ - sulu.content.type.date.class
+ - sulu.content.type.time.class
+ - sulu.content.type.color.class
+ - sulu.content.type.checkbox.class
+
+Instead you need now create a service with the same id to overwrite the class.
+
 ### Removed sulu twig variables
 
 The following sulu twig variables are removed and its symfony equivilants should be used instead:
@@ -901,7 +936,7 @@ The following example shows the changes:
 sulu_admin:
     field_type_options:
         selection:
-            internal_links:
+            page_selection:
                 adapter: 'column_list'
                 displayProperties: 'title'
                 icon: 'su-document'
@@ -919,7 +954,7 @@ sulu_admin:
 sulu_admin:
     field_type_options:
         selection:
-            internal_links:
+            page_selection:
                 default_type: 'overlay'
                 resource_key: 'pages'
                 types:
