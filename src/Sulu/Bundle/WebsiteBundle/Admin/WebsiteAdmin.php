@@ -21,12 +21,6 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebsiteAdmin extends Admin
 {
-    const ANALYTICS_LIST_ROUTE = 'sulu_webspace.analytics_list';
-
-    const ANALYTICS_ADD_FORM_ROUTE = 'sulu_webspace.analytics_add_form';
-
-    const ANALYTICS_EDIT_FORM_ROUTE = 'sulu_webspace.analytics_edit_form';
-
     /**
      * Returns security context for analytics in given webspace.
      *
@@ -73,7 +67,7 @@ class WebsiteAdmin extends Admin
 
         return [
             $this->routeBuilderFactory
-                ->createFormOverlayListRouteBuilder(static::ANALYTICS_LIST_ROUTE, '/analytics')
+                ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
                 ->setResourceKey('analytics')
                 ->setListKey('analytics')
                 ->addListAdapters(['table'])
