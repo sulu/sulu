@@ -141,4 +141,8 @@ $textEditorUnpublishedLinkColor: $gold;
     .ck-link-button {
         padding: 0 0 0 5px !important;
     }
+
+    .ck-list__item {
+        min-width: 8em !important;
+    }
 }
