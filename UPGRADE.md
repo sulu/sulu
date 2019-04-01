@@ -48,6 +48,12 @@ through the process.
 The `sulu:link` tag made problems in some cases, because other tools could not handle the colon in its name. So we have
 replace it by a dash. The tag therefore is called `sulu-link` from now on.
 
+These changes must also be reflect in the database, therefore you should executed the PHPCR migrations:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
 ### sulu:media Markup Tag
 
 Previously the `sulu:media` tag was used to link different media in the text editor. There is also a `sulu:link` tag,
