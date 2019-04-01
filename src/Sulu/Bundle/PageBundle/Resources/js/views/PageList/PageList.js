@@ -11,7 +11,7 @@ import {Requester} from 'sulu-admin-bundle/services';
 import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {Webspace} from '../../stores/WebspaceStore/types';
-import webspaceOverviewStyles from './webspaceOverview.scss';
+import pageListStyles from './pageList.scss';
 
 const USER_SETTINGS_KEY = 'webspace_overview';
 const PAGES_RESOURCE_KEY = 'pages';
@@ -26,7 +26,7 @@ type Props = ViewProps & {
 };
 
 @observer
-class WebspaceOverview extends React.Component<Props> {
+class PageList extends React.Component<Props> {
     static clearCacheEndpoint: string;
 
     page: IObservableValue<number> = observable.box();
@@ -165,7 +165,7 @@ class WebspaceOverview extends React.Component<Props> {
 
     @action handleCacheClearConfirm = () => {
         this.cacheClearing = true;
-        Requester.delete(WebspaceOverviewWithToolbar.clearCacheEndpoint).then(action(() => {
+        Requester.delete(PageList.clearCacheEndpoint).then(action(() => {
             this.showCacheClearDialog = false;
             this.cacheClearing = false;
         }));
@@ -173,7 +173,7 @@ class WebspaceOverview extends React.Component<Props> {
 
     render() {
         return (
-            <div className={webspaceOverviewStyles.webspaceOverview}>
+            <div className={pageListStyles.webspaceOverview}>
                 <List
                     adapters={['column_list', 'tree_table']}
                     onItemAdd={this.handleItemAdd}
@@ -198,7 +198,7 @@ class WebspaceOverview extends React.Component<Props> {
     }
 }
 
-const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
+const PageListWithToolbar = withToolbar(PageList, function() {
     const {webspace} = this.props;
 
     if (!webspace) {
@@ -237,4 +237,4 @@ const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
     };
 });
 
-export default WebspaceOverviewWithToolbar;
+export default PageListWithToolbar;

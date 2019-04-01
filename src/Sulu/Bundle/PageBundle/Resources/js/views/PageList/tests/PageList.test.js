@@ -83,19 +83,19 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('Render WebspaceOverview', () => {
+test('Render PageList', () => {
     const webspaceKey = observable.box('sulu');
     // $FlowFixMe
     const webspace = {};
 
-    const WebspaceOverview = require('../WebspaceOverview').default;
+    const PageList = require('../PageList').default;
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
     );
 
     webspaceOverview.update();
@@ -104,8 +104,8 @@ test('Render WebspaceOverview', () => {
 
 test('Should show the locales from the webspace configuration for the toolbar', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const WebspaceOverview = require('../WebspaceOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    const PageList = require('../PageList').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -121,7 +121,7 @@ test('Should show the locales from the webspace configuration for the toolbar', 
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
     );
 
     webspaceOverview.instance().locale.set('en');
@@ -141,8 +141,8 @@ test('Should show the locales from the webspace configuration for the toolbar', 
 
 test('Should change excludeGhostsAndShadows when value of toggler is changed', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const WebspaceOverview = require('../WebspaceOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    const PageList = require('../PageList').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -158,7 +158,7 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
     );
 
     webspaceOverview.update();
@@ -187,8 +187,8 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
 
 test('Should close Cache Clear dialog if cancel is clicked', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const WebspaceOverview = require('../WebspaceOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    const PageList = require('../PageList').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -204,7 +204,7 @@ test('Should close Cache Clear dialog if cancel is clicked', () => {
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview
+        <PageList
             route={router.route}
             router={router}
             webspace={webspace}
@@ -239,8 +239,8 @@ test('Should close Cache Clear dialog if cancel is clicked', () => {
 test('Should clear cache and close dialog if confirm is clicked', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const Requester = require('sulu-admin-bundle/services').Requester;
-    const WebspaceOverview = require('../WebspaceOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, WebspaceOverview);
+    const PageList = require('../PageList').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
 
     const webspaceKey = observable.box('sulu');
 
@@ -258,9 +258,9 @@ test('Should clear cache and close dialog if confirm is clicked', () => {
         webspace: 'sulu',
     };
 
-    WebspaceOverview.clearCacheEndpoint = '/admin/website/cache';
+    PageList.clearCacheEndpoint = '/admin/website/cache';
     const webspaceOverview = mount(
-        <WebspaceOverview
+        <PageList
             route={router.route}
             router={router}
             webspace={webspace}
@@ -302,7 +302,7 @@ test('Should clear cache and close dialog if confirm is clicked', () => {
 });
 
 test('Should load webspace and active route attribute from listStore and userStore', () => {
-    const WebspaceOverview = require('../WebspaceOverview').default;
+    const PageList = require('../PageList').default;
     const ListStore = require('sulu-admin-bundle/containers').ListStore;
     const userStore = require('sulu-admin-bundle/stores').userStore;
 
@@ -315,12 +315,12 @@ test('Should load webspace and active route attribute from listStore and userSto
     ListStore.getActiveSetting.mockReturnValueOnce('some-uuid');
 
     // $FlowFixMe
-    expect(WebspaceOverview.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({active: 'some-uuid'});
+    expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({active: 'some-uuid'});
     expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'webspace_overview_abc');
 });
 
 test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
-    const WebspaceOverview = require('../WebspaceOverview').default;
+    const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
 
@@ -336,7 +336,7 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
     );
 
     webspaceKey.set('sulu_blog');
@@ -346,7 +346,7 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
 });
 
 test('Should bind router', () => {
-    const WebspaceOverview = require('../WebspaceOverview').default;
+    const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
     // $FlowFixMe
@@ -358,7 +358,7 @@ test('Should bind router', () => {
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
     );
     const page = webspaceOverview.instance().page;
     const locale = webspaceOverview.instance().locale;
@@ -371,7 +371,7 @@ test('Should bind router', () => {
 });
 
 test('Should call disposers on unmount', () => {
-    const WebspaceOverview = require('../WebspaceOverview').default;
+    const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
     // $FlowFixMe
@@ -383,7 +383,7 @@ test('Should call disposers on unmount', () => {
     };
 
     const webspaceOverview = mount(
-        <WebspaceOverview
+        <PageList
             route={router.route}
             router={router}
             webspace={webspace}
