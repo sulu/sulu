@@ -59,8 +59,9 @@ class AnalyticsControllerTest extends SuluTestCase
         $items = $response['_embedded']['analytics'];
         $this->assertCount(1, $items);
         $this->assertEquals('test piwik', $items[0]['title']);
-        $this->assertEquals('piwik', $items[0]['type']);
-        $this->assertEquals('123', $items[0]['content']);
+        $this->assertEquals('matomo', $items[0]['type']);
+        $this->assertEquals('123', $items[0]['matomo_id']);
+        $this->assertEquals('http://matomo.org', $items[0]['matomo_url']);
         $this->assertEquals(null, $items[0]['domains']);
     }
 
@@ -77,25 +78,25 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertCount(4, $items);
         $this->assertEquals('test-1', $items[0]['title']);
         $this->assertEquals('google', $items[0]['type']);
-        $this->assertEquals('UA123-123', $items[0]['content']);
+        $this->assertEquals('UA123-123', $items[0]['google_key']);
         $this->assertCount(1, $items[0]['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $items[0]['domains'][0]);
 
         $this->assertEquals('test-2', $items[1]['title']);
-        $this->assertEquals('piwik', $items[1]['type']);
-        $this->assertEquals('123', $items[1]['content']);
+        $this->assertEquals('matomo', $items[1]['type']);
+        $this->assertEquals('123', $items[1]['matomo_id']);
         $this->assertCount(1, $items[1]['domains']);
         $this->assertEquals('{country}.test.io', $items[1]['domains'][0]);
 
         $this->assertEquals('test-3', $items[2]['title']);
         $this->assertEquals('custom', $items[2]['type']);
-        $this->assertEquals('<div/>', $items[2]['content']);
+        $this->assertEquals('<div/>', $items[2]['custom_script']);
         $this->assertCount(1, $items[2]['domains']);
         $this->assertEquals('{localization}.google.at', $items[2]['domains'][0]);
 
         $this->assertEquals('test-4', $items[3]['title']);
         $this->assertEquals('google_tag_manager', $items[3]['type']);
-        $this->assertEquals('GTM-XXXX', $items[3]['content']);
+        $this->assertEquals('GTM-XXXX', $items[3]['google_tag_manager_key']);
         $this->assertCount(1, $items[3]['domains']);
         $this->assertEquals('www.sulu.io', $items[3]['domains'][0]);
     }
@@ -111,7 +112,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
         $this->assertEquals('test-1', $response['title']);
         $this->assertEquals('google', $response['type']);
-        $this->assertEquals('UA123-123', $response['content']);
+        $this->assertEquals('UA123-123', $response['google_key']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]);
     }
@@ -126,7 +127,7 @@ class AnalyticsControllerTest extends SuluTestCase
             [
                 'title' => 'test-1',
                 'type' => 'google',
-                'content' => 'UA123-123',
+                'google_key' => 'UA123-123',
                 'domains' => ['www.sulu.io/{localization}'],
             ]
         );
@@ -137,7 +138,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertNotNull($response['id']);
         $this->assertEquals('test-1', $response['title']);
         $this->assertEquals('google', $response['type']);
-        $this->assertEquals('UA123-123', $response['content']);
+        $this->assertEquals('UA123-123', $response['google_key']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]);
     }
@@ -152,7 +153,7 @@ class AnalyticsControllerTest extends SuluTestCase
             [
                 'title' => 'test-10',
                 'type' => 'custom',
-                'content' => '<div/>',
+                'custom_script' => '<div/>',
                 'domains' => ['www.sulu.io'],
             ]
         );
@@ -163,7 +164,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertNotNull($response['id']);
         $this->assertEquals('test-10', $response['title']);
         $this->assertEquals('custom', $response['type']);
-        $this->assertEquals('<div/>', $response['content']);
+        $this->assertEquals('<div/>', $response['custom_script']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io', $response['domains'][0]);
     }
@@ -218,8 +219,8 @@ class AnalyticsControllerTest extends SuluTestCase
             'sulu_io',
             [
                 'title' => 'test-2',
-                'type' => 'piwik',
-                'content' => '123',
+                'type' => 'matomo',
+                'content' => ['siteId' => '123', 'url' => 'http://matomo.org'],
                 'domains' => ['{country}.test.io'],
             ]
         );
@@ -245,8 +246,8 @@ class AnalyticsControllerTest extends SuluTestCase
             'test_io',
             [
                 'title' => 'test piwik',
-                'type' => 'piwik',
-                'content' => '123',
+                'type' => 'matomo',
+                'content' => ['siteId' => '123', 'url' => 'http://matomo.org'],
                 'domains' => ['www.test.io', '{country}.test.io'],
             ]
         );
@@ -254,8 +255,8 @@ class AnalyticsControllerTest extends SuluTestCase
             'blog_sulu_io',
             [
                 'title' => 'test piwik',
-                'type' => 'piwik',
-                'content' => '123',
+                'type' => 'matomo',
+                'content' => ['siteId' => '123', 'url' => 'http://matomo.org'],
                 'allDomains' => true,
                 'domains' => [],
             ]

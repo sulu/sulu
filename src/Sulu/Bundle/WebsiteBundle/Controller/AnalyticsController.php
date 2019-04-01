@@ -73,7 +73,10 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function postAction(Request $request, $webspace)
     {
-        $entity = $this->get('sulu_website.analytics.manager')->create($webspace, $request->request->all());
+        $data = $request->request->all();
+        $data['content'] = $this->buildContent($data);
+
+        $entity = $this->get('sulu_website.analytics.manager')->create($webspace, $data);
         $this->get('doctrine.orm.entity_manager')->flush();
         $this->get('sulu_website.http_cache.clearer')->clear();
 
@@ -91,7 +94,10 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function putAction(Request $request, $webspace, $id)
     {
-        $entity = $this->get('sulu_website.analytics.manager')->update($id, $request->request->all());
+        $data = $request->request->all();
+        $data['content'] = $this->buildContent($data);
+
+        $entity = $this->get('sulu_website.analytics.manager')->update($id, $data);
         $this->get('doctrine.orm.entity_manager')->flush();
         $this->get('sulu_website.http_cache.clearer')->clear();
 
@@ -142,5 +148,28 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
         return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspace'));
+    }
+
+    private function buildContent(array $data)
+    {
+        if (!array_key_exists('type', $data)) {
+            return null;
+        }
+
+        switch ($data['type']) {
+            case 'google':
+                return $data['google_key'] ?? null;
+            case 'google_tag_manager':
+                return $data['google_tag_manager_key'] ?? null;
+            case 'matomo':
+                return [
+                    'siteId' => $data['matomo_id'] ?? null,
+                    'url' => $data['matomo_url'] ?? null,
+                ];
+            case 'custom':
+                return $data['custom_script'] ?? null;
+            default:
+                return null;
+        }
     }
 }

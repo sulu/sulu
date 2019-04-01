@@ -43,13 +43,23 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // the content will be appended dynamically because the metadata changes from string to array
-        // depended on the type of analytics.
-        // see issue: https://github.com/sulu/sulu/issues/3088
+        $visitor = $event->getVisitor();
         $content = $analytics->getContent();
-        if (!is_string($content)) {
-            $content = $event->getContext()->accept($content);
+
+        switch ($analytics->getType()) {
+            case 'google':
+                $visitor->addData('google_key', $content);
+                break;
+            case 'google_tag_manager':
+                $visitor->addData('google_tag_manager_key', $content);
+                break;
+            case 'matomo':
+                $visitor->addData('matomo_id', $content['siteId']);
+                $visitor->addData('matomo_url', $content['url']);
+                break;
+            case 'custom':
+                $visitor->addData('custom_script', $content);
+                break;
         }
-        $event->getVisitor()->addData('content', $content);
     }
 }
