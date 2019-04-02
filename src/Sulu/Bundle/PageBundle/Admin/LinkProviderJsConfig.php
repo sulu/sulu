@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\JsConfigInterface;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 
 /**
  * Passes the link-provider configuration into the js-config.

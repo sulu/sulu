@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
-import CKEditor5Component from '../../../components/CKEditor5';
+import CKEditor5Component from '../../CKEditor5';
 import type {TextEditorProps} from '../types';
 
 export default class CKEditor5 extends React.Component<TextEditorProps> {
     render() {
         const {
             disabled,
+            locale,
             onBlur,
             onChange,
             options,
@@ -32,6 +33,7 @@ export default class CKEditor5 extends React.Component<TextEditorProps> {
             <CKEditor5Component
                 disabled={disabled}
                 formats={formats}
+                locale={locale}
                 onBlur={onBlur}
                 onChange={onChange}
                 value={value}

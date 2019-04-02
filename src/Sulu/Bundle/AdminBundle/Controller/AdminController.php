@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -107,6 +108,11 @@ class AdminController
     private $managerRegistry;
 
     /**
+     * @var LinkProviderPoolInterface
+     */
+    private $linkProviderPool;
+
+    /**
      * @var string
      */
     private $environment;
@@ -166,6 +172,7 @@ class AdminController
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
         ManagerRegistry $managerRegistry,
+        LinkProviderPoolInterface $linkProviderPool,
         string $environment,
         string $suluVersion,
         ?string $appVersion,
@@ -190,6 +197,7 @@ class AdminController
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
         $this->managerRegistry = $managerRegistry;
+        $this->linkProviderPool = $linkProviderPool;
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
         $this->appVersion = $appVersion;
@@ -245,8 +253,9 @@ class AdminController
                     ),
                 ],
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
-                'routes' => $this->routeRegistry->getRoutes(),
+                'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
+                'routes' => $this->routeRegistry->getRoutes(),
                 'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();

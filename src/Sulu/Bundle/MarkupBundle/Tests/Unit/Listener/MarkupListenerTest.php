@@ -73,9 +73,9 @@ class MarkupListenerTest extends TestCase
     {
         $this->request->getRequestFormat(null)->willReturn('html');
         $this->request->getLocale()->willReturn('de');
-        $this->response->getContent()->willReturn('<html><sulu:link href="123-123-123"/></html>');
+        $this->response->getContent()->willReturn('<html><sulu-link href="123-123-123"/></html>');
 
-        $this->markupParser->parse('<html><sulu:link href="123-123-123"/></html>', 'de')
+        $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', 'de')
             ->willReturn('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
         $this->response->setContent('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();

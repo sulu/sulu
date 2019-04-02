@@ -1,6 +1,6 @@
 // @flow
 import {computed} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx';
 import type {FinishFieldHandler, FormStoreInterface} from './types';
 
 export default class FormInspector {

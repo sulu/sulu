@@ -30,8 +30,11 @@ const javaScriptFileExists = (path, fileName) => {
     return fs.existsSync(`${path}/${fileName}.js`);
 };
 
+const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
+
 module.exports = { // eslint-disable-line
     require: [
+        'regenerator-runtime/runtime',
         'core-js/fn/array/includes',
         'core-js/fn/array/from',
         'core-js/fn/array/fill',
@@ -147,8 +150,11 @@ module.exports = { // eslint-disable-line
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules/,
-                    loader: 'babel-loader',
+                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: babelConfig,
+                    },
                 },
                 {
                     test: /\.css/,

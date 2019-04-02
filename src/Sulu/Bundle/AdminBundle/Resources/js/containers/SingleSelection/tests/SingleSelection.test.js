@@ -226,7 +226,7 @@ test('Should call the onChange callback if a new item was selected', () => {
 
     singleSelection.find(SingleListOverlay).prop('onConfirm')({id: 6});
     expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(6);
-    expect(changeSpy).toBeCalledWith(6);
+    expect(changeSpy).toBeCalledWith(6, {id: 6});
     singleSelection.update();
     expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
 });
@@ -257,7 +257,7 @@ test('Should not call onChange callback if an unrelated observable that is acces
 
     // change callback should be called when item of the store mock changes
     singleSelection.instance().singleSelectionStore.item = {id: 7};
-    expect(changeSpy).toBeCalledWith(7);
+    expect(changeSpy).toBeCalledWith(7, {id: 7});
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     // change callback should not be called when the unrelated observable changes
@@ -346,7 +346,7 @@ test('Should call the onChange callback if the value of the selection-store chan
     );
 
     singleSelection.instance().singleSelectionStore.item = {id: 6};
-    expect(changeSpy).toBeCalledWith(6);
+    expect(changeSpy).toBeCalledWith(6, {id: 6});
 });
 
 test('Should not call the onChange callback if the component props change', () => {

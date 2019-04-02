@@ -17,7 +17,7 @@ type Props = {|
     emptyText: string,
     icon: string,
     locale?: ?IObservableValue<string>,
-    onChange: (selectedIds: ?string | number) => void,
+    onChange: (selectedIds: ?string | number, selectedItem: ?Object) => void,
     overlayTitle: string,
     resourceKey: string,
     value: ?string | number,
@@ -48,7 +48,7 @@ export default class SingleSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (value !== loadedItemId) {
-                    onChange(loadedItemId);
+                    onChange(loadedItemId, this.singleSelectionStore.item);
                 }
             }
         );

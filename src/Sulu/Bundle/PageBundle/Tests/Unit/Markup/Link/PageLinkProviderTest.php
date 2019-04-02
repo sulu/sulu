@@ -13,7 +13,8 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
@@ -21,6 +22,7 @@ use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PageLinkProviderTest extends TestCase
 {
@@ -43,6 +45,11 @@ class PageLinkProviderTest extends TestCase
      * @var RequestStack
      */
     protected $requestStack;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * @var string
@@ -75,6 +82,7 @@ class PageLinkProviderTest extends TestCase
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->request->getScheme()->willReturn($this->scheme);
 
@@ -82,16 +90,29 @@ class PageLinkProviderTest extends TestCase
             $this->contentRepository->reveal(),
             $this->webspaceManager->reveal(),
             $this->requestStack->reveal(),
+            $this->translator->reveal(),
             $this->environment
         );
     }
 
     public function testGetConfiguration()
     {
-        $configuration = $this->pageLinkProvider->getConfiguration();
+        $this->translator->trans('sulu_page.pages', [], 'admin')->willReturn('Pages');
+        $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')->willReturn('Choose page');
+        $this->translator->trans('sulu_page.no_page_selected', [], 'admin')->willReturn('No page selected');
 
-        $this->assertEquals('content.ckeditor.page-link', $configuration->getTitle());
-        $this->assertEquals('ckeditor/link/page@sulupage', $configuration->getComponent());
+        $this->assertEquals(
+            new LinkConfiguration(
+                'Pages',
+                'pages',
+                'column_list',
+                ['title'],
+                'Choose page',
+                'No page selected',
+                'su-document'
+            ),
+            $this->pageLinkProvider->getConfiguration()
+        );
     }
 
     public function testPreload()

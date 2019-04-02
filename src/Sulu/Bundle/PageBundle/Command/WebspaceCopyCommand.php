@@ -557,7 +557,7 @@ class WebspaceCopyCommand extends Command
             return;
         }
 
-        if (!strpos($structureArray[$property->getName()], 'sulu:link')) {
+        if (!strpos($structureArray[$property->getName()], 'sulu-link')) {
             return;
         }
 

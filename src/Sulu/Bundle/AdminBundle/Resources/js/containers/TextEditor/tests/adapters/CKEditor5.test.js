@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {shallow} from 'enzyme';
 import CKEditor5 from '../../adapters/CKEditor5';
 
@@ -7,9 +8,12 @@ test('Pass correct props to CKEditor5 component', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
+    const locale = observable.box('en');
+
     const ckeditor5 = shallow(
         <CKEditor5
             disabled={false}
+            locale={locale}
             onBlur={blurSpy}
             onChange={changeSpy}
             options={{}}
@@ -20,6 +24,7 @@ test('Pass correct props to CKEditor5 component', () => {
     expect(ckeditor5.find('CKEditor5').props()).toEqual(expect.objectContaining({
         disabled: false,
         formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
+        locale,
         onBlur: blurSpy,
         onChange: changeSpy,
         value: 'Test',
@@ -46,6 +51,7 @@ test('Pass formats to CKEditor5 component', () => {
     const ckeditor5 = shallow(
         <CKEditor5
             disabled={false}
+            locale={undefined}
             onBlur={blurSpy}
             onChange={changeSpy}
             options={options}
@@ -71,7 +77,14 @@ test('Throw error if passed formats is not an array', () => {
 
     expect(() =>
         shallow(
-            <CKEditor5 disabled={true} onBlur={jest.fn()} onChange={jest.fn()} options={options} value={undefined} />
+            <CKEditor5
+                disabled={true}
+                locale={undefined}
+                onBlur={jest.fn()}
+                onChange={jest.fn()}
+                options={options}
+                value={undefined}
+            />
         )
     ).toThrow(/"formats" must be an array of strings/);
 });
@@ -92,7 +105,14 @@ test('Throw error if passed formats is not an array', () => {
 
     expect(() =>
         shallow(
-            <CKEditor5 disabled={true} onBlur={jest.fn()} onChange={jest.fn()} options={options} value={undefined} />
+            <CKEditor5
+                disabled={true}
+                locale={undefined}
+                onBlur={jest.fn()}
+                onChange={jest.fn()}
+                options={options}
+                value={undefined}
+            />
         )
     ).toThrow(/"formats" must be strings/);
 });

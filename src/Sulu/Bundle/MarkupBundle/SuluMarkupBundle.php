@@ -34,5 +34,13 @@ class SuluMarkupBundle extends Bundle
                 'sulu_markup.parser.html_extractor'
             )
         );
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_markup.link_tag.provider_pool',
+                'sulu.link.provider',
+                0,
+                'alias'
+            )
+        );
     }
 }

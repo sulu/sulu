@@ -3,7 +3,7 @@ There is also a `TextEditor` component which takes all the options passed to a `
 decides which `TextEditor` should be used.
 
 ```javascript
-const CKEditor5 = require('../../components/CKEditor5').default;
+const CKEditor5 = require('../CKEditor5').default;
 initialState = {
     value: '',
 }

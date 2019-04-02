@@ -16,11 +16,11 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
  */
 class HtmlTagExtractor implements TagExtractorInterface
 {
-    const COUNT_REGEX = '/<%1$s:[a-z]+/';
+    const COUNT_REGEX = '/<%1$s-[a-z]+/';
 
     const ATTRIBUTE_REGEX = '/(?<name>\b[\w-]+\b)\s*=\s*"(?<value>[^"]*)"/';
 
-    const TAG_REGEX = '/(?<tag><%1$s:(?<name>[a-z]+)(?<attributes>(?:(?!>|\/>).)*)(?:\/>|>(?<content>(?:(?!<\/%1$s:\2>).)*)<\/%1$s:\2>))/s';
+    const TAG_REGEX = '/(?<tag><%1$s-(?<name>[a-z]+)(?<attributes>(?:(?!>|\/>).)*)(?:\/>|>(?<content>(?:(?!<\/%1$s-\2>).)*)<\/%1$s-\2>))/s';
 
     /**
      * @var string

@@ -1,5 +1,0 @@
-// @flow
-const LINK_HREF_ATTRIBUTE = 'linkHref';
-const LINK_TARGET_ATTRIBUTE = 'linkTarget';
-
-export {LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE};

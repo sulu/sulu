@@ -2,29 +2,19 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_page.link_tag" class="Sulu\Bundle\PageBundle\Markup\LinkTag">
-            <argument type="service" id="sulu_page.link_tag.provider_pool"/>
-
-            <tag name="sulu_markup.tag" tag="link" type="html"/>
-        </service>
-
-        <service id="sulu_page.link_tag.provider_pool"
-                 class="Sulu\Bundle\PageBundle\Markup\Link\LinkProviderPool">
-            <argument type="collection"/>
-        </service>
-
         <service id="sulu_page.link_tag.page_provider"
                  class="Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider">
             <argument type="service" id="sulu_page.content_repository"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="translator"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.link.provider" alias="page"/>
         </service>
 
         <service id="sulu_page.link_tag.js_config" class="Sulu\Bundle\PageBundle\Admin\LinkProviderJsConfig">
-            <argument type="service" id="sulu_page.link_tag.provider_pool"/>
+            <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
 
             <tag name="sulu.js_config"/>
             <tag name="sulu.context" context="admin"/>

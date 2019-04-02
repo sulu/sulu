@@ -22,7 +22,7 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextEditor extends SimpleContentType
 {
-    const INVALID_REGEX = '/(<%s:[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s:[^\/>]*>)/';
+    const INVALID_REGEX = '/(<%s-[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s-[^\/>]*>)/';
 
     /**
      * @var MarkupParserInterface
@@ -90,8 +90,8 @@ class TextEditor extends SimpleContentType
 
         $regex = sprintf(self::INVALID_REGEX, $this->markupNamespace, $this->markupNamespace);
         foreach ($validation as $tag => $state) {
-            if (false === strpos($tag, 'sulu:validation-state="' . $state . '"')) {
-                $newTag = preg_replace($regex, '$1 sulu:validation-state="' . $state . '"$2', $tag);
+            if (false === strpos($tag, 'sulu-validation-state="' . $state . '"')) {
+                $newTag = preg_replace($regex, '$1 sulu-validation-state="' . $state . '"$2', $tag);
                 $content = str_replace($tag, $newTag, $content);
             }
         }
@@ -108,7 +108,7 @@ class TextEditor extends SimpleContentType
      */
     private function removeValidation($content)
     {
-        return preg_replace('/ sulu:validation-state="[a-zA-Z ]*"/', '', $content);
+        return preg_replace('/ sulu-validation-state="[a-zA-Z ]*"/', '', $content);
     }
 
     /**

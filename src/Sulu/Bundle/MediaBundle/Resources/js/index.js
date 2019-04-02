@@ -1,11 +1,15 @@
 // @flow
+import {when} from 'mobx';
 import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
     fieldRegistry,
+    internalLinkTypeRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils';
+import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import {
@@ -47,6 +51,13 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         FIELD_TYPE_SINGLE_MEDIA_SELECTION,
         new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl),
         2048
+    );
+
+    when(
+        () => !!initializer.initializedTranslationsLocale,
+        (): void => {
+            internalLinkTypeRegistry.add('media', MediaInternalLinkTypeOverlay, translate('sulu_media.media'));
+        }
     );
 });
 

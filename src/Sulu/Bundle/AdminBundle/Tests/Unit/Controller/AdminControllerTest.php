@@ -30,6 +30,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -124,6 +125,11 @@ class AdminControllerTest extends TestCase
     private $managerRegistry;
 
     /**
+     * @var LinkProviderPoolInterface
+     */
+    private $linkProviderPool;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -197,6 +203,7 @@ class AdminControllerTest extends TestCase
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
         $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
+        $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
@@ -216,6 +223,7 @@ class AdminControllerTest extends TestCase
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
             $this->managerRegistry->reveal(),
+            $this->linkProviderPool->reveal(),
             $this->environment,
             $this->suluVersion,
             $this->appVersion,

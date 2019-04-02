@@ -6,9 +6,9 @@ import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
+    Form: require.requireActual('sulu-admin-bundle/containers/Form').default,
+    ResourceFormStore: require.requireActual('sulu-admin-bundle/containers/Form').ResourceFormStore,
     withToolbar: jest.fn((Component) => Component),
-    Form: require.requireActual('sulu-admin-bundle/containers').Form,
-    ResourceFormStore: require.requireActual('sulu-admin-bundle/containers').ResourceFormStore,
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({

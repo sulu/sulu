@@ -118,5 +118,9 @@
     "sulu_admin.escape_description": "Add-on for special characters.",
     "sulu_admin.new_line_description": "Character for line brake.",
     "sulu_admin.delimiter_tab": "Tab",
-    "sulu_admin.enclosure_nothing": "Nothing"
+    "sulu_admin.enclosure_nothing": "Nothing",
+    "sulu_admin.link": "Link",
+    "sulu_admin.link_title": "Alternative title",
+    "sulu_admin.link_target": "Link Target",
+    "sulu_admin.link_url": "Link URL"
 }
