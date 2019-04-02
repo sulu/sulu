@@ -40,19 +40,6 @@ export default class InternalLinkTypeOverlay extends React.Component<InternalLin
                 title={translate('sulu_admin.link')}
             >
                 <Form>
-                    <Form.Field label={translate('sulu_admin.link_title')}>
-                        <Input onChange={onTitleChange} value={title} />
-                    </Form.Field>
-
-                    <Form.Field label={translate('sulu_admin.link_target')} required={true}>
-                        <SingleSelect onChange={onTargetChange} value={target}>
-                            <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
-                            <SingleSelect.Option value="_self">_self</SingleSelect.Option>
-                            <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
-                            <SingleSelect.Option value="_top">_top</SingleSelect.Option>
-                        </SingleSelect>
-                    </Form.Field>
-
                     <Form.Field label={translate('sulu_admin.link_url')} required={true}>
                         <SingleSelection
                             adapter={listAdapter}
@@ -66,6 +53,19 @@ export default class InternalLinkTypeOverlay extends React.Component<InternalLin
                             resourceKey={resourceKey}
                             value={id}
                         />
+                    </Form.Field>
+
+                    <Form.Field label={translate('sulu_admin.link_target')} required={true}>
+                        <SingleSelect onChange={onTargetChange} value={target}>
+                            <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
+                            <SingleSelect.Option value="_self">_self</SingleSelect.Option>
+                            <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
+                            <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                        </SingleSelect>
+                    </Form.Field>
+
+                    <Form.Field label={translate('sulu_admin.link_title')}>
+                        <Input onChange={onTitleChange} value={title} />
                     </Form.Field>
                 </Form>
             </Dialog>

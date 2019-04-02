@@ -34,8 +34,8 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                 title={translate('sulu_admin.link')}
             >
                 <Form>
-                    <Form.Field label={translate('sulu_admin.link_title')}>
-                        <Input onChange={onTitleChange} value={title} />
+                    <Form.Field label={translate('sulu_admin.link_url')} required={true}>
+                        <Url defaultProtocol="https://" onChange={onUrlChange} valid={true} value={url} />
                     </Form.Field>
 
                     <Form.Field label={translate('sulu_admin.link_target')} required={true}>
@@ -47,8 +47,8 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                         </SingleSelect>
                     </Form.Field>
 
-                    <Form.Field label={translate('sulu_admin.link_url')} required={true}>
-                        <Url defaultProtocol="https://" onChange={onUrlChange} valid={true} value={url} />
+                    <Form.Field label={translate('sulu_admin.link_title')}>
+                        <Input onChange={onTitleChange} value={title} />
                     </Form.Field>
                 </Form>
             </Dialog>
