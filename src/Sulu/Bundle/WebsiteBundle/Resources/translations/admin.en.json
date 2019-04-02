@@ -9,5 +9,10 @@
     "sulu_website.script": "Script",
     "sulu_website.key": "Key",
     "sulu_website.matomo_url": "URL",
-    "sulu_website.matomo_id": "Site-ID"
+    "sulu_website.matomo_id": "Site-ID",
+    "sulu_website.position": "Position",
+    "sulu_website.head_open": "Head open",
+    "sulu_website.head_close": "Head close",
+    "sulu_website.body_open": "Body open",
+    "sulu_website.body_close": "Body close"
 }

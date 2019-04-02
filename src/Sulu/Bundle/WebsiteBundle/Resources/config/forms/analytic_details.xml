@@ -46,6 +46,7 @@
                     <schema>
                         <properties>
                             <property name="type" value="custom"/>
+                            <property name="custom_position" mandatory="true"/>
                             <property name="custom_script" mandatory="true"/>
                         </properties>
                     </schema>
@@ -141,6 +142,36 @@
             <meta>
                 <title>sulu_website.matomo_id</title>
             </meta>
+        </property>
+
+        <property name="custom_position" type="single_select" visibleCondition="type == 'custom'">
+            <meta>
+                <title>sulu_website.position</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="headOpen" value="headOpen">
+                        <meta>
+                            <title>sulu_website.head_open</title>
+                        </meta>
+                    </param>
+                    <param name="headClose" value="headClose">
+                        <meta>
+                            <title>sulu_website.head_close</title>
+                        </meta>
+                    </param>
+                    <param name="bodyOpen" value="bodyOpen">
+                        <meta>
+                            <title>sulu_website.body_open</title>
+                        </meta>
+                    </param>
+                    <param name="bodyClose" value="bodyClose">
+                        <meta>
+                            <title>sulu_website.body_close</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
         </property>
 
         <property name="custom_script" type="text_area" visibleCondition="type == 'custom'">

@@ -167,7 +167,10 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
                     'url' => $data['matomo_url'] ?? null,
                 ];
             case 'custom':
-                return $data['custom_script'] ?? null;
+                return [
+                    'position' => $data['custom_position'] ?? null,
+                    'value' => $data['custom_script'] ?? null,
+                ];
             default:
                 return null;
         }

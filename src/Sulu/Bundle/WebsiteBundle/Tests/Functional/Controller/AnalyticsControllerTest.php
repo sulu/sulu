@@ -91,6 +91,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('test-3', $items[2]['title']);
         $this->assertEquals('custom', $items[2]['type']);
         $this->assertEquals('<div/>', $items[2]['custom_script']);
+        $this->assertEquals('bodyClose', $items[2]['custom_position']);
         $this->assertCount(1, $items[2]['domains']);
         $this->assertEquals('{localization}.google.at', $items[2]['domains'][0]);
 
@@ -154,6 +155,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 'title' => 'test-10',
                 'type' => 'custom',
                 'custom_script' => '<div/>',
+                'custom_position' => 'bodyOpen',
                 'domains' => ['www.sulu.io'],
             ]
         );
@@ -165,6 +167,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('test-10', $response['title']);
         $this->assertEquals('custom', $response['type']);
         $this->assertEquals('<div/>', $response['custom_script']);
+        $this->assertEquals('bodyOpen', $response['custom_position']);
         $this->assertCount(1, $response['domains']);
         $this->assertEquals('www.sulu.io', $response['domains'][0]);
     }
@@ -229,7 +232,10 @@ class AnalyticsControllerTest extends SuluTestCase
             [
                 'title' => 'test-3',
                 'type' => 'custom',
-                'content' => '<div/>',
+                'content' => [
+                    'value' => '<div/>',
+                    'position' => 'bodyClose',
+                ],
                 'domains' => ['{localization}.google.at'],
             ]
         );

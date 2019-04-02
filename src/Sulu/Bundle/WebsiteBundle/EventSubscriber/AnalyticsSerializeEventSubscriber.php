@@ -58,7 +58,8 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
                 $visitor->addData('matomo_url', $content['url']);
                 break;
             case 'custom':
-                $visitor->addData('custom_script', $content);
+                $visitor->addData('custom_script', $content['value']);
+                $visitor->addData('custom_position', $content['position']);
                 break;
         }
     }
