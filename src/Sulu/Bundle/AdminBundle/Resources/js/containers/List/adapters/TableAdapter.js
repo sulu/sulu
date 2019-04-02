@@ -74,6 +74,10 @@ export default class TableAdapter extends AbstractTableAdapter {
             return table;
         }
 
+        if (pageCount === undefined) {
+            return table;
+        }
+
         return (
             <Pagination
                 currentLimit={limit}

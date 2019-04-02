@@ -554,6 +554,30 @@ test('Pagination should be passed correct props', () => {
     });
 });
 
+test('Pagination should not be rendered if API is not paginated', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+    ];
+
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+    const tableAdapter = shallow(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            page={1}
+            pageCount={undefined}
+        />
+    );
+    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+});
+
 test('Pagination should not be rendered if no data is available', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
