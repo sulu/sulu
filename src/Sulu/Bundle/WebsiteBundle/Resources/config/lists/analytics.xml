@@ -13,5 +13,17 @@
             visibility="always"
             translation="sulu_admin.type"
         />
+        <property
+            name="allDomains"
+            visibility="yes"
+            translation="sulu_website.all_domains"
+            type="bool"
+        />
+        <property
+            name="domains"
+            visibility="yes"
+            translation="sulu_website.domains"
+            type="array"
+        />
     </properties>
 </list>

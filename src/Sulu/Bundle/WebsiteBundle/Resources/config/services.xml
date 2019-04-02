@@ -233,7 +233,11 @@
             <argument type="collection"/>
         </service>
 
-        <service id="sulu_website.url_select_helper" class="Sulu\Bundle\WebsiteBundle\Admin\Helper\UrlSelect">
+        <service
+            id="sulu_website.url_select_helper"
+            class="Sulu\Bundle\WebsiteBundle\Admin\Helper\UrlSelect"
+            public="true"
+        >
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
         </service>
