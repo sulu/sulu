@@ -67,6 +67,39 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data with skin', () => {
+    const data = [];
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'no',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            options={{
+                skin: 'light',
+            }}
+            page={2}
+            pageCount={5}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Attach onClick handler for sorting if schema says the header is sortable', () => {
     const sortSpy = jest.fn();
 

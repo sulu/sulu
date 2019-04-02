@@ -2,7 +2,7 @@
 
 exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -48,7 +48,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
 
 exports[`Render a table with buttons 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -143,7 +143,7 @@ exports[`Render a table with buttons 1`] = `
 
 exports[`Render a table with different buttons for each row 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -283,7 +283,7 @@ exports[`Render a table with different buttons for each row 1`] = `
 
 exports[`Render an empty table 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -335,7 +335,7 @@ exports[`Render an empty table 1`] = `
 
 exports[`Render the Table component 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -437,7 +437,7 @@ exports[`Render the Table component 1`] = `
 
 exports[`Render the Table component in multiple selection mode 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -526,7 +526,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
 
 exports[`Render the Table component in single selection mode 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -602,7 +602,7 @@ exports[`Render the Table component in single selection mode 1`] = `
 
 exports[`Render the Table component in tree structure 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -727,6 +727,108 @@ exports[`Render the Table component in tree structure 1`] = `
           <div
             class="cellContent"
             style="padding-left:50px"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render the Table component with a skin 1`] = `
+<div
+  class="tableContainer light"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
           >
             Column Text
           </div>

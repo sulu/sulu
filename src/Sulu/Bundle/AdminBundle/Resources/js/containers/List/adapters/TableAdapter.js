@@ -38,6 +38,9 @@ export default class TableAdapter extends AbstractTableAdapter {
             onItemSelectionChange,
             onLimitChange,
             onPageChange,
+            options: {
+                skin = 'dark',
+            },
             page,
             pageCount,
         } = this.props;
@@ -56,6 +59,7 @@ export default class TableAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
                 onRowSelectionChange={onItemSelectionChange}
                 selectMode={onItemSelectionChange ? 'multiple' : undefined}
+                skin={skin}
             >
                 <Table.Header>
                     {this.renderHeaderCells()}

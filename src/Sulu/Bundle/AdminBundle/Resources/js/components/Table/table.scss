@@ -1,9 +1,11 @@
 @import '../../containers/Application/colors.scss';
 
-$headerTextColor: $white;
-$headerCellBackgroundColor: $blueZodiac;
-$headerButtonCellTextColor: rgba($silverChalice, .25);
-$headerButtonCellBorderColor: rgba($silverChalice, .25);
+$headerTextDarkColor: $white;
+$headerCellDarkBackgroundColor: $blueZodiac;
+$headerButtonCellDarkBorderColor: rgba($silverChalice, .25);
+$headerTextBrightColor: $black;
+$headerCellBrightBackgroundColor: $alto;
+$headerButtonCellBrightBorderColor: $silver;
 $cellTextColor: $blueZodiac;
 $cellTextColorActive: $white;
 $cellBackgroundColor: $white;
@@ -28,12 +30,8 @@ $borderRadius: 3px;
     min-width: 100%;
 }
 
-.header {
-    color: $headerTextColor;
-
-    & > tr {
-        height: 60px;
-    }
+.header > tr {
+    height: 60px;
 }
 
 .header-cell,
@@ -56,7 +54,6 @@ $borderRadius: 3px;
     padding: 20px;
     font-size: 12px;
     font-weight: normal;
-    background-color: $headerCellBackgroundColor;
 
     > span {
         display: inline-flex;
@@ -112,7 +109,6 @@ $borderRadius: 3px;
 
 .header-button-cell {
     width: 1px;
-    border-right: $borderWidth solid $headerButtonCellBorderColor;
     text-align: center;
     font-size: 16px;
 }
@@ -204,4 +200,32 @@ $borderRadius: 3px;
     margin-top: 15px;
     font-size: 12px;
     font-weight: bold;
+}
+
+.dark {
+    .header {
+        color: $headerTextDarkColor;
+    }
+
+    .header-cell {
+        background-color: $headerCellDarkBackgroundColor;
+    }
+
+    .header-button-cell {
+        border-right: $borderWidth solid $headerButtonCellDarkBorderColor;
+    }
+}
+
+.light {
+    .header {
+        color: $headerTextBrightColor;
+    }
+
+    .header-cell {
+        background-color: $headerCellBrightBackgroundColor;
+    }
+
+    .header-button-cell {
+        border-right: $borderWidth solid $headerButtonCellBrightBorderColor;
+    }
 }

@@ -7,3 +7,5 @@ export type ButtonConfig = {
     icon: string,
     onClick: ?(string | number) => void,
 };
+
+export type Skin = 'dark' | 'light';

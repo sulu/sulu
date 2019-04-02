@@ -305,7 +305,7 @@ exports[`Should render the list with a title 1`] = `
     >
       <section>
         <div
-          class="tableContainer"
+          class="tableContainer dark"
         >
           <table
             class="table"
@@ -559,7 +559,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
     >
       <section>
         <div
-          class="tableContainer"
+          class="tableContainer dark"
         >
           <table
             class="table"

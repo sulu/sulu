@@ -3,7 +3,7 @@
 exports[`Render column with ascending sort icon 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -154,7 +154,7 @@ exports[`Render column with ascending sort icon 1`] = `
 exports[`Render column with descending sort icon 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -305,7 +305,7 @@ exports[`Render column with descending sort icon 1`] = `
 exports[`Render data with all different visibility types schema 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -469,7 +469,7 @@ exports[`Render data with all different visibility types schema 1`] = `
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -651,7 +651,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 exports[`Render data with schema 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -794,7 +794,7 @@ exports[`Render data with schema 1`] = `
 exports[`Render data with schema and selections 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -1044,7 +1044,7 @@ exports[`Render data with schema and selections 1`] = `
 exports[`Render data with schema in different order 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -1187,7 +1187,7 @@ exports[`Render data with schema in different order 1`] = `
 exports[`Render data with schema not containing all fields 1`] = `
 <section>
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"
@@ -1282,6 +1282,130 @@ exports[`Render data with schema not containing all fields 1`] = `
     <button
       class="previous"
       disabled=""
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
+exports[`Render data with skin 1`] = `
+<section>
+  <div
+    class="tableContainer light"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody />
+    </table>
+    <div
+      class="tablePlaceholderArea"
+    >
+      <span
+        aria-label="su-battery-low"
+        class="su-battery-low tablePlaceholderIcon"
+      />
+    </div>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+    </span>
+    <div
+      class="loader"
+    />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark center"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
+    <span
+      class="display"
+    >
+      of 5
+    </span>
+    <button
+      class="previous"
     >
       <span
         aria-label="su-angle-left"

@@ -2,49 +2,36 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import type {ChildrenArray, Element} from 'react';
+import classNames from 'classnames';
 import Icon from '../Icon';
 import Header from './Header';
 import Body from './Body';
 import Row from './Row';
 import Cell from './Cell';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode} from './types';
+import type {ButtonConfig, SelectMode, Skin} from './types';
 import tableStyles from './table.scss';
 
 const PLACEHOLDER_ICON = 'su-battery-low';
 
 type Props = {
-    children: ChildrenArray<?Element<typeof Header | typeof Body>>,
-    /** List of buttons to apply action handlers to every row (e.g. edit row) */
     buttons?: Array<ButtonConfig>,
-    /** Can be set to "single" or "multiple". Defaults is "none". */
+    children: ChildrenArray<?Element<typeof Header | typeof Body>>,
+    onAllSelectionChange?: ?(checked: boolean) => void,
+    onRowCollapse?: (rowId: string | number) => void,
+    onRowExpand?: (rowId: string | number) => void,
+    onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
+    placeholderText?: string,
     selectMode?: SelectMode,
     selectInFirstCell?: boolean,
-    /**
-     * Callback function to notify about selection and deselection of a row.
-     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
-     */
-    onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
-    /**
-     * Callback function to notify about open of a row.
-     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
-     */
-    onRowExpand?: (rowId: string | number) => void,
-    /**
-     * Callback function to notify about close of a row.
-     * If the "id" prop is set on the row, the "rowId" corresponds to that, else it is the index of the row.
-     */
-    onRowCollapse?: (rowId: string | number) => void,
-    /** Called when the "select all" checkbox in the header was clicked. Returns the checked state. */
-    onAllSelectionChange?: ?(checked: boolean) => void,
-    /** Text shown when the table has no entries */
-    placeholderText?: string,
+    skin: Skin,
 };
 
 @observer
 export default class Table extends React.Component<Props> {
     static defaultProps = {
         selectMode: 'none',
+        skin: 'dark',
     };
 
     static Header = Header;
@@ -62,14 +49,17 @@ export default class Table extends React.Component<Props> {
             return null;
         }
 
+        const {buttons, onAllSelectionChange, selectMode, selectInFirstCell, skin} = this.props;
+
         return React.cloneElement(
             originalHeader,
             {
                 allSelected: allSelected,
-                buttons: this.props.buttons,
-                selectMode: this.props.selectMode,
-                selectInFirstCell: this.props.selectInFirstCell,
-                onAllSelectionChange: this.props.onAllSelectionChange ? this.handleAllSelectionChange : undefined,
+                buttons,
+                onAllSelectionChange: onAllSelectionChange ? this.handleAllSelectionChange : undefined,
+                selectMode,
+                selectInFirstCell,
+                skin,
             }
         );
     };
@@ -148,7 +138,7 @@ export default class Table extends React.Component<Props> {
     };
 
     render() {
-        const {children} = this.props;
+        const {children, skin} = this.props;
         let body;
         let header;
 
@@ -178,8 +168,10 @@ export default class Table extends React.Component<Props> {
         const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
+        const tableClass = classNames(tableStyles.tableContainer, tableStyles[skin]);
+
         return (
-            <div className={tableStyles.tableContainer}>
+            <div className={tableClass}>
                 <table className={tableStyles.table}>
                     {clonedHeader}
                     {clonedBody}

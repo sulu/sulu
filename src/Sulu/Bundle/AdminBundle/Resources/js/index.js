@@ -152,6 +152,7 @@ function registerListAdapters() {
     listAdapterRegistry.add('column_list', ColumnListAdapter);
     listAdapterRegistry.add('folder', FolderAdapter);
     listAdapterRegistry.add('table', TableAdapter);
+    listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
     listAdapterRegistry.add('tree_table', TreeTableAdapter);
     listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
 }

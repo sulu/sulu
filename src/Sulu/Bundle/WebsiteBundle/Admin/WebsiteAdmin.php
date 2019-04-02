@@ -70,7 +70,7 @@ class WebsiteAdmin extends Admin
                 ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
                 ->setResourceKey('analytics')
                 ->setListKey('analytics')
-                ->addListAdapters(['table'])
+                ->addListAdapters(['table_light'])
                 ->addRouterAttributesToListStore(['webspace'])
                 ->addRouterAttributesToFormStore(['webspace'])
                 ->disableSearching()
