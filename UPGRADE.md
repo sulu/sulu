@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### User-Table changed
+
+The user-table was extended with auditable information. Run following sql-statement to
+update the database schema.
+
+```bash
+ALTER TABLE se_users ADD changed DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL, ADD created DATETIME DEFAULT '1970-01-01 00:00:00' NOT NULL;
+ALTER TABLE se_users CHANGE created created DATETIME NOT NULL, CHANGE changed changed DATETIME NOT NULL;
+```
+
 ### Rename Internal Link and Single Internal Link Content Type
 
 The `single_internal_link` and `internal_links` content type were renamed.

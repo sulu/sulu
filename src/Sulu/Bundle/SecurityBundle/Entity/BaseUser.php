@@ -17,6 +17,8 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
@@ -26,8 +28,10 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  *
  * @ExclusionPolicy("all")
  */
-abstract class BaseUser extends ApiEntity implements UserInterface, Serializable, EquatableInterface
+abstract class BaseUser extends ApiEntity implements UserInterface, Serializable, EquatableInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var string
      * @Expose
