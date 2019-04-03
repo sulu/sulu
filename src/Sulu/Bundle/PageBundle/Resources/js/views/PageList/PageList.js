@@ -165,7 +165,7 @@ class PageList extends React.Component<Props> {
 
     @action handleCacheClearConfirm = () => {
         this.cacheClearing = true;
-        Requester.delete(PageList.clearCacheEndpoint).then(action(() => {
+        Requester.delete(PageListWithToolbar.clearCacheEndpoint).then(action(() => {
             this.showCacheClearDialog = false;
             this.cacheClearing = false;
         }));
