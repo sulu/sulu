@@ -165,6 +165,9 @@
             <argument>%kernel.environment%</argument>
         </service>
 
+        <service id="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface"
+                 alias="sulu_website.resolver.template_attribute"/>
+
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%" public="true">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
