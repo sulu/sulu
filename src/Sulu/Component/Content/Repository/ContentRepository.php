@@ -424,11 +424,11 @@ class ContentRepository implements ContentRepositoryInterface
 
         $queryBuilder
             ->select('node', 'jcr:uuid', 'uuid')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('nodeType', $locale), 'nodeType')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('internal_link', $locale), 'internalLink')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('state', $locale), 'state')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
+            ->addSelect('node', $this->getPropertyName('nodeType', $locale), 'nodeType')
+            ->addSelect('node', $this->getPropertyName('internal_link', $locale), 'internalLink')
+            ->addSelect('node', $this->getPropertyName('state', $locale), 'state')
+            ->addSelect('node', $this->getPropertyName('shadow-on', $locale), 'shadowOn')
+            ->addSelect('node', $this->getPropertyName('shadow-base', $locale), 'shadowBase')
             ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
             ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));
@@ -448,6 +448,15 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         return $queryBuilder;
+    }
+
+    private function getPropertyName($propertyName, $locale)
+    {
+        if ($locale) {
+            return $this->propertyEncoder->localizedContentName($propertyName, $locale);
+        }
+
+        return $this->propertyEncoder->contentName($propertyName);
     }
 
     /**

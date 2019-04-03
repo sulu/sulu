@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### Custom URL services
+
+The `CustomUrlController` delivering the API for custom urls doesn't take a locale as query parameter anymore, because
+they are not localized. In order to be consistent the `CustomUrlDocument` does not implement the `LocaleBehavior`
+anymore and neither the `CustomUrlManager` and `CustomUrlRepository` accept a locale parameter.
+
 ### Rename Internal Link and Single Internal Link Content Type
 
 The `single_internal_link` and `internal_links` content type were renamed.

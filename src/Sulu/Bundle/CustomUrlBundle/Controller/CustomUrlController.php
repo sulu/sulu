@@ -45,10 +45,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     {
         // TODO pagination
 
-        $result = $this->get('sulu_custom_urls.manager')->findList(
-            $webspaceKey,
-            $this->getRequestParameter($request, 'locale', true)
-        );
+        $result = $this->get('sulu_custom_urls.manager')->findList($webspaceKey);
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),
@@ -70,10 +67,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function getAction($webspaceKey, $uuid, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->find(
-            $uuid,
-            $this->getRequestParameter($request, 'locale', true)
-        );
+        $document = $this->get('sulu_custom_urls.manager')->find($uuid);
 
         // FIXME without this target-document will not be loaded (for serialization)
         // - issue https://github.com/sulu-io/sulu-document-manager/issues/71

@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
@@ -29,7 +28,6 @@ class CustomUrlDocument implements
     TimestampBehavior,
     BlameBehavior,
     ParentBehavior,
-    LocaleBehavior,
     AutoNameBehavior
 {
     /**
@@ -66,11 +64,6 @@ class CustomUrlDocument implements
      * @var string
      */
     protected $originalLocale;
-
-    /**
-     * @var string
-     */
-    protected $locale;
 
     /**
      * @var string
@@ -252,22 +245,6 @@ class CustomUrlDocument implements
     public function setOriginalLocale($originalLocale)
     {
         $this->originalLocale = $originalLocale;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
     }
 
     /**

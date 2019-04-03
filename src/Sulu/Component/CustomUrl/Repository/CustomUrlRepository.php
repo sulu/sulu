@@ -62,12 +62,11 @@ class CustomUrlRepository
      * Returns list of custom-url data-arrays.
      *
      * @param string $path
-     * @param string $locale
      * @param array $baseDomains
      *
      * @return \Iterator
      */
-    public function findList($path, $locale, array $baseDomains = null)
+    public function findList($path, array $baseDomains = null)
     {
         // TODO pagination
 
@@ -119,7 +118,7 @@ class CustomUrlRepository
 
         $targets = $this->contentRepository->findByUuids(
             array_unique($uuids),
-            $locale,
+            null,
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 

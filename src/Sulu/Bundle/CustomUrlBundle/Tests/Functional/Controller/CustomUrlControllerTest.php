@@ -594,7 +594,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $dateTime = new \DateTime();
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
@@ -625,26 +625,6 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey($url, $responseData['routes']);
         $this->assertFalse($responseData['routes'][$url]['history']);
-    }
-
-    /**
-     * @dataProvider getProvider
-     */
-    public function testGetWithoutLocale($data, $url)
-    {
-        // content document is not there in provider
-        if (array_key_exists('targetDocument', $data)) {
-            $data['targetDocument'] = ['uuid' => $this->contentDocument->getUuid()];
-        }
-
-        $uuid = $this->testPost($data, $url);
-
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
-
-        $response = $client->getResponse();
-
-        $this->assertHttpStatusCode(400, $response);
     }
 
     public function cgetProvider()
@@ -691,7 +671,7 @@ class CustomUrlControllerTest extends SuluTestCase
         }
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls');
         $requestTime = new \DateTime();
 
         $response = $client->getResponse();
@@ -722,23 +702,6 @@ class CustomUrlControllerTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider cgetProvider
-     */
-    public function testCGetWithoutLocale($items)
-    {
-        foreach ($items as $url => $data) {
-            $items[$url]['uuid'] = $this->testPost($data, $url);
-        }
-
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls');
-
-        $response = $client->getResponse();
-
-        $this->assertHttpStatusCode(400, $response);
-    }
-
-    /**
      * @dataProvider getProvider
      */
     public function testDelete($data, $url)
@@ -752,7 +715,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $client->getResponse();
         $this->assertHttpStatusCode(404, $response);
@@ -791,7 +754,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $response);
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls');
 
         $response = $client->getResponse();
         $this->assertHttpStatusCode(200, $response);
@@ -917,7 +880,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $uuid = $this->testPut($before, $data, $url);
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
         $customUrl = json_decode($client->getResponse()->getContent(), true);
 
         $uuids = [];
@@ -940,7 +903,7 @@ class CustomUrlControllerTest extends SuluTestCase
             return;
         }
 
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '?locale=en');
+        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
         $customUrl = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($excpected, array_keys($customUrl['routes']));
