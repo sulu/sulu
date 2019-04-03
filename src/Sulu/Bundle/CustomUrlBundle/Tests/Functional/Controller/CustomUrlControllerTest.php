@@ -679,7 +679,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $response);
 
-        foreach ($responseDataComplete['_embedded']['custom-urls'] as $responseData) {
+        foreach ($responseDataComplete['_embedded']['custom_urls'] as $responseData) {
             $data = $items[$responseData['customUrl']];
 
             foreach (['uuid', 'title', 'published', 'baseDomain'] as $key) {
@@ -760,8 +760,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         $responseData = json_decode($response->getContent(), true);
-        $this->assertCount(1, $responseData['_embedded']['custom-urls']);
-        $this->assertEquals($uuid, $responseData['_embedded']['custom-urls'][0]['uuid']);
+        $this->assertCount(1, $responseData['_embedded']['custom_urls']);
+        $this->assertEquals($uuid, $responseData['_embedded']['custom_urls'][0]['uuid']);
     }
 
     public function cdeleteRoutesProvider()

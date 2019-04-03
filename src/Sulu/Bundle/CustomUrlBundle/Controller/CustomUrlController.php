@@ -31,7 +31,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
 {
     use RequestParametersTrait;
 
-    private static $relationName = 'custom-urls';
+    private static $relationName = 'custom_urls';
 
     /**
      * Returns a list of custom-urls.
