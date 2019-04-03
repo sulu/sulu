@@ -32,7 +32,6 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
 
         $container->setParameter('sulu_preview.mode', $config['mode']);
         $container->setParameter('sulu_preview.delay', $config['delay']);
-        $container->setParameter('sulu_preview.defaults.analytics_key', $config['defaults']['analytics_key']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

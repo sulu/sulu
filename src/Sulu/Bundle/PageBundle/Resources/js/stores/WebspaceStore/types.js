@@ -24,7 +24,6 @@ export type Url = {
     segment: string,
     redirect: string,
     main: boolean,
-    analyticsKey: string,
     environment: string,
 };
 

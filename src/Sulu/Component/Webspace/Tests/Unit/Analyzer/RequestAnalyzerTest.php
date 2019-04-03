@@ -166,8 +166,6 @@ class RequestAnalyzerTest extends TestCase
             [[], 'getResourceLocator', false],
             [['resourceLocatorPrefix' => 1], 'getResourceLocatorPrefix', 1],
             [[], 'getResourceLocatorPrefix', null],
-            [['analyticsKey' => 1], 'getAnalyticsKey', 1],
-            [[], 'getAnalyticsKey', ''],
             [['portalInformation' => 1], 'getPortalInformation', 1],
             [[], 'getPortalInformation', null],
         ];

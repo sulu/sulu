@@ -5,7 +5,7 @@ exports[`Render a MediaHistory view 1`] = `
   class="mediaHistory"
 >
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"

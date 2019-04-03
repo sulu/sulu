@@ -5,7 +5,7 @@ exports[`Render a MediaFormats view 1`] = `
   class="mediaFormats"
 >
   <div
-    class="tableContainer"
+    class="tableContainer dark"
   >
     <table
       class="table"

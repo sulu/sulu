@@ -86,7 +86,7 @@ class PageAdminTest extends TestCase
         ], 'attributeDefaults', $route);
 
         $route = $admin->getRoutes()[1];
-        $this->assertAttributeEquals('sulu_page.pages_datagrid', 'name', $route);
+        $this->assertAttributeEquals('sulu_page.pages_list', 'name', $route);
         $this->assertAttributeEquals([
             'locale' => 'de',
         ], 'attributeDefaults', $route);

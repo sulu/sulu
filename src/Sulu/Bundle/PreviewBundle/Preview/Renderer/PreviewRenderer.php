@@ -181,7 +181,6 @@ class PreviewRenderer implements PreviewRendererInterface
                     'resourceLocatorPrefix' => $portalInformation->getPrefix(),
                     'getParameters' => $query,
                     'postParameters' => $request,
-                    'analyticsKey' => $this->previewDefaults['analyticsKey'],
                     'portalInformation' => $portalInformation,
                 ]
             )

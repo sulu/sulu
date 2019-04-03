@@ -6,7 +6,6 @@
         <virtual-property method="getLocale" name="locale" type="string" expose="true"/>
 
         <property name="url" type="string" expose="true"/>
-        <property name="analyticsKey" type="string" expose="true"/>
         <property name="type" type="integer" expose="true"/>
         <property name="segment" type="string" expose="true"/>
         <property name="redirect" type="string" expose="true"/>

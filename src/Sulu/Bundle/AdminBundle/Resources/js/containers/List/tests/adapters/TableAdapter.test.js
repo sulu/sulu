@@ -67,6 +67,39 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data with skin', () => {
+    const data = [];
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'no',
+            label: 'Title',
+        },
+        description: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Description',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            options={{
+                skin: 'light',
+            }}
+            page={2}
+            pageCount={5}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Attach onClick handler for sorting if schema says the header is sortable', () => {
     const sortSpy = jest.fn();
 
@@ -519,6 +552,30 @@ test('Pagination should be passed correct props', () => {
         onPageChange: pageChangeSpy,
         children: expect.anything(),
     });
+});
+
+test('Pagination should not be rendered if API is not paginated', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+    ];
+
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+    const tableAdapter = shallow(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            page={1}
+            pageCount={undefined}
+        />
+    );
+    expect(tableAdapter.find('Pagination')).toHaveLength(0);
 });
 
 test('Pagination should not be rendered if no data is available', () => {

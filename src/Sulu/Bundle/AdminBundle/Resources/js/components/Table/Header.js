@@ -4,24 +4,21 @@ import React, {Fragment} from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode} from './types';
+import type {ButtonConfig, SelectMode, Skin} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof HeaderCell>>,
-    /**
-     * @ignore
-     * The header will just display the icons.
-     */
+    allSelected: boolean,
+    /** @ignore */
     buttons?: Array<ButtonConfig>,
+    children: ChildrenArray<Element<typeof HeaderCell>>,
+    /** @ignore */
+    onAllSelectionChange?: (checked: boolean) => void,
     /** @ignore */
     selectMode?: SelectMode,
     /** @ignore */
     selectInFirstCell: boolean,
-    /** @ignore */
-    onAllSelectionChange?: (checked: boolean) => void,
-    /** If true the "select all" checkbox is checked. */
-    allSelected: boolean,
+    skin: Skin,
 };
 
 export default class Header extends React.PureComponent<Props> {
@@ -29,6 +26,7 @@ export default class Header extends React.PureComponent<Props> {
         allSelected: false,
         selectInFirstCell: false,
         selectMode: 'none',
+        skin: 'dark',
     };
 
     isMultipleSelect = () => {
@@ -87,7 +85,8 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createFirstCell = (children: *) => {
-        const {allSelected, selectInFirstCell, onAllSelectionChange} = this.props;
+        const {allSelected, selectInFirstCell, onAllSelectionChange, skin} = this.props;
+
         if (!selectInFirstCell || !this.isMultipleSelect() || !onAllSelectionChange) {
             return children;
         }
@@ -98,7 +97,7 @@ export default class Header extends React.PureComponent<Props> {
                     <Checkbox
                         checked={allSelected}
                         onChange={this.handleAllSelectionChange}
-                        skin="light"
+                        skin={skin}
                     />
                 </span>
                 {children}
@@ -128,14 +127,14 @@ export default class Header extends React.PureComponent<Props> {
     };
 
     createCheckboxCell = () => {
-        const key = 'header-checkbox';
+        const {skin} = this.props;
 
         return (
-            <HeaderCell key={key}>
+            <HeaderCell key="header-checkbox">
                 <Checkbox
                     checked={this.props.allSelected}
                     onChange={this.handleAllSelectionChange}
-                    skin="light"
+                    skin={skin === 'dark' ? 'light' : 'dark'}
                 />
             </HeaderCell>
         );

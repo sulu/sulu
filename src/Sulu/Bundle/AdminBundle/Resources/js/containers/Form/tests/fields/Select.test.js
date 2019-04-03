@@ -104,6 +104,41 @@ test('Should throw an exception if value is of wrong type', () => {
     )).toThrow(/"values"/);
 });
 
+test('Should call onChange with undefined if value is changed to an empty array', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const schemaOptions = {
+        values: {
+            value: [
+                {
+                    name: 'mr',
+                    title: 'Mister',
+                },
+                {
+                    name: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+
+    const select = shallow(
+        <Select
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    select.simulate('change', []);
+
+    expect(changeSpy).toBeCalledWith(undefined);
+    expect(finishSpy).toBeCalledWith();
+});
+
 test('Should call onFinish callback on every onChange', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
@@ -131,7 +166,7 @@ test('Should call onFinish callback on every onChange', () => {
         />
     );
 
-    select.simulate('change');
+    select.simulate('change', []);
 
     expect(finishSpy).toBeCalledWith();
 });

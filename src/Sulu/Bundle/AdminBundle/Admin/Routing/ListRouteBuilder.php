@@ -154,6 +154,13 @@ class ListRouteBuilder implements ListRouteBuilderInterface
         return $this;
     }
 
+    public function addRerenderAttribute(string $attribute)
+    {
+        $this->route->addRerenderAttribute($attribute);
+
+        return $this;
+    }
+
     public function getRoute(): Route
     {
         if (!$this->route->getOption('resourceKey')) {

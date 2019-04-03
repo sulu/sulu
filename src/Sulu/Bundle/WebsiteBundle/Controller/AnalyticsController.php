@@ -31,18 +31,18 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      * Returns webspace analytics by webspace key.
      *
      * @param Request $request
-     * @param string $webspaceKey
+     * @param string $webspace
      *
      * @return Response
      */
-    public function cgetAction(Request $request, $webspaceKey)
+    public function cgetAction(Request $request, $webspace)
     {
-        $entities = $this->get('sulu_website.analytics.manager')->findAll($webspaceKey);
+        $entities = $this->get('sulu_website.analytics.manager')->findAll($webspace);
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($entities, self::RESULT_KEY),
             'cget_webspace_analytics',
-            array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
+            array_merge($request->request->all(), ['webspace' => $webspace])
         );
 
         return $this->handleView($this->view($list, 200));
@@ -51,12 +51,12 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Returns a single analytics by id.
      *
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param int $id
      *
      * @return Response
      */
-    public function getAction($webspaceKey, $id)
+    public function getAction($webspace, $id)
     {
         $entity = $this->get('sulu_website.analytics.manager')->find($id);
 
@@ -67,13 +67,16 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      * Creates a analytics for given webspace.
      *
      * @param Request $request
-     * @param string $webspaceKey
+     * @param string $webspace
      *
      * @return Response
      */
-    public function postAction(Request $request, $webspaceKey)
+    public function postAction(Request $request, $webspace)
     {
-        $entity = $this->get('sulu_website.analytics.manager')->create($webspaceKey, $request->request->all());
+        $data = $request->request->all();
+        $data['content'] = $this->buildContent($data);
+
+        $entity = $this->get('sulu_website.analytics.manager')->create($webspace, $data);
         $this->get('doctrine.orm.entity_manager')->flush();
         $this->get('sulu_website.http_cache.clearer')->clear();
 
@@ -84,14 +87,17 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      * Updates analytics with given id.
      *
      * @param Request $request
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param int $id
      *
      * @return Response
      */
-    public function putAction(Request $request, $webspaceKey, $id)
+    public function putAction(Request $request, $webspace, $id)
     {
-        $entity = $this->get('sulu_website.analytics.manager')->update($id, $request->request->all());
+        $data = $request->request->all();
+        $data['content'] = $this->buildContent($data);
+
+        $entity = $this->get('sulu_website.analytics.manager')->update($id, $data);
         $this->get('doctrine.orm.entity_manager')->flush();
         $this->get('sulu_website.http_cache.clearer')->clear();
 
@@ -101,12 +107,12 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Removes given analytics.
      *
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param int $id
      *
      * @return Response
      */
-    public function deleteAction($webspaceKey, $id)
+    public function deleteAction($webspace, $id)
     {
         $this->get('sulu_website.analytics.manager')->remove($id);
         $this->get('doctrine.orm.entity_manager')->flush();
@@ -119,11 +125,11 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      * Removes a list of analytics.
      *
      * @param Request $request
-     * @param $webspaceKey
+     * @param $webspace
      *
      * @return Response
      */
-    public function cdeleteAction(Request $request, $webspaceKey)
+    public function cdeleteAction(Request $request, $webspace)
     {
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
@@ -141,6 +147,32 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspaceKey'));
+        return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspace'));
+    }
+
+    private function buildContent(array $data)
+    {
+        if (!array_key_exists('type', $data)) {
+            return null;
+        }
+
+        switch ($data['type']) {
+            case 'google':
+                return $data['google_key'] ?? null;
+            case 'google_tag_manager':
+                return $data['google_tag_manager_key'] ?? null;
+            case 'matomo':
+                return [
+                    'siteId' => $data['matomo_id'] ?? null,
+                    'url' => $data['matomo_url'] ?? null,
+                ];
+            case 'custom':
+                return [
+                    'position' => $data['custom_position'] ?? null,
+                    'value' => $data['custom_script'] ?? null,
+                ];
+            default:
+                return null;
+        }
     }
 }

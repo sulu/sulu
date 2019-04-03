@@ -83,7 +83,7 @@ class CacheClearer implements CacheClearerInterface
         }
 
         $path = sprintf(
-            '%s/cache/website/%s/http_cache',
+            '%s/cache/common/%s/http_cache',
             $this->varDir ?: $this->kernelRootDir,
             $this->kernelEnvironment
         );

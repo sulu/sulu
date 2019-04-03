@@ -130,13 +130,6 @@ interface RequestAnalyzerInterface
     public function getResourceLocatorPrefix();
 
     /**
-     * Returns the analytics key.
-     *
-     * @return string
-     */
-    public function getAnalyticsKey();
-
-    /**
      * Returns portal-information of request.
      *
      * @return PortalInformation

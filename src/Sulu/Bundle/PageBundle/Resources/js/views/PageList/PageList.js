@@ -1,76 +1,65 @@
 // @flow
-import {action, computed, intercept, observable} from 'mobx';
+import {action, intercept, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
-import {Dialog, Loader} from 'sulu-admin-bundle/components';
-import {userStore} from 'sulu-admin-bundle/stores';
+import {Dialog} from 'sulu-admin-bundle/components';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {Requester} from 'sulu-admin-bundle/services';
 import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
-import WebspaceSelect from '../../components/WebspaceSelect';
-import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace} from '../../stores/WebspaceStore/types';
-import webspaceOverviewStyles from './webspaceOverview.scss';
+import pageListStyles from './pageList.scss';
 
 const USER_SETTINGS_KEY = 'webspace_overview';
-
-const USER_SETTING_PREFIX = 'sulu_page.webspace_overview';
-const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
-
 const PAGES_RESOURCE_KEY = 'pages';
 
 function getUserSettingsKeyForWebspace(webspace: string) {
     return [USER_SETTINGS_KEY, webspace].join('_');
 }
 
+type Props = ViewProps & {
+    webspace: Webspace,
+    webspaceKey: IObservableValue<string>,
+};
+
 @observer
-class WebspaceOverview extends React.Component<ViewProps> {
+class PageList extends React.Component<Props> {
     static clearCacheEndpoint: string;
 
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
-    webspace: IObservableValue<string> = observable.box();
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     listStore: ListStore;
-    @observable webspaces: Array<Webspace>;
     @observable showCacheClearDialog: boolean = false;
     @observable cacheClearing: boolean = false;
     excludeGhostsAndShadowsDisposer: () => void;
-    webspaceDisposer: () => void;
+    webspaceKeyDisposer: () => void;
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
-        const webspace = attributes.webspace
-            ? attributes.webspace
-            : userStore.getPersistentSetting(USER_SETTING_WEBSPACE);
-
         return {
-            active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(webspace)),
-            webspace,
+            active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(attributes.webspace)),
         };
     }
 
-    @action handleWebspaceChange = (value: string) => {
-        this.listStore.destroy();
-        this.webspace.set(value);
-        this.setDefaultLocaleForWebspace();
-    };
-
     @action setDefaultLocaleForWebspace = () => {
-        const selectedWebspace = this.selectedWebspace;
+        const {webspace} = this.props;
 
-        if (!selectedWebspace || !selectedWebspace.localizations) {
+        if (!webspace || !webspace.localizations) {
             return;
         }
 
-        const locale = this.findDefaultLocale(selectedWebspace.localizations);
+        if (webspace.allLocalizations.find((localization) => localization.localization === this.locale.get())) {
+            return;
+        }
+
+        const locale = this.findDefaultLocale(webspace.localizations);
 
         if (!locale) {
             throw new Error(
-                'Default locale in webspace "' + selectedWebspace.key + '" not found'
+                'Default locale in webspace "' + webspace.key + '" not found'
             );
         }
 
@@ -93,20 +82,19 @@ class WebspaceOverview extends React.Component<ViewProps> {
         }
     };
 
-    @computed get selectedWebspace(): ?Webspace {
-        if (!this.webspaces || !this.webspace.get()) {
-            return null;
-        }
+    constructor(props: Props) {
+        super(props);
 
-        return this.webspaces.find((webspace) => {
-            return webspace.key === this.webspace.get();
-        });
-    }
+        const {router, webspaceKey} = this.props;
 
-    @action componentDidMount() {
-        const router = this.props.router;
+        const {
+            attributes: {
+                webspace,
+            },
+        } = router;
+
         const observableOptions = {};
-        const apiOptions = {};
+        const apiOptions = {webspace};
 
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
@@ -116,15 +104,14 @@ class WebspaceOverview extends React.Component<ViewProps> {
         observableOptions['exclude-shadows'] = this.excludeGhostsAndShadows;
 
         router.bind('locale', this.locale);
-        observableOptions.locale = this.locale;
 
-        router.bind('webspace', this.webspace);
-        apiOptions.webspace = this.webspace;
+        this.setDefaultLocaleForWebspace();
+        observableOptions.locale = this.locale;
 
         this.listStore = new ListStore(
             PAGES_RESOURCE_KEY,
             PAGES_RESOURCE_KEY,
-            getUserSettingsKeyForWebspace(this.webspace.get()),
+            getUserSettingsKeyForWebspace(webspace),
             observableOptions,
             apiOptions
         );
@@ -135,22 +122,17 @@ class WebspaceOverview extends React.Component<ViewProps> {
             return change;
         });
 
-        this.webspaceDisposer = intercept(this.webspace, '', (change) => {
-            userStore.setPersistentSetting(USER_SETTING_WEBSPACE, change.newValue);
+        this.webspaceKeyDisposer = intercept(webspaceKey, '', (change) => {
+            this.listStore.destroy();
             this.listStore.active.set(undefined);
             return change;
         });
-
-        webspaceStore.loadWebspaces()
-            .then(action((webspaces) => {
-                this.webspaces = webspaces;
-            }));
     }
 
     componentWillUnmount() {
+        this.webspaceKeyDisposer();
         this.listStore.destroy();
         this.excludeGhostsAndShadowsDisposer();
-        this.webspaceDisposer();
     }
 
     handleEditClick = (id: string | number) => {
@@ -183,7 +165,7 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     @action handleCacheClearConfirm = () => {
         this.cacheClearing = true;
-        Requester.delete(WebspaceOverviewWithToolbar.clearCacheEndpoint).then(action(() => {
+        Requester.delete(PageListWithToolbar.clearCacheEndpoint).then(action(() => {
             this.showCacheClearDialog = false;
             this.cacheClearing = false;
         }));
@@ -191,29 +173,15 @@ class WebspaceOverview extends React.Component<ViewProps> {
 
     render() {
         return (
-            <div className={webspaceOverviewStyles.webspaceOverview}>
-                {this.webspaces
-                    ? <List
-                        adapters={['column_list', 'tree_table']}
-                        header={this.webspace &&
-                            <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspace.get()}>
-                                {this.webspaces.map((webspace) => (
-                                    <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
-                                        {webspace.name}
-                                    </WebspaceSelect.Item>
-                                ))}
-                            </WebspaceSelect>
-                        }
-                        onItemAdd={this.handleItemAdd}
-                        onItemClick={this.handleEditClick}
-                        searchable={false}
-                        selectable={false}
-                        store={this.listStore}
-                    />
-                    : <div>
-                        <Loader />
-                    </div>
-                }
+            <div className={pageListStyles.webspaceOverview}>
+                <List
+                    adapters={['column_list', 'tree_table']}
+                    onItemAdd={this.handleItemAdd}
+                    onItemClick={this.handleEditClick}
+                    searchable={false}
+                    selectable={false}
+                    store={this.listStore}
+                />
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={this.cacheClearing}
@@ -230,8 +198,10 @@ class WebspaceOverview extends React.Component<ViewProps> {
     }
 }
 
-const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
-    if (!this.selectedWebspace) {
+const PageListWithToolbar = withToolbar(PageList, function() {
+    const {webspace} = this.props;
+
+    if (!webspace) {
         return {};
     }
 
@@ -259,7 +229,7 @@ const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
             onChange: action((locale) => {
                 this.locale.set(locale);
             }),
-            options: this.selectedWebspace.allLocalizations.map((localization) => ({
+            options: webspace.allLocalizations.map((localization) => ({
                 value: localization.localization,
                 label: localization.name,
             })),
@@ -267,4 +237,4 @@ const WebspaceOverviewWithToolbar = withToolbar(WebspaceOverview, function() {
     };
 });
 
-export default WebspaceOverviewWithToolbar;
+export default PageListWithToolbar;

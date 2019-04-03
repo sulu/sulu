@@ -56,7 +56,6 @@ class PortalInformationRequestProcessorTest extends TestCase
             $config['portal_url'],
             null,
             $config['redirect'],
-            null,
             false,
             $config['url_expression']
         );
@@ -113,7 +112,6 @@ class PortalInformationRequestProcessorTest extends TestCase
             $config['portal_url'],
             null,
             $config['redirect'],
-            null,
             false,
             $config['url_expression']
         );

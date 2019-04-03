@@ -1,0 +1,18 @@
+{
+    "sulu_website.analytics": "Analytics",
+    "sulu_website.all_domains": "All domains",
+    "sulu_website.domains": "Domains",
+    "sulu_website.google_analytics": "Google Analytics",
+    "sulu_website.google_tag_manager": "Google Tag Manager",
+    "sulu_website.matomo": "Matomo",
+    "sulu_website.custom_analytics": "Custom",
+    "sulu_website.script": "Script",
+    "sulu_website.key": "Key",
+    "sulu_website.matomo_url": "URL",
+    "sulu_website.matomo_id": "Site-ID",
+    "sulu_website.position": "Position",
+    "sulu_website.head_open": "Head open",
+    "sulu_website.head_close": "Head close",
+    "sulu_website.body_open": "Body open",
+    "sulu_website.body_close": "Body close"
+}

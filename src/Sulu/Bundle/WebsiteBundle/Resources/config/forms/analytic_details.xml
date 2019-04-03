@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>analytic_details</key>
+
+    <schema>
+        <allOf>
+            <schema>
+                <anyOf>
+                    <schema>
+                        <properties>
+                            <property name="allDomains" value="true" />
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="allDomains" value="false" />
+                            <property name="domains" mandatory="true" />
+                        </properties>
+                    </schema>
+                </anyOf>
+            </schema>
+            <schema>
+                <anyOf>
+                    <schema>
+                        <properties>
+                            <property name="type" value="google"/>
+                            <property name="google_key" mandatory="true"/>
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="type" value="google_tag_manager"/>
+                            <property name="google_tag_manager_key" mandatory="true"/>
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="type" value="matomo"/>
+                            <property name="matomo_url" mandatory="true"/>
+                            <property name="matomo_id" mandatory="true"/>
+                        </properties>
+                    </schema>
+                    <schema>
+                        <properties>
+                            <property name="type" value="custom"/>
+                            <property name="custom_position" mandatory="true"/>
+                            <property name="custom_script" mandatory="true"/>
+                        </properties>
+                    </schema>
+                </anyOf>
+            </schema>
+        </allOf>
+    </schema>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_admin.title</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+        </property>
+
+        <property name="allDomains" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_website.all_domains</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="domains" type="analytics_domain_select" visibleCondition="allDomains != true">
+            <meta>
+                <title>sulu_website.domains</title>
+            </meta>
+        </property>
+
+        <property name="type" type="single_select" mandatory="true">
+            <meta>
+                <title>sulu_admin.type</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="google" value="google">
+                        <meta>
+                            <title>sulu_website.google_analytics</title>
+                        </meta>
+                    </param>
+                    <param name="google_tag_manager" value="google_tag_manager">
+                        <meta>
+                            <title>sulu_website.google_tag_manager</title>
+                        </meta>
+                    </param>
+                    <param name="matomo" value="matomo">
+                        <meta>
+                            <title>sulu_website.matomo</title>
+                        </meta>
+                    </param>
+                    <param name="custom" value="custom">
+                        <meta>
+                            <title>sulu_website.custom_analytics</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
+        </property>
+
+        <property name="google_key" type="text_line" visibleCondition="type == 'google'">
+            <meta>
+                <title>sulu_website.key</title>
+            </meta>
+        </property>
+
+        <property name="google_tag_manager_key" type="text_line" visibleCondition="type == 'google_tag_manager'">
+            <meta>
+                <title>sulu_website.key</title>
+            </meta>
+        </property>
+
+        <property name="matomo_url" type="text_line" colspan="6" visibleCondition="type == 'matomo'">
+            <meta>
+                <title>sulu_website.matomo_url</title>
+            </meta>
+        </property>
+
+        <property name="matomo_id" type="text_line" colspan="6" visibleCondition="type == 'matomo'">
+            <meta>
+                <title>sulu_website.matomo_id</title>
+            </meta>
+        </property>
+
+        <property name="custom_position" type="single_select" visibleCondition="type == 'custom'">
+            <meta>
+                <title>sulu_website.position</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="headOpen" value="headOpen">
+                        <meta>
+                            <title>sulu_website.head_open</title>
+                        </meta>
+                    </param>
+                    <param name="headClose" value="headClose">
+                        <meta>
+                            <title>sulu_website.head_close</title>
+                        </meta>
+                    </param>
+                    <param name="bodyOpen" value="bodyOpen">
+                        <meta>
+                            <title>sulu_website.body_open</title>
+                        </meta>
+                    </param>
+                    <param name="bodyClose" value="bodyClose">
+                        <meta>
+                            <title>sulu_website.body_close</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
+        </property>
+
+        <property name="custom_script" type="text_area" visibleCondition="type == 'custom'">
+            <meta>
+                <title>sulu_website.script</title>
+            </meta>
+        </property>
+    </properties>
+</form>

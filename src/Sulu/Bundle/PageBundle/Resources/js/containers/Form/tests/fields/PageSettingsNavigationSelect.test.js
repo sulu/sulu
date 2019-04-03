@@ -66,7 +66,7 @@ test('Pass correct props to MultiSelect', () => {
     });
 });
 
-test('Call onChange an onBlur if the value is changed', () => {
+test('Call onChange and onBlur if the value is changed', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 

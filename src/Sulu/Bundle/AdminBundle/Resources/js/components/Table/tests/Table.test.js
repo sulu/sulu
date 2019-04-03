@@ -38,6 +38,30 @@ test('Render the Table component', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the Table component with a skin', () => {
+    expect(render(
+        <Table skin="light">
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Render the Table component in tree structure', () => {
     expect(render(
         <Table>

@@ -66,6 +66,16 @@ so just make sure you execute the migration command:
 bin/console phpcr:migrations:migrate
 ```
 
+### Piwik analytics has been renamed to Matomo
+
+The analytics software Piwik has been renamed to [Matomo](https://matomo.org/blog/2018/01/piwik-is-now-matomo/).
+Therefore we have also renamed our analytics type to matomo, which means that existing data has to be updated with the
+following SQL statement:
+
+```sql
+UPDATE we_analytics SET type="matomo" WHERE type="piwik";
+```
+
 ### Removed sulu twig variables
 
 The following sulu twig variables are removed and its symfony equivilants should be used instead:

@@ -38,18 +38,20 @@ class AnalyticsManager implements AnalyticsManagerInterface
     private $domainRepository;
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param AnalyticsRepository $analyticsRepository
-     * @param DomainRepository $domainRepository
+     * @var string
      */
+    private $environment;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         AnalyticsRepository $analyticsRepository,
-        DomainRepository $domainRepository
+        DomainRepository $domainRepository,
+        string $environment
     ) {
         $this->entityManager = $entityManager;
         $this->analyticsRepository = $analyticsRepository;
         $this->domainRepository = $domainRepository;
+        $this->environment = $environment;
     }
 
     /**
@@ -127,31 +129,25 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
         $analytics->clearDomains();
 
-        foreach ($this->getValue($data, 'domains', []) as $domain) {
-            $domainEntity = $this->findOrCreateNewDomain($domain);
-            $analytics->addDomain($domainEntity);
+        if (!$analytics->isAllDomains()) {
+            foreach ($this->getValue($data, 'domains', []) as $domain) {
+                $domainEntity = $this->findOrCreateNewDomain($domain);
+                $analytics->addDomain($domainEntity);
+            }
         }
     }
 
-    /**
-     * Returns domain.
-     * If the domain does not exists this function creates a new one.
-     *
-     * @param array $domain
-     *
-     * @return Domain
-     */
-    private function findOrCreateNewDomain(array $domain)
+    private function findOrCreateNewDomain(string $domain): Domain
     {
-        $domainEntity = $this->domainRepository->findByUrlAndEnvironment($domain['url'], $domain['environment']);
+        $domainEntity = $this->domainRepository->findByUrlAndEnvironment($domain, $this->environment);
 
         if (null !== $domainEntity) {
             return $domainEntity;
         }
 
         $domainEntity = new Domain();
-        $domainEntity->setUrl($domain['url']);
-        $domainEntity->setEnvironment($domain['environment']);
+        $domainEntity->setUrl($domain);
+        $domainEntity->setEnvironment($this->environment);
 
         $this->entityManager->persist($domainEntity);
 

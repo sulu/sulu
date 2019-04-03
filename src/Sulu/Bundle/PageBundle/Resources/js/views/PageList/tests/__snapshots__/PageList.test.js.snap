@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render WebspaceOverview 1`] = `
+exports[`Render PageList 1`] = `
 <div
   class="webspaceOverview"
 >
@@ -10,25 +10,6 @@ exports[`Render WebspaceOverview 1`] = `
     <div
       class="headerContainer"
     >
-      <div
-        class="webspaceSelect"
-      >
-        <button
-          class="button"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace buttonIcon"
-          />
-          <span
-            class="buttonValue"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down buttonIcon"
-          />
-        </button>
-      </div>
       <div
         class="toolbar"
       >
@@ -105,36 +86,7 @@ exports[`Render WebspaceOverview 1`] = `
           >
             <div
               class="columnList"
-            >
-              <div
-                class="column"
-              >
-                <div
-                  class="item"
-                  role="button"
-                >
-                  <span
-                    class="buttons"
-                  >
-                    <span
-                      aria-label="su-pen"
-                      class="su-pen clickable button"
-                      role="button"
-                      tabindex="0"
-                    />
-                  </span>
-                  <span
-                    class="text"
-                  />
-                  <span
-                    class="indicator"
-                  />
-                  <span
-                    class="children"
-                  />
-                </div>
-              </div>
-            </div>
+            />
           </div>
         </div>
       </div>

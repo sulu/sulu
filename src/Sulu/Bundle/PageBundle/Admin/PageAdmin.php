@@ -33,7 +33,7 @@ class PageAdmin extends Admin
 
     const WEBSPACE_TABS_ROUTE = 'sulu_page.webspaces';
 
-    const PAGES_ROUTE = 'sulu_page.pages_datagrid';
+    const PAGES_ROUTE = 'sulu_page.pages_list';
 
     const ADD_FORM_ROUTE = 'sulu_page.page_add_form';
 
@@ -114,15 +114,16 @@ class PageAdmin extends Admin
         $routerAttributesToFormStore = ['parentId', 'webspace'];
 
         return [
-            $this->routeBuilderFactory->createTabRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace')
-                ->getRoute()
+            (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey()),
             (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.webspace_overview'))
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->setOption('tabTitle', 'sulu_page.pages')
                 ->addRerenderAttribute('webspace')
                 ->setParent(static::WEBSPACE_TABS_ROUTE),
-            (new Route(static::ADD_FORM_ROUTE, '/webspaces/:webspace/:locale/add/:parentId', 'sulu_page.page_tabs'))
+            (new Route(
+                static::ADD_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/add/:parentId', 'sulu_page.page_tabs'
+            ))
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
@@ -135,7 +136,7 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
-            (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/:locale/:id', 'sulu_page.page_tabs'))
+            (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')

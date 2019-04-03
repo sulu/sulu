@@ -43,22 +43,24 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // domains can be an array or a boolean, this difference is necessary for the list to recognize if it is
-        // valid for all domains or only a single one
-        $domains = $analytics->getDomains();
-        if ($analytics->isAllDomains()) {
-            $domains = true;
-        }
-
-        $event->getVisitor()->addData('domains', $event->getContext()->accept($domains));
-
-        // the content will be appended dynamically because the metadata changes from string to array
-        // depended on the type of analytics.
-        // see issue: https://github.com/sulu/sulu/issues/3088
+        $visitor = $event->getVisitor();
         $content = $analytics->getContent();
-        if (!is_string($content)) {
-            $content = $event->getContext()->accept($content);
+
+        switch ($analytics->getType()) {
+            case 'google':
+                $visitor->addData('google_key', $content);
+                break;
+            case 'google_tag_manager':
+                $visitor->addData('google_tag_manager_key', $content);
+                break;
+            case 'matomo':
+                $visitor->addData('matomo_id', $content['siteId']);
+                $visitor->addData('matomo_url', $content['url']);
+                break;
+            case 'custom':
+                $visitor->addData('custom_script', $content['value']);
+                $visitor->addData('custom_position', $content['position']);
+                break;
         }
-        $event->getVisitor()->addData('content', $content);
     }
 }

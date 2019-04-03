@@ -117,8 +117,7 @@ class AnalyticsManagerTest extends BaseFunctional
 
         $domains = $result->getDomains();
         $this->assertCount(1, $domains);
-        $this->assertEquals('www.sulu.io/{localization}', $domains[0]->getUrl());
-        $this->assertEquals('test', $domains[0]->getEnvironment());
+        $this->assertEquals('www.sulu.io/{localization}', $domains[0]);
     }
 
     public function dataProvider()
@@ -131,6 +130,7 @@ class AnalyticsManagerTest extends BaseFunctional
                     'type' => 'google',
                     'content' => 'test-1',
                     'allDomains' => true,
+                    'domains' => null,
                 ],
             ],
             [
@@ -147,7 +147,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 [
                     'title' => 'test-1',
                     'type' => 'google',
-                    'domains' => [['url' => 'www.sulu.io', 'environment' => 'test']],
+                    'domains' => ['www.sulu.io'],
                 ],
             ],
             [
@@ -155,10 +155,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 [
                     'title' => 'test-1',
                     'type' => 'google',
-                    'domains' => [
-                        ['url' => 'www.sulu.io', 'environment' => 'test'],
-                        ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
-                    ],
+                    'domains' => ['www.sulu.io', 'www.sulu.io/{localization}'],
                 ],
             ],
         ];
@@ -180,9 +177,10 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        for ($i = 0; $i < count($result->getDomains()); ++$i) {
-            $this->assertEquals($data['domains'][0]['url'], $result->getDomains()[0]->getUrl());
-            $this->assertEquals($data['domains'][0]['environment'], $result->getDomains()[0]->getEnvironment());
+        if ($result->getDomains()) {
+            for ($i = 0; $i < count($result->getDomains()); ++$i) {
+                $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
+            }
         }
 
         $this->assertCount(
@@ -212,9 +210,10 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        for ($i = 0; $i < count($result->getDomains()); ++$i) {
-            $this->assertEquals($data['domains'][0]['url'], $result->getDomains()[0]->getUrl());
-            $this->assertEquals($data['domains'][0]['environment'], $result->getDomains()[0]->getEnvironment());
+        if ($result->getDomains()) {
+            for ($i = 0; $i < count($result->getDomains()); ++$i) {
+                $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
+            }
         }
 
         $this->assertCount(
@@ -236,24 +235,19 @@ class AnalyticsManagerTest extends BaseFunctional
                 'title' => 'test-1',
                 'type' => 'google',
                 'domains' => [
-                    ['url' => 'www.sulu.at', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'test'],
+                    'www.sulu.at',
+                    'www.sulu.io/{localization}',
                 ],
             ]
         );
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
-        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
+        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'test']));
         $this->assertCount(
             1,
             $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'test'])
         );
-        $this->assertCount(
-            1,
-            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'])
-        );
-        $this->assertCount(2, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
+        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
     }
 
     public function testUpdateWithExistingUrl()
@@ -263,25 +257,17 @@ class AnalyticsManagerTest extends BaseFunctional
             [
                 'title' => 'test-1',
                 'type' => 'google',
-                'domains' => [
-                    ['url' => 'www.sulu.at', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'],
-                    ['url' => 'www.sulu.io/{localization}', 'environment' => 'test'],
-                ],
+                'domains' => ['www.sulu.at', 'www.sulu.io/{localization}'],
             ]
         );
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
-        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
+        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'test']));
         $this->assertCount(
             1,
             $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'test'])
         );
-        $this->assertCount(
-            1,
-            $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}', 'environment' => 'prod'])
-        );
-        $this->assertCount(2, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
+        $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
     }
 
     public function testRemove()

@@ -1,5 +1,4 @@
 // @flow
-import ResourceTabs from './ResourceTabs';
 import Form, {
     AbstractToolbarAction as AbstractFormToolbarAction,
     toolbarActionRegistry as formToolbarActionRegistry,
@@ -8,6 +7,8 @@ import List, {
     AbstractToolbarAction as AbstractListToolbarAction,
     toolbarActionRegistry as listToolbarActionRegistry,
 } from './List';
+import Tabs from './Tabs';
+import ResourceTabs from './ResourceTabs';
 
 export {
     AbstractListToolbarAction,
@@ -17,4 +18,5 @@ export {
     Form,
     formToolbarActionRegistry,
     ResourceTabs,
+    Tabs,
 };

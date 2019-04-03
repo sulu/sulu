@@ -3,6 +3,7 @@ import List from './List';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/ListAdapterRegistry';
 import listFieldTransformerRegistry from './registries/ListFieldTransformerRegistry';
+import ArrayFieldTransformer from './fieldTransformers/ArrayFieldTransformer';
 import ThumbnailFieldTransformer from './fieldTransformers/ThumbnailFieldTransformer';
 import StringFieldTransformer from './fieldTransformers/StringFieldTransformer';
 import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
@@ -38,6 +39,7 @@ export {
     FlatStructureStrategy,
     PaginatedLoadingStrategy,
     InfiniteLoadingStrategy,
+    ArrayFieldTransformer,
     BytesFieldTransformer,
     DateFieldTransformer,
     DateTimeFieldTransformer,

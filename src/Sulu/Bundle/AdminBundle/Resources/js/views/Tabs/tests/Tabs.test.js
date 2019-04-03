@@ -69,6 +69,101 @@ test('Should render the children after the tabs', () => {
     expect(render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
 });
 
+test('Should render the header between children and tabs', () => {
+    const childRoute1 = {
+        attributeDefaults: {},
+        children: [],
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+        parent: null,
+        path: '/route1',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const route = {
+        attributeDefaults: {},
+        children: [
+            childRoute1,
+        ],
+        name: 'parent',
+        options: {
+            resourceKey: 'test',
+        },
+        parent: null,
+        path: '/parent',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.redirect = jest.fn();
+        this.route = route;
+    });
+
+    const router = new Router({});
+
+    const Child = () => (<h2>Child</h2>);
+    expect(render(<Tabs header={<h1>Header</h1>} route={route} router={router}>{() => (<Child />)}</Tabs>))
+        .toMatchSnapshot();
+});
+
+test('Should render the children with the passed props', () => {
+    const childRoute1 = {
+        attributeDefaults: {},
+        children: [],
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+        parent: null,
+        path: '/route1',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const route = {
+        attributeDefaults: {},
+        children: [
+            childRoute1,
+        ],
+        name: 'parent',
+        options: {
+            resourceKey: 'test',
+        },
+        parent: null,
+        path: '/parent',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const attributes = {
+        id: 1,
+    };
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.redirect = jest.fn();
+        this.route = route;
+    });
+
+    const router = new Router({});
+
+    const Child = ({test}) => (<h2>{test}</h2>);
+    expect(render(
+        <Tabs childrenProps={{test: 'Value'}} route={route} router={router}>{(props) => (<Child {...props} />)}</Tabs>
+    )).toMatchSnapshot();
+});
+
 test('Should consider the tabOrder when rendering the tabs', () => {
     const childRoute1 = {
         attributeDefaults: {},

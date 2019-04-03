@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>analytics</key>
+
+    <properties>
+        <property
+            name="title"
+            visibility="always"
+            translation="sulu_admin.title"
+            sortable="false"
+        />
+        <property
+            name="type"
+            visibility="always"
+            translation="sulu_admin.type"
+            sortable="false"
+        />
+        <property
+            name="allDomains"
+            visibility="yes"
+            translation="sulu_website.all_domains"
+            type="bool"
+            sortable="false"
+        />
+        <property
+            name="domains"
+            visibility="yes"
+            translation="sulu_website.domains"
+            type="array"
+            sortable="false"
+        />
+    </properties>
+</list>

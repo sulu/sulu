@@ -2,7 +2,7 @@
 
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -63,7 +63,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 
 exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -124,7 +124,7 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
 
 exports[`Render data with schema 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -209,7 +209,7 @@ exports[`Render data with schema 1`] = `
 
 exports[`Render data with schema and selections 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -294,7 +294,7 @@ exports[`Render data with schema and selections 1`] = `
 
 exports[`Render data with two columns 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"
@@ -413,7 +413,7 @@ exports[`Render data with two columns 1`] = `
 
 exports[`Render data without header 1`] = `
 <div
-  class="tableContainer"
+  class="tableContainer dark"
 >
   <table
     class="table"

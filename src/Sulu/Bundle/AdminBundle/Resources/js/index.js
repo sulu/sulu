@@ -26,6 +26,7 @@ import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './containers/CKEditor5';
 import {
+    ArrayFieldTransformer,
     BoolFieldTransformer,
     BytesFieldTransformer,
     ColumnListAdapter,
@@ -151,11 +152,13 @@ function registerListAdapters() {
     listAdapterRegistry.add('column_list', ColumnListAdapter);
     listAdapterRegistry.add('folder', FolderAdapter);
     listAdapterRegistry.add('table', TableAdapter);
+    listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
     listAdapterRegistry.add('tree_table', TreeTableAdapter);
     listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
 }
 
 function registerListFieldTransformers() {
+    listFieldTransformerRegistry.add('array', new ArrayFieldTransformer());
     listFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
     listFieldTransformerRegistry.add('date', new DateFieldTransformer());
     listFieldTransformerRegistry.add('time', new TimeFieldTransformer());

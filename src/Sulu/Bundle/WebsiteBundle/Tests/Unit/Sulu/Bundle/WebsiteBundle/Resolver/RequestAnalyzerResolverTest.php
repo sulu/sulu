@@ -46,9 +46,7 @@ class RequestAnalyzerResolverTest extends TestCase
 
         $this->resolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
-            $this->requestStack->reveal(),
-            'dev',
-            ['analyticsKey' => 'UA-SULU-Test']
+            $this->requestStack->reveal()
         );
     }
 
@@ -113,7 +111,6 @@ class RequestAnalyzerResolverTest extends TestCase
         $requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getResourceLocator()->willReturn('/search');
         $requestAnalyzer->getPortal()->willReturn($portal);
-        $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
@@ -128,7 +125,6 @@ class RequestAnalyzerResolverTest extends TestCase
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
-                    'analyticsKey' => 'analyticsKey',
                 ],
             ],
             $result

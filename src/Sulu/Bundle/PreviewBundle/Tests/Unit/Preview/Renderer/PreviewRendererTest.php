@@ -85,7 +85,7 @@ class PreviewRendererTest extends TestCase
     /**
      * @var array
      */
-    private $previewDefault = ['analyticsKey' => 'UA-xxxx'];
+    private $previewDefault = [];
 
     /**
      * @var string

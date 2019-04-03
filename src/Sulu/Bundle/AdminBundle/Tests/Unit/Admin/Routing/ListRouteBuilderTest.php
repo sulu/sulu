@@ -58,6 +58,7 @@ class ListRouteBuilderTest extends TestCase
                 ['table', 'column_list'],
                 'sulu_category.add_form',
                 'sulu_category.edit_form',
+                'webspace',
             ],
             [
                 'sulu_tag.list',
@@ -68,6 +69,7 @@ class ListRouteBuilderTest extends TestCase
                 ['table'],
                 'sulu_tag.add_form',
                 'sulu_tag.edit_form',
+                'locale',
             ],
         ];
     }
@@ -83,7 +85,8 @@ class ListRouteBuilderTest extends TestCase
         string $title,
         array $listAdapters,
         string $addRoute,
-        string $editRoute
+        string $editRoute,
+        string $rerenderAttribute
     ) {
         $route = (new ListRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -92,10 +95,12 @@ class ListRouteBuilderTest extends TestCase
             ->addListAdapters($listAdapters)
             ->setAddRoute($addRoute)
             ->setEditRoute($editRoute)
+            ->addRerenderAttribute($rerenderAttribute)
             ->getRoute();
 
         $this->assertSame($name, $route->getName());
         $this->assertSame($path, $route->getPath());
+        $this->assertAttributeEquals([$rerenderAttribute], 'rerenderAttributes', $route);
         $this->assertSame($resourceKey, $route->getOption('resourceKey'));
         $this->assertSame($listKey, $route->getOption('listKey'));
         $this->assertSame($title, $route->getOption('title'));

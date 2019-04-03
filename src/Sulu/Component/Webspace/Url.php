@@ -58,13 +58,6 @@ class Url implements ArrayableInterface
     private $main;
 
     /**
-     * The analytics key for the given url.
-     *
-     * @var string
-     */
-    private $analyticsKey;
-
-    /**
      * @var string
      */
     private $environment;
@@ -196,26 +189,6 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Sets the analytics key for this url.
-     *
-     * @param string $analyticsKey
-     */
-    public function setAnalyticsKey($analyticsKey)
-    {
-        $this->analyticsKey = $analyticsKey;
-    }
-
-    /**
-     * Returns the analytics key.
-     *
-     * @return string
-     */
-    public function getAnalyticsKey()
-    {
-        return $this->analyticsKey;
-    }
-
-    /**
      * Returns the environment.
      *
      * @return string
@@ -261,7 +234,6 @@ class Url implements ArrayableInterface
         $res['segment'] = $this->getSegment();
         $res['redirect'] = $this->getRedirect();
         $res['main'] = $this->isMain();
-        $res['analyticsKey'] = $this->getAnalyticsKey();
         $res['environment'] = $this->getEnvironment();
 
         return $res;
