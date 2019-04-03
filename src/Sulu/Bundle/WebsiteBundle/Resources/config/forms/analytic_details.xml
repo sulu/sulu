@@ -77,17 +77,10 @@
             </params>
         </property>
 
-        <property name="domains" type="select" visibleCondition="allDomains != true">
+        <property name="domains" type="analytics_domain_select" visibleCondition="allDomains != true">
             <meta>
                 <title>sulu_website.domains</title>
             </meta>
-            <params>
-                <param
-                    name="values"
-                    type="expression"
-                    value="service('sulu_website.url_select_helper').getValues()"
-                />
-            </params>
         </property>
 
         <property name="type" type="single_select" mandatory="true">

@@ -4,8 +4,8 @@ import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import webspaceStore from '../../../../stores/WebspaceStore';
-import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
+import {webspaceStore} from 'sulu-page-bundle/stores';
+import AnalyticsDomainSelect from '../../fields/AnalyticsDomainSelect';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FormInspector: jest.fn(function(formStore) {
@@ -24,8 +24,10 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/WebspaceStore', () => ({
-    loadWebspace: jest.fn(),
+jest.mock('sulu-page-bundle/stores', () => ({
+    webspaceStore: {
+        loadWebspace: jest.fn(),
+    },
 }));
 
 test('Pass correct props to MultiSelect', () => {
@@ -38,31 +40,31 @@ test('Pass correct props to MultiSelect', () => {
     );
 
     const webspacePromise = Promise.resolve({
-        navigations: [
-            {key: 'main', title: 'Main Navigation'},
-            {key: 'footer', title: 'Footer Navigation'},
+        urls: [
+            {url: '{host}/{localization}'},
+            {url: '{host}'},
         ],
     });
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
-    const pageSettingsNavigationSelect = shallow(
-        <PageSettingsNavigationSelect
+    const analyticsDomainSelect = shallow(
+        <AnalyticsDomainSelect
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
-            value={['footer']}
+            value={['{host}']}
         />
     );
 
     expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
 
     return webspacePromise.then(() => {
-        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
-        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
-        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
-        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
-        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
+        expect(analyticsDomainSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+        expect(analyticsDomainSelect.find('MultiSelect').prop('values')).toEqual(['{host}']);
+        expect(analyticsDomainSelect.find('Option').at(0).prop('children')).toEqual('{host}/{localization}');
+        expect(analyticsDomainSelect.find('Option').at(0).prop('value')).toEqual('{host}/{localization}');
+        expect(analyticsDomainSelect.find('Option').at(1).prop('children')).toEqual('{host}');
+        expect(analyticsDomainSelect.find('Option').at(1).prop('value')).toEqual('{host}');
     });
 });
 
@@ -79,26 +81,26 @@ test('Call onChange and onBlur if the value is changed', () => {
     );
 
     const webspacePromise = Promise.resolve({
-        navigations: [
-            {key: 'main', title: 'Main Navigation'},
-            {key: 'footer', title: 'Footer Navigation'},
+        urls: [
+            {url: '{host}/{localization}'},
+            {url: '{host}'},
         ],
     });
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
-    const pageSettingsNavigationSelect = shallow(
-        <PageSettingsNavigationSelect
+    const analyticsDomainSelect = shallow(
+        <AnalyticsDomainSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={['footer']}
+            value={['{host}']}
         />
     );
 
     return webspacePromise.then(() => {
-        pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
-        expect(changeSpy).toBeCalledWith(['footer', 'main']);
+        analyticsDomainSelect.find('MultiSelect').prop('onChange')(['{host}', '{host}/{localization}']);
+        expect(changeSpy).toBeCalledWith(['{host}', '{host}/{localization}']);
         expect(finishSpy).toBeCalledWith();
     });
 });

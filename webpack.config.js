@@ -29,6 +29,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     entries.unshift('sulu-page-bundle');
     entries.unshift('sulu-preview-bundle');
     entries.unshift('sulu-security-bundle');
+    entries.unshift('sulu-website-bundle');
 
     const entriesCount = entries.length;
 
