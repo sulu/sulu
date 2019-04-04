@@ -336,6 +336,14 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             'sulu.content.structure.default_types',
             $contentConfig['structure']['default_type']
         );
+
+        foreach ($contentConfig['structure']['default_type'] as $type => $default) {
+            $container->setParameter(
+                'sulu.content.structure.default_type.' . $type,
+                $default
+            );
+        }
+
         $container->setParameter(
             'sulu.content.structure.required_properties',
             $contentConfig['structure']['required_properties']
@@ -343,10 +351,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter(
             'sulu.content.structure.required_tags',
             $contentConfig['structure']['required_tags']
-        );
-        $container->setParameter(
-            'sulu.content.structure.default_type.snippet',
-            $contentConfig['structure']['default_type']['snippet']
         );
         $container->setParameter(
             'sulu.content.internal_prefix',
