@@ -45,6 +45,32 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/lists',
+                        ],
+                    ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'custom_urls' => [
+                            'routes' => [
+                                'list' => 'cget_webspace_custom-urls',
+                                'detail' => 'get_webspace_custom-urls',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_document_manager')) {
             $container->prependExtensionConfig(
                 'sulu_document_manager',

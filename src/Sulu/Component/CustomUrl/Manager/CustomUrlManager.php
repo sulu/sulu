@@ -25,6 +25,8 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+const LOCALE = 'en'; // actually custom urls are not localized, but the DocumentManager needs a locale to work
+
 /**
  * Manages custom-url documents and their routes.
  */
@@ -87,14 +89,14 @@ class CustomUrlManager implements CustomUrlManagerInterface
         try {
             $this->documentManager->persist(
                 $document,
-                null,
+                LOCALE,
                 [
                     'parent_path' => $this->getItemsPath($webspaceKey),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
                 ]
             );
-            $this->documentManager->publish($document);
+            $this->documentManager->publish($document, LOCALE);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -135,7 +137,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function find($uuid)
     {
-        return $this->documentManager->find($uuid, null, ['load_ghost_content' => true]);
+        return $this->documentManager->find($uuid, LOCALE, ['load_ghost_content' => true]);
     }
 
     /**
@@ -176,7 +178,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             /** @var RouteDocument $routeDocument */
             $routeDocument = $this->documentManager->find(
                 sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
-                null,
+                LOCALE,
                 ['load_ghost_content' => true]
             );
         } catch (DocumentNotFoundException $ex) {
@@ -219,15 +221,15 @@ class CustomUrlManager implements CustomUrlManagerInterface
         try {
             $this->documentManager->persist(
                 $document,
-                null,
+                LOCALE,
                 [
                     'parent_path' => PathHelper::getParentPath($document->getPath()),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
-                    'auto_name_locale' => null,
+                    'auto_name_locale' => LOCALE,
                 ]
             );
-            $this->documentManager->publish($document);
+            $this->documentManager->publish($document, LOCALE);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -296,7 +298,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
             $value = $data[$fieldName];
             if (array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
-                $value = $this->documentManager->find($value['uuid'], null, ['load_ghost_content' => true]);
+                $value = $this->documentManager->find($value, LOCALE, ['load_ghost_content' => true]);
             }
 
             $accessor->setValue($document, $fieldName, $value);

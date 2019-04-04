@@ -4,6 +4,7 @@ import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
+import userStore from '../../../../stores/UserStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
@@ -14,15 +15,21 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.id = id;
     this.locale = locale;
 }));
-jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
+
+jest.mock('../../../../stores/UserStore', () => jest.fn());
+
+jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
+    this.options = options;
 }));
+
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.id = formStore.id;
     this.locale = formStore.locale;
+    this.options = formStore.options;
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -321,6 +328,7 @@ test('Pass correct props to SingleItemSelection', () => {
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
+        options: undefined,
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
         value,
@@ -360,16 +368,13 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
 
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
     const value = 3;
 
     const fieldTypeOptions = {
-        default_type: 'auto_complete',
+        default_type: 'list_overlay',
         resource_key: 'accounts',
         types: {
-            auto_complete: {
-                display_property: 'name',
-                search_properties: ['name', 'number'],
-            },
             list_overlay: {
                 adapter: 'table',
                 display_properties: ['name'],
@@ -381,6 +386,55 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     };
 
     const schemaOptions = {
+        formOptionsToApi: {
+            name: 'formOptionsToApi',
+            value: 'test',
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    )).toThrow('"formOptionsToApi"');
+});
+
+test('Pass correct props with schema-options type to SingleItemSelection', () => {
+    const options = {
+        segment: 'developer',
+        webspace: 'sulu',
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', options));
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        formOptionsToApi: {
+            name: 'formOptionsToApi',
+            value: [
+                {name: 'segment'},
+                {name: 'webspace'},
+            ],
+        },
         type: {
             name: 'type',
             value: 'list_overlay',
@@ -405,6 +459,10 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
+        options: {
+            segment: 'developer',
+            webspace: 'sulu',
+        },
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
         value,
@@ -473,6 +531,39 @@ test('Throw an error if a none string was passed to field-type-options', () => {
             />
         )
     ).toThrow(/"default_type"/);
+});
+
+test('Pass content locale from user to SingleItemSelection if form has no locale', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('accounts', 5), 'test'));
+
+    userStore.contentLocale = 'en';
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(singleSelection.find(SingleSelectionComponent).prop('locale').get()).toEqual('en');
 });
 
 test('Pass correct locale and disabledIds to SingleItemSelection', () => {

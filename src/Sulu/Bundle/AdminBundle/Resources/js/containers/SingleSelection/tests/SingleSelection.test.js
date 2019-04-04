@@ -132,6 +132,27 @@ test('Pass resourceKey and locale to SingleListOverlay', () => {
     expect(singleSelection.find(SingleListOverlay).prop('locale')).toEqual(locale);
     expect(singleSelection.find(SingleListOverlay).prop('resourceKey')).toEqual('test');
     expect(singleSelection.find(SingleListOverlay).prop('listKey')).toEqual('test_list');
+    expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual(undefined);
+});
+
+test('Pass options to SingleListOverlay', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={['name', 'value']}
+            emptyText="Nothing"
+            icon="su-test"
+            listKey="test_list"
+            onChange={jest.fn()}
+            options={{value: 'Test'}}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual({value: 'Test'});
 });
 
 test('Pass disabledIds to SingleListOverlay', () => {

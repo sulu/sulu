@@ -54,6 +54,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $document = $this->prophesize(CustomUrlDocument::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
         $pageDocument = $this->prophesize(PageDocument::class);
+        $pageDocument->getUuid()->willReturn('some-uuid');
         $pageDocument->getTitle()->willReturn('test');
         $document->getTargetDocument()->willReturn($pageDocument->reveal());
         $document->getBaseDomain()->willReturn('*.sulu.io');
@@ -71,6 +72,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
+        $visitor->addData('targetDocument', 'some-uuid')->shouldBeCalled();
         $visitor->addData('targetTitle', 'test')->shouldBeCalled();
         $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
         $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();

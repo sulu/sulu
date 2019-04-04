@@ -25,6 +25,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
 
     entries.unshift('sulu-admin-bundle');
     entries.unshift('sulu-contact-bundle');
+    entries.unshift('sulu-custom-url-bundle');
     entries.unshift('sulu-media-bundle');
     entries.unshift('sulu-page-bundle');
     entries.unshift('sulu-preview-bundle');

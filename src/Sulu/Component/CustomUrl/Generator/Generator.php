@@ -39,26 +39,9 @@ class Generator implements GeneratorInterface
     public function generate($baseDomain, $domainParts, Localization $locale = null)
     {
         $domain = $baseDomain;
-        if (preg_match(self::PREFIX_REGEX, $baseDomain)) {
-            $domain = preg_replace('/\*/', $domainParts['prefix'], $domain, 1);
-        }
 
-        $optionalSuffix = false;
-        if (!preg_match(self::POSTFIX_REGEX, $baseDomain)) {
-            $domain = rtrim($domain, '/') . '/*';
-            $optionalSuffix = true;
-        }
-
-        foreach ($domainParts['suffix'] as $suffix) {
-            if (empty($suffix)) {
-                continue;
-            }
-
-            $domain = preg_replace('/\*/', $suffix, $domain, 1);
-        }
-
-        if ($optionalSuffix) {
-            $domain = rtrim($domain, '/*');
+        foreach ($domainParts as $domainPart) {
+            $domain = preg_replace('/\*/', $domainPart, $domain, 1);
         }
 
         if (strpos($domain, '*') > -1) {

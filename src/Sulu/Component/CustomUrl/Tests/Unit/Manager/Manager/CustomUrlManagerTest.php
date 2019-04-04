@@ -123,8 +123,8 @@ class CustomUrlManagerTest extends TestCase
                 'title' => 'Test',
                 'published' => true,
                 'baseDomain' => '*.sulu.io',
-                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
-                'targetDocument' => ['uuid' => '123-123-123'],
+                'domainParts' => ['test-1', 'test-1', 'test-2'],
+                'targetDocument' => '123-123-123',
                 'canonical' => true,
                 'redirect' => true,
                 'targetLocale' => 'de',
@@ -135,7 +135,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals('Test', $result->getTitle());
         $this->assertEquals('de', $result->getTargetLocale());
         $this->assertEquals('*.sulu.io', $result->getBaseDomain());
-        $this->assertEquals(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']], $result->getDomainParts());
+        $this->assertEquals(['test-1', 'test-1', 'test-2'], $result->getDomainParts());
         $this->assertEquals($this->targetDocument, $result->getTargetDocument());
         $this->assertTrue($result->isPublished());
         $this->assertTrue($result->isCanonical());
@@ -244,7 +244,7 @@ class CustomUrlManagerTest extends TestCase
         $document->setCanonical(true)->shouldBeCalled();
         $document->setTargetLocale('de')->shouldBeCalled();
         $document->setBaseDomain('*.sulu.io')->shouldBeCalled();
-        $document->setDomainParts(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']])->shouldBeCalled();
+        $document->setDomainParts(['test-1', 'test-1', 'test-2'])->shouldBeCalled();
         $document->setTargetDocument($targetDocument->reveal())->shouldBeCalled();
 
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
@@ -272,8 +272,8 @@ class CustomUrlManagerTest extends TestCase
                 'title' => 'Test',
                 'published' => true,
                 'baseDomain' => '*.sulu.io',
-                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
-                'targetDocument' => ['uuid' => '123-123-123'],
+                'domainParts' => ['test-1', 'test-1', 'test-2'],
+                'targetDocument' => '123-123-123',
                 'canonical' => true,
                 'redirect' => true,
                 'targetLocale' => 'de',
@@ -297,7 +297,7 @@ class CustomUrlManagerTest extends TestCase
         $document->setCanonical(true)->shouldBeCalled();
         $document->setTargetLocale('de')->shouldBeCalled();
         $document->setBaseDomain('*.sulu.io')->shouldBeCalled();
-        $document->setDomainParts(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']])->shouldBeCalled();
+        $document->setDomainParts(['test-1', 'test-1', 'test-2'])->shouldBeCalled();
         $document->setTargetDocument($targetDocument->reveal())->shouldBeCalled();
 
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
@@ -327,8 +327,8 @@ class CustomUrlManagerTest extends TestCase
                 'title' => 'Test',
                 'published' => true,
                 'baseDomain' => '*.sulu.io',
-                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
-                'targetDocument' => ['uuid' => '123-123-123'],
+                'domainParts' => ['test-1', 'test-1', 'test-2'],
+                'targetDocument' => '123-123-123',
                 'canonical' => true,
                 'redirect' => true,
                 'targetLocale' => 'de',

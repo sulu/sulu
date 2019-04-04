@@ -42,8 +42,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-1', 'test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -57,8 +57,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-1', 'test-2'],
                     'targetLocale' => 'en',
                     'canonical' => true,
                     'redirect' => true,
@@ -72,7 +72,7 @@ class CustomUrlControllerTest extends SuluTestCase
                     'title' => 'Test',
                     'published' => true,
                     'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => []],
+                    'domainParts' => ['test-1'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -87,7 +87,7 @@ class CustomUrlControllerTest extends SuluTestCase
                     'title' => 'Test',
                     'published' => true,
                     'baseDomain' => '*.sulu.io/*',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => []],
+                    'domainParts' => ['test-1'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -109,7 +109,7 @@ class CustomUrlControllerTest extends SuluTestCase
     {
         // content document is not there in provider
         if (array_key_exists('targetDocument', $data)) {
-            $data['targetDocument'] = ['uuid' => $this->contentDocument->getUuid()];
+            $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
         $client = $this->createAuthenticatedClient();
@@ -128,14 +128,10 @@ class CustomUrlControllerTest extends SuluTestCase
         }
 
         foreach ($data as $key => $value) {
-            if ('targetDocument' === $key) {
-                $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
-            } else {
-                $this->assertEquals($value, $responseData[$key], $key);
-            }
+            $this->assertEquals($value, $responseData[$key], $key);
         }
 
-        $this->assertArrayHasKey('uuid', $responseData);
+        $this->assertArrayHasKey('id', $responseData);
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
@@ -152,7 +148,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertArrayHasKey($url, $responseData['routes']);
         $this->assertFalse($responseData['routes'][$url]['history']);
 
-        return $responseData['uuid'];
+        return $responseData['id'];
     }
 
     public function postMultipleProvider()
@@ -162,8 +158,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-1',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-11', 'test-21'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -174,8 +170,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-12', 'test-22'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -190,8 +186,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-11', 'test-21'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -202,8 +198,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-12', 'test-22'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -220,8 +216,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-1',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test', 'test'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -232,8 +228,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test', 'test'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -266,8 +262,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-11.sulu.io/test-21' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-11', 'test-21'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -279,8 +275,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-12', 'test-22'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -295,8 +291,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-11.sulu.io/test-21' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-11', 'test-21'],
                         'targetDocument' => true,
                         'targetLocale' => 'de',
                         'canonical' => true,
@@ -308,8 +304,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-12', 'test-22'],
                     'targetDocument' => true,
                     'targetLocale' => 'de',
                     'canonical' => true,
@@ -324,8 +320,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -337,8 +333,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-1',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-1', 'test-1'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -353,8 +349,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -366,8 +362,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-1',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-2', 'suffix' => []],
+                    'baseDomain' => '*.sulu.io/',
+                    'domainParts' => ['test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -382,8 +378,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -396,7 +392,7 @@ class CustomUrlControllerTest extends SuluTestCase
                     'title' => 'Test-1',
                     'published' => true,
                     'baseDomain' => '*.sulu.io/*',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => []],
+                    'domainParts' => ['test-1'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -413,8 +409,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test.sulu.io/test' => [
                         'title' => 'Test',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test', 'test'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -425,8 +421,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -438,8 +434,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-1', 'test-1'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -456,8 +452,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test.sulu.io/test' => [
                         'title' => 'Test',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test', 'test'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -468,8 +464,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -481,8 +477,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-1',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test', 'test'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -508,7 +504,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         // content document is not there in provider
         if (array_key_exists('targetDocument', $data)) {
-            $data['targetDocument'] = ['uuid' => $this->contentDocument->getUuid()];
+            $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
         $client = $this->createAuthenticatedClient();
@@ -527,14 +523,10 @@ class CustomUrlControllerTest extends SuluTestCase
         }
 
         foreach ($data as $key => $value) {
-            if ('targetDocument' === $key) {
-                $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
-            } else {
-                $this->assertEquals($value, $responseData[$key], $key);
-            }
+            $this->assertEquals($value, $responseData[$key], $key);
         }
 
-        $this->assertEquals($uuid, $responseData['uuid']);
+        $this->assertEquals($uuid, $responseData['id']);
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
@@ -556,7 +548,7 @@ class CustomUrlControllerTest extends SuluTestCase
         }
         $this->assertFalse($responseData['routes'][$url]['history']);
 
-        return $responseData['uuid'];
+        return $responseData['id'];
     }
 
     public function getProvider()
@@ -566,8 +558,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-1', 'test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -587,7 +579,7 @@ class CustomUrlControllerTest extends SuluTestCase
     {
         // content document is not there in provider
         if (array_key_exists('targetDocument', $data)) {
-            $data['targetDocument'] = ['uuid' => $this->contentDocument->getUuid()];
+            $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
         $uuid = $this->testPost($data, $url);
@@ -602,14 +594,10 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         foreach ($data as $key => $value) {
-            if ('targetDocument' === $key) {
-                $this->assertEquals($value['uuid'], $responseData[$key]['id'], $key);
-            } else {
-                $this->assertEquals($value, $responseData[$key], $key);
-            }
+            $this->assertEquals($value, $responseData[$key], $key);
         }
 
-        $this->assertEquals($uuid, $responseData['uuid']);
+        $this->assertEquals($uuid, $responseData['id']);
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
@@ -635,8 +623,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -647,8 +635,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-2.sulu.io/test-2' => [
                         'title' => 'Test-2',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-2', 'test-2'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -667,7 +655,7 @@ class CustomUrlControllerTest extends SuluTestCase
     public function testCGet($items)
     {
         foreach ($items as $url => $data) {
-            $items[$url]['uuid'] = $this->testPost($data, $url);
+            $items[$url]['id'] = $this->testPost($data, $url);
         }
 
         $client = $this->createAuthenticatedClient();
@@ -682,7 +670,7 @@ class CustomUrlControllerTest extends SuluTestCase
         foreach ($responseDataComplete['_embedded']['custom_urls'] as $responseData) {
             $data = $items[$responseData['customUrl']];
 
-            foreach (['uuid', 'title', 'published', 'baseDomain'] as $key) {
+            foreach (['id', 'title', 'published', 'baseDomain'] as $key) {
                 $this->assertEquals($data[$key], $responseData[$key]);
             }
 
@@ -730,8 +718,8 @@ class CustomUrlControllerTest extends SuluTestCase
             [
                 'title' => 'Test',
                 'published' => true,
-                'baseDomain' => '*.sulu.io',
-                'domainParts' => ['prefix' => 'test', 'suffix' => ['test']],
+                'baseDomain' => '*.sulu.io/*',
+                'domainParts' => ['test', 'test'],
                 'targetDocument' => true,
                 'targetLocale' => 'en',
                 'canonical' => true,
@@ -761,7 +749,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $responseData = json_decode($response->getContent(), true);
         $this->assertCount(1, $responseData['_embedded']['custom_urls']);
-        $this->assertEquals($uuid, $responseData['_embedded']['custom_urls'][0]['uuid']);
+        $this->assertEquals($uuid, $responseData['_embedded']['custom_urls'][0]['id']);
     }
 
     public function cdeleteRoutesProvider()
@@ -772,8 +760,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -785,8 +773,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-2', 'test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -803,8 +791,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -816,8 +804,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-2', 'test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,
@@ -834,8 +822,8 @@ class CustomUrlControllerTest extends SuluTestCase
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
-                        'baseDomain' => '*.sulu.io',
-                        'domainParts' => ['prefix' => 'test-1', 'suffix' => ['test-1']],
+                        'baseDomain' => '*.sulu.io/*',
+                        'domainParts' => ['test-1', 'test-1'],
                         'targetDocument' => true,
                         'targetLocale' => 'en',
                         'canonical' => true,
@@ -847,8 +835,8 @@ class CustomUrlControllerTest extends SuluTestCase
                 [
                     'title' => 'Test-2',
                     'published' => true,
-                    'baseDomain' => '*.sulu.io',
-                    'domainParts' => ['prefix' => 'test-2', 'suffix' => ['test-2']],
+                    'baseDomain' => '*.sulu.io/*',
+                    'domainParts' => ['test-2', 'test-2'],
                     'targetDocument' => true,
                     'targetLocale' => 'en',
                     'canonical' => true,

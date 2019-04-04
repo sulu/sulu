@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serializer>
     <class name="Sulu\Component\CustomUrl\Document\CustomUrlDocument">
-        <property name="uuid" type="string" groups="defaultCustomUrl"/>
+        <property name="uuid" serialized-name="id" type="string" groups="defaultCustomUrl"/>
         <property name="title" type="string" groups="defaultCustomUrl"/>
         <property name="nodeName" type="string" groups="defaultCustomUrl"/>
         <property name="published" type="boolean" groups="defaultCustomUrl"/>
@@ -11,7 +11,6 @@
         <property name="changer" type="integer" groups="defaultCustomUrl"/>
         <property name="baseDomain" type="string" groups="defaultCustomUrl"/>
         <property name="domainParts" type="array" groups="defaultCustomUrl"/>
-        <property name="targetDocument" type="Sulu\Bundle\PageBundle\Document\BasePageDocument" groups="defaultCustomUrl"/>
         <property name="locale" type="string" groups="defaultCustomUrl"/>
         <property name="targetLocale" type="string" groups="defaultCustomUrl"/>
         <property name="canonical" type="boolean" groups="defaultCustomUrl"/>

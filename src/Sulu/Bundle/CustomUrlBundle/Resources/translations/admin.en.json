@@ -1,0 +1,17 @@
+{
+    "sulu_custom_url.custom_urls": "Custom URLs",
+    "sulu_custom_url.custom_url": "Custom URL",
+    "sulu_custom_url.published": "Published",
+    "sulu_custom_url.base_domain": "Base domain",
+    "sulu_custom_url.target_page": "Target page",
+    "sulu_custom_url.target_locale": "Localization",
+    "sulu_custom_url.redirect": "Redirect",
+    "sulu_custom_url.redirect_info": "The custom URL will be redirected to URL of the linked page.",
+    "sulu_custom_url.canonical": "Canonical URL",
+    "sulu_custom_url.canonical_info": "When the Canonical URL has been activated only the linked page will be indexed by search engines",
+    "sulu_custom_url.no_index": "No Index",
+    "sulu_custom_url.no_index_info": "The page will not be indexed by search engines.",
+    "sulu_custom_url.no_follow": "No Follow",
+    "sulu_custom_url.no_follow_info": "The links on the page will not be followed by search engines.",
+    "sulu_custom_url.target_title": "Target page"
+}

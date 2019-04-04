@@ -69,6 +69,7 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
 
         if (null !== $customUrl->getTargetDocument()) {
             $visitor->addData('targetTitle', $customUrl->getTargetDocument()->getTitle());
+            $visitor->addData('targetDocument', $customUrl->getTargetDocument()->getUuid());
         }
 
         $visitor->addData(

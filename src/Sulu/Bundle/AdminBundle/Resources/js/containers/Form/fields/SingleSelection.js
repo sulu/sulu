@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
+import userStore from '../../../stores/UserStore';
 import {translate} from '../../../utils/Translator';
 
 type Props = FieldTypeProps<?Object | string | number>;
@@ -54,6 +56,12 @@ export default class SingleSelection extends React.Component<Props>
         return type;
     }
 
+    @computed get locale(): IObservableValue<string> {
+        const {formInspector} = this.props;
+
+        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+    }
+
     render() {
         if (this.type === 'list_overlay') {
             return this.renderListOverlay();
@@ -87,15 +95,35 @@ export default class SingleSelection extends React.Component<Props>
                     },
                 },
             },
+            schemaOptions: {
+                formOptionsToApi: {
+                    value: formOptionsToApi,
+                } = {},
+            } = {},
             value,
         } = this.props;
 
         if (typeof value === 'object') {
             // TODO implement object value support for overlay type
             throw new Error(
-                'The "overlay" type of the SingleSelection field type supports only an ID value until now.'
+                'The "list_overlay" type of the SingleSelection field type supports only an ID value until now.'
             );
         }
+
+        if (formOptionsToApi && !Array.isArray(formOptionsToApi)) {
+            throw new Error('The "formOptionsToApi" option has to be an array if defined!');
+        }
+
+        const options = formOptionsToApi
+            ? formOptionsToApi.reduce((currentOptions, formOption) => {
+                if (!formOption.name) {
+                    throw new Error('All options set in "formOptionsToApi" must define name!');
+                }
+                currentOptions[formOption.name] = formInspector.options[formOption.name];
+
+                return currentOptions;
+            }, {})
+            : undefined;
 
         return (
             <SingleSelectionComponent
@@ -106,8 +134,9 @@ export default class SingleSelection extends React.Component<Props>
                 emptyText={translate(emptyText)}
                 icon={icon}
                 listKey={listKey || resourceKey}
-                locale={formInspector.locale}
+                locale={this.locale}
                 onChange={this.handleChange}
+                options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}

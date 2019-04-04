@@ -3,6 +3,7 @@ import type {Localization} from 'sulu-admin-bundle/stores';
 
 export type Webspace = {
     allLocalizations: Array<LocalizationItem>,
+    customUrls: Array<CustomUrl>,
     defaultTemplates: {[type: string]: string},
     key: string,
     localizations: Array<Localization>,
@@ -15,6 +16,10 @@ export type Webspace = {
 export type Navigation = {
     key: string,
     title: string,
+};
+
+export type CustomUrl = {
+    url: string,
 };
 
 export type Url = {
