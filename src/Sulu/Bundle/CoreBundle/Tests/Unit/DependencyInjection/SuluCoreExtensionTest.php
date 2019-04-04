@@ -40,6 +40,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                 'structure' => [
                     'default_type' => [
                         'snippet' => 'default',
+                        'test' => 'default_test',
                     ],
                     'paths' => [],
                     'type_map' => [
@@ -60,6 +61,11 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         $this->assertEquals(
             'default',
             $this->container->getParameter('sulu.content.structure.default_type.snippet')
+        );
+
+        $this->assertEquals(
+            'default_test',
+            $this->container->getParameter('sulu.content.structure.default_type.test')
         );
     }
 
