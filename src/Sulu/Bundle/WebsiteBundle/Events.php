@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Cache;
+namespace Sulu\Bundle\WebsiteBundle;
 
 /**
- * Events related to clearing caches.
+ * Events thrown by the WebsiteBundle.
  */
 final class Events
 {

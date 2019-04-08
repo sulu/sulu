@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Cache;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Bundle\WebsiteBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
