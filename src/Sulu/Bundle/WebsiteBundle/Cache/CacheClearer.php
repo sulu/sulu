@@ -23,11 +23,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CacheClearer implements CacheClearerInterface
 {
     /**
-     * Will be raised after caches have been cleared.
-     */
-    const CACHE_CLEAR_EVENT = 'sulu_website.cache_clear';
-
-    /**
      * @var string
      */
     private $kernelRootDir;
@@ -108,7 +103,7 @@ class CacheClearer implements CacheClearerInterface
 
             $this->proxyClient->flush();
 
-            $this->eventDispatcher->dispatch(self::CACHE_CLEAR_EVENT);
+            $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
 
             return;
         }
@@ -123,6 +118,6 @@ class CacheClearer implements CacheClearerInterface
             $this->filesystem->remove($path);
         }
 
-        $this->eventDispatcher->dispatch(self::CACHE_CLEAR_EVENT);
+        $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
     }
 }
