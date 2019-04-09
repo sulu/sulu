@@ -20,7 +20,13 @@ export default class LinkCommand extends Command {
     execute(eventInfo: Object) {
         this.editor.model.change((writer) => {
             const linkAttributes = Object.keys(this.attributeMap).reduce((attributes, key) => {
-                attributes[key] = eventInfo[this.attributeMap[key]];
+                const eventInfoValue = eventInfo[this.attributeMap[key]];
+
+                if (!eventInfoValue) {
+                    return attributes;
+                }
+
+                attributes[key] = eventInfoValue;
                 return attributes;
             }, {});
 
