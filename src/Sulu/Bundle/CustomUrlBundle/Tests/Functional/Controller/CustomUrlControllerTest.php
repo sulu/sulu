@@ -145,9 +145,6 @@ class CustomUrlControllerTest extends SuluTestCase
         }
         $this->assertEquals($url, $responseData['customUrl']);
 
-        $this->assertArrayHasKey($url, $responseData['routes']);
-        $this->assertFalse($responseData['routes'][$url]['history']);
-
         return $responseData['id'];
     }
 
@@ -540,14 +537,6 @@ class CustomUrlControllerTest extends SuluTestCase
         }
         $this->assertEquals($url, $responseData['customUrl']);
 
-        $this->assertArrayHasKey($beforeUrl, $responseData['routes']);
-        $this->assertArrayHasKey($url, $responseData['routes']);
-
-        if ($beforeUrl !== $url) {
-            $this->assertTrue($responseData['routes'][$beforeUrl]['history']);
-        }
-        $this->assertFalse($responseData['routes'][$url]['history']);
-
         return $responseData['id'];
     }
 
@@ -610,9 +599,6 @@ class CustomUrlControllerTest extends SuluTestCase
             $this->assertArrayNotHasKey('targetTitle', $responseData);
         }
         $this->assertEquals($url, $responseData['customUrl']);
-
-        $this->assertArrayHasKey($url, $responseData['routes']);
-        $this->assertFalse($responseData['routes'][$url]['history']);
     }
 
     public function cgetProvider()
@@ -750,150 +736,5 @@ class CustomUrlControllerTest extends SuluTestCase
         $responseData = json_decode($response->getContent(), true);
         $this->assertCount(1, $responseData['_embedded']['custom_urls']);
         $this->assertEquals($uuid, $responseData['_embedded']['custom_urls'][0]['id']);
-    }
-
-    public function cdeleteRoutesProvider()
-    {
-        return [
-            [
-                [
-                    'test-1.sulu.io/test-1' => [
-                        'title' => 'Test-1',
-                        'published' => true,
-                        'baseDomain' => '*.sulu.io/*',
-                        'domainParts' => ['test-1', 'test-1'],
-                        'targetDocument' => true,
-                        'targetLocale' => 'en',
-                        'canonical' => true,
-                        'redirect' => true,
-                        'noFollow' => true,
-                        'noIndex' => true,
-                    ],
-                ],
-                [
-                    'title' => 'Test-2',
-                    'published' => true,
-                    'baseDomain' => '*.sulu.io/*',
-                    'domainParts' => ['test-2', 'test-2'],
-                    'targetDocument' => true,
-                    'targetLocale' => 'en',
-                    'canonical' => true,
-                    'redirect' => true,
-                    'noFollow' => true,
-                    'noIndex' => true,
-                ],
-                'test-2.sulu.io/test-2',
-                [],
-                ['test-2.sulu.io/test-2', 'test-1.sulu.io/test-1'],
-            ],
-            [
-                [
-                    'test-1.sulu.io/test-1' => [
-                        'title' => 'Test-1',
-                        'published' => true,
-                        'baseDomain' => '*.sulu.io/*',
-                        'domainParts' => ['test-1', 'test-1'],
-                        'targetDocument' => true,
-                        'targetLocale' => 'en',
-                        'canonical' => true,
-                        'redirect' => true,
-                        'noFollow' => true,
-                        'noIndex' => true,
-                    ],
-                ],
-                [
-                    'title' => 'Test-2',
-                    'published' => true,
-                    'baseDomain' => '*.sulu.io/*',
-                    'domainParts' => ['test-2', 'test-2'],
-                    'targetDocument' => true,
-                    'targetLocale' => 'en',
-                    'canonical' => true,
-                    'redirect' => true,
-                    'noFollow' => true,
-                    'noIndex' => true,
-                ],
-                'test-2.sulu.io/test-2',
-                ['test-1.sulu.io/test-1'],
-                ['test-2.sulu.io/test-2'],
-            ],
-            [
-                [
-                    'test-1.sulu.io/test-1' => [
-                        'title' => 'Test-1',
-                        'published' => true,
-                        'baseDomain' => '*.sulu.io/*',
-                        'domainParts' => ['test-1', 'test-1'],
-                        'targetDocument' => true,
-                        'targetLocale' => 'en',
-                        'canonical' => true,
-                        'redirect' => true,
-                        'noFollow' => true,
-                        'noIndex' => true,
-                    ],
-                ],
-                [
-                    'title' => 'Test-2',
-                    'published' => true,
-                    'baseDomain' => '*.sulu.io/*',
-                    'domainParts' => ['test-2', 'test-2'],
-                    'targetDocument' => true,
-                    'targetLocale' => 'en',
-                    'canonical' => true,
-                    'redirect' => true,
-                    'noFollow' => true,
-                    'noIndex' => true,
-                ],
-                'test-2.sulu.io/test-2',
-                ['test-2.sulu.io/test-2'],
-                ['test-1.sulu.io/test-1'],
-                420,
-                9000,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider cdeleteRoutesProvider
-     */
-    public function testCDeleteRoutes(
-        array $before,
-        $data,
-        $url,
-        $delete,
-        $excpected,
-        $statusCode = 204,
-        $restErrorCode = null
-    ) {
-        $uuid = $this->testPut($before, $data, $url);
-
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
-        $customUrl = json_decode($client->getResponse()->getContent(), true);
-
-        $uuids = [];
-        foreach ($delete as $item) {
-            $uuids[] = $customUrl['routes'][$item]['uuid'];
-        }
-
-        $client->request(
-            'DELETE',
-            '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . implode(',', $uuids)
-        );
-
-        $response = $client->getResponse();
-        $this->assertHttpStatusCode($statusCode, $response);
-
-        if ($restErrorCode) {
-            $responseData = json_decode($response->getContent(), true);
-            $this->assertEquals($restErrorCode, $responseData['code']);
-
-            return;
-        }
-
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
-        $customUrl = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertEquals($excpected, array_keys($customUrl['routes']));
     }
 }

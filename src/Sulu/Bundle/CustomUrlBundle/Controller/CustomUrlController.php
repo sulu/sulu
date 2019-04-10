@@ -168,28 +168,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     }
 
     /**
-     * Deletes a lst of custom-urls identified by a list of uuids.
-     *
-     * @param $webspace
-     * @param string $customUrlUuid
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cdeleteRoutesAction($webspace, $customUrlUuid, Request $request)
-    {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
-
-        $manager = $this->get('sulu_custom_urls.manager');
-        foreach ($ids as $id) {
-            $manager->deleteRoute($webspace, $id);
-        }
-        $this->get('sulu_document_manager.document_manager')->flush();
-
-        return $this->handleView($this->view());
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getSecurityContext()

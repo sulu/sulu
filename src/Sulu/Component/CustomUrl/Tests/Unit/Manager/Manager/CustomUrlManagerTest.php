@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -35,6 +36,11 @@ class CustomUrlManagerTest extends TestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
     /**
      * @var CustomUrlRepository
@@ -79,6 +85,7 @@ class CustomUrlManagerTest extends TestCase
     protected function setUp()
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->pathBuilder = $this->prophesize(PathBuilder::class);
@@ -89,6 +96,7 @@ class CustomUrlManagerTest extends TestCase
 
         $this->manager = new CustomUrlManager(
             $this->documentManager->reveal(),
+            $this->documentInspector->reveal(),
             $this->customUrlRepository->reveal(),
             $this->metadataFactory->reveal(),
             $this->pathBuilder->reveal(),
@@ -106,11 +114,11 @@ class CustomUrlManagerTest extends TestCase
         $this->documentManager->create('custom_url')->willReturn($testDocument);
         $this->documentManager->persist(
             $testDocument,
-            null,
+            'en',
             ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'load_ghost_content' => true, 'auto_rename' => false]
         )->shouldBeCalledTimes(1);
-        $this->documentManager->publish($testDocument)->shouldBeCalled();
-        $this->documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn(
+        $this->documentManager->publish($testDocument, 'en')->shouldBeCalled();
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
                 $this->targetDocument
             );
 
@@ -185,11 +193,47 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals(['1.sulu.lo', '1.sulu.lo/2'], $result);
     }
 
+    public function testFindHistoryRoutesById()
+    {
+        $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
+        $this->documentManager->find('123-456-789', 'en', ['load_ghost_content' => true])
+            ->willReturn($customUrlDocument->reveal());
+
+        $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/routes');
+
+        $routeDocument1 = $this->prophesize(RouteDocument::class);
+        $routeDocument1->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test1');
+        $routeDocument1->isHistory()->willReturn(true);
+        $routeDocument2 = $this->prophesize(RouteDocument::class);
+        $routeDocument2->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test2');
+        $routeDocument2->isHistory()->willReturn(false);
+        $routeDocument3 = $this->prophesize(RouteDocument::class);
+        $routeDocument3->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test3');
+        $routeDocument3->isHistory()->willReturn(true);
+
+        $this->documentInspector->getReferrers($customUrlDocument->reveal())->willReturn(
+            [
+                $routeDocument1->reveal(),
+                $routeDocument2->reveal(),
+            ]
+        );
+
+        $this->documentInspector->getReferrers($routeDocument1)->willReturn([$routeDocument3]);
+        $this->documentInspector->getReferrers($routeDocument2)->willReturn([]);
+        $this->documentInspector->getReferrers($routeDocument3)->willReturn([]);
+
+        $this->assertEquals(
+            ['sulu.io/test1' => $routeDocument1->reveal(), 'sulu.io/test3' => $routeDocument3->reveal()],
+            $this->manager->findHistoryRoutesById('123-456-789', 'sulu_io')
+        );
+    }
+
     public function testFind()
     {
         $document = $this->prophesize(CustomUrlDocument::class);
 
-        $this->documentManager->find('123-123-123', null, ['load_ghost_content' => true])
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])
             ->willReturn($document->reveal());
 
         $result = $this->manager->find('123-123-123');
@@ -207,7 +251,7 @@ class CustomUrlManagerTest extends TestCase
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
             ->willReturn('/cmf/sulu_io/custom_urls/routes');
 
-        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', null, ['load_ghost_content' => true])
+        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'en', ['load_ghost_content' => true])
             ->willReturn($routeDocument->reveal());
 
         $result = $this->manager->findByUrl('sulu.io/test', 'sulu_io');
@@ -222,7 +266,7 @@ class CustomUrlManagerTest extends TestCase
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
             ->willReturn('/cmf/sulu_io/custom_urls/routes');
 
-        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', null, ['load_ghost_content' => true])
+        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'en', ['load_ghost_content' => true])
             ->willReturn($routeDocument->reveal());
 
         $result = $this->manager->findRouteByUrl('sulu.io/test', 'sulu_io');
@@ -250,21 +294,21 @@ class CustomUrlManagerTest extends TestCase
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
         $this->metadataFactory->getMetadataForAlias('custom_url')->willReturn($this->metadata->reveal());
 
-        $this->documentManager->find('312-312-312', null, ['load_ghost_content' => true])->willReturn($document->reveal());
-        $this->documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn(
+        $this->documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
             $targetDocument->reveal()
         );
         $this->documentManager->persist(
             $document,
-            null,
+            'en',
             [
                 'parent_path' => '/cmf/sulu_io/custom_urls/items',
                 'load_ghost_content' => true,
                 'auto_rename' => false,
-                'auto_name_locale' => null,
+                'auto_name_locale' => 'en',
             ]
         )->shouldBeCalledTimes(1);
-        $this->documentManager->publish($document)->shouldBeCalledTimes(1);
+        $this->documentManager->publish($document, 'en')->shouldBeCalledTimes(1);
 
         $result = $this->manager->save(
             '312-312-312',
@@ -303,19 +347,19 @@ class CustomUrlManagerTest extends TestCase
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
         $this->metadataFactory->getMetadataForAlias('custom_url')->willReturn($this->metadata->reveal());
 
-        $this->documentManager->find('312-312-312', null, ['load_ghost_content' => true])
+        $this->documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])
              ->willReturn($document->reveal());
-        $this->documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn(
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
             $targetDocument->reveal()
         );
         $this->documentManager->persist(
             $document,
-            null,
+            'en',
             [
                 'parent_path' => '/cmf/sulu_io/custom_urls/items',
                 'load_ghost_content' => true,
                 'auto_rename' => false,
-                'auto_name_locale' => null,
+                'auto_name_locale' => 'en',
             ]
         )->willThrow(NodeNameAlreadyExistsException::class);
 
@@ -340,7 +384,7 @@ class CustomUrlManagerTest extends TestCase
     {
         $document = $this->prophesize(CustomUrlDocument::class);
 
-        $this->documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn($document->reveal());
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
         $this->documentManager->remove($document->reveal())->shouldBeCalled();
 
         $this->manager->delete('123-123-123');

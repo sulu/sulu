@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use PHPCR\Util\PathHelper;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -36,6 +37,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    protected $documentInspector;
 
     /**
      * @var CustomUrlRepository
@@ -64,6 +70,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function __construct(
         DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
         CustomUrlRepository $customUrlRepository,
         MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder,
@@ -71,6 +78,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $environment
     ) {
         $this->documentManager = $documentManager;
+        $this->documentInspector = $documentInspector;
         $this->customUrlRepository = $customUrlRepository;
         $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
@@ -130,6 +138,37 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function findUrls($webspaceKey)
     {
         return $this->customUrlRepository->findUrls($this->getItemsPath($webspaceKey));
+    }
+
+    public function findHistoryRoutesById(string $id, string $webspaceKey)
+    {
+        $customUrlDocument = $this->find($id);
+
+        $routeDocuments = $this->findReferrer($customUrlDocument, $webspaceKey);
+
+        return array_filter($routeDocuments, function($routeDocument) {
+            return $routeDocument->isHistory();
+        });
+    }
+
+    private function findReferrer($document, string $webspaceKey)
+    {
+        $routes = [];
+        $referrers = $this->documentInspector->getReferrers($document);
+        foreach ($referrers as $routeDocument) {
+            if ($routeDocument instanceof RouteDocument) {
+                $path = PathHelper::relativizePath(
+                    $routeDocument->getPath(),
+                    $this->getRoutesPath($webspaceKey)
+                );
+
+                $routes[$path] = $routeDocument;
+                $tmp = $this->findReferrer($routeDocument, $webspaceKey);
+                $routes = array_merge($routes, $tmp);
+            }
+        }
+
+        return $routes;
     }
 
     /**

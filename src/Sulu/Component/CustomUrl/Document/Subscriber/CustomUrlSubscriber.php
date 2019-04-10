@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
-use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -19,7 +18,6 @@ use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -80,7 +78,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     {
         return [
             Events::PERSIST => 'handlePersist',
-            Events::HYDRATE => 'handleHydrate',
             Events::REMOVE => ['handleRemove', 550],
         ];
     }
@@ -97,8 +94,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $oldRoutes = $document->getRoutes();
-
         $webspaceKey = $this->inspector->getWebspace($document);
         $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts());
         $locale = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalization(
@@ -112,26 +107,34 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             $this->getRoutesPath($webspaceKey)
         );
 
-        if (!array_key_exists($domain, $oldRoutes)) {
-            $document->addRoute($domain, $route);
-        }
+        $this->updateOldReferrers($document, $route, $event->getLocale());
+    }
 
-        foreach ($oldRoutes as $oldRoute) {
-            if ($oldRoute->getPath() === $route->getPath()) {
+    private function updateOldReferrers($document, $newRoute, $locale)
+    {
+        $oldReferrers = $this->inspector->getReferrers($document);
+
+        foreach ($oldReferrers as $oldReferrer) {
+            if (
+                !$oldReferrer instanceof RouteDocument
+                || $oldReferrer->getPath() === $newRoute->getPath()
+            ) {
                 continue;
             }
 
-            $oldRoute->setTargetDocument($route);
-            $oldRoute->setHistory(true);
+            $oldReferrer->setTargetDocument($newRoute);
+            $oldReferrer->setHistory(true);
             $this->documentManager->persist(
-                $oldRoute,
-                $event->getLocale(),
+                $oldReferrer,
+                $locale,
                 [
-                    'path' => $oldRoute->getPath(),
+                    'path' => $oldReferrer->getPath(),
                     'auto_create' => true,
                 ]
             );
-            $this->documentManager->publish($oldRoute, $locale);
+            $this->documentManager->publish($oldReferrer, $locale);
+
+            $this->updateOldReferrers($oldReferrer, $newRoute, $locale);
         }
     }
 
@@ -205,22 +208,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Set routes to custom-url.
-     *
-     * @param HydrateEvent $event
-     */
-    public function handleHydrate(HydrateEvent $event)
-    {
-        $document = $event->getDocument();
-        if (!($document instanceof CustomUrlBehavior)) {
-            return;
-        }
-
-        $webspaceKey = $this->inspector->getWebspace($document);
-        $document->setRoutes($this->findReferrer($document, $webspaceKey));
-    }
-
-    /**
      * Removes the routes for the given document.
      *
      * @param RemoveEvent $event
@@ -237,34 +224,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
                 $this->documentManager->remove($referrer);
             }
         }
-    }
-
-    /**
-     * Returns all route-document which referees given document.
-     *
-     * @param $document
-     * @param $webspaceKey
-     *
-     * @return array
-     */
-    protected function findReferrer($document, $webspaceKey)
-    {
-        $routes = [];
-        $referrers = $this->inspector->getReferrers($document);
-        foreach ($referrers as $routeDocument) {
-            if ($routeDocument instanceof RouteDocument) {
-                $path = PathHelper::relativizePath(
-                    $routeDocument->getPath(),
-                    $this->getRoutesPath($webspaceKey)
-                );
-
-                $routes[$path] = $routeDocument;
-                $tmp = $this->findReferrer($routeDocument, $webspaceKey);
-                $routes = array_merge($routes, $tmp);
-            }
-        }
-
-        return $routes;
     }
 
     /**
