@@ -96,7 +96,7 @@ export default class SingleSelection extends React.Component<Props>
                 },
             },
             schemaOptions: {
-                formOptionsToApi: {
+                form_options_to_api: {
                     value: formOptionsToApi,
                 } = {},
             } = {},
@@ -111,13 +111,13 @@ export default class SingleSelection extends React.Component<Props>
         }
 
         if (formOptionsToApi && !Array.isArray(formOptionsToApi)) {
-            throw new Error('The "formOptionsToApi" option has to be an array if defined!');
+            throw new Error('The "form_options_to_api" option has to be an array if defined!');
         }
 
         const options = formOptionsToApi
             ? formOptionsToApi.reduce((currentOptions, formOption) => {
                 if (!formOption.name) {
-                    throw new Error('All options set in "formOptionsToApi" must define name!');
+                    throw new Error('All options set in "form_options_to_api" must define name!');
                 }
                 currentOptions[formOption.name] = formInspector.options[formOption.name];
 

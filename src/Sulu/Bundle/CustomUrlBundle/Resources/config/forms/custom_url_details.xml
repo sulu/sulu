@@ -44,7 +44,7 @@
                 <title>sulu_custom_url.target_page</title>
             </meta>
             <params>
-                <param name="formOptionsToApi" type="collection">
+                <param name="form_options_to_api" type="collection">
                     <param name="webspace" />
                 </param>
             </params>
