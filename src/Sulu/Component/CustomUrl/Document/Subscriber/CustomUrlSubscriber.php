@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
+use PHPCR\PathNotFoundException;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -114,27 +115,31 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     {
         $oldReferrers = $this->inspector->getReferrers($document);
 
-        foreach ($oldReferrers as $oldReferrer) {
-            if (
-                !$oldReferrer instanceof RouteDocument
-                || $oldReferrer->getPath() === $newRoute->getPath()
-            ) {
-                continue;
+        try {
+            foreach ($oldReferrers as $oldReferrer) {
+                if (
+                    !$oldReferrer instanceof RouteDocument
+                    || $oldReferrer->getPath() === $newRoute->getPath()
+                ) {
+                    continue;
+                }
+
+                $oldReferrer->setTargetDocument($newRoute);
+                $oldReferrer->setHistory(true);
+                $this->documentManager->persist(
+                    $oldReferrer,
+                    $locale,
+                    [
+                        'path' => $oldReferrer->getPath(),
+                        'auto_create' => true,
+                    ]
+                );
+                $this->documentManager->publish($oldReferrer, $locale);
+
+                $this->updateOldReferrers($oldReferrer, $newRoute, $locale);
             }
-
-            $oldReferrer->setTargetDocument($newRoute);
-            $oldReferrer->setHistory(true);
-            $this->documentManager->persist(
-                $oldReferrer,
-                $locale,
-                [
-                    'path' => $oldReferrer->getPath(),
-                    'auto_create' => true,
-                ]
-            );
-            $this->documentManager->publish($oldReferrer, $locale);
-
-            $this->updateOldReferrers($oldReferrer, $newRoute, $locale);
+        } catch (PathNotFoundException $e) {
+            // Avoid error if node does not exist yet
         }
     }
 
