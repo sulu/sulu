@@ -136,7 +136,7 @@ export default class SingleSelection extends React.Component<Props>
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleChange}
-                options={listOptions}
+                listOptions={listOptions}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}

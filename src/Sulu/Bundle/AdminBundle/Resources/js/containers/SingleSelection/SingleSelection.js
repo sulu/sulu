@@ -18,7 +18,7 @@ type Props = {|
     icon: string,
     locale?: ?IObservableValue<string>,
     onChange: (selectedIds: ?string | number, selectedItem: ?Object) => void,
-    options?: Object,
+    listOptions?: Object,
     overlayTitle: string,
     resourceKey: string,
     value: ?string | number,
@@ -104,7 +104,7 @@ export default class SingleSelection extends React.Component<Props> {
             emptyText,
             icon,
             locale,
-            options,
+            listOptions,
             overlayTitle,
             resourceKey,
         } = this.props;
@@ -145,7 +145,7 @@ export default class SingleSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
-                    options={options}
+                    options={listOptions}
                     preSelectedItem={item}
                     resourceKey={resourceKey}
                     title={overlayTitle}

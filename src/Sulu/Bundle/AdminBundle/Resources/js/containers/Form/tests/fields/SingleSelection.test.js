@@ -328,7 +328,7 @@ test('Pass correct props to SingleItemSelection', () => {
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
-        options: undefined,
+        listOptions: undefined,
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
         value,
@@ -459,7 +459,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
-        options: {
+        listOptions: {
             segment: 'developer',
             webspace: 'sulu',
         },
