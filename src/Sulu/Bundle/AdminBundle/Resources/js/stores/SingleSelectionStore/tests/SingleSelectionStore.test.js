@@ -29,6 +29,29 @@ test('Should load item when being constructed', () => {
     });
 });
 
+test('Should load item when being constructed with additional options', () => {
+    const getPromise = Promise.resolve({
+        id: 1,
+    });
+
+    ResourceRequester.get.mockReturnValue(getPromise);
+
+    const singleSelectionStore = new SingleSelectionStore('snippets', 1, observable.box('en'), {test: 'value'});
+
+    expect(ResourceRequester.get).toBeCalledWith(
+        'snippets',
+        {
+            id: 1,
+            locale: 'en',
+            test: 'value',
+        }
+    );
+
+    return getPromise.then(() => {
+        expect(toJS(singleSelectionStore.item)).toEqual({id: 1});
+    });
+});
+
 test('Should not load item but replace current selection with undefined if no itemId is given', () => {
     const selectionStore = new SingleSelectionStore('snippets', undefined, observable.box('en'));
     selectionStore.item = {id: 1};

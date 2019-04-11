@@ -67,7 +67,7 @@ test('Render with selected item', () => {
         />
     );
 
-    expect(SingleSelectionStore).toBeCalledWith('test', 3, locale);
+    expect(SingleSelectionStore).toBeCalledWith('test', 3, locale, undefined);
 
     singleSelection.instance().singleSelectionStore.item = {
         id: 3,
@@ -135,10 +135,11 @@ test('Pass resourceKey and locale to SingleListOverlay', () => {
     expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual(undefined);
 });
 
-test('Pass options to SingleListOverlay', () => {
+test('Pass options to SingleListOverlay and SingleSelectionStore', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
+            detailOptions={{'ghost-content': true}}
             disabledIds={[]}
             displayProperties={['name', 'value']}
             emptyText="Nothing"
@@ -151,6 +152,8 @@ test('Pass options to SingleListOverlay', () => {
             value={3}
         />
     );
+
+    expect(SingleSelectionStore).toBeCalledWith('test', 3, undefined, {'ghost-content': true});
 
     expect(singleSelection.find(SingleListOverlay).prop('options')).toEqual({value: 'Test'});
 });

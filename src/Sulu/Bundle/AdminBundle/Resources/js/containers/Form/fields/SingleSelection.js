@@ -87,6 +87,7 @@ export default class SingleSelection extends React.Component<Props>
                 types: {
                     list_overlay: {
                         adapter,
+                        detail_options: detailOptions,
                         list_key: listKey,
                         display_properties: displayProperties,
                         empty_text: emptyText,
@@ -125,18 +126,23 @@ export default class SingleSelection extends React.Component<Props>
             }, {})
             : undefined;
 
+        if (detailOptions && typeof detailOptions !== 'object') {
+            throw new Error('The "detail_options" option has to be an array if defined!');
+        }
+
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                detailOptions={detailOptions}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
                 icon={icon}
                 listKey={listKey || resourceKey}
+                listOptions={listOptions}
                 locale={this.locale}
                 onChange={this.handleChange}
-                listOptions={listOptions}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}

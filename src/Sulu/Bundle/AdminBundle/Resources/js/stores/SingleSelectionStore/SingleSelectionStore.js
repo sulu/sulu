@@ -8,14 +8,17 @@ export default class SingleSelectionStore<T, U: {id: T} = Object> {
     @observable loading: boolean = false;
     resourceKey: string;
     locale: ?IObservableValue<string>;
+    options: Object;
 
     constructor(
         resourceKey: string,
         selectedItemId: ?T,
-        locale: ?IObservableValue<string>
+        locale: ?IObservableValue<string>,
+        options: Object = {}
     ) {
         this.resourceKey = resourceKey;
         this.locale = locale;
+        this.options = options;
         if (selectedItemId) {
             this.loadItem(selectedItemId);
         }
@@ -41,6 +44,7 @@ export default class SingleSelectionStore<T, U: {id: T} = Object> {
 
         this.setLoading(true);
         return ResourceRequester.get(this.resourceKey, {
+            ...this.options,
             id: itemId,
             locale: this.locale ? this.locale.get() : undefined,
         }).then(action((data) => {

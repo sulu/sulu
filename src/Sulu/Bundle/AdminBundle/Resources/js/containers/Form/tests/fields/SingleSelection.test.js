@@ -323,6 +323,7 @@ test('Pass correct props to SingleItemSelection', () => {
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
         listKey: 'accounts_list',
+        detailOptions: undefined,
         disabled: true,
         disabledIds: [],
         displayProperties: ['name'],
@@ -366,7 +367,7 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
     expect(singleSelection.find(SingleSelectionComponent).prop('listKey')).toEqual('accounts');
 });
 
-test('Pass correct props with schema-options type to SingleItemSelection', () => {
+test('Throw an error if form_options_to_list_options has wrong value', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = 3;
@@ -403,6 +404,36 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     )).toThrow('"form_options_to_list_options"');
 });
 
+test('Throw an error if detail_options has wrong value', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                detail_options: 'test',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    )).toThrow('"detail_options"');
+});
+
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
     const options = {
         segment: 'developer',
@@ -419,6 +450,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         types: {
             list_overlay: {
                 adapter: 'table',
+                detail_options: {
+                    'ghost-content': true,
+                },
                 display_properties: ['name'],
                 empty_text: 'sulu_contact.nothing',
                 icon: 'su-account',
@@ -454,6 +488,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        detailOptions: {
+            'ghost-content': true,
+        },
         disabled: true,
         disabledIds: [],
         displayProperties: ['name'],

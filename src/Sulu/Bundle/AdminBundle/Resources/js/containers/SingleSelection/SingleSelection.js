@@ -10,15 +10,16 @@ import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
-    listKey: string,
+    detailOptions?: Object,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     emptyText: string,
     icon: string,
+    listKey: string,
+    listOptions?: Object,
     locale?: ?IObservableValue<string>,
     onChange: (selectedIds: ?string | number, selectedItem: ?Object) => void,
-    listOptions?: Object,
     overlayTitle: string,
     resourceKey: string,
     value: ?string | number,
@@ -40,9 +41,9 @@ export default class SingleSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, resourceKey, value} = this.props;
+        const {detailOptions, locale, resourceKey, value} = this.props;
 
-        this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale);
+        this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale, detailOptions);
         this.changeDisposer = reaction(
             () => (this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined),
             (loadedItemId: ?string | number) => {
