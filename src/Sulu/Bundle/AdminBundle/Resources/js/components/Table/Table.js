@@ -158,7 +158,7 @@ export default class Table extends React.Component<Props> {
                     default:
                         throw new Error(
                             'The Table component only accepts the following children types: ' +
-                        [Header.name, Body.name].join(', ')
+                            [Header.name, Body.name].join(', ')
                         );
                 }
             });

@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
+import {ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import CustomUrlComponent from '../../../components/CustomUrl';
+import customUrlStyles from './customUrl.scss';
 
 @observer
 export default class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
@@ -28,12 +30,25 @@ export default class CustomUrl extends React.Component<FieldTypeProps<Array<?str
         }
 
         return (
-            <CustomUrlComponent
-                baseDomain={baseDomain}
-                onBlur={this.handleBlur}
-                onChange={this.handleChange}
-                value={value || []}
-            />
+            <div className={customUrlStyles.customUrlContainer}>
+                <div className={customUrlStyles.customUrl}>
+                    <CustomUrlComponent
+                        baseDomain={baseDomain}
+                        onBlur={this.handleBlur}
+                        onChange={this.handleChange}
+                        value={value || []}
+                    />
+                </div>
+                {formInspector.id &&
+                    <div className={customUrlStyles.resourceLocatorHistory}>
+                        <ResourceLocatorHistory
+                            id={formInspector.id}
+                            options={{webspace: formInspector.options.webspace}}
+                            resourceKey="custom_url_routes"
+                        />
+                    </div>
+                }
+            </div>
         );
     }
 }

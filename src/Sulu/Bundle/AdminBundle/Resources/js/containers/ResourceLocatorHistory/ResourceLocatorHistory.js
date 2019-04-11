@@ -1,0 +1,138 @@
+// @flow
+import React, {Fragment} from 'react';
+import {action, observable, when} from 'mobx';
+import {observer} from 'mobx-react';
+import {translate} from '../../utils/Translator';
+import Button from '../../components/Button';
+import Dialog from '../../components/Dialog';
+import Loader from '../../components/Loader';
+import Overlay from '../../components/Overlay';
+import Table from '../../components/Table';
+import ResourceListStore from '../../stores/ResourceListStore';
+import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
+
+type Props = {|
+    id: string | number,
+    options: Object,
+    resourceKey: string,
+|};
+
+@observer
+export default class ResourceLocatorHistory extends React.Component<Props> {
+    resourceListStore: ?ResourceListStore;
+    @observable open = false;
+    @observable showDeleteWarning = false;
+    deleteId: ?string | number;
+    resourceListStoreDisposer: () => mixed;
+
+    constructor(props: Props) {
+        super(props);
+
+        const {id, options, resourceKey} = this.props;
+
+        this.resourceListStoreDisposer = when(
+            () => this.open,
+            (): void => {
+                this.resourceListStore = new ResourceListStore(resourceKey, {...options, id});
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this.resourceListStoreDisposer();
+    }
+
+    @action handleButtonClick = () => {
+        this.open = true;
+    };
+
+    @action handleOverlayConfirm = () => {
+        this.open = false;
+    };
+
+    @action handleOverlayClose = () => {
+        this.open = false;
+    };
+
+    @action handleDeleteClick = (id: string | number) => {
+        this.showDeleteWarning = true;
+        this.deleteId = id;
+    };
+
+    @action handleDeleteCancel = () => {
+        this.showDeleteWarning = false;
+        this.deleteId = undefined;
+    };
+
+    @action handleDeleteConfirm = () => {
+        if (!this.deleteId) {
+            throw new Error('The "deleteId" has not been set! This should not happen and is likely a bug!');
+        }
+
+        if (!this.resourceListStore) {
+            throw new Error(
+                'The ResourceListStore has not been initialized yet! This should not happen and is likely a bug.'
+            );
+        }
+
+        this.resourceListStore.deleteList([this.deleteId]).then(action(() => {
+            this.showDeleteWarning = false;
+            this.deleteId = undefined;
+        }));
+    };
+
+    render() {
+        const {resourceListStore} = this;
+
+        const historyRoutes = resourceListStore ? resourceListStore.data : [];
+
+        return (
+            <Fragment>
+                <Button icon="su-process" onClick={this.handleButtonClick} skin="link">
+                    {translate('sulu_admin.show_history')}
+                </Button>
+                <Overlay
+                    confirmText={translate('sulu_admin.ok')}
+                    onClose={this.handleOverlayClose}
+                    onConfirm={this.handleOverlayConfirm}
+                    open={this.open}
+                    size="small"
+                    title={translate('sulu_admin.history')}
+                >
+                    {!this.resourceListStore || this.resourceListStore.loading
+                        ? <div className={resourceLocatorHistoryStyles.loader}>
+                            <Loader />
+                        </div>
+                        : <div className={resourceLocatorHistoryStyles.resourceLocatorHistoryOverlay}>
+                            <Table buttons={[{icon: 'su-trash-alt', onClick: this.handleDeleteClick}]}>
+                                <Table.Header>
+                                    <Table.HeaderCell>{translate('sulu_admin.url')}</Table.HeaderCell>
+                                    <Table.HeaderCell>{translate('sulu_admin.created')}</Table.HeaderCell>
+                                </Table.Header>
+                                <Table.Body>
+                                    {historyRoutes.map((historyRoute) => (
+                                        <Table.Row id={historyRoute.id} key={historyRoute.id}>
+                                            <Table.Cell>{historyRoute.resourcelocator}</Table.Cell>
+                                            <Table.Cell>{(new Date(historyRoute.created)).toLocaleString()}</Table.Cell>
+                                        </Table.Row>
+                                    ))}
+                                </Table.Body>
+                            </Table>
+                        </div>
+                    }
+                </Overlay>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={resourceListStore ? resourceListStore.deleting : false}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeleteCancel}
+                    onConfirm={this.handleDeleteConfirm}
+                    open={this.showDeleteWarning}
+                    title={translate('sulu_admin.delete')}
+                >
+                    {translate('sulu_admin.resource_locator_history_delete_warning')}
+                </Dialog>
+            </Fragment>
+        );
+    }
+}
