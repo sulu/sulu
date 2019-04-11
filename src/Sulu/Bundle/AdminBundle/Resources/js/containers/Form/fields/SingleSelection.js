@@ -96,8 +96,8 @@ export default class SingleSelection extends React.Component<Props>
                 },
             },
             schemaOptions: {
-                form_options_to_api: {
-                    value: formOptionsToApi,
+                form_options_to_list_options: {
+                    value: formOptionsToListOptions,
                 } = {},
             } = {},
             value,
@@ -110,14 +110,14 @@ export default class SingleSelection extends React.Component<Props>
             );
         }
 
-        if (formOptionsToApi && !Array.isArray(formOptionsToApi)) {
-            throw new Error('The "form_options_to_api" option has to be an array if defined!');
+        if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
+            throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
 
-        const options = formOptionsToApi
-            ? formOptionsToApi.reduce((currentOptions, formOption) => {
+        const listOptions = formOptionsToListOptions
+            ? formOptionsToListOptions.reduce((currentOptions, formOption) => {
                 if (!formOption.name) {
-                    throw new Error('All options set in "form_options_to_api" must define name!');
+                    throw new Error('All options set in "form_options_to_list_options" must define name!');
                 }
                 currentOptions[formOption.name] = formInspector.options[formOption.name];
 
@@ -136,7 +136,7 @@ export default class SingleSelection extends React.Component<Props>
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleChange}
-                options={options}
+                options={listOptions}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}

@@ -386,7 +386,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     };
 
     const schemaOptions = {
-        form_options_to_api: {
+        form_options_to_list_options: {
             name: 'form_options_to_api',
             value: 'test',
         },
@@ -400,7 +400,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             schemaOptions={schemaOptions}
             value={value}
         />
-    )).toThrow('"form_options_to_api"');
+    )).toThrow('"form_options_to_list_options"');
 });
 
 test('Pass correct props with schema-options type to SingleItemSelection', () => {
@@ -428,7 +428,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     };
 
     const schemaOptions = {
-        form_options_to_api: {
+        form_options_to_list_options: {
             name: 'formOptionsToApi',
             value: [
                 {name: 'segment'},
