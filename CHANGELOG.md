@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #4512  [Components]           Fix pathcleanup whitespace character problems
+
 * 1.6.26 (2019-03-26)
     * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
     * BUGFIX      #4471  [AdminBundle]          Fix CKEditor preview for content that is not wrapped in an HTML tag
@@ -18,6 +21,7 @@ CHANGELOG for Sulu
 * 1.6.24 (2019-01-09)
     * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
+    * BUGFIX      #4313 [All]                   Fix php 7.3 compatibility
 
 * 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
