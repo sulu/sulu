@@ -8,7 +8,7 @@ import buttonStyles from './button.scss';
 
 const LOADER_SIZE = 25;
 
-type Props = {|
+type Props<T> = {|
     active: boolean,
     activeClassName?: string,
     children?: Node,
@@ -17,15 +17,15 @@ type Props = {|
     icon?: string,
     iconClassName?: string,
     loading: boolean,
-    onClick?: (value: *) => void,
+    onClick?: (value: T) => void,
     showDropdownIcon: boolean,
     size: 'small' | 'large',
     skin: 'primary' | 'secondary' | 'link' | 'icon',
     type: 'button' | 'submit' | 'reset',
-    value?: *,
+    value: T,
 |};
 
-export default class Button extends React.PureComponent<Props> {
+export default class Button<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         active: false,
         disabled: false,
@@ -34,6 +34,7 @@ export default class Button extends React.PureComponent<Props> {
         size: 'large',
         skin: 'secondary',
         type: 'button',
+        value: undefined,
     };
 
     handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
