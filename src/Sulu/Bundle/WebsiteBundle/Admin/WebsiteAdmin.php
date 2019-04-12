@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -76,6 +75,7 @@ class WebsiteAdmin extends Admin
                 ->disableSearching()
                 ->setFormKey('analytic_details')
                 ->setTabTitle('sulu_website.analytics')
+                ->setTabOrder(512)
                 ->addToolbarActions($listToolbarActions)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')
