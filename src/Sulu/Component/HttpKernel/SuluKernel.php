@@ -14,6 +14,7 @@ namespace Sulu\Component\HttpKernel;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
@@ -83,11 +84,11 @@ abstract class SuluKernel extends Kernel
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
         $confDir = $this->getProjectDir() . '/config';
 
-        $this->load($loader, $confDir . '/{packages}/*');
-        $this->load($loader, $confDir . '/{packages}/' . $this->environment . '/*');
-        $this->load($loader, $confDir . '/{services}');
-        $this->load($loader, $confDir . '/{services}_' . $this->context);
-        $this->load($loader, $confDir . '/{services}_' . $this->environment);
+        $this->load($loader, $confDir, '/{packages}/*');
+        $this->load($loader, $confDir, '/{packages}/' . $this->environment . '/*');
+        $this->load($loader, $confDir, '/{services}');
+        $this->load($loader, $confDir, '/{services}_' . $this->context);
+        $this->load($loader, $confDir, '/{services}_' . $this->environment);
     }
 
     /**
@@ -97,17 +98,17 @@ abstract class SuluKernel extends Kernel
     {
         $confDir = $this->getProjectDir() . '/config';
 
-        $this->import($routes, $confDir . '/{routes}/*');
-        $this->import($routes, $confDir . '/{routes}/' . $this->environment . '/*');
-        $this->import($routes, $confDir . '/{routes}');
+        $this->import($routes, $confDir, '/{routes}/*');
+        $this->import($routes, $confDir, '/{routes}/' . $this->environment . '/*');
+        $this->import($routes, $confDir, '/{routes}');
     }
 
-    protected function load(LoaderInterface $loader, $glob)
+    protected function load(LoaderInterface $loader, $confDir, $pattern)
     {
         $configExtensions = $this->getConfigExtensions();
         $reversedConfigExtensions = $this->getReversedConfigExtensions();
-        $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob . $reversedConfigExtensions, GLOB_BRACE);
+        $configFiles = $this->glob($confDir, $pattern . $configExtensions);
+        $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
@@ -116,19 +117,30 @@ abstract class SuluKernel extends Kernel
         }
     }
 
-    protected function import(RouteCollectionBuilder $routes, $glob)
+    protected function import(RouteCollectionBuilder $routes, $confDir, $pattern)
     {
         $configExtensions = $this->getConfigExtensions();
         $reversedConfigExtensions = $this->getReversedConfigExtensions();
 
-        $configFiles = glob($glob . $configExtensions, GLOB_BRACE);
-        $excludedConfigFiles = glob($glob . $reversedConfigExtensions, GLOB_BRACE);
+        $configFiles = $this->glob($confDir, $pattern . $configExtensions);
+        $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
                 $routes->import($resource, '/');
             }
         }
+    }
+
+    private function glob($confDir, $pattern)
+    {
+        if (\defined('GLOB_BRACE')) {
+            return glob($confDir . $pattern, GLOB_BRACE);
+        }
+
+        $resources = new GlobResource($confDir, $pattern, false);
+
+        return array_keys(iterator_to_array($resources));
     }
 
     /**
