@@ -134,10 +134,6 @@ abstract class SuluKernel extends Kernel
 
     private function glob($confDir, $pattern)
     {
-        if (\defined('GLOB_BRACE')) {
-            return glob($confDir . $pattern, GLOB_BRACE);
-        }
-
         $resources = new GlobResource($confDir, $pattern, false);
 
         return array_keys(iterator_to_array($resources));
