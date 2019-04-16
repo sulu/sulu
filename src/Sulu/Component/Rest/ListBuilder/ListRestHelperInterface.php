@@ -17,6 +17,21 @@ namespace Sulu\Component\Rest\ListBuilder;
 interface ListRestHelperInterface
 {
     /**
+     * Returns an array of ids to which the response should be restricted.
+     * If null is returned, entities in the response should not be restricted by their id.
+     *
+     * @return array
+     */
+    public function getIds();
+
+    /**
+     * Returns an array of ids which should be excluded from the response.
+     *
+     * @return array
+     */
+    public function getExcludedIds();
+
+    /**
      * Returns the desired sort column.
      *
      * @return string
