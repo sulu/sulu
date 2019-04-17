@@ -192,7 +192,7 @@ class ValidateWebspacesCommand extends Command
         $this->output->writeln('Templates:');
 
         foreach ($webspace->getTemplates() as $type => $template) {
-            $this->validateTemplate($type, $template);
+            $this->validateTemplate($type, $template . '.html.twig');
         }
     }
 
