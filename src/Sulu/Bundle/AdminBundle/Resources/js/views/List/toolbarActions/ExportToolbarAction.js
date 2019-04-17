@@ -124,6 +124,7 @@ export default class ExportToolbarAction extends AbstractToolbarAction {
             escape: this.escape,
             enclosure: this.enclosure,
             newLine: this.newLine,
+            ...this.listStore.options,
         }));
         this.showOverlay = false;
     };
