@@ -70,8 +70,10 @@ class TreeFullEditStrategyTest extends SuluTestCase
         $this->session->save();
         $this->session->refresh(false);
 
+        $routeId = $rootNode->getNode('news')->getIdentifier();
+
         // delete a history url
-        $this->resourceLocatorStrategy->deleteByPath('/news', 'sulu_io', 'de');
+        $this->resourceLocatorStrategy->deleteById($routeId, 'de');
         $this->assertFalse($rootNode->hasNode('news'));
         $this->assertTrue($rootNode->hasNode('test'));
     }

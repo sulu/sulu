@@ -1390,8 +1390,8 @@ class NodeControllerTest extends SuluTestCase
         );
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('/a2', $response['_embedded']['resourcelocators'][0]['resourceLocator']);
-        $this->assertEquals('/a1', $response['_embedded']['resourcelocators'][1]['resourceLocator']);
+        $this->assertEquals('/a2', $response['_embedded']['page_routes'][0]['resourcelocator']);
+        $this->assertEquals('/a1', $response['_embedded']['page_routes'][1]['resourcelocator']);
     }
 
     public function testMove()

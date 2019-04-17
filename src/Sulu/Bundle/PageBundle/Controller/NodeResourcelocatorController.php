@@ -58,15 +58,15 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     /**
      * return all resource locators for given node.
      *
-     * @param string $uuid
+     * @param string $id
      * @param Request $request
      *
      * @return Response
      */
-    public function cgetAction($uuid, Request $request)
+    public function cgetAction($id, Request $request)
     {
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage($request);
-        $result = $this->getResourceLocatorRepository()->getHistory($uuid, $webspaceKey, $languageCode);
+        $result = $this->getResourceLocatorRepository()->getHistory($id, $webspaceKey, $languageCode);
 
         return $this->handleView($this->view($result));
     }
@@ -74,14 +74,15 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     /**
      * deletes resource locator with given path.
      *
+     * @param string $id
      * @param Request $request
      *
      * @return Response
      */
-    public function deleteAction(Request $request)
+    public function cdeleteAction($id, Request $request)
     {
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage($request);
-        $path = $this->getRequestParameter($request, 'path', true);
+        $path = $this->getRequestParameter($request, 'ids', true); // TODO rename path to id in all function names
 
         $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $languageCode);
         $this->getDocumentManager()->flush();
