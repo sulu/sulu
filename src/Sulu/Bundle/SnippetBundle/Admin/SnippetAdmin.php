@@ -160,8 +160,10 @@ class SnippetAdmin extends Admin
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             (new Route('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas'))
+                ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                 ->setOption('tabOrder', 1024)
-                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE),
+                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                ->addRerenderAttribute('webspace'),
         ];
     }
 

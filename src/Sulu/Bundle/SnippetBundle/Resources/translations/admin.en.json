@@ -2,5 +2,8 @@
     "sulu_snippet.selection_overlay_title": "Choose snippets",
     "sulu_snippet.selection_label": "{count} {count, plural, =1 {snippet} other {snippets}} selected",
     "sulu_snippet.snippets": "Snippets",
+    "sulu_snippet.snippet": "Snippet",
+    "sulu_snippet.default_snippets": "Default Snippets",
+    "sulu_snippet.snippet_area": "Type or area",
     "sulu_snippet.taxonomies": "Taxonomies"
 }

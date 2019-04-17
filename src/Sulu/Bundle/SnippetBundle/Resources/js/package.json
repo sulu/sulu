@@ -1,0 +1,16 @@
+{
+    "name": "sulu-snippet-bundle",
+    "description": "Adds support for snippets to Sulu",
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
+    "devDependencies": {
+        "enzyme": "^3.3.0",
+        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
+    },
+    "peerDependencies": {
+        "mobx": "^4.0.0",
+        "mobx-react": "^5.0.0",
+        "react": "^16.2.0",
+        "sulu-admin-bundle": "*"
+    }
+}
