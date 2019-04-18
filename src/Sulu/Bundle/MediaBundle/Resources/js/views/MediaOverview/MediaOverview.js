@@ -30,6 +30,7 @@ class MediaOverview extends React.Component<ViewProps> {
     @observable collectionStore: CollectionStore;
     mediaList: ?ElementRef<typeof List>;
     @observable showMediaMoveOverlay: boolean = false;
+    @observable showMediaUploadOverlay: boolean = false;
     @observable mediaMoving: boolean = false;
     disposer: () => void;
 
@@ -135,6 +136,14 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionId.set(collectionId);
     };
 
+    @action handleUploadOverlayOpen = () => {
+        this.showMediaUploadOverlay = true;
+    };
+
+    @action handleUploadOverlayClose = () => {
+        this.showMediaUploadOverlay = false;
+    };
+
     handleMediaNavigate = (mediaId: string | number) => {
         const {router} = this.props;
         router.navigate(
@@ -176,6 +185,9 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaListStore={this.mediaListStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
+                    onUploadOverlayClose={this.handleUploadOverlayClose}
+                    onUploadOverlayOpen={this.handleUploadOverlayOpen}
+                    uploadOverlayOpen={this.showMediaUploadOverlay}
                 />
                 <SingleListOverlay
                     adapter="column_list"
@@ -239,6 +251,15 @@ export default withToolbar(MediaOverview, function() {
             }
             : undefined,
         items: [
+            {
+                disabled: !this.collectionId.get(),
+                icon: 'su-upload',
+                label: translate('sulu_media.upload'),
+                onClick: action(() => {
+                    this.showMediaUploadOverlay = true;
+                }),
+                type: 'button',
+            },
             {
                 disabled: this.mediaListStore.selectionIds.length === 0,
                 icon: 'su-trash-alt',

@@ -315,6 +315,57 @@ test('Should delete selected items when delete button is clicked', () => {
     expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(true);
 });
 
+test('Upload button should be disabled if nothing is selected', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(true);
+
+    mediaOverview.collectionId.set(4);
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(false);
+});
+
+test('Upload overlay should be opened and closed as it requests', () => {
+    const MediaOverview = require('../MediaOverview').default;
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+
+    const mediaOverview = mount(<MediaOverview router={router} />);
+
+    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(false);
+    mediaOverview.find('MediaCollection').prop('onUploadOverlayOpen')();
+    mediaOverview.update();
+    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(true);
+    mediaOverview.find('MediaCollection').prop('onUploadOverlayClose')();
+    mediaOverview.update();
+    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(false);
+});
+
 test('Move overlay button should be disabled if nothing is selected', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
@@ -336,11 +387,11 @@ test('Move overlay button should be disabled if nothing is selected', () => {
     mediaOverview.collectionId.set(4);
     mediaOverview.locale.set('de');
 
-    expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(true);
-    expect(toolbarFunction.call(mediaOverview).items[1].label).toEqual('sulu_admin.move_selected');
+    expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(true);
+    expect(toolbarFunction.call(mediaOverview).items[2].label).toEqual('sulu_admin.move_selected');
 
     mediaOverview.mediaListStore.selectionIds.push(8);
-    expect(toolbarFunction.call(mediaOverview).items[1].disabled).toEqual(false);
+    expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(false);
 });
 
 test('Move overlay should disappear when overlay is closed', () => {
@@ -367,8 +418,8 @@ test('Move overlay should disappear when overlay is closed', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
 
-    expect(toolbarConfig.items[1].label).toEqual('sulu_admin.move_selected');
-    toolbarConfig.items[1].onClick();
+    expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
+    toolbarConfig.items[2].onClick();
     mediaOverview.update();
     expect(mediaOverview.find(SingleListOverlay).at(1).prop('listKey')).toEqual('collections');
     expect(mediaOverview.find(SingleListOverlay).at(1).prop('resourceKey')).toEqual('collections');
@@ -405,8 +456,8 @@ test('Media should be moved when overlay is confirmed', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
 
-    expect(toolbarConfig.items[1].label).toEqual('sulu_admin.move_selected');
-    toolbarConfig.items[1].onClick();
+    expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
+    toolbarConfig.items[2].onClick();
     mediaOverview.update();
     expect(mediaOverview.find(SingleListOverlay).at(1).prop('resourceKey')).toEqual('collections');
     expect(mediaOverview.find(SingleListOverlay).at(1).prop('confirmLoading')).toEqual(false);

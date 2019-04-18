@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
@@ -8,6 +8,7 @@ import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapt
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 const SETTINGS_KEY = 'media_collection_test';
+const USER_SETTINGS_KEY = 'media_overview';
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
@@ -146,6 +147,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.delete = jest.fn();
         this.move = jest.fn();
         this.clone = jest.fn(() => {
+            // $FlowFixMe
             const resourceStore = new ResourceStoreMock(resourceKey);
             resourceStore.data = this.data;
             return resourceStore;
@@ -227,14 +229,21 @@ jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => 
 beforeEach(() => {
     const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
 
+    // $FlowFixMe
     listAdapterRegistry.has.mockReturnValue(true);
+    // $FlowFixMe
     listAdapterRegistry.getAllAdaptersMock.mockReturnValue({
         'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
         'media_card_overview': MediaCardOverviewAdapter,
     });
 });
 
-afterEach(() => document.body.innerHTML = '');
+afterEach(() => {
+    const body = document.body;
+    if (body) {
+        body.innerHTML = '';
+    }
+});
 
 test('Render the MediaCollection', () => {
     const page = observable.box();
@@ -244,6 +253,7 @@ test('Render the MediaCollection', () => {
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -252,6 +262,7 @@ test('Render the MediaCollection', () => {
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -268,6 +279,9 @@ test('Render the MediaCollection', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
     expect(mediaCollection).toMatchSnapshot();
@@ -281,6 +295,7 @@ test('Render the MediaCollection for all media', () => {
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -289,6 +304,7 @@ test('Render the MediaCollection for all media', () => {
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -306,6 +322,9 @@ test('Render the MediaCollection for all media', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
     expect(mediaCollection).toMatchSnapshot();
@@ -320,6 +339,7 @@ test('Pass correct options to SingleListOverlay', () => {
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -328,6 +348,7 @@ test('Pass correct options to SingleListOverlay', () => {
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -344,6 +365,9 @@ test('Pass correct options to SingleListOverlay', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 
@@ -356,6 +380,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
     const promise = Promise.resolve();
     const field = jest.fn().mockReturnValue(null);
+    // $FlowFixMe
     fieldRegistry.get.mockReturnValue(field);
     const page = observable.box();
     const locale = observable.box();
@@ -364,6 +389,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -372,6 +398,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -391,6 +418,9 @@ test('Should send a request to add a new collection via the overlay', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 
@@ -400,13 +430,22 @@ test('Should send a request to add a new collection via the overlay', () => {
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
-    expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Add collection'));
+
+    const header = document.querySelector('.content header');
+    if (!header) {
+        throw new Error('Header not found!');
+    }
+    expect(header.outerHTML).toEqual(expect.stringContaining('Add collection'));
 
     const newResourceStore = mediaCollection.find('CollectionSection').instance().resourceStoreByOperationType;
     newResourceStore.save = jest.fn().mockReturnValue(promise);
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
-    document.querySelector('button.primary').click();
+    const button = document.querySelector('button.primary');
+    if (!button) {
+        throw new Error('Button not found!');
+    }
+    button.click();
 
     return promise.then(() => {
         mediaCollection.update();
@@ -418,6 +457,7 @@ test('Should send a request to add a new collection via the overlay', () => {
 test('Should send a request to update the collection via the overlay', () => {
     const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
     const field = jest.fn().mockReturnValue(null);
+    // $FlowFixMe
     fieldRegistry.get.mockReturnValue(field);
     const promise = Promise.resolve();
     const page = observable.box();
@@ -427,6 +467,7 @@ test('Should send a request to update the collection via the overlay', () => {
     const ListStore = require('sulu-admin-bundle/containers').ListStore;
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
+        USER_SETTINGS_KEY,
         SETTINGS_KEY,
         {
             page,
@@ -435,6 +476,7 @@ test('Should send a request to update the collection via the overlay', () => {
     );
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
+        USER_SETTINGS_KEY,
         SETTINGS_KEY,
         {
             page,
@@ -455,11 +497,15 @@ test('Should send a request to update the collection via the overlay', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 
     mediaCollection.find('CollectionSection Icon[name="su-pen"]').simulate('click');
 
+    // $FlowFixMe
     const resourceStoreInstances = ResourceStore.mock.instances;
     const newResourceStore = resourceStoreInstances[resourceStoreInstances.length - 1];
     newResourceStore.save.mockReturnValue(promise);
@@ -468,10 +514,20 @@ test('Should send a request to update the collection via the overlay', () => {
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
-    expect(document.querySelector('.content header').outerHTML).toEqual(expect.stringContaining('Edit collection'));
+
+    const header = document.querySelector('.content header');
+    if (!header) {
+        throw new Error('Header not found!');
+    }
+    expect(header.outerHTML).toEqual(expect.stringContaining('Edit collection'));
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
-    document.querySelector('button.primary').click();
+    const button = document.querySelector('button.primary');
+    if (!button) {
+        throw new Error('Button not found!');
+    }
+
+    button.click();
 
     return promise.then(() => {
         mediaCollection.update();
@@ -488,6 +544,7 @@ test('Confirming the delete dialog should delete the item', () => {
     const ListStore = require('sulu-admin-bundle/containers').ListStore;
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
+        USER_SETTINGS_KEY,
         SETTINGS_KEY,
         {
             page,
@@ -496,6 +553,7 @@ test('Confirming the delete dialog should delete the item', () => {
     );
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
+        USER_SETTINGS_KEY,
         SETTINGS_KEY,
         {
             page,
@@ -504,6 +562,7 @@ test('Confirming the delete dialog should delete the item', () => {
     );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
+    // $FlowFixMe
     collectionStore.resourceStore.delete = jest.fn().mockReturnValue(promise);
 
     const mediaCollection = mount(
@@ -514,6 +573,9 @@ test('Confirming the delete dialog should delete the item', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 
@@ -548,6 +610,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     const mediaListStore = new ListStore(
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -556,6 +619,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -563,6 +627,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
+    // $FlowFixMe
     collectionStore.resourceStore.delete = jest.fn().mockImplementationOnce(() => {
         collectionStore.resourceStore.data = {};
         return promise;
@@ -585,13 +650,21 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 
     mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
-    document.querySelector('button.primary').click();
+    const button = document.querySelector('button.primary');
+    if (!button) {
+        throw new Error('Button not found!');
+    }
+
+    button.click();
 
     return promise.then(() => {
         expect(collectionNavigateSpy).toBeCalledWith(3);
@@ -599,12 +672,13 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 });
 
 test('Confirming the move dialog should move the item', () => {
-    const promise = Promise.resolve();
+    const promise = Promise.resolve({});
     const page = observable.box();
     const locale = observable.box();
     const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
     const ListStore = require('sulu-admin-bundle/containers').ListStore;
     const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
         MEDIA_RESOURCE_KEY,
         SETTINGS_KEY,
         {
@@ -615,6 +689,7 @@ test('Confirming the move dialog should move the item', () => {
     const collectionListStore = new ListStore(
         COLLECTIONS_RESOURCE_KEY,
         SETTINGS_KEY,
+        USER_SETTINGS_KEY,
         {
             page,
             locale,
@@ -632,6 +707,9 @@ test('Confirming the move dialog should move the item', () => {
             mediaListAdapters={['media_card_overview']}
             mediaListStore={mediaListStore}
             onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
         />
     );
 

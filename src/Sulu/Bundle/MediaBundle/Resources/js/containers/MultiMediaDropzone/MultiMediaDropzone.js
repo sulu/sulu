@@ -14,28 +14,21 @@ type Props = {
     children: any,
     locale: IObservableValue<string>,
     collectionId: ?string | number,
+    onClose: () => void,
+    onOpen: () => void,
     onUpload: (media: Array<Object>) => void,
+    open: boolean,
 };
 
 @observer
 export default class MultiMediaDropzone extends React.Component<Props> {
     dropzoneRef: ElementRef<Dropzone>;
 
-    @observable overlayOpen: boolean = false;
-
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
 
     setDropzoneRef = (ref: Dropzone) => {
         this.dropzoneRef = ref;
     };
-
-    @action openOverlay() {
-        this.overlayOpen = true;
-    }
-
-    @action closeOverlay() {
-        this.overlayOpen = false;
-    }
 
     @action addMediaUploadStore(mediaUploadStore: MediaUploadStore) {
         this.mediaUploadStores.push(mediaUploadStore);
@@ -52,19 +45,19 @@ export default class MultiMediaDropzone extends React.Component<Props> {
     }
 
     handleDragEnter = () => {
-        const {collectionId} = this.props;
+        const {collectionId, onOpen} = this.props;
 
         if (collectionId) {
-            this.openOverlay();
+            onOpen();
         }
     };
 
     handleDragLeave = () => {
-        this.closeOverlay();
+        this.props.onClose();
     };
 
     handleOverlayClose = () => {
-        this.closeOverlay();
+        this.props.onClose();
     };
 
     handleDrop = (files: Array<File>) => {
@@ -86,11 +79,11 @@ export default class MultiMediaDropzone extends React.Component<Props> {
             this.addMediaUploadStore(mediaUploadStore);
         });
 
-        Promise.all(uploadPromises).then((...media) => {
+        return Promise.all(uploadPromises).then((...media) => {
             this.props.onUpload(...media);
 
             setTimeout(() => {
-                this.closeOverlay();
+                this.props.onClose();
                 this.destroyMediaUploadStores();
             }, 1000);
         });
@@ -101,7 +94,7 @@ export default class MultiMediaDropzone extends React.Component<Props> {
     };
 
     render() {
-        const {children} = this.props;
+        const {children, open} = this.props;
 
         return (
             <Dropzone
@@ -116,7 +109,7 @@ export default class MultiMediaDropzone extends React.Component<Props> {
                 <DropzoneOverlay
                     onClick={this.handleOverlayClick}
                     onClose={this.handleOverlayClose}
-                    open={this.overlayOpen}
+                    open={open}
                 >
                     {this.createMediaItems()}
                 </DropzoneOverlay>
