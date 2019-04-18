@@ -2,58 +2,62 @@
 
 exports[`Render column with ascending sort icon 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up headerCellSortIcon"
-            />
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell clickable"
           >
-            Title 1
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+            <button>
+              Title
+              <span
+                aria-label="su-angle-up"
+                class="su-angle-up headerCellSortIcon"
+              />
+            </button>
+          </th>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -149,58 +153,62 @@ exports[`Render column with ascending sort icon 1`] = `
 
 exports[`Render column with descending sort icon 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down headerCellSortIcon"
-            />
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell clickable"
           >
-            Title 1
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+            <button>
+              Title
+            </button>
+          </th>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <button>
+              Description
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down headerCellSortIcon"
+              />
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -296,72 +304,76 @@ exports[`Render column with descending sort icon 1`] = `
 
 exports[`Render data with all different visibility types schema 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Test 1
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          />
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+            <button>
+              Description
+            </button>
+          </th>
+          <th
+            class="headerCell clickable"
           >
-            Description 2
-          </div>
-        </td>
-        <td
-          class="cell"
+            <button>
+              Test 1
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <div
-            class="cellContent"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -456,89 +468,93 @@ exports[`Render data with all different visibility types schema 1`] = `
 
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
-        >
-          <span>
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </span>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="buttonCell cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
           >
-            <button>
+            <span>
               <span
                 aria-label="su-pen"
                 class="su-pen"
               />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Description 1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="buttonCell cell"
-        >
-          <div
-            class="cellContent"
+            </span>
+          </th>
+          <th
+            class="headerCell clickable"
           >
             <button>
-              <span
-                aria-label="su-pen"
-                class="su-pen"
-              />
+              Description
             </button>
-          </div>
-        </td>
-        <td
-          class="cell"
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <div
-            class="cellContent"
+          <td
+            class="buttonCell cell"
           >
-            Description 2
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -634,51 +650,55 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 
 exports[`Render data with schema 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <div
-            class="cellContent"
+          <td
+            class="cell"
           >
-            Description 2
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -773,157 +793,161 @@ exports[`Render data with schema 1`] = `
 
 exports[`Render data with schema and selections 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox light"
-              >
-                <input
-                  type="checkbox"
-                />
-                <span />
-              </span>
-            </label>
-          </span>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell small"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell"
           >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
+            <span>
+              <label
+                class="label"
               >
-                <input
-                  checked=""
-                  type="checkbox"
-                  value="1"
-                />
-                <span>
-                  <span
-                    aria-label="su-check"
-                    class="su-check"
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
                   />
+                  <span />
                 </span>
-              </span>
-            </label>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell small"
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <div
-            class="cellContent"
+          <td
+            class="cell small"
           >
-            <label
-              class="label"
+            <div
+              class="cellContent"
             >
-              <span
-                class="switch checkbox dark"
+              <label
+                class="label"
               >
-                <input
-                  type="checkbox"
-                  value="2"
-                />
-                <span />
-              </span>
-            </label>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Description 2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell small"
-        >
-          <div
-            class="cellContent"
-          >
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox dark"
-              >
-                <input
-                  checked=""
-                  type="checkbox"
-                  value="3"
-                />
-                <span>
-                  <span
-                    aria-label="su-check"
-                    class="su-check"
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="1"
                   />
+                  <span>
+                    <span
+                      aria-label="su-check"
+                      class="su-check"
+                    />
+                  </span>
                 </span>
-              </span>
-            </label>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
           >
-            Description 3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <div
+              class="cellContent"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell small"
+          >
+            <div
+              class="cellContent"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    checked=""
+                    type="checkbox"
+                    value="3"
+                  />
+                  <span>
+                    <span
+                      aria-label="su-check"
+                      class="su-check"
+                    />
+                  </span>
+                </span>
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 3
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -1019,51 +1043,55 @@ exports[`Render data with schema and selections 1`] = `
 
 exports[`Render data with schema in different order 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <thead
+        class="header"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <tr>
+          <th
+            class="headerCell clickable"
           >
-            Description 1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
         >
-          <div
-            class="cellContent"
+          <td
+            class="cell"
           >
-            Description 2
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -1158,23 +1186,27 @@ exports[`Render data with schema in different order 1`] = `
 
 exports[`Render data with schema not containing all fields 1`] = `
 <section>
-  <table
-    class="table dark"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table dark"
     >
-      <tr />
-    </thead>
-    <tbody>
-      <tr
-        class="row"
-      />
-      <tr
-        class="row"
-      />
-    </tbody>
-  </table>
+      <thead
+        class="header"
+      >
+        <tr />
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        />
+        <tr
+          class="row"
+        />
+      </tbody>
+    </table>
+  </div>
   <nav
     class="pagination"
   >
@@ -1270,31 +1302,35 @@ exports[`Render data with schema not containing all fields 1`] = `
 
 exports[`Render data with skin 1`] = `
 <section>
-  <table
-    class="table light"
+  <div
+    class="scrollContainer"
   >
-    <thead
-      class="header"
+    <table
+      class="table light"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <caption
-      class="tablePlaceholderArea"
-    >
-      <span
-        aria-label="su-battery-low"
-        class="su-battery-low tablePlaceholderIcon"
-      />
-    </caption>
-  </table>
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <caption
+        class="tablePlaceholderArea"
+      >
+        <span
+          aria-label="su-battery-low"
+          class="su-battery-low tablePlaceholderIcon"
+        />
+      </caption>
+    </table>
+  </div>
   <nav
     class="pagination"
   >

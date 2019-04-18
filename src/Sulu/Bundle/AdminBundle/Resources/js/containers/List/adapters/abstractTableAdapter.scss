@@ -1,0 +1,21 @@
+@import '../../Application/variables.scss';
+
+.scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 0 -$viewPadding;
+    display: flex;
+    flex-wrap: nowrap;
+
+    & > * {
+        min-width: calc(100% - 2 * $viewPadding);
+        flex: 1 0 auto;
+    }
+
+    &::before,
+    &::after {
+        content: '';
+        width: $viewPadding;
+        flex-shrink: 0;
+    }
+}

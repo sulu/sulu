@@ -53,7 +53,7 @@ export default class TableAdapter extends AbstractTableAdapter {
             });
         }
 
-        const table = (
+        const table = this.renderScrollContainer(
             <Table
                 buttons={buttons}
                 onAllSelectionChange={onAllSelectionChange}

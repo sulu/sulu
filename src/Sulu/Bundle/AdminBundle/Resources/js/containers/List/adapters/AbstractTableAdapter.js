@@ -1,10 +1,12 @@
 // @flow
 import {computed} from 'mobx';
 import React from 'react';
+import type {Element} from 'react';
 import Table from '../../../components/Table';
 import listFieldTransformerRegistry from '../registries/ListFieldTransformerRegistry';
 import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
+import abstractTableAdapterStyles from './abstractTableAdapter.scss';
 
 export default class AbstractTableAdapter extends AbstractAdapter {
     static hasColumnOptions: boolean = true;
@@ -61,5 +63,13 @@ export default class AbstractTableAdapter extends AbstractAdapter {
                 </Table.HeaderCell>
             );
         });
+    }
+
+    renderScrollContainer(children: Element<typeof Table>) {
+        return (
+            <div className={abstractTableAdapterStyles.scrollContainer}>
+                {children}
+            </div>
+        );
     }
 }
