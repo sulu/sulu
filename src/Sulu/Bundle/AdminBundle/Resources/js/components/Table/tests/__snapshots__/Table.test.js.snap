@@ -270,40 +270,37 @@ exports[`Render a table with different buttons for each row 1`] = `
 `;
 
 exports[`Render an empty table 1`] = `
-Array [
-  <table
-    class="table dark"
+<table
+  class="table dark"
+>
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody />
-  </table>,
-  <div
+    <tr>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <caption
     class="tablePlaceholderArea"
   >
     <span
@@ -315,8 +312,8 @@ Array [
     >
       No entries
     </div>
-  </div>,
-]
+  </caption>
+</table>
 `;
 
 exports[`Render the Table component 1`] = `

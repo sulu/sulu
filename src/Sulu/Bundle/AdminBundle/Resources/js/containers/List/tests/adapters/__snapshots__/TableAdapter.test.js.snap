@@ -1286,16 +1286,15 @@ exports[`Render data with skin 1`] = `
         </th>
       </tr>
     </thead>
-    <tbody />
+    <caption
+      class="tablePlaceholderArea"
+    >
+      <span
+        aria-label="su-battery-low"
+        class="su-battery-low tablePlaceholderIcon"
+      />
+    </caption>
   </table>
-  <div
-    class="tablePlaceholderArea"
-  >
-    <span
-      aria-label="su-battery-low"
-      class="su-battery-low tablePlaceholderIcon"
-    />
-  </div>
   <nav
     class="pagination"
   >

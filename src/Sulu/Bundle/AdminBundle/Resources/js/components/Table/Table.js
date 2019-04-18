@@ -98,14 +98,14 @@ export default class Table extends React.Component<Props> {
         const {placeholderText} = this.props;
 
         return (
-            <div className={tableStyles.tablePlaceholderArea}>
+            <caption className={tableStyles.tablePlaceholderArea}>
                 <Icon className={tableStyles.tablePlaceholderIcon} name={PLACEHOLDER_ICON} />
                 {placeholderText &&
-                    <div className={tableStyles.tablePlaceholderText}>
-                        {placeholderText}
-                    </div>
+                <div className={tableStyles.tablePlaceholderText}>
+                    {placeholderText}
+                </div>
                 }
-            </div>
+            </caption>
         );
     };
 
@@ -174,11 +174,8 @@ export default class Table extends React.Component<Props> {
             <Fragment>
                 <table className={tableClass}>
                     {clonedHeader}
-                    {clonedBody}
+                    {emptyBody ? this.createTablePlaceholderArea() : clonedBody}
                 </table>
-                {emptyBody &&
-                this.createTablePlaceholderArea()
-                }
             </Fragment>
         );
     }
