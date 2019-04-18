@@ -304,115 +304,111 @@ exports[`Should render the list with a title 1`] = `
       class="list"
     >
       <section>
-        <div
-          class="tableContainer dark"
+        <table
+          class="table dark"
         >
-          <table
-            class="table"
+          <thead
+            class="header"
           >
-            <thead
-              class="header"
+            <tr>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </span>
+              </th>
+              <th
+                class="headerCell clickable"
+              >
+                <button>
+                  Description
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="row"
             >
-              <tr>
-                <th
-                  class="headerCell"
-                >
-                  <span>
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox light"
-                      >
-                        <input
-                          type="checkbox"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </span>
-                </th>
-                <th
-                  class="headerCell clickable"
-                >
-                  <button>
-                    Description
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="row"
+              <td
+                class="cell small"
               >
-                <td
-                  class="cell small"
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
+                  <label
+                    class="label"
                   >
-                    <label
-                      class="label"
+                    <span
+                      class="switch checkbox dark"
                     >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 1
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="row"
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
               >
-                <td
-                  class="cell small"
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
+                  Description 1
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
                   >
-                    <label
-                      class="label"
+                    <span
+                      class="switch checkbox dark"
                     >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 2
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  Description 2
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <nav
           class="pagination"
         >
@@ -558,115 +554,111 @@ exports[`Should render the list with the correct resourceKey 1`] = `
       class="list"
     >
       <section>
-        <div
-          class="tableContainer dark"
+        <table
+          class="table dark"
         >
-          <table
-            class="table"
+          <thead
+            class="header"
           >
-            <thead
-              class="header"
+            <tr>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </span>
+              </th>
+              <th
+                class="headerCell clickable"
+              >
+                <button>
+                  Description
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="row"
             >
-              <tr>
-                <th
-                  class="headerCell"
-                >
-                  <span>
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox light"
-                      >
-                        <input
-                          type="checkbox"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </span>
-                </th>
-                <th
-                  class="headerCell clickable"
-                >
-                  <button>
-                    Description
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="row"
+              <td
+                class="cell small"
               >
-                <td
-                  class="cell small"
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
+                  <label
+                    class="label"
                   >
-                    <label
-                      class="label"
+                    <span
+                      class="switch checkbox dark"
                     >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 1
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="row"
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
               >
-                <td
-                  class="cell small"
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
+                  Description 1
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
                   >
-                    <label
-                      class="label"
+                    <span
+                      class="switch checkbox dark"
                     >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
                 >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 2
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  Description 2
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <nav
           class="pagination"
         >

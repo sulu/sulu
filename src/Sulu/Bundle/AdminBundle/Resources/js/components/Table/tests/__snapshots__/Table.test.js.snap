@@ -1,292 +1,278 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            ColumnTitle
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up headerCellSortIcon"
-            />
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            ColumnTitle
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down headerCellSortIcon"
-            />
-          </button>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            ColumnTitle
-          </span>
-        </th>
-      </tr>
-    </thead>
-  </table>
-</div>
+    <tr>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          ColumnTitle
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up headerCellSortIcon"
+          />
+        </button>
+      </th>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          ColumnTitle
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down headerCellSortIcon"
+          />
+        </button>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          ColumnTitle
+        </span>
+      </th>
+    </tr>
+  </thead>
+</table>
 `;
 
 exports[`Render a table with buttons 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerButtonCell headerCell"
+      >
+        <span>
+          <span
+            aria-label="fa-pencil"
+            class="fa fa-pencil"
+          />
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
+      <td
+        class="buttonCell cell"
+      >
+        <div
+          class="cellContent"
         >
-          <span>
+          <button>
             <span
               aria-label="fa-pencil"
               class="fa fa-pencil"
             />
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+          </button>
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="buttonCell cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="fa-pencil"
-                class="fa fa-pencil"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render a table with different buttons for each row 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerButtonCell headerCell"
+      >
+        <span>
+          <span
+            aria-label="fa-pencil"
+            class="fa fa-pencil"
+          />
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
+      <td
+        class="buttonCell cell"
+      >
+        <div
+          class="cellContent"
         >
-          <span>
+          <button>
             <span
               aria-label="fa-pencil"
               class="fa fa-pencil"
             />
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+          </button>
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="buttonCell cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="fa-pencil"
-                class="fa fa-pencil"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="buttonCell cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="fa-plus"
-                class="fa fa-plus"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="buttonCell cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          <button>
+            <span
+              aria-label="fa-plus"
+              class="fa fa-plus"
+            />
+          </button>
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render an empty table 1`] = `
-<div
-  class="tableContainer dark"
->
+Array [
   <table
-    class="table"
+    class="table dark"
   >
     <thead
       class="header"
@@ -316,7 +302,7 @@ exports[`Render an empty table 1`] = `
       </tr>
     </thead>
     <tbody />
-  </table>
+  </table>,
   <div
     class="tablePlaceholderArea"
   >
@@ -329,530 +315,510 @@ exports[`Render an empty table 1`] = `
     >
       No entries
     </div>
-  </div>
-</div>
+  </div>,
+]
 `;
 
 exports[`Render the Table component 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Table component in multiple selection mode 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            <label
-              class="label"
-            >
-              <span
-                class="switch checkbox light"
-              >
-                <input
-                  type="checkbox"
-                />
-                <span />
-              </span>
-            </label>
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+    <tr>
+      <th
+        class="headerCell"
       >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+        <span>
+          <label
+            class="label"
           >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+            <span
+              class="switch checkbox light"
+            >
+              <input
+                type="checkbox"
+              />
+              <span />
+            </span>
+          </label>
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Table component in single selection mode 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span />
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+    <tr>
+      <th
+        class="headerCell"
       >
-        <td
-          class="cell"
+        <span />
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Table component in tree structure 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-            style="padding-left:25px"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+          style="padding-left:25px"
+        >
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-            style="padding-left:50px"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+          style="padding-left:50px"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Table component with a skin 1`] = `
-<div
-  class="tableContainer light"
+<table
+  class="table light"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+      <th
+        class="headerCell"
+      >
+        <span>
+          Column Title
+        </span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-        <th
-          class="headerCell"
-        >
-          <span>
-            Column Title
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-        <td
-          class="cell"
+          Column Text
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Column Text
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          Column Text
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;

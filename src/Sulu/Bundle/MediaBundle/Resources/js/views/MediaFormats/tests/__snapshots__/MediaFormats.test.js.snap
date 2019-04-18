@@ -4,156 +4,152 @@ exports[`Render a MediaFormats view 1`] = `
 <div
   class="mediaFormats"
 >
-  <div
-    class="tableContainer dark"
+  <table
+    class="table dark"
   >
-    <table
-      class="table"
+    <thead
+      class="header"
     >
-      <thead
-        class="header"
+      <tr>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </span>
+        </th>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="su-copy"
+              class="su-copy"
+            />
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            sulu_admin.title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            sulu_admin.key
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
       >
-        <tr>
-          <th
-            class="headerButtonCell headerCell"
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
           >
-            <span>
+            <button>
               <span
                 aria-label="su-eye"
                 class="su-eye"
               />
-            </span>
-          </th>
-          <th
-            class="headerButtonCell headerCell"
+            </button>
+          </div>
+        </td>
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
           >
-            <span>
+            <button>
               <span
                 aria-label="su-copy"
                 class="su-copy"
               />
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_admin.title
-            </span>
-          </th>
-          <th
-            class="headerCell"
-          >
-            <span>
-              sulu_admin.key
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="row"
+            </button>
+          </div>
+        </td>
+        <td
+          class="cell"
         >
-          <td
-            class="buttonCell cell"
+          <div
+            class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              <button>
-                <span
-                  aria-label="su-eye"
-                  class="su-eye"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="buttonCell cell"
-          >
-            <div
-              class="cellContent"
-            >
-              <button>
-                <span
-                  aria-label="su-copy"
-                  class="su-copy"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Contact
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              400x400
-            </div>
-          </td>
-        </tr>
-        <tr
-          class="row"
+            Contact
+          </div>
+        </td>
+        <td
+          class="cell"
         >
-          <td
-            class="buttonCell cell"
+          <div
+            class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              <button>
-                <span
-                  aria-label="su-eye"
-                  class="su-eye"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="buttonCell cell"
+            400x400
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              <button>
-                <span
-                  aria-label="su-copy"
-                  class="su-copy"
-                />
-              </button>
-            </div>
-          </td>
-          <td
-            class="cell"
+            <button>
+              <span
+                aria-label="su-eye"
+                class="su-eye"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              Account
-            </div>
-          </td>
-          <td
-            class="cell"
+            <button>
+              <span
+                aria-label="su-copy"
+                class="su-copy"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
           >
-            <div
-              class="cellContent"
-            >
-              800x800
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            Account
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            800x800
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 

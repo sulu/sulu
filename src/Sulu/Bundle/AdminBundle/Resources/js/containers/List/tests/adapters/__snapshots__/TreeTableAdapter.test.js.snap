@@ -1,484 +1,460 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerButtonCell headerCell"
+      >
+        <span>
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </span>
+      </th>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Description
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
+      <td
+        class="buttonCell cell"
+      >
+        <div
+          class="cellContent"
         >
-          <span>
+          <button>
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </span>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
           </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="buttonCell cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="su-pen"
-                class="su-pen"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        <div
+          class="cellContent"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerButtonCell headerCell"
+      >
+        <span>
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </span>
+      </th>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Description
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerButtonCell headerCell"
+      <td
+        class="buttonCell cell"
+      >
+        <div
+          class="cellContent"
         >
-          <span>
+          <button>
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </span>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Description
           </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="buttonCell cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <button>
-              <span
-                aria-label="su-plus-circle"
-                class="su-plus-circle"
-              />
-            </button>
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        <div
+          class="cellContent"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render data with schema 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Title
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Test1
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test2
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test3
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render data with schema and selections 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Title
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Test1
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test2
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test3
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render data with two columns 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
+  <thead
+    class="header"
   >
-    <thead
-      class="header"
+    <tr>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Title
+        </button>
+      </th>
+      <th
+        class="headerCell clickable"
+      >
+        <button>
+          Title2
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
     >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title2
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Test1
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          Title2 - Test1
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test2
+        </div>
+      </td>
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
+          Title2 - Test2
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-        <td
-          class="cell"
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test3
+        </div>
+      </td>
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          Title2 - Test3
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render data without header 1`] = `
-<div
-  class="tableContainer dark"
+<table
+  class="table dark"
 >
-  <table
-    class="table"
-  >
-    <tbody>
-      <tr
-        class="row"
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
+          Test1
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
       >
-        <td
-          class="cell"
+        <div
+          class="cellContent"
         >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
+          <span
+            class="toggleIcon"
           >
             <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test2
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="cell"
+      >
+        <div
+          class="cellContent"
+        >
+          <span
+            class="toggleIcon"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right clickable"
+              role="button"
+              tabindex="0"
+            />
+          </span>
+          Test3
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
