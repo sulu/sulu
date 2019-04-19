@@ -52,7 +52,7 @@ export default class ResourceTabs extends React.Component<Props> {
     reloadResourceStoreOnRouteChange = (route: ?Route) => {
         const {router, route: viewRoute} = this.props;
 
-        if (router.route === viewRoute) {
+        if (router.route === viewRoute || router.route === route) {
             return true;
         }
 

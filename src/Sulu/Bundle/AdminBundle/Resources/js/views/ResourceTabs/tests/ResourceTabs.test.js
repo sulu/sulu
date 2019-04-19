@@ -938,6 +938,51 @@ test('Should reload ResourceStore if route is about to change to another child r
         name: 'route1',
         options: {},
     };
+    const childRoute2 = {
+        name: 'route2',
+        options: {},
+    };
+    const route = {
+        options: {
+            resourceKey: 'test',
+        },
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+    };
+
+    const attributes = {
+        attribute: 'value',
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes,
+        navigate: jest.fn(),
+        route: childRoute2,
+    };
+
+    const Child = () => (<h1>Child</h1>);
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+
+    router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
+
+    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+});
+
+test('Should not reload ResourceStore if route is about to change to same route', () => {
+    ResourceStore.mockImplementation(function() {
+        this.initialized = true;
+        this.load = jest.fn();
+        this.reload = jest.fn();
+        extendObservable(this, {data: {}});
+    });
+
+    const childRoute1 = {
+        name: 'route1',
+        options: {},
+    };
     const route = {
         options: {
             resourceKey: 'test',
@@ -963,10 +1008,10 @@ test('Should reload ResourceStore if route is about to change to another child r
 
     router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
 
-    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
 });
 
-test('Should not reload ResourceStore if route is about to change to same route', () => {
+test('Should not reload ResourceStore if route is about to change to parent route', () => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
         this.load = jest.fn();
