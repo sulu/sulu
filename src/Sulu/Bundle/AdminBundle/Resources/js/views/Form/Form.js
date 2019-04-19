@@ -21,6 +21,8 @@ type Props = ViewProps & {
     resourceStore: ResourceStore,
 };
 
+const FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY = 1024;
+
 @observer
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
@@ -112,7 +114,10 @@ class Form extends React.Component<Props> {
             router.bind('locale', this.resourceStore.locale);
         }
 
-        router.addUpdateRouteHook(this.checkFormStoreDirtyStateBeforeNavigation);
+        router.addUpdateRouteHook(
+            this.checkFormStoreDirtyStateBeforeNavigation,
+            FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
+        );
     }
 
     @action checkFormStoreDirtyStateBeforeNavigation = (
@@ -198,7 +203,10 @@ class Form extends React.Component<Props> {
 
     componentWillUnmount() {
         const {router} = this.props;
-        router.removeUpdateRouteHook(this.checkFormStoreDirtyStateBeforeNavigation);
+        router.removeUpdateRouteHook(
+            this.checkFormStoreDirtyStateBeforeNavigation,
+            FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
+        );
 
         this.resourceFormStore.destroy();
 

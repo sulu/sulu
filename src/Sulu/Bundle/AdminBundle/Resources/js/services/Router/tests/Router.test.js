@@ -1168,13 +1168,34 @@ test('Add and remove updateRouteHooks', () => {
     router.addUpdateRouteHook(updateRouteHook1);
     router.addUpdateRouteHook(updateRouteHook2);
 
-    expect(router.updateRouteHooks).toHaveLength(2);
-    expect(router.updateRouteHooks[0]).toBe(updateRouteHook1);
-    expect(router.updateRouteHooks[1]).toBe(updateRouteHook2);
+    expect(router.updateRouteHooks[0]).toHaveLength(2);
+    expect(router.updateRouteHooks[0][0]).toBe(updateRouteHook1);
+    expect(router.updateRouteHooks[0][1]).toBe(updateRouteHook2);
 
     router.removeUpdateRouteHook(updateRouteHook1);
-    expect(router.updateRouteHooks).toHaveLength(1);
-    expect(router.updateRouteHooks[0]).toBe(updateRouteHook2);
+    expect(router.updateRouteHooks[0]).toHaveLength(1);
+    expect(router.updateRouteHooks[0][0]).toBe(updateRouteHook2);
+});
+
+test('Add and remove updateRouteHooks with different priorities', () => {
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn();
+    const updateRouteHook2 = jest.fn();
+
+    router.addUpdateRouteHook(updateRouteHook1, 1024);
+    router.addUpdateRouteHook(updateRouteHook2, 512);
+
+    expect(router.updateRouteHooks[1024]).toHaveLength(1);
+    expect(router.updateRouteHooks[1024][0]).toBe(updateRouteHook1);
+    expect(router.updateRouteHooks[512]).toHaveLength(1);
+    expect(router.updateRouteHooks[512][0]).toBe(updateRouteHook2);
+
+    router.removeUpdateRouteHook(updateRouteHook1, 1024);
+    expect(router.updateRouteHooks[1024]).toHaveLength(0);
+    expect(router.updateRouteHooks[512]).toHaveLength(1);
+    expect(router.updateRouteHooks[512][0]).toBe(updateRouteHook2);
 });
 
 test('Cancel navigation if an updateRouteHook returns false', () => {
@@ -1209,6 +1230,44 @@ test('Cancel navigation if an updateRouteHook returns false', () => {
         router.navigate
     );
     expect(updateRouteHook2).not.toBeCalled();
+
+    expect(router.route).toBe(undefined);
+    expect(router.attributes).toEqual({});
+    expect(history.location.pathname).toBe('/');
+});
+
+test('Consider priority when cancelling a navigation', () => {
+    const webspaceOverviewRoute = {
+        name: 'webspace_overview',
+        view: 'webspace_overview',
+        path: '/webspace/:webspace/:locale',
+        attributeDefaults: {
+            sortOrder: 'desc',
+            webspace: 'webspace1',
+        },
+    };
+
+    routeRegistry.getAll.mockReturnValue({
+        webspace_overview: webspaceOverviewRoute,
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    const updateRouteHook1 = jest.fn().mockReturnValue(true);
+    const updateRouteHook2 = jest.fn().mockReturnValue(false);
+
+    router.addUpdateRouteHook(updateRouteHook1, 512);
+    router.addUpdateRouteHook(updateRouteHook2, 1024);
+
+    router.navigate('webspace_overview', {locale: 'en'});
+
+    expect(updateRouteHook2).toBeCalledWith(
+        webspaceOverviewRoute,
+        {locale: 'en', sortOrder: 'desc', webspace: 'webspace1'},
+        router.navigate
+    );
+    expect(updateRouteHook1).not.toBeCalled();
 
     expect(router.route).toBe(undefined);
     expect(router.attributes).toEqual({});

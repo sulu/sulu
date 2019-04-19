@@ -1477,20 +1477,44 @@ test('Should not bind the locale if no locales have been passed via options', ()
         addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
-        unbind: jest.fn(),
+        removeUpdateRouteHook: jest.fn(),
+        route,
+    };
+
+    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(router.bind).not.toBeCalled();
+});
+
+test('Should add and remove the UpdateRouteHook on mounting and unmounting', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            resourceKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
         removeUpdateRouteHook: jest.fn(),
         route,
     };
 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(router.bind).not.toBeCalled();
-
     const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
 
+    expect(router.addUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 1024);
+    expect(router.removeUpdateRouteHook).not.toBeCalled();
+
     form.unmount();
-    expect(router.unbind).not.toBeCalled();
-    expect(router.removeUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation);
+    expect(router.removeUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 1024);
 });
 
 test('Should throw an error if the resourceStore is not passed', () => {
