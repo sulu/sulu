@@ -48,10 +48,15 @@ export default class Router {
     }
 
     @computed get sortedUpdateRouteHooks() {
+        // TODO Remove type casts with any when flow bug is fixed
+        // https://github.com/facebook/flow/issues/7652
         return Object.keys(this.updateRouteHooks)
-            .sort((a: number, b: number) => b - a)
+            .sort((a, b) => ((b: any): number) - ((a: any): number))
             .reduce((sortedUpdateRouteHooks, priority) => {
-                sortedUpdateRouteHooks = [...sortedUpdateRouteHooks, ...this.updateRouteHooks[priority]];
+                sortedUpdateRouteHooks = [
+                    ...sortedUpdateRouteHooks,
+                    ...this.updateRouteHooks[((priority: any): number)]
+                ];
                 return sortedUpdateRouteHooks;
             }, []);
     }
