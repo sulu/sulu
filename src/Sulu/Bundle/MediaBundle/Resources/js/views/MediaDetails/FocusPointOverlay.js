@@ -20,7 +20,7 @@ type Props = {|
 export default class FocusPointOverlay extends React.Component<Props> {
     @observable focusPointX: number;
     @observable focusPointY: number;
-    resourceStore: ResourceStore;
+    @observable resourceStore: ?ResourceStore;
 
     @computed get confirmDisabled() {
         const {
@@ -38,18 +38,18 @@ export default class FocusPointOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.resourceStore = this.props.resourceStore.clone();
         this.updateFocusPoint();
     }
 
-    componentDidUpdate(prevProps: Props) {
+    @action componentDidUpdate(prevProps: Props) {
         if (!prevProps.open && this.props.open) {
             this.resourceStore = this.props.resourceStore.clone();
             this.updateFocusPoint();
         }
 
-        if (prevProps.open && !this.props.open) {
+        if (prevProps.open && !this.props.open && this.resourceStore) {
             this.resourceStore.destroy();
+            this.resourceStore = undefined;
         }
     }
 
@@ -66,10 +66,16 @@ export default class FocusPointOverlay extends React.Component<Props> {
     };
 
     handleConfirm = () => {
-        this.resourceStore.change('focusPointX', this.focusPointX);
-        this.resourceStore.change('focusPointY', this.focusPointY);
+        const {resourceStore} = this;
 
-        this.resourceStore.save().then(() => {
+        if (!resourceStore) {
+            throw new Error('There is no resourceStore defined! This should not happen and is likely a bug.');
+        }
+
+        resourceStore.change('focusPointX', this.focusPointX);
+        resourceStore.change('focusPointY', this.focusPointY);
+
+        resourceStore.save().then(() => {
             this.props.resourceStore.set('focusPointX', this.focusPointX);
             this.props.resourceStore.set('focusPointY', this.focusPointY);
             this.props.onConfirm();
@@ -87,7 +93,7 @@ export default class FocusPointOverlay extends React.Component<Props> {
         return (
             <Overlay
                 confirmDisabled={this.confirmDisabled}
-                confirmLoading={this.resourceStore.saving}
+                confirmLoading={!!this.resourceStore && this.resourceStore.saving}
                 confirmText={translate('sulu_admin.save')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
@@ -96,11 +102,13 @@ export default class FocusPointOverlay extends React.Component<Props> {
                 title={translate('sulu_media.set_focus_point')}
             >
                 <div className={focusPointOverlayStyles.focusPointContainer}>
-                    <ImageFocusPoint
-                        image={this.resourceStore.data.url}
-                        onChange={this.handleFocusPointChange}
-                        value={{x: this.focusPointX, y: this.focusPointY}}
-                    />
+                    {!!this.resourceStore &&
+                        <ImageFocusPoint
+                            image={this.resourceStore.data.url}
+                            onChange={this.handleFocusPointChange}
+                            value={{x: this.focusPointX, y: this.focusPointY}}
+                        />
+                    }
                 </div>
             </Overlay>
         );
