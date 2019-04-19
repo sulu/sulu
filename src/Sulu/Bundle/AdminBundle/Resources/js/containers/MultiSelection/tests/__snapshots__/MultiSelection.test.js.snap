@@ -29,7 +29,7 @@ exports[`Render in disabled state 1`] = `
 
 exports[`Should open an overlay 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

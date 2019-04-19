@@ -23,11 +23,11 @@ test('The component should render and handle clicks correctly', () => {
     );
     expect(navigation.render()).toMatchSnapshot();
 
-    navigation.find('.userProfile button').simulate('click');
+    navigation.find('.userProfile button').at(1).simulate('click');
     expect(handleLogoutClick).toBeCalled();
 
     navigation.find('.noUserImage').simulate('click');
-    navigation.find('.userProfile span').at(0).simulate('click');
+    navigation.find('.userProfile button').at(0).simulate('click');
     expect(handleProfileClick).toHaveBeenCalledTimes(2);
 });
 
@@ -75,14 +75,14 @@ test('The component should render with all available props and handle clicks cor
     );
     expect(navigation.render()).toMatchSnapshot();
 
-    navigation.find('.userProfile button').simulate('click');
+    navigation.find('.userProfile button').at(1).simulate('click');
     expect(handleLogoutClick).toBeCalled();
 
     navigation.find('button.pin').simulate('click');
     expect(handlePinClick).toBeCalled();
 
     navigation.find('.userContent img').simulate('click');
-    navigation.find('.userProfile span').at(0).simulate('click');
+    navigation.find('.userProfile button').at(0).simulate('click');
     expect(handleProfileClick).toHaveBeenCalledTimes(2);
 });
 

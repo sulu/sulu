@@ -4,6 +4,7 @@ exports[`Show history routes in overlay 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    role="button"
   />,
   <div
     class="container"

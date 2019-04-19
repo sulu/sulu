@@ -4,7 +4,7 @@ exports[`The component should not render in body when closed 1`] = `null`;
 
 exports[`The component should render in body when open 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer open\\">
@@ -23,7 +23,7 @@ exports[`The component should render in body when open 1`] = `
 
 exports[`The component should render in body with a large class 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer open\\">
@@ -42,7 +42,7 @@ exports[`The component should render in body with a large class 1`] = `
 
 exports[`The component should render in body with disabled confirm button 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer open\\">
@@ -61,7 +61,7 @@ exports[`The component should render in body with disabled confirm button 1`] = 
 
 exports[`The component should render in body with loader instead of confirm button 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer open\\">

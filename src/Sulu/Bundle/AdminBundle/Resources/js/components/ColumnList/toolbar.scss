@@ -4,6 +4,9 @@
 $itemBackgroundColorPrimary: $silver;
 $itemBackgroundColorSecondary: $shakespeare;
 
+$itemPrimaryColor: $black;
+$itemSecondaryColor: $white;
+
 $borderRadius: 3px;
 $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
@@ -21,6 +24,7 @@ $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
     padding: 5px 0;
     cursor: pointer;
     margin-left: 1px;
+    border: 0;
 
     &:first-child {
         border-top-left-radius: $borderRadius;
@@ -33,10 +37,11 @@ $dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
 
     &.primary {
         background: $itemBackgroundColorPrimary;
+        color: $itemPrimaryColor;
     }
 
     &.secondary {
         background: $itemBackgroundColorSecondary;
-        color: $white;
+        color: $itemSecondaryColor;
     }
 }

@@ -107,11 +107,13 @@ class ModifiableRectangle extends React.Component<Props> {
                     className={modifiableRectangleStyles.rectangle}
                     onDoubleClick={this.handleDoubleClick}
                     onMouseDown={this.handleMoveMouseDown}
+                    role="button"
                     style={{left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px'}}
                 >
                     <div
                         className={modifiableRectangleStyles.resizeHandle}
                         onMouseDown={this.handleResizeMouseDown}
+                        role="slider"
                     />
                     <div
                         className={modifiableRectangleStyles.backdrop}

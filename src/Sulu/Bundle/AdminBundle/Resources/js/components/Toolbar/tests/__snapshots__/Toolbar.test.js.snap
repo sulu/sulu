@@ -72,6 +72,7 @@ exports[`Render with Snackbar 1`] = `
 >
   <div
     class="snackbar error visible"
+    role="button"
   >
     <span
       aria-label="su-exclamation-triangle"

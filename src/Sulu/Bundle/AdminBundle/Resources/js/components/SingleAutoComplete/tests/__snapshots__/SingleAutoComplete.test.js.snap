@@ -27,7 +27,7 @@ exports[`Render the SingleAutoComplete with open suggestions list 1`] = `
 
 exports[`Render the SingleAutoComplete with open suggestions list 2`] = `
 "<div>
-  <div class=\\"backdrop fixed\\"></div>
+  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

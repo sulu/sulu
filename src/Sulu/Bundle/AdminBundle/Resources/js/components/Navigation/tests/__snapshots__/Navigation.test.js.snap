@@ -27,21 +27,25 @@ exports[`The component should render and handle clicks correctly 1`] = `
     <div
       class="userContent"
     >
-      <div
+      <button
         class="noUserImage"
       >
         <span
           aria-label="fa-user"
           class="fa fa-user"
         />
-      </div>
+      </button>
       <div
         class="userProfile"
       >
-        <span>
+        <button
+          class="username"
+        >
           John Terence Maximilian Travolta
-        </span>
-        <button>
+        </button>
+        <button
+          class="logout"
+        >
           <span
             aria-label="su-exit"
             class="su-exit"
@@ -139,10 +143,14 @@ exports[`The component should render with all available props and handle clicks 
       <div
         class="userProfile"
       >
-        <span>
+        <button
+          class="username"
+        >
           John Travolta
-        </span>
-        <button>
+        </button>
+        <button
+          class="logout"
+        >
           <span
             aria-label="su-exit"
             class="su-exit"

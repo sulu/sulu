@@ -284,6 +284,7 @@ exports[`Render the MediaCollection 1`] = `
                   >
                     <div
                       class="description"
+                      role="button"
                     >
                       <div
                         class="title"
@@ -376,6 +377,7 @@ exports[`Render the MediaCollection 1`] = `
                   </div>
                   <div
                     class="media"
+                    role="button"
                   >
                     <img
                       alt="Title 1"
@@ -403,6 +405,7 @@ exports[`Render the MediaCollection 1`] = `
                   >
                     <div
                       class="description"
+                      role="button"
                     >
                       <div
                         class="title"
@@ -495,6 +498,7 @@ exports[`Render the MediaCollection 1`] = `
                   </div>
                   <div
                     class="media"
+                    role="button"
                   >
                     <img
                       alt="Title 1"
@@ -791,6 +795,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   >
                     <div
                       class="description"
+                      role="button"
                     >
                       <div
                         class="title"
@@ -883,6 +888,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   </div>
                   <div
                     class="media"
+                    role="button"
                   >
                     <img
                       alt="Title 1"
@@ -910,6 +916,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   >
                     <div
                       class="description"
+                      role="button"
                     >
                       <div
                         class="title"
@@ -1002,6 +1009,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   </div>
                   <div
                     class="media"
+                    role="button"
                   >
                     <img
                       alt="Title 1"

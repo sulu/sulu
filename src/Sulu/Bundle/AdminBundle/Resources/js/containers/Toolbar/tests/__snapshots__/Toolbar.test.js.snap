@@ -6,6 +6,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
 >
   <div
     class="snackbar error"
+    role="button"
   >
     <span
       aria-label="su-exclamation-triangle"
@@ -30,6 +31,7 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
   </div>
   <div
     class="snackbar success"
+    role="button"
   >
     <span
       aria-label="su-check"

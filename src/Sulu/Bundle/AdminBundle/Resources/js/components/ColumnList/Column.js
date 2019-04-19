@@ -60,7 +60,7 @@ export default class Column extends React.Component<Props> {
         );
 
         return (
-            <div className={columnClass} onMouseEnter={this.handleMouseEnter}>
+            <div className={columnClass} onMouseEnter={this.handleMouseEnter} role="button">
                 {loading ?
                     <div className={columnStyles.loader}>
                         <Loader />

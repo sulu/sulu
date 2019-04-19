@@ -2,7 +2,7 @@
 
 exports[`Should render a Dialog 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"dialogContainer open\\">
