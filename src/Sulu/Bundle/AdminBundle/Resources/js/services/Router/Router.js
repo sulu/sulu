@@ -55,7 +55,7 @@ export default class Router {
             .reduce((sortedUpdateRouteHooks, priority) => {
                 sortedUpdateRouteHooks = [
                     ...sortedUpdateRouteHooks,
-                    ...this.updateRouteHooks[((priority: any): number)]
+                    ...this.updateRouteHooks[((priority: any): number)],
                 ];
                 return sortedUpdateRouteHooks;
             }, []);
