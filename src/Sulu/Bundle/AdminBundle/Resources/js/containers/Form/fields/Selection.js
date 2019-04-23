@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, toJS, reaction} from 'mobx';
+import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import List from '../../../containers/List';
@@ -19,6 +19,7 @@ const USER_SETTINGS_KEY = 'selection';
 export default class Selection extends React.Component<Props> {
     listStore: ?ListStore;
     changeListDisposer: ?() => *;
+    changeLocaleDisposer: ?() => *;
 
     constructor(props: Props) {
         super(props);
@@ -65,12 +66,24 @@ export default class Selection extends React.Component<Props> {
                 () => (this.listStore ? this.listStore.selectionIds : []),
                 this.handleListSelectionChange
             );
+
+            this.changeLocaleDisposer = intercept(this.locale, '', (change) => {
+                if (this.listStore) {
+                    this.listStore.sendRequestDisposer();
+                }
+
+                return change;
+            });
         }
     }
 
     componentWillUnmount() {
         if (this.changeListDisposer) {
             this.changeListDisposer();
+        }
+
+        if (this.changeLocaleDisposer) {
+            this.changeLocaleDisposer();
         }
 
         if (this.listStore) {

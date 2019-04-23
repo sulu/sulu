@@ -54,7 +54,7 @@ test('Should select the middle by default', () => {
         />
     );
 
-    focusPointOverlay.setProps({open: true})
+    focusPointOverlay.setProps({open: true});
 
     expect(focusPointOverlay.find('ImageFocusPoint').prop('value')).toEqual({x: 1, y: 1});
 });
