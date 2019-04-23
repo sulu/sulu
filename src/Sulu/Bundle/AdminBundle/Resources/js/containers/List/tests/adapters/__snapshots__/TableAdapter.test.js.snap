@@ -3,10 +3,10 @@
 exports[`Render column with ascending sort icon 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -154,10 +154,10 @@ exports[`Render column with ascending sort icon 1`] = `
 exports[`Render column with descending sort icon 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -305,10 +305,10 @@ exports[`Render column with descending sort icon 1`] = `
 exports[`Render data with all different visibility types schema 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -469,10 +469,10 @@ exports[`Render data with all different visibility types schema 1`] = `
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -651,10 +651,10 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 exports[`Render data with schema 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -794,10 +794,10 @@ exports[`Render data with schema 1`] = `
 exports[`Render data with schema and selections 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -1044,10 +1044,10 @@ exports[`Render data with schema and selections 1`] = `
 exports[`Render data with schema in different order 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -1187,10 +1187,10 @@ exports[`Render data with schema in different order 1`] = `
 exports[`Render data with schema not containing all fields 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table dark"
     >
       <thead
         class="header"
@@ -1303,10 +1303,10 @@ exports[`Render data with schema not containing all fields 1`] = `
 exports[`Render data with skin 1`] = `
 <section>
   <div
-    class="tableContainer light"
+    class="scrollContainer"
   >
     <table
-      class="table"
+      class="table light"
     >
       <thead
         class="header"
@@ -1321,16 +1321,15 @@ exports[`Render data with skin 1`] = `
           </th>
         </tr>
       </thead>
-      <tbody />
+      <caption
+        class="tablePlaceholderArea"
+      >
+        <span
+          aria-label="su-battery-low"
+          class="su-battery-low tablePlaceholderIcon"
+        />
+      </caption>
     </table>
-    <div
-      class="tablePlaceholderArea"
-    >
-      <span
-        aria-label="su-battery-low"
-        class="su-battery-low tablePlaceholderIcon"
-      />
-    </div>
   </div>
   <nav
     class="pagination"

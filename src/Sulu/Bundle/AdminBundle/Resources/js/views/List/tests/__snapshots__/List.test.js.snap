@@ -305,10 +305,10 @@ exports[`Should render the list with a title 1`] = `
     >
       <section>
         <div
-          class="tableContainer dark"
+          class="scrollContainer"
         >
           <table
-            class="table"
+            class="table dark"
           >
             <thead
               class="header"
@@ -559,10 +559,10 @@ exports[`Should render the list with the correct resourceKey 1`] = `
     >
       <section>
         <div
-          class="tableContainer dark"
+          class="scrollContainer"
         >
           <table
-            class="table"
+            class="table dark"
           >
             <thead
               class="header"

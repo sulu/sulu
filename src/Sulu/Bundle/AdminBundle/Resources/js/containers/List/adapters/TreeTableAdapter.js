@@ -86,7 +86,7 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
             });
         }
 
-        return (
+        return this.renderScrollContainer(
             <Table
                 buttons={buttons}
                 onAllSelectionChange={onAllSelectionChange}

@@ -1,7 +1,7 @@
 // @flow
-import {observer} from 'mobx-react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Header from './Header';
@@ -98,14 +98,14 @@ export default class Table extends React.Component<Props> {
         const {placeholderText} = this.props;
 
         return (
-            <div className={tableStyles.tablePlaceholderArea}>
+            <caption className={tableStyles.tablePlaceholderArea}>
                 <Icon className={tableStyles.tablePlaceholderIcon} name={PLACEHOLDER_ICON} />
                 {placeholderText &&
-                    <div className={tableStyles.tablePlaceholderText}>
-                        {placeholderText}
-                    </div>
+                <div className={tableStyles.tablePlaceholderText}>
+                    {placeholderText}
+                </div>
                 }
-            </div>
+            </caption>
         );
     };
 
@@ -168,18 +168,15 @@ export default class Table extends React.Component<Props> {
         const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
-        const tableClass = classNames(tableStyles.tableContainer, tableStyles[skin]);
+        const tableClass = classNames(tableStyles.table, tableStyles[skin]);
 
         return (
-            <div className={tableClass}>
-                <table className={tableStyles.table}>
+            <Fragment>
+                <table className={tableClass}>
                     {clonedHeader}
-                    {clonedBody}
+                    {emptyBody ? this.createTablePlaceholderArea() : clonedBody}
                 </table>
-                {emptyBody &&
-                    this.createTablePlaceholderArea()
-                }
-            </div>
+            </Fragment>
         );
     }
 }
