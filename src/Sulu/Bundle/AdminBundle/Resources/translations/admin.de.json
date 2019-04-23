@@ -127,5 +127,5 @@
     "sulu_admin.link_url": "Link URL",
     "sulu_admin.show_history": "Verlauf anzeigen",
     "sulu_admin.history": "Verlauf",
-    "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden .Wollen Sie wirklich fortfahren?"
+    "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?"
 }
