@@ -1,0 +1,17 @@
+{
+    "sulu_custom_url.custom_urls": "Benutzerdefinierte URLs",
+    "sulu_custom_url.custom_url": "Benutzerdefinierte URL",
+    "sulu_custom_url.published": "Veröffentlicht",
+    "sulu_custom_url.base_domain": "Basis Domain",
+    "sulu_custom_url.target_page": "Zielseite",
+    "sulu_custom_url.target_locale": "Lokalisierung",
+    "sulu_custom_url.redirect": "Weiterleitung",
+    "sulu_custom_url.redirect_info": "Die Seite wird direkt auf die Ziel-URL weitergeleitet.",
+    "sulu_custom_url.canonical": "Canonical URL",
+    "sulu_custom_url.canonical_info": "Wird die Canonical URL aktiviert, so wird nur die Zielseite zur Indexierung durch eine Suchemaschine herangezogen",
+    "sulu_custom_url.no_index": "No Index",
+    "sulu_custom_url.no_index_info": "Seite nicht durch Suchmaschinen indexieren.",
+    "sulu_custom_url.no_follow": "No Follow",
+    "sulu_custom_url.no_follow_info": "Die in der Seite enthaltenen Links werden von der Suchmaschine nicht verfolgt",
+    "sulu_custom_url.target_title": "Zielseite"
+}

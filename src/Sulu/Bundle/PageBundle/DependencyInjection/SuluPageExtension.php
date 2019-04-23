@@ -93,6 +93,9 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'column_list',
+                                        'detail_options' => [
+                                            'ghost-content' => true,
+                                        ],
                                         'list_key' => 'pages',
                                         'display_properties' => ['title'],
                                         'empty_text' => 'sulu_page.no_page_selected',

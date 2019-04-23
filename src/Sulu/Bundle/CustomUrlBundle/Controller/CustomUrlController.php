@@ -31,29 +31,26 @@ class CustomUrlController extends RestController implements SecuredControllerInt
 {
     use RequestParametersTrait;
 
-    private static $relationName = 'custom-urls';
+    private static $relationName = 'custom_urls';
 
     /**
      * Returns a list of custom-urls.
      *
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param Request $request
      *
      * @return Response
      */
-    public function cgetAction($webspaceKey, Request $request)
+    public function cgetAction($webspace, Request $request)
     {
         // TODO pagination
 
-        $result = $this->get('sulu_custom_urls.manager')->findList(
-            $webspaceKey,
-            $this->getRequestParameter($request, 'locale', true)
-        );
+        $result = $this->get('sulu_custom_urls.manager')->findList($webspace);
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),
             'cget_webspace_custom-urls',
-            array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
+            array_merge($request->request->all(), ['webspace' => $webspace])
         );
 
         return $this->handleView($this->view($list));
@@ -62,18 +59,15 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     /**
      * Returns a single custom-url identified by uuid.
      *
-     * @param string $webspaceKey
-     * @param string $uuid
+     * @param string $webspace
+     * @param string $id
      * @param Request $request
      *
      * @return Response
      */
-    public function getAction($webspaceKey, $uuid, Request $request)
+    public function getAction($webspace, $id, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->find(
-            $uuid,
-            $this->getRequestParameter($request, 'locale', true)
-        );
+        $document = $this->get('sulu_custom_urls.manager')->find($id);
 
         // FIXME without this target-document will not be loaded (for serialization)
         // - issue https://github.com/sulu-io/sulu-document-manager/issues/71
@@ -84,7 +78,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $view = $this->view($document);
 
         $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
         $view->setContext($context);
 
         return $this->handleView($view);
@@ -93,22 +87,22 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     /**
      * Create a new custom-url object.
      *
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param Request $request
      *
      * @return Response
      */
-    public function postAction($webspaceKey, Request $request)
+    public function postAction($webspace, Request $request)
     {
         $document = $this->get('sulu_custom_urls.manager')->create(
-            $webspaceKey,
+            $webspace,
             $request->request->all(),
             $this->getRequestParameter($request, 'targetLocale', true)
         );
         $this->get('sulu_document_manager.document_manager')->flush();
 
         $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
 
         return $this->handleView($this->view($document)->setContext($context));
     }
@@ -116,25 +110,21 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     /**
      * Update an existing custom-url object identified by uuid.
      *
-     * @param string $webspaceKey
-     * @param string $uuid
+     * @param string $webspace
+     * @param string $id
      * @param Request $request
      *
      * @return Response
      */
-    public function putAction($webspaceKey, $uuid, Request $request)
+    public function putAction($webspace, $id, Request $request)
     {
         $manager = $this->get('sulu_custom_urls.manager');
 
-        $document = $manager->save(
-            $uuid,
-            $request->request->all(),
-            $this->getRequestParameter($request, 'targetLocale', true)
-        );
+        $document = $manager->save($id, $request->request->all());
         $this->get('sulu_document_manager.document_manager')->flush();
 
         $context = new Context();
-        $context->setGroups(['defaultCustomUrl', 'smallPage', 'fullRoute']);
+        $context->setGroups(['defaultCustomUrl', 'fullRoute']);
 
         return $this->handleView($this->view($document)->setContext($context));
     }
@@ -142,15 +132,15 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     /**
      * Delete a single custom-url identified by uuid.
      *
-     * @param string $webspaceKey
-     * @param string $uuid
+     * @param string $webspace
+     * @param string $id
      *
      * @return Response
      */
-    public function deleteAction($webspaceKey, $uuid)
+    public function deleteAction($webspace, $id)
     {
         $manager = $this->get('sulu_custom_urls.manager');
-        $manager->delete($uuid);
+        $manager->delete($id);
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view());
@@ -159,40 +149,18 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     /**
      * Deletes a list of custom-urls identified by a list of uuids.
      *
-     * @param string $webspaceKey
+     * @param string $webspace
      * @param Request $request
      *
      * @return Response
      */
-    public function cdeleteAction($webspaceKey, Request $request)
+    public function cdeleteAction($webspace, Request $request)
     {
-        $uuids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = array_filter(explode(',', $request->get('ids', '')));
 
         $manager = $this->get('sulu_custom_urls.manager');
-        foreach ($uuids as $uuid) {
-            $manager->delete($uuid);
-        }
-        $this->get('sulu_document_manager.document_manager')->flush();
-
-        return $this->handleView($this->view());
-    }
-
-    /**
-     * Deletes a lst of custom-urls identified by a list of uuids.
-     *
-     * @param $webspaceKey
-     * @param string $customUrlUuid
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cdeleteRoutesAction($webspaceKey, $customUrlUuid, Request $request)
-    {
-        $uuids = array_filter(explode(',', $request->get('ids', '')));
-
-        $manager = $this->get('sulu_custom_urls.manager');
-        foreach ($uuids as $uuid) {
-            $manager->deleteRoute($webspaceKey, $uuid);
+        foreach ($ids as $ids) {
+            $manager->delete($ids);
         }
         $this->get('sulu_document_manager.document_manager')->flush();
 
@@ -206,7 +174,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
+        return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspace'));
     }
 
     /**

@@ -89,7 +89,7 @@ interface DocumentManagerInterface
      * @param string $locale
      * @param array $options
      */
-    public function publish($document, $locale, array $options = []);
+    public function publish($document, $locale = null, array $options = []);
 
     /**
      * Unpublishes a document from the public workspace.

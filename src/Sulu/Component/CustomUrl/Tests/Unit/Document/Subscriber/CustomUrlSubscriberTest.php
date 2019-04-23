@@ -19,7 +19,6 @@ use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\Subscriber\CustomUrlSubscriber;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -92,31 +91,6 @@ class CustomUrlSubscriberTest extends TestCase
         $this->documentManager->remove($routeDocument->reveal())->shouldBeCalled();
     }
 
-    public function testHandleHydrate()
-    {
-        $hydrateEvent = $this->prophesize(HydrateEvent::class);
-        $document = $this->prophesize(CustomUrlDocument::class);
-        $hydrateEvent->getDocument()->willReturn($document->reveal());
-
-        $routeDocument1 = $this->prophesize(RouteDocument::class);
-        $routeDocument1->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/sulu.lo/test-1');
-        $routeDocument2 = $this->prophesize(RouteDocument::class);
-        $routeDocument2->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/sulu.lo/test-2');
-
-        $this->inspector->getWebspace($document->reveal())->willReturn('sulu_io');
-        $document->setRoutes(
-            ['sulu.lo/test-1' => $routeDocument1->reveal(), 'sulu.lo/test-2' => $routeDocument2->reveal()]
-        )->shouldBeCalled();
-
-        $this->inspector->getReferrers($document->reveal())->willReturn([$routeDocument1->reveal()]);
-        $this->inspector->getReferrers($routeDocument1->reveal())->willReturn([$routeDocument2->reveal()]);
-        $this->inspector->getReferrers($routeDocument2->reveal())->willReturn([]);
-        $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
-            ->willReturn('/cmf/sulu_io/custom-urls/routes');
-
-        $this->customUrlSubscriber->handleHydrate($hydrateEvent->reveal());
-    }
-
     public function testHandlePersist()
     {
         $persistEvent = $this->prophesize(PersistEvent::class);
@@ -130,6 +104,11 @@ class CustomUrlSubscriberTest extends TestCase
         $routeDocument2->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/sulu.lo/test-2');
         $routeDocument3 = $this->prophesize(RouteDocument::class);
         $routeDocument3->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/sulu.lo/test-3');
+
+        $this->inspector->getReferrers($document->reveal())->willReturn([$routeDocument1]);
+        $this->inspector->getReferrers($routeDocument1->reveal())->willReturn([$routeDocument2]);
+        $this->inspector->getReferrers($routeDocument2->reveal())->willReturn([$routeDocument3]);
+        $this->inspector->getReferrers($routeDocument3->reveal())->willReturn([]);
 
         $document->getRoutes()->willReturn(
             ['sulu.lo/test-1' => $routeDocument1->reveal(), 'sulu.lo/test-2' => $routeDocument2->reveal()]
@@ -184,8 +163,6 @@ class CustomUrlSubscriberTest extends TestCase
             ]
         )->shouldBeCalled();
         $this->documentManager->publish($routeDocument1->reveal(), 'de')->shouldBeCalled();
-
-        $document->addRoute('sulu.lo/test-3', $routeDocument3->reveal())->shouldBecalled();
 
         $routeDocument1->setTargetDocument($routeDocument3->reveal())->shouldBeCalled();
         $routeDocument2->setTargetDocument($routeDocument3->reveal())->shouldBeCalled();

@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
+import userStore from '../../../stores/UserStore';
 import {translate} from '../../../utils/Translator';
 
 type Props = FieldTypeProps<?Object | string | number>;
@@ -54,6 +56,12 @@ export default class SingleSelection extends React.Component<Props>
         return type;
     }
 
+    @computed get locale(): IObservableValue<string> {
+        const {formInspector} = this.props;
+
+        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+    }
+
     render() {
         if (this.type === 'list_overlay') {
             return this.renderListOverlay();
@@ -79,6 +87,7 @@ export default class SingleSelection extends React.Component<Props>
                 types: {
                     list_overlay: {
                         adapter,
+                        detail_options: detailOptions,
                         list_key: listKey,
                         display_properties: displayProperties,
                         empty_text: emptyText,
@@ -87,26 +96,52 @@ export default class SingleSelection extends React.Component<Props>
                     },
                 },
             },
+            schemaOptions: {
+                form_options_to_list_options: {
+                    value: formOptionsToListOptions,
+                } = {},
+            } = {},
             value,
         } = this.props;
 
         if (typeof value === 'object') {
             // TODO implement object value support for overlay type
             throw new Error(
-                'The "overlay" type of the SingleSelection field type supports only an ID value until now.'
+                'The "list_overlay" type of the SingleSelection field type supports only an ID value until now.'
             );
+        }
+
+        if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
+            throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
+        }
+
+        const listOptions = formOptionsToListOptions
+            ? formOptionsToListOptions.reduce((currentOptions, formOption) => {
+                if (!formOption.name) {
+                    throw new Error('All options set in "form_options_to_list_options" must define name!');
+                }
+                currentOptions[formOption.name] = formInspector.options[formOption.name];
+
+                return currentOptions;
+            }, {})
+            : undefined;
+
+        if (detailOptions && typeof detailOptions !== 'object') {
+            throw new Error('The "detail_options" option has to be an array if defined!');
         }
 
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                detailOptions={detailOptions}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
                 icon={icon}
                 listKey={listKey || resourceKey}
-                locale={formInspector.locale}
+                listOptions={listOptions}
+                locale={this.locale}
                 onChange={this.handleChange}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}

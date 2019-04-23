@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with completely filled placeholder 1`] = `
+<div
+  class="customUrl"
+>
+  <span>
+    sulu.io/
+  </span>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="test1"
+    />
+  </label>
+  <span>
+    /
+  </span>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="test2"
+    />
+  </label>
+</div>
+`;
+
+exports[`Render with empty placeholder 1`] = `
+<div
+  class="customUrl"
+>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+  <span>
+    .sulu.io/
+  </span>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+</div>
+`;
+
+exports[`Render with partially filled placeholder 1`] = `
+<div
+  class="customUrl"
+>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="test"
+    />
+  </label>
+  <span>
+    .
+  </span>
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </label>
+  <span>
+    .sulu.io
+  </span>
+</div>
+`;

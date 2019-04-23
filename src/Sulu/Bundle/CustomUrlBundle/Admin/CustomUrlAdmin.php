@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -39,9 +40,42 @@ class CustomUrlAdmin extends Admin
      */
     private $webspaceManager;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager)
-    {
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        RouteBuilderFactoryInterface $routeBuilderFactory
+    ) {
         $this->webspaceManager = $webspaceManager;
+        $this->routeBuilderFactory = $routeBuilderFactory;
+    }
+
+    public function getRoutes(): array
+    {
+        $listToolbarActions = [
+            'sulu_admin.add',
+            'sulu_admin.delete',
+        ];
+
+        return [
+            $this->routeBuilderFactory
+                ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
+                ->setResourceKey('custom_urls')
+                ->setListKey('custom_urls')
+                ->addListAdapters(['table_light'])
+                ->addRouterAttributesToListStore(['webspace'])
+                ->addRouterAttributesToFormStore(['webspace'])
+                ->disableSearching()
+                ->setFormKey('custom_url_details')
+                ->setTabTitle('sulu_custom_url.custom_urls')
+                ->addToolbarActions($listToolbarActions)
+                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                ->addRerenderAttribute('webspace')
+                ->getRoute(),
+        ];
     }
 
     /**

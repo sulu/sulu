@@ -119,7 +119,7 @@ class AutoNameSubscriber implements EventSubscriberInterface
 
         $options->setAllowedTypes('auto_name', 'bool');
         $options->setAllowedTypes('auto_rename', 'bool');
-        $options->setAllowedTypes('auto_name_locale', 'string');
+        $options->setAllowedTypes('auto_name_locale', ['string', 'null']);
     }
 
     /**

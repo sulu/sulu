@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use PHPCR\Util\PathHelper;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -25,6 +26,8 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+const LOCALE = 'en'; // actually custom urls are not localized, but the DocumentManager needs a locale to work
+
 /**
  * Manages custom-url documents and their routes.
  */
@@ -34,6 +37,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    protected $documentInspector;
 
     /**
      * @var CustomUrlRepository
@@ -62,6 +70,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function __construct(
         DocumentManagerInterface $documentManager,
+        DocumentInspector $documentInspector,
         CustomUrlRepository $customUrlRepository,
         MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder,
@@ -69,6 +78,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $environment
     ) {
         $this->documentManager = $documentManager;
+        $this->documentInspector = $documentInspector;
         $this->customUrlRepository = $customUrlRepository;
         $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
@@ -79,22 +89,22 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($webspaceKey, array $data, $locale = null)
+    public function create($webspaceKey, array $data)
     {
         $document = $this->documentManager->create('custom_url');
-        $this->bind($document, $data, $locale);
+        $this->bind($document, $data);
 
         try {
             $this->documentManager->persist(
                 $document,
-                $locale,
+                LOCALE,
                 [
                     'parent_path' => $this->getItemsPath($webspaceKey),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
                 ]
             );
-            $this->documentManager->publish($document, $locale);
+            $this->documentManager->publish($document, LOCALE);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -105,7 +115,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findList($webspaceKey, $locale)
+    public function findList($webspaceKey)
     {
         // TODO pagination
 
@@ -119,7 +129,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             $customUrls
         );
 
-        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $locale, $baseDomains);
+        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $baseDomains);
     }
 
     /**
@@ -130,20 +140,51 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $this->customUrlRepository->findUrls($this->getItemsPath($webspaceKey));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function find($uuid, $locale = null)
+    public function findHistoryRoutesById(string $id, string $webspaceKey)
     {
-        return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => true]);
+        $customUrlDocument = $this->find($id);
+
+        $routeDocuments = $this->findReferrer($customUrlDocument, $webspaceKey);
+
+        return array_filter($routeDocuments, function($routeDocument) {
+            return $routeDocument->isHistory();
+        });
+    }
+
+    private function findReferrer($document, string $webspaceKey)
+    {
+        $routes = [];
+        $referrers = $this->documentInspector->getReferrers($document);
+        foreach ($referrers as $routeDocument) {
+            if ($routeDocument instanceof RouteDocument) {
+                $path = PathHelper::relativizePath(
+                    $routeDocument->getPath(),
+                    $this->getRoutesPath($webspaceKey)
+                );
+
+                $routes[$path] = $routeDocument;
+                $tmp = $this->findReferrer($routeDocument, $webspaceKey);
+                $routes = array_merge($routes, $tmp);
+            }
+        }
+
+        return $routes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByUrl($url, $webspaceKey, $locale = null)
+    public function find($uuid)
     {
-        $routeDocument = $this->findRouteByUrl($url, $webspaceKey, $locale);
+        return $this->documentManager->find($uuid, LOCALE, ['load_ghost_content' => true]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByUrl($url, $webspaceKey)
+    {
+        $routeDocument = $this->findRouteByUrl($url, $webspaceKey);
 
         if (null === $routeDocument) {
             return;
@@ -170,13 +211,13 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findRouteByUrl($url, $webspaceKey, $locale = null)
+    public function findRouteByUrl($url, $webspaceKey)
     {
         try {
             /** @var RouteDocument $routeDocument */
             $routeDocument = $this->documentManager->find(
                 sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
-                $locale,
+                LOCALE,
                 ['load_ghost_content' => true]
             );
         } catch (DocumentNotFoundException $ex) {
@@ -211,23 +252,23 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save($uuid, array $data, $locale = null)
+    public function save($uuid, array $data)
     {
-        $document = $this->find($uuid, $locale);
-        $this->bind($document, $data, $locale);
+        $document = $this->find($uuid);
+        $this->bind($document, $data);
 
         try {
             $this->documentManager->persist(
                 $document,
-                $locale,
+                LOCALE,
                 [
                     'parent_path' => PathHelper::getParentPath($document->getPath()),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
-                    'auto_name_locale' => $locale,
+                    'auto_name_locale' => LOCALE,
                 ]
             );
-            $this->documentManager->publish($document, $locale);
+            $this->documentManager->publish($document, LOCALE);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -279,9 +320,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
      *
      * @param CustomUrlDocument $document
      * @param array $data
-     * @param string $locale
      */
-    private function bind(CustomUrlDocument $document, $data, $locale)
+    private function bind(CustomUrlDocument $document, $data)
     {
         $document->setTitle($data['title']);
         unset($data['title']);
@@ -297,13 +337,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
             $value = $data[$fieldName];
             if (array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
-                $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => true]);
+                $value = $this->documentManager->find($value, LOCALE, ['load_ghost_content' => true]);
             }
 
             $accessor->setValue($document, $fieldName, $value);
         }
-
-        $document->setLocale($locale);
     }
 
     /**

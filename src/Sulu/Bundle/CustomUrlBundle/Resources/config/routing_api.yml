@@ -2,3 +2,8 @@ sulu_custom_urls:
     type: rest
     parent: sulu_page.webspace
     resource: Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlController
+
+sulu_custom_url_routes:
+    type: rest
+    parent: sulu_custom_urls
+    resource: Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlRouteController

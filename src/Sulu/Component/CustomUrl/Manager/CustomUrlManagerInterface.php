@@ -25,13 +25,12 @@ interface CustomUrlManagerInterface
      *
      * @param string $webspaceKey
      * @param array $data
-     * @param string|null $locale
      *
      * @throws TitleAlreadyExistsException
      *
      * @return CustomUrlDocument
      */
-    public function create($webspaceKey, array $data, $locale = null);
+    public function create($webspaceKey, array $data);
 
     /**
      * Returns a list of custom-url data (in a assoc-array).
@@ -40,7 +39,7 @@ interface CustomUrlManagerInterface
      *
      * @return array
      */
-    public function findList($webspaceKey, $locale);
+    public function findList($webspaceKey);
 
     /**
      * Returns a list of custom-urls.
@@ -55,22 +54,20 @@ interface CustomUrlManagerInterface
      * Returns a single custom-url object identified by uuid.
      *
      * @param string $uuid
-     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
-    public function find($uuid, $locale = null);
+    public function find($uuid);
 
     /**
      * Returns a single custom-url object identified by url.
      *
      * @param string $url
      * @param string $webspaceKey
-     * @param string $locale
      *
      * @return CustomUrlDocument
      */
-    public function findByUrl($url, $webspaceKey, $locale = null);
+    public function findByUrl($url, $webspaceKey);
 
     /**
      * Returns a list of custom-url documents which targeting the given page.
@@ -86,22 +83,20 @@ interface CustomUrlManagerInterface
      *
      * @param string $url
      * @param string $webspaceKey
-     * @param string $locale
      *
      * @return RouteDocument
      */
-    public function findRouteByUrl($url, $webspaceKey, $locale = null);
+    public function findRouteByUrl($url, $webspaceKey);
 
     /**
      * Update a single custom-url object identified by uuid with given data.
      *
      * @param string $uuid
      * @param array $data
-     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
-    public function save($uuid, array $data, $locale = null);
+    public function save($uuid, array $data);
 
     /**
      * Delete custom-url identified by uuid.

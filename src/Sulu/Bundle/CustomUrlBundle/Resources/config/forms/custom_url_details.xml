@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>custom_url_details</key>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_admin.title</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+        </property>
+
+        <property name="published" type="checkbox">
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_custom_url.published</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="baseDomain" type="custom_urls_domain_select" mandatory="true">
+            <meta>
+                <title>sulu_custom_url.base_domain</title>
+            </meta>
+        </property>
+
+        <property name="domainParts" type="custom_url" mandatory="true" visibleCondition="baseDomain != null">
+            <meta>
+                <title>sulu_custom_url.custom_url</title>
+            </meta>
+        </property>
+
+        <property name="targetDocument" type="single_page_selection" mandatory="true" colspan="9">
+            <meta>
+                <title>sulu_custom_url.target_page</title>
+            </meta>
+            <params>
+                <param name="form_options_to_list_options" type="collection">
+                    <param name="webspace" />
+                </param>
+            </params>
+        </property>
+
+        <property name="targetLocale" type="custom_urls_locale_select" mandatory="true" colspan="3">
+            <meta>
+                <title>sulu_custom_url.target_locale</title>
+            </meta>
+        </property>
+
+        <property name="redirect" type="checkbox">
+            <meta>
+                <info_text>sulu_custom_url.redirect_info</info_text>
+            </meta>
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_custom_url.redirect</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="canonical" type="checkbox">
+            <meta>
+                <info_text>sulu_custom_url.canonical_info</info_text>
+            </meta>
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_custom_url.canonical</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="noIndex" type="checkbox">
+            <meta>
+                <info_text>sulu_custom_url.no_index_info</info_text>
+            </meta>
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_custom_url.no_index</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+
+        <property name="noFollow" type="checkbox">
+            <meta>
+                <info_text>sulu_custom_url.no_follow_info</info_text>
+            </meta>
+            <params>
+                <param name="label">
+                    <meta>
+                        <title>sulu_custom_url.no_follow</title>
+                    </meta>
+                </param>
+                <param name="default_value" value="false"/>
+                <param name="type" value="toggler" />
+            </params>
+        </property>
+    </properties>
+</form>

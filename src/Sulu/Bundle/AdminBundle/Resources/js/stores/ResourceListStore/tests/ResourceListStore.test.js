@@ -81,6 +81,34 @@ test('Delete items using the ResourceRequester', () => {
     });
 });
 
+test('Delete items using the ResourceRequester with api options', () => {
+    const requestResults = [{id: 1, name: 'Test1'}, {id: 2, name: 'Test2'}, {id: 3, name: 'Test3'}];
+    const requestPromise = Promise.resolve({
+        _embedded: {
+            contacts: requestResults,
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(requestPromise);
+
+    const resourceListStore = new ResourceListStore('contacts', {webspace: 'sulu_io'});
+
+    return requestPromise.then(() => {
+        expect(resourceListStore.data).toEqual(requestResults);
+        expect(resourceListStore.loading).toEqual(false);
+
+        ResourceRequester.deleteList.mockReturnValue(Promise.resolve());
+        const deleteListPromise = resourceListStore.deleteList([1, 3]);
+        expect(ResourceRequester.deleteList).toBeCalledWith('contacts', {ids: [1, 3], webspace: 'sulu_io'});
+        expect(resourceListStore.loading).toEqual(true);
+
+        return deleteListPromise.then(() => {
+            expect(resourceListStore.data).toEqual([{id: 2, name: 'Test2'}]);
+            expect(resourceListStore.loading).toEqual(false);
+        });
+    });
+});
+
 test('Patch items using the ResourceRequester', () => {
     const requestResults = [{id: 1, name: 'Test1'}, {id: 2, name: 'Test2'}, {id: 3, name: 'Test3'}];
     const requestPromise = Promise.resolve({

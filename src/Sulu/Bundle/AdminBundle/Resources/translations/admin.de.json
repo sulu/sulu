@@ -47,6 +47,7 @@
     "sulu_admin.title": "Titel",
     "sulu_admin.name": "Name",
     "sulu_admin.description": "Beschreibung",
+    "sulu_admin.url": "URL",
     "sulu_admin.creator": "Ersteller",
     "sulu_admin.created": "Erstellt am",
     "sulu_admin.changer": "Autor",
@@ -123,5 +124,8 @@
     "sulu_admin.link": "Link",
     "sulu_admin.link_title": "Alternativer Titel",
     "sulu_admin.link_target": "Link Ziel",
-    "sulu_admin.link_url": "Link URL"
+    "sulu_admin.link_url": "Link URL",
+    "sulu_admin.show_history": "Verlauf anzeigen",
+    "sulu_admin.history": "Verlauf",
+    "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?"
 }

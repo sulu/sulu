@@ -16,6 +16,7 @@ import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore} from './Form';
+import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
@@ -46,6 +47,7 @@ export {
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     ResourceFormStore,
+    ResourceLocatorHistory,
     ResourceMultiSelect,
     SingleAutoComplete,
     SingleListOverlay,
