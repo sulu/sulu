@@ -72,6 +72,10 @@ export default class Selection extends React.Component<Props> {
         if (this.changeListDisposer) {
             this.changeListDisposer();
         }
+
+        if (this.listStore) {
+            this.listStore.destroy();
+        }
     }
 
     @computed get locale(): IObservableValue<string> {

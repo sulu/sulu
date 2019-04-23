@@ -21,6 +21,7 @@ jest.mock('../../../List/stores/ListStore',
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;
         this.dataLoading = true;
+        this.destroy = jest.fn();
 
         mockExtendObservable(this, {
             selectionIds: [],
@@ -368,7 +369,7 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
     )).toThrowError(/"adapter"/);
 });
 
-test('Should call the disposer for list selections if unmounted', () => {
+test('Should call the disposer for list selections and ListStore if unmounted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
         default_type: 'list',
@@ -390,10 +391,12 @@ test('Should call the disposer for list selections if unmounted', () => {
 
     const changeListDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
+    const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
 
     expect(changeListDisposerSpy).toBeCalledWith();
+    expect(listStoreDestroy).toBeCalledWith();
 });
 
 test('Should pass props correctly to list component', () => {
