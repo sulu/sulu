@@ -6,7 +6,10 @@ import {Router} from 'sulu-admin-bundle/services';
 import SnippetAreaStore from '../stores/SnippetAreaStore';
 import SnippetAreas from '../SnippetAreas';
 
-jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers', () => ({
+    SingleListOverlay: jest.fn(() => null),
+    withToolbar: jest.fn((Component) => Component),
+}));
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn());
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) =>key),

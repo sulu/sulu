@@ -3,14 +3,14 @@ import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
-import {SingleListOverlay} from 'sulu-admin-bundle/containers';
+import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
 
 @observer
-export default class SnippetAreas extends React.Component<ViewProps> {
+class SnippetAreas extends React.Component<ViewProps> {
     @observable openedAreaKey: ?string = undefined;
     snippetAreaStore: SnippetAreaStore;
     @observable deleteAreaKey: ?string = undefined;
@@ -142,3 +142,7 @@ export default class SnippetAreas extends React.Component<ViewProps> {
         );
     }
 }
+
+export default withToolbar(SnippetAreas, function() {
+    return {};
+});
