@@ -69,6 +69,7 @@ import {
     SingleSelect,
     SingleSelection,
     SmartContent,
+    TeaserSelection,
     TextArea,
     TextEditor,
     Url,
@@ -113,6 +114,7 @@ const FIELD_TYPE_RESOURCE_LOCATOR = 'resource_locator';
 const FIELD_TYPE_SELECT = 'select';
 const FIELD_TYPE_SINGLE_SELECT = 'single_select';
 const FIELD_TYPE_SMART_CONTENT = 'smart_content';
+const FIELD_TYPE_TEASER_SELECTION = 'teaser_selection';
 const FIELD_TYPE_TEXT_AREA = 'text_area';
 const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
 const FIELD_TYPE_TEXT_LINE = 'text_line';
@@ -187,6 +189,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_RESOURCE_LOCATOR, ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
     fieldRegistry.add(FIELD_TYPE_SMART_CONTENT, SmartContent);
     fieldRegistry.add(FIELD_TYPE_SINGLE_SELECT, SingleSelect);
+    fieldRegistry.add(FIELD_TYPE_TEASER_SELECTION, TeaserSelection);
     fieldRegistry.add(FIELD_TYPE_TEXT_AREA, TextArea);
     fieldRegistry.add(FIELD_TYPE_TEXT_EDITOR, TextEditor);
     fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
