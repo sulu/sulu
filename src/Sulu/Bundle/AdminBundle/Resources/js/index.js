@@ -74,6 +74,7 @@ import {
     TextEditor,
     Url,
 } from './containers/Form';
+import {teaserProviderRegistry} from './containers/TeaserSelection';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
     DeleteToolbarAction as FormDeleteToolbarAction,
@@ -129,6 +130,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
         registerInternalLinkTypes(config.internalLinkTypes);
+        registerTeaserProviders(config.teaser);
         registerFormToolbarActions();
         registerListToolbarActions();
         registerViews();
@@ -245,6 +247,12 @@ function registerInternalLinkTypes(internalLinkTypes) {
                 resourceKey: internalLinkType.resourceKey,
             }
         );
+    }
+}
+
+function registerTeaserProviders(teaserProviders) {
+    for (const teaserProviderKey in teaserProviders) {
+        teaserProviderRegistry.add(teaserProviderKey, teaserProviders[teaserProviderKey]);
     }
 }
 

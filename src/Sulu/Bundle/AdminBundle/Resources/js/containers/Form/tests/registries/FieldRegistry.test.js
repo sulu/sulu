@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import fieldRegistry from '../../registries/FieldRegistry';
 
@@ -39,8 +39,9 @@ test('Add a field with options to the FieldRegistry', () => {
 
 test('Add field with existing key should throw', () => {
     const component1 = () => (<h1>Test1</h1>);
+    const component2 = () => (<h1>Test2</h1>);
     fieldRegistry.add('test1', component1);
-    expect(() => fieldRegistry.add('test1', 'test1 react component')).toThrow(/test1/);
+    expect(() => fieldRegistry.add('test1', component2)).toThrow(/test1/);
 });
 
 test('Get field with existing key', () => {

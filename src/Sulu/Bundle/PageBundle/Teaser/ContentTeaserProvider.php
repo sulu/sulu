@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Teaser provider for content-pages.
@@ -29,11 +30,17 @@ class ContentTeaserProvider implements TeaserProviderInterface
     private $searchManager;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param SearchManagerInterface $searchManager
      */
-    public function __construct(SearchManagerInterface $searchManager)
+    public function __construct(SearchManagerInterface $searchManager, TranslatorInterface $translator)
     {
         $this->searchManager = $searchManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -41,7 +48,13 @@ class ContentTeaserProvider implements TeaserProviderInterface
      */
     public function getConfiguration()
     {
-        return new TeaserConfiguration('sulu-page.teaser.content', 'teaser-selection/content@sulupage');
+        return new TeaserConfiguration(
+            $this->translator->trans('sulu_page.page', [], 'admin'),
+            'pages',
+            'column_list',
+            ['title'],
+            $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')
+        );
     }
 
     /**

@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\Teaser\ContentTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ContentTeaserProviderTest extends TestCase
 {
@@ -38,14 +39,20 @@ class ContentTeaserProviderTest extends TestCase
      */
     private $contentProvider;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     protected function setUp()
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->search = $this->prophesize(SearchQueryBuilder::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->searchManager->getIndexNames()->willReturn(['page_sulu_io_published']);
 
-        $this->contentProvider = new ContentTeaserProvider($this->searchManager->reveal());
+        $this->contentProvider = new ContentTeaserProvider($this->searchManager->reveal(), $this->translator->reveal());
     }
 
     public function testFind()
