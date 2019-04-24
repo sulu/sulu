@@ -321,7 +321,7 @@ test('Call onChange prop when something changed', () => {
     });
 });
 
-test('Call onChange prop with undefined if editor only contains an empty paragraph', () => {
+test('Call onChange prop with undefined if editor is empty', () => {
     const changeSpy = jest.fn();
     const editor = {
         editing: {
@@ -331,7 +331,7 @@ test('Call onChange prop with undefined if editor only contains an empty paragra
                 },
             },
         },
-        getData: jest.fn().mockReturnValue('<p>&nbsp;</p>'),
+        getData: jest.fn().mockReturnValue(''),
         model: {
             document: {
                 on: jest.fn(),
