@@ -45,9 +45,16 @@ test('TextArea should call onBlur when it loses focus', () => {
     expect(blurSpy).toBeCalledWith();
 });
 
-test('TextArea should call the callback when the TextArea changes', () => {
+test('TextArea should call onChange when the TextArea changes', () => {
     const changeSpy = jest.fn();
     const textArea = shallow(<TextArea onChange={changeSpy} value="My value" />);
     textArea.find('textarea').simulate('change', {currentTarget: {value: 'my-value'}});
     expect(changeSpy).toHaveBeenCalledWith('my-value');
+});
+
+test('TextArea should call onChange with undefined when the TextArea changes to empty', () => {
+    const changeSpy = jest.fn();
+    const textArea = shallow(<TextArea onChange={changeSpy} value="My value" />);
+    textArea.find('textarea').simulate('change', {currentTarget: {value: ''}});
+    expect(changeSpy).toHaveBeenCalledWith(undefined);
 });

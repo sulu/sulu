@@ -214,7 +214,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
     getEditorData() {
         const editorData = this.editorInstance.getData();
-        return editorData === '<p>&nbsp;</p>' ? undefined : editorData;
+        return editorData === '' ? undefined : editorData;
     }
 
     render() {

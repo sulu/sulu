@@ -9,7 +9,7 @@ type Props = {|
     maxCharacters?: number,
     name?: string,
     onBlur?: () => void,
-    onChange: (string) => void,
+    onChange: (?string) => void,
     placeholder?: string,
     valid: boolean,
     disabled: boolean,
@@ -23,7 +23,7 @@ export default class TextArea extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        this.props.onChange(event.currentTarget.value);
+        this.props.onChange(event.currentTarget.value || undefined);
     };
 
     handleBlur = () => {
