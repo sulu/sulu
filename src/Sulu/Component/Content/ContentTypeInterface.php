@@ -116,7 +116,7 @@ interface ContentTypeInterface
      *
      * @param PropertyInterface $property
      *
-     * @return array
+     * @return mixed
      */
     public function getViewData(PropertyInterface $property);
 
@@ -125,7 +125,7 @@ interface ContentTypeInterface
      *
      * @param PropertyInterface $property
      *
-     * @return array
+     * @return mixed
      */
     public function getContentData(PropertyInterface $property);
 }
