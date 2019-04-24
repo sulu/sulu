@@ -415,7 +415,7 @@ class ListQueryBuilder
                 // Add where clause y.z for x_y_z
                 // FIXME DQL injection?
                 if (in_array($key, $whereKeys)) {
-                    $wheres[] .= $prefixActual . '.' . $col . ' = ' . $this->where[$key];
+                    $wheres[] = $prefixActual . '.' . $col . ' = ' . $this->where[$key];
                 }
                 if (in_array($key, $this->searchFields)) {
                     $comparator = '=';
@@ -426,7 +426,7 @@ class ListQueryBuilder
                         $comparator = 'LIKE';
                         $search = ':search';
                     }
-                    $searches[] .= $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
+                    $searches[] = $prefixActual . '.' . $col . ' ' . $comparator . ' ' . $search;
                 }
             }
 
