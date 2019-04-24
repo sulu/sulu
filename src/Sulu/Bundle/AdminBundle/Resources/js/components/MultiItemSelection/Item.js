@@ -37,8 +37,10 @@ export default class Item extends React.PureComponent<Props> {
     }
 
     handleRemove = () => {
-        if (this.props.onRemove) {
-            this.props.onRemove(this.props.id);
+        const {id, onRemove} = this.props;
+
+        if (onRemove) {
+            onRemove(id);
         }
     };
 

@@ -29,6 +29,7 @@ export default class Header extends React.PureComponent<Props> {
             leftButton,
             rightButton,
         } = this.props;
+
         const headerClass = classNames(
             headerStyles.header,
             {

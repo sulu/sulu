@@ -15,16 +15,14 @@ export default class Button extends React.PureComponent<Props> {
         disabled: false,
     };
 
-    handleClick = () => {
-        this.props.onClick();
-    };
-
     render() {
         const {
             disabled,
             icon,
             location,
+            onClick,
         } = this.props;
+
         const buttonClass = classNames(
             buttonStyles.button,
             buttonStyles[location]
@@ -34,7 +32,7 @@ export default class Button extends React.PureComponent<Props> {
             <button
                 className={buttonClass}
                 disabled={disabled}
-                onClick={this.handleClick}
+                onClick={onClick}
                 type="button"
             >
                 <Icon name={icon} />
