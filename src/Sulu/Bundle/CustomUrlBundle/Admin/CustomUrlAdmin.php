@@ -72,7 +72,7 @@ class CustomUrlAdmin extends Admin
                 ->setFormKey('custom_url_details')
                 ->setTabTitle('sulu_custom_url.custom_urls')
                 ->addToolbarActions($listToolbarActions)
-                ->setTabOrder(1536)
+                ->setTabOrder(1024)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')
                 ->getRoute(),
