@@ -7,8 +7,6 @@ import {Icon} from 'sulu-admin-bundle/components';
 import MediaItem from './MediaItem';
 import dropzoneOverlayStyles from './dropzoneOverlay.scss';
 
-const UPLOAD_ICON = 'fa-cloud-upload';
-
 type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,
     open: boolean,
@@ -52,10 +50,10 @@ export default class DropzoneOverlay extends React.Component<Props> {
                                 role="button"
                                 tabIndex="0"
                             >
-                                <Icon className={dropzoneOverlayStyles.uploadIcon} name={UPLOAD_ICON} />
-                                <h3 className={dropzoneOverlayStyles.uploadInfoHeadline}>
+                                <Icon className={dropzoneOverlayStyles.uploadIcon} name="su-upload" />
+                                <div className={dropzoneOverlayStyles.uploadInfoHeadline}>
                                     {translate('sulu_media.drop_files_to_upload')}
-                                </h3>
+                                </div>
                                 <div className={dropzoneOverlayStyles.uploadInfoSubline}>
                                     {translate('sulu_media.click_here_to_upload')}
                                 </div>

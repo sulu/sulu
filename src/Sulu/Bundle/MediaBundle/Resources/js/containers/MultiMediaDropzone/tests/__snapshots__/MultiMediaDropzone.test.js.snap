@@ -37,14 +37,14 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
           tabindex="0"
         >
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
-          <h3
+          <div
             class="uploadInfoHeadline"
           >
             Upload files by dropping them here
-          </h3>
+          </div>
           <div
             class="uploadInfoSubline"
           >
@@ -103,14 +103,14 @@ exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
           tabindex="0"
         >
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
-          <h3
+          <div
             class="uploadInfoHeadline"
           >
             Upload files by dropping them here
-          </h3>
+          </div>
           <div
             class="uploadInfoSubline"
           >
