@@ -304,5 +304,14 @@
             <tag name="doctrine.event_listener" event="postUpdate"/>
             <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
+
+        <service id="sulu_media.command.format_cache.cleanup"
+                 class="Sulu\Bundle\MediaBundle\Command\FormatCacheCleanupCommand">
+            <argument type="service" id="sulu.repository.media"/>
+            <argument type="service" id="filesystem"/>
+            <argument>%sulu_media.format_cache.path%</argument>
+
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
