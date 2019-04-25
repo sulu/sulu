@@ -162,6 +162,39 @@ test('Clicking on the remove button inside an item should call the remove handle
         </MultiItemSelection>
     );
 
-    multiItemSelection.find('.removeButton').at(0).simulate('click');
+    multiItemSelection.find('Icon[name="su-trash-alt"]').at(0).parent().prop('onClick')();
     expect(removeHandler).toHaveBeenCalledWith(clickedItemId);
+});
+
+test('Clicking on the edit button inside an item should call the edit handler on the parent component', () => {
+    const editHandler = jest.fn();
+    const clickedItemId = 1;
+    const multiItemSelection = mount(
+        <MultiItemSelection
+            label="I have handler"
+            onItemEdit={editHandler}
+        >
+            <MultiItemSelection.Item
+                id={clickedItemId}
+                index={1}
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="2"
+                index={2}
+            >
+                Child 2
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="3"
+                index={3}
+            >
+                Child 3
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    );
+
+    multiItemSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
+    expect(editHandler).toHaveBeenCalledWith(clickedItemId);
 });

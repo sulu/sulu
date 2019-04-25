@@ -18,10 +18,14 @@ $itemBackgroundColor: $white;
     font-size: 12px;
 }
 
-.remove-button {
-    border: 0;
-    padding: 0 10px;
+.buttons:not(:empty) {
     margin-right: 10px;
+}
+
+.button {
+    height: 100%;
+    border: 0;
+    padding-right: 10px;
     cursor: pointer;
     background-color: transparent;
 }

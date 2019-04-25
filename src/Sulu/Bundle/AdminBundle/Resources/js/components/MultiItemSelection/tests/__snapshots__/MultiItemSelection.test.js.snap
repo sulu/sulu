@@ -58,6 +58,9 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -84,6 +87,9 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -110,6 +116,9 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -156,6 +165,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -182,6 +194,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -208,6 +223,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -250,6 +268,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -272,6 +293,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -294,6 +318,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -374,6 +401,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -400,6 +430,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -426,6 +459,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>

@@ -7,12 +7,12 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 const DRAG_ICON = 'su-more';
-const REMOVE_ICON = 'su-trash-alt';
 
 type Props = {
     children: Node,
     id: string | number,
     index: number,
+    onEdit?: (id: string | number) => void,
     onRemove?: (id: string | number) => void,
     sortable: boolean,
 };
@@ -36,6 +36,14 @@ export default class Item extends React.PureComponent<Props> {
         return SortableHandle(handle);
     }
 
+    handleEdit = () => {
+        const {id, onEdit} = this.props;
+
+        if (onEdit) {
+            onEdit(id);
+        }
+    };
+
     handleRemove = () => {
         const {id, onRemove} = this.props;
 
@@ -48,6 +56,7 @@ export default class Item extends React.PureComponent<Props> {
         const {
             children,
             index,
+            onEdit,
             onRemove,
             sortable,
         } = this.props;
@@ -70,15 +79,18 @@ export default class Item extends React.PureComponent<Props> {
                 <div className={itemStyles.content}>
                     {children}
                 </div>
-                {onRemove &&
-                    <button
-                        className={itemStyles.removeButton}
-                        onClick={this.handleRemove}
-                        type="button"
-                    >
-                        <Icon name={REMOVE_ICON} />
-                    </button>
-                }
+                <div className={itemStyles.buttons}>
+                    {onEdit &&
+                        <button className={itemStyles.button} onClick={this.handleEdit} type="button">
+                            <Icon name="su-pen" />
+                        </button>
+                    }
+                    {onRemove &&
+                        <button className={itemStyles.button} onClick={this.handleRemove} type="button">
+                            <Icon name="su-trash-alt" />
+                        </button>
+                    }
+                </div>
             </div>
         );
     }
