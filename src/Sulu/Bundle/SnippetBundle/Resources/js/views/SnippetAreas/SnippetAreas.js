@@ -6,6 +6,7 @@ import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
+import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
 
@@ -14,6 +15,7 @@ class SnippetAreas extends React.Component<ViewProps> {
     @observable openedAreaKey: ?string = undefined;
     snippetAreaStore: SnippetAreaStore;
     @observable deleteAreaKey: ?string = undefined;
+    cacheClearToolbarAction: CacheClearToolbarAction;
 
     constructor(props: ViewProps) {
         super(props);
@@ -26,6 +28,7 @@ class SnippetAreas extends React.Component<ViewProps> {
         } = router;
 
         this.snippetAreaStore = new SnippetAreaStore(webspace);
+        this.cacheClearToolbarAction = new CacheClearToolbarAction();
     }
 
     @action handleAddClick = (areaKey: string) => {
@@ -138,11 +141,16 @@ class SnippetAreas extends React.Component<ViewProps> {
                 >
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
+                {this.cacheClearToolbarAction.getNode()}
             </Fragment>
         );
     }
 }
 
 export default withToolbar(SnippetAreas, function() {
-    return {};
+    return {
+        items: [
+            this.cacheClearToolbarAction.getToolbarItemConfig(),
+        ],
+    };
 });

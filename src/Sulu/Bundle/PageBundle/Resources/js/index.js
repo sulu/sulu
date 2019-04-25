@@ -1,5 +1,5 @@
 // @flow
-import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {bundleReady} from 'sulu-admin-bundle/services';
 import {fieldRegistry, viewRegistry} from 'sulu-admin-bundle/containers';
 import {formToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import SearchResult from './containers/Form/fields/SearchResult';
@@ -10,10 +10,6 @@ import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAc
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
-
-initializer.addUpdateConfigHook('sulu_page', (config: Object) => {
-    PageList.clearCacheEndpoint = config.endpoints.clearCache;
-});
 
 viewRegistry.add('sulu_page.page_tabs', PageTabs);
 viewRegistry.add('sulu_page.webspace_overview', PageList);

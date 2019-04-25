@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
-import {Requester, Router} from 'sulu-admin-bundle/services';
+import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -78,6 +78,11 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
     this.selections = [];
 }));
 jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
+
+jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
+    this.getNode = jest.fn();
+    this.getToolbarItemConfig = jest.fn();
+}));
 
 beforeEach(() => {
     jest.resetModules();
@@ -185,10 +190,11 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
 });
 
-test('Should close Cache Clear dialog if cancel is clicked', () => {
+test('Should use CacheClearToolbarAction for cache clearing', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
+    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
 
     const webspaceKey = observable.box('sulu');
 
@@ -203,7 +209,7 @@ test('Should close Cache Clear dialog if cancel is clicked', () => {
         webspace: 'sulu',
     };
 
-    const webspaceOverview = mount(
+    const pageList = mount(
         <PageList
             route={router.route}
             router={router}
@@ -212,93 +218,13 @@ test('Should close Cache Clear dialog if cancel is clicked', () => {
         />
     );
 
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
+    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(false);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(false);
-    toolbarConfig.items[1].onClick();
+    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
 
-    webspaceOverview.update();
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(true);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(false);
-
-    webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('onCancel')();
-    webspaceOverview.update();
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(false);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(false);
-
-    expect(Requester.delete).not.toBeCalled();
-});
-
-test('Should clear cache and close dialog if confirm is clicked', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const Requester = require('sulu-admin-bundle/services').Requester;
-    const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
-
-    const webspaceKey = observable.box('sulu');
-
-    // $FlowFixMe
-    const webspace = {
-        key: 'sulu',
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-
-    const cacheClearPromise = Promise.resolve();
-    Requester.delete.mockReturnValue(cacheClearPromise);
-
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    PageList.clearCacheEndpoint = '/admin/website/cache';
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
-
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(false);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(false);
-    toolbarConfig.items[1].onClick();
-
-    webspaceOverview.update();
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(true);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(false);
-
-    webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('onConfirm')();
-    expect(Requester.delete).toBeCalledWith('/admin/website/cache');
-
-    webspaceOverview.update();
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-        .toEqual(true);
-    expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading'))
-        .toEqual(true);
-
-    return cacheClearPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('open'))
-            .toEqual(false);
-        expect(
-            webspaceOverview.find('Dialog[title="sulu_page.cache_clear_warning_title"]').prop('confirmLoading')
-        ).toEqual(false);
-    });
+    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
+    toolbarFunction.call(pageList.instance());
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
 });
 
 test('Should load webspace and active route attribute from listStore and userStore', () => {

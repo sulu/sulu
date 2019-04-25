@@ -42,9 +42,6 @@
     "sulu_page.no_index": "no-index (Seite wird nicht von Suchmaschinen indiziert)",
     "sulu_page.no_follow": "no-follow (Links auf der Seite wird von Suchmaschinen nicht gefolgt)",
     "sulu_page.hide_in_sitemap": "In Sitemap ausblenden",
-    "sulu_page.cache_clear": "Webseiten Cache löschen",
-    "sulu_page.cache_clear_warning_title": "Webseiten Cache löschen?",
-    "sulu_page.cache_clear_warning_text": "Diese Operation leert den gesamten Cache für jeden Webspace. Wollen Sie wirklich fortfahren?",
     "sulu_page.delete_draft": "Entwurf löschen",
     "sulu_page.delete_draft_warning_title": "Entwurf löschen?",
     "sulu_page.delete_draft_warning_text": "Soll der Entwurf wirklich gelöscht werden? Alle Daten gehen dadurch verloren. Die veröffentlichte Seite bleibt unverändert bestehen."

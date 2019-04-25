@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
-import {SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
-import SnippetAreaStore from '../stores/SnippetAreaStore';
-import SnippetAreas from '../SnippetAreas';
+import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     SingleListOverlay: jest.fn(() => null),
@@ -16,7 +14,19 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 }));
 jest.mock('../stores/SnippetAreaStore', () => jest.fn());
 
+jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
+    this.getNode = jest.fn();
+    this.getToolbarItemConfig = jest.fn();
+}));
+
+beforeEach(() => {
+    jest.resetModules();
+});
+
 test('Render snippet areas with loading icon', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -35,6 +45,9 @@ test('Render snippet areas with loading icon', () => {
 });
 
 test('Render snippet areas with data as table', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -66,6 +79,10 @@ test('Render snippet areas with data as table', () => {
 });
 
 test('Close after clicking add without choosing a snippet', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -104,6 +121,10 @@ test('Close after clicking add without choosing a snippet', () => {
 });
 
 test('Save after adding a new snippet area', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -147,6 +168,9 @@ test('Save after adding a new snippet area', () => {
 });
 
 test('Close after clicking delete and cancel dialog', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -185,6 +209,9 @@ test('Close after clicking delete and cancel dialog', () => {
 });
 
 test('Delete after confirming the confirmation dialog', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
     const router = new Router({});
     router.attributes = {
         webspace: 'sulu',
@@ -225,4 +252,44 @@ test('Delete after confirming the confirmation dialog', () => {
         snippetAreas.update();
         expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
     });
+});
+
+test('Should use CacheClearToolbarAction for cache clearing', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, SnippetAreas);
+    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    // $FlowFixMe
+    const route = {};
+
+    // $FlowFixMe
+    SnippetAreaStore.mockImplementation(function() {
+        this.snippetAreas = {
+            default: {
+                defaultTitle: 'Default Snippet',
+                defaultUuid: 'some-uuid',
+                key: 'default',
+                title: 'Default',
+            },
+        };
+    });
+
+    const snippetAreas = mount(
+        <SnippetAreas route={route} router={router} />
+    );
+
+    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
+
+    expect(cacheClearToolbarAction.getNode).toBeCalledWith();
+
+    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();
+    toolbarFunction.call(snippetAreas.instance());
+    expect(cacheClearToolbarAction.getToolbarItemConfig).toBeCalled();
 });
