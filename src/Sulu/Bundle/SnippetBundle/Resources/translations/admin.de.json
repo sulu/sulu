@@ -2,5 +2,8 @@
     "sulu_snippet.selection_overlay_title": "Schnipsel auswählen",
     "sulu_snippet.selection_label": "{count} Schnipsel ausgewählt",
     "sulu_snippet.snippets": "Schnipsel",
+    "sulu_snippet.snippet": "Schnipsel",
+    "sulu_snippet.default_snippets": "Standard Schnipsel",
+    "sulu_snippet.snippet_area": "Typ oder Bereich",
     "sulu_snippet.taxonomies": "Taxonomien"
 }

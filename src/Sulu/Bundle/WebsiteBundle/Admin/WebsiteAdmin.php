@@ -76,6 +76,7 @@ class WebsiteAdmin extends Admin
                 ->disableSearching()
                 ->setFormKey('analytic_details')
                 ->setTabTitle('sulu_website.analytics')
+                ->setTabOrder(2048)
                 ->addToolbarActions($listToolbarActions)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')

@@ -14,5 +14,8 @@
     "sulu_website.head_open": "Head open",
     "sulu_website.head_close": "Head close",
     "sulu_website.body_open": "Body open",
-    "sulu_website.body_close": "Body close"
+    "sulu_website.body_close": "Body close",
+    "sulu_website.cache_clear": "Clear website cache",
+    "sulu_website.cache_clear_warning_title": "Clear website cache?",
+    "sulu_website.cache_clear_warning_text": "This operation will clear the entire cache for all webspaces. Do you really wish to proceed?"
 }

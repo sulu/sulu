@@ -106,7 +106,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
             PermissionTypes::EDIT
         );
 
-        $default = $request->get('default');
+        $default = $request->get('defaultUuid');
 
         $areas = $this->getLocalizedAreas();
         $area = $areas[$key];

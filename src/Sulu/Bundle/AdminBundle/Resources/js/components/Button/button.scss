@@ -83,7 +83,6 @@ $iconColorActive: $white;
 
 .link {
     padding: 0;
-    margin: 0 10px 0 0;
     border: 0;
     background: transparent;
     cursor: pointer;
@@ -94,8 +93,8 @@ $iconColorActive: $white;
         text-decoration: underline;
     }
 
-    .button-icon {
-        margin-right: 10px;
+    .button-icon + .text {
+        margin-left: 10px;
     }
 
     .dropdown-icon {

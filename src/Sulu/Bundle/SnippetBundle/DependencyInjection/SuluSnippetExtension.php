@@ -43,6 +43,12 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 'detail' => 'get_snippet',
                             ],
                         ],
+                        'snippet_areas' => [
+                            'routes' => [
+                                'list' => 'get_snippet-areas',
+                                'detail' => 'put_snippet-area',
+                            ],
+                        ],
                     ],
                     'field_type_options' => [
                         'selection' => [
@@ -61,6 +67,17 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 ],
                             ],
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'put_snippet-area',
                     ],
                 ]
             );

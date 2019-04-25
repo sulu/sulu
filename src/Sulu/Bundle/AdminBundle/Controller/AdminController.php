@@ -275,11 +275,6 @@ class AdminController
                     ),
                 ],
             ],
-            'sulu_page' => [
-                'endpoints' => [
-                    'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
-                ],
-            ],
             'sulu_preview' => [
                 'endpoints' => [
                     'start' => $this->urlGenerator->generate('sulu_preview.start'),
@@ -294,6 +289,11 @@ class AdminController
             'sulu_security' => [
                 'endpoints' => [
                     'contexts' => $this->urlGenerator->generate('cget_contexts'),
+                ],
+            ],
+            'sulu_website' => [
+                'endpoints' => [
+                    'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
                 ],
             ],
         ]);

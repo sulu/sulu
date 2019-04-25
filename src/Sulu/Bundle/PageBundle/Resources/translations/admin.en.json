@@ -42,9 +42,6 @@
     "sulu_page.no_index": "no-index (page will not be indexed by search engines)",
     "sulu_page.no_follow": "no-follow (links on this page will not be followed by the search engine)",
     "sulu_page.hide_in_sitemap": "Hide in sitemap",
-    "sulu_page.cache_clear": "Clear website cache",
-    "sulu_page.cache_clear_warning_title": "Clear website cache?",
-    "sulu_page.cache_clear_warning_text": "This operation will clear the entire cache for all webspaces. Do you really wish to proceed?",
     "sulu_page.delete_draft": "Delete draft",
     "sulu_page.delete_draft_warning_title": "Delete Draft?",
     "sulu_page.delete_draft_warning_text": "Do you really want to delete the draft? All data will be lost. The published page will not be changed."

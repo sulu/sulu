@@ -59,7 +59,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $client->request(
             'PUT',
             '/api/snippet-areas/car',
-            ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
+            ['webspace' => 'sulu_io', 'defaultUuid' => $this->car1->getUuid()]
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -97,7 +97,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $client->request(
             'DELETE',
             '/api/snippet-areas/car',
-            ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
+            ['webspace' => 'sulu_io']
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
