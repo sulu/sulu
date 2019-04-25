@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
+import Mousetrap from 'mousetrap';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 
@@ -137,4 +138,26 @@ test('Should upload media when it is dropped on the dropzone', () => {
         expect(multiMediaDropzoneInstance.mediaUploadStores.length).toBe(0);
         expect(closeSpy).toBeCalledWith();
     });
+});
+
+test('Should close overlay when escape button is pressed', () => {
+    const locale = observable.box('en');
+    const closeSpy = jest.fn();
+
+    mount(
+        <MultiMediaDropzone
+            collectionId={3}
+            locale={locale}
+            onClose={closeSpy}
+            onOpen={jest.fn()}
+            onUpload={jest.fn()}
+            open={true}
+        >
+            <div />
+        </MultiMediaDropzone>
+    );
+
+    expect(closeSpy).not.toBeCalled();
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toBeCalledWith();
 });

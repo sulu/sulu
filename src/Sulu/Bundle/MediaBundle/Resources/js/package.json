@@ -7,6 +7,7 @@
         "classnames": "^2.2.5",
         "copy-to-clipboard": "^3.0.8",
         "fast-deep-equal": "^1.0.0",
+        "mousetrap": "^1.6.1",
         "react-clipboard.js": "^1.1.2",
         "react-dropzone": "^4.2.1",
         "url-search-params-polyfill": "^2.0.0"
