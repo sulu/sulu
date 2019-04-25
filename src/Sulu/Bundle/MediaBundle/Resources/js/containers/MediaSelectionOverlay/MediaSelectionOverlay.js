@@ -27,6 +27,7 @@ type Props = {|
 @observer
 export default class MediaSelectionOverlay extends React.Component<Props> {
     @observable collectionStore: CollectionStore;
+    @observable showMediaUploadOverlay: boolean = false;
     updateCollectionStoreDisposer: () => void;
 
     static createCollectionListStore(
@@ -120,6 +121,14 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         this.props.mediaListStore.setPage(1);
     };
 
+    @action handleUploadOverlayOpen = () => {
+        this.showMediaUploadOverlay = true;
+    };
+
+    @action handleUploadOverlayClose = () => {
+        this.showMediaUploadOverlay = false;
+    };
+
     handleClose = () => {
         this.props.onClose();
     };
@@ -163,7 +172,10 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
                         mediaListAdapters={['media_card_selection']}
                         mediaListStore={mediaListStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
+                        onUploadOverlayClose={this.handleUploadOverlayClose}
+                        onUploadOverlayOpen={this.handleUploadOverlayOpen}
                         overlayType="dialog"
+                        uploadOverlayOpen={this.showMediaUploadOverlay}
                     />
                 </div>
             </Overlay>

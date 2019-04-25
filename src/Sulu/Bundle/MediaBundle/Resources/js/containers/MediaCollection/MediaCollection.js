@@ -21,7 +21,10 @@ type Props = {|
     collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
+    onUploadOverlayOpen: () => void,
+    onUploadOverlayClose: () => void,
     overlayType: OverlayType,
+    uploadOverlayOpen: boolean,
 |};
 
 @observer
@@ -63,13 +66,19 @@ export default class MediaCollection extends React.Component<Props> {
             mediaListAdapters,
             mediaListRef,
             mediaListStore,
+            onUploadOverlayClose,
+            onUploadOverlayOpen,
+            uploadOverlayOpen,
         } = this.props;
 
         return (
             <MultiMediaDropzone
                 collectionId={collectionStore.id}
                 locale={locale}
+                onClose={onUploadOverlayClose}
+                onOpen={onUploadOverlayOpen}
                 onUpload={this.handleUpload}
+                open={uploadOverlayOpen}
             >
                 <CollectionSection
                     listStore={collectionListStore}
