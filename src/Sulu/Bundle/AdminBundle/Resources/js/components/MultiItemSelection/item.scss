@@ -5,7 +5,6 @@ $itemBackgroundColor: $white;
 .item {
     display: flex;
     justify-content: space-between;
-    height: 40px;
     background-color: $itemBackgroundColor;
 }
 

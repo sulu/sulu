@@ -5,6 +5,7 @@ $smartContentColumnColor: $scorpion;
 .smart-content-item {
     display: inline-flex;
     align-items: center;
+    height: 40px;
 
     > * {
         margin-right: 10px;

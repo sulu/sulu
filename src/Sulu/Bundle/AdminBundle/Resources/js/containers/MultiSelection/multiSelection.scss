@@ -6,6 +6,8 @@ $multiSelectionColumnColor: $scorpion;
 .item-column {
     color: $multiSelectionColumnColor;
     display: inline-block;
+    height: 40px;
+    line-height: 40px;
 
     &:first-child {
         color: $multiSelectionMainColumnColor;
