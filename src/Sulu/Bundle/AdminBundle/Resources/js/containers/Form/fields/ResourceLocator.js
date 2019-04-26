@@ -93,7 +93,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
                         <ResourceLocatorHistory
                             id={formInspector.id}
                             options={{language: formInspector.locale, webspace: formInspector.options.webspace}}
-                            resourceKey="page_routes"
+                            resourceKey="page_resourcelocators"
                         />
                     </div>
                 }

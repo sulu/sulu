@@ -20,10 +20,7 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * handles resource locator api.
- */
-class NodeResourcelocatorController extends RestController implements ClassResourceInterface
+class PageResourcelocatorController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 

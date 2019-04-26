@@ -44,9 +44,9 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'resources' => [
-                        'page_routes' => [
+                        'page_resourcelocators' => [
                             'routes' => [
-                                'list' => 'get_node_resourcelocators',
+                                'list' => 'get_page_resourcelocators',
                             ],
                         ],
                         'pages' => [
