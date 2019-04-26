@@ -2,14 +2,15 @@
 import React from 'react';
 import actionStyles from './action.scss';
 
-type Props = {
+type Props<T> = {
     children: string,
     disabled: boolean,
     onAfterAction?: () => void,
-    onClick: () => void,
+    onClick: (value: ?T) => void,
+    value?: T,
 };
 
-export default class Action extends React.PureComponent<Props> {
+export default class Action<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         disabled: false,
     };
@@ -18,9 +19,10 @@ export default class Action extends React.PureComponent<Props> {
         const {
             onClick,
             onAfterAction,
+            value,
         } = this.props;
 
-        onClick();
+        onClick(value);
 
         if (onAfterAction) {
             onAfterAction();
