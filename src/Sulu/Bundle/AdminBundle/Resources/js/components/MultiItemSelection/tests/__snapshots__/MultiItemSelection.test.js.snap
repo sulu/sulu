@@ -13,7 +13,7 @@ exports[`Clicking the left and right button inside the header should call the ri
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -27,7 +27,7 @@ exports[`Clicking the left and right button inside the header should call the ri
     >
       <span
         aria-label="fa-gear"
-        class="fa fa-gear"
+        class="fa fa-gear icon"
       />
     </button>
   </div>

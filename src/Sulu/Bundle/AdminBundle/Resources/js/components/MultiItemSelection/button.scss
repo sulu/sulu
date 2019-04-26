@@ -26,4 +26,12 @@ $buttonMargin: 2px;
     &.right {
         margin-left: $buttonMargin;
     }
+
+    &.options {
+        width: 60px;
+
+        .icon {
+            margin-right: 10px;
+        }
+    }
 }

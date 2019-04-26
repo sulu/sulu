@@ -133,6 +133,58 @@ test('Clicking the left and right button inside the header should call the right
     expect(rightClickHandler).toBeCalled();
 });
 
+test('Clicking the left button inside the header should call the right handler after choosing an option', () => {
+    const leftClickHandler = jest.fn();
+    const leftButtonConfig = {
+        icon: 'su-plus',
+        onClick: leftClickHandler,
+        options: [
+            {
+                label: 'Test1',
+                value: 'test1',
+            },
+            {
+                label: 'Test2',
+                value: 'test2',
+            },
+        ],
+    };
+
+    const multiItemSelection = mount(
+        <MultiItemSelection
+            label="I have handler"
+            leftButton={leftButtonConfig}
+        >
+            <MultiItemSelection.Item
+                id="1"
+                index={1}
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="2"
+                index={2}
+            >
+                Child 2
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="3"
+                index={3}
+            >
+                Child 3
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    );
+
+    multiItemSelection.find('Button[icon="su-plus"]').simulate('click');
+    multiItemSelection.find('ArrowMenu Action').at(0).simulate('click');
+    expect(leftClickHandler).toBeCalledWith('test1');
+
+    multiItemSelection.find('Button[icon="su-plus"]').simulate('click');
+    multiItemSelection.find('ArrowMenu Action').at(1).simulate('click');
+    expect(leftClickHandler).toBeCalledWith('test2');
+});
+
 test('Clicking on the remove button inside an item should call the remove handler on the parent component', () => {
     const removeHandler = jest.fn();
     const clickedItemId = 1;

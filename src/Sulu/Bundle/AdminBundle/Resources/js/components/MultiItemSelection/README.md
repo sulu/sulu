@@ -44,7 +44,7 @@ const handleAddItem = () => {
 <MultiItemSelection
     label="Select an item"
     leftButton={{
-        icon: 'fa-plus',
+        icon: 'su-plus-circle',
         onClick: handleAddItem,
     }}
     onItemsSorted={handleItemsSorted}
@@ -119,7 +119,7 @@ const handleAddItem = () => {
 <MultiItemSelection
     label="Select an item"
     leftButton={{
-        icon: 'fa-plus',
+        icon: 'su-plus-circle',
         onClick: handleAddItem,
     }}
     onItemEdit={handleEdit}
@@ -137,5 +137,35 @@ const handleAddItem = () => {
             </div>
         </Item>
     )}
+</MultiItemSelection>
+```
+
+You can also add options to the left button, which will result in a dropdown.
+
+```javascript
+const arrayMove = require('sulu-admin-bundle/components').arrayMove;
+const Item = MultiItemSelection.Item;
+
+const handleAddItem = (option) => {
+    alert('Adding a ' + option);
+};
+
+<MultiItemSelection
+    label="Select an item"
+    leftButton={{
+        icon: 'su-plus-circle',
+        onClick: handleAddItem,
+        options: [
+            {
+                label: 'Page',
+                value: 'page',
+            },
+            {
+                label: 'Article',
+                value: 'article',
+            },
+        ],
+    }}
+>
 </MultiItemSelection>
 ```
