@@ -47,3 +47,12 @@ test('Get teaserProvider with existing key', () => {
 test('Get teaserProvider of not existing key', () => {
     expect(() => teaserProviderRegistry.get('XXX')).toThrow();
 });
+
+test('Get existing keys in registry', () => {
+    const teaserProviderOptions1 = {...defaultTeaserProviderOptions};
+    const teaserProviderOptions2 = {...defaultTeaserProviderOptions};
+    teaserProviderRegistry.add('test1', teaserProviderOptions1);
+    teaserProviderRegistry.add('test2', teaserProviderOptions2);
+
+    expect(teaserProviderRegistry.keys).toEqual(['test1', 'test2']);
+});

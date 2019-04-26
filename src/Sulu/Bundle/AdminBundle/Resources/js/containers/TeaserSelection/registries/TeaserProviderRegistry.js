@@ -1,4 +1,5 @@
 // @flow
+import {computed} from 'mobx';
 import type {TeaserProviderOptions} from '../types';
 
 class TeaserProviderRegistry {
@@ -10,6 +11,10 @@ class TeaserProviderRegistry {
 
     clear() {
         this.teaserProviders = {};
+    }
+
+    @computed get keys(): Array<string> {
+        return Object.keys(this.teaserProviders);
     }
 
     add(name: string, teaserProviderOption: TeaserProviderOptions) {
