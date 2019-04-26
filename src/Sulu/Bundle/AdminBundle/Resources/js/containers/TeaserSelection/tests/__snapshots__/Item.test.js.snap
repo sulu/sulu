@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Item with data 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="description"
+  >
+    <p>
+      Title
+    </p>
+    <p>
+      Description
+    </p>
+  </div>
+  <p
+    class="type"
+  >
+    page
+  </p>
+</div>
+`;
+
+exports[`Render Item with data as form 1`] = `
+<div
+  class="editForm"
+>
+  <div
+    class="titleInput"
+  >
+    <label
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Title"
+      />
+    </label>
+  </div>
+  <div
+    class="descriptionTextArea"
+  >
+    <textarea
+      class="textArea"
+    >
+      Description
+    </textarea>
+  </div>
+  <div
+    class="buttons"
+  >
+    <button
+      class="button secondary"
+      type="button"
+    >
+      <span
+        class="text"
+      >
+        sulu_admin.cancel
+      </span>
+    </button>
+    <button
+      class="button primary"
+      type="button"
+    >
+      <span
+        class="text"
+      >
+        sulu_admin.apply
+      </span>
+    </button>
+  </div>
+</div>
+`;
