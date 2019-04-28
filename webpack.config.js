@@ -53,7 +53,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
-            new CleanWebpackPlugin([path.resolve(publicDir, basePath)], {root: rootPath}),
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: [path.resolve(publicDir, basePath)],
+            }),
             new webpack.DefinePlugin({
                 BUNDLE_ENTRIES_COUNT: entriesCount,
             }),
