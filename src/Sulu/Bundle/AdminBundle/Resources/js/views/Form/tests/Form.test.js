@@ -1418,9 +1418,9 @@ test('Should destroy the store on unmount', () => {
         attributes: {},
         bind: jest.fn(),
         route,
-        removeUpdateRouteHook: jest.fn(),
     };
 
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const locale = form.find('Form').at(1).prop('store').locale;
 
@@ -1451,8 +1451,9 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
         addUpdateRouteHook: jest.fn(),
         attributes: {},
         route,
-        removeUpdateRouteHook: jest.fn(),
     };
+
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formResourceStore = form.instance().resourceStore;
     formResourceStore.destroy = jest.fn();
@@ -1477,7 +1478,6 @@ test('Should not bind the locale if no locales have been passed via options', ()
         addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
-        removeUpdateRouteHook: jest.fn(),
         route,
     };
 
@@ -1502,19 +1502,20 @@ test('Should add and remove the UpdateRouteHook on mounting and unmounting', () 
         addUpdateRouteHook: jest.fn(),
         attributes: {},
         bind: jest.fn(),
-        removeUpdateRouteHook: jest.fn(),
         route,
     };
 
+    const checkFormStoreDirtyStateBeforeNavigationDisposerSpy = jest.fn();
+    router.addUpdateRouteHook.mockImplementationOnce(() => checkFormStoreDirtyStateBeforeNavigationDisposerSpy);
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
 
     expect(router.addUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 1024);
-    expect(router.removeUpdateRouteHook).not.toBeCalled();
+    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).not.toBeCalledWith();
 
     form.unmount();
-    expect(router.removeUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 1024);
+    expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).toBeCalledWith();
 });
 
 test('Should throw an error if the resourceStore is not passed', () => {

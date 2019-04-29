@@ -35,6 +35,7 @@ class Form extends React.Component<Props> {
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
     postponedRouteAttributes: ?AttributeMap;
+    checkFormStoreDirtyStateBeforeNavigationDisposer: () => void;
 
     @computed get hasOwnResourceStore() {
         const {
@@ -114,7 +115,7 @@ class Form extends React.Component<Props> {
             router.bind('locale', this.resourceStore.locale);
         }
 
-        router.addUpdateRouteHook(
+        this.checkFormStoreDirtyStateBeforeNavigationDisposer = router.addUpdateRouteHook(
             this.checkFormStoreDirtyStateBeforeNavigation,
             FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
         );
@@ -202,11 +203,7 @@ class Form extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        const {router} = this.props;
-        router.removeUpdateRouteHook(
-            this.checkFormStoreDirtyStateBeforeNavigation,
-            FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
-        );
+        this.checkFormStoreDirtyStateBeforeNavigationDisposer();
 
         this.resourceFormStore.destroy();
 

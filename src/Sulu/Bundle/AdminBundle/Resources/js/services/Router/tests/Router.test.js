@@ -1165,14 +1165,14 @@ test('Add and remove updateRouteHooks', () => {
     const updateRouteHook1 = jest.fn();
     const updateRouteHook2 = jest.fn();
 
-    router.addUpdateRouteHook(updateRouteHook1);
+    const updateRouteHookDisposer1 = router.addUpdateRouteHook(updateRouteHook1);
     router.addUpdateRouteHook(updateRouteHook2);
 
     expect(router.updateRouteHooks[0]).toHaveLength(2);
     expect(router.updateRouteHooks[0][0]).toBe(updateRouteHook1);
     expect(router.updateRouteHooks[0][1]).toBe(updateRouteHook2);
 
-    router.removeUpdateRouteHook(updateRouteHook1);
+    updateRouteHookDisposer1();
     expect(router.updateRouteHooks[0]).toHaveLength(1);
     expect(router.updateRouteHooks[0][0]).toBe(updateRouteHook2);
 });
@@ -1184,7 +1184,7 @@ test('Add and remove updateRouteHooks with different priorities', () => {
     const updateRouteHook1 = jest.fn();
     const updateRouteHook2 = jest.fn();
 
-    router.addUpdateRouteHook(updateRouteHook1, 1024);
+    const updateRouteHookDisposer1 = router.addUpdateRouteHook(updateRouteHook1, 1024);
     router.addUpdateRouteHook(updateRouteHook2, 512);
 
     expect(router.updateRouteHooks[1024]).toHaveLength(1);
@@ -1192,7 +1192,7 @@ test('Add and remove updateRouteHooks with different priorities', () => {
     expect(router.updateRouteHooks[512]).toHaveLength(1);
     expect(router.updateRouteHooks[512][0]).toBe(updateRouteHook2);
 
-    router.removeUpdateRouteHook(updateRouteHook1, 1024);
+    updateRouteHookDisposer1();
     expect(router.updateRouteHooks[1024]).toHaveLength(0);
     expect(router.updateRouteHooks[512]).toHaveLength(1);
     expect(router.updateRouteHooks[512][0]).toBe(updateRouteHook2);

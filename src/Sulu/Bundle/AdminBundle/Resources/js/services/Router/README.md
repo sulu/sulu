@@ -162,7 +162,7 @@ the function that was called (`navigate`, `redirect` or `restore`). Each of thes
 result in the navigation not to happen. This way the application can e.g. stop the navigation process if some data is
 not saved yet (that's what it is used for in the [`Form`](#form) view).
 
-Note that the hooks have also to be removed with a reference to the function using the `removeUpdateRouteHook` function,
+Note that the hooks have also to be removed by calling the disposer function being returned from `addUpdateRouteHook` ,
 if it is not needed anymore. Otherwise memory leaks and unexpected behavior can occur.
 
 ```javascript static
@@ -174,19 +174,16 @@ function hook(route, attributes, updateRouteMethod) {
     return true;
 }
 
-router.addUpdateRouteHook(hook);
+const disposer = router.addUpdateRouteHook(hook);
 
 router.navigate('test'); // This navigation will no happen because of the above hook
 
-router.removeUpdateRouteHook(hook);
+disposer();
 ```
 
-Both of these functions also accept a second parameter, which is a number describing the priority of the hook. Hooks
-with a higher priority are executed first, and once a hook has cancelled the navigation hooks with a lower priority will
-not be executed at all.
-
-Note that the same priority has to be passed to both functions. This is necessary because the same hook could be
-registered multiple times.
+The `addUpdateRouteHook` functions also accept a second parameter, which is a number describing the priority of the
+hook. Hooks with a higher priority are executed first, and once a hook has cancelled the navigation hooks with a lower
+priority will not be executed at all.
 
 ```javascript static
 function hook(route, attributes, updateRouteMethod) {
@@ -201,7 +198,4 @@ router.addUpdateRouteHook(hook, 1024);
 router.addUpdateRouteHook(hook, 512); // The second hook will not be executed, because the first one cancels navigation
 
 router.navigate('test'); // This navigation will no happen because of the above hook
-
-router.removeUpdateRouteHook(hook, 1024);
-router.addUpdateRouteHook(hook, 512);
 ```

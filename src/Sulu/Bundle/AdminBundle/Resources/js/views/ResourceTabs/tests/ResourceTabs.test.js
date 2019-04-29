@@ -1213,9 +1213,9 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
         attributes: {
             id: 5,
         },
-        removeUpdateRouteHook: jest.fn(),
     };
 
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
@@ -1246,9 +1246,9 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
         },
         bind: jest.fn(),
         route,
-        removeUpdateRouteHook: jest.fn(),
     };
 
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(resourceStoreConstructorCall[0][0]).toEqual('snippets');
@@ -1278,10 +1278,10 @@ test('Should create a ResourceStore with locale on mount if locales have been pa
             id: 5,
         },
         bind: jest.fn(),
-        removeUpdateRouteHook: jest.fn(),
         route,
     };
 
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
     const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
     const resourceStoreConstructorCall = ResourceStore.mock.calls;
     expect(router.bind).toBeCalled();
