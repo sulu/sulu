@@ -11,5 +11,4 @@ bin/
 config/
 public/
 templates/
-tests/
 var/

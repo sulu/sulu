@@ -122,24 +122,3 @@ test('Return the combined attributes from the current and parent getDerivedroute
             routeName3: 'test3',
         });
 });
-
-test('Throw an error if attributes returned from the getDerivedRouterAttributes function are not an object', () => {
-    viewRegistry.get.mockImplementation((key) => {
-        if (key === 'test') {
-            return {
-                getDerivedRouteAttributes: jest.fn().mockReturnValue('test'),
-            };
-        }
-    });
-
-    expect(() => updateRouterAttributesFromView({
-        attributeDefaults: {},
-        children: [],
-        name: 'test',
-        options: {},
-        path: '/test',
-        parent: undefined,
-        rerenderAttributes: [],
-        view: 'test',
-    }, {})).toThrow(/"getDerivedRouteAttributes".*"test" view/);
-});
