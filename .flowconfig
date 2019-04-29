@@ -11,3 +11,13 @@ module.name_mapper='fos-jsrouting/router' -> 'empty/object'
 .*/node_modules/npmconf/.*
 .*/node_modules/stylelint/.*
 .*/vendor/symfony/.*
+
+.circleci/
+.git/
+.github/
+bin/
+config/
+public/
+templates/
+tests/
+var/

@@ -15,5 +15,5 @@ jobs:
       - run: npm run flow
       - run: npm run styleguide:build
       - run: npm test -- --maxWorkers=4
-      - run: composer install --no-dev -q
+      - run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
       - run: npm run build
