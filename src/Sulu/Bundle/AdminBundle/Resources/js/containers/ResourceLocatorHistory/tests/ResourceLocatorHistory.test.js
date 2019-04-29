@@ -65,6 +65,24 @@ test('Show history routes in overlay', () => {
     expect(resourceLocatorHistory.find('Overlay').render()).toMatchSnapshot();
 });
 
+test('Reload history routes each time overlay is opened', () => {
+    const resourceLocatorHistory = mount(
+        <ResourceLocatorHistory
+            id={5}
+            options={{webspace: 'sulu'}}
+            resourceKey="history_routes"
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledTimes(0);
+
+    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    expect(ResourceListStore).toBeCalledTimes(1);
+
+    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    expect(ResourceListStore).toBeCalledTimes(2);
+});
+
 test('Close overlay if button is clicked', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
