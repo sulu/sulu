@@ -120,6 +120,7 @@ class PageAdmin extends Admin
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->setOption('tabTitle', 'sulu_page.pages')
                 ->setOption('tabOrder', 0)
+                ->setOption('tabPriority', 1024)
                 ->addRerenderAttribute('webspace')
                 ->setParent(static::WEBSPACE_TABS_ROUTE),
             (new Route(
