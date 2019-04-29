@@ -21,6 +21,8 @@ jest.mock('../../../List/stores/ListStore',
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;
         this.dataLoading = true;
+        this.destroy = jest.fn();
+        this.sendRequestDisposer = jest.fn();
 
         mockExtendObservable(this, {
             selectionIds: [],
@@ -368,7 +370,7 @@ test('Should throw an error if no "adapter" option is passed for overlay type in
     )).toThrowError(/"adapter"/);
 });
 
-test('Should call the disposer for list selections if unmounted', () => {
+test('Should call the disposers for list selections and locale and ListStore if unmounted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const fieldTypeOptions = {
         default_type: 'list',
@@ -389,11 +391,54 @@ test('Should call the disposer for list selections if unmounted', () => {
     );
 
     const changeListDisposerSpy = jest.fn();
+    const changeLocaleDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
+    selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
+    const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
 
     expect(changeListDisposerSpy).toBeCalledWith();
+    expect(changeLocaleDisposerSpy).toBeCalledWith();
+    expect(listStoreDestroy).toBeCalledWith();
+});
+
+test('Should call sendRequestDisposer to avoid extra request when locale is changed', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldTypeOptions = {
+        default_type: 'list',
+        resource_key: 'snippets',
+        types: {
+            list: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    locale.set('de');
+
+    expect(selection.instance().listStore.sendRequestDisposer).toBeCalledWith();
 });
 
 test('Should pass props correctly to list component', () => {

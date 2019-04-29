@@ -2,6 +2,25 @@
 
 ## dev-develop
 
+### Router removeUpdateRouteHook
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `removeUpdateRouteHook` function from the `Router` was removed. If you want to remove hooks again, you can now use
+the disposer being returned from the `addUpdateRouteHook` function.
+
+```javascript
+// Before
+const hook = () => {};
+router.addUpdateRouteHook(hook);
+router.removeUpdateRouteHook(hook);
+
+// After
+const hook = () => {};
+const disposer = router.addUpdateRouteHook(hook);
+disposer();
+```
+
 ### Custom URL services
 
 The `CustomUrlController` delivering the API for custom urls doesn't take a locale as query parameter anymore, because

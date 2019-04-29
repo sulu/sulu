@@ -14,7 +14,7 @@ export default class Router {
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number | boolean> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
-    updateRouteHooks: Array<UpdateRouteHook> = [];
+    updateRouteHooks: {[priority: number]: Array<UpdateRouteHook>} = {};
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
     redirectFlag: boolean = false;
 
@@ -40,24 +40,42 @@ export default class Router {
         });
 
         window.addEventListener('beforeunload', (event) => {
-            if (this.updateRouteHooks.some((updateRouteHook) => updateRouteHook() === false)) {
+            if (this.sortedUpdateRouteHooks.some((updateRouteHook) => updateRouteHook() === false)) {
                 event.preventDefault();
                 event.returnValue = true;
             }
         });
     }
 
-    addUpdateRouteHook(hook: UpdateRouteHook) {
-        this.updateRouteHooks.push(hook);
+    @computed get sortedUpdateRouteHooks() {
+        return Object.keys(this.updateRouteHooks)
+            .sort((a, b) => ((b: any): number) - ((a: any): number))
+            .reduce((sortedUpdateRouteHooks, priority) => {
+                sortedUpdateRouteHooks = [
+                    ...sortedUpdateRouteHooks,
+                    ...this.updateRouteHooks[((priority: any): number)],
+                ];
+                return sortedUpdateRouteHooks;
+            }, []);
     }
 
-    removeUpdateRouteHook(hook: UpdateRouteHook) {
-        const hookIndex = this.updateRouteHooks.indexOf(hook);
-        if (hookIndex === -1) {
-            return;
+    addUpdateRouteHook(hook: UpdateRouteHook, priority: number = 0) {
+        if (!this.updateRouteHooks[priority]) {
+            this.updateRouteHooks[priority] = [];
         }
 
-        this.updateRouteHooks.splice(hookIndex, 1);
+        this.updateRouteHooks[priority].push(hook);
+
+        return () => {
+            const updateRouteHooksForPriority = this.updateRouteHooks[priority];
+
+            const hookIndex = updateRouteHooksForPriority.indexOf(hook);
+            if (hookIndex === -1) {
+                return;
+            }
+
+            updateRouteHooksForPriority.splice(hookIndex, 1);
+        };
     }
 
     addUpdateAttributesHook(hook: UpdateAttributesHook) {
@@ -171,7 +189,7 @@ export default class Router {
             updatedAttributes[key] = attributeDefaults[key];
         });
 
-        for (const updateRouteHook of this.updateRouteHooks) {
+        for (const updateRouteHook of this.sortedUpdateRouteHooks) {
             if (!updateRouteHook(route, updatedAttributes, updateRouteMethod)) {
                 return;
             }

@@ -21,6 +21,7 @@ export default class WebspaceTabs extends React.Component<ViewProps> {
     @observable webspaces: ?Array<Webspace>;
     webspaceKey: IObservableValue<string> = observable.box();
     webspaceDisposer: () => void;
+    bindWebspaceToRouterDisposer: () => void;
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         const webspace = attributes.webspace
@@ -57,13 +58,11 @@ export default class WebspaceTabs extends React.Component<ViewProps> {
             return change;
         });
 
-        router.addUpdateRouteHook(this.bindWebspaceToRouter);
+        this.bindWebspaceToRouterDisposer = router.addUpdateRouteHook(this.bindWebspaceToRouter);
     }
 
     componentWillUnmount() {
-        const {router} = this.props;
-        router.removeUpdateRouteHook(this.bindWebspaceToRouter);
-
+        this.bindWebspaceToRouterDisposer();
         this.webspaceDisposer();
     }
 

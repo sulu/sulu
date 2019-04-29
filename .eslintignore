@@ -3,3 +3,13 @@
 **/flow-typed/
 styleguide/
 **/build/admin/
+
+.circleci/
+.git/
+.github/
+bin/
+config/
+public/
+templates/
+tests/
+var/

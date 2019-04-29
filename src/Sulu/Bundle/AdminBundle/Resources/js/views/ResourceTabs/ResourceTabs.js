@@ -18,6 +18,7 @@ type Props = ViewProps & {
 @observer
 export default class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
+    reloadResourceStoreOnRouteChangeDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
@@ -46,13 +47,15 @@ export default class ResourceTabs extends React.Component<Props> {
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
 
-        router.addUpdateRouteHook(this.reloadResourceStoreOnRouteChange);
+        this.reloadResourceStoreOnRouteChangeDisposer = router.addUpdateRouteHook(
+            this.reloadResourceStoreOnRouteChange
+        );
     }
 
     reloadResourceStoreOnRouteChange = (route: ?Route) => {
         const {router, route: viewRoute} = this.props;
 
-        if (router.route === viewRoute) {
+        if (router.route === viewRoute || router.route === route) {
             return true;
         }
 
@@ -64,10 +67,8 @@ export default class ResourceTabs extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        const {router} = this.props;
-
         this.resourceStore.destroy();
-        router.removeUpdateRouteHook(this.reloadResourceStoreOnRouteChange);
+        this.reloadResourceStoreOnRouteChangeDisposer();
     }
 
     @computed get locales() {

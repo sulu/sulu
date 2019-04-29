@@ -9,7 +9,6 @@ import webspaceStore from '../../../stores/WebspaceStore';
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.addUpdateRouteHook = jest.fn();
     this.bind = jest.fn();
-    this.removeUpdateRouteHook = jest.fn();
 }));
 
 jest.mock('../../../stores/WebspaceStore', () => ({
@@ -99,18 +98,19 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
         view: 'webspace_tabs',
     };
 
+    const bindWebspaceToRouterDisposerSpy = jest.fn();
+    router.addUpdateRouteHook.mockImplementationOnce(() => bindWebspaceToRouterDisposerSpy);
     const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
 
     expect(router.bind).toBeCalledWith('webspace', webspaceTabs.instance().webspaceKey);
     expect(router.addUpdateRouteHook).toBeCalledWith(webspaceTabs.instance().bindWebspaceToRouter);
 
-    const bindWebspaceToRouter = webspaceTabs.instance().bindWebspaceToRouter;
     const webspaceDisposer = jest.fn();
 
     webspaceTabs.instance().webspaceDisposer = webspaceDisposer;
 
     webspaceTabs.unmount();
-    expect(router.removeUpdateRouteHook).toBeCalledWith(bindWebspaceToRouter);
+    expect(bindWebspaceToRouterDisposerSpy).toBeCalledWith();
     expect(webspaceDisposer).toBeCalledWith();
 });
 
