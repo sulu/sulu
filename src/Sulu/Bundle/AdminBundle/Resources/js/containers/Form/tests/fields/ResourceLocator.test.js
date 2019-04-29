@@ -126,7 +126,13 @@ test('Should not pass any argument to onFinish callback', () => {
 });
 
 test('Should not request a new URL if on an edit form', () =>{
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', 1),
+            'test',
+            {webspace: 'sulu'}
+        )
+    );
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}

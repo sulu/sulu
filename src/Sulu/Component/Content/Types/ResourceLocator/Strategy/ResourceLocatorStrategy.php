@@ -246,8 +246,8 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
     /**
      * {@inheritdoc}
      */
-    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    public function deleteById($id, $languageCode, $segmentKey = null)
     {
-        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $this->mapper->deleteById($id, $languageCode, $segmentKey);
     }
 }

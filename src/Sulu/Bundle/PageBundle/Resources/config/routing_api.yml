@@ -1,6 +1,6 @@
 sulu_page.rl:
     type: rest
-    resource: Sulu\Bundle\PageBundle\Controller\NodeResourcelocatorController
+    resource: Sulu\Bundle\PageBundle\Controller\PageResourcelocatorController
 
 sulu_page.resource_locator:
     type: rest

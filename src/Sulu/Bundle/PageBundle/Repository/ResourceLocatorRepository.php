@@ -100,7 +100,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
             $result[] = [
                 'id' => $url->getId(),
-                'resourceLocator' => $url->getResourceLocator(),
+                'resourcelocator' => $url->getResourceLocator(),
                 'created' => $url->getCreated(),
                 '_links' => [
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,
@@ -110,7 +110,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
         return [
             '_embedded' => [
-                'resourcelocators' => $result,
+                'page_resourcelocators' => $result,
             ],
             '_links' => [
                 'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey,
@@ -125,7 +125,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
-        $resourceLocatorStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $resourceLocatorStrategy->deleteById($path, $languageCode, $segmentKey);
     }
 
     /**

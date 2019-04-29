@@ -115,12 +115,11 @@ interface ResourceLocatorStrategyInterface
     /**
      * Deletes given resource locator node.
      *
-     * @param string $path of resource locator node
-     * @param string $webspaceKey key of portal
+     * @param string $id of resource locator node
      * @param string $languageCode
      * @param string $segmentKey
      */
-    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
+    public function deleteById($id, $languageCode, $segmentKey = null);
 
     /**
      * Returns input-type for javscript-component.

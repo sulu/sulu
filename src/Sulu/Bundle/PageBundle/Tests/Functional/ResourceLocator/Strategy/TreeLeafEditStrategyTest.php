@@ -85,15 +85,19 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->session->save();
         $this->session->refresh(false);
 
+        $routeId1 = $rootNode->getNode('news/news-1/sub-1')->getIdentifier();
+
         // delete a history url
-        $this->resourceLocatorStrategy->deleteByPath('/news/news-1/sub-1', 'sulu_io', 'de');
+        $this->resourceLocatorStrategy->deleteById($routeId1, 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
 
+        $routeId2 = $rootNode->getNode('test/news-1/sub-2')->getIdentifier();
+
         // delete a normal url
-        $this->resourceLocatorStrategy->deleteByPath('/test/news-1/sub-2', 'sulu_io', 'de');
+        $this->resourceLocatorStrategy->deleteById($routeId2, 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
 

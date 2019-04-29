@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
+import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
+import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
 
@@ -60,6 +62,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
         const {
             dataPath,
             disabled,
+            formInspector,
             onChange,
             schemaOptions: {
                 mode: {
@@ -74,14 +77,27 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
         }
 
         return (
-            <ResourceLocatorComponent
-                disabled={!!disabled}
-                id={dataPath}
-                mode={mode}
-                onBlur={this.handleBlur}
-                onChange={onChange}
-                value={value}
-            />
+            <div className={resourceLocatorStyles.resourceLocatorContainer}>
+                <div className={resourceLocatorStyles.resourceLocator}>
+                    <ResourceLocatorComponent
+                        disabled={!!disabled}
+                        id={dataPath}
+                        mode={mode}
+                        onBlur={this.handleBlur}
+                        onChange={onChange}
+                        value={value}
+                    />
+                </div>
+                {formInspector.id &&
+                    <div className={resourceLocatorStyles.resourceLocatorHistory}>
+                        <ResourceLocatorHistory
+                            id={formInspector.id}
+                            options={{language: formInspector.locale, webspace: formInspector.options.webspace}}
+                            resourceKey="page_resourcelocators"
+                        />
+                    </div>
+                }
+            </div>
         );
     }
 }

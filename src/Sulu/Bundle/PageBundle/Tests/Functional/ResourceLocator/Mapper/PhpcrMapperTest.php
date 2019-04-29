@@ -472,41 +472,25 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($rootNode->hasNode('news'));
         $this->assertTrue($rootNode->hasNode('test'));
 
+        $routeId1 = $rootNode->getNode('content1')->getIdentifier();
+
         // delete a history url
-        $this->phpcrMapper->deleteByPath('/content1', 'sulu_io', 'de');
+        $this->phpcrMapper->deleteById($routeId1, 'de');
         $session->save();
         $session->refresh(false);
         $this->assertFalse($rootNode->hasNode('content1'));
         $this->assertTrue($rootNode->hasNode('news'));
         $this->assertTrue($rootNode->hasNode('test'));
 
+        $routeId2 = $rootNode->getNode('test')->getIdentifier();
+
         // delete a normal url
-        $this->phpcrMapper->deleteByPath('/test', 'sulu_io', 'de');
+        $this->phpcrMapper->deleteById($routeId2, 'de');
         $session->save();
         $session->refresh(false);
         $this->assertFalse($rootNode->hasNode('content1'));
         $this->assertFalse($rootNode->hasNode('news'));
         $this->assertFalse($rootNode->hasNode('test'));
-    }
-
-    public function provideInvalidDeleteByPathArguments()
-    {
-        return [
-            [''],
-            ['/'],
-            [null],
-        ];
-    }
-
-    /**
-     * The deleteByPath method would delete the entire route tree for the given language, if an invalid path is passed.
-     *
-     * @dataProvider provideInvalidDeleteByPathArguments
-     */
-    public function testDeleteByPathWithInvalidArguments($invalidPath)
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->phpcrMapper->deleteByPath($invalidPath, 'sulu_io', 'en');
     }
 
     public function testTreeDeleteByPath()
@@ -526,8 +510,10 @@ class PhpcrMapperTest extends SuluTestCase
         $session->save();
         $session->refresh(false);
 
+        $routeId = $rootNode->getNode('test')->getIdentifier();
+
         // delete all
-        $this->phpcrMapper->deleteByPath('/test', 'sulu_io', 'de');
+        $this->phpcrMapper->deleteById($routeId, 'de');
         $session->save();
         $session->refresh(false);
         $this->assertFalse($rootNode->hasNode('test'));

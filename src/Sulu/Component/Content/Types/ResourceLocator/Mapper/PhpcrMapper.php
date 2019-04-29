@@ -342,19 +342,9 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    public function deleteById($id, $languageCode, $segmentKey = null)
     {
-        if (!is_string($path) || '' == trim($path, '/')) {
-            throw new \InvalidArgumentException(
-                sprintf('The path to delete must be a non-empty string, "%s" given.', $path)
-            );
-        }
-
-        $routeDocument = $this->documentManager->find(
-            $this->getPath($path, $webspaceKey, $languageCode, $segmentKey),
-            $languageCode
-        );
-
+        $routeDocument = $this->documentManager->find($id, $languageCode);
         $this->documentManager->remove($routeDocument);
     }
 

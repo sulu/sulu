@@ -132,9 +132,9 @@ class ResourceLocatorRepositoryTest extends TestCase
 
         $result = $this->repository->getHistory($uuid, $webspace, $locale);
         $this->assertEquals(3, $result['total']);
-        $this->assertEquals(3, count($result['_embedded']['resourcelocators']));
-        $this->assertEquals('/test1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
-        $this->assertEquals('/test3', $result['_embedded']['resourcelocators'][2]['resourceLocator']);
+        $this->assertEquals(3, count($result['_embedded']['page_resourcelocators']));
+        $this->assertEquals('/test1', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
+        $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['resourcelocator']);
     }
 
     public function testDelete()
@@ -143,7 +143,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $webspace = 'sulu_io';
         $locale = 'en';
 
-        $this->resourceLocatorStrategy->deleteByPath($path, $webspace, $locale, null)->shouldBeCalled();
+        $this->resourceLocatorStrategy->deleteById($path, $locale, null)->shouldBeCalled();
         $this->repository->delete($path, $webspace, $locale);
     }
 
@@ -154,7 +154,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $locale = 'en';
         $segment = 'live';
 
-        $this->resourceLocatorStrategy->deleteByPath($path, $webspace, $locale, $segment)->shouldBeCalled();
+        $this->resourceLocatorStrategy->deleteById($path, $locale, $segment)->shouldBeCalled();
         $this->repository->delete($path, $webspace, $locale, $segment);
     }
 }

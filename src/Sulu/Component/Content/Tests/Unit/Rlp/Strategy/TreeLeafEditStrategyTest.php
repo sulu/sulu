@@ -530,21 +530,19 @@ class TreeLeafEditStrategyTest extends TestCase
     public function testDeleteByPath()
     {
         $path = 'path/to/document';
-        $webspaceKey = 'sulu_io';
         $languageCode = 'de';
 
-        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, null)->shouldBeCalled();
-        $this->treeStrategy->deleteByPath($path, $webspaceKey, $languageCode);
+        $this->mapper->deleteById($path, $languageCode, null)->shouldBeCalled();
+        $this->treeStrategy->deleteById($path, $languageCode);
     }
 
     public function testDeleteByPathWithSegment()
     {
         $path = 'path/to/document';
-        $webspaceKey = 'sulu_io';
         $languageCode = 'de';
         $segmentKey = 'segment';
 
-        $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey)->shouldBeCalled();
-        $this->treeStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $this->mapper->deleteById($path, $languageCode, $segmentKey)->shouldBeCalled();
+        $this->treeStrategy->deleteById($path, $languageCode, $segmentKey);
     }
 }

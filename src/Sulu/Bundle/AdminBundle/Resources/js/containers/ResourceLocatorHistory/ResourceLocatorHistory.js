@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable, when} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {translate} from '../../utils/Translator';
 import Button from '../../components/Button';
@@ -23,26 +23,10 @@ export default class ResourceLocatorHistory extends React.Component<Props> {
     @observable open = false;
     @observable showDeleteWarning = false;
     deleteId: ?string | number;
-    resourceListStoreDisposer: () => mixed;
-
-    constructor(props: Props) {
-        super(props);
-
-        const {id, options, resourceKey} = this.props;
-
-        this.resourceListStoreDisposer = when(
-            () => this.open,
-            (): void => {
-                this.resourceListStore = new ResourceListStore(resourceKey, {...options, id});
-            }
-        );
-    }
-
-    componentWillUnmount() {
-        this.resourceListStoreDisposer();
-    }
 
     @action handleButtonClick = () => {
+        const {id, options, resourceKey} = this.props;
+        this.resourceListStore = new ResourceListStore(resourceKey, {...options, id});
         this.open = true;
     };
 
