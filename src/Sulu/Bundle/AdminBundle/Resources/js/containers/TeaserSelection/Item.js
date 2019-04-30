@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import textVersion from 'textversionjs';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import TextArea from '../../components/TextArea';
+import TextEditor from '../../containers/TextEditor';
 import {translate} from '../../utils/Translator';
 import itemStyles from './item.scss';
 import type {TeaserItem} from './types';
@@ -13,6 +15,7 @@ type Props = {|
     description: ?string,
     editing: boolean,
     id: number | string,
+    locale: ?IObservableValue<string>,
     onApply: (item: TeaserItem) => void,
     onCancel: (id: number | string) => void,
     title: ?string,
@@ -29,6 +32,10 @@ export default class Item extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
+        if (prevProps.title !== this.props.title || prevProps.description !== this.props.description) {
+            this.setStateFromProps();
+        }
+
         if (prevProps.editing === true && this.props.editing === false) {
             this.setStateFromProps();
         }
@@ -62,7 +69,7 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {editing, type} = this.props;
+        const {editing, locale, type} = this.props;
 
         // TODO replace type with correct translation from TeaserProviderRegistry
         return (
@@ -72,7 +79,12 @@ export default class Item extends React.Component<Props> {
                         <Input onChange={this.handleTitleChange} value={this.title} />
                     </div>
                     <div className={itemStyles.descriptionTextArea}>
-                        <TextArea onChange={this.handleDescriptionChange} value={this.description} />
+                        <TextEditor
+                            adapter="ckeditor5"
+                            locale={locale}
+                            onChange={this.handleDescriptionChange}
+                            value={this.description}
+                        />
                     </div>
                     <div className={itemStyles.buttons}>
                         <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
@@ -82,7 +94,7 @@ export default class Item extends React.Component<Props> {
                 : <div className={itemStyles.item}>
                     <div className={itemStyles.description}>
                         <p>{this.title}</p>
-                        <p>{this.description}</p>
+                        <p>{textVersion(this.description)}</p>
                     </div>
                     <p className={itemStyles.type}>{type}</p>
                 </div>

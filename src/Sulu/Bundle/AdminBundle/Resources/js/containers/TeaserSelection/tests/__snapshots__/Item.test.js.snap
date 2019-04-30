@@ -12,6 +12,7 @@ exports[`Render Item with data 1`] = `
     </p>
     <p>
       Description
+
     </p>
   </div>
   <p
@@ -41,9 +42,7 @@ exports[`Render Item with data as form 1`] = `
   <div
     class="descriptionTextArea"
   >
-    <textarea
-      class="textArea"
-    >
+    <textarea>
       Description
     </textarea>
   </div>

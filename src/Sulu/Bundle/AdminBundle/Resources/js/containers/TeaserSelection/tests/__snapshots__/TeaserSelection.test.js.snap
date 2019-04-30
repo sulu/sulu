@@ -1,5 +1,325 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Load combined data from TeaserStore and props 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="description"
+            >
+              <p>
+                Edited Page Title
+              </p>
+              <p>
+                Edited Page Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              pages
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="description"
+            >
+              <p>
+                Contact 1
+              </p>
+              <p>
+                Contact Description 1
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              contacts
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="description"
+            >
+              <p>
+                Contact 2
+              </p>
+              <p>
+                Contact Description 2
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              contacts
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render loading teaser selection 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    >
+      <div
+        class="loader"
+      >
+        <div
+          class="spinner"
+          style="width: 24px; height: 24px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="description"
+            >
+              <p>
+                Title
+              </p>
+              <p>
+                Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              pages
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
 exports[`Render teaser selection with data 1`] = `
 <div
   class="multiItemSelectionClass"
@@ -47,6 +367,7 @@ exports[`Render teaser selection with data 1`] = `
               </p>
               <p>
                 Description
+
               </p>
             </div>
             <p

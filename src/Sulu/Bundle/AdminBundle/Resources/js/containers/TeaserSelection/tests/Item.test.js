@@ -1,18 +1,23 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import TextEditor from '../../TextEditor';
 import Item from '../Item';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
+
 test('Render Item with data', () => {
     const item = mount(
         <Item
-            description="Description"
+            description="<p>Description</p>"
             editing={false}
             id={5}
+            locale={observable.box('en')}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Title"
@@ -29,6 +34,8 @@ test('Render Item with data as form', () => {
             description="Description"
             editing={true}
             id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Title"
@@ -39,6 +46,25 @@ test('Render Item with data as form', () => {
     expect(item.render()).toMatchSnapshot();
 });
 
+test('Pass correct props to text editor', () => {
+    const item = mount(
+        <Item
+            description="Description"
+            editing={true}
+            id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
+
+    expect(item.find(TextEditor).prop('adapter')).toEqual('ckeditor5');
+    expect(item.find(TextEditor).prop('locale').get()).toEqual('en');
+});
+
 test('Cancelling the item while editing should call the onClose callback', () => {
     const cancelSpy = jest.fn();
 
@@ -47,6 +73,8 @@ test('Cancelling the item while editing should call the onClose callback', () =>
             description="Description"
             editing={true}
             id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
             onApply={jest.fn()}
             onCancel={cancelSpy}
             title="Title"
@@ -65,6 +93,8 @@ test('Reset the current field when the edit form is closed', () => {
             description="Edited description"
             editing={true}
             id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Edited title"
@@ -72,13 +102,37 @@ test('Reset the current field when the edit form is closed', () => {
         />
     );
 
-    item.find('TextArea').prop('onChange')('Edited description');
+    item.find(TextEditor).prop('onChange')('Edited description');
     item.find('Input').prop('onChange')('Edited title');
 
     item.setProps({description: 'Description', editing: false, title: 'Title'});
     item.setProps({editing: true});
 
-    expect(item.find('TextArea').prop('value')).toEqual('Description');
+    expect(item.find(TextEditor).prop('value')).toEqual('Description');
+    expect(item.find('Input').prop('value')).toEqual('Title');
+});
+
+test('Reset the current field when the title or description props change', () => {
+    const item = shallow(
+        <Item
+            description="Edited description"
+            editing={true}
+            id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Edited title"
+            type="page"
+        />
+    );
+
+    item.find(TextEditor).prop('onChange')('Edited description');
+    item.find('Input').prop('onChange')('Edited title');
+
+    item.setProps({description: 'Description', title: 'Title'});
+
+    expect(item.find(TextEditor).prop('value')).toEqual('Description');
     expect(item.find('Input').prop('value')).toEqual('Title');
 });
 
@@ -90,6 +144,8 @@ test('Applying the item while editing should call the onApply callback with the 
             description="Description"
             editing={true}
             id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
             onApply={applySpy}
             onCancel={jest.fn()}
             title="Title"
@@ -97,7 +153,7 @@ test('Applying the item while editing should call the onApply callback with the 
         />
     );
 
-    item.find('TextArea').prop('onChange')('Edited description');
+    item.find(TextEditor).prop('onChange')('Edited description');
     item.find('Input').prop('onChange')('Edited title');
 
     expect(applySpy).not.toBeCalled();

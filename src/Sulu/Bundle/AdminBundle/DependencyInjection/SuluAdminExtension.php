@@ -111,6 +111,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             'list' => 'get_localizations',
                         ],
                     ],
+                    'teasers' => [
+                        'routes' => [
+                            'list' => 'get_teasers',
+                        ],
+                    ],
                 ],
             ]
         );

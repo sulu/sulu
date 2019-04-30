@@ -17,6 +17,6 @@ export type TeaserItem = {
 };
 
 export type TeaserSelectionValue = {
-    displayOption: string,
+    displayOption: ?string,
     items: Array<TeaserItem>,
 };
