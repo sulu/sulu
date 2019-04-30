@@ -28,7 +28,7 @@ sulu_page.webspace:
 
 sulu_page.teaser:
     type: rest
-    resource: Sulu\Bundle\PageBundle\Controller\TeaserController
+    resource: sulu_page.teaser_controller
 
 sulu_page.node.versioning:
     type: versioning_rest

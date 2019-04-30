@@ -10,7 +10,7 @@
 
         <!-- content provider -->
         <service id="sulu_page.teaser.provider.content"
-                 class="Sulu\Bundle\PageBundle\Teaser\ContentTeaserProvider">
+                 class="Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider">
             <argument type="service" id="massive_search.search_manager"/>
             <argument type="service" id="translator"/>
 
@@ -39,6 +39,14 @@
 
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_page.teaser_controller"
+            class="Sulu\Bundle\PageBundle\Controller\TeaserController"
+            public="true"
+        >
+            <argument type="service" id="sulu_page.teaser.manager"/>
         </service>
     </services>
 </container>

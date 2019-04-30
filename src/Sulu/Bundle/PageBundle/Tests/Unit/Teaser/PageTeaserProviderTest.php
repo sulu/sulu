@@ -17,12 +17,12 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PageBundle\Teaser\ContentTeaserProvider;
+use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ContentTeaserProviderTest extends TestCase
+class PageTeaserProviderTest extends TestCase
 {
     /**
      * @var SearchManagerInterface
@@ -35,9 +35,9 @@ class ContentTeaserProviderTest extends TestCase
     private $search;
 
     /**
-     * @var ContentTeaserProvider
+     * @var PageTeaserProvider
      */
-    private $contentProvider;
+    private $pageTeaserProvider;
 
     /**
      * @var TranslatorInterface
@@ -52,7 +52,7 @@ class ContentTeaserProviderTest extends TestCase
 
         $this->searchManager->getIndexNames()->willReturn(['page_sulu_io_published']);
 
-        $this->contentProvider = new ContentTeaserProvider($this->searchManager->reveal(), $this->translator->reveal());
+        $this->pageTeaserProvider = new PageTeaserProvider($this->searchManager->reveal(), $this->translator->reveal());
     }
 
     public function testFind()
@@ -95,7 +95,7 @@ class ContentTeaserProviderTest extends TestCase
             [$this->createQueryHit($ids[0], $data[$ids[0]]), $this->createQueryHit($ids[1], $data[$ids[1]])]
         );
 
-        $result = $this->contentProvider->find($ids, 'de');
+        $result = $this->pageTeaserProvider->find($ids, 'de');
 
         $this->assertCount(2, $result);
 
@@ -125,7 +125,7 @@ class ContentTeaserProviderTest extends TestCase
     private function assertTeaser($id, array $expected, Teaser $teaser)
     {
         $this->assertEquals($id, $teaser->getId());
-        $this->assertEquals('content', $teaser->getType());
+        $this->assertEquals('pages', $teaser->getType());
 
         $this->assertEquals(
             '' !== $expected['excerptTitle'] ? $expected['excerptTitle'] : $expected['title'],

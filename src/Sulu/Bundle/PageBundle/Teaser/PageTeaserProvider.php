@@ -19,10 +19,7 @@ use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Teaser provider for content-pages.
- */
-class ContentTeaserProvider implements TeaserProviderInterface
+class PageTeaserProvider implements TeaserProviderInterface
 {
     /**
      * @var SearchManagerInterface
@@ -92,7 +89,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
 
             $result[] = new Teaser(
                 $item->getId(),
-                'content',
+                'pages',
                 $locale,
                 ('' !== $excerptTitle ? $excerptTitle : $title),
                 ('' !== $excerptDescription ? $excerptDescription : $teaserDescription),
