@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.5
+    * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
+    
 * 1.5.22 (2019-03-26)
     * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
     * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
