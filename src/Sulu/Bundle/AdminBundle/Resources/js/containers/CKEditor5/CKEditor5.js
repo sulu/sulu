@@ -24,7 +24,7 @@ type Props = {|
     disabled: boolean,
     formats: Array<string>,
     locale?: ?IObservableValue<string>,
-    onBlur: () => void,
+    onBlur?: () => void,
     onChange: (value: ?string) => void,
     value: ?string,
 |};
