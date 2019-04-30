@@ -25,7 +25,7 @@ class RedirectEnhancerTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');
         $request->getScheme()->willReturn('http');
-        
+
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
 

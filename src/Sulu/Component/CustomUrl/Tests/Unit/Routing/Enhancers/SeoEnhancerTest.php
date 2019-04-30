@@ -104,7 +104,7 @@ class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
                 '_seo' => [
                     'noFollow' => false,
                     'noIndex' => true,
-                    'canonicalUrl' => 'sulu.io/test'
+                    'canonicalUrl' => 'sulu.io/test',
                 ],
             ],
             $defaults
