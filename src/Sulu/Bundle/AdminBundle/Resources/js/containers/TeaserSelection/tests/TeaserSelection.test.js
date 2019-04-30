@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import TextEditor from '../../TextEditor';
 import TeaserSelection from '../TeaserSelection';
@@ -118,8 +118,8 @@ test('Load combined data from TeaserStore and props', () => {
             {
                 id: 4,
                 type: 'contacts',
-            }
-        ]
+            },
+        ],
     };
 
     // $FlowFixMe

@@ -32,7 +32,7 @@ test('Load and reload teasers when new ones are added', () => {
             {
                 id: 1,
                 type: 'contacts',
-            }
+            },
         ];
 
         const teaserPromise2 = Promise.resolve({
@@ -69,7 +69,7 @@ test('Use findById function to load teasers', () => {
         {
             id: 1,
             type: 'contacts',
-        }
+        },
     ];
 
     const teaserPromise = Promise.resolve({
