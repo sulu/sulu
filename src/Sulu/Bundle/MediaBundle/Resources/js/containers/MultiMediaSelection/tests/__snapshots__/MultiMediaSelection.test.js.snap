@@ -14,7 +14,7 @@ Array [
       >
         <span
           aria-label="su-image"
-          class="su-image"
+          class="su-image icon"
         />
       </button>
       <div
@@ -204,7 +204,7 @@ Array [
       >
         <span
           aria-label="su-image"
-          class="su-image"
+          class="su-image icon"
         />
       </button>
       <div
