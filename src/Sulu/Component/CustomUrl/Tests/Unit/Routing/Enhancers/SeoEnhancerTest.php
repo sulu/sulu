@@ -63,15 +63,17 @@ class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
     public function testEnhanceWithCanonical()
     {
         $request = $this->prophesize(Request::class);
+        $request->getHost()->willReturn('sulu.io');
+        $request->getScheme()->willReturn('http');
+
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
 
         $customUrl = $this->prophesize(CustomUrlDocument::class);
-        $customUrl->isRedirect()->willReturn(true);
         $customUrl->getTargetLocale()->willReturn('de');
-        $customUrl->isNoFollow()->willReturn(true);
+        $customUrl->isNoFollow()->willReturn(false);
         $customUrl->isNoIndex()->willReturn(true);
-        $customUrl->isCanonical()->willReturn(false);
+        $customUrl->isCanonical()->willReturn(true);
 
         $target = $this->prophesize(PageDocument::class);
         $target->getResourceSegment()->willReturn('/test');
@@ -82,7 +84,9 @@ class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
             '/test',
             'prod',
             'de',
-            'sulu_io'
+            'sulu_io',
+            'sulu.io',
+            'http'
         )->willReturn('sulu.io/test');
 
         $enhancer = new SeoEnhancer($webspaceManager->reveal());
@@ -98,8 +102,9 @@ class SeoEnhancerTest extends \PHPUnit_Framework_TestCase
                 '_webspace' => $webspace->reveal(),
                 '_environment' => 'prod',
                 '_seo' => [
-                    'noFollow' => true,
+                    'noFollow' => false,
                     'noIndex' => true,
+                    'canonicalUrl' => 'sulu.io/test'
                 ],
             ],
             $defaults
