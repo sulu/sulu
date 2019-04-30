@@ -7,15 +7,8 @@ const updateRouterAttributesFromView: UpdateAttributesHook = function(route, att
 
     const View = viewRegistry.get(route.view);
 
-    // $FlowFixMe
     if (typeof View.getDerivedRouteAttributes === 'function') {
         const newAttributes = View.getDerivedRouteAttributes(route, {...parentAttributes, ...attributes});
-
-        if (typeof newAttributes !== 'object') {
-            throw new Error(
-                'The "getDerivedRouteAttributes" function of the "' + route.view + '" view did not return an object.'
-            );
-        }
 
         return {...parentAttributes, ...newAttributes};
     }

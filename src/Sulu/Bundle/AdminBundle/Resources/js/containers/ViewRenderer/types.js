@@ -1,7 +1,7 @@
 // @flow
 import type {Component, Element} from 'react';
 import Router from '../../services/Router';
-import type {Route} from '../../services/Router';
+import type {AttributeMap, Route} from '../../services/Router';
 
 export type ViewProps = {
     router: Router,
@@ -9,4 +9,8 @@ export type ViewProps = {
     children?: (?Object) => Element<*> | null,
 };
 
-export type View = Class<Component<ViewProps & *>>;
+interface GetDerivedRouteAttributesInterface {
+    +getDerivedRouteAttributes?: (route: Route, attributes: AttributeMap) => Object,
+}
+
+export type View = Class<Component<ViewProps & *>> & GetDerivedRouteAttributesInterface;
