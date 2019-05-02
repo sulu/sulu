@@ -94,7 +94,7 @@ export default class Item extends React.Component<Props> {
                 : <div className={itemStyles.item}>
                     <div className={itemStyles.description}>
                         <p>{this.title}</p>
-                        <p>{textVersion(this.description)}</p>
+                        <p>{this.description && textVersion(this.description)}</p>
                     </div>
                     <p className={itemStyles.type}>{type}</p>
                 </div>

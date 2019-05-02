@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
+import MultiListOverlay from '../../../containers/MultiListOverlay';
 import TextEditor from '../../TextEditor';
 import TeaserSelection from '../TeaserSelection';
 import TeaserStore from '../stores/TeaserStore';
@@ -11,9 +12,23 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
+
 jest.mock('../../TextEditor', () => jest.fn(({value}) => (<textarea onChange={jest.fn()} value={value} />)));
 
 jest.mock('../stores/TeaserStore', () => jest.fn());
+
+jest.mock('../registries/TeaserProviderRegistry', () => ({
+    keys: ['pages', 'articles'],
+    get: jest.fn((key) => {
+        switch (key) {
+            case 'pages':
+                return {title: 'Pages'};
+            case 'articles':
+                return {title: 'Articles'};
+        }
+    }),
+}));
 
 test('Render loading teaser selection', () => {
     const value = {
@@ -162,6 +177,179 @@ test('Load combined data from TeaserStore and props', () => {
 
     teaserSelection.update();
     expect(teaserSelection.render()).toMatchSnapshot();
+});
+
+test('Opening different adding overlays and close them without any action', () => {
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />
+    );
+
+    expect(teaserSelection.find('MultiItemSelection').prop('leftButton').options).toEqual([
+        {label: 'Pages', value: 'pages'},
+        {label: 'Articles', value: 'articles'},
+    ]);
+
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
+
+    teaserSelection.find('MultiItemSelection').prop('leftButton').onClick('articles');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(true);
+
+    teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('onClose')();
+    teaserSelection.find('MultiItemSelection').prop('leftButton').onClick('pages');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
+});
+
+test('Adding a teaser element', () => {
+    const changeSpy = jest.fn();
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={undefined} />
+    );
+
+    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
+    teaserSelection.find('Action[value="pages"]').simulate('click');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
+    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 6}, {id: 5}]);
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
+
+    expect(changeSpy).toBeCalledWith({
+        displayOption: undefined,
+        items: [{id: 6, type: 'pages'}, {id: 5, type: 'pages'}],
+    });
+
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 5);
+});
+
+test('Adding two different kind of teasers', () => {
+    const changeSpy = jest.fn();
+
+    const value = {
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+            {id: 8, type: 'pages'},
+        ],
+    };
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
+    );
+
+    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
+    teaserSelection.find('Action[value="articles"]').simulate('click');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(true);
+    teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('onConfirm')([{id: 6}]);
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
+
+    expect(changeSpy).toBeCalledWith({
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+            {id: 8, type: 'pages'},
+            {id: 6, type: 'articles'},
+        ],
+    });
+
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('articles', 6);
+});
+
+test('Removing by unselecting element in teaser selection', () => {
+    const changeSpy = jest.fn();
+
+    const value = {
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+            {id: 8, type: 'pages'},
+            {id: 5, type: 'articles'},
+        ],
+    };
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
+    );
+
+    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
+    teaserSelection.find('Action[value="pages"]').simulate('click');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
+    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 6}]);
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
+
+    expect(changeSpy).toBeCalledWith({
+        displayOption: undefined,
+        items: [{id: 5, type: 'articles'}, {id: 6, type: 'pages'}],
+    });
+
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 5);
+});
+
+test('Preselecting correct items', () => {
+    const changeSpy = jest.fn();
+
+    const value = {
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+            {id: 8, type: 'pages'},
+            {id: 5, type: 'articles'},
+        ],
+    };
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
+    );
+
+    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
+    teaserSelection.find('Action[value="pages"]').simulate('click');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('preSelectedItems'))
+        .toEqual([{id: 5, type: 'pages'}, {id: 8, type: 'pages'}]);
 });
 
 test('Open and close items when clicking on the pen icon', () => {

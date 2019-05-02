@@ -2,6 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
+import userStore from '../../../../stores/UserStore';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -20,6 +21,8 @@ jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.locale = formStore.locale;
 }));
+
+jest.mock('../../../../stores/UserStore', () => ({}));
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();
@@ -51,4 +54,13 @@ test('Pass props correctly to component', () => {
     expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('en');
     expect(field.find(TeaserSelectionComponent).prop('onChange')).toBe(changeSpy);
     expect(field.find(TeaserSelectionComponent).prop('value')).toBe(value);
+});
+
+test('Pass locale from userStore when form has no locale', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    userStore.contentLocale = 'de';
+
+    const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
+
+    expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('de');
 });

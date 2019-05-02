@@ -1,12 +1,14 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from '../../components';
 import MultiItemSelection from '../../components/MultiItemSelection';
+import MultiListOverlay from '../../containers/MultiListOverlay';
 import TeaserStore from './stores/TeaserStore';
 import Item from './Item';
+import teaserProviderRegistry from './registries/TeaserProviderRegistry';
 import type {TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|
@@ -25,6 +27,7 @@ export default class TeaserSelection extends React.Component<Props> {
     };
 
     @observable editIds: Array<number | string> = [];
+    @observable openedOverlay: ?string = undefined;
     teaserStore: TeaserStore;
 
     constructor(props: Props) {
@@ -83,7 +86,6 @@ export default class TeaserSelection extends React.Component<Props> {
     handleRemove = (id: number | string) => {
         const {onChange, value} = this.props;
 
-        // TODO also check for type
         onChange({...value, items: value.items.filter((item) => item.id !== id)});
     };
 
@@ -93,32 +95,104 @@ export default class TeaserSelection extends React.Component<Props> {
         onChange({...value, items: arrayMove(value.items, oldItemIndex, newItemIndex)});
     };
 
+    @action handleClose = () => {
+        this.openedOverlay = undefined;
+    };
+
+    @action handleConfirm = (items: Array<Object>) => {
+        const {openedOverlay} = this;
+
+        if (!openedOverlay) {
+            throw new Error('There was no opened overlay defined! This should not happen and is likely a bug.');
+        }
+
+        const {onChange, value} = this.props;
+
+        const oldItems = value.items
+            .filter(
+                (currentItem) => currentItem.type !== openedOverlay || items.find((item) => item.id === currentItem.id)
+            );
+
+        const newItems = oldItems.concat(
+            items.filter((item) => !oldItems.find((oldItem) => oldItem.id === item.id && oldItem.type !== item.type))
+                .map((item) => ({id: item.id, type: openedOverlay}))
+        );
+
+        onChange({
+            ...value,
+            items: newItems,
+        });
+
+        items.forEach((item) => {
+            this.teaserStore.add(openedOverlay, item.id);
+        });
+
+        this.openedOverlay = undefined;
+    };
+
+    @action handleAddClick = (provider: ?string) => {
+        this.openedOverlay = provider;
+    };
+
     render() {
-        const {locale} = this.props;
+        const {locale, value} = this.props;
+
+        const addButtonOptions = teaserProviderRegistry.keys.map((teaserProviderKey) => {
+            const teaserProvider = teaserProviderRegistry.get(teaserProviderKey);
+
+            return {
+                label: teaserProvider.title,
+                value: teaserProviderKey,
+            };
+        });
 
         return (
-            <MultiItemSelection loading={this.teaserStore.loading} onItemsSorted={this.handleSorted}>
-                {this.teaserItems.map((teaserItem, index) => (
-                    <MultiItemSelection.Item
-                        id={teaserItem.id}
-                        index={index + 1}
-                        key={teaserItem.id}
-                        onEdit={this.editIds.includes(teaserItem.id) ? undefined : this.handleEdit}
-                        onRemove={this.handleRemove}
-                    >
-                        <Item
-                            description={teaserItem.description}
-                            editing={this.editIds.includes(teaserItem.id)}
+            <Fragment>
+                <MultiItemSelection
+                    leftButton={{
+                        icon: 'su-plus-circle',
+                        onClick: this.handleAddClick,
+                        options: addButtonOptions,
+                    }}
+                    loading={this.teaserStore.loading}
+                    onItemsSorted={this.handleSorted}
+                >
+                    {this.teaserItems.map((teaserItem, index) => (
+                        <MultiItemSelection.Item
                             id={teaserItem.id}
-                            locale={locale}
-                            onApply={this.handleApply}
-                            onCancel={this.handleCancel}
-                            title={teaserItem.title}
-                            type={teaserItem.type}
-                        />
-                    </MultiItemSelection.Item>
+                            index={index + 1}
+                            key={teaserItem.type + teaserItem.id}
+                            onEdit={this.editIds.includes(teaserItem.id) ? undefined : this.handleEdit}
+                            onRemove={this.handleRemove}
+                        >
+                            <Item
+                                description={teaserItem.description}
+                                editing={this.editIds.includes(teaserItem.id)}
+                                id={teaserItem.id}
+                                locale={locale}
+                                onApply={this.handleApply}
+                                onCancel={this.handleCancel}
+                                title={teaserItem.title}
+                                type={teaserItem.type}
+                            />
+                        </MultiItemSelection.Item>
+                    ))}
+                </MultiItemSelection>
+                {teaserProviderRegistry.keys.map((teaserProviderKey) => (
+                    <MultiListOverlay
+                        adapter={teaserProviderRegistry.get(teaserProviderKey).listAdapter}
+                        key={teaserProviderKey}
+                        listKey={teaserProviderKey}
+                        locale={locale}
+                        onClose={this.handleClose}
+                        onConfirm={this.handleConfirm}
+                        open={this.openedOverlay === teaserProviderKey}
+                        preSelectedItems={value.items.filter((item) => item.type === teaserProviderKey)}
+                        resourceKey={teaserProviderKey}
+                        title={teaserProviderRegistry.get(teaserProviderKey).overlayTitle}
+                    />
                 ))}
-            </MultiItemSelection>
+            </Fragment>
         );
     }
 }

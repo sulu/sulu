@@ -72,3 +72,21 @@ exports[`Render Item with data as form 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render Item without data 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="description"
+  >
+    <p />
+    <p />
+  </div>
+  <p
+    class="type"
+  >
+    page
+  </p>
+</div>
+`;

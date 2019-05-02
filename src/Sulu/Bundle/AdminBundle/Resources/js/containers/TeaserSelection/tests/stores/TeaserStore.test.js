@@ -56,6 +56,15 @@ test('Load and reload teasers when new ones are added', () => {
     });
 });
 
+test('Add items only once to teaser store', () => {
+    const teaserStore = new TeaserStore();
+
+    teaserStore.add('pages', 1);
+    teaserStore.add('pages', 1);
+
+    expect(teaserStore.teaserItemIds).toEqual([{id: 1, type: 'pages'}]);
+});
+
 test('Use findById function to load teasers', () => {
     const teasers = [
         {

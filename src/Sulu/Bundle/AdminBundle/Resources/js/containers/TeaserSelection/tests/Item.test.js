@@ -28,6 +28,23 @@ test('Render Item with data', () => {
     expect(item.render()).toMatchSnapshot();
 });
 
+test('Render Item without data', () => {
+    const item = mount(
+        <Item
+            description={undefined}
+            editing={false}
+            id={5}
+            locale={observable.box('en')}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title={undefined}
+            type="page"
+        />
+    );
+
+    expect(item.render()).toMatchSnapshot();
+});
+
 test('Render Item with data as form', () => {
     const item = mount(
         <Item

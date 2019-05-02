@@ -7,6 +7,19 @@ exports[`Load combined data from TeaserStore and props 1`] = `
   <div
     class="header"
   >
+    <button
+      class="button left options"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
     <div
       class="label"
     />
@@ -226,6 +239,19 @@ exports[`Render loading teaser selection 1`] = `
   <div
     class="header"
   >
+    <button
+      class="button left options"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
     <div
       class="label"
     >
@@ -327,6 +353,19 @@ exports[`Render teaser selection with data 1`] = `
   <div
     class="header"
   >
+    <button
+      class="button left options"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
     <div
       class="label"
     />
