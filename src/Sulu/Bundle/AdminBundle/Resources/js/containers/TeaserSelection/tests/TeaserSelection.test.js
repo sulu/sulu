@@ -293,6 +293,47 @@ test('Adding two different kind of teasers', () => {
     expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('articles', 6);
 });
 
+test('Adding a teaser item along with other teaser items which has already been added', () => {
+    const changeSpy = jest.fn();
+
+    const value = {
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+        ],
+    };
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />
+    );
+
+    teaserSelection.find('Button[icon="su-plus-circle"]').simulate('click');
+    teaserSelection.find('Action[value="pages"]').simulate('click');
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(true);
+    teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('onConfirm')([{id: 5}, {id: 6}]);
+
+    teaserSelection.update();
+    expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
+
+    expect(changeSpy).toBeCalledWith({
+        displayOption: undefined,
+        items: [
+            {id: 5, type: 'pages'},
+            {id: 6, type: 'pages'},
+        ],
+    });
+
+    expect(teaserSelection.instance().teaserStore.add).toBeCalledWith('pages', 6);
+});
+
 test('Removing by unselecting element in teaser selection', () => {
     const changeSpy = jest.fn();
 

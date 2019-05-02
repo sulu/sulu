@@ -118,14 +118,13 @@ export default class TeaserSelection extends React.Component<Props> {
                 (currentItem) => currentItem.type !== openedOverlay || items.find((item) => item.id === currentItem.id)
             );
 
-        const newItems = oldItems.concat(
-            items.filter((item) => !oldItems.find((oldItem) => oldItem.id === item.id && oldItem.type !== item.type))
-                .map((item) => ({id: item.id, type: openedOverlay}))
-        );
+        const newItems = items
+            .filter((item) => !oldItems.find((oldItem) => oldItem.id === item.id && oldItem.type === openedOverlay))
+            .map((item) => ({id: item.id, type: openedOverlay}));
 
         onChange({
             ...value,
-            items: newItems,
+            items: [...oldItems, ...newItems],
         });
 
         items.forEach((item) => {
