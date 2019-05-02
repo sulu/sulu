@@ -38,7 +38,7 @@ exports[`Render Item with data and image 1`] = `
     class="media"
   >
     <img
-      src="/admin/image"
+      src="/admin/image/2"
     />
   </div>
   <div

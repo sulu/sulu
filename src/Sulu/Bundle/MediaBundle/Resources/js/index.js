@@ -54,7 +54,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         2048
     );
 
-    TeaserSelection.mediaUrl = imageFormatUrl + '?locale=en&format=sulu-25x25';
+    TeaserSelection.Item.mediaUrl = imageFormatUrl + '?locale=en&format=sulu-25x25';
 
     when(
         () => !!initializer.initializedTranslationsLocale,

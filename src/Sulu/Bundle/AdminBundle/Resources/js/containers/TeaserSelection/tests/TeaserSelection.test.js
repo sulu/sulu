@@ -31,7 +31,7 @@ jest.mock('../registries/TeaserProviderRegistry', () => ({
 }));
 
 beforeEach(() => {
-    TeaserSelection.mediaUrl = '/admin/media/:id?format=sulu-25x25';
+    TeaserSelection.Item.mediaUrl = '/admin/media/:id?format=sulu-25x25';
 });
 
 test('Render loading teaser selection', () => {

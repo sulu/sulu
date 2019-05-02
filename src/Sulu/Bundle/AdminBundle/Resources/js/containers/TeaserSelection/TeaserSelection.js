@@ -28,7 +28,7 @@ export default class TeaserSelection extends React.Component<Props> {
         },
     };
 
-    static mediaUrl: ?string = undefined;
+    static Item = Item;
 
     @observable editIds: Array<number | string> = [];
     @observable openedOverlay: ?string = undefined;
@@ -140,7 +140,6 @@ export default class TeaserSelection extends React.Component<Props> {
 
     render() {
         const {disabled, locale, value} = this.props;
-        const {mediaUrl} = TeaserSelection;
 
         const addButtonOptions = teaserProviderRegistry.keys.map((teaserProviderKey) => {
             const teaserProvider = teaserProviderRegistry.get(teaserProviderKey);
@@ -176,11 +175,7 @@ export default class TeaserSelection extends React.Component<Props> {
                                 editing={this.editIds.includes(teaserItem.id)}
                                 id={teaserItem.id}
                                 locale={locale}
-                                mediaUrl={
-                                    mediaUrl && teaserItem.mediaId
-                                        ? mediaUrl.replace(':id', teaserItem.mediaId.toString())
-                                        : undefined
-                                }
+                                mediaId={teaserItem.mediaId}
                                 onApply={this.handleApply}
                                 onCancel={this.handleCancel}
                                 title={teaserItem.title}
