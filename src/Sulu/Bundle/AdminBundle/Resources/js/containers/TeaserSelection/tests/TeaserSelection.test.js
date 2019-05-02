@@ -30,6 +30,10 @@ jest.mock('../registries/TeaserProviderRegistry', () => ({
     }),
 }));
 
+beforeEach(() => {
+    TeaserSelection.mediaUrl = '/admin/media/:id?format=sulu-25x25';
+});
+
 test('Render loading teaser selection', () => {
     const value = {
         displayOption: '',
@@ -154,6 +158,7 @@ test('Load combined data from TeaserStore and props', () => {
                 return {
                     description: 'Page Description',
                     id: 2,
+                    mediaId: 8,
                     title: 'Page',
                     type: 'pages',
                 };

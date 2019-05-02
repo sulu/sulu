@@ -53,12 +53,23 @@ exports[`Load combined data from TeaserStore and props 1`] = `
             class="item"
           >
             <div
-              class="description"
+              class="media"
             >
-              <p>
+              <img
+                src="/admin/media/8?format=sulu-25x25"
+              />
+            </div>
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
                 Edited Page Title
               </p>
-              <p>
+              <p
+                class="description"
+              >
                 Edited Page Description
 
               </p>
@@ -120,12 +131,19 @@ exports[`Load combined data from TeaserStore and props 1`] = `
             class="item"
           >
             <div
-              class="description"
+              class="media"
+            />
+            <div
+              class="content"
             >
-              <p>
+              <p
+                class="title"
+              >
                 Contact 1
               </p>
-              <p>
+              <p
+                class="description"
+              >
                 Contact Description 1
 
               </p>
@@ -187,12 +205,19 @@ exports[`Load combined data from TeaserStore and props 1`] = `
             class="item"
           >
             <div
-              class="description"
+              class="media"
+            />
+            <div
+              class="content"
             >
-              <p>
+              <p
+                class="title"
+              >
                 Contact 2
               </p>
-              <p>
+              <p
+                class="description"
+              >
                 Contact Description 2
 
               </p>
@@ -301,12 +326,19 @@ exports[`Render loading teaser selection 1`] = `
             class="item"
           >
             <div
-              class="description"
+              class="media"
+            />
+            <div
+              class="content"
             >
-              <p>
+              <p
+                class="title"
+              >
                 Title
               </p>
-              <p>
+              <p
+                class="description"
+              >
                 Description
 
               </p>
@@ -399,12 +431,19 @@ exports[`Render teaser selection with data 1`] = `
             class="item"
           >
             <div
-              class="description"
+              class="media"
+            />
+            <div
+              class="content"
             >
-              <p>
+              <p
+                class="title"
+              >
                 Title
               </p>
-              <p>
+              <p
+                class="description"
+              >
                 Description
 
               </p>

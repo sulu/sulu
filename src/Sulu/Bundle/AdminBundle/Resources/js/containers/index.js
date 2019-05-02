@@ -22,6 +22,7 @@ import MultiAutoComplete from './MultiAutoComplete';
 import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
+import TeaserSelection from './TeaserSelection';
 
 export type {
     ListAdapterProps,
@@ -54,6 +55,7 @@ export {
     Sidebar,
     sidebarStore,
     sidebarRegistry,
+    TeaserSelection,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

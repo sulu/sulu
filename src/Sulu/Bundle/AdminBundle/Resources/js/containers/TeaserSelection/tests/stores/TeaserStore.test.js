@@ -1,4 +1,5 @@
 // @flow
+import {observable} from 'mobx';
 import TeaserStore from '../../stores/TeaserStore';
 import ResourceRequester from '../../../../services/ResourceRequester';
 
@@ -13,9 +14,9 @@ test('Load and reload teasers when new ones are added', () => {
         },
     });
     ResourceRequester.getList.mockReturnValue(teaserPromise1);
-    const teaserStore = new TeaserStore();
+    const teaserStore = new TeaserStore(observable.box('de'));
 
-    expect(ResourceRequester.getList).toHaveBeenLastCalledWith('teasers', {ids: []});
+    expect(ResourceRequester.getList).toHaveBeenLastCalledWith('teasers', {ids: [], locale: 'de'});
 
     return teaserPromise1.then(() => {
         expect(teaserStore.teaserItems).toHaveLength(0);
@@ -47,7 +48,7 @@ test('Load and reload teasers when new ones are added', () => {
         teaserStore.add('contacts', 1);
 
         expect(ResourceRequester.getList)
-            .toHaveBeenLastCalledWith('teasers', {ids: ['pages;1', 'pages;2', 'contacts;1']});
+            .toHaveBeenLastCalledWith('teasers', {ids: ['pages;1', 'pages;2', 'contacts;1'], locale: 'de'});
 
         return teaserPromise2.then(() => {
             expect(teaserStore.teaserItems).toEqual(teasers);
@@ -57,7 +58,7 @@ test('Load and reload teasers when new ones are added', () => {
 });
 
 test('Add items only once to teaser store', () => {
-    const teaserStore = new TeaserStore();
+    const teaserStore = new TeaserStore(observable.box('en'));
 
     teaserStore.add('pages', 1);
     teaserStore.add('pages', 1);
@@ -87,9 +88,9 @@ test('Use findById function to load teasers', () => {
         },
     });
     ResourceRequester.getList.mockReturnValue(teaserPromise);
-    const teaserStore = new TeaserStore();
+    const teaserStore = new TeaserStore(observable.box('en'));
 
-    expect(ResourceRequester.getList).toHaveBeenLastCalledWith('teasers', {ids: []});
+    expect(ResourceRequester.getList).toHaveBeenLastCalledWith('teasers', {ids: [], locale: 'en'});
 
     return teaserPromise.then(() => {
         expect(teaserStore.findById('pages', 2)).toEqual(teasers[1]);
@@ -105,7 +106,7 @@ test('Destroy should call the autorun disposer', () => {
         },
     });
     ResourceRequester.getList.mockReturnValue(teaserPromise1);
-    const teaserStore = new TeaserStore();
+    const teaserStore = new TeaserStore(observable.box('de'));
 
     const disposerSpy = jest.fn();
     teaserStore.teaserDisposer = disposerSpy;

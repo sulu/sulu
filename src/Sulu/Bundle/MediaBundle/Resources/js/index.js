@@ -6,6 +6,7 @@ import {
     listAdapterRegistry,
     fieldRegistry,
     internalLinkTypeRegistry,
+    TeaserSelection,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -52,6 +53,8 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl),
         2048
     );
+
+    TeaserSelection.mediaUrl = imageFormatUrl + '?locale=en&format=sulu-25x25';
 
     when(
         () => !!initializer.initializedTranslationsLocale,

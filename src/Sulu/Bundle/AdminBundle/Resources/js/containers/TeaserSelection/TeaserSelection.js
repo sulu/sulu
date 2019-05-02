@@ -13,7 +13,7 @@ import type {TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|
     disabled: boolean,
-    locale: ?IObservableValue<string>,
+    locale: IObservableValue<string>,
     onChange: (TeaserSelectionValue) => void,
     value: TeaserSelectionValue,
 |};
@@ -28,6 +28,8 @@ export default class TeaserSelection extends React.Component<Props> {
         },
     };
 
+    static mediaUrl: ?string = undefined;
+
     @observable editIds: Array<number | string> = [];
     @observable openedOverlay: ?string = undefined;
     teaserStore: TeaserStore;
@@ -36,9 +38,10 @@ export default class TeaserSelection extends React.Component<Props> {
         super(props);
 
         action(() => {
-            this.teaserStore = new TeaserStore();
+            const {locale, value} = this.props;
 
-            const {value} = this.props;
+            this.teaserStore = new TeaserStore(locale);
+
             value.items.forEach((item) => {
                 this.teaserStore.add(item.type, item.id);
             });
@@ -138,6 +141,7 @@ export default class TeaserSelection extends React.Component<Props> {
 
     render() {
         const {disabled, locale, value} = this.props;
+        const {mediaUrl} = TeaserSelection;
 
         const addButtonOptions = teaserProviderRegistry.keys.map((teaserProviderKey) => {
             const teaserProvider = teaserProviderRegistry.get(teaserProviderKey);
@@ -173,6 +177,11 @@ export default class TeaserSelection extends React.Component<Props> {
                                 editing={this.editIds.includes(teaserItem.id)}
                                 id={teaserItem.id}
                                 locale={locale}
+                                mediaUrl={
+                                    mediaUrl && teaserItem.mediaId
+                                        ? mediaUrl.replace(':id', teaserItem.mediaId.toString())
+                                        : undefined
+                                }
                                 onApply={this.handleApply}
                                 onCancel={this.handleCancel}
                                 title={teaserItem.title}

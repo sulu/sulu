@@ -16,6 +16,7 @@ type Props = {|
     editing: boolean,
     id: number | string,
     locale: ?IObservableValue<string>,
+    mediaUrl: ?string,
     onApply: (item: TeaserItem) => void,
     onCancel: (id: number | string) => void,
     title: ?string,
@@ -69,7 +70,7 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {editing, locale, type} = this.props;
+        const {editing, locale, mediaUrl, type} = this.props;
 
         // TODO replace type with correct translation from TeaserProviderRegistry
         return (
@@ -92,9 +93,14 @@ export default class Item extends React.Component<Props> {
                     </div>
                 </div>
                 : <div className={itemStyles.item}>
-                    <div className={itemStyles.description}>
-                        <p>{this.title}</p>
-                        <p>{this.description && textVersion(this.description)}</p>
+                    <div className={itemStyles.media}>
+                        {mediaUrl && <img src={mediaUrl} />}
+                    </div>
+                    <div className={itemStyles.content}>
+                        <p className={itemStyles.title}>{this.title}</p>
+                        <p className={itemStyles.description}>
+                            {this.description && textVersion(this.description)}
+                        </p>
                     </div>
                     <p className={itemStyles.type}>{type}</p>
                 </div>

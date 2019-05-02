@@ -5,12 +5,53 @@ exports[`Render Item with data 1`] = `
   class="item"
 >
   <div
-    class="description"
+    class="media"
+  />
+  <div
+    class="content"
   >
-    <p>
+    <p
+      class="title"
+    >
       Title
     </p>
-    <p>
+    <p
+      class="description"
+    >
+      Description
+
+    </p>
+  </div>
+  <p
+    class="type"
+  >
+    page
+  </p>
+</div>
+`;
+
+exports[`Render Item with data and image 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="media"
+  >
+    <img
+      src="/admin/image"
+    />
+  </div>
+  <div
+    class="content"
+  >
+    <p
+      class="title"
+    >
+      Title
+    </p>
+    <p
+      class="description"
+    >
       Description
 
     </p>
@@ -78,10 +119,17 @@ exports[`Render Item without data 1`] = `
   class="item"
 >
   <div
-    class="description"
+    class="media"
+  />
+  <div
+    class="content"
   >
-    <p />
-    <p />
+    <p
+      class="title"
+    />
+    <p
+      class="description"
+    />
   </div>
   <p
     class="type"

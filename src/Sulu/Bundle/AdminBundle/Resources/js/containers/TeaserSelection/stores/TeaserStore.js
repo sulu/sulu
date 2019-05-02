@@ -1,15 +1,18 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
 import type {TeaserItem} from '../types';
 
 export default class TeaserStore {
+    locale: IObservableValue<string>;
     @observable teaserItemIds: Array<{type: string, id: number | string}> = [];
     @observable teaserItems: Array<TeaserItem> = [];
     @observable loading: boolean = false;
     teaserDisposer: () => void;
 
-    constructor() {
+    constructor(locale: IObservableValue<string>) {
+        this.locale = locale;
         this.teaserDisposer = autorun(this.loadTeasers);
     }
 
@@ -21,7 +24,10 @@ export default class TeaserStore {
         this.setLoading(true);
         ResourceRequester.getList(
             'teasers',
-            {ids: this.teaserItemIds.map((teaserItemId) => teaserItemId.type + ';' + teaserItemId.id)}
+            {
+                ids: this.teaserItemIds.map((teaserItemId) => teaserItemId.type + ';' + teaserItemId.id),
+                locale: this.locale.get(),
+            }
         ).then(action((response) => {
             this.teaserItems.splice(0, this.teaserItems.length, ...response._embedded.teasers);
             this.setLoading(false);

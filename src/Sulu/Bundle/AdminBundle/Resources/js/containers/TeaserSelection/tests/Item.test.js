@@ -18,6 +18,25 @@ test('Render Item with data', () => {
             editing={false}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
+            onApply={jest.fn()}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
+
+    expect(item.render()).toMatchSnapshot();
+});
+
+test('Render Item with data and image', () => {
+    const item = mount(
+        <Item
+            description="<p>Description</p>"
+            editing={false}
+            id={5}
+            locale={observable.box('en')}
+            mediaUrl="/admin/image"
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Title"
@@ -35,6 +54,7 @@ test('Render Item without data', () => {
             editing={false}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title={undefined}
@@ -52,6 +72,7 @@ test('Render Item with data as form', () => {
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Title"
@@ -69,6 +90,7 @@ test('Pass correct props to text editor', () => {
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Title"
@@ -89,6 +111,7 @@ test('Cancelling the item while editing should call the onClose callback', () =>
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={cancelSpy}
             title="Title"
@@ -108,6 +131,7 @@ test('Reset the current field when the edit form is closed', () => {
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Edited title"
@@ -132,6 +156,7 @@ test('Reset the current field when the title or description props change', () =>
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={jest.fn()}
             onCancel={jest.fn()}
             title="Edited title"
@@ -157,6 +182,7 @@ test('Applying the item while editing should call the onApply callback with the 
             editing={true}
             id={5}
             locale={observable.box('en')}
+            mediaUrl={undefined}
             onApply={applySpy}
             onCancel={jest.fn()}
             title="Title"

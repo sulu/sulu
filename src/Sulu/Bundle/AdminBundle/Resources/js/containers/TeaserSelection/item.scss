@@ -17,12 +17,28 @@
 
 .item {
     display: flex;
+    margin: 10px 0;
 }
 
-.description {
+.media {
+    height: 25px;
+    width: 25px;
+    margin-right: 10px;
+}
+
+.title {
+    margin-top: 0;
+}
+
+.content {
     flex: 1;
 }
 
+.description {
+    margin-bottom: 0;
+}
+
 .type {
+    margin-top: 0;
     width: 50px;
 }
