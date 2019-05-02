@@ -49,7 +49,9 @@ class RedirectEnhancer extends AbstractEnhancer
             $resourceSegment,
             $defaults['_environment'],
             $customUrl->getTargetLocale(),
-            $defaults['_webspace']->getKey()
+            $defaults['_webspace']->getKey(),
+            $request->getHost(),
+            $request->getScheme()
         );
 
         return [
