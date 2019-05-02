@@ -14,8 +14,12 @@ import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
 import Snackbar from '../../components/Snackbar';
 import formOverlayListStyles from './formOverlayList.scss';
 
+type Props = ViewProps & {
+    resourceStore?: ResourceStore,
+};
+
 @observer
-export default class FormOverlayList extends React.Component<ViewProps> {
+export default class FormOverlayList extends React.Component<Props> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
     locale: IObservableValue<string> = observable.box();
 
@@ -76,7 +80,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         formKey,
                         resourceKey,
                         routerAttributesToFormStore = {},
-                        listStorePropertiesToFormStore = {},
+                        resourceStorePropertiesToFormStore = {},
                     },
                 },
             },
@@ -95,7 +99,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             apiOptions,
             attributes,
             routerAttributesToFormStore,
-            listStorePropertiesToFormStore
+            resourceStorePropertiesToFormStore
         );
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
@@ -114,7 +118,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
         apiOptions: Object,
         attributes: Object,
         routerAttributesToFormStore: {[string | number]: string},
-        listStorePropertiesToFormStore: {[string | number]: string}
+        resourceStorePropertiesToFormStore: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
@@ -126,17 +130,17 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             formStoreOptions[formOptionKey] = attributes[attributeName];
         });
 
-        listStorePropertiesToFormStore = toJS(listStorePropertiesToFormStore);
+        resourceStorePropertiesToFormStore = toJS(resourceStorePropertiesToFormStore);
 
-        Object.keys(listStorePropertiesToFormStore).forEach((key) => {
-            const formOptionKey = listStorePropertiesToFormStore[key];
-            const attributeName = isNaN(key) ? key : listStorePropertiesToFormStore[key];
+        Object.keys(resourceStorePropertiesToFormStore).forEach((key) => {
+            const formOptionKey = resourceStorePropertiesToFormStore[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToFormStore[key];
 
-            if (!this.listRef || !this.listRef.listStore || !this.listRef.listStore.options) {
+            if (!this.props.resourceStore) {
                 return;
             }
 
-            formStoreOptions[formOptionKey] = this.listRef.listStore.options[attributeName];
+            formStoreOptions[formOptionKey] = this.props.resourceStore.data[attributeName];
         });
 
         return formStoreOptions;

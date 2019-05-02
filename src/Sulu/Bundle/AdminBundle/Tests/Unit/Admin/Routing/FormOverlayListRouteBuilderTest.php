@@ -277,20 +277,20 @@ class FormOverlayListRouteBuilderTest extends TestCase
         );
     }
 
-    public function testBuildWithListStorePropertiesToFormStore()
+    public function testBuildWithResourceStorePropertiesToFormStore()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addListStorePropertiesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addListStorePropertiesToFormStore(['locale'])
+            ->addResourceStorePropertiesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToFormStore(['locale'])
             ->getRoute();
 
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('listStorePropertiesToFormStore')
+            $route->getOption('resourceStorePropertiesToFormStore')
         );
     }
 

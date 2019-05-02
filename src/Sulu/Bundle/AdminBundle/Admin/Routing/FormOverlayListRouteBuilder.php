@@ -167,11 +167,11 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
         return $this;
     }
 
-    public function addListStorePropertiesToFormStore(array $listStorePropertiesToFormStore): FormOverlayListRouteBuilderInterface
+    public function addResourceStorePropertiesToFormStore(array $resourceStorePropertiesToFormStore): FormOverlayListRouteBuilderInterface
     {
-        $oldListStorePropertiesToFormStore = $this->route->getOption('listStorePropertiesToFormStore');
-        $newListStorePropertiesToFormStore = $oldListStorePropertiesToFormStore ? array_merge($oldListStorePropertiesToFormStore, $listStorePropertiesToFormStore) : $listStorePropertiesToFormStore;
-        $this->route->setOption('listStorePropertiesToFormStore', $newListStorePropertiesToFormStore);
+        $oldResourceStorePropertiesToFormStore = $this->route->getOption('resourceStorePropertiesToFormStore');
+        $newResourceStorePropertiesToFormStore = $oldResourceStorePropertiesToFormStore ? array_merge($oldResourceStorePropertiesToFormStore, $resourceStorePropertiesToFormStore) : $resourceStorePropertiesToFormStore;
+        $this->route->setOption('resourceStorePropertiesToFormStore', $newResourceStorePropertiesToFormStore);
 
         return $this;
     }
