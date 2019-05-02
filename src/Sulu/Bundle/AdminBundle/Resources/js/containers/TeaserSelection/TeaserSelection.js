@@ -12,6 +12,7 @@ import teaserProviderRegistry from './registries/TeaserProviderRegistry';
 import type {TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|
+    disabled: boolean,
     locale: ?IObservableValue<string>,
     onChange: (TeaserSelectionValue) => void,
     value: TeaserSelectionValue,
@@ -20,6 +21,7 @@ type Props = {|
 @observer
 export default class TeaserSelection extends React.Component<Props> {
     static defaultProps = {
+        disabled: false,
         value: {
             displayOption: undefined,
             items: [],
@@ -135,7 +137,7 @@ export default class TeaserSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, value} = this.props;
+        const {disabled, locale, value} = this.props;
 
         const addButtonOptions = teaserProviderRegistry.keys.map((teaserProviderKey) => {
             const teaserProvider = teaserProviderRegistry.get(teaserProviderKey);
@@ -149,6 +151,7 @@ export default class TeaserSelection extends React.Component<Props> {
         return (
             <Fragment>
                 <MultiItemSelection
+                    disabled={disabled}
                     leftButton={{
                         icon: 'su-plus-circle',
                         onClick: this.handleAddClick,

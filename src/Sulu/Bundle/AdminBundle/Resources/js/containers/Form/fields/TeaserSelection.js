@@ -17,10 +17,11 @@ export default class TeaserSelection extends React.Component<FieldTypeProps<Teas
     }
 
     render() {
-        const {onChange, value} = this.props;
+        const {disabled, onChange, value} = this.props;
 
         return (
             <TeaserSelectionComponent
+                disabled={disabled === null ? undefined : disabled}
                 locale={this.locale}
                 onChange={onChange}
                 value={value === null ? undefined : value}

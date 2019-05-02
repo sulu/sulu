@@ -82,6 +82,14 @@ test('Render teaser selection with data', () => {
     expect(teaserSelection.render()).toMatchSnapshot();
 });
 
+test('Render MultiItemSelection disabled when disabled flag is set', () => {
+    const teaserSelection = mount(
+        <TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
+    );
+
+    expect(teaserSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
+});
+
 test('Add passed data to TeaserStore', () => {
     const value = {
         displayOption: '',

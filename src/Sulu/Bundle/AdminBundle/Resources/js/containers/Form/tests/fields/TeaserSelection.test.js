@@ -51,9 +51,19 @@ test('Pass props correctly to component', () => {
         />
     );
 
+    expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(false);
     expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('en');
     expect(field.find(TeaserSelectionComponent).prop('onChange')).toBe(changeSpy);
     expect(field.find(TeaserSelectionComponent).prop('value')).toBe(value);
+});
+
+test('Pass disabled value from props to component', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    userStore.contentLocale = 'de';
+
+    const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />);
+
+    expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(true);
 });
 
 test('Pass locale from userStore when form has no locale', () => {
