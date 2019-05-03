@@ -1,5 +1,55 @@
+@import '../../containers/Application/colors.scss';
+
+$teaserSelectionMediaEditColor: $white;
+$teaserSelectionMediaHoverBackgroundColor: rgba($black, .5);
+
+$teaserSelectionMediaHeight: 25px;
+$teaserSelectionMediaWidth: 25px;
+
 .edit-form {
     padding: 10px;
+}
+
+.form {
+    display: flex;
+}
+
+.media-column {
+    margin-right: 10px;
+}
+
+.media-button {
+    position: relative;
+    border: 0;
+    background: transparent;
+    height: $teaserSelectionMediaHeight;
+    width: $teaserSelectionMediaWidth;
+
+    &:hover .media-button-edit-icon {
+        display: flex;
+    }
+}
+
+.media-button {
+    position: relative;
+    cursor: pointer;
+
+    &:hover .media-button-icon {
+        display: flex;
+        background-color: $teaserSelectionMediaHoverBackgroundColor;
+    }
+}
+
+.media-button-icon {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: $teaserSelectionMediaEditColor;
 }
 
 .title-input {
@@ -13,6 +63,7 @@
 .buttons {
     display: flex;
     justify-content: space-between;
+    flex-basis: 100%;
 }
 
 .item {
@@ -21,8 +72,8 @@
 }
 
 .media {
-    height: 25px;
-    width: 25px;
+    height: $teaserSelectionMediaHeight;
+    width: $teaserSelectionMediaWidth;
     margin-right: 10px;
 }
 

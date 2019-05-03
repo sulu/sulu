@@ -1,10 +1,14 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import textVersion from 'textversionjs';
+import {MimeTypeIndicator} from 'sulu-media-bundle/components'; // TODO should this entire component be moved?
+import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers'; // TODO should this entire component be moved?
+import type {Media} from 'sulu-media-bundle/types';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import Input from '../../components/Input';
 import TextEditor from '../../containers/TextEditor';
 import {translate} from '../../utils/Translator';
@@ -15,7 +19,7 @@ type Props = {|
     description: ?string,
     editing: boolean,
     id: number | string,
-    locale: ?IObservableValue<string>,
+    locale: IObservableValue<string>,
     mediaId: ?number,
     onApply: (item: TeaserItem) => void,
     onCancel: (id: number | string) => void,
@@ -29,13 +33,18 @@ export default class Item extends React.Component<Props> {
 
     @observable title: ?string = undefined;
     @observable description: ?string = undefined;
+    @observable mediaId: ?number = undefined;
+    @observable mediaOverlayOpen: boolean = false;
 
     componentDidMount() {
         this.setStateFromProps();
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.title !== this.props.title || prevProps.description !== this.props.description) {
+        if (prevProps.title !== this.props.title
+            || prevProps.description !== this.props.description
+            || prevProps.mediaId !== this.props.mediaId
+        ) {
             this.setStateFromProps();
         }
 
@@ -45,11 +54,25 @@ export default class Item extends React.Component<Props> {
     }
 
     @action setStateFromProps() {
-        const {description, title} = this.props;
+        const {description, mediaId, title} = this.props;
 
         this.title = title;
         this.description = description;
+        this.mediaId = mediaId;
     }
+
+    @action handleMediaClick = () => {
+        this.mediaOverlayOpen = true;
+    };
+
+    @action handleMediaConfirm = (media: Media) => {
+        this.mediaId = media.id;
+        this.mediaOverlayOpen = false;
+    };
+
+    @action handleMediaOverlayClose = () => {
+        this.mediaOverlayOpen = false;
+    };
 
     @action handleTitleChange = (title: ?string) => {
         this.title = title;
@@ -68,36 +91,59 @@ export default class Item extends React.Component<Props> {
     handleApply = () => {
         const {id, onApply, type} = this.props;
 
-        onApply({description: this.description, id, title: this.title, type});
+        onApply({description: this.description, id, mediaId: this.mediaId, title: this.title, type});
     };
 
     render() {
-        const {editing, locale, mediaId, type} = this.props;
+        const {editing, locale, type} = this.props;
         const {mediaUrl} = Item;
 
         // TODO replace type with correct translation from TeaserProviderRegistry
         return (
             editing
-                ? <div className={itemStyles.editForm}>
-                    <div className={itemStyles.titleInput}>
-                        <Input onChange={this.handleTitleChange} value={this.title} />
+                ? <Fragment>
+                    <div className={itemStyles.editForm}>
+                        <div className={itemStyles.form}>
+                            <div className={itemStyles.mediaColumn}>
+                                {mediaUrl &&
+                                    <button className={itemStyles.mediaButton} onClick={this.handleMediaClick}>
+                                        {this.mediaId
+                                            ? <img src={mediaUrl.replace(':id', this.mediaId.toString())} />
+                                            : <MimeTypeIndicator iconSize={16} mimeType="image" />
+                                        }
+                                        <Icon className={itemStyles.mediaButtonIcon} name="su-pen" />
+                                    </button>
+                                }
+                            </div>
+                            <div className={itemStyles.formColumn}>
+                                <div className={itemStyles.titleInput}>
+                                    <Input onChange={this.handleTitleChange} value={this.title} />
+                                </div>
+                                <div className={itemStyles.descriptionTextArea}>
+                                    <TextEditor
+                                        adapter="ckeditor5"
+                                        locale={locale}
+                                        onChange={this.handleDescriptionChange}
+                                        value={this.description}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className={itemStyles.buttons}>
+                            <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
+                            <Button onClick={this.handleApply} skin="primary">{translate('sulu_admin.apply')}</Button>
+                        </div>
                     </div>
-                    <div className={itemStyles.descriptionTextArea}>
-                        <TextEditor
-                            adapter="ckeditor5"
-                            locale={locale}
-                            onChange={this.handleDescriptionChange}
-                            value={this.description}
-                        />
-                    </div>
-                    <div className={itemStyles.buttons}>
-                        <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
-                        <Button onClick={this.handleApply} skin="primary">{translate('sulu_admin.apply')}</Button>
-                    </div>
-                </div>
+                    <SingleMediaSelectionOverlay
+                        locale={locale}
+                        onClose={this.handleMediaOverlayClose}
+                        onConfirm={this.handleMediaConfirm}
+                        open={this.mediaOverlayOpen}
+                    />
+                </Fragment>
                 : <div className={itemStyles.item}>
                     <div className={itemStyles.media}>
-                        {mediaUrl && mediaId && <img src={mediaUrl.replace(':id', mediaId.toString())} />}
+                        {mediaUrl && this.mediaId && <img src={mediaUrl.replace(':id', this.mediaId.toString())} />}
                     </div>
                     <div className={itemStyles.content}>
                         <p className={itemStyles.title}>{this.title}</p>

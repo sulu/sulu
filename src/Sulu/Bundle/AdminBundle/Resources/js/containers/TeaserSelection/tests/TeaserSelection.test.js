@@ -8,6 +8,8 @@ import TeaserSelection from '../TeaserSelection';
 import TeaserStore from '../stores/TeaserStore';
 import Item from '../Item';
 
+jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
+
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
@@ -442,7 +444,7 @@ test('Open and close items when clicking on the pen icon', () => {
     expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(true);
     expect(teaserSelection.find(Item).at(1).prop('editing')).toEqual(false);
 
-    teaserSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
+    teaserSelection.find('Icon[name="su-pen"]').at(1).parent().prop('onClick')();
     teaserSelection.update();
 
     expect(teaserSelection.find(Item).at(0).prop('editing')).toEqual(true);

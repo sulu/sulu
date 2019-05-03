@@ -1,35 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render Item with data 1`] = `
-<div
-  class="item"
->
-  <div
-    class="media"
-  />
-  <div
-    class="content"
-  >
-    <p
-      class="title"
-    >
-      Title
-    </p>
-    <p
-      class="description"
-    >
-      Description
-
-    </p>
-  </div>
-  <p
-    class="type"
-  >
-    page
-  </p>
-</div>
-`;
-
 exports[`Render Item with data and image 1`] = `
 <div
   class="item"
@@ -69,23 +39,52 @@ exports[`Render Item with data as form 1`] = `
   class="editForm"
 >
   <div
-    class="titleInput"
+    class="form"
   >
-    <label
-      class="input default left"
+    <div
+      class="mediaColumn"
     >
-      <input
-        type="text"
-        value="Title"
-      />
-    </label>
-  </div>
-  <div
-    class="descriptionTextArea"
-  >
-    <textarea>
-      Description
-    </textarea>
+      <button
+        class="mediaButton"
+      >
+        <div
+          class="mimeTypeIndicator"
+          style="color: rgb(255, 255, 255); font-size: 16px; background-color: rgb(246, 126, 0);"
+        >
+          <span
+            aria-label="fa-file-image-o"
+            class="fa fa-file-image-o"
+          />
+        </div>
+        <span
+          aria-label="su-pen"
+          class="su-pen mediaButtonIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="formColumn"
+    >
+      <div
+        class="titleInput"
+      >
+        <label
+          class="input default left"
+        >
+          <input
+            type="text"
+            value="Title"
+          />
+        </label>
+      </div>
+      <div
+        class="descriptionTextArea"
+      >
+        <textarea>
+          Description
+        </textarea>
+      </div>
+    </div>
   </div>
   <div
     class="buttons"
@@ -111,6 +110,36 @@ exports[`Render Item with data as form 1`] = `
       </span>
     </button>
   </div>
+</div>
+`;
+
+exports[`Render Item with data but without image 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="media"
+  />
+  <div
+    class="content"
+  >
+    <p
+      class="title"
+    >
+      Title
+    </p>
+    <p
+      class="description"
+    >
+      Description
+
+    </p>
+  </div>
+  <p
+    class="type"
+  >
+    page
+  </p>
 </div>
 `;
 

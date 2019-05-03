@@ -2,8 +2,11 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
+import SingleMediaSelectionOverlay from 'sulu-media-bundle/containers/SingleMediaSelectionOverlay';
 import TextEditor from '../../TextEditor';
 import Item from '../Item';
+
+jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -11,7 +14,9 @@ jest.mock('../../../utils/Translator', () => ({
 
 jest.mock('../../TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
 
-test('Render Item with data', () => {
+test('Render Item with data but without image', () => {
+    Item.mediaUrl = '/admin/media/:id';
+
     const item = mount(
         <Item
             description="<p>Description</p>"
@@ -184,7 +189,7 @@ test('Applying the item while editing should call the onApply callback with the 
             editing={true}
             id={5}
             locale={observable.box('en')}
-            mediaId={undefined}
+            mediaId={5}
             onApply={applySpy}
             onCancel={jest.fn()}
             title="Title"
@@ -195,7 +200,19 @@ test('Applying the item while editing should call the onApply callback with the 
     item.find(TextEditor).prop('onChange')('Edited description');
     item.find('Input').prop('onChange')('Edited title');
 
+    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
+    item.find('button[className="mediaButton"]').simulate('click');
+    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(true);
+    item.find(SingleMediaSelectionOverlay).prop('onConfirm')({id: 8});
+    expect(item.find(SingleMediaSelectionOverlay).prop('open')).toEqual(false);
+
     expect(applySpy).not.toBeCalled();
     item.find('Button[children="sulu_admin.apply"]').simulate('click');
-    expect(applySpy).toBeCalledWith({description: 'Edited description', id: 5, title: 'Edited title', type: 'page'});
+    expect(applySpy).toBeCalledWith({
+        description: 'Edited description',
+        id: 5,
+        mediaId: 8,
+        title: 'Edited title',
+        type: 'page',
+    });
 });

@@ -11,7 +11,7 @@ export type TeaserProviderOptions = {|
 export type TeaserItem = {
     description?: ?string,
     id: number | string,
-    mediaId?: number,
+    mediaId?: ?number,
     title?: ?string,
     type: string,
 };
