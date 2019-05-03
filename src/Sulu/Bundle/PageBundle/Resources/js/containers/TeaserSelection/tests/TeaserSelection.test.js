@@ -29,6 +29,8 @@ jest.mock('../registries/TeaserProviderRegistry', () => ({
                 return {title: 'Pages'};
             case 'articles':
                 return {title: 'Articles'};
+            case 'contacts':
+                return {title: 'Contacts'};
         }
     }),
 }));

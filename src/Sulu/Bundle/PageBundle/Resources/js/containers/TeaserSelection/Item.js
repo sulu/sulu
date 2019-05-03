@@ -10,6 +10,7 @@ import type {Media} from 'sulu-media-bundle/types';
 import {Button, Icon, Input} from 'sulu-admin-bundle/components';
 import {TextEditor} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
+import teaserProviderRegistry from './registries/TeaserProviderRegistry';
 import itemStyles from './item.scss';
 import type {TeaserItem} from './types';
 
@@ -96,7 +97,6 @@ export default class Item extends React.Component<Props> {
         const {editing, locale, type} = this.props;
         const {mediaUrl} = Item;
 
-        // TODO replace type with correct translation from TeaserProviderRegistry
         return (
             editing
                 ? <Fragment>
@@ -149,7 +149,7 @@ export default class Item extends React.Component<Props> {
                             {this.description && textVersion(this.description)}
                         </p>
                     </div>
-                    <p className={itemStyles.type}>{type}</p>
+                    <p className={itemStyles.type}>{teaserProviderRegistry.get(type).title}</p>
                 </div>
         );
     }

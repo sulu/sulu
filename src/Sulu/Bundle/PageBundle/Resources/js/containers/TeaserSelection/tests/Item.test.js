@@ -14,6 +14,16 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
 
+jest.mock('../registries/TeaserProviderRegistry', () => ({
+    keys: ['pages', 'articles'],
+    get: jest.fn((key) => {
+        switch (key) {
+            case 'page':
+                return {title: 'Page'};
+        }
+    }),
+}));
+
 test('Render Item with data but without image', () => {
     Item.mediaUrl = '/admin/media/:id';
 
