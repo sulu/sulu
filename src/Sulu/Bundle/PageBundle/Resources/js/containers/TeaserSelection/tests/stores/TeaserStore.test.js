@@ -1,9 +1,9 @@
 // @flow
 import {observable} from 'mobx';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import TeaserStore from '../../stores/TeaserStore';
-import ResourceRequester from '../../../../services/ResourceRequester';
 
-jest.mock('../../../../services/ResourceRequester', () => ({
+jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn(),
 }));
 

@@ -1,7 +1,7 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import ResourceRequester from '../../../services/ResourceRequester';
+import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import type {TeaserItem} from '../types';
 
 export default class TeaserStore {

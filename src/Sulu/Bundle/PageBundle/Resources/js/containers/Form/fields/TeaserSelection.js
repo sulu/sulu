@@ -3,10 +3,10 @@ import React from 'react';
 import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import {userStore} from 'sulu-admin-bundle/stores';
 import TeaserSelectionComponent from '../../TeaserSelection';
 import type {TeaserSelectionValue} from '../../TeaserSelection/types';
-import type {FieldTypeProps} from '../../../types';
-import userStore from '../../../stores/UserStore';
 
 @observer
 export default class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {

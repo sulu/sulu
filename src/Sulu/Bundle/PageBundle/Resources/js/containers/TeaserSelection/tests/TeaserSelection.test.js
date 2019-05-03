@@ -2,21 +2,22 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
-import MultiListOverlay from '../../../containers/MultiListOverlay';
-import TextEditor from '../../TextEditor';
+import {MultiListOverlay, TextEditor} from 'sulu-admin-bundle/containers';
 import TeaserSelection from '../TeaserSelection';
 import TeaserStore from '../stores/TeaserStore';
 import Item from '../Item';
 
 jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
-jest.mock('../../../utils/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/MultiListOverlay', () => jest.fn(() => null));
 
-jest.mock('../../TextEditor', () => jest.fn(({value}) => (<textarea onChange={jest.fn()} value={value} />)));
+jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(
+    ({value}) => (<textarea onChange={jest.fn()} value={value} />))
+);
 
 jest.mock('../stores/TeaserStore', () => jest.fn());
 

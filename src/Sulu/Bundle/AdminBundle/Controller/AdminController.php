@@ -268,7 +268,6 @@ class AdminController
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
                 }, $this->dataProviderPool->getAll()),
-                'teaser' => $this->teaserProviderPool->getConfiguration(),
                 'user' => $user,
                 'contact' => $contact,
             ],
@@ -283,6 +282,9 @@ class AdminController
                         ['id' => ':id']
                     ),
                 ],
+            ],
+            'sulu_page' => [
+                'teaser' => $this->teaserProviderPool->getConfiguration(),
             ],
             'sulu_preview' => [
                 'endpoints' => [

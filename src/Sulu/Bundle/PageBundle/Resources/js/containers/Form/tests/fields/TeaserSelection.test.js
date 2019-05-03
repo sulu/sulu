@@ -2,27 +2,25 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
-import userStore from '../../../../stores/UserStore';
-import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
-import ResourceStore from '../../../../stores/ResourceStore';
-import FormInspector from '../../FormInspector';
-import ResourceFormStore from '../../stores/ResourceFormStore';
+import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import TeaserSelection from '../../fields/TeaserSelection';
 import TeaserSelectionComponent from '../../../../containers/TeaserSelection';
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.locale = observableOptions.locale;
 }));
 
-jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
 }));
 
-jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
+jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
     this.locale = formStore.locale;
 }));
 
-jest.mock('../../../../stores/UserStore', () => ({}));
+jest.mock('sulu-admin-bundle/stores/UserStore', () => ({}));
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();

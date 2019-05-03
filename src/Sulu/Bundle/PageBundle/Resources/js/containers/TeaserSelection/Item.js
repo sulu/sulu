@@ -4,14 +4,12 @@ import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import textVersion from 'textversionjs';
-import {MimeTypeIndicator} from 'sulu-media-bundle/components'; // TODO should this entire component be moved?
-import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers'; // TODO should this entire component be moved?
+import {MimeTypeIndicator} from 'sulu-media-bundle/components';
+import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers';
 import type {Media} from 'sulu-media-bundle/types';
-import Button from '../../components/Button';
-import Icon from '../../components/Icon';
-import Input from '../../components/Input';
-import TextEditor from '../../containers/TextEditor';
-import {translate} from '../../utils/Translator';
+import {Button, Icon, Input} from 'sulu-admin-bundle/components';
+import {TextEditor} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils';
 import itemStyles from './item.scss';
 import type {TeaserItem} from './types';
 

@@ -6,10 +6,10 @@ import {
     listAdapterRegistry,
     fieldRegistry,
     internalLinkTypeRegistry,
-    TeaserSelection,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
+import {TeaserSelection} from 'sulu-page-bundle/containers';
 import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';

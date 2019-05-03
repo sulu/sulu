@@ -2,17 +2,17 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
-import SingleMediaSelectionOverlay from 'sulu-media-bundle/containers/SingleMediaSelectionOverlay';
-import TextEditor from '../../TextEditor';
+import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers';
+import {TextEditor} from 'sulu-admin-bundle/containers';
 import Item from '../Item';
 
 jest.mock('sulu-media-bundle/containers/SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
-jest.mock('../../../utils/Translator', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
+jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
 
 test('Render Item with data but without image', () => {
     Item.mediaUrl = '/admin/media/:id';

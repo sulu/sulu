@@ -69,12 +69,10 @@ import {
     SingleSelect,
     SingleSelection,
     SmartContent,
-    TeaserSelection,
     TextArea,
     TextEditor,
     Url,
 } from './containers/Form';
-import {teaserProviderRegistry} from './containers/TeaserSelection';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
     DeleteToolbarAction as FormDeleteToolbarAction,
@@ -115,7 +113,6 @@ const FIELD_TYPE_RESOURCE_LOCATOR = 'resource_locator';
 const FIELD_TYPE_SELECT = 'select';
 const FIELD_TYPE_SINGLE_SELECT = 'single_select';
 const FIELD_TYPE_SMART_CONTENT = 'smart_content';
-const FIELD_TYPE_TEASER_SELECTION = 'teaser_selection';
 const FIELD_TYPE_TEXT_AREA = 'text_area';
 const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
 const FIELD_TYPE_TEXT_LINE = 'text_line';
@@ -130,7 +127,6 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
         registerInternalLinkTypes(config.internalLinkTypes);
-        registerTeaserProviders(config.teaser);
         registerFormToolbarActions();
         registerListToolbarActions();
         registerViews();
@@ -191,7 +187,6 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_RESOURCE_LOCATOR, ResourceLocator, {generationUrl: Config.endpoints.generateUrl});
     fieldRegistry.add(FIELD_TYPE_SMART_CONTENT, SmartContent);
     fieldRegistry.add(FIELD_TYPE_SINGLE_SELECT, SingleSelect);
-    fieldRegistry.add(FIELD_TYPE_TEASER_SELECTION, TeaserSelection);
     fieldRegistry.add(FIELD_TYPE_TEXT_AREA, TextArea);
     fieldRegistry.add(FIELD_TYPE_TEXT_EDITOR, TextEditor);
     fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
@@ -247,12 +242,6 @@ function registerInternalLinkTypes(internalLinkTypes) {
                 resourceKey: internalLinkType.resourceKey,
             }
         );
-    }
-}
-
-function registerTeaserProviders(teaserProviders) {
-    for (const teaserProviderKey in teaserProviders) {
-        teaserProviderRegistry.add(teaserProviderKey, teaserProviders[teaserProviderKey]);
     }
 }
 

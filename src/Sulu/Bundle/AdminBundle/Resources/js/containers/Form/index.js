@@ -18,7 +18,6 @@ import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
 import SingleSelect from './fields/SingleSelect';
 import Select from './fields/Select';
-import TeaserSelection from './fields/TeaserSelection';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
 import SmartContent from './fields/SmartContent';
@@ -49,7 +48,6 @@ export {
     SmartContent,
     SingleSelect,
     SingleSelection,
-    TeaserSelection,
     TextArea,
     TextEditor,
     Url,
