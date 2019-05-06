@@ -14,8 +14,12 @@ import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
 import Snackbar from '../../components/Snackbar';
 import formOverlayListStyles from './formOverlayList.scss';
 
+type Props = ViewProps & {
+    resourceStore?: ResourceStore,
+};
+
 @observer
-export default class FormOverlayList extends React.Component<ViewProps> {
+export default class FormOverlayList extends React.Component<Props> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
     locale: IObservableValue<string> = observable.box();
 
@@ -76,6 +80,7 @@ export default class FormOverlayList extends React.Component<ViewProps> {
                         formKey,
                         resourceKey,
                         routerAttributesToFormStore = {},
+                        resourceStorePropertiesToFormStore = {},
                     },
                 },
             },
@@ -90,7 +95,12 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             observableOptions.locale = this.locale;
         }
 
-        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
+        const formStoreOptions = this.buildFormStoreOptions(
+            apiOptions,
+            attributes,
+            routerAttributesToFormStore,
+            resourceStorePropertiesToFormStore
+        );
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
     };
@@ -107,7 +117,8 @@ export default class FormOverlayList extends React.Component<ViewProps> {
     buildFormStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToFormStore: {[string | number]: string}
+        routerAttributesToFormStore: {[string | number]: string},
+        resourceStorePropertiesToFormStore: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
@@ -117,6 +128,19 @@ export default class FormOverlayList extends React.Component<ViewProps> {
             const attributeName = isNaN(key) ? key : routerAttributesToFormStore[key];
 
             formStoreOptions[formOptionKey] = attributes[attributeName];
+        });
+
+        resourceStorePropertiesToFormStore = toJS(resourceStorePropertiesToFormStore);
+
+        Object.keys(resourceStorePropertiesToFormStore).forEach((key) => {
+            const formOptionKey = resourceStorePropertiesToFormStore[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToFormStore[key];
+
+            if (!this.props.resourceStore) {
+                return;
+            }
+
+            formStoreOptions[formOptionKey] = this.props.resourceStore.data[attributeName];
         });
 
         return formStoreOptions;
