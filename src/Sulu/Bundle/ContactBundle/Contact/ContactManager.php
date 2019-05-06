@@ -342,7 +342,11 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 }
 
                 // Set position on contact
-                $position = $this->getPosition($this->getProperty($data, 'position'));
+                $positionId = $this->getProperty($data, 'position');
+                $position = null;
+                if ($positionId) {
+                    $position = $this->getPosition($positionId);
+                }
 
                 // create new account-contact relation
                 $this->createMainAccountContact(
