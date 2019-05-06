@@ -11,6 +11,8 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
     @observable showCopyLocaleDialog = false;
     @observable showDeleteDraftDialog = false;
     @observable deletingDraft = false;
+    @observable showUnpublishDialog = false;
+    @observable unpublishing = false;
 
     getNode() {
         const {
@@ -61,6 +63,17 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
                 >
                     {translate('sulu_page.delete_draft_warning_text')}
                 </Dialog>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.unpublishing}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleUnpublishDialogClose}
+                    onConfirm={this.handleUnpublishDialogConfirm}
+                    open={this.showUnpublishDialog}
+                    title={translate('sulu_page.unpublish_warning_title')}
+                >
+                    {translate('sulu_page.unpublish_warning_text')}
+                </Dialog>
             </Fragment>
         );
     }
@@ -86,6 +99,13 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
                     label: translate('sulu_page.delete_draft'),
                     onClick: action(() => {
                         this.showDeleteDraftDialog = true;
+                    }),
+                },
+                {
+                    disabled: !id || !published,
+                    label: translate('sulu_page.unpublish'),
+                    onClick: action(() => {
+                        this.showUnpublishDialog = true;
                     }),
                 },
             ],
@@ -136,5 +156,43 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
 
     @action handleDeleteDraftDialogClose = () => {
         this.showDeleteDraftDialog = false;
+    };
+
+    @action handleUnpublishDialogConfirm = () => {
+        const {
+            id,
+            locale,
+            options: {
+                webspace,
+            },
+        } = this.resourceFormStore;
+
+        if (!id) {
+            throw new Error(
+                'The page can only be unpublished if an ID is given! This should not happen and is likely a bug.'
+            );
+        }
+
+        this.unpublishing = true;
+
+        ResourceRequester.post(
+            'pages',
+            undefined,
+            {
+                action: 'unpublish',
+                locale,
+                id,
+                webspace,
+            }
+        ).then(action((response) => {
+            this.unpublishing = false;
+            this.showUnpublishDialog = false;
+            this.resourceFormStore.setMultiple(response);
+            this.resourceFormStore.dirty = false;
+        }));
+    };
+
+    @action handleUnpublishDialogClose = () => {
+        this.showUnpublishDialog = false;
     };
 }
