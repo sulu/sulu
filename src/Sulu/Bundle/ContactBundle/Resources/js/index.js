@@ -67,7 +67,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                             })),
                                         },
                                     },
-                                    size: 6,
+                                    colSpan: 6,
                                     type: 'single_select',
                                 },
                                 primaryAddress: {
@@ -76,7 +76,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                             title: translate('sulu_contact.primary_address'),
                                         },
                                     },
-                                    size: 6,
+                                    colSpan: 6,
                                     type: 'checkbox',
                                 },
                                 deliveryAddress: {
@@ -85,7 +85,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                             title: translate('sulu_contact.delivery_address'),
                                         },
                                     },
-                                    size: 6,
+                                    colSpan: 6,
                                     type: 'checkbox',
                                 },
                                 billingAddress: {
@@ -94,7 +94,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                             title: translate('sulu_contact.billing_address'),
                                         },
                                     },
-                                    size: 6,
+                                    colSpan: 6,
                                     type: 'checkbox',
                                 },
                             },
@@ -104,12 +104,12 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                             items: {
                                 street: {
                                     label: translate('sulu_contact.street'),
-                                    size: 8,
+                                    colSpan: 8,
                                     type: 'text_line',
                                 },
                                 number: {
                                     label: translate('sulu_contact.number'),
-                                    size: 4,
+                                    colSpan: 4,
                                     type: 'text_line',
                                 },
                                 addition: {
@@ -118,12 +118,12 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                 },
                                 zip: {
                                     label: translate('sulu_contact.zip'),
-                                    size: 4,
+                                    colSpan: 4,
                                     type: 'text_line',
                                 },
                                 city: {
                                     label: translate('sulu_contact.city'),
-                                    size: 8,
+                                    colSpan: 8,
                                     type: 'text_line',
                                 },
                                 state: {
@@ -153,12 +153,12 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                 },
                                 postboxPostcode: {
                                     label: translate('sulu_contact.postbox_zip'),
-                                    size: 4,
+                                    colSpan: 4,
                                     type: 'text_line',
                                 },
                                 postboxCity: {
                                     label: translate('sulu_contact.postbox_city'),
-                                    size: 8,
+                                    colSpan: 8,
                                     type: 'text_line',
                                 },
                             },
@@ -203,12 +203,12 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                         iban: {
                             label: translate('sulu_contact.iban'),
                             required: true,
-                            size: 8,
+                            colSpan: 8,
                             type: 'iban',
                         },
                         bic: {
                             label: translate('sulu_contact.bic'),
-                            size: 4,
+                            colSpan: 4,
                             type: 'bic',
                         },
                     },
