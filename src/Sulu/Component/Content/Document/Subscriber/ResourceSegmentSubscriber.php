@@ -149,7 +149,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 $property->getName(),
                 $locale
             ),
-            ''
+            null
         );
 
         $document->setResourceSegment($segment);
