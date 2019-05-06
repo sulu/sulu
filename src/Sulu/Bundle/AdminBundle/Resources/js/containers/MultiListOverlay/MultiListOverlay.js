@@ -23,6 +23,7 @@ type Props = {|
     open: boolean,
     options?: Object,
     overlayType: OverlayType,
+    preloadSelectedItems: boolean,
     preSelectedItems: Array<Object>,
     reloadOnOpen?: boolean,
     resourceKey: string,
@@ -36,6 +37,7 @@ class MultiListOverlay extends React.Component<Props> {
         disabledIds: [],
         excludedIds: [],
         overlayType: 'overlay',
+        preloadSelectedItems: true,
         preSelectedItems: [],
     };
 
@@ -49,7 +51,7 @@ class MultiListOverlay extends React.Component<Props> {
         const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
         this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
 
-        const {listKey, locale, options, preSelectedItems, resourceKey} = this.props;
+        const {listKey, locale, options, preloadSelectedItems, preSelectedItems, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
         observableOptions.excludedIds = excludedIds;
@@ -64,7 +66,7 @@ class MultiListOverlay extends React.Component<Props> {
             USER_SETTINGS_KEY,
             observableOptions,
             options,
-            preSelectedItems.map((preSelectedItem) => preSelectedItem.id)
+            preloadSelectedItems ? preSelectedItems.map((preSelectedItem) => preSelectedItem.id) : undefined
         );
     }
 

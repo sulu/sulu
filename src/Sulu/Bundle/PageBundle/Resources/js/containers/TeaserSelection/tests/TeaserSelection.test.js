@@ -99,6 +99,16 @@ test('Render MultiItemSelection disabled when disabled flag is set', () => {
     expect(teaserSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });
 
+test('Avoid that MultiListOverlay loads the preSelectedItems from start', () => {
+    const teaserSelection = mount(
+        <TeaserSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
+    );
+
+    expect(teaserSelection.find(MultiListOverlay)).toHaveLength(2);
+    expect(teaserSelection.find(MultiListOverlay).at(0).prop('preloadSelectedItems')).toEqual(false);
+    expect(teaserSelection.find(MultiListOverlay).at(1).prop('preloadSelectedItems')).toEqual(false);
+});
+
 test('Add passed data to TeaserStore', () => {
     const value = {
         displayOption: '',

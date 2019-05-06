@@ -150,7 +150,6 @@ export default class TeaserSelection extends React.Component<Props> {
             };
         });
 
-
         return (
             <Fragment>
                 <MultiItemSelection
@@ -195,6 +194,7 @@ export default class TeaserSelection extends React.Component<Props> {
                         onClose={this.handleClose}
                         onConfirm={this.handleConfirm}
                         open={this.openedOverlay === teaserProviderKey}
+                        preloadSelectedItems={false}
                         preSelectedItems={value.items.filter((item) => item.type === teaserProviderKey)}
                         resourceKey={teaserProviderKey}
                         title={teaserProviderRegistry.get(teaserProviderKey).overlayTitle}
