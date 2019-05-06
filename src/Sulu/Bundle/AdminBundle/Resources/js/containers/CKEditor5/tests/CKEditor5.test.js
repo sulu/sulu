@@ -76,7 +76,7 @@ test('Create a CKEditor5 instance', () => {
             ],
         },
         internalLinks: {
-            locale,
+            locale: 'en',
         },
     }));
 });

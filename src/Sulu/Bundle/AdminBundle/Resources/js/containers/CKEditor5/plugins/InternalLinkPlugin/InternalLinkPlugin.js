@@ -81,7 +81,7 @@ export default class InternalLinkPlugin extends Plugin {
                                     <InternalLinkOverlay
                                         id={this.openOverlay === key ? this.id : undefined}
                                         key={key}
-                                        locale={locale}
+                                        locale={observable.box(locale)}
                                         onCancel={this.handleOverlayClose}
                                         onConfirm={this.handleOverlayConfirm}
                                         onResourceChange={this.handleResourceChange}

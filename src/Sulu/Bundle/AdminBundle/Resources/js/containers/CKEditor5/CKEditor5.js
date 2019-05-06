@@ -155,7 +155,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     ].filter((entry) => entry !== undefined),
                 },
                 internalLinks: {
-                    locale,
+                    locale: locale && locale.get(),
                 },
                 table: {
                     contentToolbar: [
