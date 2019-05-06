@@ -30,6 +30,7 @@ test('Render Item with data but without image', () => {
     const item = mount(
         <Item
             description="<p>Description</p>"
+            edited={false}
             editing={false}
             id={5}
             locale={observable.box('en')}
@@ -50,6 +51,7 @@ test('Render Item with data and image', () => {
     const item = mount(
         <Item
             description="<p>Description</p>"
+            edited={true}
             editing={false}
             id={5}
             locale={observable.box('en')}
@@ -68,6 +70,7 @@ test('Render Item without data', () => {
     const item = mount(
         <Item
             description={undefined}
+            edited={false}
             editing={false}
             id={5}
             locale={observable.box('en')}
@@ -86,6 +89,7 @@ test('Render Item with data as form', () => {
     const item = mount(
         <Item
             description="Description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}
@@ -104,6 +108,7 @@ test('Pass correct props to text editor', () => {
     const item = mount(
         <Item
             description="Description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}
@@ -125,6 +130,7 @@ test('Cancelling the item while editing should call the onClose callback', () =>
     const item = shallow(
         <Item
             description="Description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}
@@ -145,6 +151,7 @@ test('Reset the current field when the edit form is closed', () => {
     const item = shallow(
         <Item
             description="Edited description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}
@@ -170,6 +177,7 @@ test('Reset the current field when the title or description props change', () =>
     const item = shallow(
         <Item
             description="Edited description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}
@@ -196,6 +204,7 @@ test('Applying the item while editing should call the onApply callback with the 
     const item = shallow(
         <Item
             description="Description"
+            edited={false}
             editing={true}
             id={5}
             locale={observable.box('en')}

@@ -29,7 +29,7 @@ exports[`Render Item with data and image 1`] = `
   <p
     class="type"
   >
-    Page
+    Page (sulu_page.edited)
   </p>
 </div>
 `;

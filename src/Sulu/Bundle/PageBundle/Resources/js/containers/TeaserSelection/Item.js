@@ -16,6 +16,7 @@ import type {TeaserItem} from './types';
 
 type Props = {|
     description: ?string,
+    edited: ?boolean,
     editing: boolean,
     id: number | string,
     locale: IObservableValue<string>,
@@ -94,7 +95,7 @@ export default class Item extends React.Component<Props> {
     };
 
     render() {
-        const {editing, locale, type} = this.props;
+        const {edited, editing, locale, type} = this.props;
         const {mediaUrl} = Item;
 
         return (
@@ -149,7 +150,10 @@ export default class Item extends React.Component<Props> {
                             {this.description && textVersion(this.description)}
                         </p>
                     </div>
-                    <p className={itemStyles.type}>{teaserProviderRegistry.get(type).title}</p>
+                    <p className={itemStyles.type}>
+                        {teaserProviderRegistry.get(type).title}
+                        {edited && ' (' + translate('sulu_page.edited') + ')'}
+                    </p>
                 </div>
         );
     }

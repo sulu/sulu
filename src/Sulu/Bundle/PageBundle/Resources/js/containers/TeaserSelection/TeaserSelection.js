@@ -56,6 +56,7 @@ export default class TeaserSelection extends React.Component<Props> {
                 }
                 return clearedTeaserItem;
             }, {}),
+            edited: !!(teaserItem.description || teaserItem.mediaId || teaserItem.title),
         }));
     }
 
@@ -149,6 +150,7 @@ export default class TeaserSelection extends React.Component<Props> {
             };
         });
 
+
         return (
             <Fragment>
                 <MultiItemSelection
@@ -171,6 +173,7 @@ export default class TeaserSelection extends React.Component<Props> {
                         >
                             <Item
                                 description={teaserItem.description}
+                                edited={teaserItem.edited}
                                 editing={this.editIds.includes(teaserItem.id)}
                                 id={teaserItem.id}
                                 locale={locale}

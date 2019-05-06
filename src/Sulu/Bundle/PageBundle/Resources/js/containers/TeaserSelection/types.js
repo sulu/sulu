@@ -8,15 +8,16 @@ export type TeaserProviderOptions = {|
     title: string,
 |};
 
-export type TeaserItem = {
+export type TeaserItem = {|
     description?: ?string,
+    edited?: boolean,
     id: number | string,
     mediaId?: ?number,
     title?: ?string,
     type: string,
-};
+|};
 
-export type TeaserSelectionValue = {
+export type TeaserSelectionValue = {|
     displayOption: ?string,
     items: Array<TeaserItem>,
-};
+|};

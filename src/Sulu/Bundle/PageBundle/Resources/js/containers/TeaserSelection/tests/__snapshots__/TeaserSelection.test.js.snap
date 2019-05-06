@@ -77,7 +77,7 @@ exports[`Load combined data from TeaserStore and props 1`] = `
             <p
               class="type"
             >
-              Pages
+              Pages (sulu_page.edited)
             </p>
           </div>
         </div>
@@ -346,7 +346,7 @@ exports[`Render loading teaser selection 1`] = `
             <p
               class="type"
             >
-              Pages
+              Pages (sulu_page.edited)
             </p>
           </div>
         </div>
@@ -451,7 +451,7 @@ exports[`Render teaser selection with data 1`] = `
             <p
               class="type"
             >
-              Pages
+              Pages (sulu_page.edited)
             </p>
           </div>
         </div>
