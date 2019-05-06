@@ -23,6 +23,7 @@ exports[`Render in disabled state 1`] = `
       </div>
     </div>
     <input
+      autocomplete="off"
       class="mousetrap"
       disabled=""
       type="text"
@@ -55,6 +56,7 @@ exports[`Render in loading state 1`] = `
       </div>
     </div>
     <input
+      autocomplete="off"
       class="mousetrap"
       type="text"
       value=""
@@ -86,6 +88,7 @@ exports[`Render with given value 1`] = `
       </div>
     </div>
     <input
+      autocomplete="off"
       class="mousetrap"
       type="text"
       value="James Bond"

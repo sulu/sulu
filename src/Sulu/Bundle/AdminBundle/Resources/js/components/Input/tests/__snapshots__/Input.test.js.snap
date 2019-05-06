@@ -150,6 +150,19 @@ Array [
 ]
 `;
 
+exports[`Input should render with autocomplete off 1`] = `
+<label
+  class="input default left disabled"
+>
+  <input
+    autocomplete="off"
+    disabled=""
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
 exports[`Input should render with dark skin 1`] = `
 <label
   class="input dark left hasAppendIcon"
