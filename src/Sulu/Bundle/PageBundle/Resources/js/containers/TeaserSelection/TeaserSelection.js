@@ -17,6 +17,21 @@ type Props = {|
     value: TeaserSelectionValue,
 |};
 
+const ID_SEPERATOR = ';';
+
+function getUniqueId(teaserItem: TeaserItem) {
+    return teaserItem.type + ';' + teaserItem.id;
+}
+
+function extractUniqueId(id: string) {
+    const splitId = id.split(ID_SEPERATOR);
+
+    return {
+        id: splitId[1],
+        type: splitId[0],
+    };
+}
+
 @observer
 export default class TeaserSelection extends React.Component<Props> {
     static defaultProps = {
@@ -60,19 +75,19 @@ export default class TeaserSelection extends React.Component<Props> {
         }));
     }
 
-    openItemEdit(id: number | string) {
+    openItemEdit(id: string) {
         this.editIds.push(id);
     }
 
-    closeItemEdit(id: number | string) {
+    closeItemEdit(id: string) {
         this.editIds.splice(this.editIds.findIndex((editId) => editId === id), 1);
     }
 
-    @action handleCancel = (id: number | string) => {
-        this.closeItemEdit(id);
+    @action handleCancel = (type: string, id: number | string) => {
+        this.closeItemEdit(getUniqueId({id, type}));
     };
 
-    @action handleEdit = (id: number | string) => {
+    @action handleEdit = (id: string) => {
         this.openItemEdit(id);
     };
 
@@ -85,13 +100,17 @@ export default class TeaserSelection extends React.Component<Props> {
 
         onChange(value);
 
-        this.closeItemEdit(item.id);
+        this.closeItemEdit(getUniqueId(item));
     };
 
-    handleRemove = (id: number | string) => {
+    handleRemove = (id: string) => {
         const {onChange, value} = this.props;
+        const teaserItem = extractUniqueId(id);
 
-        onChange({...value, items: value.items.filter((item) => item.id !== id)});
+        onChange({
+            ...value,
+            items: value.items.filter((item) => item.id.toString() !== teaserItem.id || item.type !== teaserItem.type),
+        });
     };
 
     handleSorted = (oldItemIndex: number, newItemIndex: number) => {
@@ -162,28 +181,32 @@ export default class TeaserSelection extends React.Component<Props> {
                     loading={this.teaserStore.loading}
                     onItemsSorted={this.handleSorted}
                 >
-                    {this.teaserItems.map((teaserItem, index) => (
-                        <MultiItemSelection.Item
-                            id={teaserItem.id}
-                            index={index + 1}
-                            key={teaserItem.type + teaserItem.id}
-                            onEdit={this.editIds.includes(teaserItem.id) ? undefined : this.handleEdit}
-                            onRemove={this.handleRemove}
-                        >
-                            <Item
-                                description={teaserItem.description}
-                                edited={teaserItem.edited}
-                                editing={this.editIds.includes(teaserItem.id)}
-                                id={teaserItem.id}
-                                locale={locale}
-                                mediaId={teaserItem.mediaId}
-                                onApply={this.handleApply}
-                                onCancel={this.handleCancel}
-                                title={teaserItem.title}
-                                type={teaserItem.type}
-                            />
-                        </MultiItemSelection.Item>
-                    ))}
+                    {this.teaserItems.map((teaserItem, index) => {
+                        const teaserId = getUniqueId(teaserItem);
+
+                        return (
+                            <MultiItemSelection.Item
+                                id={teaserId}
+                                index={index + 1}
+                                key={teaserId}
+                                onEdit={this.editIds.includes(teaserId) ? undefined : this.handleEdit}
+                                onRemove={this.handleRemove}
+                            >
+                                <Item
+                                    description={teaserItem.description}
+                                    edited={teaserItem.edited}
+                                    editing={this.editIds.includes(teaserId)}
+                                    id={teaserItem.id}
+                                    locale={locale}
+                                    mediaId={teaserItem.mediaId}
+                                    onApply={this.handleApply}
+                                    onCancel={this.handleCancel}
+                                    title={teaserItem.title}
+                                    type={teaserItem.type}
+                                />
+                            </MultiItemSelection.Item>
+                        );
+                    })}
                 </MultiItemSelection>
                 {teaserProviderRegistry.keys.map((teaserProviderKey) => (
                     <MultiListOverlay

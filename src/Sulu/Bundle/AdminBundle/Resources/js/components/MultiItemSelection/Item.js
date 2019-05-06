@@ -8,16 +8,16 @@ import itemStyles from './item.scss';
 
 const DRAG_ICON = 'su-more';
 
-type Props = {
+type Props<T> = {
     children: Node,
-    id: string | number,
+    id: T,
     index: number,
-    onEdit?: (id: string | number) => void,
-    onRemove?: (id: string | number) => void,
+    onEdit?: (id: T) => void,
+    onRemove?: (id: T) => void,
     sortable: boolean,
 };
 
-export default class Item extends React.PureComponent<Props> {
+export default class Item<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         sortable: true,
     };

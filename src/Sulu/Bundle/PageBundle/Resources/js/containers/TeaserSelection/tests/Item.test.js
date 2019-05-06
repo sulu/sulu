@@ -144,7 +144,7 @@ test('Cancelling the item while editing should call the onClose callback', () =>
 
     expect(cancelSpy).not.toBeCalled();
     item.find('Button[children="sulu_admin.cancel"]').simulate('click');
-    expect(cancelSpy).toBeCalledWith(5);
+    expect(cancelSpy).toBeCalledWith('page', 5);
 });
 
 test('Reset the current field when the edit form is closed', () => {

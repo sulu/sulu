@@ -488,6 +488,12 @@ test('Call onChange with new values when apply button is clicked', () => {
                 title: 'Title 2',
                 type: 'pages',
             },
+            {
+                description: 'Description 3',
+                id: 6,
+                title: 'Title 3',
+                type: 'contacts',
+            },
         ],
     };
 
@@ -523,6 +529,12 @@ test('Call onChange with new values when apply button is clicked', () => {
                     title: 'Edited Title 2',
                     type: 'pages',
                 },
+                {
+                    description: 'Description 3',
+                    id: 6,
+                    title: 'Title 3',
+                    type: 'contacts',
+                },
             ],
         }
     );
@@ -535,15 +547,21 @@ test('Call onChange with new values after one item is removed', () => {
         displayOption: '',
         items: [
             {
-                description: 'Description',
-                id: 2,
-                title: 'Title',
-                type: 'pages',
+                description: 'Contact',
+                id: 6,
+                title: 'Contact',
+                type: 'contacts',
             },
             {
                 description: 'Description 2',
                 id: 6,
                 title: 'Title 2',
+                type: 'pages',
+            },
+            {
+                description: 'Description 3',
+                id: 7,
+                title: 'Title 3',
                 type: 'pages',
             },
         ],
@@ -557,16 +575,22 @@ test('Call onChange with new values after one item is removed', () => {
 
     const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={changeSpy} value={value} />);
 
-    teaserSelection.find('Icon[name="su-trash-alt"]').at(0).parent().prop('onClick')();
+    teaserSelection.find('Icon[name="su-trash-alt"]').at(1).parent().prop('onClick')();
 
     expect(changeSpy).toBeCalledWith(
         {
             displayOption: '',
             items: [
                 {
-                    description: 'Description 2',
+                    description: 'Contact',
                     id: 6,
-                    title: 'Title 2',
+                    title: 'Contact',
+                    type: 'contacts',
+                },
+                {
+                    description: 'Description 3',
+                    id: 7,
+                    title: 'Title 3',
                     type: 'pages',
                 },
             ],

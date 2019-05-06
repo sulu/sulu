@@ -22,7 +22,7 @@ type Props = {|
     locale: IObservableValue<string>,
     mediaId: ?number,
     onApply: (item: TeaserItem) => void,
-    onCancel: (id: number | string) => void,
+    onCancel: (type: string, id: number | string) => void,
     title: ?string,
     type: string,
 |};
@@ -83,9 +83,9 @@ export default class Item extends React.Component<Props> {
     };
 
     handleCancel = () => {
-        const {id, onCancel} = this.props;
+        const {id, onCancel, type} = this.props;
 
-        onCancel(id);
+        onCancel(type, id);
     };
 
     handleApply = () => {
