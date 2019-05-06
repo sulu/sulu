@@ -6,7 +6,6 @@ import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';
 import {resourceRouteRegistry} from '../ResourceRequester';
-import {bundlesReadyPromise} from '../../services/Bundles';
 import type {UpdateConfigHook} from './types';
 
 function getBrowserLanguage() {
@@ -86,32 +85,31 @@ class Initializer {
 
     initialize() {
         this.setLoading(true);
-        return bundlesReadyPromise.then(() => {
-            const configPromise = Requester.get(Config.endpoints.config);
-            const routePromise = this.initializeSymfonyRouting();
 
-            return Promise.all([configPromise, routePromise])
-                .then(([config]) => {
-                    if (!this.initialized) {
-                        setMomentLocale();
-                    }
+        const configPromise = Requester.get(Config.endpoints.config);
+        const routePromise = this.initializeSymfonyRouting();
 
-                    for (const bundle in this.updateConfigHooks) {
-                        this.updateConfigHooks[bundle].forEach((hook) => {
-                            hook(config[bundle], this.initialized);
-                        });
-                    }
+        return Promise.all([configPromise, routePromise])
+            .then(([config]) => {
+                if (!this.initialized) {
+                    setMomentLocale();
+                }
 
-                    this.setInitialized();
-                    return this.initializeTranslations();
-                })
-                .catch((error) => {
-                    if (error.status !== 401) {
-                        return Promise.reject(error);
-                    }
-                    return this.initializeTranslations();
-                });
-        });
+                for (const bundle in this.updateConfigHooks) {
+                    this.updateConfigHooks[bundle].forEach((hook) => {
+                        hook(config[bundle], this.initialized);
+                    });
+                }
+
+                this.setInitialized();
+                return this.initializeTranslations();
+            })
+            .catch((error) => {
+                if (error.status !== 401) {
+                    return Promise.reject(error);
+                }
+                return this.initializeTranslations();
+            });
     }
 }
 

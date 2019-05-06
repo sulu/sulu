@@ -13,10 +13,6 @@ jest.mock('../../Requester', () => ({
     get: jest.fn(),
 }));
 
-jest.mock('../../Bundles', () => ({
-    bundlesReadyPromise: Promise.resolve(),
-}));
-
 jest.mock('../../../utils/Translator', () => ({
     setTranslations: jest.fn(),
 }));

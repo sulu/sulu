@@ -1,6 +1,6 @@
 // @flow
 import {when} from 'mobx';
-import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {initializer} from 'sulu-admin-bundle/services';
 import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
@@ -63,5 +63,3 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         }
     );
 });
-
-bundleReady();
