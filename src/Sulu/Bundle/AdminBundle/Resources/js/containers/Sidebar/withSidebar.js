@@ -19,10 +19,6 @@ export default function withSidebar<P, C: Class<Component<P>>>(
                 super.componentDidMount();
             }
 
-            if (super.hasOwnProperty('sidebarDisposer')) {
-                throw new Error('Component passed to withSidebar cannot declare a property called "sidebarDisposer".');
-            }
-
             this.sidebarDisposer = autorun(() => {
                 const sidebarConfig = sidebar.call(this);
                 if (!sidebarConfig) {

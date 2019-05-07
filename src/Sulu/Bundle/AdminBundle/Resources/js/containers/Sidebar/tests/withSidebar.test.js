@@ -87,24 +87,3 @@ test('Recall sidebar-function when changing observable', () => {
         view: 'test',
     });
 });
-
-test('Throw error when component has property sidebarDisposer', () => {
-    // catch error logging as described in https://github.com/facebook/react/issues/11098#issuecomment-335290556
-    // until better solution is availble
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    const Component = class Component extends React.Component<*> {
-        sidebarDisposer = true;
-
-        render() {
-            return <h1>Test</h1>;
-        }
-    };
-
-    const ComponentWithSidebar = withSidebar(Component, function() {
-        return null;
-    });
-
-    expect(() => mount(<ComponentWithSidebar />))
-        .toThrowError('Component passed to withSidebar cannot declare a property called "sidebarDisposer".');
-});
