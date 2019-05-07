@@ -45,9 +45,7 @@ class Toolbar extends React.Component<*> {
 
     toolbarStore: ToolbarStore;
 
-    constructor(props: *) {
-        super(props);
-
+    componentWillMount() {
         this.setStore(this.props.storeKey);
     }
 

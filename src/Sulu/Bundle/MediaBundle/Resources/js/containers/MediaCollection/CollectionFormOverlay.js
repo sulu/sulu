@@ -26,9 +26,7 @@ class CollectionFormOverlay extends React.Component<Props> {
     operationType: string;
     @observable formStore: ResourceFormStore;
 
-    constructor(props: Props) {
-        super(props);
-
+    componentWillMount() {
         const {resourceStore} = this.props;
         this.formStore = new ResourceFormStore(resourceStore, FORM_KEY);
     }
