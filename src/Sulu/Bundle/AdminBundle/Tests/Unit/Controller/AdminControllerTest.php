@@ -301,7 +301,6 @@ class AdminControllerTest extends TestCase
                     return 'json' === $view->getFormat()
                         && $data['fieldTypeOptions'] === $fieldTypeOptions
                         && $data['smartContent'] === $dataProviders
-                        && $data['teaser'] === $teaserProviders
                         && $data['routes'] === $routes
                         && $data['navigation'] === ['navigation_item1', 'navigation_item2']
                         && $data['resources'] === $this->resources;
