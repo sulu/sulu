@@ -1,7 +1,8 @@
 // @flow
 export type Button = {|
     disabled?: boolean,
-    icon: string,
+    icon?: string,
+    label?: string,
     onClick: (value: ?string) => void,
     options?: Array<ButtonOption>,
 |};

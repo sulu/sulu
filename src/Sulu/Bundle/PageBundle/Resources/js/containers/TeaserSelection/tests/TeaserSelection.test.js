@@ -65,6 +65,49 @@ test('Render loading teaser selection', () => {
     expect(teaserSelection.render()).toMatchSnapshot();
 });
 
+test('Render teaser selection with presentations', () => {
+    const value = {
+        displayOption: 'test-2',
+        items: [
+            {
+                description: 'Description',
+                id: 2,
+                title: 'Title',
+                type: 'pages',
+            },
+        ],
+    };
+
+    const presentations = [
+        {
+            label: 'Test 1',
+            value: 'test-1',
+        },
+        {
+            label: 'Test 2',
+            value: 'test-2',
+        },
+    ];
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            presentations={presentations}
+            value={value}
+        />
+    );
+
+    teaserSelection.update();
+    expect(teaserSelection.render()).toMatchSnapshot();
+});
+
 test('Render teaser selection with data', () => {
     const value = {
         displayOption: '',
@@ -107,6 +150,43 @@ test('Avoid that MultiListOverlay loads the preSelectedItems from start', () => 
     expect(teaserSelection.find(MultiListOverlay)).toHaveLength(2);
     expect(teaserSelection.find(MultiListOverlay).at(0).prop('preloadSelectedItems')).toEqual(false);
     expect(teaserSelection.find(MultiListOverlay).at(1).prop('preloadSelectedItems')).toEqual(false);
+});
+
+test('Call onChange when presentation is changed', () => {
+    const changeSpy = jest.fn();
+
+    const presentations = [
+        {
+            label: 'Test 1',
+            value: 'test-1',
+        },
+        {
+            label: 'Test 2',
+            value: 'test-2',
+        },
+    ];
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            presentations={presentations}
+            value={undefined}
+        />
+    );
+
+    teaserSelection.find('Button[icon="su-eye"]').simulate('click');
+    teaserSelection.find('Action[value="test-2"]').simulate('click');
+
+    expect(changeSpy).toBeCalledWith({
+        displayOption: 'test-2',
+        items: [],
+    });
 });
 
 test('Add passed data to TeaserStore', () => {

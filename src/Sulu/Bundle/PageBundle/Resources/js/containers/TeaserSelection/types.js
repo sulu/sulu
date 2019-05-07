@@ -21,3 +21,8 @@ export type TeaserSelectionValue = {|
     displayOption: ?string,
     items: Array<TeaserItem>,
 |};
+
+export type PresentationItem = {
+    label: string,
+    value: string,
+};

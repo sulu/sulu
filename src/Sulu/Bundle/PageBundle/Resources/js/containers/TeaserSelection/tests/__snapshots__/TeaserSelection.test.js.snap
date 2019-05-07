@@ -8,7 +8,7 @@ exports[`Load combined data from TeaserStore and props 1`] = `
     class="header"
   >
     <button
-      class="button left options"
+      class="button left hasOptions"
       type="button"
     >
       <span
@@ -265,7 +265,7 @@ exports[`Render loading teaser selection 1`] = `
     class="header"
   >
     <button
-      class="button left options"
+      class="button left hasOptions"
       type="button"
     >
       <span
@@ -386,7 +386,7 @@ exports[`Render teaser selection with data 1`] = `
     class="header"
   >
     <button
-      class="button left options"
+      class="button left hasOptions"
       type="button"
     >
       <span
@@ -401,6 +401,129 @@ exports[`Render teaser selection with data 1`] = `
     <div
       class="label"
     />
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Title
+              </p>
+              <p
+                class="description"
+              >
+                Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Pages (sulu_page.edited)
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render teaser selection with presentations 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="label"
+    />
+    <button
+      class="button right hasLabel hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-eye"
+        class="su-eye icon"
+      />
+      <span
+        class="label"
+      >
+        Test 2
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
   </div>
   <ul
     class="list"

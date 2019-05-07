@@ -8,12 +8,13 @@ import {MultiListOverlay} from 'sulu-admin-bundle/containers';
 import TeaserStore from './stores/TeaserStore';
 import Item from './Item';
 import teaserProviderRegistry from './registries/TeaserProviderRegistry';
-import type {TeaserItem, TeaserSelectionValue} from './types';
+import type {PresentationItem, TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
     onChange: (TeaserSelectionValue) => void,
+    presentations?: Array<PresentationItem>,
     value: TeaserSelectionValue,
 |};
 
@@ -73,6 +74,30 @@ export default class TeaserSelection extends React.Component<Props> {
             }, {}),
             edited: !!(teaserItem.description || teaserItem.mediaId || teaserItem.title),
         }));
+    }
+
+    @computed get presentationOptions(): ?Array<PresentationItem> {
+        const {presentations} = this.props;
+
+        if (!presentations) {
+            return undefined;
+        }
+
+        return presentations.map((presentation) => {
+            return {
+                label: presentation.label,
+                value: presentation.value,
+            };
+        });
+    }
+
+    @computed get selectedPresentation() {
+        const {presentations, value} = this.props;
+        if (!presentations) {
+            return undefined;
+        }
+
+        return presentations.find((presentation) => presentation.value === value.displayOption);
     }
 
     openItemEdit(id: string) {
@@ -157,6 +182,15 @@ export default class TeaserSelection extends React.Component<Props> {
         this.openedOverlay = provider;
     };
 
+    @action handlePresentationClick = (presentation: ?string) => {
+        const {onChange, value} = this.props;
+
+        onChange({
+            ...value,
+            displayOption: presentation,
+        });
+    };
+
     render() {
         const {disabled, locale, value} = this.props;
 
@@ -169,6 +203,15 @@ export default class TeaserSelection extends React.Component<Props> {
             };
         });
 
+        const rightButton = this.presentationOptions
+            ? {
+                icon: 'su-eye',
+                label: this.selectedPresentation && this.selectedPresentation.label,
+                onClick: this.handlePresentationClick,
+                options: this.presentationOptions,
+            }
+            : undefined;
+
         return (
             <Fragment>
                 <MultiItemSelection
@@ -180,6 +223,7 @@ export default class TeaserSelection extends React.Component<Props> {
                     }}
                     loading={this.teaserStore.loading}
                     onItemsSorted={this.handleSorted}
+                    rightButton={rightButton}
                 >
                     {this.teaserItems.map((teaserItem, index) => {
                         const teaserId = getUniqueId(teaserItem);

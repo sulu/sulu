@@ -46,6 +46,7 @@ export default class Button extends React.Component<Props> {
         const {
             disabled,
             icon,
+            label,
             location,
             options,
         } = this.props;
@@ -54,7 +55,8 @@ export default class Button extends React.Component<Props> {
             buttonStyles.button,
             buttonStyles[location],
             {
-                [buttonStyles.options]: options,
+                [buttonStyles.hasLabel]: label,
+                [buttonStyles.hasOptions]: options,
             }
         );
 
@@ -65,7 +67,8 @@ export default class Button extends React.Component<Props> {
                 onClick={this.handleClick}
                 type="button"
             >
-                <Icon className={buttonStyles.icon} name={icon} />
+                {icon && <Icon className={buttonStyles.icon} name={icon} />}
+                {label && <span className={buttonStyles.label}>{label}</span>}
                 {options && <Icon name="su-angle-down" />}
             </button>
         );

@@ -14,7 +14,7 @@ $buttonMargin: 2px;
     cursor: pointer;
     font-size: 14px;
 
-    &:hover {
+    &:hover:not(.has-label) {
         color: $buttonTextColorActive;
         background-color: $buttonBackgroundColorActive;
     }
@@ -27,11 +27,22 @@ $buttonMargin: 2px;
         margin-left: $buttonMargin;
     }
 
-    &.options {
+    &.has-options {
         width: 60px;
 
         .icon {
             margin-right: 10px;
         }
+
+        &.has-label {
+            display: flex;
+            padding: 0 10px;
+            width: auto;
+        }
     }
+}
+
+.label {
+    font-size: 12px;
+    margin-right: 10px;
 }

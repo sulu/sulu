@@ -52,6 +52,7 @@ test('Pass props correctly to component', () => {
     expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(false);
     expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('en');
     expect(field.find(TeaserSelectionComponent).prop('onChange')).toBe(changeSpy);
+    expect(field.find(TeaserSelectionComponent).prop('presentations')).toBe(undefined);
     expect(field.find(TeaserSelectionComponent).prop('value')).toBe(value);
 });
 
@@ -71,4 +72,48 @@ test('Pass locale from userStore when form has no locale', () => {
     const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
     expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('de');
+});
+
+test('Pass presentations prop correctly to component', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    userStore.contentLocale = 'de';
+
+    const schemaOptions = {
+        present_as: {
+            value: [
+                {name: 'test-1', title: 'Test 1'},
+                {name: 'test-2', title: 'Test 2'},
+            ],
+        },
+    };
+
+    const field = shallow(
+        <TeaserSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(field.find(TeaserSelectionComponent).prop('presentations')).toEqual([
+        {label: 'Test 1', value: 'test-1'},
+        {label: 'Test 2', value: 'test-2'},
+    ]);
+});
+
+test('Throw error if present_as schemaOption is from wrong type', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    userStore.contentLocale = 'de';
+
+    const schemaOptions = {
+        present_as: {
+            value: 'test',
+        },
+    };
+
+    expect(
+        () => shallow(
+            <TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
+        )
+    ).toThrow(/present_as/);
 });

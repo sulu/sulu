@@ -57,6 +57,33 @@ test('Render a disabled MultiItemSelection with children', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a button on the right with options and a value', () => {
+    const rightButton = {label: 'Test', onClick: jest.fn(), options: [{label: 'Test1', value: 'test-1'}]};
+
+    expect(render(
+        <MultiItemSelection rightButton={rightButton}>
+            <MultiItemSelection.Item
+                id="1"
+                index={1}
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="2"
+                index={2}
+            >
+                Child 2
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id="3"
+                index={3}
+            >
+                Child 3
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render a not sortable MultiItemSelection with children', () => {
     expect(render(
         <MultiItemSelection label="I have children" sortable={false}>
