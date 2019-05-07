@@ -38,7 +38,7 @@ export default class TeaserSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         value: {
-            displayOption: undefined,
+            presentAs: undefined,
             items: [],
         },
     };
@@ -97,7 +97,7 @@ export default class TeaserSelection extends React.Component<Props> {
             return undefined;
         }
 
-        return presentations.find((presentation) => presentation.value === value.displayOption);
+        return presentations.find((presentation) => presentation.value === value.presentAs);
     }
 
     openItemEdit(id: string) {
@@ -187,7 +187,7 @@ export default class TeaserSelection extends React.Component<Props> {
 
         onChange({
             ...value,
-            displayOption: presentation,
+            presentAs: presentation,
         });
     };
 

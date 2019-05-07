@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/stores/UserStore', () => ({}));
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();
     const value = {
-        displayOption: undefined,
+        presentAs: undefined,
         items: [],
     };
 

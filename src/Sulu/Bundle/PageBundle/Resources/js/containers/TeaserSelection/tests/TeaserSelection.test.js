@@ -41,7 +41,6 @@ beforeEach(() => {
 
 test('Render loading teaser selection', () => {
     const value = {
-        displayOption: '',
         items: [
             {
                 description: 'Description',
@@ -50,6 +49,7 @@ test('Render loading teaser selection', () => {
                 type: 'pages',
             },
         ],
+        presentAs: '',
     };
 
     // $FlowFixMe
@@ -67,7 +67,7 @@ test('Render loading teaser selection', () => {
 
 test('Render teaser selection with presentations', () => {
     const value = {
-        displayOption: 'test-2',
+        presentAs: 'test-2',
         items: [
             {
                 description: 'Description',
@@ -110,7 +110,7 @@ test('Render teaser selection with presentations', () => {
 
 test('Render teaser selection with data', () => {
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Description',
@@ -184,14 +184,14 @@ test('Call onChange when presentation is changed', () => {
     teaserSelection.find('Action[value="test-2"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith({
-        displayOption: 'test-2',
+        presentAs: 'test-2',
         items: [],
     });
 });
 
 test('Add passed data to TeaserStore', () => {
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Description 1',
@@ -223,7 +223,7 @@ test('Add passed data to TeaserStore', () => {
 
 test('Load combined data from TeaserStore and props', () => {
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Edited Page Description',
@@ -337,7 +337,7 @@ test('Adding a teaser element', () => {
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
     expect(changeSpy).toBeCalledWith({
-        displayOption: undefined,
+        presentAs: undefined,
         items: [{id: 6, type: 'pages'}, {id: 5, type: 'pages'}],
     });
 
@@ -349,7 +349,7 @@ test('Adding two different kind of teasers', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
             {id: 8, type: 'pages'},
@@ -377,7 +377,7 @@ test('Adding two different kind of teasers', () => {
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="articles"]').prop('open')).toEqual(false);
 
     expect(changeSpy).toBeCalledWith({
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
             {id: 8, type: 'pages'},
@@ -392,7 +392,7 @@ test('Adding a teaser item along with other teaser items which has already been 
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
         ],
@@ -419,7 +419,7 @@ test('Adding a teaser item along with other teaser items which has already been 
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
     expect(changeSpy).toBeCalledWith({
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
             {id: 6, type: 'pages'},
@@ -433,7 +433,7 @@ test('Removing by unselecting element in teaser selection', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
             {id: 8, type: 'pages'},
@@ -462,7 +462,7 @@ test('Removing by unselecting element in teaser selection', () => {
     expect(teaserSelection.find(MultiListOverlay).find('[resourceKey="pages"]').prop('open')).toEqual(false);
 
     expect(changeSpy).toBeCalledWith({
-        displayOption: undefined,
+        presentAs: undefined,
         items: [{id: 5, type: 'articles'}, {id: 6, type: 'pages'}],
     });
 
@@ -474,7 +474,7 @@ test('Preselecting correct items', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: undefined,
+        presentAs: undefined,
         items: [
             {id: 5, type: 'pages'},
             {id: 8, type: 'pages'},
@@ -503,7 +503,7 @@ test('Preselecting correct items', () => {
 
 test('Open and close items when clicking on the pen icon', () => {
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Description',
@@ -554,7 +554,7 @@ test('Call onChange with new values when apply button is clicked', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Description',
@@ -595,7 +595,7 @@ test('Call onChange with new values when apply button is clicked', () => {
 
     expect(changeSpy).toBeCalledWith(
         {
-            displayOption: '',
+            presentAs: '',
             items: [
                 {
                     description: 'Description',
@@ -624,7 +624,7 @@ test('Call onChange with new values after one item is removed', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Contact',
@@ -659,7 +659,7 @@ test('Call onChange with new values after one item is removed', () => {
 
     expect(changeSpy).toBeCalledWith(
         {
-            displayOption: '',
+            presentAs: '',
             items: [
                 {
                     description: 'Contact',
@@ -682,7 +682,7 @@ test('Call onChange with new values after items are sorted', () => {
     const changeSpy = jest.fn();
 
     const value = {
-        displayOption: '',
+        presentAs: '',
         items: [
             {
                 description: 'Description',
@@ -717,7 +717,7 @@ test('Call onChange with new values after items are sorted', () => {
 
     expect(changeSpy).toBeCalledWith(
         {
-            displayOption: '',
+            presentAs: '',
             items: [
                 {
                     description: 'Description',

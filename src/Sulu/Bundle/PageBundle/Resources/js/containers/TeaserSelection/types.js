@@ -18,8 +18,8 @@ export type TeaserItem = {|
 |};
 
 export type TeaserSelectionValue = {|
-    displayOption: ?string,
     items: Array<TeaserItem>,
+    presentAs: ?string,
 |};
 
 export type PresentationItem = {
