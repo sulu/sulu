@@ -10,8 +10,7 @@ type Props = {
     value: ?string,
 };
 
-@observer
-export default class Search extends React.Component<Props> {
+export default @observer class Search extends React.Component<Props> {
     @observable collapsed: boolean = true;
     @observable value: ?string;
 

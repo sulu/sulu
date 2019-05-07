@@ -20,8 +20,7 @@ type Props = {
 
 const VERTICAL_OFFSET = 20;
 
-@observer
-export default class ArrowMenu extends React.Component<Props> {
+export default @observer class ArrowMenu extends React.Component<Props> {
     static Section = Section;
     static SingleItemSection = SingleItemSection;
     static Item = Item;

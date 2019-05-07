@@ -24,8 +24,7 @@ type Props = {|
     overlayTitle: string,
 |};
 
-@observer
-export default class MultiSelection extends React.Component<Props> {
+export default @observer class MultiSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         disabledIds: [],

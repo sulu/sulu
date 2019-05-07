@@ -21,8 +21,7 @@ type Props = {
     error: boolean,
 };
 
-@observer
-export default class LoginForm extends React.Component<Props> {
+export default @observer class LoginForm extends React.Component<Props> {
     static defaultProps = {
         error: false,
         loading: false,

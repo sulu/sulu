@@ -23,8 +23,7 @@ type Props = {|
 const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 
-@observer
-export default class MultiMediaSelection extends React.Component<Props> {
+export default @observer class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         value: {ids: []},

@@ -12,8 +12,7 @@ type Props = {
     children: ChildrenArray<Element<typeof ArrowMenu.Item>>,
 };
 
-@observer
-export default class WebspaceSelect extends React.Component<Props> {
+export default @observer class WebspaceSelect extends React.Component<Props> {
     static Item = ArrowMenu.Item;
 
     @observable open: boolean = false;

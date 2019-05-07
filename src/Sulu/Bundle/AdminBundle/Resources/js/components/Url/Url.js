@@ -29,8 +29,7 @@ const URL_REGEX = new RegExp(
     'iu'
 );
 
-@observer
-export default class Url extends React.Component<Props> {
+export default @observer class Url extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         protocols: ['http://', 'https://', 'ftp://', 'ftps://'],

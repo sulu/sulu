@@ -7,8 +7,7 @@ import {observable} from 'mobx';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
 
-@observer
-export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
+export default @observer class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 

@@ -21,8 +21,7 @@ type Props = {|
     uploadText: ?string,
 |};
 
-@observer
-export default class SingleMediaUpload extends React.Component<Props> {
+export default @observer class SingleMediaUpload extends React.Component<Props> {
     static defaultProps = {
         deletable: true,
         disabled: false,

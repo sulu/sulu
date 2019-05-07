@@ -16,8 +16,7 @@ type Props = {|
     onItemClick: (id: string | number) => void,
 |};
 
-@observer
-export default class ColumnList extends React.Component<Props> {
+export default @observer class ColumnList extends React.Component<Props> {
     static Column = Column;
 
     static Item = Item;

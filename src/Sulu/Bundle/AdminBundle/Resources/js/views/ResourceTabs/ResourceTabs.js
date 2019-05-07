@@ -15,8 +15,7 @@ type Props = ViewProps & {
     titleProperty?: string,
 };
 
-@observer
-export default class ResourceTabs extends React.Component<Props> {
+export default @observer class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
 

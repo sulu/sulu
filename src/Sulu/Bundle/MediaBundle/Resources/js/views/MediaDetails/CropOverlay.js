@@ -19,8 +19,7 @@ type Props = {|
     open: boolean,
 |};
 
-@observer
-export default class CropOverlay extends React.Component<Props> {
+export default @observer class CropOverlay extends React.Component<Props> {
     @observable rawFormats: ?Array<Object>;
     @observable formatKey: ?string;
     @observable changedFormatCroppings: Map<string, Object> = new Map();

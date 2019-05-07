@@ -20,8 +20,7 @@ type Props = {
     open: boolean,
 };
 
-@observer
-export default class MultiMediaDropzone extends React.Component<Props> {
+export default @observer class MultiMediaDropzone extends React.Component<Props> {
     dropzoneRef: ElementRef<Dropzone>;
 
     @observable mediaUploadStores: Array<MediaUploadStore> = [];

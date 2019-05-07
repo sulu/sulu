@@ -18,8 +18,7 @@ type Props = ViewProps & {
     resourceStore?: ResourceStore,
 };
 
-@observer
-export default class FormOverlayList extends React.Component<Props> {
+export default @observer class FormOverlayList extends React.Component<Props> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
     locale: IObservableValue<string> = observable.box();
 

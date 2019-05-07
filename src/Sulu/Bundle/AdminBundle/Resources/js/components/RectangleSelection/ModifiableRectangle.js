@@ -17,8 +17,7 @@ type Props = {
     onDoubleClick?: () => void,
 };
 
-@observer
-export default class ModifiableRectangle extends React.Component<Props> {
+export default @observer class ModifiableRectangle extends React.Component<Props> {
     static defaultProps = {
         backdropSize: 0,
         left: 0,

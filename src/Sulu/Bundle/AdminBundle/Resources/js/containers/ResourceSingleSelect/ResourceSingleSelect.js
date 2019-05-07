@@ -21,8 +21,7 @@ type Props<T> = {|
     value: ?T,
 |};
 
-@observer
-export default class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
+export default @observer class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         apiOptions: {},
         disabled: false,

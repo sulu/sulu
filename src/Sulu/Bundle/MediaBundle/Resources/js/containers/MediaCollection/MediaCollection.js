@@ -27,8 +27,7 @@ type Props = {|
     uploadOverlayOpen: boolean,
 |};
 
-@observer
-export default class MediaCollection extends React.Component<Props> {
+export default @observer class MediaCollection extends React.Component<Props> {
     static defaultProps = {
         overlayType: 'overlay',
     };

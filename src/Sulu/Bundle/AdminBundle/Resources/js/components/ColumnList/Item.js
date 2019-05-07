@@ -26,8 +26,7 @@ type Props = {|
     selected: boolean,
 |};
 
-@observer
-export default class Item extends React.Component<Props> {
+export default @observer class Item extends React.Component<Props> {
     static defaultProps = {
         active: false,
         disabled: false,

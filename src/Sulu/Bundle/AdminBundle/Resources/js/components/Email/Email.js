@@ -16,8 +16,7 @@ type Props = {|
     onChange: (value: ?string) => void,
 |};
 
-@observer
-export default class Email extends React.Component<Props> {
+export default @observer class Email extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,

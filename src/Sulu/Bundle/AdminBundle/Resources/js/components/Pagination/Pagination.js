@@ -21,8 +21,7 @@ type Props = {
 
 const AVAILABLE_LIMITS = [10, 20, 50, 100];
 
-@observer
-export default class Pagination extends React.Component<Props> {
+export default @observer class Pagination extends React.Component<Props> {
     @observable currentInputValue = 1;
 
     static defaultProps = {

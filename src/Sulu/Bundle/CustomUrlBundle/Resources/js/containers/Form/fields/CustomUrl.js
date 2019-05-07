@@ -6,8 +6,7 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import CustomUrlComponent from '../../../components/CustomUrl';
 import customUrlStyles from './customUrl.scss';
 
-@observer
-export default class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
+export default @observer class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
     handleChange = (value: Array<?string>) => {
         const {onChange} = this.props;
 

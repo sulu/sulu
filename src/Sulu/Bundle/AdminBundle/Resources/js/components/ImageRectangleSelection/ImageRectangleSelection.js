@@ -18,8 +18,7 @@ type Props = {|
     value: ?SelectionData,
 |};
 
-@observer
-export class ImageRectangleSelection extends React.Component<Props> {
+export @observer class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
     rounding = new RoundingNormalizer();
     @observable imageLoaded = false;

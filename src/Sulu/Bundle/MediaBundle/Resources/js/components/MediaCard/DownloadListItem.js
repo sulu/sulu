@@ -14,8 +14,7 @@ type Props = {
     copyUrlOnClick: boolean,
 };
 
-@observer
-export default class DownloadListItem extends React.Component<Props> {
+export default @observer class DownloadListItem extends React.Component<Props> {
     static defaultProps = {
         copyUrlOnClick: false,
     };

@@ -17,8 +17,7 @@ type Props = {|
     resourceKey: string,
 |};
 
-@observer
-export default class ResourceLocatorHistory extends React.Component<Props> {
+export default @observer class ResourceLocatorHistory extends React.Component<Props> {
     resourceListStore: ?ResourceListStore;
     @observable open = false;
     @observable showDeleteWarning = false;

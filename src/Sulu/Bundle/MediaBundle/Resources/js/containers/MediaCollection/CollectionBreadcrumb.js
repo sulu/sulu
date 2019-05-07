@@ -12,8 +12,7 @@ type Props = {
     onNavigate: (collectionId?: string | number) => void,
 };
 
-@observer
-export default class CollectionBreadcrumb extends React.Component<Props> {
+export default @observer class CollectionBreadcrumb extends React.Component<Props> {
     static getCurrentCollectionItem(data: Object): BreadcrumbItem {
         return {
             id: data.id,

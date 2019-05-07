@@ -13,8 +13,7 @@ type Props = {|
     toolbarRef?: (?ElementRef<'div'>) => void,
 |};
 
-@observer
-export default class Toolbar extends React.Component<Props> {
+export default @observer class Toolbar extends React.Component<Props> {
     static defaultProps = {
         toolbarItems: [],
     };

@@ -16,8 +16,7 @@ import webspaceTabsStyles from './webspaceTabs.scss';
 const USER_SETTING_PREFIX = 'sulu_page.webspace_tabs';
 const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
 
-@observer
-export default class WebspaceTabs extends React.Component<ViewProps> {
+export default @observer class WebspaceTabs extends React.Component<ViewProps> {
     @observable webspaces: ?Array<Webspace>;
     webspaceKey: IObservableValue<string> = observable.box();
     webspaceDisposer: () => void;

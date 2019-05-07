@@ -23,8 +23,7 @@ type Props<T> = {|
     selectedVisualization?: OptionSelectedVisualization,
 |};
 
-@observer
-export default class Select<T> extends React.Component<Props<T>> {
+export default @observer class Select<T> extends React.Component<Props<T>> {
     static defaultProps = {
         closeOnSelect: true,
         disabled: false,

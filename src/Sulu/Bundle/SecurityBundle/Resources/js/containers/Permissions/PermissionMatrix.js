@@ -18,8 +18,7 @@ type Props = {|
     title?: string,
 |};
 
-@observer
-export default class PermissionMatrix extends React.Component<Props> {
+export default @observer class PermissionMatrix extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };

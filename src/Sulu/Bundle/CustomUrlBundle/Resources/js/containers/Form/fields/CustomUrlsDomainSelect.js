@@ -7,8 +7,7 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import type {Webspace} from 'sulu-page-bundle/types';
 
-@observer
-export default class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
+export default @observer class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
     @observable webspace: Webspace;
 
     componentDidMount() {

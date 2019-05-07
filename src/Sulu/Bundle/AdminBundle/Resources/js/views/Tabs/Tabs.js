@@ -16,8 +16,7 @@ type Props = ViewProps & {
     selectedIndex?: number,
 };
 
-@observer
-export default class Tabs extends React.Component<Props> {
+export default @observer class Tabs extends React.Component<Props> {
     static defaultProps = {
         childrenProps: {},
     };

@@ -16,8 +16,7 @@ type Props = {|
 const LOCK_ICON = 'su-lock';
 const INPUT_TYPE = 'password';
 
-@observer
-export default class PasswordConfirmation extends React.Component<Props> {
+export default @observer class PasswordConfirmation extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,

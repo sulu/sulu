@@ -22,8 +22,7 @@ type Props = {
     onCollectionNavigate: (collectionId: ?string | number) => void,
 };
 
-@observer
-export default class CollectionSection extends React.Component<Props> {
+export default @observer class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {

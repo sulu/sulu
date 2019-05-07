@@ -29,8 +29,7 @@ type Props = {|
 
 const DEBOUNCE_TIME = 300;
 
-@observer
-export default class MultiAutoComplete extends React.Component<Props> {
+export default @observer class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
         allowAdd: false,
         disabled: false,

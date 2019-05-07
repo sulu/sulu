@@ -21,8 +21,7 @@ type Props = {|
     value: Array<BlockEntry>,
 |};
 
-@observer
-export default class BlockCollection extends React.Component<Props> {
+export default @observer class BlockCollection extends React.Component<Props> {
     static idCounter = 0;
 
     static defaultProps = {

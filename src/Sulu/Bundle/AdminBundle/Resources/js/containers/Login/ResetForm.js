@@ -18,8 +18,7 @@ type Props = {
     success: boolean,
 };
 
-@observer
-export default class ResetForm extends React.Component<Props> {
+export default @observer class ResetForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
         success: false,

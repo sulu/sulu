@@ -22,8 +22,7 @@ type Props = {
     value: SelectionData | typeof undefined,
 };
 
-@observer
-export class RectangleSelection extends React.Component<Props> {
+export @observer class RectangleSelection extends React.Component<Props> {
     static defaultProps = {
         round: true,
     };

@@ -26,8 +26,7 @@ type Props = {
 
 type NavigationState = 'pinned' | 'hidden' | 'visible';
 
-@observer
-export default class Application extends React.Component<Props> {
+export default @observer class Application extends React.Component<Props> {
     @observable navigationState: NavigationState;
 
     @computed get navigationPinned() {

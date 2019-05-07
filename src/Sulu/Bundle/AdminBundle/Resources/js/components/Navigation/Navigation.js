@@ -23,8 +23,7 @@ type Props = {
     appVersionLink?: string,
 };
 
-@observer
-export default class Navigation extends React.Component<Props> {
+export default @observer class Navigation extends React.Component<Props> {
     static defaultProps = {
         appVersion: undefined,
         pinned: false,

@@ -27,8 +27,7 @@ type Props = {
     skin: Skin,
 };
 
-@observer
-export default class Table extends React.Component<Props> {
+export default @observer class Table extends React.Component<Props> {
     static defaultProps = {
         selectMode: 'none',
         skin: 'dark',

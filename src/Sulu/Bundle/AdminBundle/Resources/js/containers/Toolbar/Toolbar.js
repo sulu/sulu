@@ -35,8 +35,7 @@ function getItemComponentByType(itemConfig, key) {
     }
 }
 
-@observer
-export default class Toolbar extends React.Component<*> {
+export default @observer class Toolbar extends React.Component<*> {
     static defaultProps = {
         navigationOpen: false,
     };

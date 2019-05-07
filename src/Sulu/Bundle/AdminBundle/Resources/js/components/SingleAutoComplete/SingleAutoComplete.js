@@ -26,8 +26,7 @@ type Props = {|
     value: ?Object,
 |};
 
-@observer
-export default class SingleAutoComplete extends React.Component<Props> {
+export default @observer class SingleAutoComplete extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };

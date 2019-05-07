@@ -28,8 +28,7 @@ type Props = {
     title: string,
 };
 
-@observer
-export default class FilterOverlay extends React.Component<Props> {
+export default @observer class FilterOverlay extends React.Component<Props> {
     @observable dataSource: ?Object;
     @observable includeSubElements: ?boolean;
     @observable categories: ?Array<Object>;

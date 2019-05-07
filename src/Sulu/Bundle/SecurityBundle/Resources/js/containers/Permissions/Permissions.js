@@ -18,8 +18,7 @@ type Props = {|
     value: Array<ContextPermission>,
 |};
 
-@observer
-export default class Permissions extends React.Component<Props> {
+export default @observer class Permissions extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };

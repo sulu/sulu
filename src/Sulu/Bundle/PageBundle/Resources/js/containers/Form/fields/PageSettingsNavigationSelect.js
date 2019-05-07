@@ -8,8 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import webspaceStore from '../../../stores/WebspaceStore';
 import type {Webspace} from '../../../stores/WebspaceStore/types';
 
-@observer
-export default class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
+export default @observer class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
     @observable webspace: Webspace;
 
     componentDidMount() {

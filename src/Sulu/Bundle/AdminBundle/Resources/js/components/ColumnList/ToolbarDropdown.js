@@ -9,8 +9,7 @@ import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 import toolbarStyles from './toolbar.scss';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
 
-@observer
-export default class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
+export default @observer class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
     static defaultProps = {
         skin: 'primary',
     };

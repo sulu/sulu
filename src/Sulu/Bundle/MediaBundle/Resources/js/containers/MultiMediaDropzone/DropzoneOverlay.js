@@ -17,8 +17,7 @@ type Props = {
 
 const CLOSE_OVERLAY_KEY = 'esc';
 
-@observer
-export default class DropzoneOverlay extends React.Component<Props> {
+export default @observer class DropzoneOverlay extends React.Component<Props> {
     static defaultProps = {
         open: false,
     };

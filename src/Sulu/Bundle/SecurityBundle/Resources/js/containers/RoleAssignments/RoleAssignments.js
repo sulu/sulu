@@ -15,8 +15,7 @@ type Props = {|
     value: Array<Object>,
 |};
 
-@observer
-export default class RoleAssignments extends React.Component<Props> {
+export default @observer class RoleAssignments extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };

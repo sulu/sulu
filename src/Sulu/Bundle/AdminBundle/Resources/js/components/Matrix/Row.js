@@ -17,8 +17,7 @@ type Props = {|
     values: MatrixRowValue,
 |};
 
-@observer
-export default class Row extends React.Component<Props> {
+export default @observer class Row extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         values: {},

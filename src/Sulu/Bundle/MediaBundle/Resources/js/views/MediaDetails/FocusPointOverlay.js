@@ -16,8 +16,7 @@ type Props = {|
     resourceStore: ResourceStore,
 |};
 
-@observer
-export default class FocusPointOverlay extends React.Component<Props> {
+export default @observer class FocusPointOverlay extends React.Component<Props> {
     @observable focusPointX: number;
     @observable focusPointY: number;
     @observable resourceStore: ?ResourceStore;

@@ -29,8 +29,7 @@ type Props = {|
     title: string,
 |};
 
-@observer
-export default class SingleListOverlay extends React.Component<Props> {
+export default @observer class SingleListOverlay extends React.Component<Props> {
     static defaultProps = {
         clearSelectionOnClose: false,
         disabledIds: [],

@@ -10,8 +10,7 @@ import Button from './Button';
 import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
-@observer
-export default class Select extends React.Component<SelectProps> {
+export default @observer class Select extends React.Component<SelectProps> {
     @observable open: boolean = false;
 
     static defaultProps = {

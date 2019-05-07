@@ -13,8 +13,7 @@ type Props = ListAdapterProps & {
     showCoverWhenSelected?: boolean,
 };
 
-@observer
-export default class MediaCardAdapter extends React.Component<Props> {
+export default @observer class MediaCardAdapter extends React.Component<Props> {
     static formatFileSize(size: number) {
         const megaByteThreshold = 1000000;
         const kiloByteThreshold = 1000;

@@ -44,8 +44,7 @@ type Props = {
     showCover: boolean,
 };
 
-@observer
-export default class MediaCard extends React.Component<Props> {
+export default @observer class MediaCard extends React.Component<Props> {
     static defaultProps = {
         downloadCopyText: '',
         imageSizes: [],

@@ -7,8 +7,7 @@ import ResourceRequester from '../../../services/ResourceRequester';
 import {translate} from '../../../utils/Translator';
 import type {FieldTypeProps} from '../../../types';
 
-@observer
-export default class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
+export default @observer class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
     @observable changer: ?Object;
     @observable creator: ?Object;
     @observable changerLoaded: boolean = false;

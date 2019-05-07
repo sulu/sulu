@@ -44,8 +44,7 @@ type Props = {|
     store: ListStore,
 |};
 
-@observer
-export default class List extends React.Component<Props> {
+export default @observer class List extends React.Component<Props> {
     static defaultProps = {
         allowActivateForDisabledItems: true,
         copyable: true,

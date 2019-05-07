@@ -12,8 +12,7 @@ import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrat
 import AbstractAdapter from './AbstractAdapter';
 import columnListAdapterStyles from './columnListAdapter.scss';
 
-@observer
-export default class ColumnListAdapter extends AbstractAdapter {
+export default @observer class ColumnListAdapter extends AbstractAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = ColumnStructureStrategy;

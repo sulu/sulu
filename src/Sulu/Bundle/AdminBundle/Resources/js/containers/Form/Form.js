@@ -15,8 +15,7 @@ type Props = {
     store: FormStoreInterface,
 };
 
-@observer
-export default class Form extends React.Component<Props> {
+export default @observer class Form extends React.Component<Props> {
     @observable showAllErrors = false;
     @observable displayGhostDialog = false;
     displayGhostDialogDisposer: () => void;

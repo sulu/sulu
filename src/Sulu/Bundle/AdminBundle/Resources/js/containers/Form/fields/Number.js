@@ -5,8 +5,7 @@ import {observer} from 'mobx-react';
 import NumberComponent from '../../../components/Number';
 import type {FieldTypeProps, SchemaOptions} from '../types';
 
-@observer
-export default class Number extends React.Component<FieldTypeProps<?number>> {
+export default @observer class Number extends React.Component<FieldTypeProps<?number>> {
     @computed get schemaOptions(): SchemaOptions {
         const {schemaOptions} = this.props;
 

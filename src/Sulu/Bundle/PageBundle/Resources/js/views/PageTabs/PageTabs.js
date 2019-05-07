@@ -7,8 +7,7 @@ import {ResourceTabs} from 'sulu-admin-bundle/views';
 import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace} from '../../stores/WebspaceStore/types';
 
-@observer
-export default class PageTabs extends React.Component<ViewProps> {
+export default @observer class PageTabs extends React.Component<ViewProps> {
     @observable webspace: Webspace;
 
     constructor(props: ViewProps) {

@@ -28,8 +28,7 @@ type Props = {
     verticalOffset: number,
 };
 
-@observer
-export default class Popover extends React.Component<Props> {
+export default @observer class Popover extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
         horizontalOffset: 0,

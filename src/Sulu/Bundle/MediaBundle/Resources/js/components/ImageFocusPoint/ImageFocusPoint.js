@@ -15,8 +15,7 @@ type Props = {|
     value: Point,
 |};
 
-@observer
-export default class ImageFocusPoint extends React.Component<Props> {
+export default @observer class ImageFocusPoint extends React.Component<Props> {
     @observable imageDimension: ClientRect;
 
     createFocusPoints(selectedPoint: Point) {

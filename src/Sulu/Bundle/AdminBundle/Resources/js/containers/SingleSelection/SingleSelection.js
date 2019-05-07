@@ -25,8 +25,7 @@ type Props = {|
     value: ?string | number,
 |};
 
-@observer
-export default class SingleSelection extends React.Component<Props> {
+export default @observer class SingleSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         disabledIds: [],

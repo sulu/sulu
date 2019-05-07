@@ -14,8 +14,7 @@ type Props = {|
     onConfirm: (selectedMedia: Object) => void,
 |};
 
-@observer
-export default class SingleMediaSelectionOverlay extends React.Component<Props> {
+export default @observer class SingleMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         excludedIds: [],
     };

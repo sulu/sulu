@@ -10,8 +10,7 @@ type Props = {
     className?: string,
 };
 
-@observer
-export default class Sidebar extends React.Component<Props> {
+export default @observer class Sidebar extends React.Component<Props> {
     render() {
         if (!sidebarStore.view || sidebarRegistry.isDisabled(sidebarStore.view)) {
             return null;

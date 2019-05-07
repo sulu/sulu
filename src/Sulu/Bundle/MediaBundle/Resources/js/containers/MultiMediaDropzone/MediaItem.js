@@ -11,8 +11,7 @@ type Props = {
     store: MediaUploadStore,
 };
 
-@observer
-export default class MediaItem extends React.Component<Props> {
+export default @observer class MediaItem extends React.Component<Props> {
     render() {
         const {store} = this.props;
 

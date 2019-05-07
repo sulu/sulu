@@ -24,8 +24,7 @@ type Props = {|
     onConfirm: (selectedMedia: Array<Object>) => void,
 |};
 
-@observer
-export default class MediaSelectionOverlay extends React.Component<Props> {
+export default @observer class MediaSelectionOverlay extends React.Component<Props> {
     @observable collectionStore: CollectionStore;
     @observable showMediaUploadOverlay: boolean = false;
     updateCollectionStoreDisposer: () => void;

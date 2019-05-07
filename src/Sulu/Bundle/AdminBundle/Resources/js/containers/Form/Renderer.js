@@ -19,8 +19,7 @@ type Props = {|
     onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
 |};
 
-@observer
-export default class Renderer extends React.Component<Props> {
+export default @observer class Renderer extends React.Component<Props> {
     static defaultProps = {
         showAllErrors: false,
     };

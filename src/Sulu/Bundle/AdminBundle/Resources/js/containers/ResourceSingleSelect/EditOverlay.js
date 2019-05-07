@@ -19,8 +19,7 @@ type Props = {|
     title: ?string,
 |};
 
-@observer
-export default class EditOverlay extends React.Component<Props> {
+export default @observer class EditOverlay extends React.Component<Props> {
     @observable data: Array<Object>;
     updateDataDisposer: () => void;
 

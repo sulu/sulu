@@ -18,8 +18,7 @@ type Props = {|
     router: Router,
 |};
 
-@observer
-export default class Preview extends React.Component<Props> {
+export default @observer class Preview extends React.Component<Props> {
     static debounceDelay: number = 250;
     static mode: PreviewMode = 'auto';
 

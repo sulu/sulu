@@ -12,8 +12,7 @@ type Props = {
     router: Router,
 };
 
-@observer
-export default class ViewRenderer extends React.Component<Props> {
+export default @observer class ViewRenderer extends React.Component<Props> {
     componentDidUpdate() {
         this.clearSidebarConfig();
     }

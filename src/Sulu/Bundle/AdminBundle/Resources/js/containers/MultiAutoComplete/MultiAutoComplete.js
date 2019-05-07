@@ -23,8 +23,7 @@ type Props = {|
     value: ?Array<string | number>,
 |};
 
-@observer
-export default class MultiAutoComplete extends React.Component<Props> {
+export default @observer class MultiAutoComplete extends React.Component<Props> {
     static defaultProps = {
         allowAdd: false,
         disabled: false,

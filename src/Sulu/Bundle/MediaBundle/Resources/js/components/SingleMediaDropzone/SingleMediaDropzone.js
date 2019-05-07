@@ -22,8 +22,7 @@ type Props = {|
     uploadText?: ?string,
 |};
 
-@observer
-export default class SingleMediaDropzone extends React.Component<Props> {
+export default @observer class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         emptyIcon: 'su-image',
