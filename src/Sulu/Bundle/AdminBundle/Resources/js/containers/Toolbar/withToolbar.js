@@ -18,10 +18,6 @@ export default function withToolbar<P, C: Class<Component<P>>>(
                 super.componentDidMount();
             }
 
-            if (super.hasOwnProperty('toolbarDisposer')) {
-                throw new Error('Component passed to withToolbar cannot declare a property called "toolbarDisposer".');
-            }
-
             this.toolbarDisposer = autorun(() => {
                 toolbarStorePool.setToolbarConfig(toolbarStoreKey, toolbar.call(this));
             });
