@@ -1,6 +1,5 @@
 // @flow
 import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'jsonpointer';
 import log from 'loglevel';
@@ -154,9 +153,6 @@ function collectTagPaths(
 
 export default class AbstractFormStore
 {
-    +data: Object;
-    +loading: boolean;
-    +locale: ?IObservableValue<string>;
     @observable rawSchema: RawSchema;
     @observable evaluatedSchema: Schema = {};
     modifiedFields: Array<string> = [];
@@ -184,6 +180,7 @@ export default class AbstractFormStore
         const {validator} = this;
         const errors = {};
 
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         if (validator && !validator(toJS(this.data))) {
             for (const error of validator.errors) {
                 switch (error.keyword) {
@@ -219,7 +216,9 @@ export default class AbstractFormStore
     }
 
     updateFieldPathEvaluations = () => {
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         const {loading, rawSchema} = this;
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         const locale = this.locale ? this.locale.get() : undefined;
 
         when(
@@ -227,6 +226,7 @@ export default class AbstractFormStore
             (): void => this.setEvaluatedSchema(
                 transformRawSchema(
                     rawSchema,
+                    // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
                     untracked(() => toJS(this.data)),
                     locale
                 )
@@ -239,6 +239,7 @@ export default class AbstractFormStore
     }
 
     getValueByPath = (path: string): mixed => {
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         return jsonpointer.get(this.data, path);
     };
 
@@ -247,6 +248,7 @@ export default class AbstractFormStore
     }
 
     getPathsByTag(tagName: string) {
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         const {data, rawSchema} = this;
         if (!(tagName in this.pathsByTag)) {
             this.pathsByTag[tagName] = collectTagPaths(tagName, data, rawSchema);
@@ -262,6 +264,7 @@ export default class AbstractFormStore
     @action addMissingSchemaProperties() {
         const schemaFields = Object.keys(this.rawSchema)
             .reduce((data, key) => addSchemaProperties(data, key, this.rawSchema), {});
+        // $FlowFixMe not compatible with babel 7 runtime error on readonly overwrite
         set(this.data, {...schemaFields, ...this.data});
     }
 }

@@ -12,6 +12,8 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     id = undefined;
     options = {};
     resourceKey = undefined;
+    +loading: boolean;
+    +locale: ?IObservableValue<string>;
     @observable data: Object;
     @observable dirty: boolean = false;
     updateFieldPathEvaluationsDisposer: ?() => void;
