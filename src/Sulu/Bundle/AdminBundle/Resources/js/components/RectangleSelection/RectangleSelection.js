@@ -22,7 +22,7 @@ type Props = {
     value: SelectionData | typeof undefined,
 };
 
-export @observer class RectangleSelection extends React.Component<Props> {
+@observer class RectangleSelection extends React.Component<Props> {
     static defaultProps = {
         round: true,
     };
@@ -138,5 +138,9 @@ export @observer class RectangleSelection extends React.Component<Props> {
         );
     }
 }
+
+export {
+    RectangleSelection,
+};
 
 export default withContainerSize(RectangleSelection, rectangleSelectionStyles.container);
