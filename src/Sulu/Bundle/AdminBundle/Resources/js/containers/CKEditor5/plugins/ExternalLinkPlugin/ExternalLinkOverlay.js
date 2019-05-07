@@ -35,7 +35,13 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
             >
                 <Form>
                     <Form.Field label={translate('sulu_admin.link_url')} required={true}>
-                        <Url defaultProtocol="https://" onChange={onUrlChange} valid={true} value={url} />
+                        <Url
+                            defaultProtocol="https://"
+                            onChange={onUrlChange}
+                            protocols={['http://', 'https://', 'ftp://', 'ftps://', 'mailto:']}
+                            valid={true}
+                            value={url}
+                        />
                     </Form.Field>
 
                     <Form.Field label={translate('sulu_admin.link_target')} required={true}>

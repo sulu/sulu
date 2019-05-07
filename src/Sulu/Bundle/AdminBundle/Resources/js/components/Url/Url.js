@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
 import log from 'loglevel';
+import Isemail from 'isemail';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
@@ -56,6 +57,10 @@ class Url extends React.Component<Props> {
     isValidUrl(url: ?string) {
         if (!url) {
             return true;
+        }
+
+        if (url.indexOf('mailto:') === 0) {
+            return Isemail.validate(url.substring(7));
         }
 
         return URL_REGEX.test(url);

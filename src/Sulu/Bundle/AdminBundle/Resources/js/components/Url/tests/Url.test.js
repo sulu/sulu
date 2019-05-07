@@ -168,6 +168,38 @@ test('Call onChange callback with undefined if URL is not valid but leave the cu
     expect(url.find('.error')).toHaveLength(1);
 });
 
+test('Call onChange callback with correct mail address', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: 'test@example.com',
+        },
+    });
+    url.find('input').prop('onBlur')();
+
+    expect(changeSpy).toBeCalledWith('mailto:test@example.com');
+    expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
+    expect(url.find('input').prop('value')).toEqual('test@example.com');
+    expect(url.find('.error')).toHaveLength(0);
+});
+
+test('Call onChange callback with undefined if incorrect mail address is entered', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: 'example.com',
+        },
+    });
+    url.find('input').prop('onBlur')();
+
+    expect(changeSpy).toBeCalledWith(undefined);
+    expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
+    expect(url.find('input').prop('value')).toEqual('example.com');
+    expect(url.find('.error')).toHaveLength(1);
+});
+
 test('Should remove the protocol from path and set it on the protocol select', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} value={undefined} />);
