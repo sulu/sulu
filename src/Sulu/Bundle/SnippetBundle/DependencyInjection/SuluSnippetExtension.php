@@ -36,6 +36,11 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                             __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
                     'resources' => [
                         'snippets' => [
                             'routes' => [
