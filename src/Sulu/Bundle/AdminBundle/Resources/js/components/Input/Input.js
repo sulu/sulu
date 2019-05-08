@@ -56,6 +56,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
     render() {
         const {
             alignment,
+            autocomplete,
             headline,
             id,
             inputClass,
@@ -141,6 +142,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     }
 
                     <input
+                        autoComplete={autocomplete}
                         className={inputClass}
                         disabled={disabled}
                         id={id}

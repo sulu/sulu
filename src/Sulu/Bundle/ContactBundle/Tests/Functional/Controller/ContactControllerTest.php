@@ -483,6 +483,37 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
+    public function testPostWithAccountWithoutPosition()
+    {
+        $collectionType = $this->createCollectionType('My collection type');
+        $account = $this->createAccount('Musterfirma');
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'POST',
+            '/api/contacts',
+            [
+                'firstName' => 'Erika',
+                'lastName' => 'Mustermann',
+                'formOfAddress' => 1,
+                'account' => [
+                    'id' => $account->getId(),
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertNotNull($response->id);
+        $this->assertEquals('Erika', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals(1, $response->formOfAddress);
+        $this->assertEquals($account->getid(), $response->account->id);
+    }
+
     public function testPostEmptyAddress()
     {
         $addressType = $this->createAddressType('Private');

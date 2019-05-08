@@ -3,6 +3,7 @@ import type {ElementRef} from 'react';
 
 export type InputProps<T: ?string | ?number> = {|
     alignment: 'left' | 'center' | 'right',
+    autocomplete?: string,
     collapsed?: boolean,
     name?: string,
     headline?: boolean,

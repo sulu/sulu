@@ -102,6 +102,7 @@ export default class SingleAutoComplete extends React.Component<Props> {
         return (
             <div className={singleAutoCompleteStyles.singleAutoComplete}>
                 <Input
+                    autocomplete="off"
                     disabled={disabled}
                     icon={LENS_ICON}
                     id={id}
