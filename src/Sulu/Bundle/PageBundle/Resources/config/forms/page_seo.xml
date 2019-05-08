@@ -11,7 +11,7 @@
                 <title>sulu_page.search_result</title>
             </meta>
         </property>
-        <property name="title" type="text_line">
+        <property name="ext/seo/title" type="text_line">
             <meta>
                 <title>sulu_page.meta_title</title>
                 <info_text>sulu_page.meta_title_info_text</info_text>
@@ -20,7 +20,7 @@
                 <param name="max_characters" value="55" />
             </params>
         </property>
-        <property name="description" type="text_area">
+        <property name="ext/seo/description" type="text_area">
             <meta>
                 <title>sulu_page.meta_description</title>
                 <info_text>sulu_page.meta_description_info_text</info_text>
@@ -29,7 +29,7 @@
                 <param name="max_characters" value="320" />
             </params>
         </property>
-        <property name="keywords" type="text_line">
+        <property name="ext/seo/keywords" type="text_line">
             <meta>
                 <title>sulu_page.meta_keywords</title>
                 <info_text>sulu_page.meta_keywords_info_text</info_text>
@@ -39,12 +39,12 @@
                 <param name="max_segments" value="5" />
             </params>
         </property>
-        <property name="canonicalUrl" type="text_line">
+        <property name="ext/seo/canonicalUrl" type="text_line">
             <meta>
                 <title>sulu_page.canonical_url</title>
             </meta>
         </property>
-        <property name="noIndex" type="checkbox">
+        <property name="ext/seo/noIndex" type="checkbox">
             <params>
                 <param name="label">
                     <meta>
@@ -54,7 +54,7 @@
                 <param name="type" value="toggler" />
             </params>
         </property>
-        <property name="noFollow" type="checkbox">
+        <property name="ext/seo/noFollow" type="checkbox">
             <params>
                 <param name="label">
                     <meta>
@@ -64,7 +64,7 @@
                 <param name="type" value="toggler" />
             </params>
         </property>
-        <property name="hideInSitemap" type="checkbox">
+        <property name="ext/seo/hideInSitemap" type="checkbox">
             <params>
                 <param name="label">
                     <meta>

@@ -14,14 +14,6 @@ sulu_page.page:
     type: rest
     resource: Sulu\Bundle\PageBundle\Controller\PageController
 
-sulu_page.page_seo:
-    type: rest
-    resource: Sulu\Bundle\PageBundle\Controller\SeoController
-
-sulu_page.page_excerpt:
-    type: rest
-    resource: Sulu\Bundle\PageBundle\Controller\ExcerptController
-
 sulu_page.webspace.localization:
     type: rest
     resource: Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController

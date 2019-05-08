@@ -2,6 +2,7 @@
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
+import jsonpointer from 'json-pointer';
 import Form from '../../components/Form';
 import Field from './Field';
 import FormInspector from './FormInspector';
@@ -64,7 +65,7 @@ export default class Renderer extends React.Component<Props> {
                 schema={schemaField}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}
-                value={data[schemaKey]}
+                value={jsonpointer.has(data, '/' + schemaKey) ? jsonpointer.get(data, '/' + schemaKey) : undefined}
             />
         );
     }

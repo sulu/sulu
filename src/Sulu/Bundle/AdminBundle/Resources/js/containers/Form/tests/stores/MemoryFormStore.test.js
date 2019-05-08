@@ -12,15 +12,23 @@ test('Create data object for schema', () => {
             label: 'Description',
             type: 'text_line',
         },
+        'ext/seo/title': {
+            label: 'Description',
+            type: 'text_line',
+        },
     };
 
     const memoryFormStore = new MemoryFormStore({}, schema);
     expect(memoryFormStore.loading).toEqual(false);
 
-    expect(Object.keys(memoryFormStore.data)).toHaveLength(2);
     expect(memoryFormStore.data).toEqual({
         title: undefined,
         description: undefined,
+        ext: {
+            seo: {
+                title: undefined,
+            },
+        },
     });
     memoryFormStore.destroy();
 });
@@ -313,6 +321,13 @@ test('Set dirty flag', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test', 'test');
     expect(memoryFormStore.dirty).toEqual(true);
+    memoryFormStore.destroy();
+});
+
+test('Set nested value', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('test1/test2', 'test');
+    expect(memoryFormStore.data).toEqual({test1: {test2: 'test'}});
     memoryFormStore.destroy();
 });
 

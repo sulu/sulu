@@ -153,7 +153,7 @@ class PageAdmin extends Admin
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
-                ->setResourceKey('pages_seo')
+                ->setResourceKey('pages')
                 ->setFormKey('page_seo')
                 ->setTabTitle('sulu_page.seo')
                 ->setTabCondition('nodeType == 1 && shadowOn == false')
@@ -162,7 +162,7 @@ class PageAdmin extends Admin
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
-                ->setResourceKey('pages_excerpt')
+                ->setResourceKey('pages')
                 ->setFormKey('page_excerpt')
                 ->setBackRoute(static::PAGES_ROUTE)
                 ->setTabTitle('sulu_page.excerpt')

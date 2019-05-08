@@ -2,7 +2,7 @@
 import {action, autorun, computed, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
-import jsonpointer from 'jsonpointer';
+import jsonpointer from 'json-pointer';
 import ResourceStore from '../../../stores/ResourceStore';
 import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';

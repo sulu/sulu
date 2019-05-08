@@ -17,12 +17,12 @@ jest.mock('../registries/FieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'text_line':
-                return function Text() {
-                    return <input type="text" />;
+                return function Text({value}) {
+                    return <input onChange={jest.fn()} type="text" value={value} />;
                 };
             case 'datetime':
-                return function DateTime() {
-                    return <input type="datetime" />;
+                return function DateTime({value}) {
+                    return <input onChange={jest.fn()} type="datetime" value={value} />;
                 };
         }
     }),
@@ -85,6 +85,46 @@ test('Should render field types based on schema', () => {
     const renderer = render(
         <Renderer
             data={{}}
+            dataPath=""
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFieldFinish={jest.fn()}
+            schema={schema}
+            schemaPath=""
+        />
+    );
+
+    expect(renderer).toMatchSnapshot();
+});
+
+test('Should render nested field types with based on schema', () => {
+    const schema = {
+        'test/text': {
+            label: 'Text',
+            type: 'text_line',
+            visible: true,
+        },
+        'test/datetime': {
+            label: 'Datetime',
+            type: 'datetime',
+            visible: true,
+        },
+    };
+
+    const data = {
+        test: {
+            text: 'Text',
+            datetime: 'DateTime',
+        },
+    };
+
+    const changeSpy = jest.fn();
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    const renderer = render(
+        <Renderer
+            data={data}
             dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
