@@ -2,9 +2,9 @@
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import View from '@ckeditor/ckeditor5-ui/src/view';
 // $FlowFixMe
-import editIcon from '!!raw-loader!./edit.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import editIcon from './edit.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 // $FlowFixMe
-import unlinkIcon from '!!raw-loader!./unlink.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import unlinkIcon from './unlink.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export default class LinkBalloonView extends View {
     constructor(locale: string, hasPreview: boolean = false) {

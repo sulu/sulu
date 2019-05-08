@@ -1,5 +1,5 @@
 @import 'sulu-admin-bundle/components/Tabs/variables.scss';
-@import 'sulu-page-bundle/views/WebspaceTabs/variables.scss';
+@import '../WebspaceTabs/variables.scss';
 
 .webspace-overview {
     height: calc(100% - $tabMenuHeight - 8px);

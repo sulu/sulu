@@ -13,7 +13,7 @@ import LinkCommand from '../../LinkCommand';
 import ExternalLinkOverlay from './ExternalLinkOverlay';
 import UnlinkCommand from '../../UnlinkCommand';
 // $FlowFixMe
-import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import linkIcon from './link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
 const DEFAULT_TARGET = '_self';
 

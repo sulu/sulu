@@ -3,15 +3,18 @@
     "description": "Adds support for custom urls to Sulu",
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
+    "dependencies": {
+        "mobx": "^4.0.0",
+        "mobx-react": "^5.0.0",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0"
+    },
     "devDependencies": {
         "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
         "sulu-page-bundle": "file:../../../PageBundle/Resources/js"
     },
     "peerDependencies": {
-        "mobx": "^4.0.0",
-        "mobx-react": "^5.0.0",
-        "react": "^16.2.0",
         "sulu-admin-bundle": "*",
         "sulu-page-bundle": "*"
     }

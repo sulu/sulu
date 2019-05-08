@@ -6,7 +6,11 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "fast-deep-equal": "^1.0.0",
-        "url-search-params-polyfill": "^2.0.0"
+        "url-search-params-polyfill": "^2.0.0",
+        "mobx": "^4.0.0",
+        "mobx-react": "^5.0.0",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
@@ -15,9 +19,6 @@
         "sulu-website-bundle": "file:../../../WebsiteBundle/Resources/js"
     },
     "peerDependencies": {
-        "mobx": "^4.0.0",
-        "mobx-react": "^5.0.0",
-        "react": "^16.2.0",
         "sulu-admin-bundle": "*",
         "sulu-website-bundle": "*"
     }
