@@ -87,7 +87,8 @@
             "fos-jsrouting/router": "<rootDir>/tests/js/mocks/fos-jsrouting-router.js"
         },
         "setupFiles": [
-            "jest-canvas-mock"
+            "jest-canvas-mock",
+            "regenerator-runtime/runtime"
         ],
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
