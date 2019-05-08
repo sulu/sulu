@@ -163,6 +163,15 @@ export default class Preview extends React.Component<Props> {
         this.selectedDeviceOption = value;
     };
 
+    @action handleRefreshClick = () => {
+        const document = this.getPreviewDocument();
+        if (!document) {
+            return;
+        }
+
+        document.location.reload();
+    };
+
     handleStartClick = () => {
         this.startPreview();
     };
@@ -218,6 +227,12 @@ export default class Preview extends React.Component<Props> {
                             options={this.availableDeviceOptions}
                             value={this.selectedDeviceOption}
                         />
+                        <Toolbar.Button
+                            icon="su-sync"
+                            onClick={this.handleRefreshClick}
+                        >
+                            {translate('sulu_preview.reload')}
+                        </Toolbar.Button>
                         <Toolbar.Button
                             icon="su-link"
                             onClick={this.handlePreviewWindowClick}
