@@ -44,5 +44,8 @@
     "sulu_page.hide_in_sitemap": "In Sitemap ausblenden",
     "sulu_page.delete_draft": "Entwurf löschen",
     "sulu_page.delete_draft_warning_title": "Entwurf löschen?",
-    "sulu_page.delete_draft_warning_text": "Soll der Entwurf wirklich gelöscht werden? Alle Daten gehen dadurch verloren. Die veröffentlichte Seite bleibt unverändert bestehen."
+    "sulu_page.delete_draft_warning_text": "Soll der Entwurf wirklich gelöscht werden? Alle Daten gehen dadurch verloren. Die veröffentlichte Seite bleibt unverändert bestehen.",
+    "sulu_page.unpublish_warning_title": "Nicht mehr veröffentlichen?",
+    "sulu_page.unpublish_warning_text": "Soll die Seite wirklich nicht mehr veröffentlicht werden? Dadurch gehen sämtliche Verknüpfungen auf der Website verloren. Dieser Status kann jederzeit ohne Datenverlust geändert werden.",
+    "sulu_page.unpublish": "Nicht mehr veröffentlichen"
 }

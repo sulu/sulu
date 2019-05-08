@@ -89,11 +89,15 @@ test('Return enabled item config', () => {
                 disabled: false,
                 label: 'sulu_page.delete_draft',
             }),
+            expect.objectContaining({
+                disabled: false,
+                label: 'sulu_page.unpublish',
+            }),
         ],
     }));
 });
 
-test('Return disabled delete draft item when page is not published', () => {
+test('Return disabled delete draft and unpublish items when page is not published', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
     editToolbarAction.resourceFormStore.resourceStore.id = 5;
     editToolbarAction.resourceFormStore.resourceStore.data.published = false;
@@ -111,6 +115,10 @@ test('Return disabled delete draft item when page is not published', () => {
             expect.objectContaining({
                 disabled: true,
                 label: 'sulu_page.delete_draft',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_page.unpublish',
             }),
         ],
     }));
@@ -135,6 +143,10 @@ test('Return disabled delete draft item when page has no draft', () => {
                 disabled: true,
                 label: 'sulu_page.delete_draft',
             }),
+            expect.objectContaining({
+                disabled: false,
+                label: 'sulu_page.unpublish',
+            }),
         ],
     }));
 });
@@ -155,6 +167,10 @@ test('Return disabled item config', () => {
             expect.objectContaining({
                 disabled: true,
                 label: 'sulu_page.delete_draft',
+            }),
+            expect.objectContaining({
+                disabled: true,
+                label: 'sulu_page.unpublish',
             }),
         ],
     }));
@@ -293,7 +309,7 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[1].onClick;
     if (!clickHandler) {
-        throw new Error('A onClick callback should be registered on the copy locale option');
+        throw new Error('An onClick callback should be registered on the delete draft option');
     }
 
     let element = mount(editToolbarAction.getNode()).at(1);
@@ -314,7 +330,7 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     }));
 });
 
-test('Close dialog when onClose from delete draft dialog is called', () => {
+test('Delete draft when delete draft dialog is confirmed', () => {
     const data = {
         title: 'Title',
     };
@@ -331,7 +347,7 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     const clickHandler = toolbarItemConfig.options[1].onClick;
     if (!clickHandler) {
-        throw new Error('A onClick callback should be registered on the copy locale option');
+        throw new Error('An onClick callback should be registered on the delete draft option');
     }
 
     let element = mount(editToolbarAction.getNode()).at(1);
@@ -349,6 +365,78 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
 
     return deleteDraftPromise.then(() => {
         element = mount(editToolbarAction.getNode()).at(1);
+        expect(element.prop('confirmLoading')).toEqual(false);
+        expect(editToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
+        expect(editToolbarAction.resourceFormStore.dirty).toEqual(false);
+    });
+});
+
+test('Close dialog when onClose from unpublish dialog is called', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de']);
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
+    // $FlowFixMe
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    const clickHandler = toolbarItemConfig.options[2].onClick;
+    if (!clickHandler) {
+        throw new Error('A onClick callback should be registered on the unpublish option');
+    }
+
+    let element = mount(editToolbarAction.getNode()).at(2);
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: false,
+    }));
+
+    clickHandler();
+    element = mount(editToolbarAction.getNode()).at(2);
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.prop('onCancel')();
+    element = mount(editToolbarAction.getNode()).at(2);
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: false,
+    }));
+});
+
+test('Unpublish page when delete draft dialog is confirmed', () => {
+    const data = {
+        title: 'Title',
+    };
+
+    const unpublishPromise = Promise.resolve(data);
+    ResourceRequester.post.mockReturnValue(unpublishPromise);
+
+    const editToolbarAction = createEditToolbarAction(['en', 'de']);
+    editToolbarAction.resourceFormStore.resourceStore.id = 3;
+    // $FlowFixMe
+    editToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
+    editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    const clickHandler = toolbarItemConfig.options[2].onClick;
+    if (!clickHandler) {
+        throw new Error('A onClick callback should be registered on the unpublish option');
+    }
+
+    let element = mount(editToolbarAction.getNode()).at(2);
+    clickHandler();
+
+    expect(element.prop('confirmLoading')).toEqual(false);
+    element.prop('onConfirm')();
+    element = mount(editToolbarAction.getNode()).at(2);
+    expect(element.prop('confirmLoading')).toEqual(true);
+    expect(ResourceRequester.post).toBeCalledWith(
+        'pages',
+        undefined,
+        {action: 'unpublish', id: 3, locale: editToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
+    );
+
+    return unpublishPromise.then(() => {
+        element = mount(editToolbarAction.getNode()).at(2);
         expect(element.prop('confirmLoading')).toEqual(false);
         expect(editToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
         expect(editToolbarAction.resourceFormStore.dirty).toEqual(false);

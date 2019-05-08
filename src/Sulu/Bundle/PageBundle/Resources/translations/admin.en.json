@@ -44,5 +44,8 @@
     "sulu_page.hide_in_sitemap": "Hide in sitemap",
     "sulu_page.delete_draft": "Delete draft",
     "sulu_page.delete_draft_warning_title": "Delete Draft?",
-    "sulu_page.delete_draft_warning_text": "Do you really want to delete the draft? All data will be lost. The published page will not be changed."
+    "sulu_page.delete_draft_warning_text": "Do you really want to delete the draft? All data will be lost. The published page will not be changed.",
+    "sulu_page.unpublish_warning_title": "Set to unpublished?",
+    "sulu_page.unpublish_warning_text": "Do you really want to unpublish the page? All website links will be lost. This setting can be changed at any time without data loss.",
+    "sulu_page.unpublish": "Set to unpublished"
 }
