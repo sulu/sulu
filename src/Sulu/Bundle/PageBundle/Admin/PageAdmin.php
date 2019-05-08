@@ -113,6 +113,8 @@ class PageAdmin extends Admin
 
         $routerAttributesToFormStore = ['parentId', 'webspace'];
 
+        $previewCondition = 'nodeType == 1';
+
         return [
             (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs'))
                 ->setAttributeDefault('webspace', $firstWebspace->getKey()),
@@ -149,19 +151,20 @@ class PageAdmin extends Admin
                 ->setTabCondition('nodeType == 1 && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setPreviewCondition('nodeType == 1')
+                ->setPreviewCondition($previewCondition)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
+            $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
                 ->setResourceKey('pages')
                 ->setFormKey('page_seo')
                 ->setTabTitle('sulu_page.seo')
                 ->setTabCondition('nodeType == 1 && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setPreviewCondition($previewCondition)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
+            $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                 ->setResourceKey('pages')
                 ->setFormKey('page_excerpt')
                 ->setBackRoute(static::PAGES_ROUTE)
@@ -169,9 +172,10 @@ class PageAdmin extends Admin
                 ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setPreviewCondition($previewCondition)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
+            $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
                 ->setResourceKey('pages')
                 ->setFormKey('page_settings')
                 ->setBackRoute(static::PAGES_ROUTE)
@@ -179,6 +183,7 @@ class PageAdmin extends Admin
                 ->setTabPriority(512)
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                ->setPreviewCondition($previewCondition)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];
