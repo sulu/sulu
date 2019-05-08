@@ -141,7 +141,7 @@ class ResourceSegmentSubscriberTest extends TestCase
 
         $this->documentInspector->getOriginalLocale($this->document->reveal())->willReturn('de');
 
-        $node->getPropertyValueWithDefault('i18n:de-url', '')->willReturn($segment);
+        $node->getPropertyValueWithDefault('i18n:de-url', null)->willReturn($segment);
 
         // Asserts
         $this->document->setResourceSegment($segment)->shouldBeCalled();

@@ -177,6 +177,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             /** @var PageDocument $document */
             $document = $this->documentManager->create('page');
             $document->setTitle($data['title']);
+            $document->setResourceSegment($data['url']);
             $document->getStructure()->bind($data);
             $document->setStructureType($template);
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
