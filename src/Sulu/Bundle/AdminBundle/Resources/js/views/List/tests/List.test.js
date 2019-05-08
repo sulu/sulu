@@ -444,6 +444,33 @@ test('Should navigate to defined route on back button click', () => {
     expect(router.restore).toBeCalledWith('backRoute', {locale: 'de'});
 });
 
+test('Should propagate errors to toolbar', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                backRoute: 'backRoute',
+                addRoute: 'addRoute',
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const error = 'This is an error';
+    list.instance().errors.push(error);
+
+    const toolbarConfig = toolbarFunction.call(list.instance());
+    expect(toolbarConfig.errors.length).toBe(1);
+    expect(toolbarConfig.errors[0]).toBe(error);
+});
+
 test('Should navigate to defined route on back button click without locale', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
