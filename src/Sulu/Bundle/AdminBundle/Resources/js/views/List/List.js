@@ -29,7 +29,9 @@ class List extends React.Component<Props> {
     locale: IObservableValue<string>;
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
+
     @observable toolbarActions = [];
+    @observable errors = [];
 
     static getDerivedRouteAttributes(route: Route) {
         const {
@@ -282,6 +284,7 @@ class List extends React.Component<Props> {
 }
 
 export default withToolbar(List, function() {
+    const {errors} = this;
     const {router} = this.props;
 
     const {
@@ -323,6 +326,7 @@ export default withToolbar(List, function() {
 
     return {
         backButton,
+        errors,
         locale,
         items,
     };
