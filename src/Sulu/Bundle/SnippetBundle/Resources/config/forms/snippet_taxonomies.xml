@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>snippet_taxonomies</key>
+
+    <properties>
+        <property name="ext/excerpt/categories" type="category_selection">
+            <meta>
+                <title>sulu_category.categories</title>
+            </meta>
+        </property>
+        <property name="ext/excerpt/tags" type="tag_selection">
+            <meta>
+                <title>sulu_tag.tags</title>
+            </meta>
+        </property>
+    </properties>
+</form>

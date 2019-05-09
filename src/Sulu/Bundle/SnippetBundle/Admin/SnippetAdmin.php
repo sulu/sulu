@@ -109,10 +109,14 @@ class SnippetAdmin extends Admin
             )
         );
 
-        $formToolbarActions = [
+        $formToolbarActionsWithType = [
             'sulu_admin.save',
             'sulu_admin.type',
             'sulu_admin.delete',
+        ];
+
+        $formToolbarActionsWithoutType = [
+            'sulu_admin.save',
         ];
 
         $listToolbarActions = [
@@ -143,7 +147,7 @@ class SnippetAdmin extends Admin
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($formToolbarActionsWithType)
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
@@ -156,7 +160,14 @@ class SnippetAdmin extends Admin
                 ->setResourceKey('snippets')
                 ->setFormKey('snippet')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($formToolbarActionsWithType)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.taxonomies', '/taxonomies')
+                ->setResourceKey('snippets')
+                ->setFormKey('snippet_taxonomies')
+                ->setTabTitle('sulu_snippet.taxonomies')
+                ->addToolbarActions($formToolbarActionsWithoutType)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             (new Route('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas'))
