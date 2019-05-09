@@ -8,8 +8,8 @@ import iconStyles from './icon.scss';
 
 type Props = {
     className?: string,
-    onClick?: () => void,
     name: string,
+    onClick?: () => void,
     style?: Object,
 };
 

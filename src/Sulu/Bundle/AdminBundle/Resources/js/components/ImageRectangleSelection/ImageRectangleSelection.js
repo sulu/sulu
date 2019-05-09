@@ -12,8 +12,8 @@ type Props = {|
     containerHeight: number,
     containerWidth: number,
     image: string,
-    minWidth?: number,
     minHeight?: number,
+    minWidth?: number,
     onChange: (s: ?SelectionData) => void,
     value: ?SelectionData,
 |};

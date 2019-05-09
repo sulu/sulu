@@ -13,8 +13,8 @@ import PermissionMatrix from './PermissionMatrix';
 
 type Props = {|
     disabled: boolean,
-    system: string,
     onChange: (value: Array<ContextPermission>) => void,
+    system: string,
     value: Array<ContextPermission>,
 |};
 

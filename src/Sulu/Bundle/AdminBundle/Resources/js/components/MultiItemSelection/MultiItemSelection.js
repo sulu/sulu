@@ -9,14 +9,14 @@ import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
 type Props<T> = {|
-    disabled: boolean,
     children?: ChildrenArray<Element<typeof Item>>,
+    disabled: boolean,
     label?: string,
+    leftButton?: Button,
+    loading: boolean,
     onItemRemove?: (itemid: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
-    leftButton?: Button,
     rightButton?: Button,
-    loading: boolean,
     sortable: boolean,
 |};
 
@@ -52,7 +52,7 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
         }
     };
 
-    handleItemsSorted = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    handleItemsSorted = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         const {onItemsSorted} = this.props;
 
         if (onItemsSorted) {

@@ -8,13 +8,13 @@ import optionStyles from './option.scss';
 const ICON_CHECKMARK = 'su-check';
 
 type Props = {
+    disabled?: boolean,
     label: string | number,
-    value: Object,
     onClick: (value: Object) => void,
+    selected?: boolean,
     size?: string,
     skin?: Skin,
-    selected?: boolean,
-    disabled?: boolean,
+    value: Object,
 };
 
 export default class Option extends React.PureComponent<Props> {

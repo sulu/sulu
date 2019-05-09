@@ -27,9 +27,9 @@ export type TogglerItemConfig = {|
 export type ToolbarItemConfig = ButtonItemConfig | DropdownItemConfig | SelectItemConfig | TogglerItemConfig;
 
 export type ToolbarProps = {
-    storeKey?: string,
-    onNavigationButtonClick?: () => void,
     navigationOpen?: boolean,
+    onNavigationButtonClick?: () => void,
+    storeKey?: string,
 };
 
 type Error = {

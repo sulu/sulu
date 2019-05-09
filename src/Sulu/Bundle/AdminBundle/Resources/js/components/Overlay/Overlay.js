@@ -15,16 +15,16 @@ import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 
 type Props = {
-    title: string,
-    children: Node,
     actions: Array<Action>,
+    children: Node,
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
+    onClose: () => void,
     onConfirm: () => void,
     open: boolean,
     size?: Size,
-    onClose: () => void,
+    title: string,
 };
 
 const CLOSE_ICON = 'su-times';

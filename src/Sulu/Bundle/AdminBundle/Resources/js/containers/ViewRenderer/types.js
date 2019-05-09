@@ -4,9 +4,9 @@ import Router from '../../services/Router';
 import type {AttributeMap, Route} from '../../services/Router';
 
 export type ViewProps = {
-    router: Router,
-    route: Route,
     children?: (?Object) => Element<*> | null,
+    route: Route,
+    router: Router,
 };
 
 interface GetDerivedRouteAttributesInterface {

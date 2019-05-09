@@ -4,9 +4,9 @@ import ReactCircularProgressbar from 'react-circular-progressbar';
 import circularProgressbarStyles from './circularProgressbar.scss';
 
 type Props = {
-    size: number,
-    percentage: number,
     hidePercentageText: boolean,
+    percentage: number,
+    size: number,
 };
 
 export default class CircularProgressbar extends React.PureComponent<Props> {

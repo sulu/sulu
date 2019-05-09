@@ -6,13 +6,13 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 type Props = {
-    children?: ChildrenArray<Element<typeof Item> | false>,
-    value: string,
-    title: string,
     active?: boolean,
-    onClick?: (value: string) => void,
+    children?: ChildrenArray<Element<typeof Item> | false>,
     expanded?: boolean,
     icon?: string,
+    onClick?: (value: string) => void,
+    title: string,
+    value: string,
 };
 
 export default class Item extends React.PureComponent<Props> {

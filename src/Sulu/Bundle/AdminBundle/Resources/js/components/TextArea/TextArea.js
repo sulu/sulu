@@ -5,6 +5,7 @@ import CharacterCounter from '../CharacterCounter';
 import textAreaStyles from './textArea.scss';
 
 type Props = {|
+    disabled: boolean,
     id?: string,
     maxCharacters?: number,
     name?: string,
@@ -12,7 +13,6 @@ type Props = {|
     onChange: (?string) => void,
     placeholder?: string,
     valid: boolean,
-    disabled: boolean,
     value: ?string,
 |};
 

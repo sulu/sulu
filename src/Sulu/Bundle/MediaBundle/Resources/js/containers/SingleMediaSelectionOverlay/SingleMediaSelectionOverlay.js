@@ -7,11 +7,11 @@ import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
-    open: boolean,
-    locale: IObservableValue<string>,
     excludedIds: Array<number>,
+    locale: IObservableValue<string>,
     onClose: () => void,
     onConfirm: (selectedMedia: Object) => void,
+    open: boolean,
 |};
 
 @observer

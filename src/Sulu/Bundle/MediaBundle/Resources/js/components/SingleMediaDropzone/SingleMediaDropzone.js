@@ -15,11 +15,11 @@ type Props = {|
     emptyIcon: string,
     image: ?string,
     mimeType: ?string,
-    uploading: boolean,
-    progress: number,
     onDrop: (data: File) => void,
+    progress: number,
     skin: 'default' | 'round',
     uploadText?: ?string,
+    uploading: boolean,
 |};
 
 @observer

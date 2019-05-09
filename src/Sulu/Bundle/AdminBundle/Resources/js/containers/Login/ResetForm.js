@@ -11,11 +11,11 @@ import formStyles from './form.scss';
 
 type Props = {
     loading: boolean,
-    user: ?string,
-    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
     onChangeForm: () => void,
+    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
     onUserChange: (user: ?string) => void,
     success: boolean,
+    user: ?string,
 };
 
 @observer

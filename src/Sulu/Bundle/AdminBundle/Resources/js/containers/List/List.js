@@ -36,11 +36,11 @@ type Props = {|
     disabledIds: Array<string | number>,
     header?: Node,
     movable: boolean,
-    onItemClick?: (itemId: string | number) => void,
     onItemAdd?: (id: string | number) => void,
+    onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
-    selectable: boolean,
     searchable: boolean,
+    selectable: boolean,
     store: ListStore,
 |};
 

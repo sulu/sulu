@@ -2,8 +2,8 @@
 export type Size = 'small' | 'medium' | 'large';
 
 export type SidebarConfig = {|
-    view: string,
+    defaultSize?: Size,
     props?: Object,
     sizes?: Array<Size>,
-    defaultSize?: Size,
+    view: string,
 |};

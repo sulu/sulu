@@ -15,9 +15,9 @@ type Props = {
     /** @ignore */
     onAllSelectionChange?: (checked: boolean) => void,
     /** @ignore */
-    selectMode?: SelectMode,
-    /** @ignore */
     selectInFirstCell: boolean,
+    /** @ignore */
+    selectMode?: SelectMode,
     skin: Skin,
 };
 

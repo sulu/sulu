@@ -7,8 +7,8 @@ import type {ToolbarDropdownOptionConfig} from './types';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
 
 type Props = {|
-    options: Array<ToolbarDropdownOptionConfig>,
     onClick: () => void,
+    options: Array<ToolbarDropdownOptionConfig>,
     skin?: 'primary' | 'secondary',
 |};
 

@@ -13,18 +13,15 @@ import Popover from '../Popover';
 import './datePicker.scss';
 
 type Props = {|
+    disabled: boolean,
     id?: string,
-    /** Placeholder can be overwritten */
-    placeholder?: string,
-    /** Listen for changes of this component */
     onChange: (value: ?Date) => void,
-    /** Configure the datepicker to your needs, for more information have a look in the README.md */
     options: {
         dateFormat?: ?string | boolean,
         timeFormat?: ?string | boolean,
     },
+    placeholder?: string,
     valid: boolean,
-    disabled: boolean,
     value: ?Date,
 |};
 

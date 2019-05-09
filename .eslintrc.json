@@ -88,7 +88,7 @@
         "prefer-const": "error",
         "space-infix-ops": "error",
         "space-before-function-paren": [
-            "error", 
+            "error",
             "never"
         ],
         "keyword-spacing": [
@@ -199,6 +199,7 @@
             "error",
             "always-multiline"
         ],
+        "flowtype/sort-keys": "error",
         "babel/semi": "error"
     }
 }

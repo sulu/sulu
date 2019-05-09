@@ -16,10 +16,10 @@ const VERTICAL_OFFSET = 2;
 
 type Props<T> = {|
     ...SelectProps<T>,
-    onSelect: (value: T) => void,
-    displayValue: string,
     closeOnSelect: boolean,
+    displayValue: string,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
+    onSelect: (value: T) => void,
     selectedVisualization?: OptionSelectedVisualization,
 |};
 

@@ -23,13 +23,13 @@ export type CustomUrl = {
 };
 
 export type Url = {
-    url: string,
-    language: string,
     country: string,
-    segment: string,
-    redirect: string,
-    main: boolean,
     environment: string,
+    language: string,
+    main: boolean,
+    redirect: string,
+    segment: string,
+    url: string,
 };
 
 export type LocalizationItem = {
@@ -38,9 +38,9 @@ export type LocalizationItem = {
 };
 
 export type PortalInformation = {
-    webspaceKey: string,
-    portalKey: string,
     locale: string,
-    url: string,
     main: boolean,
+    portalKey: string,
+    url: string,
+    webspaceKey: string,
 };

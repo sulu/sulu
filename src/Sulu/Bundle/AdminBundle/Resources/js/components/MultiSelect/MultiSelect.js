@@ -9,8 +9,8 @@ type Props<T: string | number> = {|
     ...SelectProps<T>,
     allSelectedText?: string,
     noneSelectedText?: string,
-    values: Array<T>,
     onChange: (values: Array<T>) => void,
+    values: Array<T>,
 |};
 
 export default class MultiSelect<T: string | number> extends React.PureComponent<Props<T>> {

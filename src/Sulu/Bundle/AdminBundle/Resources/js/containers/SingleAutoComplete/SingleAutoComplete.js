@@ -8,10 +8,10 @@ type Props = {|
     disabled: boolean,
     displayProperty: string,
     id?: string,
-    searchProperties: Array<string>,
     onChange: (value: ?Object) => void,
     options: Object,
     resourceKey: string,
+    searchProperties: Array<string>,
     value: ?Object,
 |};
 

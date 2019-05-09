@@ -35,11 +35,11 @@ export type Presentation = {
 };
 
 export type SmartContentConfig = {
+    audienceTargeting: boolean,
+    categories: boolean,
     datasourceAdapter?: string,
     datasourceListKey?: string,
     datasourceResourceKey?: string,
-    audienceTargeting: boolean,
-    categories: boolean,
     limit: boolean,
     presentAs: boolean,
     sorting: Array<Sorting>,

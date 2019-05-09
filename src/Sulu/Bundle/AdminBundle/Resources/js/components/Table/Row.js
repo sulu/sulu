@@ -11,27 +11,25 @@ import Cell from './Cell';
 import tableStyles from './table.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Cell>>,
-    /** The index of the row inside the body */
-    rowIndex: number,
-    /** The id will be used to mark the selected row inside the onRowSelection callback. */
-    id?: string | number,
     /** @ignore */
     buttons?: Array<ButtonConfig>,
-    /** @ignore */
-    selectMode?: SelectMode,
-    selectInFirstCell: boolean,
-    selected: boolean,
-    hasChildren: boolean,
-    expanded: boolean,
-    isLoading: boolean,
+    children: ChildrenArray<Element<typeof Cell>>,
     depth?: number,
-    /** @ignore */
-    onExpand?: (rowId: string | number) => void,
+    expanded: boolean,
+    hasChildren: boolean,
+    id?: string | number,
+    isLoading: boolean,
     /** @ignore */
     onCollapse?: (rowId: string | number) => void,
     /** @ignore */
+    onExpand?: (rowId: string | number) => void,
+    /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
+    rowIndex: number,
+    selectInFirstCell: boolean,
+    /** @ignore */
+    selectMode?: SelectMode,
+    selected: boolean,
 };
 
 export default class Row extends React.PureComponent<Props> {

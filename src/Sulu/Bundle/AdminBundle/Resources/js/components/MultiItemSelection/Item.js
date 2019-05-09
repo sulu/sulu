@@ -10,9 +10,9 @@ const DRAG_ICON = 'su-more';
 const REMOVE_ICON = 'su-trash-alt';
 
 type Props = {
+    children: Node,
     id: string | number,
     index: number,
-    children: Node,
     onRemove?: (id: string | number) => void,
     sortable: boolean,
 };

@@ -15,11 +15,11 @@ import collectionSectionStyles from './collectionSection.scss';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
-    locale: IObservableValue<string>,
-    overlayType: OverlayType,
     listStore: ListStore,
-    resourceStore: ResourceStore,
+    locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    overlayType: OverlayType,
+    resourceStore: ResourceStore,
 };
 
 @observer

@@ -12,8 +12,8 @@ export type ColumnItem = DataItem & {
 
 export type SchemaEntry = {
     label: string,
-    type: string,
     sortable: boolean,
+    type: string,
     visibility: 'always' | 'yes' | 'no' | 'never',
 };
 
@@ -53,14 +53,14 @@ export type ListAdapterProps = {
 };
 
 export type ObservableOptions = {
-    page: IObservableValue<number>,
     locale?: ?IObservableValue<string>,
+    page: IObservableValue<number>,
 };
 
 export type LoadOptions = {
+    limit?: number,
     locale?: ?string,
     page?: number,
-    limit?: number,
     sortBy?: string,
     sortOrder?: SortOrder,
 };
@@ -72,22 +72,22 @@ export interface LoadingStrategyInterface {
 }
 
 export interface StructureStrategyInterface {
-    constructor(): void,
-    +data: Array<*>,
-    +visibleItems: Array<Object>,
-    +activeItems?: Array<*>,
     +activate?: (id: ?string | number) => void,
+    +activeItems?: Array<*>,
+    +addItem: (item: Object, parentId: ?string | number) => void,
+    +clear: (parentId: ?string | number) => void,
+    +constructor: () => void,
+    +data: Array<*>,
     +deactivate?: (id: ?string | number) => void,
-    addItem(item: Object, parentId: ?string | number): void,
-    remove(id: string | number): void,
-    order(id: string | number, position: number): void,
-    findById(identifier: string | number): ?Object,
-    clear(parentId: ?string | number): void,
+    +findById: (identifier: string | number) => ?Object,
+    +order: (id: string | number, position: number) => void,
+    +remove: (id: string | number) => void,
+    +visibleItems: Array<Object>,
 }
 
 export type TreeItem = {
-    data: DataItem,
     children: Array<TreeItem>,
+    data: DataItem,
     hasChildren: boolean,
 };
 

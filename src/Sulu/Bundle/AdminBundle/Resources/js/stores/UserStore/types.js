@@ -2,21 +2,21 @@
 
 export type User = {
     id: number,
-    username: string,
     locale: string,
     settings: {[string]: string},
+    username: string,
 };
 
 export type Contact = {
-    id: number,
-    firstName: string,
-    lastName: string,
-    fullName: string,
     avatar?: Avatar,
+    firstName: string,
+    fullName: string,
+    id: number,
+    lastName: string,
 };
 
 export type Avatar = {
     id: number,
-    url: string,
     thumbnails: {[string]: string},
+    url: string,
 };

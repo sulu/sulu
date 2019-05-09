@@ -10,11 +10,11 @@ import type {NavigationItem} from './types';
 
 type Props = {
     appVersion: ?string,
+    onLogout: () => void,
+    onNavigate: (route: string) => void,
+    onPinToggle: () => void,
     pinned: boolean,
     router: Router,
-    onNavigate: (route: string) => void,
-    onLogout: () => void,
-    onPinToggle: () => void,
     suluVersion: string,
 };
 

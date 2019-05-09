@@ -7,9 +7,9 @@ import {Icon, ArrowMenu} from 'sulu-admin-bundle/components';
 import webspaceSelectStyles from './webspaceSelect.scss';
 
 type Props = {
+    children: ChildrenArray<Element<typeof ArrowMenu.Item>>,
     onChange: (value: string) => void,
     value: string,
-    children: ChildrenArray<Element<typeof ArrowMenu.Item>>,
 };
 
 @observer

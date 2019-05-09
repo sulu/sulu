@@ -3,8 +3,8 @@ import React from 'react';
 import itemStyles from './item.scss';
 
 type Props = {
-    onClick?: (value?: string | number) => void,
     children: string,
+    onClick?: (value?: string | number) => void,
     value?: string | number,
 };
 

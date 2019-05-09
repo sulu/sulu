@@ -8,8 +8,8 @@ import gridStyles from './grid.scss';
 
 type Props = {|
     children: Node,
-    label?: string,
     colSpan: ColSpan,
+    label?: string,
 |};
 
 export default class Section extends React.Component<Props> {

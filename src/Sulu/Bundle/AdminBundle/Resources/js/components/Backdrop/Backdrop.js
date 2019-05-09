@@ -5,13 +5,12 @@ import React from 'react';
 import backdropStyles from './backdrop.scss';
 
 type Props = {
-    open: boolean,
-    /** When set to false the backdrop renders transparent. */
-    visible: boolean,
+    fixed: boolean,
     /** If true, the backdrop gets rendered in the placed element and not in the body. */
     local: boolean,
     onClick?: () => void,
-    fixed: boolean,
+    open: boolean,
+    visible: boolean,
 };
 
 export default class Backdrop extends React.PureComponent<Props> {
