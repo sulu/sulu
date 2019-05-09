@@ -154,3 +154,27 @@ exports[`Render the adapter in non-searchable mode 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render the adapter in non-searchable mode if searchable is set to true but adapter does not support it 1`] = `
+<div
+  class="listContainer"
+>
+  <div
+    class="headerContainer"
+  >
+    <h1>
+      Title
+    </h1>
+    <div
+      class="toolbar"
+    />
+  </div>
+  <div
+    class="list"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>
+</div>
+`;

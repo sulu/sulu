@@ -119,7 +119,7 @@ class ListOverlay extends React.Component<Props> {
                         disabledIds={disabledIds}
                         movable={false}
                         orderable={false}
-                        searchable={false}
+                        searchable={true}
                         store={this.listStore}
                     />
                 </div>

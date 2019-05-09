@@ -10,4 +10,6 @@ export default class AbstractAdapter extends React.Component<ListAdapterProps> {
     static icon: string;
 
     static hasColumnOptions: boolean = false;
+
+    static searchable: boolean = true;
 }

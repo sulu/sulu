@@ -246,6 +246,28 @@ test('Render the adapter in non-searchable mode', () => {
     ).toMatchSnapshot();
 });
 
+test('Render the adapter in non-searchable mode if searchable is set to true but adapter does not support it', () => {
+    class TestAdapter extends AbstractAdapter {
+        static LoadingStrategy = LoadingStrategy;
+        static StructureStrategy = StructureStrategy;
+        static icon = 'su-th-large';
+        static searchable = false;
+
+        render() {
+            return (
+                <div>Test Adapter</div>
+            );
+        }
+    }
+
+    listAdapterRegistry.get.mockReturnValue(TestAdapter);
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    expect(
+        render(<List adapters={['test']} header={<h1>Title</h1>} searchable={true} store={listStore} />)
+    ).toMatchSnapshot();
+});
+
 test('Render the adapter in disabled state', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     expect(

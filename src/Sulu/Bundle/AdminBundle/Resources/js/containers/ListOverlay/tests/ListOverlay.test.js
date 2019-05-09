@@ -132,6 +132,7 @@ test('Should pass correct flags to the List', () => {
     expect(listOverlay.find(List).prop('deletable')).toEqual(false);
     expect(listOverlay.find(List).prop('movable')).toEqual(false);
     expect(listOverlay.find(List).prop('orderable')).toEqual(false);
+    expect(listOverlay.find(List).prop('searchable')).toEqual(true);
 });
 
 test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () => {
