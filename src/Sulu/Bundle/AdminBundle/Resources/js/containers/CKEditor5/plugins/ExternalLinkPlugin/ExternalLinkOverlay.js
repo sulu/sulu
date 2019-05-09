@@ -44,14 +44,16 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                         />
                     </Form.Field>
 
-                    <Form.Field label={translate('sulu_admin.link_target')} required={true}>
-                        <SingleSelect onChange={onTargetChange} value={target}>
-                            <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
-                            <SingleSelect.Option value="_self">_self</SingleSelect.Option>
-                            <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
-                            <SingleSelect.Option value="_top">_top</SingleSelect.Option>
-                        </SingleSelect>
-                    </Form.Field>
+                    {url && !url.startsWith('mailto:') &&
+                        <Form.Field label={translate('sulu_admin.link_target')} required={true}>
+                            <SingleSelect onChange={onTargetChange} value={target}>
+                                <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
+                                <SingleSelect.Option value="_self">_self</SingleSelect.Option>
+                                <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
+                                <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                            </SingleSelect>
+                        </Form.Field>
+                    }
 
                     <Form.Field label={translate('sulu_admin.link_title')}>
                         <Input onChange={onTitleChange} value={title} />
