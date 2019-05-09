@@ -24,7 +24,7 @@ const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 
 @observer
-export default class SingleMediaSelection extends React.Component<Props> {
+class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,
@@ -146,3 +146,5 @@ export default class SingleMediaSelection extends React.Component<Props> {
         );
     }
 }
+
+export default SingleMediaSelection;

@@ -13,7 +13,7 @@ type Props = {
 };
 
 @observer
-export default class ViewRenderer extends React.Component<Props> {
+class ViewRenderer extends React.Component<Props> {
     componentDidUpdate() {
         this.clearSidebarConfig();
     }
@@ -98,3 +98,5 @@ export default class ViewRenderer extends React.Component<Props> {
         return this.renderView(this.props.router.route);
     }
 }
+
+export default ViewRenderer;

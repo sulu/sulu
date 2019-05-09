@@ -13,7 +13,7 @@ type Props = {
 };
 
 @observer
-export default class CollectionBreadcrumb extends React.Component<Props> {
+class CollectionBreadcrumb extends React.Component<Props> {
     static getCurrentCollectionItem(data: Object): BreadcrumbItem {
         return {
             id: data.id,
@@ -77,3 +77,5 @@ export default class CollectionBreadcrumb extends React.Component<Props> {
         );
     }
 }
+
+export default CollectionBreadcrumb;

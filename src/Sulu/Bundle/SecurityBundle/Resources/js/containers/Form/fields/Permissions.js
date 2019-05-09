@@ -9,7 +9,7 @@ import type {ContextPermission} from '../../Permissions';
 type Props = FieldTypeProps<?Array<ContextPermission>>;
 
 @observer
-export default class Permissions extends React.Component<Props> {
+class Permissions extends React.Component<Props> {
     @computed get system(): ?string {
         const {formInspector} = this.props;
         const system = formInspector.getValueByPath('/system');
@@ -44,3 +44,5 @@ export default class Permissions extends React.Component<Props> {
         );
     }
 }
+
+export default Permissions;

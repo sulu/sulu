@@ -29,7 +29,7 @@ type Props = {|
 |};
 
 @observer
-export default class ListOverlay extends React.Component<Props> {
+class ListOverlay extends React.Component<Props> {
     static defaultProps = {
         allowActivateForDisabledItems: true,
         clearSelectionOnClose: false,
@@ -164,3 +164,5 @@ export default class ListOverlay extends React.Component<Props> {
         throw new Error('The "' + overlayType + '" overlayType does not exist in the ListOverlay.');
     }
 }
+
+export default ListOverlay;

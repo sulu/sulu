@@ -6,7 +6,7 @@ import NumberComponent from '../../../components/Number';
 import type {FieldTypeProps, SchemaOptions} from '../types';
 
 @observer
-export default class Number extends React.Component<FieldTypeProps<?number>> {
+class Number extends React.Component<FieldTypeProps<?number>> {
     @computed get schemaOptions(): SchemaOptions {
         const {schemaOptions} = this.props;
 
@@ -51,3 +51,5 @@ export default class Number extends React.Component<FieldTypeProps<?number>> {
         );
     }
 }
+
+export default Number;

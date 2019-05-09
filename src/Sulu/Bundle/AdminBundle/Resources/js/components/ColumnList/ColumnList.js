@@ -17,7 +17,7 @@ type Props = {|
 |};
 
 @observer
-export default class ColumnList extends React.Component<Props> {
+class ColumnList extends React.Component<Props> {
     static Column = Column;
 
     static Item = Item;
@@ -155,3 +155,5 @@ export default class ColumnList extends React.Component<Props> {
         );
     }
 }
+
+export default ColumnList;

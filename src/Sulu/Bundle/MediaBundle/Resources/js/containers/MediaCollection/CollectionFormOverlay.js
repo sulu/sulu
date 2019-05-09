@@ -20,7 +20,7 @@ type Props = {
 const FORM_KEY = 'collection_details';
 
 @observer
-export default class CollectionFormOverlay extends React.Component<Props> {
+class CollectionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     title: string;
     operationType: string;
@@ -115,3 +115,5 @@ export default class CollectionFormOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default CollectionFormOverlay;

@@ -12,7 +12,7 @@ type Props = {
 };
 
 @observer
-export default class MediaItem extends React.Component<Props> {
+class MediaItem extends React.Component<Props> {
     render() {
         const {store} = this.props;
 
@@ -32,3 +32,5 @@ export default class MediaItem extends React.Component<Props> {
         );
     }
 }
+
+export default MediaItem;

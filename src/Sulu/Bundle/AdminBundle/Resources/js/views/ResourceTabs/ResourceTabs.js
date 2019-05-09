@@ -16,7 +16,7 @@ type Props = ViewProps & {
 };
 
 @observer
-export default class ResourceTabs extends React.Component<Props> {
+class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
 
@@ -157,3 +157,5 @@ export default class ResourceTabs extends React.Component<Props> {
             );
     }
 }
+
+export default ResourceTabs;

@@ -22,7 +22,7 @@ type Props<T> = {|
 |};
 
 @observer
-export default class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
+class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         apiOptions: {},
         disabled: false,
@@ -103,3 +103,5 @@ export default class ResourceSingleSelect<T: string | number> extends React.Comp
         );
     }
 }
+
+export default ResourceSingleSelect;

@@ -7,7 +7,7 @@ import CustomUrlComponent from '../../../components/CustomUrl';
 import customUrlStyles from './customUrl.scss';
 
 @observer
-export default class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
+class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {
     handleChange = (value: Array<?string>) => {
         const {onChange} = this.props;
 
@@ -52,3 +52,5 @@ export default class CustomUrl extends React.Component<FieldTypeProps<Array<?str
         );
     }
 }
+
+export default CustomUrl;

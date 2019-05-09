@@ -15,7 +15,7 @@ type Props = {
 };
 
 @observer
-export default class GhostDialog extends React.Component<Props> {
+class GhostDialog extends React.Component<Props> {
     @observable selectedLocale: string;
 
     constructor(props: Props) {
@@ -72,3 +72,5 @@ export default class GhostDialog extends React.Component<Props> {
         );
     }
 }
+
+export default GhostDialog;

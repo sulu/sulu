@@ -29,7 +29,7 @@ function getValue(value: ?string, format: string): ?moment {
 }
 
 @observer
-export default class DatePicker extends React.Component<FieldTypeProps<?string>> {
+class DatePicker extends React.Component<FieldTypeProps<?string>> {
     @computed get format() {
         const {fieldTypeOptions} = this.props;
         const {dateFormat, timeFormat} = fieldTypeOptions;
@@ -83,3 +83,5 @@ export default class DatePicker extends React.Component<FieldTypeProps<?string>>
         );
     }
 }
+
+export default DatePicker;

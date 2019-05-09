@@ -11,7 +11,7 @@ import type {FieldTypeProps} from '../../../types';
 import cardCollectionStyles from './cardCollection.scss';
 
 @observer
-export default class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
+class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
     @observable overlayIndex: number | typeof undefined = undefined;
     @observable formStore: ?MemoryFormStore = undefined;
     formRef: ?ElementRef<typeof Form>;
@@ -165,3 +165,5 @@ export default class CardCollection extends React.Component<FieldTypeProps<Array
         );
     }
 }
+
+export default CardCollection;

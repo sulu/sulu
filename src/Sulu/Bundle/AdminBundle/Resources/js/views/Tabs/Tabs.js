@@ -17,7 +17,7 @@ type Props = ViewProps & {
 };
 
 @observer
-export default class Tabs extends React.Component<Props> {
+class Tabs extends React.Component<Props> {
     static defaultProps = {
         childrenProps: {},
     };
@@ -130,3 +130,5 @@ export default class Tabs extends React.Component<Props> {
         );
     }
 }
+
+export default Tabs;

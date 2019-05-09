@@ -15,7 +15,7 @@ type Props = {|
 |};
 
 @observer
-export default class MultiMediaSelectionOverlay extends React.Component<Props> {
+class MultiMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         excludedIds: [],
     };
@@ -69,3 +69,5 @@ export default class MultiMediaSelectionOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default MultiMediaSelectionOverlay;

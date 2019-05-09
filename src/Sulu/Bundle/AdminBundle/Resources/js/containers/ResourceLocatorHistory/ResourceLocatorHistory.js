@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 @observer
-export default class ResourceLocatorHistory extends React.Component<Props> {
+class ResourceLocatorHistory extends React.Component<Props> {
     resourceListStore: ?ResourceListStore;
     @observable open = false;
     @observable showDeleteWarning = false;
@@ -120,3 +120,5 @@ export default class ResourceLocatorHistory extends React.Component<Props> {
         );
     }
 }
+
+export default ResourceLocatorHistory;

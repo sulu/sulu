@@ -11,7 +11,7 @@ import OptionList from './OptionList';
 import dropdownStyles from './dropdown.scss';
 
 @observer
-export default class Dropdown extends React.Component<DropdownProps> {
+class Dropdown extends React.Component<DropdownProps> {
     @observable open: boolean = false;
 
     static defaultProps = {
@@ -112,3 +112,5 @@ export default class Dropdown extends React.Component<DropdownProps> {
         );
     }
 }
+
+export default Dropdown;

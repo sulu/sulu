@@ -9,7 +9,7 @@ import webspaceStore from '../../../stores/WebspaceStore';
 import type {Webspace} from '../../../stores/WebspaceStore/types';
 
 @observer
-export default class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
+class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
     @observable webspace: Webspace;
 
     componentDidMount() {
@@ -50,3 +50,5 @@ export default class PageSettingsNavigationSelect extends React.Component<FieldT
         );
     }
 }
+
+export default PageSettingsNavigationSelect;

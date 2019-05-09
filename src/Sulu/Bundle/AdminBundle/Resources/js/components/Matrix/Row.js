@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 @observer
-export default class Row extends React.Component<Props> {
+class Row extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         values: {},
@@ -112,3 +112,5 @@ export default class Row extends React.Component<Props> {
         );
     }
 }
+
+export default Row;

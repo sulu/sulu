@@ -19,7 +19,7 @@ type Props = {
 };
 
 @observer
-export default class ResetForm extends React.Component<Props> {
+class ResetForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
         success: false,
@@ -95,3 +95,5 @@ export default class ResetForm extends React.Component<Props> {
         );
     }
 }
+
+export default ResetForm;

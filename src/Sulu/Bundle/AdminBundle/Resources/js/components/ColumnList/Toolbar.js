@@ -14,7 +14,7 @@ type Props = {|
 |};
 
 @observer
-export default class Toolbar extends React.Component<Props> {
+class Toolbar extends React.Component<Props> {
     static defaultProps = {
         toolbarItems: [],
     };
@@ -55,3 +55,5 @@ export default class Toolbar extends React.Component<Props> {
         );
     }
 }
+
+export default Toolbar;

@@ -16,7 +16,7 @@ type Props = {
 const DEBOUNCE_TIME = 200;
 
 @observer
-export default class Items extends React.Component<Props> {
+class Items extends React.Component<Props> {
     @observable expandedWidth: number = 0;
     @observable parentWidth: number = 0;
 
@@ -104,3 +104,5 @@ export default class Items extends React.Component<Props> {
         );
     }
 }
+
+export default Items;

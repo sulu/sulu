@@ -21,7 +21,7 @@ type Props = {
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
 
 @observer
-export default class Navigation extends React.Component<Props> {
+class Navigation extends React.Component<Props> {
     @computed get username(): string {
         if (!userStore.loggedIn || !userStore.contact) {
             return '';
@@ -108,3 +108,5 @@ export default class Navigation extends React.Component<Props> {
         );
     }
 }
+
+export default Navigation;

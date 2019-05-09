@@ -22,7 +22,7 @@ type Props = {|
 |};
 
 @observer
-export default class BlockCollection extends React.Component<Props> {
+class BlockCollection extends React.Component<Props> {
     static idCounter = 0;
 
     static defaultProps = {
@@ -163,3 +163,5 @@ export default class BlockCollection extends React.Component<Props> {
         );
     }
 }
+
+export default BlockCollection;

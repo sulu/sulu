@@ -17,7 +17,7 @@ const USER_SETTING_PREFIX = 'sulu_page.webspace_tabs';
 const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
 
 @observer
-export default class WebspaceTabs extends React.Component<ViewProps> {
+class WebspaceTabs extends React.Component<ViewProps> {
     @observable webspaces: ?Array<Webspace>;
     webspaceKey: IObservableValue<string> = observable.box();
     webspaceDisposer: () => void;
@@ -99,3 +99,5 @@ export default class WebspaceTabs extends React.Component<ViewProps> {
             : <Loader />;
     }
 }
+
+export default WebspaceTabs;
