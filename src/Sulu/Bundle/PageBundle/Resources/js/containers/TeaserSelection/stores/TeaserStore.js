@@ -6,7 +6,7 @@ import type {TeaserItem} from '../types';
 
 export default class TeaserStore {
     locale: IObservableValue<string>;
-    @observable teaserItemIds: Array<{type: string, id: number | string}> = [];
+    @observable teaserItemIds: Array<{id: number | string, type: string}> = [];
     @observable teaserItems: Array<TeaserItem> = [];
     @observable loading: boolean = false;
     teaserDisposer: () => void;
