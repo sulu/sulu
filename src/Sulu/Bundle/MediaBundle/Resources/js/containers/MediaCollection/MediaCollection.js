@@ -13,16 +13,16 @@ import CollectionSection from './CollectionSection';
 import MediaSection from './MediaSection';
 
 type Props = {|
+    collectionListStore: ListStore,
+    collectionStore: CollectionStore,
     locale: IObservableValue<string>,
     mediaListAdapters: Array<string>,
     mediaListRef?: (?ElementRef<typeof List>) => void,
     mediaListStore: ListStore,
-    collectionListStore: ListStore,
-    collectionStore: CollectionStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
-    onUploadOverlayOpen: () => void,
     onUploadOverlayClose: () => void,
+    onUploadOverlayOpen: () => void,
     overlayType: OverlayType,
     uploadOverlayOpen: boolean,
 |};

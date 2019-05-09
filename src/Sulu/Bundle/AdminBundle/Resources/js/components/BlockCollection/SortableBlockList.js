@@ -8,11 +8,11 @@ import sortableBlockListStyles from './sortableBlockList.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {|
-    disabled: boolean,
     blockTypes: Array<string>,
+    disabled: boolean,
     expandedBlocks: Array<boolean>,
-    onExpand: (index: number) => void,
     onCollapse: (index: number) => void,
+    onExpand: (index: number) => void,
     onRemove: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,

@@ -18,8 +18,8 @@ type Props = {|
 |};
 
 type ColumnOption = {|
-    schemaKey: string,
     schemaEntry: SchemaEntry,
+    schemaKey: string,
 |};
 
 const SortableItem = SortableElement(ColumnOptionComponent);
@@ -84,7 +84,7 @@ class ColumnOptionsOverlay extends React.Component<Props> {
         this.sorting = true;
     };
 
-    @action handleItemsSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    @action handleItemsSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         this.columnOptions = arrayMove(this.columnOptions, oldIndex, newIndex);
         this.sorting = false;
     };

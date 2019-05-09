@@ -14,8 +14,8 @@ const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
 type Props = {
     backLink: string,
-    onLoginSuccess: () => void,
     initialized: boolean,
+    onLoginSuccess: () => void,
 };
 
 @observer

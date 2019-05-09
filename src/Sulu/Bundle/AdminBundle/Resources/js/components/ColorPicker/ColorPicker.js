@@ -10,13 +10,13 @@ import colorPickerStyles from './colorPicker.scss';
 import './colorPickerGlobal.scss';
 
 type Props = {|
+    disabled: boolean,
     id?: string,
     name?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     placeholder?: string,
     valid: boolean,
-    disabled: boolean,
     value: ?string,
 |};
 

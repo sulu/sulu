@@ -18,9 +18,9 @@ const USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
-    resourceStore?: ResourceStore,
     onItemAdd?: (parentId: string | number) => void,
     onItemClick?: (itemId: string | number) => void,
+    resourceStore?: ResourceStore,
 };
 
 @observer

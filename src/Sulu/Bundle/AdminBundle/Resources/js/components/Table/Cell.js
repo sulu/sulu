@@ -7,10 +7,10 @@ import tableStyles from './table.scss';
 type Props = {
     children?: Node,
     className?: string,
-    /** If set to true, the cell will not stretch and stay at minimal width */
-    small: boolean,
     colSpan?: number,
     depth?: number,
+    /** If set to true, the cell will not stretch and stay at minimal width */
+    small: boolean,
 };
 
 const DEPTH_PADDING = 25;

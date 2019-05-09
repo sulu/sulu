@@ -9,18 +9,18 @@ import Item from './Item';
 import navigationStyles from './navigation.scss';
 
 type Props = {
+    appVersion: ?string,
+    appVersionLink?: string,
     children: ChildrenArray<Element<typeof Item>>,
-    title: string,
-    username: string,
-    userImage: ?string,
     onLogoutClick: () => void,
     onPinToggle?: () => void,
     onProfileClick: () => void,
     pinned?: boolean,
     suluVersion: string,
     suluVersionLink: string,
-    appVersion: ?string,
-    appVersionLink?: string,
+    title: string,
+    userImage: ?string,
+    username: string,
 };
 
 @observer

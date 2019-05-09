@@ -15,13 +15,13 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 const USER_SETTINGS_KEY = 'media_selection_overlay';
 
 type Props = {|
-    open: boolean,
-    locale: IObservableValue<string>,
     collectionId: IObservableValue<?string | number>,
     collectionListStore: ListStore,
+    locale: IObservableValue<string>,
     mediaListStore: ListStore,
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
+    open: boolean,
 |};
 
 @observer

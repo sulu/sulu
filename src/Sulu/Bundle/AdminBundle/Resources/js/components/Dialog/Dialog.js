@@ -11,13 +11,13 @@ import Button from '../Button';
 import dialogStyles from './dialog.scss';
 
 type Props = {|
-    confirmDisabled: boolean,
-    children: Node,
     cancelText: string,
-    confirmText: string,
+    children: Node,
+    confirmDisabled: boolean,
     confirmLoading: boolean,
-    onConfirm: () => void,
+    confirmText: string,
     onCancel: () => void,
+    onConfirm: () => void,
     open: boolean,
     size?: 'small' | 'large',
     title: string,

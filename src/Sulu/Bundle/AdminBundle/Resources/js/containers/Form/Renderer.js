@@ -13,11 +13,11 @@ type Props = {|
     dataPath: string,
     errors?: ErrorCollection,
     formInspector: FormInspector,
+    onChange: (string, *) => void,
+    onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
-    onChange: (string, *) => void,
-    onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
 |};
 
 @observer

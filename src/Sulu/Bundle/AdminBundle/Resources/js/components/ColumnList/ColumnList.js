@@ -12,8 +12,8 @@ import columnListStyles from './columnList.scss';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
-    toolbarItemsProvider: (index: number) => Array<ToolbarItemConfig>,
     onItemClick: (id: string | number) => void,
+    toolbarItemsProvider: (index: number) => Array<ToolbarItemConfig>,
 |};
 
 @observer

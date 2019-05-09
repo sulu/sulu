@@ -9,8 +9,8 @@ type Props = {|
     ...SwitchProps,
     className?: string,
     icon?: string,
-    type: string,
     onChange?: (checked: boolean, value?: string | number) => void,
+    type: string,
 |};
 
 export default class Switch extends React.PureComponent<Props> {

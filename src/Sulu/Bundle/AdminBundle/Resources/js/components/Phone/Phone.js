@@ -3,14 +3,14 @@ import React from 'react';
 import Input from '../Input';
 
 type Props = {|
+    disabled: boolean,
     id?: string,
     name?: string,
-    placeholder?: string,
-    valid: boolean,
-    disabled: boolean,
-    value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
+    placeholder?: string,
+    valid: boolean,
+    value: ?string,
 |};
 
 export default class Phone extends React.PureComponent<Props> {

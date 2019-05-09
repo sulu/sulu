@@ -86,7 +86,7 @@ class BlockCollection extends React.Component<Props> {
         }
     };
 
-    @action handleSortEnd = ({oldIndex, newIndex}: {oldIndex: number, newIndex: number}) => {
+    @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);

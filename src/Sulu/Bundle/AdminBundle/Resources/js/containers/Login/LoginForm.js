@@ -11,14 +11,14 @@ import formStyles from './form.scss';
 import Header from './Header';
 
 type Props = {
-    loading: boolean,
-    user: ?string,
-    password: ?string,
-    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
-    onChangeForm: () => void,
-    onUserChange: (user: ?string) => void,
-    onPasswordChange: (user: ?string) => void,
     error: boolean,
+    loading: boolean,
+    onChangeForm: () => void,
+    onPasswordChange: (user: ?string) => void,
+    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
+    onUserChange: (user: ?string) => void,
+    password: ?string,
+    user: ?string,
 };
 
 @observer

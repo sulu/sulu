@@ -22,8 +22,8 @@ type Props = {
     onClose: () => void,
     open: boolean,
     presentations: {[key: string]: string},
-    smartContentStore: SmartContentStore,
     sections: Array<string>,
+    smartContentStore: SmartContentStore,
     sortings: {[key: string]: string},
     title: string,
 };

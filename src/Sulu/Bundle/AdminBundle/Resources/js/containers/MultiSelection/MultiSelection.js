@@ -11,17 +11,17 @@ import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
-    listKey: string,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
-    onChange: (selectedIds: Array<string | number>) => void,
-    label?: string,
-    locale?: ?IObservableValue<string>,
     icon: string,
+    label?: string,
+    listKey: string,
+    locale?: ?IObservableValue<string>,
+    onChange: (selectedIds: Array<string | number>) => void,
+    overlayTitle: string,
     resourceKey: string,
     value: Array<string | number>,
-    overlayTitle: string,
 |};
 
 @observer

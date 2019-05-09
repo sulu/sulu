@@ -8,11 +8,11 @@ import imageFocusPointCellStyles from './imageFocusPointCell.scss';
 const ICON_UP = 'su-angle-up';
 
 type Props = {
+    active: boolean,
+    arrowDirection?: ArrowDirection,
+    onClick?: (value: Point) => void,
     size: number,
     value: Point,
-    active: boolean,
-    onClick?: (value: Point) => void,
-    arrowDirection?: ArrowDirection,
 };
 
 export default class ImageFocusPointCell extends React.PureComponent<Props> {

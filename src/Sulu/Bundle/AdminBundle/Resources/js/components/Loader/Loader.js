@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import loaderStyles from './loader.scss';
 
 type Props = {
-    size: number,
     className?: string,
+    size: number,
 };
 
 export default class Loader extends React.Component<Props> {

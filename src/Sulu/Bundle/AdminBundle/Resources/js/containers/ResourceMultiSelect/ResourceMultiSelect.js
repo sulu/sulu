@@ -7,8 +7,8 @@ import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
 
 type Props<T: string | number> = {|
-    apiOptions: Object,
     allSelectedText?: string,
+    apiOptions: Object,
     disabled: boolean,
     displayProperty: string,
     idProperty: string,

@@ -22,8 +22,8 @@ type Props = {
     onRowExpand?: (rowId: string | number) => void,
     onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
     placeholderText?: string,
-    selectMode?: SelectMode,
     selectInFirstCell?: boolean,
+    selectMode?: SelectMode,
     skin: Skin,
 };
 

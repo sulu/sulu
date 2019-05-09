@@ -3,9 +3,9 @@ import React from 'react';
 import actionStyles from './action.scss';
 
 type Props<T> = {|
+    afterAction?: () => void,
     children: string,
     onClick: (value: ?T) => void,
-    afterAction?: () => void,
     value?: T,
 |};
 

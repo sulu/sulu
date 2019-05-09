@@ -5,19 +5,19 @@ import type {ButtonConfig, SelectMode} from './types';
 import Row from './Row';
 
 type Props = {
-    children?: ChildrenArray<Element<typeof Row>>,
     /** @ignore */
     buttons?: Array<ButtonConfig>,
+    children?: ChildrenArray<Element<typeof Row>>,
     /** @ignore */
-    selectMode?: SelectMode,
-    /** @ignore */
-    selectInFirstCell: boolean,
-    /** @ignore */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowCollapse?: (rowId: string | number) => void,
     /** @ignore */
     onRowExpand?: (rowId: string | number) => void,
     /** @ignore */
-    onRowCollapse?: (rowId: string | number) => void,
+    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    /** @ignore */
+    selectInFirstCell: boolean,
+    /** @ignore */
+    selectMode?: SelectMode,
 };
 
 export default class Body extends React.PureComponent<Props> {

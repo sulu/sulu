@@ -22,8 +22,8 @@ type Props = {|
     onClick?: (id: string | number) => void,
     onOrderChange?: (id: string | number, order: number) => Promise<boolean>,
     order?: number,
-    showOrderField: boolean,
     selected: boolean,
+    showOrderField: boolean,
 |};
 
 @observer

@@ -7,14 +7,14 @@ import type {RectangleChange} from './types';
 import modifiableRectangleStyles from './modifiableRectangle.scss';
 
 type Props = {
-    left: number,
-    top: number,
-    width: number,
-    height: number,
     backdropSize: number,
+    height: number,
+    left: number,
     minSizeReached: boolean,
     onChange?: (r: RectangleChange) => void,
     onDoubleClick?: () => void,
+    top: number,
+    width: number,
 };
 
 @observer

@@ -9,10 +9,10 @@ import headerStyles from './header.scss';
 const LOADER_SIZE = 24;
 
 type Props = {
-    label?: string,
-    loading: boolean,
     emptyList: boolean,
+    label?: string,
     leftButton?: ButtonConfig,
+    loading: boolean,
     rightButton?: ButtonConfig,
 };
 

@@ -6,8 +6,8 @@ import Icon from '../Icon';
 import snackbarStyles from './snackbar.scss';
 
 type Props = {|
-    onCloseClick?: () => void,
     onClick?: () => void,
+    onCloseClick?: () => void,
     type: 'error' | 'success',
     visible: boolean,
 |};

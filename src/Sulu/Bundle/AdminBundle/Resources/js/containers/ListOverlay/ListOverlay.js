@@ -15,10 +15,10 @@ import type {OverlayType} from './types';
 type Props = {|
     adapter: string,
     allowActivateForDisabledItems: boolean,
-    confirmLoading?: boolean,
     clearSelectionOnClose: boolean,
-    listStore: ListStore,
+    confirmLoading?: boolean,
     disabledIds: Array<string | number>,
+    listStore: ListStore,
     onClose: () => void,
     onConfirm: () => void,
     open: boolean,

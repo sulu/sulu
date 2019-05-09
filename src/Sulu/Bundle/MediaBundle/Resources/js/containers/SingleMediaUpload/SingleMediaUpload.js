@@ -10,8 +10,8 @@ import singleMediaUploadStyles from './singleMediaUpload.scss';
 
 type Props = {|
     collectionId?: number,
-    disabled: boolean,
     deletable: boolean,
+    disabled: boolean,
     downloadable: boolean,
     emptyIcon?: string,
     imageSize: string,

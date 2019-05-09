@@ -12,8 +12,8 @@ import dropzoneStyles from './dropzone.scss';
 
 type Props = {
     children: any,
-    locale: IObservableValue<string>,
     collectionId: ?string | number,
+    locale: IObservableValue<string>,
     onClose: () => void,
     onOpen: () => void,
     onUpload: (media: Array<Object>) => void,

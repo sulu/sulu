@@ -6,14 +6,14 @@ import {action, computed, observable} from 'mobx';
 import Input from '../Input';
 
 type Props = {|
+    disabled: boolean,
     id?: string,
     name?: string,
-    placeholder?: string,
-    valid: boolean,
-    disabled: boolean,
-    value: ?string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
+    placeholder?: string,
+    valid: boolean,
+    value: ?string,
 |};
 
 @observer

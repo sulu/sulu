@@ -10,9 +10,9 @@ import dropzoneOverlayStyles from './dropzoneOverlay.scss';
 
 type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,
-    open: boolean,
-    onClose: () => void,
     onClick: () => void,
+    onClose: () => void,
+    open: boolean,
 };
 
 const CLOSE_OVERLAY_KEY = 'esc';

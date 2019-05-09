@@ -8,10 +8,10 @@ import columnOptionsStyles from './columnOptions.scss';
 const DRAG_ICON = 'su-more';
 
 type Props = {
-    schemaKey: string,
     label: string,
-    visibility: 'always' | 'yes' | 'no',
     onChange: (visibility: 'yes' | 'no', schemaKey: string) => void,
+    schemaKey: string,
+    visibility: 'always' | 'yes' | 'no',
 };
 
 const DragHandle = SortableHandle(() => {
