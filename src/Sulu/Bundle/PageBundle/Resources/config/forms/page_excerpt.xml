@@ -6,37 +6,37 @@
     <key>page_excerpt</key>
 
     <properties>
-        <property name="title" type="text_line">
+        <property name="ext/excerpt/title" type="text_line">
             <meta>
                 <title>sulu_admin.title</title>
             </meta>
         </property>
-        <property name="more" type="text_line">
+        <property name="ext/excerpt/more" type="text_line">
             <meta>
                 <title>sulu_page.text_for_more_link</title>
             </meta>
         </property>
-        <property name="description" type="text_editor">
+        <property name="ext/excerpt/description" type="text_editor">
             <meta>
                 <title>sulu_admin.description</title>
             </meta>
         </property>
-        <property name="categories" type="category_selection">
+        <property name="ext/excerpt/categories" type="category_selection">
             <meta>
                 <title>sulu_category.categories</title>
             </meta>
         </property>
-        <property name="tags" type="tag_selection">
+        <property name="ext/excerpt/tags" type="tag_selection">
             <meta>
                 <title>sulu_tag.tags</title>
             </meta>
         </property>
-        <property name="icon" type="media_selection">
+        <property name="ext/excerpt/icon" type="media_selection">
             <meta>
                 <title>sulu_page.icons</title>
             </meta>
         </property>
-        <property name="images" type="media_selection">
+        <property name="ext/excerpt/images" type="media_selection">
             <meta>
                 <title>sulu_page.images</title>
             </meta>

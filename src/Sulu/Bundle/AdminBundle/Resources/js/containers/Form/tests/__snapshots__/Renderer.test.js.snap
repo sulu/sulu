@@ -131,6 +131,71 @@ exports[`Should render field types based on schema 1`] = `
 </div>
 `;
 
+exports[`Should render nested field types with based on schema 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        for="/test/text"
+      >
+        Text
+      </label>
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="text"
+            value="Text"
+          />
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        for="/test/datetime"
+      >
+        Datetime
+      </label>
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="datetime"
+            value="DateTime"
+          />
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Should render nested sections 1`] = `
 <div
   class="grid grid"

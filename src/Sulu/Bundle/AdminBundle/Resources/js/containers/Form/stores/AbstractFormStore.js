@@ -2,7 +2,7 @@
 import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
-import jsonpointer from 'jsonpointer';
+import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
 
@@ -12,7 +12,7 @@ function addSchemaProperties(data: Object, key: string, schema: RawSchema) {
     const type = schema[key].type;
 
     if (type !== SECTION_TYPE) {
-        data[key] = undefined;
+        jsonpointer.set(data, '/' + key, undefined);
     }
 
     const items = schema[key].items;
@@ -239,7 +239,7 @@ export default class AbstractFormStore
     }
 
     getValueByPath = (path: string): mixed => {
-        return jsonpointer.get(this.data, path);
+        return jsonpointer.has(this.data, path) ? jsonpointer.get(this.data, path) : undefined;
     };
 
     getValuesByTag(tagName: string): Array<mixed> {

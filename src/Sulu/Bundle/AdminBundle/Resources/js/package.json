@@ -27,7 +27,7 @@
         "intl-messageformat": "^2.2.0",
         "isemail": "^3.1.2",
         "jexl": "^2.1.0",
-        "jsonpointer": "^4.0.1",
+        "json-pointer": "^0.6.0",
         "loglevel": "^1.4.1",
         "masonry-layout": "^4.2.0",
         "moment": "^2.19.2",

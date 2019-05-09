@@ -1,8 +1,8 @@
 // @flow
-import {action, autorun, observable, set} from 'mobx';
+import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-
 import Ajv from 'ajv';
+import jsonpointer from 'json-pointer';
 import type {FormStoreInterface, RawSchema} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 
@@ -34,8 +34,8 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     }
 
-    @action change(name: string, value: mixed) {
-        set(this.data, name, value);
+    @action change(path: string, value: mixed) {
+        jsonpointer.set(this.data, '/' + path, value);
         this.dirty = true;
     }
 

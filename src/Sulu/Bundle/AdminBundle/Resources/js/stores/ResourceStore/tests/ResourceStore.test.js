@@ -61,6 +61,17 @@ test('Should be marked dirty when value is changed', () => {
     expect(resourceStore.dirty).toBe(true);
 });
 
+test('Should set nested values', () => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    expect(resourceStore.dirty).toBe(false);
+    resourceStore.change('test1/test2', 'value');
+
+    expect(resourceStore.data.test1.test2).toBe('value');
+    expect(resourceStore.dirty).toBe(true);
+});
+
 test('Should load the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);

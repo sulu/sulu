@@ -1,7 +1,8 @@
 // @flow
-import {action, autorun, observable, set, toJS, when} from 'mobx';
+import {action, autorun, observable, toJS, set, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import log from 'loglevel';
+import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {ObservableOptions} from './types';
 
@@ -239,12 +240,12 @@ export default class ResourceStore {
             }));
     }
 
-    @action set(name: string, value: mixed) {
-        if (name === 'id' && (typeof value === 'string' || typeof value === 'number')) {
+    @action set(path: string, value: mixed) {
+        if (path === 'id' && (typeof value === 'string' || typeof value === 'number')) {
             this.id = value;
         }
 
-        set(this.data, name, value);
+        jsonpointer.set(this.data, '/' + path, value);
     }
 
     @action setMultiple(data: Object) {
@@ -252,7 +253,10 @@ export default class ResourceStore {
             this.id = data.id;
         }
 
-        set(this.data, data);
+        Object.keys(data).forEach((path) => {
+            this.set(path, data[path]);
+        });
+        set(this.data, this.data);
 
         log.info(
             'ResourceStore changed "' + this.resourceKey + '" data with the ID "' + (this.id || 'undefined') + '"',
@@ -260,8 +264,8 @@ export default class ResourceStore {
         );
     }
 
-    @action change(name: string, value: mixed) {
-        this.set(name, value);
+    @action change(path: string, value: mixed) {
+        this.set(path, value);
         this.dirty = true;
     }
 

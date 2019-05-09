@@ -42,6 +42,10 @@ test('Create data object for schema', (done) => {
             label: 'Description',
             type: 'text_line',
         },
+        'ext/seo/title': {
+            label: 'Description',
+            type: 'text_line',
+        },
     };
 
     const schemaTypesPromise = Promise.resolve({});
@@ -56,11 +60,15 @@ test('Create data object for schema', (done) => {
 
     setTimeout(() => {
         expect(resourceFormStore.schemaLoading).toEqual(false);
-        expect(Object.keys(resourceFormStore.data)).toHaveLength(2);
         expect(resourceStore.set).not.toBeCalledWith('template', expect.anything());
         expect(resourceFormStore.data).toEqual({
             title: undefined,
             description: undefined,
+            ext: {
+                seo: {
+                    title: undefined,
+                },
+            },
         });
         resourceFormStore.destroy();
         done();

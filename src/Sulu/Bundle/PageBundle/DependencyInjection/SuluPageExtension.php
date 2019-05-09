@@ -55,18 +55,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'detail' => 'get_page',
                             ],
                         ],
-                        'pages_seo' => [
-                            'routes' => [
-                                'list' => 'get_page-seos',
-                                'detail' => 'get_page-seo',
-                            ],
-                        ],
-                        'pages_excerpt' => [
-                            'routes' => [
-                                'list' => 'get_page-excerpts',
-                                'detail' => 'get_page-excerpt',
-                            ],
-                        ],
                         'webspaces' => [
                             'routes' => [
                                 'list' => 'get_webspaces',
