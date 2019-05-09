@@ -24,7 +24,7 @@ type Props<T> = {|
 |};
 
 @observer
-export default class Select<T> extends React.Component<Props<T>> {
+class Select<T> extends React.Component<Props<T>> {
     static defaultProps = {
         closeOnSelect: true,
         disabled: false,
@@ -154,3 +154,5 @@ export default class Select<T> extends React.Component<Props<T>> {
         );
     }
 }
+
+export default Select;

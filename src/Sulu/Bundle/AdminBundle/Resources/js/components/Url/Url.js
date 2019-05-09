@@ -30,7 +30,7 @@ const URL_REGEX = new RegExp(
 );
 
 @observer
-export default class Url extends React.Component<Props> {
+class Url extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
@@ -194,3 +194,5 @@ export default class Url extends React.Component<Props> {
         );
     }
 }
+
+export default Url;

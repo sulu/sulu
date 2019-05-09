@@ -18,7 +18,7 @@ type Props = {
 };
 
 @observer
-export default class CopyLocaleDialog extends React.Component<Props> {
+class CopyLocaleDialog extends React.Component<Props> {
     @observable copying: boolean = false;
     @observable selectedLocales: Array<string> = [];
 
@@ -97,3 +97,5 @@ export default class CopyLocaleDialog extends React.Component<Props> {
         );
     }
 }
+
+export default CopyLocaleDialog;

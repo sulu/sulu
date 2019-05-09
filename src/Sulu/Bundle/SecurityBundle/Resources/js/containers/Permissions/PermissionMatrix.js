@@ -19,7 +19,7 @@ type Props = {|
 |};
 
 @observer
-export default class PermissionMatrix extends React.Component<Props> {
+class PermissionMatrix extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
@@ -127,3 +127,5 @@ export default class PermissionMatrix extends React.Component<Props> {
         );
     }
 }
+
+export default PermissionMatrix;

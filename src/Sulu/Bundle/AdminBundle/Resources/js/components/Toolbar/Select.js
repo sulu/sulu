@@ -11,7 +11,7 @@ import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
 @observer
-export default class Select extends React.Component<SelectProps> {
+class Select extends React.Component<SelectProps> {
     @observable open: boolean = false;
 
     static defaultProps = {
@@ -122,3 +122,5 @@ export default class Select extends React.Component<SelectProps> {
         );
     }
 }
+
+export default Select;

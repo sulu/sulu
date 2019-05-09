@@ -21,7 +21,7 @@ type Props = {|
 |};
 
 @observer
-export default class Renderer extends React.Component<Props> {
+class Renderer extends React.Component<Props> {
     static defaultProps = {
         showAllErrors: false,
     };
@@ -100,3 +100,5 @@ export default class Renderer extends React.Component<Props> {
         );
     }
 }
+
+export default Renderer;

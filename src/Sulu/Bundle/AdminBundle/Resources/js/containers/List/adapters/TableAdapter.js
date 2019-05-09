@@ -9,7 +9,7 @@ import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy'
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
-export default class TableAdapter extends AbstractTableAdapter {
+class TableAdapter extends AbstractTableAdapter {
     static LoadingStrategy = PaginatedLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
@@ -92,3 +92,5 @@ export default class TableAdapter extends AbstractTableAdapter {
         );
     }
 }
+
+export default TableAdapter;

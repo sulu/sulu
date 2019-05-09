@@ -7,7 +7,7 @@ import MediaCardAdapter from './MediaCardAdapter';
 const SELECT_ICON = 'su-check';
 
 @observer
-export default class MediaCardSelectionAdapter extends AbstractAdapter {
+class MediaCardSelectionAdapter extends AbstractAdapter {
     static LoadingStrategy = InfiniteLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
@@ -35,3 +35,5 @@ export default class MediaCardSelectionAdapter extends AbstractAdapter {
         );
     }
 }
+
+export default MediaCardSelectionAdapter;

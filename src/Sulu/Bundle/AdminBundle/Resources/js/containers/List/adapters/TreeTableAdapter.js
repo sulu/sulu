@@ -9,7 +9,7 @@ import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
-export default class TreeTableAdapter extends AbstractTableAdapter {
+class TreeTableAdapter extends AbstractTableAdapter {
     static LoadingStrategy = FullLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
@@ -108,3 +108,5 @@ export default class TreeTableAdapter extends AbstractTableAdapter {
         );
     }
 }
+
+export default TreeTableAdapter;

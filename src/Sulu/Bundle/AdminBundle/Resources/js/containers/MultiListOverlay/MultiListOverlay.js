@@ -30,7 +30,7 @@ type Props = {|
 |};
 
 @observer
-export default class MultiListOverlay extends React.Component<Props> {
+class MultiListOverlay extends React.Component<Props> {
     static defaultProps = {
         clearSelectionOnClose: false,
         disabledIds: [],
@@ -111,3 +111,5 @@ export default class MultiListOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default MultiListOverlay;

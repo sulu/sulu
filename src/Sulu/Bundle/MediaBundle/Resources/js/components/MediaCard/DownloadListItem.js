@@ -15,7 +15,7 @@ type Props = {
 };
 
 @observer
-export default class DownloadListItem extends React.Component<Props> {
+class DownloadListItem extends React.Component<Props> {
     static defaultProps = {
         copyUrlOnClick: false,
     };
@@ -83,3 +83,5 @@ export default class DownloadListItem extends React.Component<Props> {
         );
     }
 }
+
+export default DownloadListItem;

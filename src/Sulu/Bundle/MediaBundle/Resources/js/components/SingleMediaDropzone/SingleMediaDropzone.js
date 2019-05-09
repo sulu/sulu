@@ -23,7 +23,7 @@ type Props = {|
 |};
 
 @observer
-export default class SingleMediaDropzone extends React.Component<Props> {
+class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         emptyIcon: 'su-image',
@@ -121,3 +121,5 @@ export default class SingleMediaDropzone extends React.Component<Props> {
         );
     }
 }
+
+export default SingleMediaDropzone;

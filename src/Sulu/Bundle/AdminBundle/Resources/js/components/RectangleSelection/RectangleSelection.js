@@ -23,7 +23,7 @@ type Props = {
 };
 
 @observer
-export class RectangleSelection extends React.Component<Props> {
+class RectangleSelection extends React.Component<Props> {
     static defaultProps = {
         round: true,
     };
@@ -139,5 +139,9 @@ export class RectangleSelection extends React.Component<Props> {
         );
     }
 }
+
+export {
+    RectangleSelection,
+};
 
 export default withContainerSize(RectangleSelection, rectangleSelectionStyles.container);

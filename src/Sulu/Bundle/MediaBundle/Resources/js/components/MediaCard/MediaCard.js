@@ -45,7 +45,7 @@ type Props = {
 };
 
 @observer
-export default class MediaCard extends React.Component<Props> {
+class MediaCard extends React.Component<Props> {
     static defaultProps = {
         downloadCopyText: '',
         imageSizes: [],
@@ -212,3 +212,5 @@ export default class MediaCard extends React.Component<Props> {
         );
     }
 }
+
+export default MediaCard;

@@ -23,7 +23,7 @@ type Props = {
 };
 
 @observer
-export default class CollectionSection extends React.Component<Props> {
+class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {
@@ -236,3 +236,5 @@ export default class CollectionSection extends React.Component<Props> {
         );
     }
 }
+
+export default CollectionSection;

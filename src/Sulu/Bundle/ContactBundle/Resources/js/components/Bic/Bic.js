@@ -17,7 +17,7 @@ type Props = {|
 |};
 
 @observer
-export default class Bic extends React.Component<Props> {
+class Bic extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,
@@ -107,3 +107,5 @@ export default class Bic extends React.Component<Props> {
         );
     }
 }
+
+export default Bic;

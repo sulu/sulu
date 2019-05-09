@@ -21,7 +21,7 @@ type Props = {|
 |};
 
 @observer
-export default class ColorPicker extends React.Component<Props> {
+class ColorPicker extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,
@@ -168,3 +168,5 @@ export default class ColorPicker extends React.Component<Props> {
         );
     }
 }
+
+export default ColorPicker;

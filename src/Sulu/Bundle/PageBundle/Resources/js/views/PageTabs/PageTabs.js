@@ -8,7 +8,7 @@ import webspaceStore from '../../stores/WebspaceStore';
 import type {Webspace} from '../../stores/WebspaceStore/types';
 
 @observer
-export default class PageTabs extends React.Component<ViewProps> {
+class PageTabs extends React.Component<ViewProps> {
     @observable webspace: Webspace;
 
     constructor(props: ViewProps) {
@@ -30,3 +30,5 @@ export default class PageTabs extends React.Component<ViewProps> {
         return <ResourceTabs {...props} locales={locales} titleProperty="title" />;
     }
 }
+
+export default PageTabs;

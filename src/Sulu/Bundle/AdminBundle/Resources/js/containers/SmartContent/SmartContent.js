@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 @observer
-export default class SmartContent extends React.Component<Props> {
+class SmartContent extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         presentations: [],
@@ -145,3 +145,5 @@ export default class SmartContent extends React.Component<Props> {
         );
     }
 }
+
+export default SmartContent;

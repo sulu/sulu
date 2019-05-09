@@ -17,7 +17,7 @@ const LOCK_ICON = 'su-lock';
 const INPUT_TYPE = 'password';
 
 @observer
-export default class PasswordConfirmation extends React.Component<Props> {
+class PasswordConfirmation extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,
@@ -102,3 +102,5 @@ export default class PasswordConfirmation extends React.Component<Props> {
         );
     }
 }
+
+export default PasswordConfirmation;

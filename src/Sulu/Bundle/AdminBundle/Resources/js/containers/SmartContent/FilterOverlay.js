@@ -29,7 +29,7 @@ type Props = {
 };
 
 @observer
-export default class FilterOverlay extends React.Component<Props> {
+class FilterOverlay extends React.Component<Props> {
     @observable dataSource: ?Object;
     @observable includeSubElements: ?boolean;
     @observable categories: ?Array<Object>;
@@ -408,3 +408,5 @@ export default class FilterOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default FilterOverlay;

@@ -29,7 +29,7 @@ type Props = {|
 |};
 
 @observer
-export default class DatePicker extends React.Component<Props> {
+class DatePicker extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         options: {},
@@ -220,3 +220,5 @@ export default class DatePicker extends React.Component<Props> {
         );
     }
 }
+
+export default DatePicker;

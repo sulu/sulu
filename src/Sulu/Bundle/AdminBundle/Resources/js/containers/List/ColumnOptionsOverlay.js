@@ -33,7 +33,7 @@ const SortableList = SortableContainer(({children, className}) => {
 });
 
 @observer
-export default class ColumnOptionsOverlay extends React.Component<Props> {
+class ColumnOptionsOverlay extends React.Component<Props> {
     @observable columnOptions: Array<ColumnOption> = [];
     @observable sorting: boolean = false;
 
@@ -144,3 +144,5 @@ export default class ColumnOptionsOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default ColumnOptionsOverlay;

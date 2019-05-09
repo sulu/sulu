@@ -22,7 +22,7 @@ type Props = {
 };
 
 @observer
-export default class LoginForm extends React.Component<Props> {
+class LoginForm extends React.Component<Props> {
     static defaultProps = {
         error: false,
         loading: false,
@@ -116,3 +116,5 @@ export default class LoginForm extends React.Component<Props> {
         );
     }
 }
+
+export default LoginForm;

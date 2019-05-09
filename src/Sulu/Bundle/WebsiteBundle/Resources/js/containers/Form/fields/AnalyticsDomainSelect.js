@@ -8,7 +8,7 @@ import {webspaceStore} from 'sulu-page-bundle/stores';
 import type {Webspace} from 'sulu-page-bundle/types';
 
 @observer
-export default class AnalyticsDomainSelect extends React.Component<FieldTypeProps<Array<string>>> {
+class AnalyticsDomainSelect extends React.Component<FieldTypeProps<Array<string>>> {
     @observable webspace: Webspace;
 
     componentDidMount() {
@@ -47,3 +47,5 @@ export default class AnalyticsDomainSelect extends React.Component<FieldTypeProp
         );
     }
 }
+
+export default AnalyticsDomainSelect;

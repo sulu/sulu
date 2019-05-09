@@ -8,7 +8,7 @@ import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
 
 @observer
-export default class MediaSelection extends React.Component<FieldTypeProps<Value>> {
+class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
@@ -30,3 +30,5 @@ export default class MediaSelection extends React.Component<FieldTypeProps<Value
         );
     }
 }
+
+export default MediaSelection;

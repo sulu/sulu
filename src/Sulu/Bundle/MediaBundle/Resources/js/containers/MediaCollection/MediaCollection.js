@@ -28,7 +28,7 @@ type Props = {|
 |};
 
 @observer
-export default class MediaCollection extends React.Component<Props> {
+class MediaCollection extends React.Component<Props> {
     static defaultProps = {
         overlayType: 'overlay',
     };
@@ -100,3 +100,5 @@ export default class MediaCollection extends React.Component<Props> {
         );
     }
 }
+
+export default MediaCollection;

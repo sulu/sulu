@@ -22,7 +22,7 @@ type Props = {|
 |};
 
 @observer
-export default class SingleMediaUpload extends React.Component<Props> {
+class SingleMediaUpload extends React.Component<Props> {
     static defaultProps = {
         deletable: true,
         disabled: false,
@@ -160,3 +160,5 @@ export default class SingleMediaUpload extends React.Component<Props> {
         );
     }
 }
+
+export default SingleMediaUpload;

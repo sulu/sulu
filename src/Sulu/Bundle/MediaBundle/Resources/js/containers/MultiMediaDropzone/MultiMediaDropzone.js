@@ -21,7 +21,7 @@ type Props = {
 };
 
 @observer
-export default class MultiMediaDropzone extends React.Component<Props> {
+class MultiMediaDropzone extends React.Component<Props> {
     dropzoneRef: ElementRef<Dropzone>;
 
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
@@ -118,3 +118,5 @@ export default class MultiMediaDropzone extends React.Component<Props> {
         );
     }
 }
+
+export default MultiMediaDropzone;

@@ -8,7 +8,7 @@ import SingleMediaSelectionComponent from '../../SingleMediaSelection';
 import type {Value} from '../../SingleMediaSelection';
 
 @observer
-export default class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
+class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
     handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
@@ -31,3 +31,5 @@ export default class SingleMediaSelection extends React.Component<FieldTypeProps
         );
     }
 }
+
+export default SingleMediaSelection;

@@ -18,7 +18,7 @@ type Props = {
 };
 
 @observer
-export default class ModifiableRectangle extends React.Component<Props> {
+class ModifiableRectangle extends React.Component<Props> {
     static defaultProps = {
         backdropSize: 0,
         left: 0,
@@ -122,3 +122,5 @@ export default class ModifiableRectangle extends React.Component<Props> {
         );
     }
 }
+
+export default ModifiableRectangle;

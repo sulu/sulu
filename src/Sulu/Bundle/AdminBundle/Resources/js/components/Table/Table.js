@@ -28,7 +28,7 @@ type Props = {
 };
 
 @observer
-export default class Table extends React.Component<Props> {
+class Table extends React.Component<Props> {
     static defaultProps = {
         selectMode: 'none',
         skin: 'dark',
@@ -183,3 +183,5 @@ export default class Table extends React.Component<Props> {
         );
     }
 }
+
+export default Table;

@@ -19,7 +19,7 @@ type Props = ViewProps & {
 };
 
 @observer
-export default class FormOverlayList extends React.Component<Props> {
+class FormOverlayList extends React.Component<Props> {
     static getDerivedRouteAttributes = List.getDerivedRouteAttributes;
     locale: IObservableValue<string> = observable.box();
 
@@ -214,3 +214,5 @@ export default class FormOverlayList extends React.Component<Props> {
         );
     }
 }
+
+export default FormOverlayList;

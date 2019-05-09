@@ -13,7 +13,7 @@ type Props = {
 };
 
 @observer
-export default class WebspaceSelect extends React.Component<Props> {
+class WebspaceSelect extends React.Component<Props> {
     static Item = ArrowMenu.Item;
 
     @observable open: boolean = false;
@@ -83,3 +83,5 @@ export default class WebspaceSelect extends React.Component<Props> {
         );
     }
 }
+
+export default WebspaceSelect;

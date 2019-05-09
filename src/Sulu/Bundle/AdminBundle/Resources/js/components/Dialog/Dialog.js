@@ -24,7 +24,7 @@ type Props = {|
 |};
 
 @observer
-export default class Dialog extends React.Component<Props> {
+class Dialog extends React.Component<Props> {
     static defaultProps = {
         confirmDisabled: false,
         confirmLoading: false,
@@ -137,3 +137,5 @@ export default class Dialog extends React.Component<Props> {
         );
     }
 }
+
+export default Dialog;

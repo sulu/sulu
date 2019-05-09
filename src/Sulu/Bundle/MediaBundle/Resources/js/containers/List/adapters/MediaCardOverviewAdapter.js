@@ -7,7 +7,7 @@ import MediaCardAdapter from './MediaCardAdapter';
 const EDIT_ICON = 'su-pen';
 
 @observer
-export default class MediaCardOverviewAdapter extends AbstractAdapter {
+class MediaCardOverviewAdapter extends AbstractAdapter {
     static LoadingStrategy = InfiniteLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
@@ -23,3 +23,5 @@ export default class MediaCardOverviewAdapter extends AbstractAdapter {
         );
     }
 }
+
+export default MediaCardOverviewAdapter;

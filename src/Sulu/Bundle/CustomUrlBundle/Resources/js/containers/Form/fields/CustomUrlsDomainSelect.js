@@ -8,7 +8,7 @@ import {webspaceStore} from 'sulu-page-bundle/stores';
 import type {Webspace} from 'sulu-page-bundle/types';
 
 @observer
-export default class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
+class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
     @observable webspace: Webspace;
 
     componentDidMount() {
@@ -47,3 +47,5 @@ export default class CustomUrlsDomainSelect extends React.Component<FieldTypePro
         );
     }
 }
+
+export default CustomUrlsDomainSelect;

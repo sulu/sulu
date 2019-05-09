@@ -24,7 +24,7 @@ type Props = {
 };
 
 @observer
-export default class Navigation extends React.Component<Props> {
+class Navigation extends React.Component<Props> {
     static defaultProps = {
         appVersion: undefined,
         pinned: false,
@@ -178,3 +178,5 @@ export default class Navigation extends React.Component<Props> {
         );
     }
 }
+
+export default Navigation;

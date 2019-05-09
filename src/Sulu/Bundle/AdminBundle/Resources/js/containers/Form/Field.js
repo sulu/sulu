@@ -24,7 +24,7 @@ type Props = {|
 |};
 
 @observer
-export default class Field extends React.Component<Props> {
+class Field extends React.Component<Props> {
     static defaultProps = {
         showAllErrors: false,
     };
@@ -158,3 +158,5 @@ export default class Field extends React.Component<Props> {
         );
     }
 }
+
+export default Field;

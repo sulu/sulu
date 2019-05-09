@@ -25,7 +25,7 @@ type Props = {|
 |};
 
 @observer
-export default class MediaSelectionOverlay extends React.Component<Props> {
+class MediaSelectionOverlay extends React.Component<Props> {
     @observable collectionStore: CollectionStore;
     @observable showMediaUploadOverlay: boolean = false;
     updateCollectionStoreDisposer: () => void;
@@ -182,3 +182,5 @@ export default class MediaSelectionOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default MediaSelectionOverlay;

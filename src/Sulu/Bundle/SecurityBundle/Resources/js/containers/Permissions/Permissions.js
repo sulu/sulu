@@ -19,7 +19,7 @@ type Props = {|
 |};
 
 @observer
-export default class Permissions extends React.Component<Props> {
+class Permissions extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
@@ -235,3 +235,5 @@ export default class Permissions extends React.Component<Props> {
         );
     }
 }
+
+export default Permissions;

@@ -19,7 +19,7 @@ type Props = {|
 |};
 
 @observer
-export class ImageRectangleSelection extends React.Component<Props> {
+class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
     rounding = new RoundingNormalizer();
     @observable imageLoaded = false;
@@ -109,5 +109,9 @@ export class ImageRectangleSelection extends React.Component<Props> {
         );
     }
 }
+
+export {
+    ImageRectangleSelection,
+};
 
 export default withContainerSize(ImageRectangleSelection, imageRectangleSelectionStyles.container);
