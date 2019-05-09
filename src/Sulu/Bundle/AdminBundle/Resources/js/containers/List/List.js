@@ -419,7 +419,6 @@ class List extends React.Component<Props> {
             onItemClick,
             onItemAdd,
             orderable,
-            searchable,
             selectable,
             store,
         } = this.props;
@@ -431,6 +430,8 @@ class List extends React.Component<Props> {
                 [listStyles.disabled]: disabled,
             }
         );
+
+        const searchable = this.props.searchable && Adapter.searchable;
 
         return (
             <div className={listStyles.listContainer}>

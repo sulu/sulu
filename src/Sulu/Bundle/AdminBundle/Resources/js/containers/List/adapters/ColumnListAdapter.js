@@ -20,6 +20,8 @@ class ColumnListAdapter extends AbstractAdapter {
 
     static icon = 'su-columns';
 
+    static searchable = false;
+
     static defaultProps = {
         data: [],
     };
