@@ -3,5 +3,6 @@
     "sulu_preview.desktop": "Desktop",
     "sulu_preview.tablet": "Tablet",
     "sulu_preview.smartphone": "Smartphone",
+    "sulu_preview.reload": "Reload",
     "sulu_preview.open_in_window": "Open in window"
 }
