@@ -20,8 +20,18 @@ type Props = {|
 |};
 
 export default class ExternalLinkOverlay extends React.Component<Props> {
+    handleUrlChange = (url: ?string) => {
+        const {onTargetChange, onUrlChange} = this.props;
+
+        if (url && url.startsWith('mailto:')) {
+            onTargetChange('_self');
+        }
+
+        onUrlChange(url);
+    };
+
     render() {
-        const {onCancel, onConfirm, onTargetChange, onTitleChange, onUrlChange, open, target, title, url} = this.props;
+        const {onCancel, onConfirm, onTargetChange, onTitleChange, open, target, title, url} = this.props;
 
         return (
             <Dialog
@@ -37,7 +47,7 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                     <Form.Field label={translate('sulu_admin.link_url')} required={true}>
                         <Url
                             defaultProtocol="https://"
-                            onChange={onUrlChange}
+                            onChange={this.handleUrlChange}
                             protocols={['http://', 'https://', 'ftp://', 'ftps://', 'mailto:']}
                             valid={true}
                             value={url}

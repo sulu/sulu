@@ -83,3 +83,49 @@ test('Pass correct props to Dialog', () => {
     expect(externalLinkOverlay.find('Dialog').prop('onConfirm')).toEqual(confirmSpy);
     expect(externalLinkOverlay.find('Dialog').prop('open')).toEqual(false);
 });
+
+test('Reset target to self when a mailto link is entered', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = shallow(
+        <ExternalLinkOverlay
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            onUrlChange={urlChangeSpy}
+            open={true}
+            target="_blank"
+            title={undefined}
+            url="http://www.sulu.io"
+        />
+    );
+
+    externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
+    expect(targetChangeSpy).toBeCalledWith('_self');
+});
+
+test('Should not reset target to self when a non-mail URL is entered', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = shallow(
+        <ExternalLinkOverlay
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            onUrlChange={urlChangeSpy}
+            open={true}
+            target="_blank"
+            title={undefined}
+            url="http://www.sulu.io"
+        />
+    );
+
+    externalLinkOverlay.find('Url').prop('onChange')('http://sulu.io');
+    expect(urlChangeSpy).toBeCalledWith('http://sulu.io');
+    expect(targetChangeSpy).not.toBeCalled();
+});
