@@ -72,8 +72,8 @@ class TeaserProviderPoolTest extends TestCase
     public function testGetConfiguration()
     {
         $configuration = [
-            'content' => new TeaserConfiguration('content', 'pages', 'column_list', ['title'], 'Choose'),
-            'media' => new TeaserConfiguration('media', 'media', 'masonry', ['title', 'version'], 'Choose'),
+            'content' => new TeaserConfiguration('Pages', 'pages', 'column_list', ['title'], 'Choose'),
+            'media' => new TeaserConfiguration('Media', 'media', 'masonry', ['title', 'version'], 'Choose'),
         ];
 
         $this->providers['content']->getConfiguration()->willReturn($configuration['content']);
