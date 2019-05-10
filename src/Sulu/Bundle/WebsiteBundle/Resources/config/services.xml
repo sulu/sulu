@@ -208,6 +208,7 @@
             <argument type="string">%kernel.environment%</argument>
             <argument type="string">%kernel.root_dir%</argument>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="event_dispatcher"/>
             <argument type="expression">container.hasParameter('kernel.var_dir') ? parameter('kernel.var_dir') : null</argument>
             <argument type="service" id="sulu_http_cache.proxy_client" on-invalid="null"/>
         </service>
