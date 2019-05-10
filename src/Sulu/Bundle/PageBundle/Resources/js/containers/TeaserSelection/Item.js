@@ -88,6 +88,12 @@ export default class Item extends React.Component<Props> {
         onCancel(type, id);
     };
 
+    handleReset = () => {
+        const {id, onApply, type} = this.props;
+
+        onApply({id, type});
+    };
+
     handleApply = () => {
         const {id, onApply, type} = this.props;
 
@@ -130,6 +136,7 @@ export default class Item extends React.Component<Props> {
                         </div>
                         <div className={itemStyles.buttons}>
                             <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
+                            <Button onClick={this.handleReset} skin="link">{translate('sulu_admin.reset')}</Button>
                             <Button onClick={this.handleApply} skin="primary">{translate('sulu_admin.apply')}</Button>
                         </div>
                     </div>

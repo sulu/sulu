@@ -235,3 +235,28 @@ test('Applying the item while editing should call the onApply callback with the 
         type: 'page',
     });
 });
+
+test('Applying the item while editing should call the onApply callback with the current data', () => {
+    const applySpy = jest.fn();
+
+    const item = shallow(
+        <Item
+            description="Description"
+            edited={false}
+            editing={true}
+            id={5}
+            locale={observable.box('en')}
+            mediaId={5}
+            onApply={applySpy}
+            onCancel={jest.fn()}
+            title="Title"
+            type="page"
+        />
+    );
+
+    item.find('Button[children="sulu_admin.reset"]').simulate('click');
+    expect(applySpy).toBeCalledWith({
+        id: 5,
+        type: 'page',
+    });
+});
