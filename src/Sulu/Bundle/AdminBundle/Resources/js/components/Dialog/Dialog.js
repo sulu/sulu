@@ -1,6 +1,6 @@
 // @flow
 import classNames from 'classnames';
-import {observable, action} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
@@ -30,48 +30,45 @@ class Dialog extends React.Component<Props> {
         confirmLoading: false,
     };
 
+    @observable open: boolean = false;
     @observable visible: boolean = false;
-    @observable openHasChanged: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        this.openHasChanged = this.props.open;
-    }
+        const {open} = this.props;
 
-    componentDidMount() {
-        this.toggle();
-    }
-
-    @action componentWillReceiveProps(newProps: Props) {
-        this.openHasChanged = newProps.open !== this.props.open;
-    }
-
-    componentDidUpdate() {
-        this.toggle();
+        this.open = open;
+        this.visible = open;
     }
 
     close = () => {
         this.props.onCancel();
     };
 
-    @action toggle() {
-        afterElementsRendered(action(() => {
-            if (this.openHasChanged) {
-                this.visible = this.props.open;
-            }
-        }));
+    @action componentDidUpdate(prevProps: Props) {
+        const {open} = this.props;
+
+        if (prevProps.open === false && open === true) {
+            this.visible = true;
+        }
+
+        if (prevProps.open !== open) {
+            afterElementsRendered(action(() => {
+                this.open = open;
+            }));
+        }
     }
 
     @action handleTransitionEnd = () => {
-        afterElementsRendered(action(() => {
-            this.openHasChanged = false;
-        }));
+        const {open} = this.props;
+        if (!open) {
+            this.visible = false;
+        }
     };
 
     render() {
         const {
-            open,
             title,
             children,
             confirmDisabled,
@@ -82,14 +79,15 @@ class Dialog extends React.Component<Props> {
             confirmLoading,
             size,
         } = this.props;
+
+        const {open, visible} = this;
+
         const containerClass = classNames(
             dialogStyles.dialogContainer,
             {
-                [dialogStyles.open]: this.visible,
+                [dialogStyles.open]: open,
             }
         );
-
-        const showPortal = open || this.openHasChanged;
 
         const dialogClass = classNames(
             dialogStyles.dialog,
@@ -100,8 +98,8 @@ class Dialog extends React.Component<Props> {
 
         return (
             <Fragment>
-                <Backdrop open={showPortal} />
-                {showPortal &&
+                <Backdrop open={visible} />
+                {visible &&
                     <Portal>
                         <div
                             className={containerClass}

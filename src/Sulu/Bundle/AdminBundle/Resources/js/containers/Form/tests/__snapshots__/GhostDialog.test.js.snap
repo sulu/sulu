@@ -5,7 +5,7 @@ exports[`Should render a Dialog 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer open\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header></header>
