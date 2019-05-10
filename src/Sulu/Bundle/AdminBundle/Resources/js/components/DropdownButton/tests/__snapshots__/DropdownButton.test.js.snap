@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render dropdown button 1`] = `
+<div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      Add
+    </span>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
+`;
