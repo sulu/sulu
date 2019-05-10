@@ -68,7 +68,7 @@ $teaserSelectionMediaWidth: 25px;
 
 .item {
     display: flex;
-    margin: 10px 0;
+    margin: 7px 0;
 }
 
 .media {
@@ -78,7 +78,7 @@ $teaserSelectionMediaWidth: 25px;
 }
 
 .title {
-    margin-top: 0;
+    margin: 5px 0;
 }
 
 .content {
@@ -86,10 +86,14 @@ $teaserSelectionMediaWidth: 25px;
 }
 
 .description {
-    margin-bottom: 0;
+    margin-bottom: 5px;
+
+    &:empty {
+        display: none;
+    }
 }
 
 .type {
-    margin-top: 0;
+    margin: 5px 0;
     width: 100px;
 }
