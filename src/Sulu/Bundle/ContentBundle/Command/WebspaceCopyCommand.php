@@ -563,6 +563,10 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         }
 
         foreach ($structureArray[$property->getName()]['items'] as $key => $teaserItem) {
+            if ('content' !== $teaserItem['type']) {
+                continue;
+            }
+
             $targetDocumentDestination = $this->getTargetDocumentDestination(
                 $teaserItem['id'],
                 $localeSource,
