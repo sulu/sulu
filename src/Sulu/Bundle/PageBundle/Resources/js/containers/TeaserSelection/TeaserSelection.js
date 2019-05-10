@@ -34,7 +34,7 @@ function extractUniqueId(id: string) {
 }
 
 @observer
-export default class TeaserSelection extends React.Component<Props> {
+class TeaserSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         value: {
@@ -271,3 +271,5 @@ export default class TeaserSelection extends React.Component<Props> {
         );
     }
 }
+
+export default TeaserSelection;
