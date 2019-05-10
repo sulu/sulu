@@ -126,6 +126,8 @@
     "sulu_admin.link_title": "Alternative title",
     "sulu_admin.link_target": "Link Target",
     "sulu_admin.link_url": "Link URL",
+    "sulu_admin.mail_subject": "E-Mail Subject",
+    "sulu_admin.mail_body": "E-Mail Text",
     "sulu_admin.show_history": "Show history",
     "sulu_admin.history": "History",
     "sulu_admin.resource_locator_history_delete_warning": "The URL will be deleted for all draft and live versions. This cannot be undone. Do you wish to proceed?"

@@ -1,9 +1,12 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
+import {observer} from 'mobx-react';
+import {action, observable} from 'mobx';
 import Dialog from '../../../../components/Dialog';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
 import SingleSelect from '../../../../components/SingleSelect';
+import TextArea from '../../../../components/TextArea';
 import Url from '../../../../components/Url';
 import {translate} from '../../../../utils/Translator';
 
@@ -19,19 +22,98 @@ type Props = {|
     url: ?string,
 |};
 
-export default class ExternalLinkOverlay extends React.Component<Props> {
-    handleUrlChange = (url: ?string) => {
+@observer
+class ExternalLinkOverlay extends React.Component<Props> {
+    @observable url: ?string = undefined;
+    @observable mailSubject: ?string = undefined;
+    @observable mailBody: ?string = undefined;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.updateUrl();
+    }
+
+    @action componentDidUpdate(prevProps: Props) {
+        if (prevProps.open === false && this.props.open === true) {
+            this.updateUrl();
+        }
+    }
+
+    updateUrl() {
+        const {url} = this.props;
+
+        if (!url) {
+            return;
+        }
+
+        const urlParts = url.split('?');
+
+        this.url = urlParts[0];
+
+        const urlParameters = new URLSearchParams(urlParts[1]);
+        const mailSubject = urlParameters.get('subject');
+        const mailBody = urlParameters.get('body');
+
+        this.mailSubject = mailSubject ? mailSubject : undefined;
+        this.mailBody = mailBody ? mailBody : undefined;
+    }
+
+    callUrlChange = () => {
         const {onTargetChange, onUrlChange} = this.props;
+        const {mailBody, mailSubject, url} = this;
+
+        if (!url) {
+            onUrlChange(undefined);
+            return;
+        }
 
         if (url && url.startsWith('mailto:')) {
             onTargetChange('_self');
         }
 
-        onUrlChange(url);
+        const urlParameters = new URLSearchParams();
+
+        if (mailSubject) {
+            urlParameters.set('subject', mailSubject);
+        }
+
+        if (mailBody) {
+            urlParameters.set('body', mailBody);
+        }
+
+        onUrlChange(url + (Array.from(urlParameters).length > 0 ? '?' + urlParameters.toString() : ''));
+    };
+
+    handleUrlBlur = this.callUrlChange;
+
+    @action handleUrlChange = (url: ?string) => {
+        this.url = url;
+    };
+
+    handleMailSubjectBlur = this.callUrlChange;
+
+    @action handleMailSubjectChange = (mailSubject: ?string) => {
+        this.mailSubject = mailSubject;
+    };
+
+    handleMailBodyBlur = this.callUrlChange;
+
+    @action handleMailBodyChange = (mailBody: ?string) => {
+        this.mailBody = mailBody;
     };
 
     render() {
-        const {onCancel, onConfirm, onTargetChange, onTitleChange, open, target, title, url} = this.props;
+        const {
+            onCancel,
+            onConfirm,
+            onTargetChange,
+            onTitleChange,
+            open,
+            target,
+            title,
+            url,
+        } = this.props;
 
         return (
             <Dialog
@@ -47,10 +129,11 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                     <Form.Field label={translate('sulu_admin.link_url')} required={true}>
                         <Url
                             defaultProtocol="https://"
+                            onBlur={this.handleUrlBlur}
                             onChange={this.handleUrlChange}
                             protocols={['http://', 'https://', 'ftp://', 'ftps://', 'mailto:']}
                             valid={true}
-                            value={url}
+                            value={this.url}
                         />
                     </Form.Field>
 
@@ -65,6 +148,25 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
                         </Form.Field>
                     }
 
+                    {url && url.startsWith('mailto:') &&
+                        <Fragment>
+                            <Form.Field label={translate('sulu_admin.mail_subject')}>
+                                <Input
+                                    onBlur={this.handleMailSubjectBlur}
+                                    onChange={this.handleMailSubjectChange}
+                                    value={this.mailSubject}
+                                />
+                            </Form.Field>
+                            <Form.Field label={translate('sulu_admin.mail_body')}>
+                                <TextArea
+                                    onBlur={this.handleMailBodyBlur}
+                                    onChange={this.handleMailBodyChange}
+                                    value={this.mailBody}
+                                />
+                            </Form.Field>
+                        </Fragment>
+                    }
+
                     <Form.Field label={translate('sulu_admin.link_title')}>
                         <Input onChange={onTitleChange} value={title} />
                     </Form.Field>
@@ -73,3 +175,5 @@ export default class ExternalLinkOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default ExternalLinkOverlay;

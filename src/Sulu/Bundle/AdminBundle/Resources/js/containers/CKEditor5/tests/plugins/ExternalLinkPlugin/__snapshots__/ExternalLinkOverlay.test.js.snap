@@ -327,6 +327,51 @@ exports[`Render overlay with mailto URL 1`] = `
       <label
         class="label"
       >
+        sulu_admin.mail_subject
+      </label>
+      <label
+        class="input default left"
+      >
+        <input
+          type="text"
+          value="Subject"
+        />
+      </label>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.mail_body
+      </label>
+      <textarea
+        class="textArea"
+      >
+        Body
+      </textarea>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
         sulu_admin.link_title
       </label>
       <label

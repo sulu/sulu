@@ -36,7 +36,7 @@ test('Render overlay with mailto URL', () => {
             open={true}
             target={undefined}
             title={undefined}
-            url="mailto:test@example.org"
+            url="mailto:test@example.org?subject=Subject&body=Body"
         />
     );
 
@@ -84,6 +84,65 @@ test('Pass correct props to Dialog', () => {
     expect(externalLinkOverlay.find('Dialog').prop('open')).toEqual(false);
 });
 
+test('Do not call onUrlChange handler if input did not loose focus', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = shallow(
+        <ExternalLinkOverlay
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            onUrlChange={urlChangeSpy}
+            open={true}
+            target="_blank"
+            title={undefined}
+            url={undefined}
+        />
+    );
+
+    externalLinkOverlay.find('Url').prop('onChange')('http://www.sulu.io');
+    expect(urlChangeSpy).not.toBeCalled();
+});
+
+test('Call onUrlChange with all mail values', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = shallow(
+        <ExternalLinkOverlay
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            onUrlChange={urlChangeSpy}
+            open={true}
+            target="_blank"
+            title={undefined}
+            url="mailto:bla@example.org"
+        />
+    );
+
+    externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org');
+    externalLinkOverlay.find('Url').prop('onBlur')();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
+    expect(targetChangeSpy).toBeCalledWith('_self');
+
+    externalLinkOverlay.update();
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onChange')('Subject');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject');
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onBlur')();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject');
+
+    externalLinkOverlay.update();
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onChange')('Body');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject&body=Body');
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onBlur')();
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject&body=Body');
+});
+
 test('Reset target to self when a mailto link is entered', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
@@ -103,6 +162,7 @@ test('Reset target to self when a mailto link is entered', () => {
     );
 
     externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
+    externalLinkOverlay.find('Url').prop('onBlur')();
     expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
     expect(targetChangeSpy).toBeCalledWith('_self');
 });
@@ -126,6 +186,7 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
     );
 
     externalLinkOverlay.find('Url').prop('onChange')('http://sulu.io');
+    externalLinkOverlay.find('Url').prop('onBlur')();
     expect(urlChangeSpy).toBeCalledWith('http://sulu.io');
     expect(targetChangeSpy).not.toBeCalled();
 });
