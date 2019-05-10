@@ -23,7 +23,7 @@ Array [
     class="backdrop visible fixed"
   />,
   <div
-    class="container"
+    class="container isDown"
   >
     <div
       class="overlay small"

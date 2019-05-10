@@ -8,7 +8,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
 
 exports[`Render an open MediaSelectionOverlay 2`] = `
 <div
-  class="container"
+  class="container isDown"
 >
   <div
     class="overlay"
@@ -601,7 +601,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 1`] = `
 
 exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
 <div
-  class="container"
+  class="container isDown"
 >
   <div
     class="overlay"

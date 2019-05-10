@@ -7,7 +7,7 @@ exports[`The component should render in body when open 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"container\\">
+  <div class=\\"container isDown\\">
     <div class=\\"overlay small\\">
       <section class=\\"content\\">
         <header>
@@ -28,7 +28,7 @@ exports[`The component should render in body with actions when open 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"container\\">
+  <div class=\\"container isDown\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
@@ -51,7 +51,7 @@ exports[`The component should render in body with loader instead of confirm butt
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"container\\">
+  <div class=\\"container isDown\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>
@@ -78,7 +78,7 @@ exports[`The component should render with a disabled confirm button 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"container\\">
+  <div class=\\"container isDown\\">
     <div class=\\"overlay\\">
       <section class=\\"content\\">
         <header>

@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import Mousetrap from 'mousetrap';
-import {observable, action} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {Node} from 'react';
 import React, {Fragment} from 'react';
@@ -38,16 +38,20 @@ class Overlay extends React.Component<Props> {
         confirmLoading: false,
     };
 
+    @observable open: boolean = false;
     @observable visible: boolean = false;
-    @observable openHasChanged: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        if (this.props.open) {
+        const {open} = this.props;
+
+        if (open) {
             Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
         }
-        this.openHasChanged = this.props.open;
+
+        this.open = open;
+        this.visible = open;
     }
 
     componentWillUnmount() {
@@ -56,25 +60,23 @@ class Overlay extends React.Component<Props> {
         }
     }
 
-    componentDidMount() {
-        this.toggle();
-    }
-
-    @action componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.open !== this.props.open) {
-            this.openHasChanged = true;
-        }
-    }
-
     @action componentDidUpdate(prevProps: Props) {
-        this.toggle();
+        const {open} = this.props;
 
-        if (prevProps.open !== this.props.open) {
-            if (this.props.open) {
+        if (prevProps.open !== open) {
+            if (open) {
                 Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
             } else {
                 Mousetrap.unbind(CLOSE_OVERLAY_KEY);
             }
+
+            afterElementsRendered(action(() => {
+                this.open = open;
+            }));
+        }
+
+        if (prevProps.open === false && open === true) {
+            this.visible = true;
         }
     }
 
@@ -82,18 +84,11 @@ class Overlay extends React.Component<Props> {
         this.props.onClose();
     };
 
-    @action toggle() {
-        afterElementsRendered(action(() => {
-            if (this.openHasChanged) {
-                this.visible = this.props.open;
-            }
-        }));
-    }
-
     @action handleTransitionEnd = () => {
-        afterElementsRendered(action(() => {
-            this.openHasChanged = false;
-        }));
+        const {open} = this.props;
+        if (!open) {
+            this.visible = false;
+        }
     };
 
     handleIconClick = () => {
@@ -109,14 +104,16 @@ class Overlay extends React.Component<Props> {
             confirmText,
             onClose,
             onConfirm,
-            open,
             title,
             size,
         } = this.props;
+
+        const {open, visible} = this;
+
         const containerClass = classNames(
             overlayStyles.container,
             {
-                [overlayStyles.isDown]: this.visible,
+                [overlayStyles.isDown]: open,
             }
         );
 
@@ -127,12 +124,10 @@ class Overlay extends React.Component<Props> {
             }
         );
 
-        const showPortal = open || this.openHasChanged;
-
         return (
             <Fragment>
-                <Backdrop onClick={onClose} open={showPortal} />
-                {showPortal &&
+                <Backdrop onClick={onClose} open={visible} />
+                {visible &&
                     <Portal>
                         <div
                             className={containerClass}
