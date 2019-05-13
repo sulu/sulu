@@ -20,7 +20,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Bundle\ContactBundle\Content\Types\ContactSelectionContentType;
+use Sulu\Bundle\ContactBundle\Content\Types\ContactAccountSelection;
 use Sulu\Bundle\ContactBundle\Util\CustomerIdConverter;
 use Sulu\Bundle\ContactBundle\Util\IndexComparator;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -28,7 +28,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 
-class ContactSelectionContentTypeTest extends TestCase
+class ContactAccountSelectionTest extends TestCase
 {
     /**
      * @var string
@@ -112,7 +112,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testRead()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -138,7 +138,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testReadNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -164,7 +164,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testReadPropertyNotExists()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -190,7 +190,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testWrite()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -216,7 +216,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testWriteNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -243,7 +243,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testRemove()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -275,7 +275,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetViewData()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -292,7 +292,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetDefaultValue()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -309,7 +309,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetDefaultParams()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -332,7 +332,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testHasValue()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -358,7 +358,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataOnlyContact()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -400,7 +400,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataCombined()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -442,7 +442,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataOrderOnlyContact()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -485,7 +485,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataEmpty()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -506,7 +506,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -527,7 +527,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testGetContentDataWrongType()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
@@ -548,7 +548,7 @@ class ContactSelectionContentTypeTest extends TestCase
 
     public function testPreResolve()
     {
-        $type = new ContactSelectionContentType(
+        $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
             $this->accountManager->reveal(),
             $this->serializer->reveal(),
