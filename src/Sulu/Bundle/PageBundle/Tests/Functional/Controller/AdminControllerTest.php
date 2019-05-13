@@ -15,6 +15,21 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function testTeaserConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $pageConfig = $response->sulu_page;
+
+        $this->assertCount(1, (array) $pageConfig->teaser);
+        $this->assertEquals('Page', $pageConfig->teaser->pages->title);
+        $this->assertEquals('pages', $pageConfig->teaser->pages->resourceKey);
+    }
+
     public function testPagesListMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

@@ -11,95 +11,51 @@
 
 namespace Sulu\Bundle\PageBundle\Teaser\Configuration;
 
-/**
- * Contains configuration for teaser provider.
- */
-class TeaserConfiguration implements \JsonSerializable
+use JMS\Serializer\Annotation\Groups;
+
+class TeaserConfiguration
 {
     /**
      * @var string
+     * @Groups({"frontend"})
      */
-    protected $title;
+    private $title;
 
     /**
      * @var string
+     * @Groups({"frontend"})
      */
-    protected $component;
+    private $resourceKey;
 
     /**
-     * @var array
+     * @var string
+     * @Groups({"frontend"})
      */
-    protected $componentOptions;
+    private $listAdapter;
 
     /**
-     * @var array
+     * @var string[]
+     * @Groups({"frontend"})
      */
-    private $additionalSlides;
+    private $displayProperties;
 
     /**
-     * @param string $title
-     * @param string $component
-     * @param array $componentOptions
-     * @param array $additionalSlides
+     * @var string
+     * @Groups({"frontend"})
      */
-    public function __construct($title, $component, array $componentOptions = [], array $additionalSlides = [])
-    {
+    private $overlayTitle;
+
+    public function __construct(
+        string $title,
+        string $resourceKey,
+        string $listAdapter,
+        array $displayProperties,
+        string $overlayTitle
+    ) {
         $this->title = $title;
-        $this->component = $component;
-        $this->componentOptions = $componentOptions;
-        $this->additionalSlides = $additionalSlides;
-    }
-
-    /**
-     * Returns title.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Returns component-name.
-     *
-     * @return string
-     */
-    public function getComponent()
-    {
-        return $this->component;
-    }
-
-    /**
-     * Returns component-options.
-     *
-     * @return array
-     */
-    public function getComponentOptions()
-    {
-        return $this->componentOptions;
-    }
-
-    /**
-     * Returns additional-slides.
-     *
-     * @return array
-     */
-    public function getAdditionalSlides()
-    {
-        return $this->additionalSlides;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'title' => $this->title,
-            'component' => $this->component,
-            'componentOptions' => $this->componentOptions,
-            'additionalSlides' => $this->additionalSlides,
-        ];
+        $this->resourceKey = $resourceKey;
+        $this->listAdapter = $listAdapter;
+        $this->displayProperties = $displayProperties;
+        $this->overlayTitle = $overlayTitle;
     }
 }

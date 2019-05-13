@@ -9,6 +9,7 @@ import {
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
+import {TeaserSelection} from 'sulu-page-bundle/containers';
 import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
@@ -52,6 +53,8 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
         new SingleMediaSelectionBlockPreviewTransformer(imageFormatUrl),
         2048
     );
+
+    TeaserSelection.Item.mediaUrl = imageFormatUrl + '?locale=en&format=sulu-25x25';
 
     when(
         () => !!initializer.initializedTranslationsLocale,

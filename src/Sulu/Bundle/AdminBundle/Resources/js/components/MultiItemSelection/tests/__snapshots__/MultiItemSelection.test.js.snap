@@ -13,7 +13,7 @@ exports[`Clicking the left and right button inside the header should call the ri
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -27,7 +27,7 @@ exports[`Clicking the left and right button inside the header should call the ri
     >
       <span
         aria-label="fa-gear"
-        class="fa fa-gear"
+        class="fa fa-gear icon"
       />
     </button>
   </div>
@@ -58,6 +58,9 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -84,6 +87,9 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -110,6 +116,128 @@ exports[`Clicking the left and right button inside the header should call the ri
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render a button on the right with options and a value 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    />
+    <button
+      class="button right hasLabel hasOptions"
+      type="button"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 1
+        </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 2
+        </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 3
+        </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -156,6 +284,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -182,6 +313,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -208,6 +342,9 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -250,6 +387,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -272,6 +412,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -294,6 +437,9 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>
@@ -374,6 +520,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 1
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -400,6 +549,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 2
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
     <li
@@ -426,6 +578,9 @@ exports[`Render an MultiItemSelection with children 1`] = `
         >
           Child 3
         </div>
+        <div
+          class="buttons"
+        />
       </div>
     </li>
   </ul>

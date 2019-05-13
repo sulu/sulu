@@ -5,8 +5,8 @@ import type {SchemaOptions} from '../Form/types';
 export type TextEditorProps = {|
     disabled: boolean,
     locale: ?IObservableValue<string>,
-    onBlur: () => void,
+    onBlur?: () => void,
     onChange: (value: ?string) => void,
-    options: ?SchemaOptions,
+    options?: ?SchemaOptions,
     value: ?string,
 |};

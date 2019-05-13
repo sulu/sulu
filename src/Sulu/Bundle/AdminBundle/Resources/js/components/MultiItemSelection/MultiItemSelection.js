@@ -14,7 +14,8 @@ type Props<T> = {|
     label?: string,
     leftButton?: Button,
     loading: boolean,
-    onItemRemove?: (itemid: T) => void,
+    onItemEdit?: (itemId: T) => void,
+    onItemRemove?: (itemId: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
     rightButton?: Button,
     sortable: boolean,
@@ -45,6 +46,13 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
 
     static Item = Item;
 
+    handleItemEdit = (itemId: T) => {
+        const {onItemEdit} = this.props;
+        if (onItemEdit) {
+            onItemEdit(itemId);
+        }
+    };
+
     handleItemRemove = (itemId: T) => {
         const {onItemRemove} = this.props;
         if (onItemRemove) {
@@ -68,6 +76,7 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
             leftButton,
             loading,
             rightButton,
+            onItemEdit,
             onItemRemove,
             sortable,
         } = this.props;
@@ -105,7 +114,8 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
                                     item,
                                     {
                                         ...item.props,
-                                        onRemove: onItemRemove && this.handleItemRemove,
+                                        onEdit: onItemEdit ? this.handleItemEdit : item.props.onEdit,
+                                        onRemove: onItemRemove ? this.handleItemRemove : item.props.onRemove,
                                         sortable,
                                     }
                                 )

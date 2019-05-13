@@ -24,7 +24,7 @@ type Props = {|
     disabled: boolean,
     formats: Array<string>,
     locale?: ?IObservableValue<string>,
-    onBlur: () => void,
+    onBlur?: () => void,
     onChange: (value: ?string) => void,
     value: ?string,
 |};
@@ -155,7 +155,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     ].filter((entry) => entry !== undefined),
                 },
                 internalLinks: {
-                    locale,
+                    locale: locale && locale.get(),
                 },
                 table: {
                     contentToolbar: [

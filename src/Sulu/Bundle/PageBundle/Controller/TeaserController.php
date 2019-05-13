@@ -13,15 +13,23 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Provides api for requesting teasers.
- */
 class TeaserController extends RestController implements ClassResourceInterface
 {
+    /**
+     * @var TeaserManagerInterface
+     */
+    private $teaserManager;
+
+    public function __construct(TeaserManagerInterface $teaserManager)
+    {
+        $this->teaserManager = $teaserManager;
+    }
+
     /**
      * Returns teaser by ids (get-parameter).
      *
@@ -43,7 +51,7 @@ class TeaserController extends RestController implements ClassResourceInterface
         return $this->handleView(
             $this->view(
                 new CollectionRepresentation(
-                    $this->get('sulu_page.teaser.manager')->find($ids, $this->getLocale($request)),
+                    $this->teaserManager->find($ids, $this->getLocale($request)),
                     'teasers'
                 )
             )

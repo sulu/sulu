@@ -1,0 +1,100 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$teaserSelectionMediaEditColor: $white;
+$teaserSelectionMediaHoverBackgroundColor: rgba($black, .5);
+
+$teaserSelectionMediaHeight: 25px;
+$teaserSelectionMediaWidth: 25px;
+
+.edit-form {
+    padding: 10px;
+}
+
+.form {
+    display: flex;
+}
+
+.media-column {
+    margin-right: 10px;
+}
+
+.media-button {
+    position: relative;
+    border: 0;
+    background: transparent;
+    height: $teaserSelectionMediaHeight;
+    width: $teaserSelectionMediaWidth;
+
+    &:hover .media-button-edit-icon {
+        display: flex;
+    }
+}
+
+.media-button {
+    position: relative;
+    cursor: pointer;
+
+    &:hover .media-button-icon {
+        display: flex;
+        background-color: $teaserSelectionMediaHoverBackgroundColor;
+    }
+}
+
+.media-button-icon {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: $teaserSelectionMediaEditColor;
+}
+
+.title-input {
+    margin-bottom: 10px;
+}
+
+.description-text-area {
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-basis: 100%;
+}
+
+.item {
+    display: flex;
+    margin: 7px 0;
+}
+
+.media {
+    height: $teaserSelectionMediaHeight;
+    width: $teaserSelectionMediaWidth;
+    margin-right: 10px;
+}
+
+.title {
+    margin: 5px 0;
+}
+
+.content {
+    flex: 1;
+}
+
+.description {
+    font-size: 10px;
+    margin-bottom: 5px;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.type {
+    margin: 5px 0;
+    width: 100px;
+}

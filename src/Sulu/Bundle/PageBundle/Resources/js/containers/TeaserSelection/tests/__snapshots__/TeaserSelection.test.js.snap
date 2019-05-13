@@ -1,0 +1,607 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Load combined data from TeaserStore and props 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            >
+              <img
+                src="/admin/media/8?format=sulu-25x25"
+              />
+            </div>
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Edited Page Title
+              </p>
+              <p
+                class="description"
+              >
+                Edited Page Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Pages (sulu_page.edited)
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Contact 1
+              </p>
+              <p
+                class="description"
+              >
+                Contact Description 1
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Contacts
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Contact 2
+              </p>
+              <p
+                class="description"
+              >
+                Contact Description 2
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Contacts
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render loading teaser selection 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      <div
+        class="loader"
+      >
+        <div
+          class="spinner"
+          style="width: 24px; height: 24px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Title
+              </p>
+              <p
+                class="description"
+              >
+                Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Pages (sulu_page.edited)
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render teaser selection with data 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Title
+              </p>
+              <p
+                class="description"
+              >
+                Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Pages (sulu_page.edited)
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Render teaser selection with presentations 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-plus-circle"
+        class="su-plus-circle icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="label"
+    />
+    <button
+      class="button right hasLabel hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-eye"
+        class="su-eye icon"
+      />
+      <span
+        class="label"
+      >
+        Test 2
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div
+            class="item"
+          >
+            <div
+              class="media"
+            />
+            <div
+              class="content"
+            >
+              <p
+                class="title"
+              >
+                Title
+              </p>
+              <p
+                class="description"
+              >
+                Description
+
+              </p>
+            </div>
+            <p
+              class="type"
+            >
+              Pages (sulu_page.edited)
+            </p>
+          </div>
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;

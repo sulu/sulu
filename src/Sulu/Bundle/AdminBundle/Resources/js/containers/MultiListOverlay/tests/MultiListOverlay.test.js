@@ -249,6 +249,31 @@ test('Should select the preSelectedItems in the ListStore', () => {
     );
 });
 
+test('Should not add the preSelectedItems to the ListStore if preloadSelectedItems is set to false', () => {
+    shallow(
+        <MultiListOverlay
+            adapter="table"
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preloadSelectedItems={false}
+            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(ListStore).toBeCalledWith(
+        'snippets',
+        'snippets',
+        'multi_list_overlay',
+        expect.anything(),
+        undefined,
+        undefined
+    );
+});
+
 test('Should not fail when preSelectedItems is undefined', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay

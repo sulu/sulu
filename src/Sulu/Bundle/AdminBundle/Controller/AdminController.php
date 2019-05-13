@@ -23,6 +23,7 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -103,6 +104,11 @@ class AdminController
     private $dataProviderPool;
 
     /**
+     * @var TeaserProviderPoolInterface
+     */
+    private $teaserProviderPool;
+
+    /**
      * @var ManagerRegistry
      */
     private $managerRegistry;
@@ -171,6 +177,7 @@ class AdminController
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
+        TeaserProviderPoolInterface $teaserProviderPool,
         ManagerRegistry $managerRegistry,
         LinkProviderPoolInterface $linkProviderPool,
         string $environment,
@@ -196,6 +203,7 @@ class AdminController
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
+        $this->teaserProviderPool = $teaserProviderPool;
         $this->managerRegistry = $managerRegistry;
         $this->linkProviderPool = $linkProviderPool;
         $this->environment = $environment;
@@ -274,6 +282,9 @@ class AdminController
                         ['id' => ':id']
                     ),
                 ],
+            ],
+            'sulu_page' => [
+                'teaser' => $this->teaserProviderPool->getConfiguration(),
             ],
             'sulu_preview' => [
                 'endpoints' => [

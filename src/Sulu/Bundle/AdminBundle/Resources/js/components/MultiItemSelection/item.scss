@@ -5,7 +5,6 @@ $itemBackgroundColor: $white;
 .item {
     display: flex;
     justify-content: space-between;
-    height: 40px;
     background-color: $itemBackgroundColor;
 }
 
@@ -19,20 +18,22 @@ $itemBackgroundColor: $white;
     font-size: 12px;
 }
 
-.remove-button {
-    border: 0;
-    padding: 0 10px;
+.buttons:not(:empty) {
     margin-right: 10px;
+}
+
+.button {
+    border: 0;
+    padding: 13px 10px 0 0;
     cursor: pointer;
     background-color: transparent;
 }
 
 .drag-handle {
     display: flex;
-    align-items: center;
     width: 40px;
     border: 0;
-    padding-left: 20px;
+    padding: 13px 0 0 20px;
 
     &.sortable {
         cursor: move;

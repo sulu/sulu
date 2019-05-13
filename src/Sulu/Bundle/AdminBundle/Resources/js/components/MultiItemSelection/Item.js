@@ -7,17 +7,17 @@ import Icon from '../Icon';
 import itemStyles from './item.scss';
 
 const DRAG_ICON = 'su-more';
-const REMOVE_ICON = 'su-trash-alt';
 
-type Props = {
+type Props<T> = {
     children: Node,
-    id: string | number,
+    id: T,
     index: number,
-    onRemove?: (id: string | number) => void,
+    onEdit?: (id: T) => void,
+    onRemove?: (id: T) => void,
     sortable: boolean,
 };
 
-export default class Item extends React.PureComponent<Props> {
+export default class Item<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         sortable: true,
     };
@@ -36,9 +36,19 @@ export default class Item extends React.PureComponent<Props> {
         return SortableHandle(handle);
     }
 
+    handleEdit = () => {
+        const {id, onEdit} = this.props;
+
+        if (onEdit) {
+            onEdit(id);
+        }
+    };
+
     handleRemove = () => {
-        if (this.props.onRemove) {
-            this.props.onRemove(this.props.id);
+        const {id, onRemove} = this.props;
+
+        if (onRemove) {
+            onRemove(id);
         }
     };
 
@@ -46,6 +56,7 @@ export default class Item extends React.PureComponent<Props> {
         const {
             children,
             index,
+            onEdit,
             onRemove,
             sortable,
         } = this.props;
@@ -68,15 +79,18 @@ export default class Item extends React.PureComponent<Props> {
                 <div className={itemStyles.content}>
                     {children}
                 </div>
-                {onRemove &&
-                    <button
-                        className={itemStyles.removeButton}
-                        onClick={this.handleRemove}
-                        type="button"
-                    >
-                        <Icon name={REMOVE_ICON} />
-                    </button>
-                }
+                <div className={itemStyles.buttons}>
+                    {onEdit &&
+                        <button className={itemStyles.button} onClick={this.handleEdit} type="button">
+                            <Icon name="su-pen" />
+                        </button>
+                    }
+                    {onRemove &&
+                        <button className={itemStyles.button} onClick={this.handleRemove} type="button">
+                            <Icon name="su-trash-alt" />
+                        </button>
+                    }
+                </div>
             </div>
         );
     }

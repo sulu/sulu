@@ -13,7 +13,6 @@ $secondaryBackground: $wildSand;
 $secondaryColor: $black;
 $secondaryDisabledColor: $silver;
 
-$linkFontSize: 14px;
 $linkColor: $black;
 
 $iconFontSize: 18px;
@@ -86,7 +85,7 @@ $iconColorActive: $white;
     border: 0;
     background: transparent;
     cursor: pointer;
-    font-size: $linkFontSize;
+    font-size: $fontSize;
     color: $linkColor;
 
     .text {

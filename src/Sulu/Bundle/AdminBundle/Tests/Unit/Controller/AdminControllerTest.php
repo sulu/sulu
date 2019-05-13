@@ -31,6 +31,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -120,6 +121,11 @@ class AdminControllerTest extends TestCase
     private $dataProviderPool;
 
     /**
+     * @var TeaserProviderPoolInterface
+     */
+    private $teaserProviderPool;
+
+    /**
      * @var ManagerRegistry
      */
     private $managerRegistry;
@@ -202,6 +208,7 @@ class AdminControllerTest extends TestCase
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
+        $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
         $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
 
@@ -222,6 +229,7 @@ class AdminControllerTest extends TestCase
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
+            $this->teaserProviderPool->reveal(),
             $this->managerRegistry->reveal(),
             $this->linkProviderPool->reveal(),
             $this->environment,
@@ -272,6 +280,9 @@ class AdminControllerTest extends TestCase
         $dataProviders = [];
         $this->dataProviderPool->getAll()->willReturn($dataProviders);
 
+        $teaserProviders = [];
+        $this->teaserProviderPool->getConfiguration()->willReturn($teaserProviders);
+
         $addressTypeRepository = $this->prophesize(EntityRepository::class);
         $this->managerRegistry
              ->getRepository('SuluContactBundle:AddressType')
@@ -282,16 +293,20 @@ class AdminControllerTest extends TestCase
              ->getRepository('SuluContactBundle:Country')
              ->willReturn($countryRepository->reveal());
 
-        $this->viewHandler->handle(Argument::that(function(View $view) use ($dataProviders, $fieldTypeOptions, $routes) {
-            $data = $view->getData()['sulu_admin'];
+        $this->viewHandler->handle(
+            Argument::that(
+                function(View $view) use ($dataProviders, $teaserProviders, $fieldTypeOptions, $routes) {
+                    $data = $view->getData()['sulu_admin'];
 
-            return 'json' === $view->getFormat()
-                && $data['fieldTypeOptions'] === $fieldTypeOptions
-                && $data['smartContent'] === $dataProviders
-                && $data['routes'] === $routes
-                && $data['navigation'] === ['navigation_item1', 'navigation_item2']
-                && $data['resources'] === $this->resources;
-        }))->shouldBeCalled()->willReturn(new Response());
+                    return 'json' === $view->getFormat()
+                        && $data['fieldTypeOptions'] === $fieldTypeOptions
+                        && $data['smartContent'] === $dataProviders
+                        && $data['routes'] === $routes
+                        && $data['navigation'] === ['navigation_item1', 'navigation_item2']
+                        && $data['resources'] === $this->resources;
+                }
+            )
+        )->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configAction();
     }

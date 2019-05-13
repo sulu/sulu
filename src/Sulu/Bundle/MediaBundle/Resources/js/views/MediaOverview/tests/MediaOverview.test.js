@@ -7,7 +7,7 @@ import MediaCardOverviewAdapter from '../../../containers/List/adapters/MediaCar
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
-        Form: require('sulu-admin-bundle/containers/Form').default,
+        Form: jest.fn(() => null),
         ResourceFormStore: jest.fn(),
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
         List: require('sulu-admin-bundle/containers/List/List').default,

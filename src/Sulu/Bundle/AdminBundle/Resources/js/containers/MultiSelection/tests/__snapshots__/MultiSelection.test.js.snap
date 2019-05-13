@@ -14,7 +14,7 @@ exports[`Render in disabled state 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -65,7 +65,7 @@ exports[`Show with default plus icon 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -91,7 +91,7 @@ exports[`Show with passed icon 1`] = `
     >
       <span
         aria-label="su-document"
-        class="su-document"
+        class="su-document icon"
       />
     </button>
     <div
@@ -117,7 +117,7 @@ exports[`Show with passed label 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -145,7 +145,7 @@ exports[`Show with passed values as items in right locale 1`] = `
     >
       <span
         aria-label="su-plus"
-        class="su-plus"
+        class="su-plus icon"
       />
     </button>
     <div
@@ -192,15 +192,19 @@ exports[`Show with passed values as items in right locale 1`] = `
             </span>
           </div>
         </div>
-        <button
-          class="removeButton"
-          type="button"
+        <div
+          class="buttons"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
       </div>
     </li>
     <li
@@ -240,15 +244,19 @@ exports[`Show with passed values as items in right locale 1`] = `
             </span>
           </div>
         </div>
-        <button
-          class="removeButton"
-          type="button"
+        <div
+          class="buttons"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
       </div>
     </li>
     <li
@@ -288,15 +296,19 @@ exports[`Show with passed values as items in right locale 1`] = `
             </span>
           </div>
         </div>
-        <button
-          class="removeButton"
-          type="button"
+        <div
+          class="buttons"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
       </div>
     </li>
   </ul>

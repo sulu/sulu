@@ -69,7 +69,7 @@ class TeaserContentTypeTest extends TestCase
 
     public function testGetDefaultParameter()
     {
-        $configuration = [new TeaserConfiguration('sulu_test.content', 'content@sulupage')];
+        $configuration = [new TeaserConfiguration('content', 'pages', 'column_list', ['title'], 'Choose')];
         $this->teaserProviderPool->getConfiguration()->willReturn($configuration);
 
         $this->assertEquals(
