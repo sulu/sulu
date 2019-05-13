@@ -24,6 +24,7 @@ type Props = {|
 
 @observer
 class ExternalLinkOverlay extends React.Component<Props> {
+    @observable protocol: ?string = undefined;
     @observable url: ?string = undefined;
     @observable mailSubject: ?string = undefined;
     @observable mailBody: ?string = undefined;
@@ -93,6 +94,10 @@ class ExternalLinkOverlay extends React.Component<Props> {
 
     handleMailSubjectBlur = this.callUrlChange;
 
+    @action handleProtocolChange = (protocol: ?string) => {
+        this.protocol = protocol;
+    };
+
     @action handleMailSubjectChange = (mailSubject: ?string) => {
         this.mailSubject = mailSubject;
     };
@@ -131,13 +136,14 @@ class ExternalLinkOverlay extends React.Component<Props> {
                             defaultProtocol="https://"
                             onBlur={this.handleUrlBlur}
                             onChange={this.handleUrlChange}
+                            onProtocolChange={this.handleProtocolChange}
                             protocols={['http://', 'https://', 'ftp://', 'ftps://', 'mailto:']}
                             valid={true}
                             value={this.url}
                         />
                     </Form.Field>
 
-                    {url && !url.startsWith('mailto:') &&
+                    {this.protocol && this.protocol !== 'mailto:' &&
                         <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
                                 <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
@@ -148,7 +154,7 @@ class ExternalLinkOverlay extends React.Component<Props> {
                         </Form.Field>
                     }
 
-                    {url && url.startsWith('mailto:') &&
+                    {this.protocol && this.protocol === 'mailto:' &&
                         <Fragment>
                             <Form.Field label={translate('sulu_admin.mail_subject')}>
                                 <Input

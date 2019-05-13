@@ -106,6 +106,36 @@ test('Do not call onUrlChange handler if input did not loose focus', () => {
     expect(urlChangeSpy).not.toBeCalled();
 });
 
+test('Fields should change immediately after protocol was changed', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = mount(
+        <ExternalLinkOverlay
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            onUrlChange={urlChangeSpy}
+            open={true}
+            target="_blank"
+            title={undefined}
+            url={undefined}
+        />
+    );
+
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.link_target"]')).toHaveLength(1);
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"]')).toHaveLength(0);
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(0);
+
+    externalLinkOverlay.find('Url').prop('onProtocolChange')('mailto:');
+
+    externalLinkOverlay.update();
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.link_target"]')).toHaveLength(0);
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"]')).toHaveLength(1);
+    expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(1);
+});
+
 test('Call onUrlChange with all mail values', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
@@ -125,6 +155,7 @@ test('Call onUrlChange with all mail values', () => {
     );
 
     externalLinkOverlay.find('Url').prop('onChange')('mailto:test@example.org');
+    externalLinkOverlay.find('Url').prop('onProtocolChange')('mailto:');
     expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org');
     externalLinkOverlay.find('Url').prop('onBlur')();
     expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org');
