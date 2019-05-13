@@ -28,7 +28,7 @@
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
 
-            <tag name="sulu.content.type" alias="snippet"/>
+            <tag name="sulu.content.type" alias="snippet_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu_snippet.smart_content.data_provider.query_builder"

@@ -57,7 +57,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'field_type_options' => [
                         'selection' => [
-                            'snippet' => [
+                            'snippet_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'snippets',
                                 'types' => [

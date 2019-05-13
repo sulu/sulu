@@ -35,7 +35,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="internal_link" type="snippet"/>
+        <property name="internal_link" type="snippet_selection"/>
     </properties>
 </template>
 

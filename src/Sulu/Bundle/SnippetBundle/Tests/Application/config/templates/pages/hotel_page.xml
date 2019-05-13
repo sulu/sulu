@@ -36,7 +36,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="hotels" type="snippet" mandatory="true">
+        <property name="hotels" type="snippet_selection" mandatory="true">
             <meta>
                 <title lang="de">Hotel</title>
                 <title lang="en">Hotel</title>
