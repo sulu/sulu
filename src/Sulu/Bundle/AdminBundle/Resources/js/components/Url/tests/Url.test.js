@@ -228,13 +228,7 @@ test('Should remove the protocol from path and set it on the protocol select if 
 
 test('Call onBlur callback when protocol was changed', () => {
     const blurSpy = jest.fn();
-    const url = shallow(
-        <Url
-            onBlur={blurSpy}
-            onChange={jest.fn()}
-            value="https://www.sulu.io"
-        />
-    );
+    const url = shallow(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
     url.find('SingleSelect').prop('onChange')('http://');
 
     expect(blurSpy).toBeCalledWith();
@@ -242,14 +236,34 @@ test('Call onBlur callback when protocol was changed', () => {
 
 test('Call onBlur callback when path was changed', () => {
     const blurSpy = jest.fn();
-    const url = shallow(
-        <Url
-            onBlur={blurSpy}
-            onChange={jest.fn()}
-            value="https://www.sulu.io"
-        />
-    );
+    const url = shallow(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
     url.find('input').prop('onBlur')();
 
     expect(blurSpy).toBeCalledWith();
+});
+
+test('Should call onProtocolChange with default protocol', () => {
+    const protocolChangeSpy = jest.fn();
+    shallow(
+        <Url defaultProtocol="http://" onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value={undefined} />
+    );
+
+    expect(protocolChangeSpy).toBeCalledWith('http://');
+});
+
+test('Should call onProtocolChange with initial value', () => {
+    const protocolChangeSpy = jest.fn();
+    shallow(<Url onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value="http://www.google.at" />);
+
+    expect(protocolChangeSpy).toBeCalledWith('http://');
+});
+
+test('Should call onProtocolChange when protocol is changed', () => {
+    const changeSpy = jest.fn();
+    const protocolChangeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} onProtocolChange={protocolChangeSpy} value={undefined} />);
+
+    url.find('SingleSelect').prop('onChange')('https://');
+
+    expect(protocolChangeSpy).toHaveBeenLastCalledWith('https://');
 });
