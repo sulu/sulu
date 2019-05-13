@@ -6,9 +6,11 @@ import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
-import Iban from './containers/Form/fields/Iban';
+import ContactDetails from './containers/Form/fields/ContactDetails';
 import Bic from './containers/Form/fields/Bic';
+import Iban from './containers/Form/fields/Iban';
 
+fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
 
