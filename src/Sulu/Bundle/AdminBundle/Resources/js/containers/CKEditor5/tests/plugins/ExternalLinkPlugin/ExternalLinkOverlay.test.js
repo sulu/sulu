@@ -162,16 +162,16 @@ test('Call onUrlChange with all mail values', () => {
     expect(targetChangeSpy).toBeCalledWith('_self');
 
     externalLinkOverlay.update();
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onChange')('Subject');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject');
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onChange')('Subject Line');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
     externalLinkOverlay.find('Field[label="sulu_admin.mail_subject"] Input').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject');
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line');
 
     externalLinkOverlay.update();
-    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onChange')('Body');
-    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject&body=Body');
+    externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onChange')('Body Text');
+    expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
     externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onBlur')();
-    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject&body=Body');
+    expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
 });
 
 test('Reset target to self when a mailto link is entered', () => {

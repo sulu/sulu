@@ -56,8 +56,8 @@ class ExternalLinkOverlay extends React.Component<Props> {
         const mailSubject = urlParameters.get('subject');
         const mailBody = urlParameters.get('body');
 
-        this.mailSubject = mailSubject ? decodeURI(mailSubject) : undefined;
-        this.mailBody = mailBody ? decodeURI(mailBody) : undefined;
+        this.mailSubject = mailSubject ? mailSubject : undefined;
+        this.mailBody = mailBody ? mailBody : undefined;
     }
 
     callUrlChange = () => {
@@ -76,14 +76,21 @@ class ExternalLinkOverlay extends React.Component<Props> {
         const urlParameters = new URLSearchParams();
 
         if (mailSubject) {
-            urlParameters.set('subject', encodeURI(mailSubject));
+            urlParameters.set('subject', mailSubject);
         }
 
         if (mailBody) {
-            urlParameters.set('body', encodeURI(mailBody));
+            urlParameters.set('body', mailBody);
         }
 
-        onUrlChange(url + (Array.from(urlParameters).length > 0 ? '?' + urlParameters.toString() : ''));
+        onUrlChange(
+            url + (
+                Array.from(urlParameters).length > 0
+                    // Replacing value is required, because Apple Mail does not seem to understand it otherwise
+                    ? '?' + urlParameters.toString().replace(/\+/g, '%20')
+                    : ''
+            )
+        );
     };
 
     handleUrlBlur = this.callUrlChange;
