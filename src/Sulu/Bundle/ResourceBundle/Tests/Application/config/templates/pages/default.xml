@@ -35,7 +35,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="animals" type="snippet">
+        <property name="animals" type="snippet_selection">
             <params>
                 <param name="snippetType" value="animal" />
             </params>

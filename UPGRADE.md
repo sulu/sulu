@@ -4,6 +4,20 @@
 
 When upgrading also have a look at the changes in the [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha5...2.0.0-alpha6).
 
+### Rename snippet content type to snippet_selection
+
+**Before**:
+
+```xml
+<property name="snippets" type="snippet" />
+```
+
+**After**:
+
+```xml
+<property name="snippets" type="snippet_selection" />
+```
+
 ### Router removeUpdateRouteHook
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
