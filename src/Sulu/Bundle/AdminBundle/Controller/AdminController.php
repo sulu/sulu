@@ -274,6 +274,12 @@ class AdminController
             'sulu_contact' => [
                 'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
                 'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
+                'emailTypes' => $this->managerRegistry->getRepository('SuluContactBundle:EmailType')->findAll(),
+                'faxTypes' => $this->managerRegistry->getRepository('SuluContactBundle:FaxType')->findAll(),
+                'phoneTypes' => $this->managerRegistry->getRepository('SuluContactBundle:PhoneType')->findAll(),
+                'socialMediaProfileTypes' => $this->managerRegistry
+                    ->getRepository('SuluContactBundle:SocialMediaProfileType')->findAll(),
+                'urlTypes' => $this->managerRegistry->getRepository('SuluContactBundle:UrlType')->findAll(),
             ],
             'sulu_media' => [
                 'endpoints' => [

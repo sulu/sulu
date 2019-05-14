@@ -293,6 +293,31 @@ class AdminControllerTest extends TestCase
              ->getRepository('SuluContactBundle:Country')
              ->willReturn($countryRepository->reveal());
 
+        $emailTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:EmailType')
+             ->willReturn($emailTypeRepository->reveal());
+
+        $faxTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:FaxType')
+             ->willReturn($faxTypeRepository->reveal());
+
+        $phoneTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:PhoneType')
+             ->willReturn($phoneTypeRepository->reveal());
+
+        $socialMediaProfileTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:SocialMediaProfileType')
+             ->willReturn($socialMediaProfileTypeRepository->reveal());
+
+        $urlTypeRepository = $this->prophesize(EntityRepository::class);
+        $this->managerRegistry
+             ->getRepository('SuluContactBundle:UrlType')
+             ->willReturn($urlTypeRepository->reveal());
+
         $this->viewHandler->handle(
             Argument::that(
                 function(View $view) use ($dataProviders, $teaserProviders, $fieldTypeOptions, $routes) {

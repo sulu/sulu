@@ -14,6 +14,11 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Country;
+use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\ContactBundle\Entity\FaxType;
+use Sulu\Bundle\ContactBundle\Entity\PhoneType;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
+use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -49,10 +54,34 @@ class AdminControllerTest extends SuluTestCase
         $em = $this->getEntityManager();
 
         $addressType1 = new AddressType();
-        $addressType1->setName('work');
-
+        $addressType1->setName('work address');
         $addressType2 = new AddressType();
-        $addressType2->setName('private');
+        $addressType2->setName('private address');
+
+        $phoneType1 = new PhoneType();
+        $phoneType1->setName('work phone');
+        $phoneType2 = new PhoneType();
+        $phoneType2->setName('private phone');
+
+        $emailType1 = new EmailType();
+        $emailType1->setName('work email');
+        $emailType2 = new EmailType();
+        $emailType2->setName('private email');
+
+        $urlType1 = new UrlType();
+        $urlType1->setName('work url');
+        $urlType2 = new UrlType();
+        $urlType2->setName('private url');
+
+        $socialMediaProfileType1 = new SocialMediaProfileType();
+        $socialMediaProfileType1->setName('Facebook');
+        $socialMediaProfileType2 = new SocialMediaProfileType();
+        $socialMediaProfileType2->setName('Twitter');
+
+        $faxType1 = new FaxType();
+        $faxType1->setName('work fax');
+        $faxType2 = new FaxType();
+        $faxType2->setName('private fax');
 
         $country = new Country();
         $country->setName('Austria');
@@ -60,6 +89,16 @@ class AdminControllerTest extends SuluTestCase
 
         $em->persist($addressType1);
         $em->persist($addressType2);
+        $em->persist($phoneType1);
+        $em->persist($phoneType2);
+        $em->persist($emailType1);
+        $em->persist($emailType2);
+        $em->persist($urlType1);
+        $em->persist($urlType2);
+        $em->persist($socialMediaProfileType1);
+        $em->persist($socialMediaProfileType2);
+        $em->persist($faxType1);
+        $em->persist($faxType2);
         $em->persist($country);
         $em->flush();
 
@@ -72,9 +111,35 @@ class AdminControllerTest extends SuluTestCase
         $contactConfig = $response->sulu_contact;
 
         $this->assertEquals($addressType1->getId(), $contactConfig->addressTypes[0]->id);
-        $this->assertEquals('work', $contactConfig->addressTypes[0]->name);
+        $this->assertEquals('work address', $contactConfig->addressTypes[0]->name);
         $this->assertEquals($addressType2->getId(), $contactConfig->addressTypes[1]->id);
-        $this->assertEquals('private', $contactConfig->addressTypes[1]->name);
+        $this->assertEquals('private address', $contactConfig->addressTypes[1]->name);
+
+        $this->assertEquals($phoneType1->getId(), $contactConfig->phoneTypes[0]->id);
+        $this->assertEquals('work phone', $contactConfig->phoneTypes[0]->name);
+        $this->assertEquals($phoneType2->getId(), $contactConfig->phoneTypes[1]->id);
+        $this->assertEquals('private phone', $contactConfig->phoneTypes[1]->name);
+
+        $this->assertEquals($emailType1->getId(), $contactConfig->emailTypes[0]->id);
+        $this->assertEquals('work email', $contactConfig->emailTypes[0]->name);
+        $this->assertEquals($emailType2->getId(), $contactConfig->emailTypes[1]->id);
+        $this->assertEquals('private email', $contactConfig->emailTypes[1]->name);
+
+        $this->assertEquals($urlType1->getId(), $contactConfig->urlTypes[0]->id);
+        $this->assertEquals('work url', $contactConfig->urlTypes[0]->name);
+        $this->assertEquals($urlType2->getId(), $contactConfig->urlTypes[1]->id);
+        $this->assertEquals('private url', $contactConfig->urlTypes[1]->name);
+
+        $this->assertEquals($socialMediaProfileType1->getId(), $contactConfig->socialMediaProfileTypes[0]->id);
+        $this->assertEquals('Facebook', $contactConfig->socialMediaProfileTypes[0]->name);
+        $this->assertEquals($socialMediaProfileType2->getId(), $contactConfig->socialMediaProfileTypes[1]->id);
+        $this->assertEquals('Twitter', $contactConfig->socialMediaProfileTypes[1]->name);
+
+        $this->assertEquals($faxType1->getId(), $contactConfig->faxTypes[0]->id);
+        $this->assertEquals('work fax', $contactConfig->faxTypes[0]->name);
+        $this->assertEquals($faxType2->getId(), $contactConfig->faxTypes[1]->id);
+        $this->assertEquals('private fax', $contactConfig->faxTypes[1]->name);
+
         $this->assertEquals($country->getId(), $contactConfig->countries[0]->id);
         $this->assertEquals('Austria', $contactConfig->countries[0]->name);
     }
