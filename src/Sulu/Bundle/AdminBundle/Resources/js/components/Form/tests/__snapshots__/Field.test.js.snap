@@ -121,12 +121,16 @@ exports[`Display a field with label and type 1`] = `
       <button
         class="type"
       >
-        (Work
+        <span
+          class="typeDelimiter"
+        >
+          •
+        </span>
+        Work
         <span
           aria-label="su-angle-down"
           class="su-angle-down typeIcon"
         />
-        )
       </button>
     </label>
     <p>

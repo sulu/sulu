@@ -17,12 +17,16 @@ exports[`Render ContactDetails with data 1`] = `
         <button
           class="type"
         >
-          (Private
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Private
           <span
             aria-label="su-angle-down"
             class="su-angle-down typeIcon"
           />
-          )
         </button>
       </label>
       <div
@@ -71,12 +75,16 @@ exports[`Render ContactDetails with data 1`] = `
         <button
           class="type"
         >
-          (Work
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
           <span
             aria-label="su-angle-down"
             class="su-angle-down typeIcon"
           />
-          )
         </button>
       </label>
       <div
@@ -125,12 +133,16 @@ exports[`Render ContactDetails with data 1`] = `
         <button
           class="type"
         >
-          (Work
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
           <span
             aria-label="su-angle-down"
             class="su-angle-down typeIcon"
           />
-          )
         </button>
       </label>
       <div
@@ -211,12 +223,16 @@ exports[`Render ContactDetails with data 1`] = `
         <button
           class="type"
         >
-          (Private
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Private
           <span
             aria-label="su-angle-down"
             class="su-angle-down typeIcon"
           />
-          )
         </button>
       </label>
       <div
@@ -265,12 +281,16 @@ exports[`Render ContactDetails with data 1`] = `
         <button
           class="type"
         >
-          (Twitter
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Twitter
           <span
             aria-label="su-angle-down"
             class="su-angle-down typeIcon"
           />
-          )
         </button>
       </label>
       <div

@@ -17,11 +17,17 @@ $errorLabelHeight: 20px;
     border: 0;
     color: $labelColor;
     cursor: pointer;
-    margin-left: 5px;
+    margin-left: 7px;
+    font-size: 12px;
+}
+
+.type-delimiter {
+    margin-right: 7px;
 }
 
 .type-icon {
-    margin-left: 5px;
+    margin-left: 3px;
+    font-size: 10px;
 }
 
 .error {
