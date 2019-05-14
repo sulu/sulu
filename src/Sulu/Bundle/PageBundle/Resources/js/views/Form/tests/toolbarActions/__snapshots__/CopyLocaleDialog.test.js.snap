@@ -2,7 +2,7 @@
 
 exports[`Render the dialog with given props 1`] = `
 <div
-  class="dialogContainer"
+  class="dialogContainer open"
 >
   <div
     class="dialog"

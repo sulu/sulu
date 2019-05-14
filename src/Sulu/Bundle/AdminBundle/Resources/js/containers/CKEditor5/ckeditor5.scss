@@ -135,6 +135,9 @@ $textEditorUnpublishedLinkColor: $gold;
     .ck-preview-button {
         .ck-button__label {
             cursor: pointer !important;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 

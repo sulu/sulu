@@ -7,7 +7,7 @@ exports[`The component should render in body when open 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer open\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header>My dialog title</header>
@@ -26,7 +26,7 @@ exports[`The component should render in body with a large class 1`] = `
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer open\\">
     <div class=\\"dialog large\\">
       <section class=\\"content\\">
         <header>My dialog title</header>
@@ -45,7 +45,7 @@ exports[`The component should render in body with disabled confirm button 1`] = 
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer open\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header>My dialog title</header>
@@ -64,7 +64,7 @@ exports[`The component should render in body with loader instead of confirm butt
   <div class=\\"backdrop visible fixed\\"></div>
 </div>
 <div>
-  <div class=\\"dialogContainer\\">
+  <div class=\\"dialogContainer open\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
         <header>My dialog title</header>

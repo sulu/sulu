@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
 import log from 'loglevel';
+import Isemail from 'isemail';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
@@ -13,6 +14,7 @@ type Props = {|
     id?: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
+    onProtocolChange?: (protocol: ?string) => void,
     protocols: Array<string>,
     valid: boolean,
     value: ?string,
@@ -58,6 +60,10 @@ class Url extends React.Component<Props> {
             return true;
         }
 
+        if (url.indexOf('mailto:') === 0) {
+            return Isemail.validate(url.substring(7));
+        }
+
         return URL_REGEX.test(url);
     }
 
@@ -80,10 +86,16 @@ class Url extends React.Component<Props> {
             this.protocol = undefined;
             this.path = undefined;
 
+            const {defaultProtocol, onProtocolChange} = this.props;
+
+            if (onProtocolChange) {
+                onProtocolChange(defaultProtocol);
+            }
+
             return;
         }
 
-        const {protocols, value} = this.props;
+        const {onProtocolChange, protocols, value} = this.props;
 
         if (value === this.url) {
             return;
@@ -98,6 +110,10 @@ class Url extends React.Component<Props> {
         this.path = url.substring(protocol ? protocol.length : 0);
 
         this.validUrl = this.isValidUrl(this.url);
+
+        if (onProtocolChange) {
+            onProtocolChange(protocol);
+        }
     }
 
     @computed get url() {
@@ -110,8 +126,8 @@ class Url extends React.Component<Props> {
         return protocol + this.path;
     }
 
-    @action handleProtocolChange = (protocol: string | number) => {
-        const {onBlur, protocols} = this.props;
+    @action handleProtocolChange = (protocol: string) => {
+        const {onBlur, onProtocolChange, protocols} = this.props;
 
         if (typeof protocol !== 'string' || !protocols.includes(protocol)) {
             throw new Error(
@@ -123,6 +139,10 @@ class Url extends React.Component<Props> {
         this.protocol = protocol;
 
         this.callChangeCallback();
+
+        if (onProtocolChange) {
+            onProtocolChange(protocol);
+        }
 
         if (onBlur) {
             onBlur();

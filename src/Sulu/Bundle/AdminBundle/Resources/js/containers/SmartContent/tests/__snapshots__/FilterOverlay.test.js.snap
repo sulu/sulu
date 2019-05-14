@@ -2,7 +2,7 @@
 
 exports[`Render with all fields 1`] = `
 <div
-  class="container"
+  class="container isDown"
 >
   <div
     class="overlay small"
@@ -412,7 +412,7 @@ exports[`Render with all fields 1`] = `
 
 exports[`Render with no fields 1`] = `
 <div
-  class="container"
+  class="container isDown"
 >
   <div
     class="overlay small"
