@@ -4,6 +4,28 @@
 
 When upgrading also have a look at the changes in the [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha5...2.0.0-alpha6).
 
+### Rename contact content type to contact_account_selection
+
+**Before**:
+
+```xml
+<property name="contacts" type="contact" />
+```
+
+**After**:
+
+```xml
+<property name="contacts" type="contact_account_selection" />
+```
+
+Following container parameters removed:
+
+ - `sulu_contact.content.contact.class`
+
+Following service renamed:
+
+ - `sulu_contact.content.contact` to `sulu_contact.content.contact_account_selection`
+
 ### Rename snippet content type to snippet_selection
 
 **Before**:

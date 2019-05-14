@@ -29,7 +29,7 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 /**
  * ContentType for Contact.
  */
-class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class ContactAccountSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     const PREFIX_CONTACT = 'c';
 
