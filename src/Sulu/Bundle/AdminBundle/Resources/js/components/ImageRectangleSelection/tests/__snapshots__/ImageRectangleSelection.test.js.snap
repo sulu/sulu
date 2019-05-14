@@ -11,10 +11,12 @@ exports[`The component should calculate the selection with respect to the image 
   />
   <div
     class="rectangle"
+    role="button"
     style="left: 0px; top: 0px; width: 640px; height: 360px;"
   >
     <div
       class="resizeHandle"
+      role="slider"
     />
     <div
       class="backdrop"
@@ -35,10 +37,12 @@ exports[`The component should render with image source 1`] = `
   />
   <div
     class="rectangle"
+    role="button"
     style="left: 0px; top: 0px; width: 640px; height: 360px;"
   >
     <div
       class="resizeHandle"
+      role="slider"
     />
     <div
       class="backdrop"
@@ -59,10 +63,12 @@ exports[`The component should render with initial selection 1`] = `
   />
   <div
     class="rectangle"
+    role="button"
     style="left: 100px; top: 66.66666666666667px; width: 500px; height: 266.6666666666667px;"
   >
     <div
       class="resizeHandle"
+      role="slider"
     />
     <div
       class="backdrop"

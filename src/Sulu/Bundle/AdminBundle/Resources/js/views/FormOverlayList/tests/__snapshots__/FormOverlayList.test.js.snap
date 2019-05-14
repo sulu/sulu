@@ -13,6 +13,7 @@ Array [
   </div>,
   <div
     class="backdrop visible fixed"
+    role="button"
   />,
 ]
 `;
@@ -21,6 +22,7 @@ exports[`View should render with opened overlay 2`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    role="button"
   />,
   <div
     class="container isDown"
@@ -48,6 +50,7 @@ Array [
           >
             <div
               class="snackbar error"
+              role="button"
             >
               <span
                 aria-label="su-exclamation-triangle"

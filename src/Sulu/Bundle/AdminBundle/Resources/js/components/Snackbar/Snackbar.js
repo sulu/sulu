@@ -35,7 +35,7 @@ export default class Snackbar extends React.Component<Props> {
         );
 
         return (
-            <div className={snackbarClass} onClick={onClick}>
+            <div className={snackbarClass} onClick={onClick} role="button">
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
                 {type !== 'success' &&
                     <div className={snackbarStyles.text}>

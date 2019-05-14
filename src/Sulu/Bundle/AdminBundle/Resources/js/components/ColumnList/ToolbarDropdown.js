@@ -32,10 +32,10 @@ class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {
             toolbarStyles[skin]
         );
         return (
-            <a className={className} onClick={this.handleClick}>
+            <button className={className} onClick={this.handleClick}>
                 <Icon name={icon} />
                 <Icon className={toolbarDropdownStyles.buttonArrowIcon} name="su-angle-down" />
-            </a>
+            </button>
         );
     }
 

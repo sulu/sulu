@@ -3,6 +3,7 @@
 exports[`Render an open MediaSelectionOverlay 1`] = `
 <div
   class="backdrop visible fixed"
+  role="button"
 />
 `;
 
@@ -316,6 +317,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                             >
                               <div
                                 class="description"
+                                role="button"
                               >
                                 <div
                                   class="title"
@@ -408,6 +410,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                             </div>
                             <div
                               class="media"
+                              role="button"
                             >
                               <img
                                 alt="Title 1"
@@ -435,6 +438,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                             >
                               <div
                                 class="description"
+                                role="button"
                               >
                                 <div
                                   class="title"
@@ -527,6 +531,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
                             </div>
                             <div
                               class="media"
+                              role="button"
                             >
                               <img
                                 alt="Title 2"
@@ -596,6 +601,7 @@ exports[`Render an open MediaSelectionOverlay 2`] = `
 exports[`Render an open MediaSelectionOverlay with selected items 1`] = `
 <div
   class="backdrop visible fixed"
+  role="button"
 />
 `;
 
@@ -909,6 +915,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                             >
                               <div
                                 class="description"
+                                role="button"
                               >
                                 <div
                                   class="title"
@@ -1001,6 +1008,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                             </div>
                             <div
                               class="media"
+                              role="button"
                             >
                               <img
                                 alt="Title 1"
@@ -1028,6 +1036,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                             >
                               <div
                                 class="description"
+                                role="button"
                               >
                                 <div
                                   class="title"
@@ -1120,6 +1129,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 2`] = `
                             </div>
                             <div
                               class="media"
+                              role="button"
                             >
                               <img
                                 alt="Title 2"

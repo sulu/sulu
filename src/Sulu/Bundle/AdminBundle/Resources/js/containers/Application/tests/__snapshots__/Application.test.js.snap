@@ -33,21 +33,25 @@ exports[`Render based on current route 1`] = `
         <div
           class="userContent"
         >
-          <div
+          <button
             class="noUserImage"
           >
             <span
               aria-label="fa-user"
               class="fa fa-user"
             />
-          </div>
+          </button>
           <div
             class="userProfile"
           >
-            <span>
+            <button
+              class="username"
+            >
               Hikaru Sulu
-            </span>
-            <button>
+            </button>
+            <button
+              class="logout"
+            >
               <span
                 aria-label="su-exit"
                 class="su-exit"
@@ -104,6 +108,7 @@ exports[`Render based on current route 1`] = `
         >
           <div
             class="snackbar error"
+            role="button"
           >
             <span
               aria-label="su-exclamation-triangle"
@@ -128,6 +133,7 @@ exports[`Render based on current route 1`] = `
           </div>
           <div
             class="snackbar success clickable"
+            role="button"
           >
             <span
               aria-label="su-check"
@@ -201,21 +207,25 @@ exports[`Render based on current route with app version 1`] = `
         <div
           class="userContent"
         >
-          <div
+          <button
             class="noUserImage"
           >
             <span
               aria-label="fa-user"
               class="fa fa-user"
             />
-          </div>
+          </button>
           <div
             class="userProfile"
           >
-            <span>
+            <button
+              class="username"
+            >
               Hikaru Sulu
-            </span>
-            <button>
+            </button>
+            <button
+              class="logout"
+            >
               <span
                 aria-label="su-exit"
                 class="su-exit"
@@ -275,6 +285,7 @@ exports[`Render based on current route with app version 1`] = `
         >
           <div
             class="snackbar error"
+            role="button"
           >
             <span
               aria-label="su-exclamation-triangle"
@@ -299,6 +310,7 @@ exports[`Render based on current route with app version 1`] = `
           </div>
           <div
             class="snackbar success clickable"
+            role="button"
           >
             <span
               aria-label="su-check"
@@ -592,7 +604,7 @@ exports[`Render opened navigation 1`] = `
               <div
                 className="userContent"
               >
-                <div
+                <button
                   className="noUserImage"
                   onClick={[Function]}
                 >
@@ -604,16 +616,18 @@ exports[`Render opened navigation 1`] = `
                       className="fa fa-user"
                     />
                   </Icon>
-                </div>
+                </button>
                 <div
                   className="userProfile"
                 >
-                  <span
+                  <button
+                    className="username"
                     onClick={[Function]}
                   >
                     Hikaru Sulu
-                  </span>
+                  </button>
                   <button
+                    className="logout"
                     onClick={[Function]}
                   >
                     <Icon
@@ -699,6 +713,7 @@ exports[`Render opened navigation 1`] = `
         <div
           className="backdrop"
           onClick={[Function]}
+          role="button"
         />
       </Backdrop>
       <main
@@ -726,6 +741,7 @@ exports[`Render opened navigation 1`] = `
                 >
                   <div
                     className="snackbar error"
+                    role="button"
                   >
                     <Icon
                       className="icon"
@@ -770,6 +786,7 @@ exports[`Render opened navigation 1`] = `
                   <div
                     className="snackbar success clickable"
                     onClick={[Function]}
+                    role="button"
                   >
                     <Icon
                       className="icon"
@@ -903,21 +920,25 @@ exports[`Should not fail if current route does not exist 1`] = `
         <div
           class="userContent"
         >
-          <div
+          <button
             class="noUserImage"
           >
             <span
               aria-label="fa-user"
               class="fa fa-user"
             />
-          </div>
+          </button>
           <div
             class="userProfile"
           >
-            <span>
+            <button
+              class="username"
+            >
               Hikaru Sulu
-            </span>
-            <button>
+            </button>
+            <button
+              class="logout"
+            >
               <span
                 aria-label="su-exit"
                 class="su-exit"
@@ -974,6 +995,7 @@ exports[`Should not fail if current route does not exist 1`] = `
         >
           <div
             class="snackbar error"
+            role="button"
           >
             <span
               aria-label="su-exclamation-triangle"
@@ -998,6 +1020,7 @@ exports[`Should not fail if current route does not exist 1`] = `
           </div>
           <div
             class="snackbar success clickable"
+            role="button"
           >
             <span
               aria-label="su-check"

@@ -4,12 +4,13 @@ exports[`The component should not render local when closed 1`] = `null`;
 
 exports[`The component should render in body when open 1`] = `
 "<div>
-  <div class=\\"backdrop visible fixed\\"></div>
+  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>"
 `;
 
 exports[`The component should render normally when local property is set 1`] = `
 <div
   class="backdrop visible fixed"
+  role="button"
 />
 `;

@@ -9,6 +9,7 @@ exports[`Render a MediaCard component 1`] = `
   >
     <div
       class="description"
+      role="button"
     >
       <div
         class="title"
@@ -76,6 +77,7 @@ exports[`Render a MediaCard component 1`] = `
   </div>
   <div
     class="media"
+    role="button"
   >
     <img
       alt="Test"
@@ -97,6 +99,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
   >
     <div
       class="description"
+      role="button"
     >
       <div
         class="title"
@@ -178,6 +181,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
   </div>
   <div
     class="media"
+    role="button"
   >
     <img
       alt="Test"
@@ -192,7 +196,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
 
 exports[`Render a MediaCard with download list 1`] = `
 "<div>
-  <div class=\\"backdrop fixed\\"></div>
+  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

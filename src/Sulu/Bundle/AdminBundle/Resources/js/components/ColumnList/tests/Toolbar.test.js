@@ -44,7 +44,7 @@ test('Should render with active', () => {
 
     // check for opened dropdown in body
     expect(body.innerHTML).toBe('');
-    toolbar.find(ToolbarDropdown).find('a').simulate('click');
+    toolbar.find(ToolbarDropdown).find('button').simulate('click');
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 
@@ -69,7 +69,7 @@ test('Should close dropdown when item is clicked', () => {
     const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
 
     expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(0);
-    toolbar.find(ToolbarDropdown).find('a').simulate('click');
+    toolbar.find(ToolbarDropdown).find('button').simulate('click');
     expect(toolbar.find('ToolbarDropdown').find('Action')).toHaveLength(2);
 
     toolbar.find('ToolbarDropdown Action[children="Option1"]').simulate('click');

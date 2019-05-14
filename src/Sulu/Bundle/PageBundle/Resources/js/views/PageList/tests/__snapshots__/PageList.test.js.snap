@@ -59,15 +59,15 @@ exports[`Render PageList 1`] = `
             <div
               class="toolbar"
             >
-              <a
+              <button
                 class="item primary"
               >
                 <span
                   aria-label="su-plus-circle"
                   class="su-plus-circle"
                 />
-              </a>
-              <a
+              </button>
+              <button
                 class="item primary"
               >
                 <span
@@ -78,7 +78,7 @@ exports[`Render PageList 1`] = `
                   aria-label="su-angle-down"
                   class="su-angle-down buttonArrowIcon"
                 />
-              </a>
+              </button>
             </div>
           </div>
           <div

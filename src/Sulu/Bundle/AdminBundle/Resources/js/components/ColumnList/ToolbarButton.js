@@ -23,9 +23,9 @@ export default class ToolbarButton extends React.Component<ToolbarButtonProps> {
         );
 
         return (
-            <a className={className} onClick={this.handleClick}>
+            <button className={className} onClick={this.handleClick}>
                 <Icon name={icon} />
-            </a>
+            </button>
         );
     };
 }

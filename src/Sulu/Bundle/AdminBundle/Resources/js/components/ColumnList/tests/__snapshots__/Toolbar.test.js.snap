@@ -4,15 +4,15 @@ exports[`Should render with active 1`] = `
 <div
   class="toolbar"
 >
-  <a
+  <button
     class="item primary"
   >
     <span
       aria-label="fa-plus"
       class="fa fa-plus"
     />
-  </a>
-  <a
+  </button>
+  <button
     class="item primary"
   >
     <span
@@ -23,13 +23,13 @@ exports[`Should render with active 1`] = `
       aria-label="su-angle-down"
       class="su-angle-down buttonArrowIcon"
     />
-  </a>
+  </button>
 </div>
 `;
 
 exports[`Should render with active 2`] = `
 "<div>
-  <div class=\\"backdrop fixed\\"></div>
+  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

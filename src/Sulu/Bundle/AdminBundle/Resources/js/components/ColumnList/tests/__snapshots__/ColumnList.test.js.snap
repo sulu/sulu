@@ -11,23 +11,23 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
     <div
       class="toolbar"
     >
-      <a
+      <button
         class="item primary"
       >
         <span
           aria-label="fa-plus"
           class="fa fa-plus"
         />
-      </a>
-      <a
+      </button>
+      <button
         class="item primary"
       >
         <span
           aria-label="fa-search"
           class="fa fa-search"
         />
-      </a>
-      <a
+      </button>
+      <button
         class="item primary"
       >
         <span
@@ -38,7 +38,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           aria-label="su-angle-down"
           class="su-angle-down buttonArrowIcon"
         />
-      </a>
+      </button>
     </div>
   </div>
   <div
@@ -49,6 +49,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
     >
       <div
         class="column"
+        role="button"
       >
         <div
           class="item selected"
@@ -204,6 +205,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
       </div>
       <div
         class="column"
+        role="button"
       >
         <div
           class="item"
@@ -319,6 +321,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
       </div>
       <div
         class="column"
+        role="button"
       >
         <div
           class="item"
@@ -429,6 +432,7 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
       </div>
       <div
         class="column"
+        role="button"
       >
         <div
           class="loader"
@@ -462,14 +466,14 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
     <div
       class="toolbar"
     >
-      <a
+      <button
         class="item primary"
       >
         <span
           aria-label="fa-plus"
           class="fa fa-plus"
         />
-      </a>
+      </button>
     </div>
   </div>
   <div
@@ -480,6 +484,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
     >
       <div
         class="column scrolling"
+        role="button"
       >
         <div
           class="item selected"
@@ -609,6 +614,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       </div>
       <div
         class="column scrolling"
+        role="button"
       >
         <div
           class="item"
@@ -698,6 +704,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       </div>
       <div
         class="column scrolling"
+        role="button"
       >
         <div
           class="item"
@@ -782,6 +789,7 @@ exports[`The ColumnList component should render in a scrolling container 1`] = `
       </div>
       <div
         class="column scrolling"
+        role="button"
       >
         <div
           class="loader"

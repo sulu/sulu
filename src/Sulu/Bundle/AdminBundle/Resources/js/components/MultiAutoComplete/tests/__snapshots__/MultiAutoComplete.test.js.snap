@@ -81,7 +81,7 @@ exports[`MultiAutoComplete should render in disabled state 1`] = `
 
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
 "<div>
-  <div class=\\"backdrop fixed\\"></div>
+  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
 </div>
 <div>
   <div class=\\"container\\">

@@ -138,6 +138,7 @@ class MediaCard extends React.Component<Props> {
                     <div
                         className={mediaCardStyles.description}
                         onClick={this.handleHeaderClick}
+                        role="button"
                     >
                         <div className={mediaCardStyles.title}>
                             {onSelectionChange
@@ -182,6 +183,7 @@ class MediaCard extends React.Component<Props> {
                 <div
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
+                    role="button"
                 >
                     {image
                         ? <img alt={title} src={image} />

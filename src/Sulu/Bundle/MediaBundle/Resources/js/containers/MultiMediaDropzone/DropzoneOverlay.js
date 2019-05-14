@@ -71,7 +71,7 @@ class DropzoneOverlay extends React.Component<Props> {
         }
 
         return (
-            <div className={dropzoneOverlayStyles.dropzoneOverlay} onClick={this.handleClose}>
+            <div className={dropzoneOverlayStyles.dropzoneOverlay} onClick={this.handleClose} role="button">
                 <div className={dropzoneOverlayStyles.dropArea}>
                     <div className={dropzoneOverlayStyles.uploadInfoContainer}>
                         {children &&

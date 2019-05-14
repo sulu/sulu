@@ -14,7 +14,7 @@ exports[`Render data with disabled items 1`] = `
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
@@ -25,7 +25,7 @@ exports[`Render data with disabled items 1`] = `
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -36,6 +36,7 @@ exports[`Render data with disabled items 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item active selected"
@@ -95,6 +96,7 @@ exports[`Render data with disabled items 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         >
           <div
             class="item active disabled"
@@ -149,6 +151,7 @@ exports[`Render data with disabled items 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         />
       </div>
     </div>
@@ -170,7 +173,7 @@ exports[`Render data with loading column 1`] = `
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
@@ -181,7 +184,7 @@ exports[`Render data with loading column 1`] = `
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -192,6 +195,7 @@ exports[`Render data with loading column 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item active"
@@ -287,6 +291,7 @@ exports[`Render data with loading column 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         >
           <div
             class="loader"
@@ -325,6 +330,7 @@ exports[`Render data with name as fallback for title 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item"
@@ -390,7 +396,7 @@ exports[`Render data with selection 1`] = `
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
@@ -401,7 +407,7 @@ exports[`Render data with selection 1`] = `
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -412,6 +418,7 @@ exports[`Render data with selection 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item selected"
@@ -489,7 +496,7 @@ exports[`Render data without edit button 1`] = `
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
@@ -500,7 +507,7 @@ exports[`Render data without edit button 1`] = `
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -511,6 +518,7 @@ exports[`Render data without edit button 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item"
@@ -581,15 +589,15 @@ exports[`Render different kind of data with edit button 1`] = `
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
             aria-label="su-plus-circle"
             class="su-plus-circle"
           />
-        </a>
-        <a
+        </button>
+        <button
           class="item primary"
         >
           <span
@@ -600,7 +608,7 @@ exports[`Render different kind of data with edit button 1`] = `
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -611,6 +619,7 @@ exports[`Render different kind of data with edit button 1`] = `
       >
         <div
           class="column"
+          role="button"
         >
           <div
             class="item"
@@ -851,6 +860,7 @@ exports[`Render different kind of data with edit button 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         >
           <div
             class="item active"
@@ -1097,6 +1107,7 @@ exports[`Render different kind of data with edit button 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         >
           <div
             class="item"
@@ -1218,6 +1229,7 @@ exports[`Render different kind of data with edit button 1`] = `
         </div>
         <div
           class="column"
+          role="button"
         />
       </div>
     </div>
@@ -1239,15 +1251,15 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
       <div
         class="toolbar"
       >
-        <a
+        <button
           class="item primary"
         >
           <span
             aria-label="su-plus-circle"
             class="su-plus-circle"
           />
-        </a>
-        <a
+        </button>
+        <button
           class="item primary"
         >
           <span
@@ -1258,7 +1270,7 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
             aria-label="su-angle-down"
             class="su-angle-down buttonArrowIcon"
           />
-        </a>
+        </button>
       </div>
     </div>
     <div
@@ -1269,6 +1281,7 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
       >
         <div
           class="column"
+          role="button"
         />
       </div>
     </div>

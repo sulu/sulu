@@ -27,19 +27,23 @@ exports[`Should render navigation 1`] = `
     <div
       class="userContent"
     >
-      <div
+      <button
         class="noUserImage"
       >
         <span
           aria-label="fa-user"
           class="fa fa-user"
         />
-      </div>
+      </button>
       <div
         class="userProfile"
       >
-        <span />
-        <button>
+        <button
+          class="username"
+        />
+        <button
+          class="logout"
+        >
           <span
             aria-label="su-exit"
             class="su-exit"
@@ -177,19 +181,23 @@ exports[`Should render navigation without appVersion 1`] = `
     <div
       class="userContent"
     >
-      <div
+      <button
         class="noUserImage"
       >
         <span
           aria-label="fa-user"
           class="fa fa-user"
         />
-      </div>
+      </button>
       <div
         class="userProfile"
       >
-        <span />
-        <button>
+        <button
+          class="username"
+        />
+        <button
+          class="logout"
+        >
           <span
             aria-label="su-exit"
             class="su-exit"

@@ -3,10 +3,12 @@
 exports[`The component should render 1`] = `
 <div
   class="rectangle"
+  role="button"
   style="left:0px;top:0px;width:200px;height:100px"
 >
   <div
     class="resizeHandle"
+    role="slider"
   />
   <div
     class="backdrop"
@@ -18,10 +20,12 @@ exports[`The component should render 1`] = `
 exports[`The component should render with correct positions 1`] = `
 <div
   class="rectangle"
+  role="button"
   style="left:10px;top:20px;width:200px;height:100px"
 >
   <div
     class="resizeHandle"
+    role="slider"
   />
   <div
     class="backdrop"
@@ -40,10 +44,12 @@ Array [
   </div>,
   <div
     class="rectangle"
+    role="button"
     style="left:0px;top:0px;width:200px;height:100px"
   >
     <div
       class="resizeHandle"
+      role="slider"
     />
     <div
       class="backdrop"

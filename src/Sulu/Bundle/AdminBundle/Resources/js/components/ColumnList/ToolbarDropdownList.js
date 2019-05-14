@@ -45,11 +45,11 @@ export default class ToolbarDropdownList extends React.Component<Props> {
         );
 
         return (
-            <div className={toolbarDropdownStyles.listContainer} onClick={onClick}>
+            <button className={toolbarDropdownStyles.listContainer} onClick={onClick}>
                 <ul className={className}>
                     {this.renderOptions()}
                 </ul>
-            </div>
+            </button>
         );
     }
 }

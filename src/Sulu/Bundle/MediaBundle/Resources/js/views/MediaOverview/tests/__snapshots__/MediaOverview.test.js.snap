@@ -325,6 +325,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     >
                       <div
                         class="description"
+                        role="button"
                       >
                         <div
                           class="title"
@@ -417,6 +418,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     </div>
                     <div
                       class="media"
+                      role="button"
                     >
                       <img
                         alt="Title 1"
@@ -444,6 +446,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     >
                       <div
                         class="description"
+                        role="button"
                       >
                         <div
                           class="title"
@@ -536,6 +539,7 @@ exports[`Render a simple MediaOverview 1`] = `
                     </div>
                     <div
                       class="media"
+                      role="button"
                     >
                       <img
                         alt="Title 1"

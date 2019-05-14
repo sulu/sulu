@@ -24,6 +24,7 @@ exports[`Render a MultiMediaDropzone while media is uploaded 1`] = `
 >
   <div
     class="dropzoneOverlay"
+    role="button"
   >
     <div
       class="dropArea"
@@ -90,6 +91,7 @@ exports[`Render a MultiMediaDropzone while the overlay is visible 1`] = `
 >
   <div
     class="dropzoneOverlay"
+    role="button"
   >
     <div
       class="dropArea"

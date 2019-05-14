@@ -3,5 +3,6 @@
 exports[`Should render column with toolbar 1`] = `
 <div
   class="column"
+  role="button"
 />
 `;

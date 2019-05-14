@@ -3,6 +3,7 @@
 exports[`Render a clickable success snackbar 1`] = `
 <div
   class="snackbar success clickable visible"
+  role="button"
 >
   <span
     aria-label="su-check"
@@ -14,6 +15,7 @@ exports[`Render a clickable success snackbar 1`] = `
 exports[`Render a success snackbar 1`] = `
 <div
   class="snackbar success visible"
+  role="button"
 >
   <span
     aria-label="su-check"
@@ -25,6 +27,7 @@ exports[`Render a success snackbar 1`] = `
 exports[`Render an error snackbar 1`] = `
 <div
   class="snackbar error visible"
+  role="button"
 >
   <span
     aria-label="su-exclamation-triangle"
@@ -52,6 +55,7 @@ exports[`Render an error snackbar 1`] = `
 exports[`Render an error snackbar without close button 1`] = `
 <div
   class="snackbar error visible"
+  role="button"
 >
   <span
     aria-label="su-exclamation-triangle"
@@ -70,6 +74,7 @@ exports[`Render an error snackbar without close button 1`] = `
 exports[`Render an invisible success snackbar 1`] = `
 <div
   class="snackbar success"
+  role="button"
 >
   <span
     aria-label="su-check"

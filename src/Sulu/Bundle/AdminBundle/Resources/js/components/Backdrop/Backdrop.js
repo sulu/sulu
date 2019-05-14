@@ -41,7 +41,7 @@ export default class Backdrop extends React.PureComponent<Props> {
                 [backdropStyles.fixed]: fixed,
             }
         );
-        const backdrop = <div className={backdropClass} onClick={this.handleClick} />;
+        const backdrop = <div className={backdropClass} onClick={this.handleClick} role="button" />;
 
         if (!open) {
             return null;
