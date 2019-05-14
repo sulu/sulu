@@ -1,12 +1,28 @@
 The `Form` component allows to render fields in a structured form with labels, errors and so on. The form elements can
 also be further structured by using `Section`s.
 
+Each field can also have one of multiple types. The `onTypeChange` callback is then called if the type is changed using
+the dropdown right next to the label of the field.
+
 ```javascript
 const Form = require('./Form').default;
 
+const types = [
+    {label: 'Work', value: 'work'},
+    {label: 'Private', value: 'private'},
+];
+
+initialState = {
+    type: 'work',
+};
+
+const handleTypeChange = (type) => {
+    setState({type});
+};
+
 <Form>
     <Form.Section label="Section 1" size={3}>
-        <Form.Field label="Author">
+        <Form.Field label="Author" onTypeChange={handleTypeChange} types={types} type={state.type}>
             <input type="text" style={{width: '100%'}} />
         </Form.Field>
     </Form.Section>

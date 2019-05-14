@@ -1,11 +1,24 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {mount, render} from 'enzyme';
 import Field from '../Field';
 
 test('Display a field with label', () => {
     expect(render(
         <Field label="Test">
+            <p>Test</p>
+        </Field>
+    )).toMatchSnapshot();
+});
+
+test('Display a field with label and type', () => {
+    const types = [
+        {label: 'Work', value: 'work'},
+        {label: 'Private', value: 'private'},
+    ];
+
+    expect(render(
+        <Field label="Test" type="work" types={types}>
             <p>Test</p>
         </Field>
     )).toMatchSnapshot();
@@ -49,4 +62,27 @@ test('Display a field with an error', () => {
             <div>Test</div>
         </Field>
     )).toMatchSnapshot();
+});
+
+test('Change type of field', () => {
+    const typeChangeSpy = jest.fn();
+
+    const types = [
+        {label: 'Work', value: 'work'},
+        {label: 'Private', value: 'private'},
+    ];
+
+    const field = mount(
+        <Field label="Test" onTypeChange={typeChangeSpy} type="work" types={types}>
+            <p>Test</p>
+        </Field>
+    );
+
+    expect(field.find('ArrowMenu').prop('open')).toEqual(false);
+    field.find('button').simulate('click');
+    expect(field.find('ArrowMenu').prop('open')).toEqual(true);
+
+    field.find('ArrowMenu Item').at(1).simulate('click');
+    expect(typeChangeSpy).toBeCalledWith('private');
+    expect(field.find('ArrowMenu').prop('open')).toEqual(false);
 });

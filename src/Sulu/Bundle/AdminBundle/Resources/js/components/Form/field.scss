@@ -12,6 +12,18 @@ $errorLabelHeight: 20px;
     margin-bottom: calc($fieldMarginBottom - $errorLabelHeight);
 }
 
+.type {
+    background: transparent;
+    border: 0;
+    color: $labelColor;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.type-icon {
+    margin-left: 5px;
+}
+
 .error {
     & > .label {
         color: $labelErrorColor;

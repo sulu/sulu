@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 @observer
-export default class ContactDetails extends React.Component<Props> {
+class ContactDetails extends React.Component<Props> {
     static defaultProps = {
         value: {
             emails: [],
@@ -189,3 +189,5 @@ export default class ContactDetails extends React.Component<Props> {
         );
     }
 }
+
+export default ContactDetails;
