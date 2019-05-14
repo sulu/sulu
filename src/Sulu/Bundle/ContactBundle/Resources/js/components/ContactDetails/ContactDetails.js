@@ -36,26 +36,26 @@ class ContactDetails extends React.Component<Props> {
     };
 
     handleEmailAddClick = () => {
-        this.addEntry('emails', {email: undefined});
+        this.addEntry('emails', {email: undefined, emailType: Email.types[0].value});
     };
 
     handlePhoneAddClick = () => {
-        this.addEntry('phones', {phone: undefined});
+        this.addEntry('phones', {phone: undefined, phoneType: Phone.types[0].value});
     };
 
     handleWebsiteAddClick = () => {
-        this.addEntry('websites', {website: undefined});
+        this.addEntry('websites', {website: undefined, websiteType: Website.types[0].value});
     };
 
     handleFaxAddClick = () => {
-        this.addEntry('faxes', {fax: undefined});
+        this.addEntry('faxes', {fax: undefined, faxType: Fax.types[0].value});
     };
 
     handleSocialMediaAddClick = () => {
-        this.addEntry('socialMedia', {username: undefined});
+        this.addEntry('socialMedia', {socialMediaType: SocialMedia.types[0].value, username: undefined});
     };
 
-    updateValue = (type: string, index: number, property: string, updatedValue: ?string) => {
+    updateValue = (type: string, index: number, property: string, updatedValue: ?string | number) => {
         const {onChange, value} = this.props;
 
         const newValue = toJS(value);
@@ -111,6 +111,31 @@ class ContactDetails extends React.Component<Props> {
         this.removeEntry('socialMedia', removeIndex);
     };
 
+    handleEmailTypeChange = (index: number, type: number) => {
+        this.updateValue('emails', index, 'emailType', type);
+        this.props.onBlur();
+    };
+
+    handlePhoneTypeChange = (index: number, type: number) => {
+        this.updateValue('phones', index, 'phoneType', type);
+        this.props.onBlur();
+    };
+
+    handleWebsiteTypeChange = (index: number, type: number) => {
+        this.updateValue('websites', index, 'websiteType', type);
+        this.props.onBlur();
+    };
+
+    handleFaxTypeChange = (index: number, type: number) => {
+        this.updateValue('faxes', index, 'faxType', type);
+        this.props.onBlur();
+    };
+
+    handleSocialMediaTypeChange = (index: number, type: number) => {
+        this.updateValue('socialMedia', index, 'socialMediaType', type);
+        this.props.onBlur();
+    };
+
     render() {
         const {onBlur, value} = this.props;
 
@@ -124,6 +149,8 @@ class ContactDetails extends React.Component<Props> {
                         onBlur={onBlur}
                         onEmailChange={this.handleEmailChange}
                         onRemove={this.handleEmailRemove}
+                        onTypeChange={this.handleEmailTypeChange}
+                        type={email.emailType}
                     />
                 ))}
                 {value.phones.map((phone, index) => (
@@ -133,7 +160,9 @@ class ContactDetails extends React.Component<Props> {
                         onBlur={onBlur}
                         onPhoneChange={this.handlePhoneChange}
                         onRemove={this.handlePhoneRemove}
+                        onTypeChange={this.handlePhoneTypeChange}
                         phone={phone.phone}
+                        type={phone.phoneType}
                     />
                 ))}
                 {value.websites.map((website, index) => (
@@ -142,7 +171,9 @@ class ContactDetails extends React.Component<Props> {
                         key={index}
                         onBlur={onBlur}
                         onRemove={this.handleWebsiteRemove}
+                        onTypeChange={this.handleWebsiteTypeChange}
                         onWebsiteChange={this.handleWebsiteChange}
+                        type={website.websiteType}
                         website={website.website}
                     />
                 ))}
@@ -154,6 +185,8 @@ class ContactDetails extends React.Component<Props> {
                         onBlur={onBlur}
                         onFaxChange={this.handleFaxChange}
                         onRemove={this.handleFaxRemove}
+                        onTypeChange={this.handleFaxTypeChange}
+                        type={fax.faxType}
                     />
                 ))}
                 {value.socialMedia.map((socialMedia, index) => (
@@ -162,11 +195,13 @@ class ContactDetails extends React.Component<Props> {
                         key={index}
                         onBlur={onBlur}
                         onRemove={this.handleSocialMediaRemove}
+                        onTypeChange={this.handleSocialMediaTypeChange}
                         onUsernameChange={this.handleUsernameChange}
+                        type={socialMedia.socialMediaType}
                         username={socialMedia.username}
                     />
                 ))}
-                <Form.Field colSpan={4} label={translate('sulu_contact.contact_details')}>
+                <Form.Field colSpan={6} label={translate('sulu_contact.contact_details')}>
                     <DropdownButton icon="su-plus" label={translate('sulu_admin.add')}>
                         <DropdownButton.Item onClick={this.handleEmailAddClick}>
                             {translate('sulu_contact.email')}

@@ -10,23 +10,24 @@ import type {ColSpan} from '../Grid';
 import Icon from '../Icon';
 import fieldStyles from './field.scss';
 import gridStyles from './grid.scss';
+import type {FormFieldTypes} from './types';
 
-type Props = {|
+type Props<T: string | number> = {|
     children: Node,
     colSpan: ColSpan,
     description?: string,
     error?: string,
     id?: string,
     label?: string,
-    onTypeChange?: (type: string) => void,
+    onTypeChange?: (type: T) => void,
     required: boolean,
     spaceAfter: ColSpan,
-    type?: string,
-    types?: Array<{label: string, value: string}>,
+    type?: T,
+    types?: FormFieldTypes,
 |};
 
 @observer
-class Field extends React.Component<Props> {
+class Field<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         colSpan: 12,
         required: false,
@@ -53,7 +54,7 @@ class Field extends React.Component<Props> {
         this.open = false;
     };
 
-    handleTypeChange = (type: string) => {
+    @action handleTypeChange = (type: T) => {
         const {onTypeChange} = this.props;
 
         if (!onTypeChange) {

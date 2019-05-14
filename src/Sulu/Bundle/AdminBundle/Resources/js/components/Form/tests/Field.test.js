@@ -13,12 +13,12 @@ test('Display a field with label', () => {
 
 test('Display a field with label and type', () => {
     const types = [
-        {label: 'Work', value: 'work'},
-        {label: 'Private', value: 'private'},
+        {label: 'Work', value: 1},
+        {label: 'Private', value: 2},
     ];
 
     expect(render(
-        <Field label="Test" type="work" types={types}>
+        <Field label="Test" type={1} types={types}>
             <p>Test</p>
         </Field>
     )).toMatchSnapshot();
@@ -68,12 +68,12 @@ test('Change type of field', () => {
     const typeChangeSpy = jest.fn();
 
     const types = [
-        {label: 'Work', value: 'work'},
-        {label: 'Private', value: 'private'},
+        {label: 'Work', value: 1},
+        {label: 'Private', value: 2},
     ];
 
     const field = mount(
-        <Field label="Test" onTypeChange={typeChangeSpy} type="work" types={types}>
+        <Field label="Test" onTypeChange={typeChangeSpy} type={1} types={types}>
             <p>Test</p>
         </Field>
     );
@@ -83,6 +83,6 @@ test('Change type of field', () => {
     expect(field.find('ArrowMenu').prop('open')).toEqual(true);
 
     field.find('ArrowMenu Item').at(1).simulate('click');
-    expect(typeChangeSpy).toBeCalledWith('private');
+    expect(typeChangeSpy).toBeCalledWith(2);
     expect(field.find('ArrowMenu').prop('open')).toEqual(false);
 });

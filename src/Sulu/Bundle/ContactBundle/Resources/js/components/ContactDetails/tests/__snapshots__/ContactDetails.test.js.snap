@@ -5,7 +5,7 @@ exports[`Render ContactDetails with data 1`] = `
   class="grid grid"
 >
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -14,6 +14,16 @@ exports[`Render ContactDetails with data 1`] = `
         class="label"
       >
         sulu_contact.email
+        <button
+          class="type"
+        >
+          (Private
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+          )
+        </button>
       </label>
       <div
         class="field"
@@ -49,7 +59,7 @@ exports[`Render ContactDetails with data 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -58,6 +68,16 @@ exports[`Render ContactDetails with data 1`] = `
         class="label"
       >
         sulu_contact.phone
+        <button
+          class="type"
+        >
+          (Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+          )
+        </button>
       </label>
       <div
         class="field"
@@ -93,7 +113,7 @@ exports[`Render ContactDetails with data 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -102,6 +122,16 @@ exports[`Render ContactDetails with data 1`] = `
         class="label"
       >
         sulu_contact.website
+        <button
+          class="type"
+        >
+          (Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+          )
+        </button>
       </label>
       <div
         class="field"
@@ -169,7 +199,7 @@ exports[`Render ContactDetails with data 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -178,6 +208,16 @@ exports[`Render ContactDetails with data 1`] = `
         class="label"
       >
         sulu_contact.fax
+        <button
+          class="type"
+        >
+          (Private
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+          )
+        </button>
       </label>
       <div
         class="field"
@@ -213,7 +253,7 @@ exports[`Render ContactDetails with data 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -222,6 +262,16 @@ exports[`Render ContactDetails with data 1`] = `
         class="label"
       >
         sulu_contact.social_media
+        <button
+          class="type"
+        >
+          (Twitter
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+          )
+        </button>
       </label>
       <div
         class="field"
@@ -255,7 +305,7 @@ exports[`Render ContactDetails with data 1`] = `
     </div>
   </div>
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"
@@ -298,7 +348,7 @@ exports[`Render empty ContactDetails 1`] = `
   class="grid grid"
 >
   <div
-    class="item gridItem colSpan colSpan-4 space-before-0 space-after-0"
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
   >
     <div
       class="field"

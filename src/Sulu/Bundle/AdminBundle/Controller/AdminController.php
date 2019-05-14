@@ -277,9 +277,9 @@ class AdminController
                 'emailTypes' => $this->managerRegistry->getRepository('SuluContactBundle:EmailType')->findAll(),
                 'faxTypes' => $this->managerRegistry->getRepository('SuluContactBundle:FaxType')->findAll(),
                 'phoneTypes' => $this->managerRegistry->getRepository('SuluContactBundle:PhoneType')->findAll(),
-                'socialMediaProfileTypes' => $this->managerRegistry
+                'socialMediaTypes' => $this->managerRegistry
                     ->getRepository('SuluContactBundle:SocialMediaProfileType')->findAll(),
-                'urlTypes' => $this->managerRegistry->getRepository('SuluContactBundle:UrlType')->findAll(),
+                'websiteTypes' => $this->managerRegistry->getRepository('SuluContactBundle:UrlType')->findAll(),
             ],
             'sulu_media' => [
                 'endpoints' => [

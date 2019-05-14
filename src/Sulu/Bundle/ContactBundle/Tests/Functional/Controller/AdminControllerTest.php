@@ -125,15 +125,15 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals($emailType2->getId(), $contactConfig->emailTypes[1]->id);
         $this->assertEquals('private email', $contactConfig->emailTypes[1]->name);
 
-        $this->assertEquals($urlType1->getId(), $contactConfig->urlTypes[0]->id);
-        $this->assertEquals('work url', $contactConfig->urlTypes[0]->name);
-        $this->assertEquals($urlType2->getId(), $contactConfig->urlTypes[1]->id);
-        $this->assertEquals('private url', $contactConfig->urlTypes[1]->name);
+        $this->assertEquals($urlType1->getId(), $contactConfig->websiteTypes[0]->id);
+        $this->assertEquals('work url', $contactConfig->websiteTypes[0]->name);
+        $this->assertEquals($urlType2->getId(), $contactConfig->websiteTypes[1]->id);
+        $this->assertEquals('private url', $contactConfig->websiteTypes[1]->name);
 
-        $this->assertEquals($socialMediaProfileType1->getId(), $contactConfig->socialMediaProfileTypes[0]->id);
-        $this->assertEquals('Facebook', $contactConfig->socialMediaProfileTypes[0]->name);
-        $this->assertEquals($socialMediaProfileType2->getId(), $contactConfig->socialMediaProfileTypes[1]->id);
-        $this->assertEquals('Twitter', $contactConfig->socialMediaProfileTypes[1]->name);
+        $this->assertEquals($socialMediaProfileType1->getId(), $contactConfig->socialMediaTypes[0]->id);
+        $this->assertEquals('Facebook', $contactConfig->socialMediaTypes[0]->name);
+        $this->assertEquals($socialMediaProfileType2->getId(), $contactConfig->socialMediaTypes[1]->id);
+        $this->assertEquals('Twitter', $contactConfig->socialMediaTypes[1]->name);
 
         $this->assertEquals($faxType1->getId(), $contactConfig->faxTypes[0]->id);
         $this->assertEquals('work fax', $contactConfig->faxTypes[0]->name);
