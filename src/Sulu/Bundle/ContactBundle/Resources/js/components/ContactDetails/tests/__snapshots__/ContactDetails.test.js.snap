@@ -129,6 +129,64 @@ exports[`Render ContactDetails with data 1`] = `
       <label
         class="label"
       >
+        sulu_contact.fax
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Private
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-phone"
+              class="su-phone clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="tel"
+            value="20937439"
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
         sulu_contact.website
         <button
           class="type"
@@ -198,64 +256,6 @@ exports[`Render ContactDetails with data 1`] = `
             value=""
           />
         </div>
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt clickable removeIcon"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-      <label
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_contact.fax
-        <button
-          class="type"
-        >
-          <span
-            class="typeDelimiter"
-          >
-            •
-          </span>
-          Private
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down typeIcon"
-          />
-        </button>
-      </label>
-      <div
-        class="field"
-      >
-        <label
-          class="input default left"
-        >
-          <div
-            class="prependedContainer default"
-          >
-            <span
-              aria-label="su-phone"
-              class="su-phone clickable icon default iconClickable"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="tel"
-            value="20937439"
-          />
-        </label>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -643,6 +643,64 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       <label
         class="label"
       >
+        sulu_contact.fax
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-phone"
+              class="su-phone clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="tel"
+            value="230985230"
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
         sulu_contact.website
         <button
           class="type"
@@ -712,64 +770,6 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
             value=""
           />
         </div>
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt clickable removeIcon"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-      <label
-        class="errorLabel"
-      />
-    </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
-  >
-    <div
-      class="field"
-    >
-      <label
-        class="label"
-      >
-        sulu_contact.fax
-        <button
-          class="type"
-        >
-          <span
-            class="typeDelimiter"
-          >
-            •
-          </span>
-          Work
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down typeIcon"
-          />
-        </button>
-      </label>
-      <div
-        class="field"
-      >
-        <label
-          class="input default left"
-        >
-          <div
-            class="prependedContainer default"
-          >
-            <span
-              aria-label="su-phone"
-              class="su-phone clickable icon default iconClickable"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="tel"
-            value="230985230"
-          />
-        </label>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"

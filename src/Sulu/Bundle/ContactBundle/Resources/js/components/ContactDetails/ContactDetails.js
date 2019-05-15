@@ -217,18 +217,6 @@ class ContactDetails extends React.Component<Props> {
                         type={phone.phoneType}
                     />
                 ))}
-                {websites.map((website, index) => (
-                    <Website
-                        index={index}
-                        key={index}
-                        onBlur={onBlur}
-                        onRemove={this.handleWebsiteRemove}
-                        onTypeChange={this.handleWebsiteTypeChange}
-                        onWebsiteChange={this.handleWebsiteChange}
-                        type={website.websiteType}
-                        website={website.website}
-                    />
-                ))}
                 {faxes.map((fax, index) => (
                     <Fax
                         fax={fax.fax}
@@ -239,6 +227,18 @@ class ContactDetails extends React.Component<Props> {
                         onRemove={this.handleFaxRemove}
                         onTypeChange={this.handleFaxTypeChange}
                         type={fax.faxType}
+                    />
+                ))}
+                {websites.map((website, index) => (
+                    <Website
+                        index={index}
+                        key={index}
+                        onBlur={onBlur}
+                        onRemove={this.handleWebsiteRemove}
+                        onTypeChange={this.handleWebsiteTypeChange}
+                        onWebsiteChange={this.handleWebsiteChange}
+                        type={website.websiteType}
+                        website={website.website}
                     />
                 ))}
                 {socialMedia.map((socialMedia, index) => (
@@ -261,11 +261,11 @@ class ContactDetails extends React.Component<Props> {
                         <DropdownButton.Item onClick={this.handlePhoneAddClick}>
                             {translate('sulu_contact.phone')}
                         </DropdownButton.Item>
-                        <DropdownButton.Item onClick={this.handleWebsiteAddClick}>
-                            {translate('sulu_contact.website')}
-                        </DropdownButton.Item>
                         <DropdownButton.Item onClick={this.handleFaxAddClick}>
                             {translate('sulu_contact.fax')}
+                        </DropdownButton.Item>
+                        <DropdownButton.Item onClick={this.handleWebsiteAddClick}>
+                            {translate('sulu_contact.website')}
                         </DropdownButton.Item>
                         <DropdownButton.Item onClick={this.handleSocialMediaAddClick}>
                             {translate('sulu_contact.social_media')}

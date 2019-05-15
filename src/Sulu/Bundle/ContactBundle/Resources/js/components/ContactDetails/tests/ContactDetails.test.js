@@ -94,19 +94,19 @@ test('Add data should call onChange and onBlur callbacks', () => {
     contactDetails.find('DropdownButton Action').at(2).simulate('click');
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
-        faxes: [],
+        faxes: [{fax: undefined, faxType: 1}],
         phones: [],
         socialMedia: [],
-        websites: [{website: undefined, websiteType: 1}],
+        websites: [],
     });
 
     contactDetails.find('DropdownButton Action').at(3).simulate('click');
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
-        faxes: [{fax: undefined, faxType: 1}],
+        faxes: [],
         phones: [],
         socialMedia: [],
-        websites: [],
+        websites: [{website: undefined, websiteType: 1}],
     });
 
     contactDetails.find('DropdownButton Action').at(4).simulate('click');
