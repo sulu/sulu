@@ -43,6 +43,18 @@ test('Render empty ContactDetails', () => {
     expect(render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} />)).toMatchSnapshot();
 });
 
+test('Render empty phone and email fields even if other values are set', () => {
+    const value = {
+        emails: [],
+        faxes: [{fax: '230985230', faxType: 1}],
+        phones: [],
+        socialMedia: [{socialMediaType: 1, username: 'test'}],
+        websites: [{website: 'http://www.sulu.io', websiteType: 1}],
+    };
+
+    expect(render(<ContactDetails onBlur={jest.fn()} onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+});
+
 test('Render ContactDetails with data', () => {
     const value = {
         emails: [{email: 'test@example.org', emailType: 2}],
@@ -107,6 +119,31 @@ test('Add data should call onChange and onBlur callbacks', () => {
     });
 
     expect(blurSpy).toBeCalledTimes(5);
+});
+
+test('Add data should also work with predefined email and phone fields', () => {
+    const blurSpy = jest.fn();
+    const changeSpy = jest.fn();
+
+    const contactDetails = mount(<ContactDetails onBlur={blurSpy} onChange={changeSpy} />);
+
+    contactDetails.find('Email Email').prop('onChange')('test@example.org');
+    expect(changeSpy).toBeCalledWith({
+        emails: [{email: 'test@example.org', emailType: 1}],
+        faxes: [],
+        phones: [],
+        socialMedia: [],
+        websites: [],
+    });
+
+    contactDetails.find('Phone Phone').prop('onChange')('1098509');
+    expect(changeSpy).toBeCalledWith({
+        emails: [{email: 'test@example.org', emailType: 1}],
+        faxes: [],
+        phones: [{phone: '1098509', phoneType: 1}],
+        socialMedia: [],
+        websites: [],
+    });
 });
 
 test('Remove data should call the onChange and onBlur callbacks', () => {

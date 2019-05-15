@@ -376,6 +376,477 @@ exports[`Render empty ContactDetails 1`] = `
       <label
         class="label"
       >
+        sulu_contact.email
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-envelope"
+              class="su-envelope icon default"
+            />
+          </div>
+          <input
+            type="email"
+            value=""
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.phone
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-phone"
+              class="su-phone icon default"
+            />
+          </div>
+          <input
+            type="tel"
+            value=""
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.contact_details
+      </label>
+      <div>
+        <button
+          class="button secondary"
+          type="button"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus buttonIcon"
+          />
+          <span
+            class="text"
+          >
+            sulu_admin.add
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render empty phone and email fields even if other values are set 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.email
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-envelope"
+              class="su-envelope icon default"
+            />
+          </div>
+          <input
+            type="email"
+            value=""
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.phone
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-phone"
+              class="su-phone icon default"
+            />
+          </div>
+          <input
+            type="tel"
+            value=""
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.website
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <div
+          class="url"
+        >
+          <div
+            class="protocols"
+          >
+            <div
+              class="select"
+            >
+              <button
+                class="displayValue flat"
+                type="button"
+              >
+                <div
+                  aria-label="http://"
+                  class="croppedText"
+                  title="http://"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    http
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      ://
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    http://
+                  </div>
+                </div>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down toggle"
+                />
+              </button>
+            </div>
+          </div>
+          <input
+            type="text"
+            value=""
+          />
+        </div>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.fax
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-phone"
+              class="su-phone clickable icon default iconClickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="tel"
+            value="230985230"
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_contact.social_media
+        <button
+          class="type"
+        >
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Facebook
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <div
+        class="field"
+      >
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-user"
+              class="su-user icon default"
+            />
+          </div>
+          <input
+            type="text"
+            value="test"
+          />
+        </label>
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt clickable removeIcon"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
         sulu_contact.contact_details
       </label>
       <div>

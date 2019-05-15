@@ -344,13 +344,13 @@ class AccountControllerTest extends SuluTestCase
                 'note' => 'A small notice',
                 'parent' => ['id' => $account->getId()],
                 'logo' => ['id' => $logo->getId()],
-                'urls' => [
-                    [
-                        'url' => 'http://example.company.com',
-                        'urlType' => $urlType->getId(),
-                    ],
-                ],
                 'contactDetails' => [
+                    'websites' => [
+                        [
+                            'website' => 'http://example.company.com',
+                            'websiteType' => $urlType->getId(),
+                        ],
+                    ],
                     'emails' => [
                         [
                             'email' => 'erika.mustermann@muster.at',
@@ -453,6 +453,23 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(2, count($response->categories));
         $this->assertEquals($category1->getId(), $response->categories[0]);
         $this->assertEquals($category2->getId(), $response->categories[1]);
+    }
+
+    public function testPostWithNullContactDetails()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/accounts',
+            [
+                'name' => 'ExampleCompany',
+                'contactDetails' => null,
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals('ExampleCompany', $response->name);
     }
 
     public function testPostWithNullLogo()

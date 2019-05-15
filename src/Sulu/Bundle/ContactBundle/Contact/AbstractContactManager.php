@@ -592,7 +592,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function addNewContactRelations($contact, $data)
     {
-        $contactDetailsData = $this->getProperty($data, 'contactDetails', []);
+        $contactDetailsData = $this->getProperty($data, 'contactDetails') ?? [];
 
         // urls
         $urls = $this->getProperty($contactDetailsData, 'websites');

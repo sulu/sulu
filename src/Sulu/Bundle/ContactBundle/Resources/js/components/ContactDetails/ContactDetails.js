@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {toJS} from 'mobx';
+import {computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {DropdownButton, Form} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -29,37 +29,57 @@ class ContactDetails extends React.Component<Props> {
         },
     };
 
-    addEntry = (type: string, entry: Object) => {
+    getEmptyEntry(type: string) {
+        switch (type) {
+            case 'emails':
+                return {email: undefined, emailType: Email.types[0].value};
+            case 'phones':
+                return {phone: undefined, phoneType: Phone.types[0].value};
+            case 'websites':
+                return {website: undefined, websiteType: Website.types[0].value};
+            case 'faxes':
+                return {fax: undefined, faxType: Fax.types[0].value};
+            case 'socialMedia':
+                return {socialMediaType: SocialMedia.types[0].value, username: undefined};
+        }
+    }
+
+    addEntry = (type: string) => {
         const {onBlur, onChange, value} = this.props;
-        onChange({...value, [type]: value[type].concat(entry)});
+        onChange({...value, [type]: value[type].concat(this.getEmptyEntry(type))});
         onBlur();
     };
 
     handleEmailAddClick = () => {
-        this.addEntry('emails', {email: undefined, emailType: Email.types[0].value});
+        this.addEntry('emails');
     };
 
     handlePhoneAddClick = () => {
-        this.addEntry('phones', {phone: undefined, phoneType: Phone.types[0].value});
+        this.addEntry('phones');
     };
 
     handleWebsiteAddClick = () => {
-        this.addEntry('websites', {website: undefined, websiteType: Website.types[0].value});
+        this.addEntry('websites');
     };
 
     handleFaxAddClick = () => {
-        this.addEntry('faxes', {fax: undefined, faxType: Fax.types[0].value});
+        this.addEntry('faxes');
     };
 
     handleSocialMediaAddClick = () => {
-        this.addEntry('socialMedia', {socialMediaType: SocialMedia.types[0].value, username: undefined});
+        this.addEntry('socialMedia');
     };
 
     updateValue = (type: string, index: number, property: string, updatedValue: ?string | number) => {
         const {onChange, value} = this.props;
 
         const newValue = toJS(value);
-        newValue[type][index][property] = updatedValue;
+        const typeEntries = newValue[type];
+        if (typeEntries[index] === undefined) {
+            typeEntries[index] = this.getEmptyEntry(type);
+        }
+
+        typeEntries[index][property] = updatedValue;
 
         onChange(newValue);
     };
@@ -136,12 +156,44 @@ class ContactDetails extends React.Component<Props> {
         this.props.onBlur();
     };
 
+    @computed get emails() {
+        const {value: {emails}} = this.props;
+
+        if (emails.length === 0) {
+            return [
+                {
+                    email: undefined,
+                    emailType: Email.types[0].value,
+                },
+            ];
+        }
+
+        return emails;
+    }
+
+    @computed get phones() {
+        const {value: {phones}} = this.props;
+
+        if (phones.length === 0) {
+            return [
+                {
+                    phone: undefined,
+                    phoneType: Phone.types[0].value,
+                },
+            ];
+        }
+
+        return phones;
+    }
+
     render() {
         const {onBlur, value} = this.props;
 
+        const {faxes, socialMedia, websites} = value;
+
         return (
             <Form>
-                {value.emails.map((email, index) => (
+                {this.emails.map((email, index) => (
                     <Email
                         email={email.email}
                         index={index}
@@ -153,7 +205,7 @@ class ContactDetails extends React.Component<Props> {
                         type={email.emailType}
                     />
                 ))}
-                {value.phones.map((phone, index) => (
+                {this.phones.map((phone, index) => (
                     <Phone
                         index={index}
                         key={index}
@@ -165,7 +217,7 @@ class ContactDetails extends React.Component<Props> {
                         type={phone.phoneType}
                     />
                 ))}
-                {value.websites.map((website, index) => (
+                {websites.map((website, index) => (
                     <Website
                         index={index}
                         key={index}
@@ -177,7 +229,7 @@ class ContactDetails extends React.Component<Props> {
                         website={website.website}
                     />
                 ))}
-                {value.faxes.map((fax, index) => (
+                {faxes.map((fax, index) => (
                     <Fax
                         fax={fax.fax}
                         index={index}
@@ -189,7 +241,7 @@ class ContactDetails extends React.Component<Props> {
                         type={fax.faxType}
                     />
                 ))}
-                {value.socialMedia.map((socialMedia, index) => (
+                {socialMedia.map((socialMedia, index) => (
                     <SocialMedia
                         index={index}
                         key={index}
