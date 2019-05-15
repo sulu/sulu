@@ -27,6 +27,10 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
+use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
+use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -97,6 +101,8 @@ class ContactControllerTest extends SuluTestCase
             $email,
             $phone,
             $fax,
+            null,
+            null,
             $address,
             $note,
             $media
@@ -829,6 +835,8 @@ class ContactControllerTest extends SuluTestCase
             $email,
             $phone,
             $fax,
+            null,
+            null,
             $address,
             $note,
             null,
@@ -1002,6 +1010,167 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($category3->getId(), $response->categories[0]);
     }
 
+    public function testPutEmptyContactDetails()
+    {
+        $emailType = $this->createEmailType('Private');
+        $faxType = $this->createFaxType('Private');
+        $phoneType = $this->createPhoneType('Private');
+        $socialMediaType = $this->createSocialMediaType('Private');
+        $websiteType = $this->createWebsiteType('Private');
+
+        $contact = $this->createContact(
+            'Max',
+            'Mustermann',
+            'CEO',
+            new \DateTime(),
+            0,
+            'Sehr geehrter Herr'
+        );
+
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/contacts/' . $contact->getId(),
+            [
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'contactDetails' => [
+                    'emails' => [
+                        [
+                            'email' => null,
+                            'emailType' => $emailType->getId(),
+                        ],
+                    ],
+                    'phones' => [
+                        [
+                            'phone' => null,
+                            'phoneType' => $phoneType->getId(),
+                        ],
+                    ],
+                    'faxes' => [
+                        [
+                            'fax' => null,
+                            'faxType' => $faxType->getId(),
+                        ],
+                    ],
+                    'socialMedia' => [
+                        [
+                            'socialMediaType' => $socialMediaType->getId(),
+                            'username' => null,
+                        ]
+                    ],
+                    'websites' => [
+                        [
+                            'website' => null,
+                            'websiteType' => $websiteType->getId(),
+                        ]
+                    ],
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEmpty($response->contactDetails->emails);
+        $this->assertEmpty($response->contactDetails->phones);
+        $this->assertEmpty($response->contactDetails->faxes);
+        $this->assertEmpty($response->contactDetails->socialMedia);
+        $this->assertEmpty($response->contactDetails->websites);
+    }
+
+    public function testPutEmptyContactDetailsOnExistingValues()
+    {
+        $emailType = $this->createEmailType('Private');
+        $email = $this->createEmail('max.mustermann@muster.at', $emailType);
+        $faxType = $this->createFaxType('Private');
+        $fax = $this->createFax('max.mustermann@muster.at', $faxType);
+        $phoneType = $this->createPhoneType('Private');
+        $phone = $this->createPhone('123456789', $phoneType);
+        $socialMediaType = $this->createSocialMediaType('Private');
+        $socialMedia = $this->createSocialMedia('muster', $socialMediaType);
+        $websiteType = $this->createWebsiteType('Private');
+        $website = $this->createWebsite('http://www.muster.at', $websiteType);
+
+        $contact = $this->createContact(
+            'Max',
+            'Mustermann',
+            'CEO',
+            new \DateTime(),
+            0,
+            'Sehr geehrter Herr',
+            null,
+            null,
+            $email,
+            $phone,
+            $fax,
+            $socialMedia,
+            $website,
+        );
+
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'PUT',
+            '/api/contacts/' . $contact->getId(),
+            [
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'contactDetails' => [
+                    'emails' => [
+                        [
+                            'id' => $email->getId(),
+                            'email' => null,
+                            'emailType' => $emailType->getId(),
+                        ],
+                    ],
+                    'phones' => [
+                        [
+                            'id' => $phone->getId(),
+                            'phone' => null,
+                            'phoneType' => $phoneType->getId(),
+                        ],
+                    ],
+                    'faxes' => [
+                        [
+                            'id' => $fax->getId(),
+                            'fax' => null,
+                            'faxType' => $faxType->getId(),
+                        ],
+                    ],
+                    'socialMedia' => [
+                        [
+                            'id' => $socialMedia->getId(),
+                            'socialMediaType' => $socialMediaType->getId(),
+                            'username' => null,
+                        ]
+                    ],
+                    'websites' => [
+                        [
+                            'id' => $website->getId(),
+                            'website' => null,
+                            'websiteType' => $websiteType->getId(),
+                        ]
+                    ],
+                ],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEmpty($response->contactDetails->emails);
+        $this->assertEmpty($response->contactDetails->phones);
+        $this->assertEmpty($response->contactDetails->faxes);
+        $this->assertEmpty($response->contactDetails->socialMedia);
+        $this->assertEmpty($response->contactDetails->websites);
+    }
+
     public function testPutDeleteAndAddWithoutId()
     {
         $title = $this->createTitle('MSc');
@@ -1043,6 +1212,8 @@ class ContactControllerTest extends SuluTestCase
             $position,
             $email,
             $phone,
+            null,
+            null,
             null,
             $address,
             $note
@@ -1179,6 +1350,8 @@ class ContactControllerTest extends SuluTestCase
             $email,
             $phone,
             null,
+            null,
+            null,
             $address,
             $note
         );
@@ -1296,6 +1469,8 @@ class ContactControllerTest extends SuluTestCase
             $email,
             $phone,
             null,
+            null,
+            null,
             $address,
             $note
         );
@@ -1398,6 +1573,8 @@ class ContactControllerTest extends SuluTestCase
             $position,
             $email,
             $phone,
+            null,
+            null,
             null,
             $address,
             $note
@@ -1660,6 +1837,8 @@ class ContactControllerTest extends SuluTestCase
             $position,
             $email,
             $phone,
+            null,
+            null,
             null,
             $address,
             $note
@@ -2061,6 +2240,8 @@ class ContactControllerTest extends SuluTestCase
             $email,
             null,
             null,
+            null,
+            null,
             $address
         );
         $this->em->flush();
@@ -2203,6 +2384,8 @@ class ContactControllerTest extends SuluTestCase
         ?Email $email = null,
         ?Phone $phone = null,
         ?Fax $fax = null,
+        ?SocialMediaProfile $socialMedia = null,
+        ?Url $url = null,
         ?Address $address = null,
         ?Note $note = null,
         ?Media $media = null,
@@ -2227,6 +2410,14 @@ class ContactControllerTest extends SuluTestCase
 
         if ($fax) {
             $contact->addFax($fax);
+        }
+
+        if ($socialMedia) {
+            $contact->addSocialMediaProfile($socialMedia);
+        }
+
+        if ($url) {
+            $contact->addUrl($url);
         }
 
         if ($note) {
@@ -2322,7 +2513,7 @@ class ContactControllerTest extends SuluTestCase
     private function createFaxType(string $type)
     {
         $faxType = new FaxType();
-        $faxType->setName('Private');
+        $faxType->setName($type);
 
         $this->em->persist($faxType);
 
@@ -2338,6 +2529,48 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($fax);
 
         return $fax;
+    }
+
+    private function createSocialMediaType(string $type)
+    {
+        $socialMediaType = new SocialMediaProfileType();
+        $socialMediaType->setName($type);
+
+        $this->em->persist($socialMediaType);
+
+        return $socialMediaType;
+    }
+
+    private function createSocialMedia(string $username, SocialMediaProfileType $socialMediaType)
+    {
+        $socialMedia = new SocialMediaProfile();
+        $socialMedia->setUsername($username);
+        $socialMedia->setSocialMediaProfileType($socialMediaType);
+
+        $this->em->persist($socialMedia);
+
+        return $socialMedia;
+    }
+
+    private function createWebsiteType(string $type)
+    {
+        $websiteType = new UrlType();
+        $websiteType->setName($type);
+
+        $this->em->persist($websiteType);
+
+        return $websiteType;
+    }
+
+    private function createWebsite(string $url, UrlType $websiteType)
+    {
+        $website = new Url();
+        $website->setUrl($url);
+        $website->setUrlType($websiteType);
+
+        $this->em->persist($website);
+
+        return $website;
     }
 
     private function createAddressType(string $type)

@@ -703,7 +703,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $emails,
+            array_filter($emails, function($email) {return $email['email'];}),
             $get,
             $add,
             $update,
@@ -810,7 +810,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $urls,
+            array_filter($urls, function($url) {return $url['website'];}),
             $get,
             $add,
             $update,
@@ -945,7 +945,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $phones,
+            array_filter($phones, function($phone) {return $phone['phone'];}),
             $get,
             $add,
             $update,
@@ -1054,7 +1054,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $faxes,
+            array_filter($faxes, function($fax) {return $fax['fax'];}),
             $get,
             $add,
             $update,
@@ -1155,7 +1155,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $socialMediaProfiles,
+            array_filter($socialMediaProfiles, function($socialMediaProfile) {return $socialMediaProfile['username'];}),
             $get,
             $add,
             $update,
