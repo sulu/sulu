@@ -557,8 +557,7 @@ class WebspaceCopyCommand extends ContainerAwareCommand
         $localeSource,
         $localeDestination
     ) {
-        if (!array_key_exists($property->getName(),
-                $structureArray) || !$structureArray[$property->getName()]['items']) {
+        if (!isset($structureArray[$property->getName()]['items'])) {
             return;
         }
 
