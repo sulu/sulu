@@ -6,13 +6,17 @@ import Section from './Section';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item>>,
-    icon?: string,
+    icon: string,
     onChange: (value: *) => void,
-    title: string,
+    title?: string,
     value: ?*,
 };
 
 export default class SingleItemSection extends React.PureComponent<Props> {
+    static defaultProps = {
+        icon: 'su-check',
+    };
+
     handleItemClick = (value: *) => {
         this.props.onChange(value);
     };

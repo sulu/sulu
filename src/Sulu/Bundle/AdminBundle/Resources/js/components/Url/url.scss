@@ -3,6 +3,7 @@
 $urlBackgroundColor: $white;
 $urlBorderColor: $silver;
 $urlButtonColor: $dustyGray;
+$urlInputColor: $black;
 $urlErrorBorderColor: $persianRed;
 
 $urlInputDisabledColor: $gray;
@@ -12,10 +13,12 @@ $urlInputDisabledBackgroundColor: $wildSand;
     display: flex;
     align-items: center;
     width: 100%;
+    height: 30px;
     border-radius: 3px;
     border: 1px solid $urlBorderColor;
     background-color: $urlBackgroundColor;
     font-size: 12px;
+    overflow: hidden;
 
     &.error {
         border-color: $urlErrorBorderColor;
@@ -27,10 +30,11 @@ $urlInputDisabledBackgroundColor: $wildSand;
     }
 
     input {
+        color: $urlInputColor;
         flex-grow: 1;
         border: none;
-        height: 28px;
         padding: 0 10px;
+        width: 0;
 
         &:disabled {
             color: $urlInputDisabledColor;

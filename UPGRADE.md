@@ -2,7 +2,18 @@
 
 ## dev-develop
 
-When upgrading also have a look at the changes in the [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha5...2.0.0-alpha6).
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha5...2.0.0-alpha6).
+
+### Restructuring of Contact & Account REST API
+
+The `urls` property of the REST API has been renamed to `websites`, and the `socialMediaProfiles` property was renamed
+to `socialMedia`. The properties under these properties have been changed accordingly.
+
+The `emails`, `phones`, `faxes`, `websites` and `socialMedia` properties have been grouped under a `contactDetails`
+property. The types ("work", "private") of all these `contactDetails` properties have changed from an object to an ID.
+
+The above changes have been made in all actions, this includes `GET`, `POST` and `PUT`.
 
 ### Rename contact content type to contact_account_selection
 

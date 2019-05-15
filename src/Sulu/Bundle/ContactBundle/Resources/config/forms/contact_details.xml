@@ -114,6 +114,15 @@
                     </meta>
                 </property>
 
+                <section name="contactDetails">
+                    <meta>
+                        <title>sulu_contact.contact_details</title>
+                    </meta>
+                    <properties>
+                        <property name="contactDetails" type="contact_details" />
+                    </properties>
+                </section>
+
                 <section name="addresses">
                     <meta>
                         <title>sulu_contact.addresses</title>

@@ -61,7 +61,7 @@ class SocialMediaProfileType implements \JsonSerializable
     /**
      * @VirtualProperty()
      * @SerializedName("id")
-     * @Groups({"fullAccount", "fullContact"})
+     * @Groups({"fullAccount", "fullContact", "frontend"})
      *
      * @return int
      */
@@ -86,7 +86,7 @@ class SocialMediaProfileType implements \JsonSerializable
     /**
      * @VirtualProperty()
      * @SerializedName("name")
-     * @Groups({"fullAccount", "fullContact"})
+     * @Groups({"fullAccount", "fullContact", "frontend"})
      *
      * @return string
      */

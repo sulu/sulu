@@ -11,6 +11,8 @@ import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
 import Dialog from './Dialog';
 import Divider from './Divider';
+import DropdownButton from './DropdownButton';
+import Email from './Email';
 import Form from './Form';
 import Grid from './Grid';
 import Icon from './Icon';
@@ -25,11 +27,13 @@ import MultiItemSelection from './MultiItemSelection';
 import MultiSelect from './MultiSelect';
 import Navigation from './Navigation';
 import Overlay from './Overlay';
+import Phone from './Phone';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
 import SingleSelect from './SingleSelect';
 import Table from './Table';
 import Toolbar from './Toolbar';
+import Url from './Url';
 import withContainerSize from './withContainerSize';
 
 export {
@@ -45,6 +49,8 @@ export {
     DatePicker,
     Dialog,
     Divider,
+    DropdownButton,
+    Email,
     Form,
     Grid,
     Icon,
@@ -59,10 +65,12 @@ export {
     MultiSelect,
     Navigation,
     Overlay,
+    Phone,
     Popover,
     PublishIndicator,
     SingleSelect,
     Table,
     Toolbar,
+    Url,
     withContainerSize,
 };

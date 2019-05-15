@@ -107,6 +107,42 @@ exports[`Display a field with label 1`] = `
 </div>
 `;
 
+exports[`Display a field with label and type 1`] = `
+<div
+  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+>
+  <div
+    class="field"
+  >
+    <label
+      class="label"
+    >
+      Test
+      <button
+        class="type"
+      >
+        <span
+          class="typeDelimiter"
+        >
+          •
+        </span>
+        Work
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down typeIcon"
+        />
+      </button>
+    </label>
+    <p>
+      Test
+    </p>
+    <label
+      class="errorLabel"
+    />
+  </div>
+</div>
+`;
+
 exports[`Display a field without label 1`] = `
 <div
   class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"

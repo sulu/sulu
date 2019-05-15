@@ -375,10 +375,7 @@ class ContactController extends RestController implements ClassResourceInterface
     public function putAction($id, Request $request)
     {
         try {
-            $contact = $this->getContactManager()->save(
-                $request->request->all(),
-                $id
-            );
+            $contact = $this->getContactManager()->save($request->request->all(), $id);
 
             $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);

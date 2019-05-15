@@ -592,8 +592,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function addNewContactRelations($contact, $data)
     {
+        $contactDetailsData = $this->getProperty($data, 'contactDetails') ?? [];
+
         // urls
-        $urls = $this->getProperty($data, 'urls');
+        $urls = $this->getProperty($contactDetailsData, 'websites');
         if (!empty($urls)) {
             foreach ($urls as $urlData) {
                 $this->addUrl($contact, $urlData);
@@ -602,7 +604,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         //faxes
-        $faxes = $this->getProperty($data, 'faxes');
+        $faxes = $this->getProperty($contactDetailsData, 'faxes');
         if (!empty($faxes)) {
             foreach ($faxes as $faxData) {
                 $this->addFax($contact, $faxData);
@@ -611,7 +613,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // Social media profiles.
-        $socialMediaProfiles = $this->getProperty($data, 'socialMediaProfiles');
+        $socialMediaProfiles = $this->getProperty($contactDetailsData, 'socialMedia');
         if (!empty($socialMediaProfiles)) {
             foreach ($socialMediaProfiles as $socialMediaProfileData) {
                 $this->addSocialMediaProfile($contact, $socialMediaProfileData);
@@ -619,7 +621,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // emails
-        $emails = $this->getProperty($data, 'emails');
+        $emails = $this->getProperty($contactDetailsData, 'emails');
         if (!empty($emails)) {
             foreach ($emails as $emailData) {
                 $this->addEmail($contact, $emailData);
@@ -628,7 +630,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         // phones
-        $phones = $this->getProperty($data, 'phones');
+        $phones = $this->getProperty($contactDetailsData, 'phones');
         if (!empty($phones)) {
             foreach ($phones as $phoneData) {
                 $this->addPhone($contact, $phoneData);
@@ -701,7 +703,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $emails,
+            array_filter($emails, function($email) {
+                return $email['email'];
+            }),
             $get,
             $add,
             $update,
@@ -733,12 +737,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $emailType = $this->em
             ->getRepository(self::$emailTypeEntityName)
-            ->find($emailData['emailType']['id']);
+            ->find($emailData['emailType']);
 
         if (isset($emailData['id'])) {
             throw new EntityIdAlreadySetException(self::$emailEntityName, $emailData['id']);
         } elseif (!$emailType) {
-            throw new EntityNotFoundException(self::$emailTypeEntityName, $emailData['emailType']['id']);
+            throw new EntityNotFoundException(self::$emailTypeEntityName, $emailData['emailType']);
         } else {
             $email = new Email();
             $email->setEmail($emailData['email']);
@@ -766,10 +770,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $emailType = $this->em
             ->getRepository(self::$emailTypeEntityName)
-            ->find($entry['emailType']['id']);
+            ->find($entry['emailType']);
 
         if (!$emailType) {
-            throw new EntityNotFoundException(self::$emailTypeEntityName, $entry['emailType']['id']);
+            throw new EntityNotFoundException(self::$emailTypeEntityName, $entry['emailType']);
         } else {
             $email->setEmail($entry['email']);
             $email->setEmailType($emailType);
@@ -808,7 +812,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $urls,
+            array_filter($urls, function($url) {
+                return $url['website'];
+            }),
             $get,
             $add,
             $update,
@@ -867,12 +873,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
         /** @var UrlType $urlType */
         $urlType = $this->em->getRepository(
             self::$urlTypeEntityName
-        )->find($entry['urlType']['id']);
+        )->find($entry['websiteType']);
 
         if (!$urlType) {
-            throw new EntityNotFoundException(self::$urlTypeEntityName, $entry['urlType']['id']);
+            throw new EntityNotFoundException(self::$urlTypeEntityName, $entry['websiteType']);
         } else {
-            $url->setUrl($entry['url']);
+            $url->setUrl($entry['website']);
             $url->setUrlType($urlType);
         }
 
@@ -896,15 +902,15 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $urlType = $this->em->getRepository(
             self::$urlTypeEntityName
-        )->find($data['urlType']['id']);
+        )->find($data['websiteType']);
 
         if (isset($data['id'])) {
             throw new EntityIdAlreadySetException(self::$urlEntityName, $data['id']);
         } elseif (!$urlType) {
-            throw new EntityNotFoundException(self::$urlTypeEntityName, $data['urlType']['id']);
+            throw new EntityNotFoundException(self::$urlTypeEntityName, $data['websiteType']);
         } else {
             $url = new Url();
-            $url->setUrl($data['url']);
+            $url->setUrl($data['website']);
             $url->setUrlType($urlType);
             $this->em->persist($url);
             $contact->addUrl($url);
@@ -943,7 +949,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $phones,
+            array_filter($phones, function($phone) {
+                return $phone['phone'];
+            }),
             $get,
             $add,
             $update,
@@ -975,12 +983,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $phoneType = $this->em->getRepository(
             self::$phoneTypeEntityName
-        )->find($phoneData['phoneType']['id']);
+        )->find($phoneData['phoneType']);
 
         if (isset($phoneData['id'])) {
             throw new EntityIdAlreadySetException(self::$phoneEntityName, $phoneData['id']);
         } elseif (!$phoneType) {
-            throw new EntityNotFoundException(self::$phoneTypeEntityName, $phoneData['phoneType']['id']);
+            throw new EntityNotFoundException(self::$phoneTypeEntityName, $phoneData['phoneType']);
         } else {
             $phone = new Phone();
             $phone->setPhone($phoneData['phone']);
@@ -1008,10 +1016,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $phoneType = $this->em->getRepository(
             self::$phoneTypeEntityName
-        )->find($entry['phoneType']['id']);
+        )->find($entry['phoneType']);
 
         if (!$phoneType) {
-            throw new EntityNotFoundException(self::$phoneTypeEntityName, $entry['phoneType']['id']);
+            throw new EntityNotFoundException(self::$phoneTypeEntityName, $entry['phoneType']);
         } else {
             $phone->setPhone($entry['phone']);
             $phone->setPhoneType($phoneType);
@@ -1052,7 +1060,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $faxes,
+            array_filter($faxes, function($fax) {
+                return $fax['fax'];
+            }),
             $get,
             $add,
             $update,
@@ -1080,12 +1090,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $faxType = $this->em
             ->getRepository(self::$faxTypeEntityName)
-            ->find($faxData['faxType']['id']);
+            ->find($faxData['faxType']);
 
         if (isset($faxData['id'])) {
             throw new EntityIdAlreadySetException($faxEntity, $faxData['id']);
         } elseif (!$faxType) {
-            throw new EntityNotFoundException(self::$faxTypeEntityName, $faxData['faxType']['id']);
+            throw new EntityNotFoundException(self::$faxTypeEntityName, $faxData['faxType']);
         } else {
             $fax = new Fax();
             $fax->setFax($faxData['fax']);
@@ -1109,10 +1119,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $faxType = $this->em->getRepository(
             self::$faxTypeEntityName
-        )->find($entry['faxType']['id']);
+        )->find($entry['faxType']);
 
         if (!$faxType) {
-            throw new EntityNotFoundException(self::$faxTypeEntityName, $entry['faxType']['id']);
+            throw new EntityNotFoundException(self::$faxTypeEntityName, $entry['faxType']);
         } else {
             $fax->setFax($entry['fax']);
             $fax->setFaxType($faxType);
@@ -1153,7 +1163,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            $socialMediaProfiles,
+            array_filter($socialMediaProfiles, function($socialMediaProfile) {
+                return $socialMediaProfile['username'];
+            }),
             $get,
             $add,
             $update,
@@ -1178,14 +1190,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $socialMediaProfileType = $this->em
             ->getRepository(self::$socialMediaProfileTypeEntityName)
-            ->find($socialMediaProfileData['socialMediaProfileType']['id']);
+            ->find($socialMediaProfileData['socialMediaType']);
 
         if (isset($socialMediaProfileData['id'])) {
             throw new EntityIdAlreadySetException($socialMediaProfileEntity, $socialMediaProfileData['id']);
         } elseif (!$socialMediaProfileType) {
             throw new EntityNotFoundException(
                 self::$socialMediaProfileTypeEntityName,
-                $socialMediaProfileData['socialMediaProfileType']['id']
+                $socialMediaProfileData['socialMediaType']
             );
         }
 
@@ -1208,12 +1220,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         $socialMediaProfileType = $this->em->getRepository(
             self::$socialMediaProfileTypeEntityName
-        )->find($entry['socialMediaProfileType']['id']);
+        )->find($entry['socialMediaType']);
 
         if (!$socialMediaProfileType) {
             throw new EntityNotFoundException(
                 self::$socialMediaProfileTypeEntityName,
-                $entry['socialMediaProfileType']['id']
+                $entry['socialMediaType']
             );
         }
 

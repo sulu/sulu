@@ -6,9 +6,16 @@ import {bundleReady, initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
-import Iban from './containers/Form/fields/Iban';
+import ContactDetails from './containers/Form/fields/ContactDetails';
 import Bic from './containers/Form/fields/Bic';
+import Iban from './containers/Form/fields/Iban';
+import Email from './components/ContactDetails/Email';
+import Fax from './components/ContactDetails/Fax';
+import Phone from './components/ContactDetails/Phone';
+import SocialMedia from './components/ContactDetails/SocialMedia';
+import Website from './components/ContactDetails/Website';
 
+fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
 
@@ -18,7 +25,19 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
     }
 
     when(
-        () => !!initializer.initializedTranslationsLocale, (): void => {
+        () => !!initializer.initializedTranslationsLocale,
+        (): void => {
+            Email.types = config.emailTypes
+                .map((emailType) => ({label: translate(emailType.name), value: emailType.id}));
+            Fax.types = config.faxTypes
+                .map((faxType) => ({label: translate(faxType.name), value: faxType.id}));
+            Phone.types = config.phoneTypes
+                .map((phoneType) => ({label: translate(phoneType.name), value: phoneType.id}));
+            SocialMedia.types = config.socialMediaTypes
+                .map((socialMediaType) => ({label: translate(socialMediaType.name), value: socialMediaType.id}));
+            Website.types = config.websiteTypes
+                .map((urlType) => ({label: translate(urlType.name), value: urlType.id}));
+
             fieldRegistry.add(
                 'addresses',
                 CardCollection,

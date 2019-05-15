@@ -1,0 +1,19 @@
+.field {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    &:hover {
+        .remove-icon {
+            visibility: visible;
+            margin-right: 0;
+        }
+    }
+}
+
+.remove-icon {
+    padding: 5px 5px 5px 10px;
+    margin-right: -20px;
+    transition: visibility 1s, margin-right .2s;
+    visibility: hidden;
+}

@@ -21,13 +21,13 @@ class FaxType implements \JsonSerializable
 {
     /**
      * @var string
-     * @Groups({"fullAccount", "fullContact"})
+     * @Groups({"fullAccount", "fullContact", "frontend"})
      */
     private $name;
 
     /**
      * @var int
-     * @Groups({"fullAccount", "fullContact"})
+     * @Groups({"fullAccount", "fullContact", "frontend"})
      */
     private $id;
 
