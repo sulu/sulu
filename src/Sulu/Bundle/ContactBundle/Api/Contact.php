@@ -2,7 +2,6 @@
 
 /*
  * This file is part of Sulu.
- *
  * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
@@ -445,6 +444,22 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("contactDetails")
+     * @Groups({"fullContact"})
+     */
+    public function getContactDetails()
+    {
+        return [
+            'emails' => $this->getEmails(),
+            'faxes' => $this->getFaxes(),
+            'phones' => $this->getPhones(),
+            'socialMedia' => $this->getSocialMediaProfiles(),
+            'websites' => $this->getUrls(),
+        ];
+    }
+
+    /**
      * Add email.
      *
      * @param EmailEntity $email
@@ -472,21 +487,17 @@ class Contact extends ApiWrapper
      * Get emails.
      *
      * @return array
-     *
-     * @VirtualProperty
-     * @SerializedName("emails")
-     * @Groups({"fullContact"})
      */
     public function getEmails()
     {
-        $entities = [];
+        $emails = [];
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
-                $entities[] = $email;
+                $emails[] = new Email($email, $this->locale);
             }
         }
 
-        return $entities;
+        return $emails;
     }
 
     /**
@@ -517,21 +528,17 @@ class Contact extends ApiWrapper
      * Get phones.
      *
      * @return array
-     *
-     * @VirtualProperty
-     * @SerializedName("phones")
-     * @Groups({"fullContact"})
      */
     public function getPhones()
     {
-        $entities = [];
+        $phones = [];
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
-                $entities[] = $phone;
+                $phones[] = new Phone($phone, $this->locale);
             }
         }
 
-        return $entities;
+        return $phones;
     }
 
     /**
@@ -562,21 +569,17 @@ class Contact extends ApiWrapper
      * Get faxes.
      *
      * @return array
-     *
-     * @VirtualProperty
-     * @SerializedName("faxes")
-     * @Groups({"fullContact"})
      */
     public function getFaxes()
     {
-        $entities = [];
+        $faxes = [];
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
-                $entities[] = $fax;
+                $faxes[] = new Fax($fax, $this->locale);
             }
         }
 
-        return $entities;
+        return $faxes;
     }
 
     /**
@@ -606,10 +609,6 @@ class Contact extends ApiWrapper
     /**
      * Get social media profiles.
      *
-     * @VirtualProperty
-     * @SerializedName("socialMediaProfiles")
-     * @Groups({"fullContact"})
-     *
      * @return SocialMediaProfileEntity[]
      */
     public function getSocialMediaProfiles()
@@ -617,7 +616,7 @@ class Contact extends ApiWrapper
         $socialMediaProfiles = [];
         if ($this->entity->getSocialMediaProfiles()) {
             foreach ($this->entity->getSocialMediaProfiles() as $socialMediaProfile) {
-                $socialMediaProfiles[] = $socialMediaProfile;
+                $socialMediaProfiles[] = new SocialMediaProfile($socialMediaProfile, $this->locale);
             }
         }
 
@@ -652,21 +651,17 @@ class Contact extends ApiWrapper
      * Get urls.
      *
      * @return array
-     *
-     * @VirtualProperty
-     * @SerializedName("urls")
-     * @Groups({"fullContact"})
      */
     public function getUrls()
     {
-        $entities = [];
+        $urls = [];
         if ($this->entity->getUrls()) {
-            foreach ($this->entity->getUrls() as $entity) {
-                $entities[] = $entity;
+            foreach ($this->entity->getUrls() as $url) {
+                $urls[] = new Url($url, $this->locale);
             }
         }
 
-        return $entities;
+        return $urls;
     }
 
     /**

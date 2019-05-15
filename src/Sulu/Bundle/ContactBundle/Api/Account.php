@@ -240,16 +240,13 @@ class Account extends ApiWrapper
      * Get urls.
      *
      * @return UrlEntity[]
-     * @VirtualProperty
-     * @SerializedName("urls")
-     * @Groups({"fullAccount"})
      */
     public function getUrls()
     {
         $urls = [];
         if ($this->entity->getUrls()) {
             foreach ($this->entity->getUrls() as $url) {
-                $urls[] = $url;
+                $urls[] = new Url($url, $this->locale);
             }
         }
 
@@ -284,16 +281,13 @@ class Account extends ApiWrapper
      * Get phones.
      *
      * @return PhoneEntity[]
-     * @VirtualProperty
-     * @SerializedName("phones")
-     * @Groups({"fullAccount"})
      */
     public function getPhones()
     {
         $phones = [];
         if ($this->entity->getPhones()) {
             foreach ($this->entity->getPhones() as $phone) {
-                $phones[] = $phone;
+                $phones[] = new Phone($phone, $this->locale);
             }
         }
 
@@ -328,16 +322,13 @@ class Account extends ApiWrapper
      * Get emails.
      *
      * @return EmailEntity[]
-     * @VirtualProperty
-     * @SerializedName("emails")
-     * @Groups({"fullAccount"})
      */
     public function getEmails()
     {
         $emails = [];
         if ($this->entity->getEmails()) {
             foreach ($this->entity->getEmails() as $email) {
-                $emails[] = $email;
+                $emails[] = new Email($email, $this->locale);
             }
         }
 
@@ -404,6 +395,22 @@ class Account extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("contactDetails")
+     * @Groups({"fullAccount"})
+     */
+    public function getContactDetails()
+    {
+        return [
+            'emails' => $this->getEmails(),
+            'faxes' => $this->getFaxes(),
+            'phones' => $this->getPhones(),
+            'socialMedia' => $this->getSocialMediaProfiles(),
+            'websites' => $this->getUrls(),
+        ];
+    }
+
+    /**
      * Add faxes.
      *
      * @param FaxEntity $fax
@@ -431,16 +438,13 @@ class Account extends ApiWrapper
      * Get faxes.
      *
      * @return FaxEntity[]
-     * @VirtualProperty
-     * @SerializedName("faxes")
-     * @Groups({"fullAccount"})
      */
     public function getFaxes()
     {
         $faxes = [];
         if ($this->entity->getFaxes()) {
             foreach ($this->entity->getFaxes() as $fax) {
-                $faxes[] = $fax;
+                $faxes[] = new Fax($fax, $this->locale);
             }
         }
 
@@ -475,16 +479,13 @@ class Account extends ApiWrapper
      * Get social media profiles.
      *
      * @return SocialMediaProfileEntity[]
-     * @VirtualProperty
-     * @SerializedName("socialMediaProfiles")
-     * @Groups({"fullAccount"})
      */
     public function getSocialMediaProfiles()
     {
         $socialMediaProfiles = [];
         if ($this->entity->getSocialMediaProfiles()) {
             foreach ($this->entity->getSocialMediaProfiles() as $socialMediaProfile) {
-                $socialMediaProfiles[] = $socialMediaProfile;
+                $socialMediaProfiles[] = new SocialMediaProfile($socialMediaProfile, $this->locale);
             }
         }
 

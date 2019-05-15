@@ -580,12 +580,14 @@ class AccountController extends RestController implements ClassResourceInterface
         $user = $this->getUser();
         $account->setChanger($user);
 
+        $contactDetailsData = $request->get('contactDetails', []);
+
         // Process details
-        if (!($accountManager->processUrls($account, $request->get('urls', []))
-            && $accountManager->processEmails($account, $request->get('emails', []))
-            && $accountManager->processFaxes($account, $request->get('faxes', []))
-            && $accountManager->processSocialMediaProfiles($account, $request->get('socialMediaProfiles', []))
-            && $accountManager->processPhones($account, $request->get('phones', []))
+        if (!($accountManager->processUrls($account, $contactDetailsData['websites'] ?? [])
+            && $accountManager->processEmails($account, $contactDetailsData['emails'] ?? [])
+            && $accountManager->processFaxes($account, $contactDetailsData['faxes'] ?? [])
+            && $accountManager->processSocialMediaProfiles($account, $contactDetailsData['socialMedia'] ?? [])
+            && $accountManager->processPhones($account, $contactDetailsData['phones'] ?? [])
             && $accountManager->processAddresses($account, $request->get('addresses', []))
             && $accountManager->processTags($account, $request->get('tags', []))
             && $accountManager->processNotes($account, $request->get('notes', []))

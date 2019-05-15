@@ -231,6 +231,8 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
          * to better reusability.
          */
 
+        $contactDetailsData = $this->getProperty($data, 'contactDetails', []);
+
         if ($id) {
             /** @var Contact $contact */
             $contact = $this->contactRepository->findById($id);
@@ -241,11 +243,11 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             if (!$patch || $this->getProperty($data, 'account')) {
                 $this->setMainAccount($contact, $data);
             }
-            if (!$patch || $this->getProperty($data, 'emails')) {
-                $this->processEmails($contact, $this->getProperty($data, 'emails', []));
+            if (!$patch || $this->getProperty($contactDetailsData, 'emails')) {
+                $this->processEmails($contact, $this->getProperty($contactDetailsData, 'emails', []));
             }
-            if (!$patch || $this->getProperty($data, 'phones')) {
-                $this->processPhones($contact, $this->getProperty($data, 'phones', []));
+            if (!$patch || $this->getProperty($contactDetailsData, 'phones')) {
+                $this->processPhones($contact, $this->getProperty($contactDetailsData, 'phones', []));
             }
             if (!$patch || $this->getProperty($data, 'addresses')) {
                 $this->processAddresses($contact, $this->getProperty($data, 'addresses', []));
@@ -253,17 +255,20 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             if (!$patch || $this->getProperty($data, 'notes')) {
                 $this->processNotes($contact, $this->getProperty($data, 'notes', []));
             }
-            if (!$patch || $this->getProperty($data, 'faxes')) {
-                $this->processFaxes($contact, $this->getProperty($data, 'faxes', []));
+            if (!$patch || $this->getProperty($contactDetailsData, 'faxes')) {
+                $this->processFaxes($contact, $this->getProperty($contactDetailsData, 'faxes', []));
             }
-            if (!$patch || $this->getProperty($data, 'socialMediaProfiles')) {
-                $this->processSocialMediaProfiles($contact, $this->getProperty($data, 'socialMediaProfiles', []));
+            if (!$patch || $this->getProperty($contactDetailsData, 'socialMedia')) {
+                $this->processSocialMediaProfiles(
+                    $contact,
+                    $this->getProperty($contactDetailsData, 'socialMedia', [])
+                );
             }
             if (!$patch || $this->getProperty($data, 'tags')) {
                 $this->processTags($contact, $this->getProperty($data, 'tags', []));
             }
-            if (!$patch || $this->getProperty($data, 'urls')) {
-                $this->processUrls($contact, $this->getProperty($data, 'urls', []));
+            if (!$patch || $this->getProperty($contactDetailsData, 'websites')) {
+                $this->processUrls($contact, $this->getProperty($contactDetailsData, 'websites', []));
             }
             if (!$patch || $this->getProperty($data, 'categories')) {
                 $this->processCategories($contact, $this->getProperty($data, 'categories', []));
