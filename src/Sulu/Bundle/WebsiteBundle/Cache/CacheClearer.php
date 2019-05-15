@@ -13,6 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Cache;
 
 use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Bundle\WebsiteBundle\Events;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -52,10 +54,16 @@ class CacheClearer implements CacheClearerInterface
     private $proxyClient;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param Filesystem $filesystem
      * @param $kernelEnvironment
      * @param $kernelRootDir
      * @param RequestStack $requestStack
+     * @param EventDispatcherInterface $eventDispatcher
      * @param string $varDir
      * @param ProxyClientInterface $proxyClient
      */
@@ -64,6 +72,7 @@ class CacheClearer implements CacheClearerInterface
         $kernelEnvironment,
         $kernelRootDir,
         RequestStack $requestStack,
+        EventDispatcherInterface $eventDispatcher,
         $varDir = null,
         ProxyClientInterface $proxyClient = null
     ) {
@@ -73,6 +82,7 @@ class CacheClearer implements CacheClearerInterface
         $this->varDir = $varDir;
         $this->proxyClient = $proxyClient;
         $this->requestStack = $requestStack;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -92,7 +102,11 @@ class CacheClearer implements CacheClearerInterface
                 [$request->getHost()]
             );
 
-            return $this->proxyClient->flush();
+            $this->proxyClient->flush();
+
+            $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
+
+            return;
         }
 
         $path = sprintf(
@@ -104,5 +118,7 @@ class CacheClearer implements CacheClearerInterface
         if ($this->filesystem->exists($path)) {
             $this->filesystem->remove($path);
         }
+
+        $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
     }
 }
