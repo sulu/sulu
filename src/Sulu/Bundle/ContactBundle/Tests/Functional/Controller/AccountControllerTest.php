@@ -347,7 +347,7 @@ class AccountControllerTest extends SuluTestCase
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
-                        'urlType' =>  $urlType->getId(),
+                        'urlType' => $urlType->getId(),
                     ],
                 ],
                 'contactDetails' => [
@@ -498,7 +498,7 @@ class AccountControllerTest extends SuluTestCase
                             'websiteType' => $urlType->getId(),
                         ],
                     ],
-                ]
+                ],
             ]
         );
 
@@ -614,7 +614,7 @@ class AccountControllerTest extends SuluTestCase
                             'websiteType' => '12312',
                         ],
                     ],
-                ]
+                ],
             ]
         );
 
@@ -724,7 +724,7 @@ class AccountControllerTest extends SuluTestCase
                             'faxType' => '123123',
                         ],
                     ],
-                ]
+                ],
             ]
         );
 
