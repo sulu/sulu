@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #4540  [ContentBundle]        Fix copying of teaser selection in WebspaceCopyCommand
     * FEATURE     #4532  [MediaBundle]          Add command to remove format cache files which not longer exists
     * HOTFIX      #4512  [Components]           Fix pathcleanup whitespace character problems
 
