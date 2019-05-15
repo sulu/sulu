@@ -4,11 +4,11 @@ websites, faxes and social media profiles.
 ```javascript
 initialState = {
     value: {
-        emails: [{email: undefined}],
-        faxes: [{fax: undefined}],
-        phones: [{phone: undefined}],
-        socialMedia: [{username: undefined}],
-        websites: [{website: undefined}],
+        emails: [{email: undefined, emailType: 1}],
+        faxes: [{fax: undefined, faxType: 1}],
+        phones: [{phone: undefined, phoneType: 1}],
+        socialMedia: [{username: undefined, socialMediaType: 1}],
+        websites: [{website: undefined, websiteType: 1}],
     },
 };
 

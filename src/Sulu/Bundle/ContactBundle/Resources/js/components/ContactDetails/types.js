@@ -1,26 +1,26 @@
 // @flow
 
-type Email = {|
+export type Email = {|
     email: ?string,
     emailType: number,
 |};
 
-type Fax = {|
+export type Fax = {|
     fax: ?string,
     faxType: number,
 |};
 
-type Phone = {|
+export type Phone = {|
     phone: ?string,
     phoneType: number,
 |};
 
-type SocialMedia = {|
+export type SocialMedia = {|
     socialMediaType: number,
     username: ?string,
 |};
 
-type Website = {|
+export type Website = {|
     website: ?string,
     websiteType: number,
 |};

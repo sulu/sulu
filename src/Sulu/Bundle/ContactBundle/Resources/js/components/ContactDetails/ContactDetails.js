@@ -9,7 +9,7 @@ import Fax from './Fax';
 import Phone from './Phone';
 import SocialMedia from './SocialMedia';
 import Website from './Website';
-import type {ContactDetailsValue} from './types';
+import type {ContactDetailsValue, Email as EmailType, Phone as PhoneType} from './types';
 
 type Props = {|
     onBlur: () => void,
@@ -156,30 +156,26 @@ class ContactDetails extends React.Component<Props> {
         this.props.onBlur();
     };
 
-    @computed get emails() {
+    @computed get emails(): Array<EmailType> {
         const {value: {emails}} = this.props;
 
         if (emails.length === 0) {
+            // $FlowFixMe
             return [
-                {
-                    email: undefined,
-                    emailType: Email.types[0].value,
-                },
+                this.getEmptyEntry('emails'),
             ];
         }
 
         return emails;
     }
 
-    @computed get phones() {
+    @computed get phones(): Array<PhoneType> {
         const {value: {phones}} = this.props;
 
         if (phones.length === 0) {
+            // $FlowFixMe
             return [
-                {
-                    phone: undefined,
-                    phoneType: Phone.types[0].value,
-                },
+                this.getEmptyEntry('phones'),
             ];
         }
 
