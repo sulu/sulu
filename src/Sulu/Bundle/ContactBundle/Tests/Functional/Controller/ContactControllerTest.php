@@ -1060,13 +1060,13 @@ class ContactControllerTest extends SuluTestCase
                         [
                             'socialMediaType' => $socialMediaType->getId(),
                             'username' => null,
-                        ]
+                        ],
                     ],
                     'websites' => [
                         [
                             'website' => null,
                             'websiteType' => $websiteType->getId(),
-                        ]
+                        ],
                     ],
                 ],
             ]
@@ -1108,7 +1108,7 @@ class ContactControllerTest extends SuluTestCase
             $phone,
             $fax,
             $socialMedia,
-            $website,
+            $website
         );
 
         $this->em->flush();
@@ -1148,14 +1148,14 @@ class ContactControllerTest extends SuluTestCase
                             'id' => $socialMedia->getId(),
                             'socialMediaType' => $socialMediaType->getId(),
                             'username' => null,
-                        ]
+                        ],
                     ],
                     'websites' => [
                         [
                             'id' => $website->getId(),
                             'website' => null,
                             'websiteType' => $websiteType->getId(),
-                        ]
+                        ],
                     ],
                 ],
             ]

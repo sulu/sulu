@@ -703,7 +703,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($emails, function($email) {return $email['email'];}),
+            array_filter($emails, function($email) {
+                return $email['email'];
+            }),
             $get,
             $add,
             $update,
@@ -810,7 +812,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($urls, function($url) {return $url['website'];}),
+            array_filter($urls, function($url) {
+                return $url['website'];
+            }),
             $get,
             $add,
             $update,
@@ -945,7 +949,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($phones, function($phone) {return $phone['phone'];}),
+            array_filter($phones, function($phone) {
+                return $phone['phone'];
+            }),
             $get,
             $add,
             $update,
@@ -1054,7 +1060,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($faxes, function($fax) {return $fax['fax'];}),
+            array_filter($faxes, function($fax) {
+                return $fax['fax'];
+            }),
             $get,
             $add,
             $update,
@@ -1155,7 +1163,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($socialMediaProfiles, function($socialMediaProfile) {return $socialMediaProfile['username'];}),
+            array_filter($socialMediaProfiles, function($socialMediaProfile) {
+                return $socialMediaProfile['username'];
+            }),
             $get,
             $add,
             $update,
