@@ -455,6 +455,14 @@ class WebspaceCopyCommand extends ContainerAwareCommand
                     $localeDestination
                 );
                 break;
+            case 'teaser_selection':
+                $this->updateTeaserSelection(
+                    $structureArray,
+                    $property,
+                    $localeSource,
+                    $localeDestination
+                );
+                break;
         }
     }
 
@@ -532,6 +540,43 @@ class WebspaceCopyCommand extends ContainerAwareCommand
             }
 
             $structureArray[$property->getName()]['dataSource'] = $targetDocumentDestination->getUuid();
+        }
+    }
+
+    /**
+     * Updates references in structure for content type `teaser_selection`.
+     *
+     * @param array $structureArray
+     * @param PropertyMetadata $property
+     * @param string $localeSource
+     * @param string $localeDestination
+     */
+    protected function updateTeaserSelection(
+        array &$structureArray,
+        PropertyMetadata $property,
+        $localeSource,
+        $localeDestination
+    ) {
+        if (!isset($structureArray[$property->getName()]['items'])) {
+            return;
+        }
+
+        foreach ($structureArray[$property->getName()]['items'] as $key => $teaserItem) {
+            if ('content' !== $teaserItem['type']) {
+                continue;
+            }
+
+            $targetDocumentDestination = $this->getTargetDocumentDestination(
+                $teaserItem['id'],
+                $localeSource,
+                $localeDestination
+            );
+
+            if (!$targetDocumentDestination) {
+                continue;
+            }
+
+            $structureArray[$property->getName()]['items'][$key]['id'] = $targetDocumentDestination->getUuid();
         }
     }
 
