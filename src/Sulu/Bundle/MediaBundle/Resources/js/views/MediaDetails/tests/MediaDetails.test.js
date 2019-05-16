@@ -130,7 +130,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaDetails);
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de'});
+    expect(router.restore).toBeCalledWith('sulu_media.overview', {locale: 'de', mediaPage: 1});
 });
 
 test('Should show locales from router options in toolbar', () => {

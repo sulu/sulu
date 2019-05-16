@@ -203,7 +203,7 @@ export default withToolbar(MediaDetails, function() {
         locale,
         backButton: {
             onClick: () => {
-                router.restore(COLLECTION_ROUTE, {locale: resourceStore.locale.get()});
+                router.restore(COLLECTION_ROUTE, {locale: resourceStore.locale.get(), mediaPage: 1});
             },
         },
         items: [
