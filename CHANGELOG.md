@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.5
+* 1.5.23 (2019-05-16)
     * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
     
 * 1.5.22 (2019-03-26)
