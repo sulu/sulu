@@ -429,6 +429,5 @@ class WebspaceCopyCommandTest extends SuluTestCase
             ]
         );
         $this->documentManager->flush();
-
     }
 }
