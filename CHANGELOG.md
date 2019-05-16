@@ -291,6 +291,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.23 (2019-05-16)
+    * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
+    
 * 1.5.22 (2019-03-26)
     * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
     * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
