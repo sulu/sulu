@@ -1,5 +1,5 @@
 // @flow
-import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {initializer} from 'sulu-admin-bundle/services';
 import {fieldRegistry, viewRegistry} from 'sulu-admin-bundle/containers';
 import {formToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import SearchResult from './containers/Form/fields/SearchResult';
@@ -34,5 +34,3 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
         teaserProviderRegistry.add(teaserProviderKey, config.teaser[teaserProviderKey]);
     }
 });
-
-bundleReady();

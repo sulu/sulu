@@ -1,5 +1,5 @@
 // @flow
-import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {initializer} from 'sulu-admin-bundle/services';
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
 import CacheClearToolbarAction from './containers/CacheClearToolbarAction';
 import AnalyticsDomainSelect from './containers/Form/fields/AnalyticsDomainSelect';
@@ -9,5 +9,3 @@ initializer.addUpdateConfigHook('sulu_website', (config: Object) => {
 });
 
 fieldRegistry.add('analytics_domain_select', AnalyticsDomainSelect);
-
-bundleReady();

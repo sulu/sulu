@@ -12,7 +12,7 @@ import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import metadataStore from './stores/MetadataStore';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
-import {bundleReady, Config, resourceRouteRegistry} from './services';
+import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
@@ -271,7 +271,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
 }
 
-function startApplication() {
+function startAdmin() {
     const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
 
@@ -292,6 +292,6 @@ function startApplication() {
     );
 }
 
-startApplication();
-
-bundleReady();
+export {
+    startAdmin,
+};

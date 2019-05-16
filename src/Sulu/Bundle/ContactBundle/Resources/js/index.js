@@ -2,7 +2,7 @@
 import React from 'react';
 import {when} from 'mobx';
 import {CardCollection, fieldRegistry} from 'sulu-admin-bundle/containers';
-import {bundleReady, initializer} from 'sulu-admin-bundle/services';
+import {initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
@@ -236,5 +236,3 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
         }
     );
 });
-
-bundleReady();

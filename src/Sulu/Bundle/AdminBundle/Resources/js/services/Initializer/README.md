@@ -1,5 +1,4 @@
-The `Initializer` is used to initialize the application.
-Method `initiliaze` waits for the [`bundleReadyPromise`](../Bundles/README.md) and sends then two requests:
+The `Initializer` is used to initialize the application and sends two requests:
 * Translations request
 * Config request
 

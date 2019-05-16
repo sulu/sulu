@@ -2,7 +2,6 @@
 /* eslint-disable import/no-nodejs-modules*/
 const fs = require('fs');
 const path = require('path');
-const webpack = require('webpack');
 const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -21,32 +20,8 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         publicDir = composerConfig.extra['public-dir'];
     }
 
-    const entries = [];
-
-    entries.unshift('sulu-admin-bundle');
-    entries.unshift('sulu-contact-bundle');
-    entries.unshift('sulu-custom-url-bundle');
-    entries.unshift('sulu-media-bundle');
-    entries.unshift('sulu-page-bundle');
-    entries.unshift('sulu-preview-bundle');
-    entries.unshift('sulu-security-bundle');
-    entries.unshift('sulu-snippet-bundle');
-    entries.unshift('sulu-website-bundle');
-
-    const entriesCount = entries.length;
-
-    entries.unshift('core-js/fn/array/includes');
-    entries.unshift('core-js/fn/array/find-index');
-    entries.unshift('core-js/fn/array/fill');
-    entries.unshift('core-js/fn/array/from');
-    entries.unshift('core-js/fn/promise');
-    entries.unshift('core-js/fn/symbol');
-    entries.unshift('whatwg-fetch');
-    entries.unshift('url-search-params-polyfill');
-    entries.unshift('regenerator-runtime/runtime');
-
     return {
-        entry: entries,
+        entry: [path.resolve(__dirname, 'assets/admin/index.js')], // eslint-disable-line no-undef
         output: {
             path: path.resolve(publicDir),
             filename: basePath + '/[name].[chunkhash].js',
@@ -55,9 +30,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         plugins: [
             new CleanWebpackPlugin({
                 cleanOnceBeforeBuildPatterns: [path.resolve(publicDir, basePath)],
-            }),
-            new webpack.DefinePlugin({
-                BUNDLE_ENTRIES_COUNT: entriesCount,
             }),
             new MiniCssExtractPlugin({
                 filename: basePath + '/[name].[chunkhash].css',

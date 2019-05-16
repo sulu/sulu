@@ -5,8 +5,7 @@
         "jest": true
     },
     "globals": {
-        "process": true,
-        "BUNDLE_ENTRIES_COUNT": true
+        "process": true
     },
     "extends": [
         "eslint:recommended",

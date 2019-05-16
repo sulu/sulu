@@ -51,6 +51,12 @@ Following service renamed:
 <property name="snippets" type="snippet_selection" />
 ```
 
+### BundleReady and BundleReadyPromise removed
+
+**This change only affects you if you have used a 2.0.0 alpha release before**
+
+The `bundleReady` call is not longer needed and needs to be removed from your bundle `index.js`.
+
 ### Router removeUpdateRouteHook
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
