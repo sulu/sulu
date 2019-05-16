@@ -51,7 +51,9 @@ class SeoEnhancer extends AbstractEnhancer
                 $resourceSegment,
                 $defaults['_environment'],
                 $customUrl->getTargetLocale(),
-                $webspace->getKey()
+                $webspace->getKey(),
+                $request->getHost(),
+                $request->getScheme()
             );
         }
 

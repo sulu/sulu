@@ -109,12 +109,13 @@ class WebspaceCopyCommandTest extends SuluTestCase
 
         /** @var HomeDocument $baseDocument */
         $homeDocumentDestination = $this->documentManager->find('/cmf/destination_io/contents');
-        $this->assertCount(4, $homeDocumentDestination->getChildren());
+        $this->assertCount(5, $homeDocumentDestination->getChildren());
 
         $this->checkRedirectInternal();
         $this->checkSmartContentReference();
         $this->checkSmartContentReferenceInDifferentWebspace();
         $this->checkInternalLinks();
+        $this->checkTeaserSelection();
         $this->checkSingleInternalLink();
         $this->checkTextEditorLinkInBlock();
     }
@@ -147,6 +148,22 @@ class WebspaceCopyCommandTest extends SuluTestCase
         /** @var PageDocument $page3_sulu */
         $page3_sulu = $this->documentManager->find('/cmf/sulu_io/contents/node3', 'en');
         $this->assertContains($targetDocument->getUuid(), $page3_sulu->getStructure()->toArray()['smart_content']);
+    }
+
+    protected function checkTeaserSelection()
+    {
+        /** @var BasePageDocument $targetDocument1 */
+        $targetDocument1 = $this->documentManager->find('/cmf/destination_io/contents/node1', 'es');
+        /** @var BasePageDocument $targetDocument2 */
+        $targetDocument2 = $this->documentManager->find('/cmf/destination_io/contents/node2', 'es');
+        /** @var BasePageDocument $targetDocument3 */
+        $targetDocument3 = $this->documentManager->find('/cmf/test_io/contents', 'es');
+        /** @var PageDocument $page2_1 */
+        $page2_1 = $this->documentManager->find('/cmf/destination_io/contents/node5', 'es');
+        $structure = $page2_1->getStructure()->toArray()['teasers'];
+        $this->assertContains($targetDocument1->getUuid(), $structure['items'][0]['id']);
+        $this->assertContains($targetDocument2->getUuid(), $structure['items'][1]['id']);
+        $this->assertContains($targetDocument3->getUuid(), $structure['items'][2]['id']);
     }
 
     protected function checkInternalLinks()
@@ -379,6 +396,38 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $page4->setResourceSegment('/node4');
         $this->documentManager->persist(
             $page4,
+            'de',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
+
+        $page5 = $this->documentManager->create('page');
+        $page5->setStructureType('teasers');
+        $page5->setTitle('Node5');
+        $page5->getStructure()->bind(
+            [
+                'displayOption' => 'top',
+                'teasers' => [
+                    'items' => [
+                        [
+                            'id' => $page1->getUuid(),
+                            'type' => 'content',
+                        ],
+                        [
+                            'id' => $page2->getUuid(),
+                            'type' => 'content',
+                        ],
+                        [
+                            'id' => $testIoHomeDocument->getUuid(),
+                            'type' => 'content',
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $this->documentManager->persist(
+            $page5,
             'de',
             [
                 'parent_path' => '/cmf/sulu_io/contents',

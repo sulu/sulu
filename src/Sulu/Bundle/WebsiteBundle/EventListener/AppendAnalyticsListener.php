@@ -94,8 +94,14 @@ class AppendAnalyticsListener
      */
     public function onResponse(FilterResponseEvent $event)
     {
-        if ($this->preview
-            || 0 !== strpos($event->getResponse()->headers->get('Content-Type'), 'text/html')
+        if ($this->preview) {
+            return;
+        }
+
+        $response = $event->getResponse();
+
+        if (0 !== strpos($response->headers->get('Content-Type'), 'text/html')
+            || !$response->getContent()
             || null === $this->requestAnalyzer->getPortalInformation()
         ) {
             return;

@@ -201,6 +201,7 @@
             <argument type="string">%kernel.environment%</argument>
             <argument type="string">%kernel.root_dir%</argument>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="event_dispatcher"/>
             <argument>%kernel.project_dir%/var</argument>
             <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null"/>
         </service>

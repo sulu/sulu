@@ -24,6 +24,9 @@ class RedirectEnhancerTest extends TestCase
     public function testEnhance()
     {
         $request = $this->prophesize(Request::class);
+        $request->getHost()->willReturn('sulu.io');
+        $request->getScheme()->willReturn('http');
+
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
 
@@ -40,7 +43,9 @@ class RedirectEnhancerTest extends TestCase
             '/test',
             'prod',
             'de',
-            'sulu_io'
+            'sulu_io',
+            'sulu.io',
+            'http'
         )->willReturn('sulu.io/test');
 
         $enhancer = new RedirectEnhancer($webspaceManager->reveal());

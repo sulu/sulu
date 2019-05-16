@@ -18,6 +18,7 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +55,36 @@ class AppendAnalyticsListenerTest extends TestCase
         $request->getRequestFormat()->willReturn($format);
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/plain']);
+        $response->getContent()->shouldNotBeCalled();
+        $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
+        $event->getResponse()->willReturn($response->reveal());
+
+        $listener->onResponse($event->reveal());
+
+        $engine->render(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $response->setContent(Argument::any())->shouldNotBeCalled();
+    }
+
+    public function testBinaryFileResponse()
+    {
+        $engine = $this->prophesize(EngineInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $listener = new AppendAnalyticsListener(
+            $engine->reveal(),
+            $requestAnalyzer->reveal(),
+            $analyticsRepository->reveal(),
+            'prod'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $request = $this->prophesize(Request::class);
+        $event->getRequest()->willReturn($request->reveal());
+        $request->getRequestFormat()->willReturn('html');
+        $response = $this->prophesize(BinaryFileResponse::class);
+        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->getContent()->willReturn(false)->shouldBeCalled();
+        $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
         $event->getResponse()->willReturn($response->reveal());
 
         $listener->onResponse($event->reveal());

@@ -1,6 +1,13 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.27 (2019-05-16)
+    * BUGFIX      #4540  [ContentBundle]        Fix copying of teaser selection in WebspaceCopyCommand
+    * BUGFIX      #4562  [WebsiteBundle]        Fix BinaryFileResponse of html files.
+    * FEATURE     #4532  [MediaBundle]          Add command to remove format cache files which not longer exists
+    * HOTFIX      #4512  [Components]           Fix pathcleanup whitespace character problems
+    * FEATURE     #4504  [WebsiteBundle]        Dispatch an event after cache clear. 
+
 * 1.6.26 (2019-03-26)
     * BUGFIX      #4343  [MediaBundle]          Fixed format manager types configuration cannot be changed
     * BUGFIX      #4471  [AdminBundle]          Fix CKEditor preview for content that is not wrapped in an HTML tag
@@ -18,6 +25,7 @@ CHANGELOG for Sulu
 * 1.6.24 (2019-01-09)
     * BUGFIX      #4349 [ContentBundle]         Fix compatibility to symfony 3.4.21, 4.1.10 and 4.2.2
     * ENHANCEMENT #4319 [MediaBundle]           Added possibility to have a image format configuration file without formats
+    * BUGFIX      #4313 [All]                   Fix php 7.3 compatibility
 
 * 1.6.23 (2018-12-03)
     * FEATURE     #4236 [MediaBundle]           Added autorotation based on exif
@@ -283,6 +291,9 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.23 (2019-05-16)
+    * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
+    
 * 1.5.22 (2019-03-26)
     * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
     * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object

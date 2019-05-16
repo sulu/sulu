@@ -50,9 +50,9 @@ class PathCleanupTest extends TestCase
 
     public function testCleanup()
     {
-        $clean = $this->cleaner->cleanup('-/aSDf     asdf/äöü-', 'de');
+        $clean = $this->cleaner->cleanup('-/aSDf     asdf/äöü-/hello: world\'s', 'de');
 
-        $this->assertEquals('/asdf-asdf/aeoeue', $clean);
+        $this->assertEquals('/asdf-asdf/aeoeue/hello-worlds', $clean);
     }
 
     public function testValidate()
