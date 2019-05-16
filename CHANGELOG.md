@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.6.27 (2019-05-16)
     * BUGFIX      #4540  [ContentBundle]        Fix copying of teaser selection in WebspaceCopyCommand
     * BUGFIX      #4562  [WebsiteBundle]        Fix BinaryFileResponse of html files.
     * FEATURE     #4532  [MediaBundle]          Add command to remove format cache files which not longer exists
