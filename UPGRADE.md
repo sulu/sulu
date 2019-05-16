@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 2.0.0-alpha6
 
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha5...2.0.0-alpha6).
