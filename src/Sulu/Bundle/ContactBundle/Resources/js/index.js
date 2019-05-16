@@ -34,7 +34,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
             Phone.types = config.phoneTypes
                 .map((phoneType) => ({label: translate(phoneType.name), value: phoneType.id}));
             SocialMedia.types = config.socialMediaTypes
-                .map((socialMediaType) => ({label: translate(socialMediaType.name), value: socialMediaType.id}));
+                .map((socialMediaType) => ({label: socialMediaType.name, value: socialMediaType.id}));
             Website.types = config.websiteTypes
                 .map((urlType) => ({label: translate(urlType.name), value: urlType.id}));
 
