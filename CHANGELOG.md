@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #4562 [WebsiteBundle]         Fix BinaryFileResponse of html files.
     * FEATURE     #4532  [MediaBundle]          Add command to remove format cache files which not longer exists
     * HOTFIX      #4512  [Components]           Fix pathcleanup whitespace character problems
     * FEATURE     #4504  [WebsiteBundle]        Dispatch an event after cache clear. 
