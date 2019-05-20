@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.5
+    * BUGFIX      #4571 [WebsiteBundle]         Fix language switcher for static routes
     * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
 
 * 1.5.23 (2019-05-16)
