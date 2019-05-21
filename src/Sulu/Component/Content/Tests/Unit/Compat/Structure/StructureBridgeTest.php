@@ -19,6 +19,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -166,6 +167,31 @@ class StructureBridgeTest extends TestCase
 
         $this->assertFalse($structure->getIsShadow());
         $this->assertNull($structure->getShadowBaseLanguage());
+    }
+
+    public function testGetExt()
+    {
+        $ext = [
+            'seo' => [],
+            'excerpt' => [],
+        ];
+
+        $metadata = $this->prophesize(StructureMetadata::class);
+        $inspector = $this->prophesize(DocumentInspector::class);
+        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+
+        $document = $this->prophesize(\stdClass::class);
+        $document->willImplement(ExtensionBehavior::class);
+        $document->getExtensionsData()->willReturn($ext);
+
+        $structure = new StructureBridge(
+            $metadata->reveal(),
+            $inspector->reveal(),
+            $propertyFactory->reveal(),
+            $document->reveal()
+        );
+
+        $this->assertSame($ext, $structure->getExt());
     }
 
     public function testWithoutDocument()

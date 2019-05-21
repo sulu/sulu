@@ -191,7 +191,10 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
             $ids = $this->loadSnippetAreaIds($webspaceKey, $snippetArea, $locale);
         }
 
-        return $this->snippetResolver->resolve($ids, $webspaceKey, $locale, $shadowLocale);
+        $params = $property->getParams();
+        $loadExcerpt = isset($params['loadExcerpt']) ? $params['loadExcerpt']->getValue() : false;
+
+        return $this->snippetResolver->resolve($ids, $webspaceKey, $locale, $shadowLocale, $loadExcerpt);
     }
 
     private function loadSnippetAreaIds($webspaceKey, $snippetArea, $locale)

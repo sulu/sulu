@@ -45,7 +45,7 @@ class SnippetResolver implements SnippetResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null)
+    public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
     {
         $snippets = [];
         foreach ($uuids as $uuid) {
@@ -59,7 +59,13 @@ class SnippetResolver implements SnippetResolverInterface
                 $snippet->setIsShadow(null !== $shadowLocale);
                 $snippet->setShadowBaseLanguage($shadowLocale);
 
-                $resolved = $this->structureResolver->resolve($snippet);
+                $resolved = $this->structureResolver->resolve($snippet, $loadExcerpt);
+                if ($loadExcerpt) {
+                    $resolved['content']['taxonomies'] = [
+                        'categories' => $resolved['extension']['excerpt']['categories'],
+                        'tags' => $resolved['extension']['excerpt']['tags'],
+                    ];
+                }
                 $resolved['view']['template'] = $snippet->getKey();
                 $resolved['view']['uuid'] = $snippet->getUuid();
 

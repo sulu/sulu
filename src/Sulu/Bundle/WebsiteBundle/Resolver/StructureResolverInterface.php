@@ -25,5 +25,5 @@ interface StructureResolverInterface
      *
      * @return array
      */
-    public function resolve(StructureInterface $structure);
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = false);
 }

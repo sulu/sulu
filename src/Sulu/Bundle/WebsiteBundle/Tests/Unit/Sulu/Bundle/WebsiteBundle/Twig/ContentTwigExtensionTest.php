@@ -20,7 +20,7 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -30,21 +30,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
-
-class TestStructure extends Structure
-{
-    public function __construct($uuid, $title, $userId)
-    {
-        parent::__construct('test', '', '');
-
-        $this->setUuid($uuid);
-        $this->setCreator($userId);
-        $this->setChanger($userId);
-
-        $this->addChild(new Property('title', [], 'text_line'));
-        $this->getProperty('title')->setValue($title);
-    }
-}
 
 class ContentTwigExtensionTest extends TestCase
 {
@@ -165,10 +150,24 @@ class ContentTwigExtensionTest extends TestCase
 
     public function testLoad()
     {
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getKey()->willReturn('test');
+        $testStructure->getPath()->willReturn(null);
+        $testStructure->getUuid()->willReturn('123-123-123');
+        $testStructure->getCreator()->willReturn(1);
+        $testStructure->getChanger()->willReturn(1);
+        $testStructure->getCreated()->willReturn(null);
+        $testStructure->getChanged()->willReturn(null);
+        $testStructure->getDocument()->willReturn(null);
+
+        $titleProperty = new Property('title', [], 'text_line');
+        $titleProperty->setValue('test');
+        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+
         $this
             ->contentMapper
             ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn(new TestStructure('123-123-123', 'test', 1));
+            ->willReturn($testStructure);
 
         $result = $this->extension->load('123-123-123');
 
@@ -209,10 +208,24 @@ class ContentTwigExtensionTest extends TestCase
 
     public function testLoadParent()
     {
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getKey()->willReturn('test');
+        $testStructure->getPath()->willReturn(null);
+        $testStructure->getUuid()->willReturn('321-321-321');
+        $testStructure->getCreator()->willReturn(1);
+        $testStructure->getChanger()->willReturn(1);
+        $testStructure->getCreated()->willReturn(null);
+        $testStructure->getChanged()->willReturn(null);
+        $testStructure->getDocument()->willReturn(null);
+
+        $titleProperty = new Property('title', [], 'text_line');
+        $titleProperty->setValue('test');
+        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+
         $this
             ->contentMapper
             ->load('321-321-321', 'sulu_test', 'en_us')
-            ->willReturn(new TestStructure('321-321-321', 'test', 1));
+            ->willReturn($testStructure);
 
         $result = $this->extension->loadParent('123-123-123');
 

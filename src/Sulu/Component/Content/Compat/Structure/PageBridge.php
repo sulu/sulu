@@ -93,22 +93,6 @@ class PageBridge extends StructureBridge implements PageInterface
     /**
      * {@inheritdoc}
      */
-    public function getExt()
-    {
-        return $this->document->getExtensionsData();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExt($data)
-    {
-        $this->readOnlyException(__METHOD__);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getInternalLinkContent()
     {
         $target = $this->getDocument()->getRedirectTarget();

@@ -17,6 +17,7 @@ use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 
 class SnippetContentTest extends TestCase
@@ -68,7 +69,7 @@ class SnippetContentTest extends TestCase
         $property->getValue()->willReturn(['123-123-123']);
         $property->getParams()->willReturn([]);
 
-        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en')
+        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en', false)
             ->willReturn(
                 [['content' => ['title' => 'test-1'], 'view' => ['title' => 'test-2', 'template' => 'default']]]
             );
@@ -76,6 +77,33 @@ class SnippetContentTest extends TestCase
         $result = $this->contentType->getContentData($property->reveal());
 
         $this->assertEquals([['title' => 'test-1']], $result);
+    }
+
+    public function testGetContentDataWithExtensions()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $structure = $this->prophesize(StructureBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
+        $structure->getIsShadow()->wilLReturn(true);
+        $structure->getShadowBaseLanguage()->wilLReturn('en');
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getValue()->willReturn(['123-123-123']);
+        $property->getParams()->willReturn(['loadExcerpt' => new PropertyParameter('loadExcerpt', true)]);
+
+        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en', true)
+            ->willReturn(
+                [
+                    [
+                        'content' => ['title' => 'test-1', 'taxonomies' => ['categories' => [], 'tags' => []]],
+                        'view' => ['title' => 'test-2', 'template' => 'default'],
+                    ],
+                ]
+            );
+
+        $result = $this->contentType->getContentData($property->reveal());
+
+        $this->assertEquals([['title' => 'test-1', 'taxonomies' => ['categories' => [], 'tags' => []]]], $result);
     }
 
     public function testGetViewData()
@@ -90,7 +118,7 @@ class SnippetContentTest extends TestCase
         $property->getValue()->willReturn(['123-123-123']);
         $property->getParams()->willReturn([]);
 
-        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en')
+        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en', false)
             ->willReturn(
                 [['content' => ['title' => 'test-1'], 'view' => ['title' => 'test-2', 'template' => 'default']]]
             );

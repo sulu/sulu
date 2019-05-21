@@ -60,18 +60,6 @@ interface PageInterface extends StructureInterface
     public function setNavContexts($navContexts);
 
     /**
-     * @return array
-     */
-    public function getExt();
-
-    /**
-     * @param $data
-     *
-     * @return array
-     */
-    public function setExt($data);
-
-    /**
      * returns content node that holds the internal link.
      *
      * @return StructureInterface
