@@ -529,6 +529,40 @@ test('Should navigate to defined route on back button click with routerAttribues
     expect(router.restore).toBeCalledWith('test_route', {locale: 'de', webspace: 'sulu_io'});
 });
 
+test('Should navigate to defined route on back button click with mixed routerAttribuesToBackRoute mapping', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            locales: [],
+            routerAttributesToBackRoute: {0: 'webspace', 'id': 'active'},
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            id: 4,
+            webspace: 'sulu_io',
+        },
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('test_route', {active: 4, locale: 'de', webspace: 'sulu_io'});
+});
+
 test('Should navigate to defined route on back button click without locale', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
@@ -1398,6 +1432,66 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
                 expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
                 expect(router.navigate)
                     .toBeCalledWith('editRoute', {id: undefined, locale: undefined, webspace: 'sulu_io'});
+                done();
+            });
+        });
+    });
+
+    jsonSchemaResolve({});
+});
+
+test('Should save form when submitted and redirect to editRoute', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve());
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets');
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    let jsonSchemaResolve;
+    const jsonSchemaPromise = new Promise((resolve) => {
+        jsonSchemaResolve = resolve;
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            editRoute: 'editRoute',
+            formKey: 'snippets',
+            locales: [],
+            routerAttributesToEditRoute: {0: 'webspace', 'id': 'active'},
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            id: 8,
+            webspace: 'sulu_io',
+        },
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        jsonSchemaPromise.then(() => {
+            form.find('Form').at(1).instance().submit().then(() => {
+                expect(resourceStore.destroy).toBeCalled();
+                expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+                expect(router.navigate)
+                    .toBeCalledWith('editRoute', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
                 done();
             });
         });

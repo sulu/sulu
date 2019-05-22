@@ -22,6 +22,11 @@ interface ResourceTabRouteBuilderInterface
 
     public function setBackRoute(string $backRoute): self;
 
+    /**
+     * @param string[] $routerAttributesToBackRoute
+     */
+    public function addRouterAttributesToBackRoute(array $routerAttributesToBackRoute): self;
+
     public function setTitleProperty(string $titleProperty): self;
 
     public function getRoute(): Route;

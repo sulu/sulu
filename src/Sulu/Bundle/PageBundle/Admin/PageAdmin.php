@@ -112,7 +112,6 @@ class PageAdmin extends Admin
         ];
 
         $routerAttributesToFormStore = ['parentId', 'webspace'];
-        $routerAttributesToBackRoute = ['webspace'];
 
         $previewCondition = 'nodeType == 1';
 
@@ -130,7 +129,7 @@ class PageAdmin extends Admin
                 static::ADD_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/add/:parentId', 'sulu_page.page_tabs'
             ))
                 ->setOption('backRoute', static::PAGES_ROUTE)
-                ->setOption('routerAttributesToBackRoute', $routerAttributesToBackRoute)
+                ->setOption('routerAttributesToBackRoute', ['webspace'])
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
                 ->setResourceKey('pages')
@@ -144,7 +143,7 @@ class PageAdmin extends Admin
                 ->getRoute(),
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
-                ->setOption('routerAttributesToBackRoute', $routerAttributesToBackRoute)
+                ->setOption('routerAttributesToBackRoute', ['id' => 'active' , 'webspace'])
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')

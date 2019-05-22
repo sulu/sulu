@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 {
+    use FormRouteBuilderTrait;
+
     const VIEW = 'sulu_admin.resource_tabs';
 
     /**
@@ -43,7 +45,15 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 
     public function setBackRoute(string $backRoute): ResourceTabRouteBuilderInterface
     {
-        $this->route->setOption('backRoute', $backRoute);
+        $this->setBackRouteToRoute($this->route, $backRoute);
+
+        return $this;
+    }
+
+    public function addRouterAttributesToBackRoute(
+        array $routerAttributesToBackRoute
+    ): ResourceTabRouteBuilderInterface {
+        $this->addRouterAttributesToBackRouteToRoute($this->route, $routerAttributesToBackRoute);
 
         return $this;
     }

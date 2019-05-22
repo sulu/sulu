@@ -112,6 +112,14 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToBackRoute(
+        array $routerAttributesToBackRoute
+    ): FormRouteBuilderInterface {
+        $this->addRouterAttributesToBackRouteToRoute($this->route, $routerAttributesToBackRoute);
+
+        return $this;
+    }
+
     public function setIdQueryParameter(string $idQueryParameter): FormRouteBuilderInterface
     {
         $this->setIdQueryParameterToRoute($this->route, $idQueryParameter);

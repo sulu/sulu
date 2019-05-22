@@ -71,4 +71,14 @@ trait FormRouteBuilderTrait
 
         $route->setOption('routerAttributesToEditRoute', $newRouterAttributesToEditRoute);
     }
+
+    private function addRouterAttributesToBackRouteToRoute(Route $route, array $routerAttributesToBackRoute): void
+    {
+        $oldRouterAttributesToBackRoute = $route->getOption('routerAttributesToBackRoute');
+        $newRouterAttributesToBackRoute = $oldRouterAttributesToBackRoute
+            ? array_merge($oldRouterAttributesToBackRoute, $routerAttributesToBackRoute)
+            : $routerAttributesToBackRoute;
+
+        $route->setOption('routerAttributesToBackRoute', $newRouterAttributesToBackRoute);
+    }
 }

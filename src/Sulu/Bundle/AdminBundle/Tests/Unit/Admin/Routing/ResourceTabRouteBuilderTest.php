@@ -41,6 +41,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 '/categories/add',
                 'categories',
                 'sulu_category.list',
+                null,
                 'title',
             ],
             [
@@ -49,6 +50,23 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'tags',
                 null,
                 null,
+                null,
+            ],
+            [
+                'sulu_category.add_form',
+                '/categories/add',
+                'categories',
+                'sulu_category.list',
+                ['webspace'],
+                'title',
+            ],
+            [
+                'sulu_category.add_form',
+                '/categories/add',
+                'categories',
+                'sulu_category.list',
+                ['webspace', 'active' => 'id'],
+                'title',
             ],
         ];
     }
@@ -61,6 +79,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         string $path,
         string $resourceKey,
         ?string $backRoute,
+        ?array $routerAttributesToBackRoute,
         ?string $titleProperty
     ) {
         $routeBuilder = (new ResourceTabRouteBuilder($name, $path))
@@ -68,6 +87,10 @@ class ResourceTabRouteBuilderTest extends TestCase
 
         if ($backRoute) {
             $routeBuilder->setBackRoute($backRoute);
+        }
+
+        if ($routerAttributesToBackRoute) {
+            $routeBuilder->addRouterAttributesToBackRoute($routerAttributesToBackRoute);
         }
 
         if ($titleProperty) {
@@ -80,6 +103,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         $this->assertSame($path, $route->getPath());
         $this->assertSame($resourceKey, $route->getOption('resourceKey'));
         $this->assertSame($backRoute, $route->getOption('backRoute'));
+        $this->assertSame($routerAttributesToBackRoute, $route->getOption('routerAttributesToBackRoute'));
         $this->assertSame($titleProperty, $route->getOption('titleProperty'));
         $this->assertSame('sulu_admin.resource_tabs', $route->getView());
     }

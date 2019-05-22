@@ -244,15 +244,16 @@ class Form extends React.Component<Props> {
             action: actionParameter,
         };
 
-        const editRouteParameters = routerAttributesToEditRoute
-            ? routerAttributesToEditRoute.reduce(
-                (parameters: Object, routerAttribute: string) => {
-                    parameters[routerAttribute] = attributes[routerAttribute];
-                    return parameters;
-                },
-                {}
-            )
-            : {};
+        const editRouteParameters = {};
+
+        if (routerAttributesToEditRoute) {
+            Object.keys(routerAttributesToEditRoute).forEach((key) => {
+                const formOptionKey = routerAttributesToEditRoute[key];
+                const attributeName = isNaN(key) ? key : routerAttributesToEditRoute[key];
+
+                editRouteParameters[formOptionKey] = attributes[attributeName];
+            });
+        }
 
         return this.resourceFormStore.save(saveOptions)
             .then((response) => {
@@ -343,15 +344,16 @@ export default withToolbar(Form, function() {
     const backButton = backRoute
         ? {
             onClick: () => {
-                const backRouteParameters = routerAttributesToBackRoute
-                    ? routerAttributesToBackRoute.reduce(
-                        (parameters: Object, routerAttribute: string) => {
-                            parameters[routerAttribute] = attributes[routerAttribute];
-                            return parameters;
-                        },
-                        {}
-                    )
-                    : {};
+                const backRouteParameters = {};
+
+                if (routerAttributesToBackRoute) {
+                    Object.keys(routerAttributesToBackRoute).forEach((key) => {
+                        const formOptionKey = routerAttributesToBackRoute[key];
+                        const attributeName = isNaN(key) ? key : routerAttributesToBackRoute[key];
+
+                        backRouteParameters[formOptionKey] = attributes[attributeName];
+                    });
+                }
 
                 if (resourceStore.locale) {
                     backRouteParameters.locale = resourceStore.locale.get();
