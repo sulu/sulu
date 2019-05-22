@@ -5,10 +5,11 @@ import classNames from 'classnames';
 import type {BaseItemProps} from './types';
 import baseItemStyles from './baseItem.scss';
 
-type Props = BaseItemProps & {
+type Props = {|
+    ...BaseItemProps,
     children: ?Node,
     className: string,
-};
+|};
 
 export default class BaseItem extends React.PureComponent<Props> {
     render() {
