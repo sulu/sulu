@@ -143,7 +143,7 @@ class PageAdmin extends Admin
                 ->getRoute(),
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
-                ->setOption('routerAttributesToBackRoute', ['id' => 'active' , 'webspace'])
+                ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')

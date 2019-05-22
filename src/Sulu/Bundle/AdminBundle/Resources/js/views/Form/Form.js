@@ -247,7 +247,7 @@ class Form extends React.Component<Props> {
         const editRouteParameters = {};
 
         if (routerAttributesToEditRoute) {
-            Object.keys(routerAttributesToEditRoute).forEach((key) => {
+            Object.keys(toJS(routerAttributesToEditRoute)).forEach((key) => {
                 const formOptionKey = routerAttributesToEditRoute[key];
                 const attributeName = isNaN(key) ? key : routerAttributesToEditRoute[key];
 
@@ -347,7 +347,7 @@ export default withToolbar(Form, function() {
                 const backRouteParameters = {};
 
                 if (routerAttributesToBackRoute) {
-                    Object.keys(routerAttributesToBackRoute).forEach((key) => {
+                    Object.keys(toJS(routerAttributesToBackRoute)).forEach((key) => {
                         const formOptionKey = routerAttributesToBackRoute[key];
                         const attributeName = isNaN(key) ? key : routerAttributesToBackRoute[key];
 
