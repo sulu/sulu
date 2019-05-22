@@ -496,6 +496,39 @@ test('Should navigate to defined route on back button click', () => {
     expect(router.restore).toBeCalledWith('test_route', {locale: 'de'});
 });
 
+test('Should navigate to defined route on back button click with routerAttribuesToBackRoute', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+
+    const route = {
+        options: {
+            backRoute: 'test_route',
+            formKey: 'snippets',
+            locales: [],
+            routerAttributesToBackRoute: ['webspace'],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            webspace: 'sulu_io',
+        },
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    resourceStore.setLocale('de');
+
+    const toolbarConfig = toolbarFunction.call(form.instance());
+    toolbarConfig.backButton.onClick();
+    expect(router.restore).toBeCalledWith('test_route', {locale: 'de', webspace: 'sulu_io'});
+});
+
 test('Should navigate to defined route on back button click without locale', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;

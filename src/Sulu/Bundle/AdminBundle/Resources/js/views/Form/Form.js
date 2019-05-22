@@ -329,17 +329,35 @@ class Form extends React.Component<Props> {
 
 export default withToolbar(Form, function() {
     const {router} = this.props;
-    const {backRoute} = router.route.options;
+    const {
+        attributes,
+        route: {
+            options: {
+                backRoute,
+                routerAttributesToBackRoute,
+            },
+        },
+    } = router;
     const {errors, resourceStore, showSuccess} = this;
 
     const backButton = backRoute
         ? {
             onClick: () => {
-                const options = {};
+                const backRouteParameters = routerAttributesToBackRoute
+                    ? routerAttributesToBackRoute.reduce(
+                        (parameters: Object, routerAttribute: string) => {
+                            parameters[routerAttribute] = attributes[routerAttribute];
+                            return parameters;
+                        },
+                        {}
+                    )
+                    : {};
+
                 if (resourceStore.locale) {
-                    options.locale = resourceStore.locale.get();
+                    backRouteParameters.locale = resourceStore.locale.get();
                 }
-                router.restore(backRoute, options);
+
+                router.restore(backRoute, backRouteParameters);
             },
         }
         : undefined;
