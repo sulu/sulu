@@ -22,8 +22,8 @@ use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class StructureMetadataFactoryTest extends TestCase
@@ -93,10 +93,10 @@ class StructureMetadataFactoryTest extends TestCase
         $this->overriddenDefaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
 
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->apostropheStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
-        $this->somethingStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
-        $this->defaultStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
-        $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
+        $this->apostropheStructure = $this->prophesize(StructureMetadata::class);
+        $this->somethingStructure = $this->prophesize(StructureMetadata::class);
+        $this->defaultStructure = $this->prophesize(StructureMetadata::class);
+        $this->loader = $this->prophesize(LoaderInterface::class);
         $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
             [
@@ -246,16 +246,18 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testGetStructures()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->defaultStructure->reveal());
+        $revealedSomethingStructure = $this->somethingStructure->reveal();
+        $revealedDefaultStructure = $this->somethingStructure->reveal();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($revealedSomethingStructure);
+        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($revealedDefaultStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
         $this->loader->load($this->defaultMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structures = $this->factory->getStructures('page');
         $this->assertCount(3, $structures);
-        $this->assertEquals($this->defaultStructure->reveal(), $structures[0]);
-        $this->assertEquals($this->somethingStructure->reveal(), $structures[1]);
-        $this->assertEquals($this->defaultStructure->reveal(), $structures[2]);
+        $this->assertEquals($revealedDefaultStructure, $structures[0]);
+        $this->assertEquals($revealedSomethingStructure, $structures[1]);
+        $this->assertEquals($revealedDefaultStructure, $structures[2]);
     }
 
     private function cleanUp()
