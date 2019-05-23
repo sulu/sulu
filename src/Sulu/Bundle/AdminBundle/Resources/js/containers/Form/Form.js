@@ -49,6 +49,13 @@ class Form extends React.Component<Props> {
         this.displayGhostDialogDisposer();
     }
 
+    @action setRendererRef = () => {
+        const {store} = this.props;
+        // This avoids starting with an already dirty form
+        // That can happen if a field type calls the onChange handler to set a default value in their its constructor
+        store.dirty = false;
+    };
+
     @computed get formInspector(): FormInspector {
         return new FormInspector(this.props.store);
     }
@@ -133,6 +140,7 @@ class Form extends React.Component<Props> {
                         formInspector={this.formInspector}
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
+                        ref={this.setRendererRef}
                         schema={store.schema}
                         schemaPath=""
                         showAllErrors={this.showAllErrors}

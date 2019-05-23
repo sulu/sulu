@@ -256,6 +256,15 @@ test('Should change data on store when changed', () => {
     expect(store.change).toBeCalledWith('field', 'value');
 });
 
+test('Reset dirty flag after form was rendered to avoid initial dirty state if defaults were set by fields', () => {
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    store.dirty = true;
+    mount(<Form onSubmit={submitSpy} store={store} />);
+
+    expect(store.dirty).toEqual(false);
+});
+
 test('Should change data on store without sections', () => {
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
