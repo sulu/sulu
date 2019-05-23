@@ -51,6 +51,10 @@ export default class ListStore {
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
     limitDisposer: () => void;
+    activeSettingDisposer: () => void;
+    limitSettingDisposer: () => void;
+    sortColumnSettingDisposer: () => void;
+    sortOrderSettingDisposer: () => void;
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
 
@@ -153,6 +157,22 @@ export default class ListStore {
         this.sortColumnDisposer = intercept(this.sortColumn, '', callResetForChangedObservable);
         this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
         this.limitDisposer = intercept(this.limit, '', callResetForChangedObservable);
+
+        this.activeSettingDisposer = autorun(
+            () => ListStore.setActiveSetting(this.listKey, this.userSettingsKey, this.active.get())
+        );
+
+        this.limitSettingDisposer = autorun(
+            () => ListStore.setLimitSetting(this.listKey, this.userSettingsKey, this.limit.get())
+        );
+
+        this.sortColumnSettingDisposer = autorun(
+            () => ListStore.setSortColumnSetting(this.listKey, this.userSettingsKey, this.sortColumn.get())
+        );
+
+        this.sortOrderSettingDisposer = autorun(
+            () => ListStore.setSortOrderSetting(this.listKey, this.userSettingsKey, this.sortOrder.get())
+        );
 
         metadataStore.getSchema(this.listKey)
             .then(action((schema) => {
@@ -490,8 +510,6 @@ export default class ListStore {
 
     @action setLimit(limit: number) {
         this.limit.set(limit);
-
-        ListStore.setLimitSetting(this.listKey, this.userSettingsKey, limit);
     }
 
     @action setActive(active: ?string | number) {
@@ -506,8 +524,6 @@ export default class ListStore {
         if (this.structureStrategy.activate) {
             this.structureStrategy.activate(id);
         }
-
-        ListStore.setActiveSetting(this.listKey, this.userSettingsKey, id);
     }
 
     @action deactivate(id: ?string | number) {
@@ -519,9 +535,6 @@ export default class ListStore {
     @action sort(column: string, order: SortOrder) {
         this.sortColumn.set(column);
         this.sortOrder.set(order);
-
-        ListStore.setSortColumnSetting(this.listKey, this.userSettingsKey, column);
-        ListStore.setSortOrderSetting(this.listKey, this.userSettingsKey, order);
     }
 
     @action order(id: string | number, order: number) {
@@ -596,6 +609,11 @@ export default class ListStore {
         this.sortColumnDisposer();
         this.sortOrderDisposer();
         this.limitDisposer();
+
+        this.activeSettingDisposer();
+        this.limitSettingDisposer();
+        this.sortColumnSettingDisposer();
+        this.sortOrderSettingDisposer();
 
         if (this.localeDisposer) {
             this.localeDisposer();

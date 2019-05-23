@@ -157,6 +157,10 @@ class UserStore {
     }, UPDATE_PERSISTENT_SETTINGS_DELAY);
 
     @action setPersistentSetting(key: string, value: *) {
+        if (this.persistentSettings.get(key) === value) {
+            return;
+        }
+
         this.persistentSettings.set(key, value);
         this.dirtyPersistentSettings.push(key);
         this.updatePersistentSettings();

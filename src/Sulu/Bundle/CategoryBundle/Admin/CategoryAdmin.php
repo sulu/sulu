@@ -125,6 +125,7 @@ class CategoryAdmin extends Admin
                 ->setResourceKey('categories')
                 ->addLocales($locales)
                 ->setBackRoute(static::LIST_ROUTE)
+                ->addRouterAttributesToBackRoute(['id' => 'active'])
                 ->setTitleProperty('name')
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_category.edit_form.details', '/details')

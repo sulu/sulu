@@ -244,15 +244,16 @@ class Form extends React.Component<Props> {
             action: actionParameter,
         };
 
-        const editRouteParameters = routerAttributesToEditRoute
-            ? routerAttributesToEditRoute.reduce(
-                (parameters: Object, routerAttribute: string) => {
-                    parameters[routerAttribute] = attributes[routerAttribute];
-                    return parameters;
-                },
-                {}
-            )
-            : {};
+        const editRouteParameters = {};
+
+        if (routerAttributesToEditRoute) {
+            Object.keys(toJS(routerAttributesToEditRoute)).forEach((key) => {
+                const formOptionKey = routerAttributesToEditRoute[key];
+                const attributeName = isNaN(key) ? key : routerAttributesToEditRoute[key];
+
+                editRouteParameters[formOptionKey] = attributes[attributeName];
+            });
+        }
 
         return this.resourceFormStore.save(saveOptions)
             .then((response) => {
@@ -329,17 +330,36 @@ class Form extends React.Component<Props> {
 
 export default withToolbar(Form, function() {
     const {router} = this.props;
-    const {backRoute} = router.route.options;
+    const {
+        attributes,
+        route: {
+            options: {
+                backRoute,
+                routerAttributesToBackRoute,
+            },
+        },
+    } = router;
     const {errors, resourceStore, showSuccess} = this;
 
     const backButton = backRoute
         ? {
             onClick: () => {
-                const options = {};
-                if (resourceStore.locale) {
-                    options.locale = resourceStore.locale.get();
+                const backRouteParameters = {};
+
+                if (routerAttributesToBackRoute) {
+                    Object.keys(toJS(routerAttributesToBackRoute)).forEach((key) => {
+                        const formOptionKey = routerAttributesToBackRoute[key];
+                        const attributeName = isNaN(key) ? key : routerAttributesToBackRoute[key];
+
+                        backRouteParameters[formOptionKey] = attributes[attributeName];
+                    });
                 }
-                router.restore(backRoute, options);
+
+                if (resourceStore.locale) {
+                    backRouteParameters.locale = resourceStore.locale.get();
+                }
+
+                router.restore(backRoute, backRouteParameters);
             },
         }
         : undefined;

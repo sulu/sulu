@@ -49,6 +49,38 @@ class StructureStrategy {
     findById: (id: string | number) => ?Object = jest.fn();
 }
 
+test('The active item should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.active.get()).toEqual();
+
+    listStore.active.set('123');
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.active', '123');
+});
+
+test('The limit value should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.limit.get()).toEqual(10);
+
+    listStore.limit.set(20);
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.limit', 20);
+});
+
+test('The sort column value should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.sortColumn.get()).toEqual();
+
+    listStore.sortColumn.set('title');
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.sort_column', 'title');
+});
+
+test('The sort order value should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.sortOrder.get()).toEqual();
+
+    listStore.sortOrder.set('asc');
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.sort_order', 'asc');
+});
+
 test('The loading strategy should get passed the structure strategy', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -1771,6 +1803,10 @@ test('Should call all disposers if destroy is called', () => {
     listStore.sortColumnDisposer = jest.fn();
     listStore.sortOrderDisposer = jest.fn();
     listStore.limitDisposer = jest.fn();
+    listStore.activeSettingDisposer = jest.fn();
+    listStore.limitSettingDisposer = jest.fn();
+    listStore.sortColumnSettingDisposer = jest.fn();
+    listStore.sortOrderSettingDisposer = jest.fn();
 
     listStore.destroy();
 
@@ -1780,4 +1816,8 @@ test('Should call all disposers if destroy is called', () => {
     expect(listStore.sortColumnDisposer).toBeCalledWith();
     expect(listStore.sortOrderDisposer).toBeCalledWith();
     expect(listStore.limitDisposer).toBeCalledWith();
+    expect(listStore.activeSettingDisposer).toBeCalledWith();
+    expect(listStore.limitSettingDisposer).toBeCalledWith();
+    expect(listStore.sortColumnSettingDisposer).toBeCalledWith();
+    expect(listStore.sortOrderSettingDisposer).toBeCalledWith();
 });

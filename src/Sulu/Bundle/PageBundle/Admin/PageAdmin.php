@@ -129,6 +129,7 @@ class PageAdmin extends Admin
                 static::ADD_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/add/:parentId', 'sulu_page.page_tabs'
             ))
                 ->setOption('backRoute', static::PAGES_ROUTE)
+                ->setOption('routerAttributesToBackRoute', ['webspace'])
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
                 ->setResourceKey('pages')
@@ -142,6 +143,7 @@ class PageAdmin extends Admin
                 ->getRoute(),
             (new Route(static::EDIT_FORM_ROUTE, '/webspaces/:webspace/pages/:locale/:id', 'sulu_page.page_tabs'))
                 ->setOption('backRoute', static::PAGES_ROUTE)
+                ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
                 ->setOption('resourceKey', 'pages'),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')
@@ -167,7 +169,6 @@ class PageAdmin extends Admin
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                 ->setResourceKey('pages')
                 ->setFormKey('page_excerpt')
-                ->setBackRoute(static::PAGES_ROUTE)
                 ->setTabTitle('sulu_page.excerpt')
                 ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
                 ->addToolbarActions($formToolbarActionsWithoutType)
@@ -178,7 +179,6 @@ class PageAdmin extends Admin
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
                 ->setResourceKey('pages')
                 ->setFormKey('page_settings')
-                ->setBackRoute(static::PAGES_ROUTE)
                 ->setTabTitle('sulu_page.settings')
                 ->setTabPriority(512)
                 ->addToolbarActions($formToolbarActionsWithoutType)
