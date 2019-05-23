@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?pin9hf');
-  src:  url('fonts/sulu.eot?pin9hf#iefix') format('embedded-opentype'),
-    url('fonts/sulu.ttf?pin9hf') format('truetype'),
-    url('fonts/sulu.woff?pin9hf') format('woff'),
-    url('fonts/sulu.svg?pin9hf#sulu') format('svg');
+  src:  url('fonts/sulu.eot?45mxu');
+  src:  url('fonts/sulu.eot?45mxu#iefix') format('embedded-opentype'),
+    url('fonts/sulu.ttf?45mxu') format('truetype'),
+    url('fonts/sulu.woff?45mxu') format('woff'),
+    url('fonts/sulu.svg?45mxu#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,42 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-bottom-center:before {
+  content: "\e95c";
+  color: #585858;
+}
+.su-bottom-left:before {
+  content: "\e95d";
+  color: #585858;
+}
+.su-bottom-right:before {
+  content: "\e95e";
+  color: #585858;
+}
+.su-center-center:before {
+  content: "\e95f";
+  color: #585858;
+}
+.su-center-left:before {
+  content: "\e964";
+  color: #585858;
+}
+.su-center-right:before {
+  content: "\e970";
+  color: #585858;
+}
+.su-top-center:before {
+  content: "\e972";
+  color: #585858;
+}
+.su-top-left:before {
+  content: "\e974";
+  color: #585858;
+}
+.su-top-right:before {
+  content: "\e98c";
+  color: #585858;
+}
 .su-shadow-page:before {
   content: "\e95b";
 }
