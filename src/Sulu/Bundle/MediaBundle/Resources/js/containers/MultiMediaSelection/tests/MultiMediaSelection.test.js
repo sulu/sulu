@@ -52,6 +52,53 @@ test('Render a MultiMediaSelection field', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a MultiMediaSelection field with display options', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {
+                id: 1,
+                title: 'Media 1',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
+            },
+        ];
+    });
+
+    expect(render(
+        <MultiMediaSelection
+            displayOptions={['top', 'left', 'right', 'bottom']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render a MultiMediaSelection field with display options and selected icon', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {
+                id: 1,
+                title: 'Media 1',
+                thumbnails: {
+                    'sulu-25x25': 'http://lorempixel.com/25/25',
+                },
+            },
+        ];
+    });
+
+    expect(render(
+        <MultiMediaSelection
+            displayOptions={['top', 'left', 'right', 'bottom']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: 'left', ids: []}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator', () => {
     // $FlowFixMe
     MultiSelectionStore.mockImplementationOnce(function() {
@@ -205,7 +252,11 @@ test('Should call the onChange handler if selection store changes', () => {
     const changeSpy = jest.fn();
 
     const mediaSelectionInstance = shallow(
-        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+        <MultiMediaSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, ids: [55]}}
+        />
     ).instance();
 
     mediaSelectionInstance.mediaSelectionStore.items.push({id: 99, thumbnails: {}});
@@ -215,11 +266,33 @@ test('Should call the onChange handler if selection store changes', () => {
     expect(changeSpy).toBeCalledWith({ids: [99]});
 });
 
+test('Should call the onChange handler if the displayOption changes', () => {
+    const changeSpy = jest.fn();
+
+    const mediaSelection = mount(
+        <MultiMediaSelection
+            displayOptions={['left']}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, ids: [55]}}
+        />
+    );
+
+    mediaSelection.find('Button[icon="su-display-default"]').simulate('click');
+    mediaSelection.find('Action[value="left"]').simulate('click');
+
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: [55]});
+});
+
 test('Should not call the onChange callback if the component props change', () => {
     const changeSpy = jest.fn();
 
     const mediaSelection = shallow(
-        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+        <MultiMediaSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, ids: [55]}}
+        />
     );
 
     mediaSelection.setProps({disabled: true});
@@ -242,7 +315,11 @@ test('Should not call onChange callback if an unrelated observable that is acces
     });
 
     const mediaSelectionInstance = shallow(
-        <MultiMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{ids: [55]}} />
+        <MultiMediaSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, ids: [55]}}
+        />
     ).instance();
 
     // change callback should be called when item of the store mock changes

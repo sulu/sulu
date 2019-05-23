@@ -190,6 +190,204 @@ Array [
 ]
 `;
 
+exports[`Render a MultiMediaSelection field with display options 1`] = `
+Array [
+  <div
+    class="multiItemSelectionClass"
+  >
+    <div
+      class="header"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-image"
+          class="su-image icon"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        1 sulu_media.media_selected_singular
+      </div>
+      <button
+        class="button right hasOptions"
+        type="button"
+      >
+        <span
+          aria-label="su-display-default"
+          class="su-display-default icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+    </div>
+    <ul
+      class="list"
+    >
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              1
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div
+              class="mediaItem"
+            >
+              <img
+                alt="Media 1"
+                class="thumbnailImage"
+                src="http://lorempixel.com/25/25"
+              />
+              <div
+                class="mediaTitle"
+              >
+                Media 1
+              </div>
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;
+
+exports[`Render a MultiMediaSelection field with display options and selected icon 1`] = `
+Array [
+  <div
+    class="multiItemSelectionClass"
+  >
+    <div
+      class="header"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-image"
+          class="su-image icon"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        1 sulu_media.media_selected_singular
+      </div>
+      <button
+        class="button right hasOptions"
+        type="button"
+      >
+        <span
+          aria-label="su-display-center-left"
+          class="su-display-center-left icon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down"
+        />
+      </button>
+    </div>
+    <ul
+      class="list"
+    >
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              1
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div
+              class="mediaItem"
+            >
+              <img
+                alt="Media 1"
+                class="thumbnailImage"
+                src="http://lorempixel.com/25/25"
+              />
+              <div
+                class="mediaTitle"
+              >
+                Media 1
+              </div>
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;
+
 exports[`Render a MultiMediaSelection field without thumbnails with MimeTypeIndicator 1`] = `
 Array [
   <div

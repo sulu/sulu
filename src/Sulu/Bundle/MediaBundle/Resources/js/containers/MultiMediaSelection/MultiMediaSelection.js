@@ -11,10 +11,11 @@ import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import type {Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
-import type {Value} from './types';
+import type {DisplayOption, Value} from './types';
 
 type Props = {|
     disabled: boolean,
+    displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
     value: Value,
@@ -23,11 +24,62 @@ type Props = {|
 const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
 
+function getTranslationForDisplayOption(value: ?DisplayOption) {
+    switch (value) {
+        case 'leftTop':
+            return translate('sulu_media.left_top');
+        case 'top':
+            return translate('sulu_media.top');
+        case 'rightTop':
+            return translate('sulu_media.right_top');
+        case 'left':
+            return translate('sulu_media.left');
+        case 'middle':
+            return translate('sulu_media.middle');
+        case 'right':
+            return translate('sulu_media.right');
+        case 'leftBottom':
+            return translate('sulu_media.left_bottom');
+        case 'bottom':
+            return translate('sulu_media.bottom');
+        case 'rightBottom':
+            return translate('sulu_media.right_bottom');
+        default:
+            return '';
+    }
+}
+
+function getIconForDisplayOption(value: ?DisplayOption) {
+    switch (value) {
+        case 'leftTop':
+            return 'su-display-top-left';
+        case 'top':
+            return 'su-display-top-center';
+        case 'rightTop':
+            return 'su-display-top-right';
+        case 'left':
+            return 'su-display-center-left';
+        case 'middle':
+            return 'su-display-center-center';
+        case 'right':
+            return 'su-display-center-right';
+        case 'leftBottom':
+            return 'su-display-bottom-left';
+        case 'bottom':
+            return 'su-display-bottom-center';
+        case 'rightBottom':
+            return 'su-display-bottom-right';
+        default:
+            return 'su-display-default';
+    }
+}
+
 @observer
 class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        value: {ids: []},
+        displayOptions: [],
+        value: {displayOption: undefined, ids: []},
     };
 
     mediaSelectionStore: MultiSelectionStore<number, Media>;
@@ -47,7 +99,7 @@ class MultiMediaSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (!equals(toJS(value.ids), toJS(loadedMediaIds))) {
-                    onChange({ids: loadedMediaIds});
+                    onChange({...value, ids: loadedMediaIds});
                 }
             }
         );
@@ -107,11 +159,28 @@ class MultiMediaSelection extends React.Component<Props> {
         this.closeMediaOverlay();
     };
 
+    handleDisplayOptionClick = (displayOption: ?DisplayOption) => {
+        const {onChange, value} = this.props;
+
+        onChange({...value, displayOption});
+    };
+
     render() {
-        const {locale, disabled} = this.props;
+        const {locale, disabled, displayOptions, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
+
+        const rightButton = displayOptions.length > 0
+            ? {
+                icon: getIconForDisplayOption(value.displayOption),
+                onClick: this.handleDisplayOptionClick,
+                options: displayOptions.map((displayOption) => ({
+                    label: getTranslationForDisplayOption(displayOption),
+                    value: displayOption,
+                })),
+            }
+            : undefined;
 
         return (
             <Fragment>
@@ -125,6 +194,7 @@ class MultiMediaSelection extends React.Component<Props> {
                     loading={loading}
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
+                    rightButton={rightButton}
                 >
                     {medias.map((media, index) => {
                         return (

@@ -12,12 +12,12 @@ type Props<T> = {|
     children?: ChildrenArray<Element<typeof Item>>,
     disabled: boolean,
     label?: string,
-    leftButton?: Button,
+    leftButton?: Button<*>,
     loading: boolean,
     onItemEdit?: (itemId: T) => void,
     onItemRemove?: (itemId: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
-    rightButton?: Button,
+    rightButton?: Button<*>,
     sortable: boolean,
 |};
 

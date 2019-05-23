@@ -9,7 +9,7 @@ import buttonStyles from './button.scss';
 import type {Button as ButtonConfig} from './types';
 
 type Props = {|
-    ...ButtonConfig,
+    ...ButtonConfig<*>,
     location: 'left' | 'right',
 |};
 

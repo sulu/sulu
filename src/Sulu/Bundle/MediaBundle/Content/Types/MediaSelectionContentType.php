@@ -50,28 +50,11 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     {
         return [
             'types' => new PropertyParameter('types', null),
-            'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'top'),
-            'displayOptions' => new PropertyParameter(
-                'displayOptions',
-                [
-                    'leftTop' => new PropertyParameter('leftTop', true),
-                    'top' => new PropertyParameter('top', true),
-                    'rightTop' => new PropertyParameter('rightTop', true),
-                    'left' => new PropertyParameter('left', true),
-                    'middle' => new PropertyParameter('middle', false),
-                    'right' => new PropertyParameter('right', true),
-                    'leftBottom' => new PropertyParameter('leftBottom', true),
-                    'bottom' => new PropertyParameter('bottom', true),
-                    'rightBottom' => new PropertyParameter('rightBottom', true),
-                ],
-                'collection'
-            ),
             'formats' => new PropertyParameter('formats', []),
         ];
     }
 
-    /**
-     * @param $params
+    /** @param $params
      *
      * @return PropertyParameter[]
      */

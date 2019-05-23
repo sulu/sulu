@@ -11,9 +11,9 @@ const LOADER_SIZE = 24;
 type Props = {
     emptyList: boolean,
     label?: string,
-    leftButton?: ButtonConfig,
+    leftButton?: ButtonConfig<*>,
     loading: boolean,
-    rightButton?: ButtonConfig,
+    rightButton?: ButtonConfig<*>,
 };
 
 export default class Header extends React.PureComponent<Props> {
