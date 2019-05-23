@@ -10,10 +10,6 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
 
         const {onChange, schemaOptions, value} = this.props;
 
-        if (!schemaOptions) {
-            return;
-        }
-
         const {
             default_value: {
                 value: defaultValue,

@@ -118,7 +118,7 @@ export type FieldTypeProps<T> = {|
     minOccurs: ?number,
     onChange: (value: T) => void,
     onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
-    schemaOptions?: SchemaOptions,
+    schemaOptions: SchemaOptions,
     schemaPath: string,
     showAllErrors: boolean,
     types: ?Types,

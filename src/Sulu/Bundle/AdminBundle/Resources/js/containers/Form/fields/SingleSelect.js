@@ -4,17 +4,11 @@ import {toJS} from 'mobx';
 import SingleSelectComponent from '../../../components/SingleSelect';
 import type {FieldTypeProps} from '../../../types';
 
-const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the SingleSelect FieldType';
-
 export default class SingleSelect extends React.Component<FieldTypeProps<string | number>> {
     constructor(props: FieldTypeProps<string | number>) {
         super(props);
 
         const {onChange, schemaOptions, value} = this.props;
-
-        if (!schemaOptions) {
-            return;
-        }
 
         const {
             default_value: {
@@ -44,14 +38,10 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
 
     render() {
         const {schemaOptions, disabled, value} = this.props;
-        if (!schemaOptions) {
-            throw new Error(MISSING_VALUES_OPTIONS);
-        }
-
         const values = toJS(schemaOptions.values);
 
-        if (!Array.isArray(values.value)) {
-            throw new Error(MISSING_VALUES_OPTIONS);
+        if (!values || !Array.isArray(values.value)) {
+            throw new Error('The "values" option has to be set for the SingleSelect FieldType');
         }
 
         return (
