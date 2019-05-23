@@ -71,6 +71,59 @@ test('Pass content-locale of user to MultiMediaSelection if locale is not presen
     expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('userContentLocale');
 });
 
+test('Set default display option if no value is passed', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        defaultDisplayOption: {value: 'left'},
+        displayOptions: {value: [{name: 'left', value: true}]},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {}),
+            'test'
+        )
+    );
+
+    shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []});
+});
+
+test('Do not set default display option if value is passed', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        defaultDisplayOption: {value: 'left'},
+        displayOptions: {value: [{name: 'left', value: true}]},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {}),
+            'test'
+        )
+    );
+
+    shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+            value={{displayOption: undefined, ids: []}}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
 test('Should call onChange and onFinish if the selection changes', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();

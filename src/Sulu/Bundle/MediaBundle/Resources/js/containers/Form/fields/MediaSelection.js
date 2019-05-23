@@ -7,8 +7,47 @@ import {observable} from 'mobx';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
 
+function validateDisplayOption(name: ?string | number): boolean %checks {
+    return name === 'leftTop'
+        || name === 'top'
+        || name === 'rightTop'
+        || name === 'left'
+        || name === 'middle'
+        || name === 'right'
+        || name === 'leftBottom'
+        || name === 'bottom'
+        || name === 'rightBottom';
+}
+
 @observer
 class MediaSelection extends React.Component<FieldTypeProps<Value>> {
+    constructor(props: FieldTypeProps<Value>) {
+        super(props);
+
+        const {onChange, schemaOptions, value} = this.props;
+
+        const {
+            defaultDisplayOption: {
+                value: defaultDisplayOption,
+            } = {},
+        } = schemaOptions;
+
+        if (!defaultDisplayOption) {
+            return;
+        }
+
+        if (typeof defaultDisplayOption !== 'string' || !validateDisplayOption(defaultDisplayOption)) {
+            throw new Error(
+                'The children of "displayOptions" contains the invalid value "'
+                + (defaultDisplayOption.toString() + '') + '".'
+            );
+        }
+
+        if (value === undefined) {
+            onChange({ids: [], displayOption: defaultDisplayOption});
+        }
+    }
+
     handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
@@ -33,21 +72,10 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             ? displayOptions
                 .filter((displayOption) => displayOption.value === true)
                 .map(({name}) => {
-                    switch (name) {
-                        case 'leftTop':
-                        case 'top':
-                        case 'rightTop':
-                        case 'left':
-                        case 'middle':
-                        case 'right':
-                        case 'leftBottom':
-                        case 'bottom':
-                        case 'rightBottom':
-                            break;
-                        default:
-                            throw new Error(
-                                'The children of "displayOptions" contains the invalid value "' + (name || '') + '".'
-                            );
+                    if (!validateDisplayOption(name)) {
+                        throw new Error(
+                            'The children of "displayOptions" contains the invalid value "' + (name || '') + '".'
+                        );
                     }
                     return name;
                 })
