@@ -89,8 +89,9 @@ class RoleAssignments extends React.Component<Props> {
 
         return (
             <Grid>
-                <Grid.Item size={6}>
+                <Grid.Item colSpan={6}>
                     <ResourceMultiSelect
+                        apiOptions={{sortBy: 'name'}}
                         disabled={disabled}
                         displayProperty="name"
                         onChange={this.handleRoleChange}
@@ -99,7 +100,7 @@ class RoleAssignments extends React.Component<Props> {
                     />
                 </Grid.Item>
                 {this.selectedRoles.length > 0 &&
-                    <Grid.Item size={12}>
+                    <Grid.Item colSpan={12}>
                         <div className={roleAssignmentsStyle.roleAssignmentsContainer}>
                             {value.map((userRole, key) => {
                                 return (

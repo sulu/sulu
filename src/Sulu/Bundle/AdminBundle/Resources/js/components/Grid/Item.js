@@ -6,10 +6,11 @@ import type {BaseItemProps} from './types';
 import BaseItem from './BaseItem';
 import itemStyles from './item.scss';
 
-type Props = BaseItemProps & {
+type Props = {|
+    ...BaseItemProps,
     children?: Node,
     className?: string,
-};
+|};
 
 export default class Item extends React.PureComponent<Props> {
     static defaultProps = {
