@@ -4,20 +4,9 @@ import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/UserStore';
 import {observable} from 'mobx';
+import {convertDisplayOptionsFromParams, validateDisplayOption} from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
-
-function validateDisplayOption(name: ?string | number): boolean %checks {
-    return name === 'leftTop'
-        || name === 'top'
-        || name === 'rightTop'
-        || name === 'left'
-        || name === 'middle'
-        || name === 'right'
-        || name === 'leftBottom'
-        || name === 'bottom'
-        || name === 'rightBottom';
-}
 
 @observer
 class MediaSelection extends React.Component<FieldTypeProps<Value>> {
@@ -38,7 +27,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         if (typeof defaultDisplayOption !== 'string' || !validateDisplayOption(defaultDisplayOption)) {
             throw new Error(
-                'The children of "displayOptions" contains the invalid value "'
+                'The children of "defaultDisplayOption" contains the invalid value "'
                 + (defaultDisplayOption.toString() + '') + '".'
             );
         }
@@ -64,22 +53,11 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
         } = schemaOptions;
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        if (displayOptions && !Array.isArray(displayOptions)) {
+        if (displayOptions !== undefined && displayOptions !== null && !Array.isArray(displayOptions)) {
             throw new Error('The "displayOptions" option has to be an Array if set.');
         }
 
-        const displayOptionValues = displayOptions
-            ? displayOptions
-                .filter((displayOption) => displayOption.value === true)
-                .map(({name}) => {
-                    if (!validateDisplayOption(name)) {
-                        throw new Error(
-                            'The children of "displayOptions" contains the invalid value "' + (name || '') + '".'
-                        );
-                    }
-                    return name;
-                })
-            : [];
+        const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
         return (
             <MultiMediaSelection

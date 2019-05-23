@@ -7,11 +7,12 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
+import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {Media} from '../../types';
+import type {DisplayOption, Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
-import type {DisplayOption, Value} from './types';
+import type {Value} from './types';
 
 type Props = {|
     disabled: boolean,
@@ -23,56 +24,6 @@ type Props = {|
 
 const MEDIA_RESOURCE_KEY = 'media';
 const THUMBNAIL_SIZE = 'sulu-25x25';
-
-function getTranslationForDisplayOption(value: ?DisplayOption) {
-    switch (value) {
-        case 'leftTop':
-            return translate('sulu_media.left_top');
-        case 'top':
-            return translate('sulu_media.top');
-        case 'rightTop':
-            return translate('sulu_media.right_top');
-        case 'left':
-            return translate('sulu_media.left');
-        case 'middle':
-            return translate('sulu_media.middle');
-        case 'right':
-            return translate('sulu_media.right');
-        case 'leftBottom':
-            return translate('sulu_media.left_bottom');
-        case 'bottom':
-            return translate('sulu_media.bottom');
-        case 'rightBottom':
-            return translate('sulu_media.right_bottom');
-        default:
-            return '';
-    }
-}
-
-function getIconForDisplayOption(value: ?DisplayOption) {
-    switch (value) {
-        case 'leftTop':
-            return 'su-display-top-left';
-        case 'top':
-            return 'su-display-top-center';
-        case 'rightTop':
-            return 'su-display-top-right';
-        case 'left':
-            return 'su-display-center-left';
-        case 'middle':
-            return 'su-display-center-center';
-        case 'right':
-            return 'su-display-center-right';
-        case 'leftBottom':
-            return 'su-display-bottom-left';
-        case 'bottom':
-            return 'su-display-bottom-center';
-        case 'rightBottom':
-            return 'su-display-bottom-right';
-        default:
-            return 'su-display-default';
-    }
-}
 
 @observer
 class MultiMediaSelection extends React.Component<Props> {
