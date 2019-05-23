@@ -23,8 +23,9 @@ interface SnippetResolverInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $shadowLocale
+     * @param bool $loadExcerpt
      *
      * @return array
      */
-    public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null);
+    public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false);
 }

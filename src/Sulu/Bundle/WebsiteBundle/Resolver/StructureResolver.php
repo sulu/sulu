@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
@@ -48,7 +49,7 @@ class StructureResolver implements StructureResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(StructureInterface $structure)
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = false)
     {
         $data = [
             'view' => [],
@@ -62,19 +63,21 @@ class StructureResolver implements StructureResolverInterface
             'path' => $structure->getPath(),
         ];
 
-        if ($structure instanceof PageBridge) {
+        $document = $structure->getDocument();
+        if ($document instanceof ExtensionBehavior && $loadExcerpt) {
             $data['extension'] = $structure->getExt() ? $structure->getExt()->toArray() : [];
+            foreach ($data['extension'] as $name => $value) {
+                $extension = $this->extensionManager->getExtension($structure->getKey(), $name);
+                $data['extension'][$name] = $extension->getContentData($value);
+            }
+        }
+
+        if ($structure instanceof PageBridge) {
             $data['urls'] = $structure->getUrls();
             $data['published'] = $structure->getPublished();
             $data['shadowBaseLocale'] = $structure->getShadowBaseLanguage();
             $data['webspaceKey'] = $structure->getWebspaceKey();
 
-            foreach ($data['extension'] as $name => $value) {
-                $extension = $this->extensionManager->getExtension($structure->getKey(), $name);
-                $data['extension'][$name] = $extension->getContentData($value);
-            }
-
-            $document = $structure->getDocument();
             if ($document instanceof LocalizedAuthorBehavior) {
                 $data['authored'] = $document->getAuthored();
                 $data['author'] = $document->getAuthor();

@@ -79,7 +79,8 @@ class SnippetResolverTest extends TestCase
                 function(StructureInterface $structure) use ($uuids) {
                     return in_array($structure->getUuid(), $uuids);
                 }
-            )
+            ),
+            false
         )->shouldBeCalledTimes(count(array_unique($uuids)))->willReturn(
             ['content' => ['title' => 'test'], 'view' => ['title' => []]]
         );
@@ -120,9 +121,63 @@ class SnippetResolverTest extends TestCase
         $contentMapper->load('123-123-123', 'sulu_io', 'de')->shouldBeCalledTimes(1)->willReturn($structure1->reveal());
         $contentMapper->load('123-123-123', 'sulu_io', 'en')->shouldBeCalledTimes(1)->willReturn($structure2->reveal());
 
-        $structureResolver->resolve($structure2->reveal())
+        $structureResolver->resolve($structure2->reveal(), false)
             ->willReturn(['content' => ['title' => 'test'], 'view' => ['title' => []]]);
 
         $resolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en');
+    }
+
+    public function testResolveWithExtensions()
+    {
+        $contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+
+        $structure = $this->prophesize(SnippetBridge::class);
+        $structure->getUuid()->willReturn('123-123-123');
+        $structure->getKey()->willReturn('test');
+        $structure->getHasTranslation()->willReturn(true);
+        $structure->setIsShadow(false)->shouldBeCalled();
+        $structure->setShadowBaseLanguage(null)->shouldBeCalled();
+
+        $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
+
+        $contentMapper->load('123-123-123', 'sulu_io', 'de')->shouldBeCalledTimes(1)->willReturn($structure->reveal());
+
+        $structureResolver->resolve($structure->reveal(), true)
+            ->willReturn(
+                [
+                    'content' => [
+                        'title' => 'test',
+                    ],
+                    'extension' => ['excerpt' => ['categories' => [], 'tags' => []]],
+                    'view' => ['title' => []],
+                ]
+            );
+
+        $this->assertEquals(
+            [
+                [
+                    'content' => [
+                        'title' => 'test',
+                        'taxonomies' => [
+                            'categories' => [],
+                            'tags' => [],
+                        ],
+                    ],
+                    'extension' => [
+                        'excerpt' => [
+                            'categories' => [],
+                            'tags' => [],
+                        ],
+                    ],
+                    'view' => [
+                        'title' => [],
+                        'template' => 'test',
+                        'uuid' => '123-123-123',
+                    ],
+                ],
+            ],
+            $resolver->resolve(['123-123-123'], 'sulu_io', 'de', null, true)
+        );
     }
 }

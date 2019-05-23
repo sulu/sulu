@@ -887,7 +887,6 @@ class ContentMapper implements ContentMapperInterface
         // get extension data from cache
         $data = $this->extensionDataCache->fetch($extension->getName());
 
-        // if property exists set it to target (with default value '')
         return isset($data[$propertyName]) ? $data[$propertyName] : null;
     }
 
