@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* release/1.5
+    * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
+
 * 1.5.23 (2019-05-16)
     * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
     
