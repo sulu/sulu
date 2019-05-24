@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.5
+    * BUGFIX      #4572 [WebsiteBundle]         Fix false 406 status code for controller InvalidArgumentExceptions
     * BUGFIX      #4571 [WebsiteBundle]         Fix language switcher for static routes
     * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
 
@@ -10,7 +11,7 @@ CHANGELOG for Sulu
     
 * 1.5.22 (2019-03-26)
     * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
-    * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
+    * BUGFIX      #4433 [SecurityBundle]        Fix fresh User object comparison to the deserialized User object
     
 * 1.5.21 (2019-02-28)
     * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure
