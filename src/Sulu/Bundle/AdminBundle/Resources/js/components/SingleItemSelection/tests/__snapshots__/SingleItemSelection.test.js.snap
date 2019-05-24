@@ -1,43 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render button with right button 1`] = `
-<div
-  class="singleItemSelection"
->
-  <button
-    class="button left"
-    type="button"
-  >
-    <span
-      aria-label="su-document"
-      class="su-document icon"
-    />
-  </button>
-  <div
-    class="itemContainer hasRightButton"
-  >
-    <div
-      class="item"
-    >
-      Test Item
-    </div>
-  </div>
-  <button
-    class="button right hasOptions"
-    type="button"
-  >
-    <span
-      aria-label="su-display-default"
-      class="su-display-default icon"
-    />
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down"
-    />
-  </button>
-</div>
-`;
-
 exports[`Render in disabled state 1`] = `
 <div
   class="singleItemSelection disabled"
@@ -291,6 +253,44 @@ exports[`Render with right button 1`] = `
     <span
       aria-label="su-display-default"
       class="su-display-default icon"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render with right button with options 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer hasRightButton"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+  <button
+    class="button right hasOptions"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down"
     />
   </button>
 </div>

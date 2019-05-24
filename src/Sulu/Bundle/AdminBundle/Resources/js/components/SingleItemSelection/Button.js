@@ -79,6 +79,7 @@ export default class Button<T: string | number> extends React.Component<Props<T>
                 <ArrowMenu.Section>
                     {options.map((option) => (
                         <ArrowMenu.Action
+                            icon={option.icon}
                             key={option.value}
                             onClick={this.handleOptionClick}
                             value={option.value}

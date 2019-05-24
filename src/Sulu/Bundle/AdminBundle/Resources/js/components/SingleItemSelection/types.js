@@ -6,7 +6,8 @@ export type Button<T> = {|
     options?: Array<ButtonOption<T>>,
 |};
 
-type ButtonOption<T> = {
+type ButtonOption<T> = {|
+    icon?: string,
     label: string,
     value: T,
-};
+|};

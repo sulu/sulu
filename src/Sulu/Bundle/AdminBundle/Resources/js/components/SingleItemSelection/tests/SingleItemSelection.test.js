@@ -28,7 +28,7 @@ test('Render with right button', () => {
     )).toMatchSnapshot();
 });
 
-test('Render button with right button', () => {
+test('Render with right button with options', () => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
