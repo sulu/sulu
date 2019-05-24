@@ -8,11 +8,64 @@ const leftButton = {
     },
 };
 
+const rightButton = {
+    icon: 'su-display-default',
+    onClick: () => {
+        alert('Right button pressed!');
+    },
+};
+
 const handleRemove = () => {
     alert('Remove was pressed!');
 };
 
-<SingleItemSelection emptyText="Nothing was selected!" leftButton={leftButton} onRemove={handleRemove}>
+<SingleItemSelection
+    emptyText="Nothing was selected!"
+    leftButton={leftButton}
+    onRemove={handleRemove}
+    rightButton={rightButton}
+>
+    Test item
+</SingleItemSelection>
+```
+
+It can also handle different options on its right button.
+
+```javascript
+const leftButton = {
+    icon: 'su-document',
+    onClick: () => {
+        alert('Button pressed!');
+    },
+};
+
+const rightButton = {
+    icon: 'su-display-default',
+    onClick: (value) => {
+        alert(value + ' was pressed!');
+    },
+    options: [
+        {
+            label: 'Left',
+            value: 'left',
+        },
+        {
+            label: 'Right',
+            value: 'right',
+        },
+    ],
+};
+
+const handleRemove = () => {
+    alert('Remove was pressed!');
+};
+
+<SingleItemSelection
+    emptyText="Nothing was selected!"
+    leftButton={leftButton}
+    onRemove={handleRemove}
+    rightButton={rightButton}
+>
     Test item
 </SingleItemSelection>
 ```
@@ -25,4 +78,42 @@ const leftButton = {
 };
 
 <SingleItemSelection emptyText="Nothing was selected!" leftButton={leftButton} />
+```
+
+The component can also be rendered in a disabled state:
+
+```javascript
+const leftButton = {
+    icon: 'su-document',
+    onClick: () => {
+        alert('Button pressed!');
+    },
+};
+
+const rightButton = {
+    icon: 'su-display-default',
+    onClick: (value) => {
+        alert(value + ' was pressed!');
+    },
+    options: [
+        {
+            label: 'Left',
+            value: 'left',
+        },
+    ],
+};
+
+const handleRemove = () => {
+    alert('Remove was pressed!');
+};
+
+<SingleItemSelection
+    disabled={true}
+    emptyText="Nothing was selected!"
+    leftButton={leftButton}
+    onRemove={handleRemove}
+    rightButton={rightButton}
+>
+    Test item
+</SingleItemSelection>
 ```

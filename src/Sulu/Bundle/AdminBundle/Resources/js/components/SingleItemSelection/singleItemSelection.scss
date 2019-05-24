@@ -1,19 +1,12 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $singleItemSelectionBackgroundColor: $white;
-$singleItemSelectionBorderColor: $silver;
-$singleItemSelectionButtonColor: $dustyGray;
-$singleItemSelectionButtonActiveColor: $white;
-$singleItemSelectionButtonBackgroundColor: $white;
-$singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
 $singleItemSelectionEmptyColor: $silver;
 
 $singleItemSelectionErrorBorderColor: $persianRed;
 
 $singleItemSelectionDisabledColor: $gray;
-$singleItemSelectionDisabledBackgroundColor: $wildSand;
-
-$singleItemSelectionBorderRadius: 3px;
 
 .single-item-selection {
     display: flex;
@@ -21,24 +14,6 @@ $singleItemSelectionBorderRadius: 3px;
     background-color: $singleItemSelectionBackgroundColor;
     height: 30px;
     overflow: hidden;
-
-    .button {
-        height: 100%;
-        width: 28px;
-        background-color: $singleItemSelectionButtonBackgroundColor;
-        color: $singleItemSelectionButtonColor;
-        border: 1px solid $singleItemSelectionBorderColor;
-        border-right: none;
-        border-radius: $singleItemSelectionBorderRadius 0 0 $singleItemSelectionBorderRadius;
-        cursor: pointer;
-        font-size: 14px;
-
-        &:hover {
-            background-color: $singleItemSelectionButtonActiveBackgroundColor;
-            border-color: $singleItemSelectionButtonActiveBackgroundColor;
-            color: $singleItemSelectionButtonActiveColor;
-        }
-    }
 
     .item-container {
         display: flex;
@@ -57,6 +32,10 @@ $singleItemSelectionBorderRadius: 3px;
 
         .empty {
             color: $singleItemSelectionEmptyColor;
+        }
+
+        &.has-right-button {
+            border-radius: 0;
         }
     }
 
@@ -85,17 +64,6 @@ $singleItemSelectionBorderRadius: 3px;
     &.disabled {
         background-color: $singleItemSelectionDisabledBackgroundColor;
         color: $singleItemSelectionDisabledColor;
-
-        .button {
-            cursor: default;
-            background-color: $singleItemSelectionDisabledBackgroundColor;
-
-            &:hover {
-                background-color: $singleItemSelectionDisabledBackgroundColor;
-                border-color: $singleItemSelectionBorderColor;
-                color: $singleItemSelectionButtonColor;
-            }
-        }
 
         .remove-button {
             display: none;

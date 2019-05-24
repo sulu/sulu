@@ -5,15 +5,17 @@ import type {Node} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader/Loader';
 import singleItemSelectionStyles from './singleItemSelection.scss';
-import type {Button} from './types';
+import Button from './Button';
+import type {Button as ButtonConfig} from './types';
 
 type Props = {|
     children?: Node,
     disabled: boolean,
     emptyText?: string,
-    leftButton: Button,
+    leftButton: ButtonConfig<*>,
     loading: boolean,
     onRemove?: () => void,
+    rightButton?: ButtonConfig<*>,
     valid: boolean,
 |};
 
@@ -25,8 +27,14 @@ export default class SingleItemSelection extends React.Component<Props> {
     };
 
     render() {
-        const {children, disabled, emptyText, leftButton, loading, onRemove, valid} = this.props;
-        const {icon, onClick} = leftButton;
+        const {children, disabled, emptyText, leftButton, loading, onRemove, rightButton, valid} = this.props;
+
+        const itemContainerClass = classNames(
+            singleItemSelectionStyles.itemContainer,
+            {
+                [singleItemSelectionStyles.hasRightButton]: !!rightButton,
+            }
+        );
 
         const singleItemSelectionClass = classNames(
             singleItemSelectionStyles.singleItemSelection,
@@ -38,15 +46,12 @@ export default class SingleItemSelection extends React.Component<Props> {
 
         return (
             <div className={singleItemSelectionClass}>
-                <button
-                    className={singleItemSelectionStyles.button}
+                <Button
+                    {...leftButton}
                     disabled={disabled}
-                    onClick={onClick}
-                    type="button"
-                >
-                    <Icon name={icon} />
-                </button>
-                <div className={singleItemSelectionStyles.itemContainer}>
+                    location="left"
+                />
+                <div className={itemContainerClass}>
                     <div className={singleItemSelectionStyles.item}>
                         {children
                             ? children
@@ -69,6 +74,13 @@ export default class SingleItemSelection extends React.Component<Props> {
                         <Loader className={singleItemSelectionStyles.loader} size={14} />
                     }
                 </div>
+                {rightButton &&
+                    <Button
+                        {...rightButton}
+                        disabled={disabled}
+                        location="right"
+                    />
+                }
             </div>
         );
     }

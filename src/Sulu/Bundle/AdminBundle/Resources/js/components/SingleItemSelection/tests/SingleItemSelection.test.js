@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import SingleItemSelection from '../SingleItemSelection';
 
 test('Render with given children prop', () => {
@@ -10,6 +10,41 @@ test('Render with given children prop', () => {
     };
 
     expect(render(<SingleItemSelection leftButton={leftButton}>Test Item</SingleItemSelection>)).toMatchSnapshot();
+});
+
+test('Render with right button', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection leftButton={leftButton} rightButton={rightButton}>Test Item</SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
+test('Render button with right button', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+        options: [
+            {label: 'Test1', value: 'test-1'},
+        ],
+    };
+
+    expect(render(
+        <SingleItemSelection leftButton={leftButton} rightButton={rightButton}>Test Item</SingleItemSelection>
+    )).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -78,7 +113,7 @@ test('Render with emptyText if no children have been passed', () => {
     )).toMatchSnapshot();
 });
 
-test('Call onClick callback if button is clicked', () => {
+test('Call onClick callback if left button is clicked', () => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -86,9 +121,52 @@ test('Call onClick callback if button is clicked', () => {
 
     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} />);
 
-    singleItemSelection.find('button').prop('onClick')();
+    singleItemSelection.find('Button').prop('onClick')();
 
     expect(leftButton.onClick).toBeCalledWith();
+});
+
+test('Call onClick callback with option value', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+        options: [
+            {
+                label: 'Test1',
+                value: 'test1',
+            },
+        ],
+    };
+
+    const singleItemSelection = mount(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+
+    singleItemSelection.find('Button[icon="su-display-default"]').simulate('click');
+    singleItemSelection.find('Action[value="test1"]').simulate('click');
+
+    expect(rightButton.onClick).toBeCalledWith('test1');
+});
+
+test('Call onClick callback if right button is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+    };
+
+    const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+
+    singleItemSelection.find('Button[icon="su-display-default"]').prop('onClick')();
+
+    expect(rightButton.onClick).toBeCalledWith();
 });
 
 test('Call onRemove callback if remove button is clicked', () => {
@@ -100,7 +178,7 @@ test('Call onRemove callback if remove button is clicked', () => {
     const removeSpy = jest.fn();
     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} onRemove={removeSpy} />);
 
-    singleItemSelection.find('.button').prop('onClick')();
+    singleItemSelection.find('.removeButton').prop('onClick')();
 
-    expect(leftButton.onClick).toBeCalledWith();
+    expect(removeSpy).toBeCalledWith();
 });

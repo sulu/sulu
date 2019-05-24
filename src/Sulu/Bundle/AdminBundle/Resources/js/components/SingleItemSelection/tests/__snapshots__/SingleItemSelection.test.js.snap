@@ -1,17 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render button with right button 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer hasRightButton"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+  <button
+    class="button right hasOptions"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down"
+    />
+  </button>
+</div>
+`;
+
 exports[`Render in disabled state 1`] = `
 <div
   class="singleItemSelection disabled"
 >
   <button
-    class="button"
+    class="button left"
     disabled=""
     type="button"
   >
     <span
       aria-label="su-document"
-      class="su-document"
+      class="su-document icon"
     />
   </button>
   <div
@@ -31,12 +69,12 @@ exports[`Render in invalid state 1`] = `
   class="singleItemSelection error"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-document"
-      class="su-document"
+      class="su-document icon"
     />
   </button>
   <div
@@ -56,12 +94,12 @@ exports[`Render in loading state 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-document"
-      class="su-document"
+      class="su-document icon"
     />
   </button>
   <div
@@ -92,12 +130,12 @@ exports[`Render in loading state with no children 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-document"
-      class="su-document"
+      class="su-document icon"
     />
   </button>
   <div
@@ -132,12 +170,12 @@ exports[`Render with emptyText if no children have been passed 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-page"
-      class="su-page"
+      class="su-page icon"
     />
   </button>
   <div
@@ -170,12 +208,12 @@ exports[`Render with given children prop 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-document"
-      class="su-document"
+      class="su-document icon"
     />
   </button>
   <div
@@ -195,12 +233,12 @@ exports[`Render with given onRemove prop 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-page"
-      class="su-page"
+      class="su-page icon"
     />
   </button>
   <div
@@ -221,5 +259,39 @@ exports[`Render with given onRemove prop 1`] = `
       />
     </button>
   </div>
+</div>
+`;
+
+exports[`Render with right button 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer hasRightButton"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+  <button
+    class="button right"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+  </button>
 </div>
 `;

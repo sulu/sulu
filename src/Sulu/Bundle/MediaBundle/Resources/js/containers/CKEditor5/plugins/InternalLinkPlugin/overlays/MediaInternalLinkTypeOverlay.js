@@ -37,7 +37,7 @@ export default class MediaInternalLinkTypeOverlay extends React.Component<Intern
                         <SingleMediaSelection
                             locale={locale || observable.box(userStore.contentLocale)}
                             onChange={this.handleChange}
-                            value={{id}}
+                            value={{displayOption: undefined, id}}
                         />
                     </Form.Field>
 
