@@ -8,16 +8,16 @@ import Header from './Header';
 import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
-type Props<T> = {|
+type Props<T, U, V> = {|
     children?: ChildrenArray<Element<typeof Item>>,
     disabled: boolean,
     label?: string,
-    leftButton?: Button<*>,
+    leftButton?: Button<U>,
     loading: boolean,
     onItemEdit?: (itemId: T) => void,
     onItemRemove?: (itemId: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
-    rightButton?: Button<*>,
+    rightButton?: Button<V>,
     sortable: boolean,
 |};
 
@@ -37,7 +37,7 @@ const ListWrapper = ({children}: Object) => (
 
 const SortableListWrapper = SortableContainer(ListWrapper);
 
-export default class MultiItemSelection<T> extends React.PureComponent<Props<T>> {
+class MultiItemSelection<T, U: string | number, V: string | number> extends React.PureComponent<Props<T, U, V>> {
     static defaultProps = {
         disabled: false,
         loading: false,
@@ -127,3 +127,5 @@ export default class MultiItemSelection<T> extends React.PureComponent<Props<T>>
         );
     }
 }
+
+export default MultiItemSelection;

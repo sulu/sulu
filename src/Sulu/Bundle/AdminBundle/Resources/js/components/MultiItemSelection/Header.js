@@ -8,15 +8,15 @@ import headerStyles from './header.scss';
 
 const LOADER_SIZE = 24;
 
-type Props = {
+type Props<T, U> = {
     emptyList: boolean,
     label?: string,
-    leftButton?: ButtonConfig<*>,
+    leftButton?: ButtonConfig<T>,
     loading: boolean,
-    rightButton?: ButtonConfig<*>,
+    rightButton?: ButtonConfig<U>,
 };
 
-export default class Header extends React.PureComponent<Props> {
+export default class Header<T: string | number, U: string | number> extends React.PureComponent<Props<T, U>> {
     static defaultProps = {
         emptyList: true,
     };

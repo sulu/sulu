@@ -4,13 +4,15 @@ import {render, mount} from 'enzyme';
 import Action from '../Action';
 
 test('Render default Action', () => {
-    const clickHandler = jest.fn();
-    expect(render(<Action onClick={clickHandler}>My Action</Action>)).toMatchSnapshot();
+    expect(render(<Action onClick={jest.fn()}>My Action</Action>)).toMatchSnapshot();
+});
+
+test('Render Action with icon', () => {
+    expect(render(<Action icon="su-display-default" onClick={jest.fn()}>My Action</Action>)).toMatchSnapshot();
 });
 
 test('Render disabled Action', () => {
-    const clickHandler = jest.fn();
-    expect(render(<Action disabled={true} onClick={clickHandler}>My Action</Action>)).toMatchSnapshot();
+    expect(render(<Action disabled={true} onClick={jest.fn()}>My Action</Action>)).toMatchSnapshot();
 });
 
 test('Clicking the Action should call the right handler', () => {

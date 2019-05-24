@@ -8,20 +8,20 @@ import Icon from '../Icon';
 import buttonStyles from './button.scss';
 import type {Button as ButtonConfig} from './types';
 
-type Props = {|
-    ...ButtonConfig<*>,
+type Props<T> = {|
+    ...ButtonConfig<T>,
     location: 'left' | 'right',
 |};
 
 @observer
-export default class Button extends React.Component<Props> {
+export default class Button<T: string | number> extends React.Component<Props<T>> {
     @observable open: boolean = false;
 
     static defaultProps = {
         disabled: false,
     };
 
-    handleOptionClick = (option: ?string) => {
+    handleOptionClick: (option: ?T) => void = (option: ?T) => {
         const {onClick} = this.props;
 
         onClick(option);
@@ -82,6 +82,7 @@ export default class Button extends React.Component<Props> {
                 <ArrowMenu.Section>
                     {options.map((option) => (
                         <ArrowMenu.Action
+                            icon={option.icon}
                             key={option.value}
                             onClick={this.handleOptionClick}
                             value={option.value}

@@ -1,5 +1,5 @@
 // @flow
-export type Button<T> = {|
+export type Button<T: string | number> = {|
     disabled?: boolean,
     icon?: string,
     label?: string,
@@ -7,7 +7,8 @@ export type Button<T> = {|
     options?: Array<ButtonOption<T>>,
 |};
 
-type ButtonOption<T> = {
+export type ButtonOption<T> = {|
+    icon?: string,
     label: string,
     value: T,
-};
+|};

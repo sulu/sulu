@@ -1,14 +1,16 @@
 // @flow
 import React from 'react';
+import Icon from '../Icon';
 import actionStyles from './action.scss';
 
-type Props<T> = {
+type Props<T> = {|
     children: string,
     disabled: boolean,
+    icon?: string,
     onAfterAction?: () => void,
     onClick: (value: ?T) => void,
     value?: T,
-};
+|};
 
 export default class Action<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
@@ -30,7 +32,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
     };
 
     render() {
-        const {disabled} = this.props;
+        const {disabled, icon} = this.props;
 
         return (
             <button
@@ -38,6 +40,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                 disabled={disabled}
                 onClick={this.handleButtonClick}
             >
+                {icon && <Icon className={actionStyles.icon} name={icon} />}
                 {this.props.children}
             </button>
         );

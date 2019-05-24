@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render Action with icon 1`] = `
+<button
+  class="action"
+>
+  <span
+    aria-label="su-display-default"
+    class="su-display-default icon"
+  />
+  My Action
+</button>
+`;
+
 exports[`Render default Action 1`] = `
 <button
   class="action"

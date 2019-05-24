@@ -127,6 +127,7 @@ class MultiMediaSelection extends React.Component<Props> {
                 icon: getIconForDisplayOption(value.displayOption),
                 onClick: this.handleDisplayOptionClick,
                 options: displayOptions.map((displayOption) => ({
+                    icon: getIconForDisplayOption(displayOption),
                     label: getTranslationForDisplayOption(displayOption),
                     value: displayOption,
                 })),
