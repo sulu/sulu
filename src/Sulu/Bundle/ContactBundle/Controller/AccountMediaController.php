@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AccountMediaController extends AbstractMediaController implements ClassResourceInterface
 {
+    protected static $mediaEntityKey = 'account_media';
+
     /**
      * Removes a media from the relation to the account.
      *

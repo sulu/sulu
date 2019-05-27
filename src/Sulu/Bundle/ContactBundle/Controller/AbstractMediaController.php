@@ -178,7 +178,7 @@ abstract class AbstractMediaController extends RestController
 
                 $list = new ListRepresentation(
                     $listResponse,
-                    self::$mediaEntityKey,
+                    static::$mediaEntityKey,
                     $routeName,
                     array_merge(['id' => $id], $request->query->all()),
                     $listBuilder->getCurrentPage(),
@@ -187,7 +187,7 @@ abstract class AbstractMediaController extends RestController
                 );
             } else {
                 $media = $contactManager->getById($id, $locale)->getMedias();
-                $list = new CollectionRepresentation($media, self::$mediaEntityKey);
+                $list = new CollectionRepresentation($media, static::$mediaEntityKey);
             }
             $view = $this->view($list, 200);
         } catch (EntityNotFoundException $e) {
