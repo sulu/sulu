@@ -92,12 +92,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'detail' => 'get_contact',
                             ],
                         ],
-                        'accounts' => [
-                            'routes' => [
-                                'list' => 'get_accounts',
-                                'detail' => 'get_account',
-                            ],
-                        ],
                         'contact_titles' => [
                             'routes' => [
                                 'list' => 'get_contact-titles',
@@ -106,6 +100,22 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'contact_positions' => [
                             'routes' => [
                                 'list' => 'get_contact-positions',
+                            ],
+                        ],
+                        'contact_media' => [
+                            'routes' => [
+                                'list' => 'cget_contact_medias',
+                            ],
+                        ],
+                        'accounts' => [
+                            'routes' => [
+                                'list' => 'get_accounts',
+                                'detail' => 'get_account',
+                            ],
+                        ],
+                        'account_media' => [
+                            'routes' => [
+                                'list' => 'cget_account_medias',
                             ],
                         ],
                     ],
@@ -166,6 +176,17 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 ],
                             ],
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'delete_contact_medias',
                     ],
                 ]
             );

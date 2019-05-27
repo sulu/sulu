@@ -134,6 +134,14 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.contact_documents', '/documents')
+                ->setResourceKey('contact_media')
+                ->setListKey('media')
+                ->setTabTitle('sulu_contact.documents')
+                ->addListAdapters(['table'])
+                ->addRouterAttributesToListStore(['id'])
+                ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
+                ->getRoute(),
             $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
                 ->setResourceKey('accounts')
                 ->setListKey('accounts')
@@ -165,6 +173,14 @@ class ContactAdmin extends Admin
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
+                ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_documents', '/documents')
+                ->setResourceKey('account_media')
+                ->setListKey('media')
+                ->setTabTitle('sulu_contact.documents')
+                ->addListAdapters(['table'])
+                ->addRouterAttributesToListStore(['id'])
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

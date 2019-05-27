@@ -65,5 +65,6 @@
     "sulu_contact.iban": "IBAN",
     "sulu_contact.bic": "BIC",
     "sulu_contact.edit_title_overlay_title": "Edit titles",
-    "sulu_contact.edit_position_overlay_title": "Edit positions"
+    "sulu_contact.edit_position_overlay_title": "Edit positions",
+    "sulu_contact.documents": "Documents"
 }
