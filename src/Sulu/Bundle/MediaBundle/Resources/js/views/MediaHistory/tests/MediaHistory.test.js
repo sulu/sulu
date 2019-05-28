@@ -42,7 +42,7 @@ test('Render a loading MediaHistory view', () => {
     resourceStore.loading = true;
 
     expect(render(
-        <MediaHistory resourceStore={resourceStore} router={router} />
+        <MediaHistory resourceStore={resourceStore} router={router} title="Test 1" />
     )).toMatchSnapshot();
 });
 
@@ -71,7 +71,7 @@ test('Render a MediaHistory view', () => {
     };
 
     expect(render(
-        <MediaHistory resourceStore={resourceStore} router={router} />
+        <MediaHistory resourceStore={resourceStore} router={router} title="Test 2" />
     )).toMatchSnapshot();
 });
 

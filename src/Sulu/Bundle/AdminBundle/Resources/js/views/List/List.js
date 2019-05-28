@@ -21,6 +21,7 @@ type Props = ViewProps & {
     onItemAdd?: (parentId: string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     resourceStore?: ResourceStore,
+    title?: string,
 };
 
 @observer
@@ -263,17 +264,20 @@ class List extends React.Component<Props> {
                         addRoute,
                         editRoute,
                         searchable,
-                        title,
+                        title: routeTitle,
                     },
                 },
             },
+            title: propTitle,
         } = this.props;
+
+        const title = routeTitle ? translate(routeTitle) : propTitle;
 
         return (
             <div>
                 <ListContainer
                     adapters={adapters}
-                    header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
+                    header={title && <h1 className={listStyles.header}>{title}</h1>}
                     onItemAdd={onItemAdd || addRoute ? this.addItem : undefined}
                     onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
                     ref={this.setListRef}

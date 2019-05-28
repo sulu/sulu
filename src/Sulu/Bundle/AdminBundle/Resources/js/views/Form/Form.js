@@ -19,6 +19,7 @@ import formStyles from './form.scss';
 type Props = ViewProps & {
     locales: Array<string>,
     resourceStore: ResourceStore,
+    title?: string,
 };
 
 const FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY = 1024;
@@ -304,8 +305,18 @@ class Form extends React.Component<Props> {
     };
 
     render() {
+        const {
+            route: {
+                options: {
+                    titleVisible = false,
+                },
+            },
+            title,
+        } = this.props;
+
         return (
             <div className={formStyles.form}>
+                {titleVisible && title && <h1>{title}</h1>}
                 <FormContainer
                     onError={this.handleError}
                     onSubmit={this.handleSubmit}

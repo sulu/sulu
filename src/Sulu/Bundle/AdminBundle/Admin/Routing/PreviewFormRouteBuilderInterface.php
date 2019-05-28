@@ -53,6 +53,8 @@ interface PreviewFormRouteBuilderInterface
 
     public function setPreviewCondition(string $previewCondition): self;
 
+    public function setTitleVisible(bool $titleVisible): self;
+
     public function setParent(string $parent): self;
 
     public function getRoute(): Route;

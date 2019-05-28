@@ -172,7 +172,7 @@ test('Should render the list with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router} title="Test 1" />);
     expect(list).toMatchSnapshot();
 });
 
@@ -191,7 +191,7 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router} title="Test 2" />);
     expect(list).toMatchSnapshot();
 });
 
