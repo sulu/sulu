@@ -14,7 +14,7 @@ import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import listStyles from './list.scss';
 
-const USER_SETTINGS_KEY = 'list';
+const DEFAULT_USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
@@ -36,15 +36,16 @@ class List extends React.Component<Props> {
     static getDerivedRouteAttributes(route: Route) {
         const {
             options: {
-                resourceKey,
+                listKey,
+                userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
             },
         } = route;
 
         return {
-            active: ListStore.getActiveSetting(resourceKey, USER_SETTINGS_KEY),
-            sortColumn: ListStore.getSortColumnSetting(resourceKey, USER_SETTINGS_KEY),
-            sortOrder: ListStore.getSortOrderSetting(resourceKey, USER_SETTINGS_KEY),
-            limit: ListStore.getLimitSetting(resourceKey, USER_SETTINGS_KEY),
+            active: ListStore.getActiveSetting(listKey, userSettingsKey),
+            sortColumn: ListStore.getSortColumnSetting(listKey, userSettingsKey),
+            sortOrder: ListStore.getSortOrderSetting(listKey, userSettingsKey),
+            limit: ListStore.getLimitSetting(listKey, userSettingsKey),
         };
     }
 
@@ -63,6 +64,7 @@ class List extends React.Component<Props> {
                     resourceKey,
                     routerAttributesToListStore = {},
                     resourceStorePropertiesToListStore = {},
+                    userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
                 },
             },
         } = router;
@@ -102,7 +104,7 @@ class List extends React.Component<Props> {
         this.listStore = new ListStore(
             resourceKey,
             listKey,
-            USER_SETTINGS_KEY,
+            userSettingsKey,
             observableOptions,
             listStoreOptions
         );

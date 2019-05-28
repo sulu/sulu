@@ -23,6 +23,11 @@ trait ListRouteBuilderTrait
         $route->setOption('listKey', $listKey);
     }
 
+    private function setUserSettingsKeyToRoute(Route $route, string $userSettingsKey): void
+    {
+        $route->setOption('userSettingsKey', $userSettingsKey);
+    }
+
     private function setTitleToRoute(Route $route, string $title): void
     {
         $route->setOption('title', $title);
