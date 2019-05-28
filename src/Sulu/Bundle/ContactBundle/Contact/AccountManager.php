@@ -276,19 +276,12 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Currently associated medias are replaced.
      *
      * @param Account $account
-     * @param $medias
+     * @param $mediaIds
      *
      * @throws EntityNotFoundException
      */
-    public function setMedias(Account $account, $medias)
+    public function setMedias(Account $account, $mediaIds)
     {
-        $mediaIds = array_map(
-            function($media) {
-                return $media['id'];
-            },
-            $medias
-        );
-
         $foundMedias = $this->mediaRepository->findById($mediaIds);
         $foundMediaIds = array_map(
             function($mediaEntity) {

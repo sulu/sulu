@@ -326,8 +326,8 @@ class ContactMediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
 
-        $this->assertNotNull($response->medias[0]->id);
-        $this->assertNotNull($response->medias[1]->id);
+        $this->assertInternalType('int', $response->medias[0]);
+        $this->assertInternalType('int', $response->medias[1]);
     }
 
     public function testContactMediaPostNotExistingMedia()
