@@ -100,6 +100,11 @@ class ContactAdmin extends Admin
             'sulu_admin.export',
         ];
 
+        $documentsToolbarAction = [
+            'sulu_contact.add_media',
+            'sulu_contact.delete_media',
+        ];
+
         return [
             $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
                 ->setResourceKey('contacts')
@@ -139,6 +144,7 @@ class ContactAdmin extends Admin
                 ->setListKey('media')
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
+                ->addToolbarActions($documentsToolbarAction)
                 ->addRouterAttributesToListStore(['id'])
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
@@ -181,6 +187,7 @@ class ContactAdmin extends Admin
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
                 ->addRouterAttributesToListStore(['id'])
+                ->addToolbarActions($documentsToolbarAction)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

@@ -147,7 +147,7 @@ class List extends React.Component<Props> {
     }
 
     @action componentDidMount() {
-        const {router} = this.props;
+        const {resourceStore, router} = this.props;
         const {
             route: {
                 options: {
@@ -165,7 +165,8 @@ class List extends React.Component<Props> {
             this.listStore,
             this,
             router,
-            locales
+            locales,
+            resourceStore
         ));
     }
 

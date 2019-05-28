@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import type {ToolbarAction, ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
@@ -10,12 +11,20 @@ export default class AbstractToolbarAction implements ToolbarAction {
     list: List;
     router: Router;
     locales: ?Array<string>;
+    resourceStore: ?ResourceStore;
 
-    constructor(listStore: ListStore, list: List, router: Router, locales?: Array<string>) {
+    constructor(
+        listStore: ListStore,
+        list: List,
+        router: Router,
+        locales?: Array<string>,
+        resourceStore?: ResourceStore
+    ) {
         this.listStore = listStore;
         this.list = list;
         this.router = router;
         this.locales = locales;
+        this.resourceStore = resourceStore;
     }
 
     setLocales(locales: Array<string>) {
