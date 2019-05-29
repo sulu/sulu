@@ -139,7 +139,7 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.contact_documents', '/documents')
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.contact_documents_list', '/documents')
                 ->setResourceKey('contact_media')
                 ->setListKey('media')
                 ->setUserSettingsKey('contact_media')
@@ -182,7 +182,7 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_documents', '/documents')
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_documents_list', '/documents')
                 ->setResourceKey('account_media')
                 ->setListKey('media')
                 ->setUserSettingsKey('contact_media')
