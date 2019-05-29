@@ -1,5 +1,37 @@
 # Upgrade
 
+## dev-develop
+
+### Display options in MediaSelection
+
+The `media_selection` content type showed all available display options(left top, top, right, ...) except for `middle`
+by default. From now on this feature is deactivated, if the `displayOptions` parameter is not defined in the XML
+template definition.
+
+In case you have relied on the old behavior, you have to add the parameters yourself:
+
+```xml
+<!-- Before -->
+<property name="media" type="media_selection" />
+
+<!-- After (if you really need all the available options) -->
+<property name="media" type="media_selection">
+    <params>
+        <param name="displayOptions" type="collection">
+            <param name="leftTop" value="true"/>
+            <param name="top" value="true"/>
+            <param name="rightTop" value="true"/>
+            <param name="left" value="true"/>
+            <param name="middle" value="false"/>
+            <param name="right" value="true"/>
+            <param name="leftBottom" value="true"/>
+            <param name="bottom" value="true"/>
+            <param name="rightBottom" value="true"/>
+        </param>
+    </params>
+</property>
+```
+
 ## 2.0.0-alpha6
 
 When upgrading also have a look at the changes in the

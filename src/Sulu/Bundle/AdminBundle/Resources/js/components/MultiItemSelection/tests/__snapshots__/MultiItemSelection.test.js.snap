@@ -244,6 +244,125 @@ exports[`Render a button on the right with options and a value 1`] = `
 </div>
 `;
 
+exports[`Render a button on the right with options including icons and a value 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="label"
+    />
+    <button
+      class="button right hasLabel hasOptions"
+      type="button"
+    >
+      <span
+        class="label"
+      >
+        Test
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 1
+        </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 2
+        </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            3
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 3
+        </div>
+        <div
+          class="buttons"
+        />
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
 exports[`Render a disabled MultiItemSelection with children 1`] = `
 <div
   class="multiItemSelectionClass disabled"

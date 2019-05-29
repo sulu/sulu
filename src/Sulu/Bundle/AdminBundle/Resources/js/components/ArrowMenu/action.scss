@@ -5,15 +5,15 @@ $fontColor: $black;
 $disabledColor: $silver;
 
 .action {
-    border: none;
     background: transparent;
+    border: none;
+    display: block;
     line-height: 14px;
     color: $fontColor;
     cursor: pointer;
     font-size: 12px;
     margin-bottom: 10px;
     text-align: left;
-    width: 100%;
 
     &:hover {
         color: $hoverColor;
@@ -27,4 +27,8 @@ $disabledColor: $silver;
         color: $disabledColor;
         cursor: default;
     }
+}
+
+.icon {
+    margin-right: 10px;
 }

@@ -3,30 +3,23 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import NumberComponent from '../../../components/Number';
-import type {FieldTypeProps, SchemaOptions} from '../types';
+import type {FieldTypeProps} from '../types';
 
 @observer
 class Number extends React.Component<FieldTypeProps<?number>> {
-    @computed get schemaOptions(): SchemaOptions {
-        const {schemaOptions} = this.props;
-
-        if (!schemaOptions) {
-            return {};
-        }
-
-        return schemaOptions;
-    }
-
     @computed get min(): ?number {
-        return this.schemaOptions.min ? parseFloat(this.schemaOptions.min.value) : undefined;
+        const {schemaOptions} = this.props;
+        return schemaOptions.min ? parseFloat(schemaOptions.min.value) : undefined;
     }
 
     @computed get max(): ?number {
-        return this.schemaOptions.max ? parseFloat(this.schemaOptions.max.value) : undefined;
+        const {schemaOptions} = this.props;
+        return schemaOptions.max ? parseFloat(schemaOptions.max.value) : undefined;
     }
 
     @computed get step(): ?number {
-        return this.schemaOptions.step ? parseFloat(this.schemaOptions.step.value) : undefined;
+        const {schemaOptions} = this.props;
+        return schemaOptions.step ? parseFloat(schemaOptions.step.value) : undefined;
     }
 
     handleBlur = () => {

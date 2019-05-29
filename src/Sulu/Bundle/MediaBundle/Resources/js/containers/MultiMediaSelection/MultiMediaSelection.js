@@ -7,14 +7,16 @@ import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
+import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {Media} from '../../types';
+import type {DisplayOption, Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {Value} from './types';
 
 type Props = {|
     disabled: boolean,
+    displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
     value: Value,
@@ -27,7 +29,8 @@ const THUMBNAIL_SIZE = 'sulu-25x25';
 class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        value: {ids: []},
+        displayOptions: [],
+        value: {displayOption: undefined, ids: []},
     };
 
     mediaSelectionStore: MultiSelectionStore<number, Media>;
@@ -47,7 +50,7 @@ class MultiMediaSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (!equals(toJS(value.ids), toJS(loadedMediaIds))) {
-                    onChange({ids: loadedMediaIds});
+                    onChange({...value, ids: loadedMediaIds});
                 }
             }
         );
@@ -107,11 +110,29 @@ class MultiMediaSelection extends React.Component<Props> {
         this.closeMediaOverlay();
     };
 
+    handleDisplayOptionClick = (displayOption: ?DisplayOption) => {
+        const {onChange, value} = this.props;
+
+        onChange({...value, displayOption});
+    };
+
     render() {
-        const {locale, disabled} = this.props;
+        const {locale, disabled, displayOptions, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
+
+        const rightButton = displayOptions.length > 0
+            ? {
+                icon: getIconForDisplayOption(value.displayOption),
+                onClick: this.handleDisplayOptionClick,
+                options: displayOptions.map((displayOption) => ({
+                    icon: getIconForDisplayOption(displayOption),
+                    label: getTranslationForDisplayOption(displayOption),
+                    value: displayOption,
+                })),
+            }
+            : undefined;
 
         return (
             <Fragment>
@@ -125,6 +146,7 @@ class MultiMediaSelection extends React.Component<Props> {
                     loading={loading}
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
+                    rightButton={rightButton}
                 >
                     {medias.map((media, index) => {
                         return (

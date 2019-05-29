@@ -1,4 +1,5 @@
 // @flow
+import type {ButtonOption} from 'sulu-admin-bundle/types';
 
 export type TeaserProviderOptions = {|
     displayProperties: Array<string>,
@@ -22,7 +23,4 @@ export type TeaserSelectionValue = {|
     presentAs: ?string,
 |};
 
-export type PresentationItem = {
-    label: string,
-    value: string,
-};
+export type PresentationItem = ButtonOption<string>;

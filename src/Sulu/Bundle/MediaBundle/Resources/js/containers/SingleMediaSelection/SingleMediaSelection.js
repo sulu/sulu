@@ -6,14 +6,16 @@ import {action, observable, reaction, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
+import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {Media} from '../../types';
+import type {DisplayOption, Media} from '../../types';
 import type {Value} from './types';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 
 type Props = {|
     disabled: boolean,
+    displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedId: Value, media: ?Media) => void,
     valid: boolean,
@@ -27,8 +29,9 @@ const THUMBNAIL_SIZE = 'sulu-25x25';
 class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        displayOptions: [],
         valid: true,
-        value: {id: undefined},
+        value: {displayOption: undefined, id: undefined},
     };
 
     singleMediaSelectionStore: SingleSelectionStore<number, Media>;
@@ -48,7 +51,7 @@ class SingleMediaSelection extends React.Component<Props> {
                 const {onChange, value} = this.props;
 
                 if (value.id !== loadedMediaId) {
-                    onChange({id: loadedMediaId}, this.singleMediaSelectionStore.item);
+                    onChange({...value, id: loadedMediaId}, this.singleMediaSelectionStore.item);
                 }
             }
         );
@@ -92,16 +95,27 @@ class SingleMediaSelection extends React.Component<Props> {
         this.closeOverlay();
     };
 
+    handleDisplayOptionClick = (displayOption: ?DisplayOption) => {
+        const {onChange, value} = this.props;
+
+        onChange({...value, displayOption});
+    };
+
     render() {
-        const {
-            disabled,
-            locale,
-            valid,
-        } = this.props;
-        const {
-            loading,
-            item: media,
-        } = this.singleMediaSelectionStore;
+        const {disabled, displayOptions, locale, valid, value} = this.props;
+        const {loading, item: media} = this.singleMediaSelectionStore;
+
+        const rightButton = displayOptions.length > 0
+            ? {
+                icon: getIconForDisplayOption(value.displayOption),
+                onClick: this.handleDisplayOptionClick,
+                options: displayOptions.map((displayOption) => ({
+                    icon: getIconForDisplayOption(displayOption),
+                    label: getTranslationForDisplayOption(displayOption),
+                    value: displayOption,
+                })),
+            }
+            : undefined;
 
         return (
             <Fragment>
@@ -114,6 +128,7 @@ class SingleMediaSelection extends React.Component<Props> {
                     }}
                     loading={loading}
                     onRemove={media ? this.handleRemove : undefined}
+                    rightButton={rightButton}
                     valid={valid}
                 >
                     {media &&

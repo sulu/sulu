@@ -14,12 +14,12 @@ $buttonMargin: 2px;
     cursor: pointer;
     font-size: 14px;
 
-    &:hover:not(.has-label) {
-        color: $buttonTextColorActive;
-        background-color: $buttonBackgroundColorActive;
-    }
-
     &.left {
+        &:hover {
+            color: $buttonTextColorActive;
+            background-color: $buttonBackgroundColorActive;
+        }
+
         margin-right: $buttonMargin;
     }
 

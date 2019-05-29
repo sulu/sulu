@@ -15,6 +15,7 @@ import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore} from './Form';
+import type {SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import MultiAutoComplete from './MultiAutoComplete';
@@ -27,6 +28,7 @@ import TextEditor, {textEditorRegistry} from './TextEditor';
 export type {
     ListAdapterProps,
     LoadingStrategyInterface,
+    SchemaOption,
     StructureStrategyInterface,
     ViewProps,
 };

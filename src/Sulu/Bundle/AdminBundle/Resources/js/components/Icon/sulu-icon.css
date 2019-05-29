@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'sulu';
-  src:  url('fonts/sulu.eot?pin9hf');
-  src:  url('fonts/sulu.eot?pin9hf#iefix') format('embedded-opentype'),
-    url('fonts/sulu.ttf?pin9hf') format('truetype'),
-    url('fonts/sulu.woff?pin9hf') format('woff'),
-    url('fonts/sulu.svg?pin9hf#sulu') format('svg');
+  src:  url('fonts/sulu.eot?66vpnb');
+  src:  url('fonts/sulu.eot?66vpnb#iefix') format('embedded-opentype'),
+    url('fonts/sulu.ttf?66vpnb') format('truetype'),
+    url('fonts/sulu.woff?66vpnb') format('woff'),
+    url('fonts/sulu.svg?66vpnb#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,46 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-display-bottom-center:before {
+  content: "\e91d";
+  color: #585858;
+}
+.su-display-bottom-left:before {
+  content: "\e923";
+  color: #585858;
+}
+.su-display-bottom-right:before {
+  content: "\e95c";
+  color: #585858;
+}
+.su-display-center-center:before {
+  content: "\e95d";
+  color: #585858;
+}
+.su-display-center-left:before {
+  content: "\e95e";
+  color: #585858;
+}
+.su-display-center-right:before {
+  content: "\e95f";
+  color: #585858;
+}
+.su-display-default:before {
+  content: "\e964";
+  color: #585858;
+}
+.su-display-top-center:before {
+  content: "\e966";
+  color: #585858;
+}
+.su-display-top-left:before {
+  content: "\e970";
+  color: #585858;
+}
+.su-display-top-right:before {
+  content: "\e972";
+  color: #585858;
+}
 .su-shadow-page:before {
   content: "\e95b";
 }
@@ -129,9 +169,6 @@
 .su-file-word:before {
   content: "\e965";
 }
-.su-hashtag:before {
-  content: "\e966";
-}
 .su-copyright:before {
   content: "\e967";
 }
@@ -168,9 +205,6 @@
 .su-microphone:before {
   content: "\e976";
 }
-.su-music:before {
-  content: "\e977";
-}
 .su-camera:before {
   content: "\e978";
 }
@@ -191,9 +225,6 @@
 }
 .su-house:before {
   content: "\e97e";
-}
-.su-handshake:before {
-  content: "\e97f";
 }
 .su-trophy:before {
   content: "\e980";
@@ -249,9 +280,6 @@
 .su-sort:before {
   content: "\e999";
 }
-.su-rss-feed:before {
-  content: "\e99a";
-}
 .su-align-left:before {
   content: "\e99b";
 }
@@ -287,9 +315,6 @@
 }
 .su-folder:before {
   content: "\e91c";
-}
-.su-checkbox:before {
-  content: "\e91d";
 }
 .su-circle:before {
   content: "\e906";
@@ -395,9 +420,6 @@
 }
 .su-cut:before {
   content: "\e922";
-}
-.su-dashboard:before {
-  content: "\e923";
 }
 .su-desktop:before {
   content: "\e924";

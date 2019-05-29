@@ -39,10 +39,6 @@ export default class SingleSelection extends React.Component<Props>
 
         const {schemaOptions} = this.props;
 
-        if (!schemaOptions) {
-            return defaultType;
-        }
-
         const {
             type: {
                 value: type = defaultType,

@@ -46,7 +46,6 @@ export default class Button<T: string | number> extends React.Component<Props<T>
         const {
             disabled,
             icon,
-            label,
             location,
             options,
         } = this.props;
@@ -55,7 +54,6 @@ export default class Button<T: string | number> extends React.Component<Props<T>
             buttonStyles.button,
             buttonStyles[location],
             {
-                [buttonStyles.hasLabel]: label,
                 [buttonStyles.hasOptions]: options,
             }
         );
@@ -68,7 +66,6 @@ export default class Button<T: string | number> extends React.Component<Props<T>
                 type="button"
             >
                 {icon && <Icon className={buttonStyles.icon} name={icon} />}
-                {label && <span className={buttonStyles.label}>{label}</span>}
                 {options && <Icon name="su-angle-down" />}
             </button>
         );

@@ -43,7 +43,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
             disabled={true}
             error={{keyword: 'mandatory', parameters: {}}}
             formInspector={formInspector}
-            value={{id: 33}}
+            value={{displayOption: undefined, id: 33}}
         />
     );
 
@@ -66,11 +66,64 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
-            value={{id: 33}}
+            value={{displayOption: undefined, id: 33}}
         />
     );
 
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('userContentLocale');
+});
+
+test('Set default display option if no value is passed', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        defaultDisplayOption: {value: 'left'},
+        displayOptions: {value: [{name: 'left', value: 'true'}]},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined});
+});
+
+test('Do not set default display option if value is passed', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        defaultDisplayOption: {value: 'left'},
+        displayOptions: {value: [{name: 'left', value: 'true'}]},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+            value={{displayOption: 'left', id: undefined}}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Should call onChange and onFinish if the selection changes', () => {
@@ -91,7 +144,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={{id: 55}}
+            value={{displayOption: undefined, id: 55}}
         />
     );
 
@@ -99,4 +152,38 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     expect(changeSpy).toBeCalledWith({id: 44});
     expect(finishSpy).toBeCalled();
+});
+
+test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{displayOptions: {value: true}}}
+        />
+    )).toThrow(/"displayOptions"/);
+});
+
+test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{displayOptions: {value: [{name: 'test', value: true}]}}}
+        />
+    )).toThrow(/"displayOptions"/);
 });

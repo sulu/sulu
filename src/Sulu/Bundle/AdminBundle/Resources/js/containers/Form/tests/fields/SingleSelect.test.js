@@ -233,22 +233,23 @@ test('Set default value to a number of 0 should work', () => {
     expect(changeSpy).toBeCalledWith(0);
 });
 
-test('Throw error if no schemaOptions are passed', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <SingleSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-        />)
-    ) .toThrow(/"values"/);
-});
-
 test('Throw error if no value option is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
+        />)
+    ).toThrow(/"values"/);
+});
+
+test('Throw error if value option with wrong is passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    expect(() => shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{values: {value: true}}}
         />)
     ).toThrow(/"values"/);
 });
