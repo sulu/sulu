@@ -4,13 +4,15 @@ import type {Element} from 'react';
 import {observer} from 'mobx-react';
 import {sidebarStore} from '../Sidebar';
 import Router from '../../services/Router';
-import type {Route} from '../../services/Router';
+import type {AttributeMap, Route} from '../../services/Router';
 import viewRegistry from './registries/ViewRegistry';
 import type {View} from './types';
 
 type Props = {
     router: Router,
 };
+
+const UPDATE_ROUTE_HOOK_PRIORITY = -1024;
 
 @observer
 class ViewRenderer extends React.Component<Props> {
@@ -19,7 +21,18 @@ class ViewRenderer extends React.Component<Props> {
     }
 
     componentDidMount() {
+        const {router} = this.props;
+
         this.clearSidebarConfig();
+
+        router.addUpdateRouteHook((newRoute, newAttributes) => {
+            const {attributes: oldAttributes, route: oldRoute} = router;
+            if (this.getKey(newRoute, newAttributes) !== this.getKey(oldRoute, oldAttributes)) {
+                router.clearBindings();
+            }
+
+            return true;
+        }, UPDATE_ROUTE_HOOK_PRIORITY);
     }
 
     clearSidebarConfig() {
@@ -47,18 +60,16 @@ class ViewRenderer extends React.Component<Props> {
         return false;
     }
 
-    getKey = (route: Route) => {
-        const {
-            router: {
-                attributes,
-            },
-        } = this.props;
+    getKey = (route: ?Route, attributes: ?AttributeMap) => {
+        if (!route) {
+            return null;
+        }
 
         const rerenderAttributeValues = [];
 
         if (route.rerenderAttributes) {
             route.rerenderAttributes.forEach((rerenderAttribute) => {
-                if (attributes.hasOwnProperty(rerenderAttribute)) {
+                if (attributes && attributes.hasOwnProperty(rerenderAttribute)) {
                     rerenderAttributeValues.push(attributes[rerenderAttribute]);
                 }
             });
@@ -82,7 +93,7 @@ class ViewRenderer extends React.Component<Props> {
         const View = this.getView(route);
 
         const element = (
-            <View key={this.getKey(route)} route={route} router={router}>
+            <View key={this.getKey(route, router.attributes)} route={route} router={router}>
                 {(props) => child ? React.cloneElement(child, props) : null}
             </View>
         );
