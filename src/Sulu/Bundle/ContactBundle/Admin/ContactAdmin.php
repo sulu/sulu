@@ -192,6 +192,15 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($documentsToolbarAction)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_contacts_list', '/contacts')
+                ->setResourceKey('account_contacts')
+                ->setListKey('account_contacts')
+                ->setTabTitle('sulu_contact.people')
+                ->addListAdapters(['table'])
+                ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                ->addRouterAttributesToListStore(['id'])
+                ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

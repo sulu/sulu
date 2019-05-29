@@ -201,7 +201,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(0, $response->total);
-        $this->assertCount(0, $response->_embedded->contacts);
+        $this->assertCount(0, $response->_embedded->account_contacts);
     }
 
     public function testGetAccountContacts()
@@ -259,10 +259,10 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(2, $response['total']);
-        $this->assertCount(2, $response['_embedded']['contacts']);
+        $this->assertCount(2, $response['_embedded']['account_contacts']);
 
-        $this->assertEquals('Erika', $response['_embedded']['contacts'][0]['firstName']);
-        $this->assertEquals('Max', $response['_embedded']['contacts'][1]['firstName']);
+        $this->assertEquals('Erika', $response['_embedded']['account_contacts'][0]['firstName']);
+        $this->assertEquals('Max', $response['_embedded']['account_contacts'][1]['firstName']);
     }
 
     public function testGetAccountContactsSearch()
@@ -309,9 +309,9 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(1, $response['total']);
-        $this->assertCount(1, $response['_embedded']['contacts']);
+        $this->assertCount(1, $response['_embedded']['account_contacts']);
 
-        $this->assertEquals('Max Mustermann', $response['_embedded']['contacts'][0]['fullName']);
+        $this->assertEquals('Max Mustermann', $response['_embedded']['account_contacts'][0]['fullName']);
     }
 
     public function testPost()

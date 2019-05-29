@@ -139,7 +139,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $list = new ListRepresentation(
                 $values,
-                'contacts',
+                'account_contacts',
                 'get_account_contacts',
                 array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),

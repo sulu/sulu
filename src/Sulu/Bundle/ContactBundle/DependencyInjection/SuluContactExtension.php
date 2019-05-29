@@ -120,6 +120,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'detail' => 'delete_account_medias',
                             ],
                         ],
+                        'account_contacts' => [
+                            'routes' => [
+                                'list' => 'get_account_contacts',
+                            ],
+                        ],
                     ],
                     'field_type_options' => [
                         'single_selection' => [
