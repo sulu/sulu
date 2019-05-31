@@ -18,9 +18,9 @@ class DeleteMediaToolbarAction extends AbstractListToolbarAction {
                 onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
                 open={this.showDialog}
-                title={translate('sulu_admin.delete_warning_title')}
+                title={translate('sulu_contact.delete_media_warning_title')}
             >
-                {translate('sulu_admin.delete_warning_text')}
+                {translate('sulu_contact.delete_media_warning_text')}
             </Dialog>
         );
     }
