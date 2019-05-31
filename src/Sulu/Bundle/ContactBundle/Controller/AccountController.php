@@ -288,24 +288,24 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @return Response
      */
-    public function deleteContactsAction($accountId, $contactId)
+    public function deleteContactsAction($accountId, $id)
     {
         try {
             // Check if relation exists.
             /** @var AccountContactEntity $accountContact */
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
-                ->findByForeignIds($accountId, $contactId);
+                ->findByForeignIds($accountId, $id);
 
             if (!$accountContact) {
-                throw new EntityNotFoundException('AccountContact', $accountId . $contactId);
+                throw new EntityNotFoundException('AccountContact', $accountId . $id);
             }
             $id = $accountContact->getId();
 
             $account = $accountContact->getAccount();
 
             // Remove main contact when relation with main was removed.
-            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId) {
+            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $id) {
                 $account->setMainContact(null);
             }
 

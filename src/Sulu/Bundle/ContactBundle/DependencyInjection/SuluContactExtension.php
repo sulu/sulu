@@ -123,6 +123,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'account_contacts' => [
                             'routes' => [
                                 'list' => 'get_account_contacts',
+                                'detail' => 'delete_account_contacts',
                             ],
                         ],
                     ],
@@ -195,6 +196,17 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     'routes_to_expose' => [
                         'delete_contact_medias',
                         'delete_account_medias',
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'delete_account_contacts',
                     ],
                 ]
             );
