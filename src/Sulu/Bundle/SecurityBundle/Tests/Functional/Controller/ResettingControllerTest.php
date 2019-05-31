@@ -17,7 +17,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\Client;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -410,7 +409,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(1009, $response['code']);
     }
 
-    protected function getExpectedEmailData(Client $client, User $user)
+    protected function getExpectedEmailData($client, User $user)
     {
         $sender = $this->getContainer()->getParameter('sulu_security.reset_password.mail.sender');
         $template = $this->getContainer()->getParameter('sulu_security.reset_password.mail.template');

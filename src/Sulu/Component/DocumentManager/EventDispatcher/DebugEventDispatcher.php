@@ -40,6 +40,7 @@ class DebugEventDispatcher extends EventDispatcher
         Stopwatch $stopwatch,
         LoggerInterface $logger = null
     ) {
+        parent::__construct();
         $this->stopwatch = $stopwatch;
         $this->logger = $logger ?: new NullLogger();
     }
