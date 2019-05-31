@@ -47,7 +47,7 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
         ResourceRequester.patch(
             resourceKey,
             {medias: data.medias.concat(medias.map((media) => media.id))},
-            {id: this.listStore.options.id}
+            {id: this.listStore.options.contactId}
         ).then(action((response) => {
             this.patching = false;
             this.showOverlay = false;

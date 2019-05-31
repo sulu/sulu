@@ -76,7 +76,7 @@ test('Do nothing if overlay is just closed', () => {
 
 test('Delete selected items if confirm button is clicked', () => {
     const addMediaToolbarAction = createAddMediaToolbarAction();
-    addMediaToolbarAction.listStore.options.id = 4;
+    addMediaToolbarAction.listStore.options.contactId = 4;
     if (!addMediaToolbarAction.resourceStore) {
         throw new Error('The resourceStore must be set on the ToolbarAction!');
     }

@@ -12,9 +12,9 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
-    this.options = {};
     this.selectionIds = [];
-    this.reload = jest.fn();
+    this.deleteSelection = jest.fn();
+    this.deletingSelection = false;
 }));
 
 jest.mock('sulu-admin-bundle/views/List/List', () => jest.fn());
@@ -28,6 +28,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () =
 jest.mock('sulu-admin-bundle/stores/ResourceStore/ResourceStore', () => jest.fn(function() {
     this.data = {};
     this.setMultiple = jest.fn();
+    this.set = jest.fn();
 }));
 
 function createDeleteMediaToolbarAction() {
@@ -90,7 +91,6 @@ test('Do nothing if cancel button is clicked', () => {
 
 test('Delete selected items if confirm button is clicked', () => {
     const deleteMediaToolbarAction = createDeleteMediaToolbarAction();
-    deleteMediaToolbarAction.listStore.options.id = 4;
     // $FlowFixMe
     deleteMediaToolbarAction.listStore.selectionIds = [3, 4];
     if (!deleteMediaToolbarAction.resourceStore) {
@@ -102,14 +102,17 @@ test('Delete selected items if confirm button is clicked', () => {
 
     const clickHandler = deleteMediaToolbarAction.getToolbarItemConfig().onClick;
 
-    const patchResponse = {};
-    const patchPromise = Promise.resolve(patchResponse);
-    ResourceRequester.patch.mockReturnValue(patchPromise);
+    const deleteSelectionPromise = Promise.resolve();
+    // $FlowFixMe
+    deleteMediaToolbarAction.listStore.deleteSelection.mockReturnValue(deleteSelectionPromise);
 
     clickHandler();
     let deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
     expect(deleteMediaDialog.props.open).toEqual(true);
     deleteMediaDialog.props.onConfirm();
+
+    deleteMediaToolbarAction.listStore.deletingSelection = true;
+    expect(deleteMediaToolbarAction.listStore.deleteSelection).toBeCalledWith();
 
     deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
     expect(deleteMediaDialog.props).toEqual(expect.objectContaining({
@@ -117,9 +120,8 @@ test('Delete selected items if confirm button is clicked', () => {
         open: true,
     }));
 
-    expect(ResourceRequester.patch).toBeCalledWith('contacts', {medias: [1, 2, 5]}, {id: 4});
-
-    return patchPromise.then(() => {
+    return deleteSelectionPromise.then(() => {
+        deleteMediaToolbarAction.listStore.deletingSelection = false;
         deleteMediaDialog = shallow(deleteMediaToolbarAction.getNode()).instance();
         expect(deleteMediaDialog.props).toEqual(expect.objectContaining({
             confirmLoading: false,
@@ -131,7 +133,6 @@ test('Delete selected items if confirm button is clicked', () => {
             throw new Error('The resourceStore must be set on the ToolbarAction!');
         }
 
-        expect(deleteMediaToolbarAction.listStore.reload).toBeCalledWith();
-        expect(resourceStore.setMultiple).toBeCalledWith(patchResponse);
+        expect(resourceStore.set).toBeCalledWith('medias', [1, 2, 5]);
     });
 });

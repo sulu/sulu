@@ -2,19 +2,17 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
-import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';
 
 class DeleteMediaToolbarAction extends AbstractListToolbarAction {
     @observable showDialog: boolean = false;
-    @observable patching: boolean = false;
 
     getNode() {
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={this.patching}
+                confirmLoading={this.listStore.deletingSelection}
                 confirmText={translate('sulu_admin.ok')}
                 key="sulu_contact.delete_media"
                 onCancel={this.handleCancel}
@@ -40,25 +38,20 @@ class DeleteMediaToolbarAction extends AbstractListToolbarAction {
     }
 
     @action handleConfirm = () => {
-        if (!this.resourceStore) {
+        const {resourceStore} = this;
+
+        if (!resourceStore) {
             throw new Error('The resourceStore needs to be available in order to update the media!');
         }
 
-        const {data, resourceKey} = this.resourceStore;
+        const deleteIds = this.listStore.selectionIds;
 
-        this.patching = true;
-        ResourceRequester.patch(
-            resourceKey,
-            {medias: data.medias.filter((media) => !this.listStore.selectionIds.includes(media))},
-            {id: this.listStore.options.id}
-        ).then(action((response) => {
-            this.patching = false;
+        this.listStore.deleteSelection().then(action(() =>{
             this.showDialog = false;
-            this.listStore.reload();
-
-            if (this.resourceStore) {
-                this.resourceStore.setMultiple(response);
-            }
+            resourceStore.set(
+                'medias',
+                resourceStore.data.medias.filter((media) => !deleteIds.includes(media))
+            );
         }));
     };
 

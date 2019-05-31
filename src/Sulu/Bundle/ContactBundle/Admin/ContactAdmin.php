@@ -146,7 +146,7 @@ class ContactAdmin extends Admin
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
                 ->addToolbarActions($documentsToolbarAction)
-                ->addRouterAttributesToListStore(['id'])
+                ->addRouterAttributesToListStore(['id' => 'contactId'])
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
@@ -188,7 +188,7 @@ class ContactAdmin extends Admin
                 ->setUserSettingsKey('contact_media')
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
-                ->addRouterAttributesToListStore(['id'])
+                ->addRouterAttributesToListStore(['id' => 'contactId'])
                 ->addToolbarActions($documentsToolbarAction)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),

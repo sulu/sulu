@@ -105,6 +105,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'contact_media' => [
                             'routes' => [
                                 'list' => 'cget_contact_medias',
+                                'detail' => 'delete_contact_medias',
                             ],
                         ],
                         'accounts' => [
@@ -116,6 +117,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'account_media' => [
                             'routes' => [
                                 'list' => 'cget_account_medias',
+                                'detail' => 'delete_account_medias',
                             ],
                         ],
                     ],
@@ -187,6 +189,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 [
                     'routes_to_expose' => [
                         'delete_contact_medias',
+                        'delete_account_medias',
                     ],
                 ]
             );

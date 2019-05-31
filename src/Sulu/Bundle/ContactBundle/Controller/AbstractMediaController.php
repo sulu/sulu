@@ -155,7 +155,7 @@ abstract class AbstractMediaController extends RestController
      *
      * @return Response
      */
-    protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $id, $request)
+    protected function getMultipleView($entityName, $routeName, AbstractContactManager $contactManager, $contactId, $request)
     {
         try {
             $locale = $this->getUser()->getLocale();
@@ -168,7 +168,7 @@ abstract class AbstractMediaController extends RestController
                 $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
                 $listBuilder = $factory->create($entityName);
-                $fieldDescriptors = $this->getFieldDescriptors($entityName, $id);
+                $fieldDescriptors = $this->getFieldDescriptors($entityName, $contactId);
                 $listBuilder->setIdField($fieldDescriptors['id']);
                 $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
@@ -180,13 +180,13 @@ abstract class AbstractMediaController extends RestController
                     $listResponse,
                     static::$mediaEntityKey,
                     $routeName,
-                    array_merge(['id' => $id], $request->query->all()),
+                    array_merge(['contactId' => $contactId], $request->query->all()),
                     $listBuilder->getCurrentPage(),
                     $listBuilder->getLimit(),
                     $listBuilder->count()
                 );
             } else {
-                $media = $contactManager->getById($id, $locale)->getMedias();
+                $media = $contactManager->getById($contactId, $locale)->getMedias();
                 $list = new CollectionRepresentation($media, static::$mediaEntityKey);
             }
             $view = $this->view($list, 200);
