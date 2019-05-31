@@ -32,6 +32,15 @@ In case you have relied on the old behavior, you have to add the parameters your
 </property>
 ```
 
+### Media in Contact & Account REST API
+
+The APIs under `/admin/api/contacts/<id>` and `/admin/api/accounts/<id>` have a `medias` field containing references
+to assigned medias. This field was an array of objects containing only an `id` property. Now the `medias` property is an
+array of numbers. The same change was made in the PATCH and PUT requests.
+
+There are also subresources at `/admin/api/contacts/<id>/medias` and `/admin/api/accounts/<id>/medias`, where the key in
+the `_embedded` object was changed from `media` to `contact_media` resp. `account_media`
+
 ## 2.0.0-alpha6
 
 When upgrading also have a look at the changes in the

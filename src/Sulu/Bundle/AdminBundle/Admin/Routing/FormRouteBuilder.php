@@ -127,6 +127,13 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
+    public function setTitleVisible(bool $titleVisible): FormRouteBuilderInterface
+    {
+        $this->setTitleVisibleToRoute($this->route, $titleVisible);
+
+        return $this;
+    }
+
     public function setParent(string $parent): FormRouteBuilderInterface
     {
         $this->route->setParent($parent);

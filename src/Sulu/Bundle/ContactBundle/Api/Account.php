@@ -1100,7 +1100,7 @@ class Account extends ApiWrapper
         $medias = [];
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
-                $medias[] = new Media($media, $this->locale, null);
+                $medias[] = $media->getId();
             }
         }
 

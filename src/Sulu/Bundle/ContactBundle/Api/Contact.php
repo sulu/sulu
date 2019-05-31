@@ -1083,7 +1083,7 @@ class Contact extends ApiWrapper
         $entities = [];
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
-                $entities[] = new Media($media, $this->locale, null);
+                $entities[] = $media->getId();
             }
         }
 

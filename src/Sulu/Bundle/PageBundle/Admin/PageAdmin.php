@@ -164,6 +164,7 @@ class PageAdmin extends Admin
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setPreviewCondition($previewCondition)
+                ->setTitleVisible(true)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
@@ -174,6 +175,7 @@ class PageAdmin extends Admin
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setPreviewCondition($previewCondition)
+                ->setTitleVisible(true)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
@@ -184,6 +186,7 @@ class PageAdmin extends Admin
                 ->addToolbarActions($formToolbarActionsWithoutType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setPreviewCondition($previewCondition)
+                ->setTitleVisible(true)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

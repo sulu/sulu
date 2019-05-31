@@ -274,13 +274,15 @@ test('Update boolean observable attribute on route change', () => {
     const history = createMemoryHistory();
     const router = new Router(history);
 
-    router.bind('exclude', exclude);
+    router.bind('exclude', exclude, true);
 
     router.navigate('list');
     expect(router.attributes.exclude).toBe(true);
+    expect(exclude.get()).toBe(true);
 
     history.push('/list?exclude=false');
     expect(router.attributes.exclude).toBe(false);
+    expect(exclude.get()).toBe(false);
 });
 
 test('Navigate to route using URL', () => {

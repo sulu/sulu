@@ -17,6 +17,8 @@ interface ListRouteBuilderInterface
 
     public function setListKey(string $listKey): self;
 
+    public function setUserSettingsKey(string $userSettingsKey): self;
+
     public function setTitle(string $title): self;
 
     public function setTabTitle(string $tabTitle): self;

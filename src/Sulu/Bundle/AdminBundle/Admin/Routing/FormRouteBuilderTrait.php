@@ -38,6 +38,11 @@ trait FormRouteBuilderTrait
         $route->setOption('idQueryParameter', $idQueryParameter);
     }
 
+    private function setTitleVisibleToRoute(Route $route, bool $titleVisible): void
+    {
+        $route->setOption('titleVisible', $titleVisible);
+    }
+
     private function addLocalesToRoute(Route $route, array $locales): void
     {
         $oldLocales = $route->getOption('locales');

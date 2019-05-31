@@ -289,10 +289,10 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media2->getId(), $response->_embedded->media[0]->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->_embedded->media[0]);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->media[0]->thumbnails);
-        $this->assertTrue(is_string($response->_embedded->media[0]->thumbnails->{'sulu-100x100'}));
+        $this->assertEquals($this->media2->getId(), $response->_embedded->account_media[0]->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->_embedded->account_media[0]);
+        $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->account_media[0]->thumbnails);
+        $this->assertTrue(is_string($response->_embedded->account_media[0]->thumbnails->{'sulu-100x100'}));
     }
 
     public function testAccountMediaPost()
@@ -325,8 +325,8 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
-        $this->assertNotNull($response->medias[0]->id);
-        $this->assertNotNull($response->medias[1]->id);
+        $this->assertInternalType('int', $response->medias[0]);
+        $this->assertInternalType('int', $response->medias[1]);
     }
 
     public function testAccountMediaPostNotExistingMedia()

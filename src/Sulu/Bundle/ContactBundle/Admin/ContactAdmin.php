@@ -100,6 +100,11 @@ class ContactAdmin extends Admin
             'sulu_admin.export',
         ];
 
+        $documentsToolbarAction = [
+            'sulu_contact.add_media',
+            'sulu_contact.delete_media',
+        ];
+
         return [
             $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
                 ->setResourceKey('contacts')
@@ -134,6 +139,16 @@ class ContactAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.contact_documents_list', '/documents')
+                ->setResourceKey('contact_media')
+                ->setListKey('media')
+                ->setUserSettingsKey('contact_media')
+                ->setTabTitle('sulu_contact.documents')
+                ->addListAdapters(['table'])
+                ->addToolbarActions($documentsToolbarAction)
+                ->addRouterAttributesToListStore(['id' => 'contactId'])
+                ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
+                ->getRoute(),
             $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
                 ->setResourceKey('accounts')
                 ->setListKey('accounts')
@@ -165,6 +180,16 @@ class ContactAdmin extends Admin
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
+                ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
+                ->getRoute(),
+            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_documents_list', '/documents')
+                ->setResourceKey('account_media')
+                ->setListKey('media')
+                ->setUserSettingsKey('contact_media')
+                ->setTabTitle('sulu_contact.documents')
+                ->addListAdapters(['table'])
+                ->addRouterAttributesToListStore(['id' => 'contactId'])
+                ->addToolbarActions($documentsToolbarAction)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

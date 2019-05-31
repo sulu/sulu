@@ -7,6 +7,7 @@ import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
 
 type Props = {|
+    confirmLoading: boolean,
     excludedIds: Array<number>,
     locale: IObservableValue<string>,
     onClose: () => void,
@@ -17,6 +18,7 @@ type Props = {|
 @observer
 class MultiMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
+        confirmLoading: false,
         excludedIds: [],
     };
 
@@ -50,6 +52,7 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
 
     render() {
         const {
+            confirmLoading,
             onClose,
             onConfirm,
             open,
@@ -60,6 +63,7 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
             <MediaSelectionOverlay
                 collectionId={this.collectionId}
                 collectionListStore={this.collectionListStore}
+                confirmLoading={confirmLoading}
                 locale={locale}
                 mediaListStore={this.mediaListStore}
                 onClose={onClose}

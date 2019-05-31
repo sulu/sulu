@@ -49,7 +49,7 @@ test('Render a loading MediaFormats view', () => {
     resourceStore.loading = true;
 
     expect(render(
-        <MediaFormats resourceStore={resourceStore} router={router} />
+        <MediaFormats resourceStore={resourceStore} router={router} title="Test 1" />
     )).toMatchSnapshot();
 });
 
@@ -102,7 +102,7 @@ test('Render a MediaFormats view', () => {
         '800x800': '/media/800x800/image.jpg',
     };
 
-    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} />);
+    const mediaFormats = mount(<MediaFormats resourceStore={resourceStore} router={router} title="Test 2" />);
 
     return formatPromise.then(() => {
         expect(mediaFormats.render()).toMatchSnapshot();

@@ -4,6 +4,7 @@ import {when} from 'mobx';
 import {CardCollection, fieldRegistry} from 'sulu-admin-bundle/containers';
 import {initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
+import {listToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
 import ContactDetails from './containers/Form/fields/ContactDetails';
@@ -14,10 +15,15 @@ import Fax from './components/ContactDetails/Fax';
 import Phone from './components/ContactDetails/Phone';
 import SocialMedia from './components/ContactDetails/SocialMedia';
 import Website from './components/ContactDetails/Website';
+import AddMediaToolbarAction from './views/List/toolbarActions/AddMediaToolbarAction';
+import DeleteMediaToolbarAction from './views/List/toolbarActions/DeleteMediaToolbarAction';
 
 fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
+
+listToolbarActionRegistry.add('sulu_contact.add_media', AddMediaToolbarAction);
+listToolbarActionRegistry.add('sulu_contact.delete_media', DeleteMediaToolbarAction);
 
 initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: boolean) => {
     if (initialized) {

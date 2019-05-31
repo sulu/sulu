@@ -1,5 +1,5 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import {computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
@@ -94,6 +94,10 @@ class ResourceTabs extends React.Component<Props> {
             titleProperty,
         } = this.props;
 
+        if (!this.resourceStore.initialized && this.resourceStore.loading) {
+            return undefined;
+        }
+
         return this.resourceStore.data[titleProperty || routeTitleProperty];
     }
 
@@ -128,26 +132,17 @@ class ResourceTabs extends React.Component<Props> {
         const {children} = this.props;
 
         const childComponent = children
-            ? children({locales: this.locales, resourceStore: this.resourceStore})
+            ? children({locales: this.locales, resourceStore: this.resourceStore, title: this.title})
             : null;
 
         const selectedRouteIndex = childComponent
             ? this.visibleTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
             : undefined;
 
-        const selectedRoute = selectedRouteIndex !== undefined ? this.visibleTabRoutes[selectedRouteIndex] : undefined;
-
         return this.resourceStore.initialized
             ? (
                 <Tabs {...this.props} routeChildren={this.visibleTabRoutes} selectedIndex={selectedRouteIndex}>
-                    {() => (
-                        <Fragment>
-                            {this.sortedTabRoutes[0] !== selectedRoute && this.title &&
-                                <h1>{this.title}</h1>
-                            }
-                            {childComponent}
-                        </Fragment>
-                    )}
+                    {() => childComponent}
                 </Tabs>
             )
             : (

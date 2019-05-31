@@ -42,6 +42,13 @@ class ListRouteBuilder implements ListRouteBuilderInterface
         return $this;
     }
 
+    public function setUserSettingsKey(string $userSettingsKey): ListRouteBuilderInterface
+    {
+        $this->setUserSettingsKeyToRoute($this->route, $userSettingsKey);
+
+        return $this;
+    }
+
     public function setTitle(string $title): ListRouteBuilderInterface
     {
         $this->setTitleToRoute($this->route, $title);

@@ -1214,18 +1214,14 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts/' . $account->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => $media2->getId(),
-                    ],
+                    $media1->getId(),
+                    $media2->getId(),
                 ],
             ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->medias));
+        $this->assertCount(2, $response->medias);
 
         // remove medias
         $client->request(
@@ -1245,12 +1241,8 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts/' . $account->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => 101,
-                    ],
+                    'id' => $media1->getId(),
+                    'id' => 101,
                 ],
             ]
         );

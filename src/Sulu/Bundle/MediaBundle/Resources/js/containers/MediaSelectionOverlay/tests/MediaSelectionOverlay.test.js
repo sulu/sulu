@@ -160,6 +160,23 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
     expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
 });
 
+test('Render the overlay with a loading confirm button', () => {
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            confirmLoading={true}
+            locale={observable.box()}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(mediaSelectionOverlay.find('Overlay').at(0).prop('confirmLoading')).toEqual(true);
+});
+
 test('Should call onConfirm callback with selected medias from media list', () => {
     const confirmSpy = jest.fn();
     const locale = observable.box();

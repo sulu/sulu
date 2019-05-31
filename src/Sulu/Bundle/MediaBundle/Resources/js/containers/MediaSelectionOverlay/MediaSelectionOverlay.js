@@ -17,6 +17,7 @@ const USER_SETTINGS_KEY = 'media_selection_overlay';
 type Props = {|
     collectionId: IObservableValue<?string | number>,
     collectionListStore: ListStore,
+    confirmLoading: boolean,
     locale: IObservableValue<string>,
     mediaListStore: ListStore,
     onClose: () => void,
@@ -26,6 +27,10 @@ type Props = {|
 
 @observer
 class MediaSelectionOverlay extends React.Component<Props> {
+    static defaultProps = {
+        confirmLoading: false,
+    };
+
     @observable collectionStore: CollectionStore;
     @observable showMediaUploadOverlay: boolean = false;
     updateCollectionStoreDisposer: () => void;
@@ -144,6 +149,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
     render() {
         const {
             collectionListStore,
+            confirmLoading,
             mediaListStore,
             open,
             locale,
@@ -158,6 +164,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             <Overlay
                 actions={overlayActions}
                 confirmDisabled={!mediaListStore.selections.length}
+                confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.confirm')}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}

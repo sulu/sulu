@@ -2047,18 +2047,14 @@ class ContactControllerTest extends SuluTestCase
             '/api/contacts/' . $contact->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => $media2->getId(),
-                    ],
+                    $media1->getId(),
+                    $media2->getId(),
                 ],
             ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->medias));
+        $this->assertCount(2, $response->medias);
 
         // remove medias
         $client->request(
@@ -2078,12 +2074,8 @@ class ContactControllerTest extends SuluTestCase
             '/api/contacts/' . $contact->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => 101,
-                    ],
+                    $media1->getId(),
+                    101,
                 ],
             ]
         );

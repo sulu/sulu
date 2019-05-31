@@ -168,6 +168,7 @@ class SnippetAdmin extends Admin
                 ->setFormKey('snippet_taxonomies')
                 ->setTabTitle('sulu_snippet.taxonomies')
                 ->addToolbarActions($formToolbarActionsWithoutType)
+                ->setTitleVisible(true)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
             (new Route('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas'))

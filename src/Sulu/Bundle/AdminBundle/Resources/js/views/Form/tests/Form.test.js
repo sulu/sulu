@@ -76,9 +76,54 @@ test('Should reuse the passed resourceStore if the passed resourceKey is the sam
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     expect(resourceStore).toBe(form.instance().resourceStore);
+});
+
+test('Should not show the title if the titleVisible option is not given', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            formKey: 'snippets',
+            resourceKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        route,
+    };
+
+    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} title="Test 1" />);
+
+    expect(form.find('h1')).toHaveLength(0);
+});
+
+test('Should show the title if the titleVisible option is set to true', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 10);
+    const route = {
+        options: {
+            formKey: 'snippets',
+            resourceKey: 'snippets',
+            titleVisible: true,
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        route,
+    };
+
+    const form = shallow(<Form resourceStore={resourceStore} route={route} router={router} title="Test 2" />);
+
+    expect(form.find('h1[children="Test 2"]')).toHaveLength(1);
 });
 
 test('Should create a new resourceStore if the passed resourceKey differs', () => {
