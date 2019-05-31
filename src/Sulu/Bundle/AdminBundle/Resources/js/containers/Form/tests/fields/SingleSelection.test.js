@@ -30,6 +30,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
     this.locale = formStore.locale;
     this.options = formStore.options;
+    this.getValueByPath = jest.fn();
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -66,9 +67,57 @@ test('Pass correct props to SingleAutoComplete', () => {
     expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
         disabled: true,
         displayProperty: 'name',
+        options: {},
         resourceKey: 'accounts',
         searchProperties: ['name', 'number'],
         value,
+    }));
+});
+
+test('Pass correct options to SingleAutoComplete based on data_path_to_auto_complete schema option', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const value = {
+        test: 'value',
+    };
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        data_path_to_auto_complete: {
+            name: 'data_path_to_auto_complete',
+            value: [
+                {name: 'id', value: 'accountId'},
+            ],
+        },
+    };
+
+    formInspector.getValueByPath.mockReturnValue(5);
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(formInspector.getValueByPath).toBeCalledWith('/id');
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        options: {
+            accountId: 5,
+        },
     }));
 });
 

@@ -240,8 +240,14 @@ class ContactController extends RestController implements ClassResourceInterface
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
+        $fieldDescriptors = $this->getFieldDescriptors();
         $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
-        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $account = $request->get('accountId');
+        if ($account) {
+            $listBuilder->where($fieldDescriptors['accountId'], $account);
+        }
 
         $listResponse = $this->prepareListResponse($listBuilder, $locale);
 

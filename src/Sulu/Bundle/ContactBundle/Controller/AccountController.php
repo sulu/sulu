@@ -515,6 +515,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         try {
             $account = $this->getRepository()->findAccountById($id);
 
@@ -523,7 +525,7 @@ class AccountController extends RestController implements ClassResourceInterface
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $this->doPut($account, $request);
+                $this->doPut($account, $request, $em);
 
                 $em->flush();
 
@@ -556,7 +558,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @throws EntityNotFoundException
      * @throws RestException
      */
-    protected function doPut(AccountInterface $account, Request $request)
+    protected function doPut(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
@@ -576,6 +578,15 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         $this->setParent($request->get('parent'), $account);
+
+        if (null !== ($mainContactRequest = $request->get('mainContact'))) {
+            $mainContact = $entityManager->getRepository(
+                $this->container->getParameter('sulu.model.contact.class')
+            )->find($mainContactRequest['id']);
+            if ($mainContact) {
+                $account->setMainContact($mainContact);
+            }
+        }
 
         $user = $this->getUser();
         $account->setChanger($user);
@@ -690,7 +701,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setMedias($account, $request->get('medias'));
         }
 
-        // Check if mainContact is set
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
@@ -700,7 +710,6 @@ class AccountController extends RestController implements ClassResourceInterface
             }
         }
 
-        // Process details
         if (null !== $request->get('bankAccounts')) {
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }

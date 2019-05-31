@@ -151,6 +151,10 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'contacts',
                                 'types' => [
+                                    'auto_complete' => [
+                                        'display_property' => 'fullName',
+                                        'search_properties' => ['fullName'],
+                                    ],
                                     'list_overlay' => [
                                         'adapter' => 'table',
                                         'list_key' => 'contacts',

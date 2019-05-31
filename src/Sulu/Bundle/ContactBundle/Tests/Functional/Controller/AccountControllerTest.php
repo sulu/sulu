@@ -850,6 +850,7 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
         $logo = $this->createMedia('logo.jpeg', 'image/jpeg', $mediaType, $collection);
+        $contact = $this->createContact($account, 'Vorname', 'Nachname');
 
         $this->em->flush();
 
@@ -861,6 +862,7 @@ class AccountControllerTest extends SuluTestCase
                 'name' => 'ExampleCompany',
                 'note' => 'A small notice',
                 'logo' => ['id' => $logo->getId()],
+                'mainContact' => ['id' => $contact->getId()],
                 'contactDetails' => [
                     'websites' => [
                         [
@@ -949,6 +951,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
+        $this->assertEquals($contact->getId(), $response->mainContact->id);
 
         $this->assertEquals(2, count($response->contactDetails->websites));
         $this->assertEquals('http://example.company.com', $response->contactDetails->websites[0]->website);
