@@ -574,3 +574,69 @@ test('Navigate to tab if it was clicked', () => {
     tabs.find('Tab button').at(1).simulate('click');
     expect(router.navigate).toBeCalledWith('route2', attributes);
 });
+
+test('Navigate to tab if it was clicked', () => {
+    const childRoute1 = {
+        attributeDefaults: {},
+        children: [],
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+        },
+        parent: null,
+        path: '/route1',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+    const childRoute2 = {
+        attributeDefaults: {},
+        children: [],
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+        parent: null,
+        path: '/route2',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const route = {
+        attributeDefaults: {},
+        children: [
+            childRoute1,
+            childRoute2,
+        ],
+        name: 'parent',
+        options: {
+            resourceKey: 'test',
+            routerAttributesToBlacklist: ['sortColumn', 'sortOrder'],
+        },
+        parent: null,
+        path: '/parent',
+        rerenderAttributes: [],
+        view: 'route1',
+    };
+
+    const attributes = {
+        id: 1,
+        sortColumn: 'size',
+        sortOrder: 'asc',
+    };
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.navigate = jest.fn();
+        this.redirect = jest.fn();
+        this.route = route;
+    });
+
+    const router = new Router({});
+
+    const Child = () => (<h1>Child</h1>);
+    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+
+    tabs.find('Tab button').at(1).simulate('click');
+    expect(router.navigate).toBeCalledWith('route2', {id: 1});
+});

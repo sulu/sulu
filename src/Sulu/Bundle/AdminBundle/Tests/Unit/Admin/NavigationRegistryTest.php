@@ -181,4 +181,35 @@ class NavigationRegistryTest extends TestCase
 
         $this->navigationRegistry->getNavigation();
     }
+
+    public function testGetNavigationWithChildren()
+    {
+        $rootItem = new NavigationItem('Root');
+        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem));
+        $this->admin2->getNavigation()->willReturn(new Navigation());
+
+        $navigationItem1 = new NavigationItem('navigation_1');
+        $navigationItem1->setMainRoute('route1');
+
+        $rootItem->addChild($navigationItem1);
+
+        $route1 = $this->prophesize(Route::class);
+        $route1->getPath()->willReturn('/route1');
+        $route1->getName()->willReturn('route1');
+
+        $route11 = $this->prophesize(Route::class);
+        $route11->getPath()->willReturn('/route1/child1');
+        $route11->getName()->willReturn('route11');
+
+        $route21 = $this->prophesize(Route::class);
+        $route21->getPath()->willReturn('/route2/route1');
+        $route21->getName()->willReturn('route2_1');
+
+        $this->routeRegistry->getRoutes()->willReturn([$route1, $route11, $route21]);
+        $this->routeRegistry->findRouteByName('route1')->willReturn($route1);
+
+        $navigation = $this->navigationRegistry->getNavigation();
+
+        $this->assertEquals(['route1', 'route11'], $navigation->getRoot()->getChildren()[0]->getChildRoutes());
+    }
 }

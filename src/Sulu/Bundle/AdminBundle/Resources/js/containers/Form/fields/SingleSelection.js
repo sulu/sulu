@@ -201,6 +201,12 @@ export default class SingleSelection extends React.Component<Props>
             disabled,
             dataPath,
             fieldTypeOptions,
+            formInspector,
+            schemaOptions: {
+                data_path_to_auto_complete: {
+                    value: dataPathToAutoComplete = [],
+                } = {},
+            },
             value,
         } = this.props;
 
@@ -227,12 +233,31 @@ export default class SingleSelection extends React.Component<Props>
             },
         } = fieldTypeOptions;
 
+        if (!Array.isArray(dataPathToAutoComplete)) {
+            throw new Error('The "data_path_to_auto_complete" schemaOption must be an array!');
+        }
+
+        const options = dataPathToAutoComplete.reduce((options, schemaEntry) => {
+            const {name, value} = schemaEntry;
+            if (typeof name !== 'string' || typeof value !== 'string') {
+                throw new Error(
+                    'An entry of the "data_path_to_auto_complete" schemaOption must provide strings for their name and '
+                    + 'value'
+                );
+            }
+
+            options[value] = formInspector.getValueByPath('/' + name);
+
+            return options;
+        }, {});
+
         return (
             <SingleAutoComplete
                 disabled={!!disabled}
                 displayProperty={displayProperty}
                 id={dataPath}
                 onChange={this.handleChange}
+                options={options}
                 resourceKey={resourceKey}
                 searchProperties={searchProperties}
                 value={value}
