@@ -182,7 +182,7 @@ class SnippetDataProvider implements DataProviderInterface
     {
         return array_map(
             function($item) use ($locale) {
-                return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
+                return new ContentDataItem($item, $this->getResource($item['id'], $locale));
             },
             $data
         );
@@ -200,9 +200,9 @@ class SnippetDataProvider implements DataProviderInterface
     {
         return array_map(
             function($item) use ($locale) {
-                $this->referenceStore->add($item['uuid']);
+                $this->referenceStore->add($item['id']);
 
-                return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
+                return new ArrayAccessItem($item['id'], $item, $this->getResource($item['id'], $locale));
             },
             $data
         );

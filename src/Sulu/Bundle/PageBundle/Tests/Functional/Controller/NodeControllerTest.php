@@ -949,7 +949,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
         $this->assertEquals($data[0]['title'], $items[0]->title);
@@ -961,7 +961,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
         $this->assertEquals($data[2]['title'], $items[0]->title);
@@ -973,7 +973,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(1, count($items));
         $this->assertEquals($data[4]['title'], $items[0]->title);
@@ -995,12 +995,12 @@ class NodeControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // check if tree is correctly loaded till the given id
-        $node1 = $response->_embedded->nodes[0];
+        $node1 = $response->_embedded->pages[0];
         $this->assertEquals($data[0]['path'], $node1->path);
         $this->assertFalse($node1->hasChildren);
         $this->assertEmpty($node1->_embedded->pages);
 
-        $node2 = $response->_embedded->nodes[1];
+        $node2 = $response->_embedded->pages[1];
         $this->assertEquals($data[1]['path'], $node2->path);
         $this->assertTrue($node2->hasChildren);
         $this->assertCount(2, $node2->_embedded->pages);
@@ -1031,12 +1031,12 @@ class NodeControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // check if tree is correctly loaded till the given id
-        $node1 = $response->_embedded->nodes[0];
+        $node1 = $response->_embedded->pages[0];
         $this->assertEquals($data[0]['path'], $node1->path);
         $this->assertFalse($node1->hasChildren);
         $this->assertEmpty($node1->_embedded->pages);
 
-        $node2 = $response->_embedded->nodes[1];
+        $node2 = $response->_embedded->pages[1];
         $this->assertEquals($data[1]['path'], $node2->path);
         $this->assertTrue($node2->hasChildren);
         $this->assertCount(2, $node2->_embedded->pages);
@@ -1061,7 +1061,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
 
@@ -1075,7 +1075,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=2&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(4, count($items));
 
@@ -1095,7 +1095,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(5, count($items));
 
@@ -1118,7 +1118,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=3&webspace=sulu_io&language=en&parentId=' . $data[3]['id']);
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(1, count($items));
 
@@ -1135,87 +1135,87 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&flat=false&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(0, count($items[1]->_embedded->nodes));
+        $this->assertEquals(0, count($items[1]->_embedded->pages));
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=2&flat=false&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(2, count($items[1]->_embedded->nodes));
+        $this->assertEquals(2, count($items[1]->_embedded->pages));
 
-        $items = $items[1]->_embedded->nodes;
+        $items = $items[1]->_embedded->pages;
 
         $this->assertEquals('test3', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         $this->assertEquals('test4', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(0, count($items[1]->_embedded->nodes));
+        $this->assertEquals(0, count($items[1]->_embedded->pages));
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(2, count($items));
 
         $this->assertEquals('test1', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         $this->assertEquals('test2', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(2, count($items[1]->_embedded->nodes));
+        $this->assertEquals(2, count($items[1]->_embedded->pages));
 
-        $items = $items[1]->_embedded->nodes;
+        $items = $items[1]->_embedded->pages;
 
         $this->assertEquals('test3', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         $this->assertEquals('test4', $items[1]->title);
         $this->assertTrue($items[1]->hasSub);
-        $this->assertEquals(1, count($items[1]->_embedded->nodes));
+        $this->assertEquals(1, count($items[1]->_embedded->pages));
 
-        $items = $items[1]->_embedded->nodes;
+        $items = $items[1]->_embedded->pages;
 
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
 
         // get child nodes from subNode
         $client->request('GET', '/api/nodes?depth=3&flat=false&webspace=sulu_io&language=en&parentId=' . $data[3]['id']);
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $items = $response->_embedded->pages;
 
         $this->assertEquals(1, count($items));
 
         $this->assertEquals('test5', $items[0]->title);
         $this->assertFalse($items[0]->hasSub);
-        $this->assertEquals(0, count($items[0]->_embedded->nodes));
+        $this->assertEquals(0, count($items[0]->_embedded->pages));
     }
 
     public function testBreadcrumb()
@@ -1317,7 +1317,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $items = $response['_embedded']['nodes'];
+        $items = $response['_embedded']['pages'];
 
         $this->assertEquals(2, count($items));
 
@@ -1328,7 +1328,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[0]['publishedState']);
         $this->assertEmpty($items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
-        $this->assertEquals(0, count($items[0]['_embedded']['nodes']));
+        $this->assertEquals(0, count($items[0]['_embedded']['pages']));
         $this->assertArrayHasKey('_links', $items[0]);
 
         $this->assertArrayHasKey('id', $items[1]);
@@ -1338,7 +1338,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[1]['publishedState']);
         $this->assertEmpty($items[1]['navContexts']);
         $this->assertTrue($items[1]['hasSub']);
-        $this->assertEquals(0, count($items[1]['_embedded']['nodes']));
+        $this->assertEquals(0, count($items[1]['_embedded']['pages']));
         $this->assertArrayHasKey('_links', $items[1]);
     }
 
@@ -1734,7 +1734,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $items = $response['_embedded']['nodes'];
+        $items = $response['_embedded']['pages'];
 
         $this->assertEquals(4, count($items));
         $this->assertEquals('test4', $items[0]['title']);
@@ -1786,7 +1786,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=de');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $items = $response['_embedded']['nodes'];
+        $items = $response['_embedded']['pages'];
 
         $this->assertEquals(4, count($items));
         $this->assertEquals('test4', $items[0]['title']);
@@ -1866,7 +1866,7 @@ class NodeControllerTest extends SuluTestCase
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
-        $items = $response['_embedded']['nodes'];
+        $items = $response['_embedded']['pages'];
 
         $this->assertEquals(1, count($items));
 
@@ -1877,7 +1877,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertFalse($items[0]['publishedState']);
         $this->assertEquals(['main', 'footer'], $items[0]['navContexts']);
         $this->assertFalse($items[0]['hasSub']);
-        $this->assertEquals(0, count($items[0]['_embedded']['nodes']));
+        $this->assertEquals(0, count($items[0]['_embedded']['pages']));
         $this->assertArrayHasKey('_links', $items[0]);
     }
 
@@ -1972,7 +1972,7 @@ class NodeControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertArrayHasKey('_permissions', $response['_embedded']['nodes'][0]);
+        $this->assertArrayHasKey('_permissions', $response['_embedded']['pages'][0]);
 
         $client->request('GET', '/api/nodes/' . $securedPage->getUuid() . '?language=en&webspace=sulu_io');
 
@@ -1992,7 +1992,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $nodes = $response['_embedded']['nodes'];
+        $nodes = $response['_embedded']['pages'];
         $this->assertCount(3, $nodes);
 
         $titles = array_map(
@@ -2017,7 +2017,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $nodes = $response['_embedded']['nodes'];
+        $nodes = $response['_embedded']['pages'];
         $this->assertCount(1, $nodes);
 
         $titles = array_map(
@@ -2040,7 +2040,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $nodes = $response['_embedded']['nodes'];
+        $nodes = $response['_embedded']['pages'];
         $this->assertCount(1, $nodes);
 
         $titles = array_map(

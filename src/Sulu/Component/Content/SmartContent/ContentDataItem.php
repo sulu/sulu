@@ -30,7 +30,7 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishI
      */
     public function __construct(array $data, $resource)
     {
-        parent::__construct($data['uuid'], $data, $resource);
+        parent::__construct($data['id'], $data, $resource);
     }
 
     /**

@@ -173,7 +173,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             return;
         }
 
-        return new DatasourceItem($result[0]['uuid'], $result[0]['title'], '/' . ltrim($result[0]['path'], '/'));
+        return new DatasourceItem($result[0]['id'], $result[0]['title'], '/' . ltrim($result[0]['path'], '/'));
     }
 
     /**
@@ -348,7 +348,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     {
         return array_map(
             function($item) use ($locale) {
-                return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
+                return new ContentDataItem($item, $this->getResource($item['id'], $locale));
             },
             $data
         );
@@ -366,9 +366,9 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     {
         return array_map(
             function($item) use ($locale) {
-                $this->referenceStore->add($item['uuid']);
+                $this->referenceStore->add($item['id']);
 
-                return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
+                return new ArrayAccessItem($item['id'], $item, $this->getResource($item['id'], $locale));
             },
             $data
         );

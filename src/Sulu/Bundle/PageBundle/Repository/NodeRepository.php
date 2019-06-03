@@ -153,7 +153,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add default embedded property with empty nodes array
         $result['_embedded'] = [];
-        $result['_embedded']['nodes'] = [];
+        $result['_embedded']['pages'] = [];
 
         // add api links
         $result['_links'] = [
@@ -270,7 +270,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         $parentNode = $this->getParentNode($parent, $webspaceKey, $languageCode);
         $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-        $result['_embedded']['nodes'] = $this->prepareNodesTree(
+        $result['_embedded']['pages'] = $this->prepareNodesTree(
             $nodes,
             $webspaceKey,
             $languageCode,
@@ -278,7 +278,7 @@ class NodeRepository implements NodeRepositoryInterface
             $excludeGhosts,
             $flat ? 1 : $depth
         );
-        $result['total'] = count($result['_embedded']['nodes']);
+        $result['total'] = count($result['_embedded']['pages']);
 
         return $result;
     }
@@ -311,7 +311,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         return [
             '_embedded' => [
-                'nodes' => $result,
+                'pages' => $result,
             ],
             'total' => count($result),
             '_links' => [
@@ -334,7 +334,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add default empty embedded property
         $data['_embedded'] = [
-            'nodes' => [$this->createWebspaceNode($webspaceKey, $languageCode, $depth, $excludeGhosts)],
+            'pages' => [$this->createWebspaceNode($webspaceKey, $languageCode, $depth, $excludeGhosts)],
         ];
         // add api links
         $data['_links'] = [
@@ -353,11 +353,11 @@ class NodeRepository implements NodeRepositoryInterface
     public function getWebspaceNodes($languageCode)
     {
         // init result
-        $data = ['_embedded' => ['nodes' => []]];
+        $data = ['_embedded' => ['pages' => []]];
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $data['_embedded']['nodes'][] = $this->createWebspaceNode($webspace->getKey(), $languageCode, 0);
+            $data['_embedded']['pages'][] = $this->createWebspaceNode($webspace->getKey(), $languageCode, 0);
         }
 
         // add api links
@@ -453,8 +453,8 @@ class NodeRepository implements NodeRepositoryInterface
             $parentNode = $this->getParentNode($node->getIdentifier(), $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
 
-            $result['_embedded']['nodes'] = $data;
-            $result['total'] = count($result['_embedded']['nodes']);
+            $result['_embedded']['pages'] = $data;
+            $result['total'] = count($result['_embedded']['pages']);
         } else {
             $result = $data;
         }
@@ -508,7 +508,7 @@ class NodeRepository implements NodeRepositoryInterface
                 $node->getHasChildren() &&
                 null != $node->getChildren()
             ) {
-                $result['_embedded']['nodes'] = $this->prepareNodesTree(
+                $result['_embedded']['pages'] = $this->prepareNodesTree(
                     $node->getChildren(),
                     $webspaceKey,
                     $languageCode,
@@ -538,7 +538,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         $result = [
             '_embedded' => [
-                'nodes' => $nodes,
+                'pages' => $nodes,
             ],
         ];
 
@@ -634,7 +634,7 @@ class NodeRepository implements NodeRepositoryInterface
         if (is_array($result)) {
             foreach ($result as &$node) {
                 if ($node['id'] === $uuid) {
-                    $node['_embedded']['nodes'] = $tier;
+                    $node['_embedded']['pages'] = $tier;
                     $found = true;
                     break;
                 }
@@ -654,7 +654,7 @@ class NodeRepository implements NodeRepositoryInterface
             );
         }
 
-        $this->iterateTiers($tiers, $node['_embedded']['nodes']);
+        $this->iterateTiers($tiers, $node['_embedded']['pages']);
     }
 
     /**

@@ -49,7 +49,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(3, $items);
 
@@ -73,7 +73,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(3, $items);
 
@@ -98,7 +98,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(2, $items);
 
@@ -118,7 +118,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(3, $items);
 
@@ -143,7 +143,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(2, $items);
 
@@ -163,7 +163,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(3, $items);
 
@@ -188,7 +188,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['nodes'];
+        $items = $result['_embedded']['pages'];
 
         $this->assertCount(1, $items);
 
@@ -238,7 +238,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['nodes'];
+        $layer = $result['_embedded']['pages'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertTrue($layer[0]['hasChildren']);
@@ -358,7 +358,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['nodes'];
+        $layer = $result['_embedded']['pages'];
         $this->assertCount(1, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -392,7 +392,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'all', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
-        $layer = $result['_embedded']['nodes'];
+        $layer = $result['_embedded']['pages'];
 
         usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
@@ -443,7 +443,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['nodes'];
+        $layer = $result['_embedded']['pages'];
         usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });
@@ -495,7 +495,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['nodes'];
+        $layer = $result['_embedded']['pages'];
         usort($layer, function($layer1, $layer2) {
             return strcmp($layer1['title'], $layer2['title']);
         });

@@ -795,6 +795,35 @@ test('Set loading flag to false after request', (done) => {
     });
 });
 
+test('Set active to undefined if the response returned a 404', (done) => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    listStore.schema = {};
+    const promise = Promise.reject({
+        status: 404,
+    });
+
+    const loadingStrategy = new LoadingStrategy();
+    loadingStrategy.load.mockReturnValue(promise);
+    const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.setActive('some-uuid');
+    listStore.sendRequest();
+
+    expect(listStore.active.get()).toEqual('some-uuid');
+
+    setTimeout(() => {
+        loadingStrategy.load.mockReturnValue(Promise.resolve());
+        expect(listStore.active.get()).toEqual(undefined);
+        expect(userStore.setPersistentSetting).toBeCalledWith(
+            'sulu_admin.list_store.tests.list_test.active',
+            undefined
+        );
+        done();
+    });
+});
+
 test('Get schema from MetadataStore for correct resourceKey', () => {
     const schema = {
         id: {

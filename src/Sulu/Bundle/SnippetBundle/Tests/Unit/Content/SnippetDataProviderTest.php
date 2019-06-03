@@ -147,7 +147,7 @@ class SnippetDataProviderTest extends TestCase
                 null,
                 1,
                 null,
-                [['uuid' => 1], ['uuid' => 2]],
+                [['id' => 1], ['id' => 2]],
                 false,
             ],
             [
@@ -157,7 +157,7 @@ class SnippetDataProviderTest extends TestCase
                 1,
                 1,
                 null,
-                [['uuid' => 1]],
+                [['id' => 1]],
                 false,
             ],
             [
@@ -167,7 +167,7 @@ class SnippetDataProviderTest extends TestCase
                 null,
                 5,
                 2,
-                [['uuid' => 1], ['uuid' => 2]],
+                [['id' => 1], ['id' => 2]],
                 false,
             ],
             [
@@ -177,7 +177,7 @@ class SnippetDataProviderTest extends TestCase
                 null,
                 5,
                 2,
-                [['uuid' => 1], ['uuid' => 2]],
+                [['id' => 1], ['id' => 2]],
                 false,
             ],
         ];
@@ -197,7 +197,7 @@ class SnippetDataProviderTest extends TestCase
         $hasNextPage
     ) {
         foreach ($result as $item) {
-            $this->referenceStore->add($item['uuid'])->shouldBeCalled();
+            $this->referenceStore->add($item['id'])->shouldBeCalled();
         }
 
         $this->contentQueryExecutor->execute(
@@ -234,7 +234,7 @@ class SnippetDataProviderTest extends TestCase
 
         $result = [];
         foreach ($uuids as $uuid) {
-            $result[] = ['uuid' => $uuid];
+            $result[] = ['id' => $uuid];
             $this->referenceStore->add($uuid)->shouldBeCalled();
         }
 
@@ -295,7 +295,7 @@ class SnippetDataProviderTest extends TestCase
                 null,
                 1,
                 null,
-                [['uuid' => 1], ['uuid' => 2]],
+                [['id' => 1], ['id' => 2]],
                 false,
             ],
             [
@@ -305,7 +305,7 @@ class SnippetDataProviderTest extends TestCase
                 1,
                 1,
                 null,
-                [['uuid' => 1]],
+                [['id' => 1]],
                 false,
             ],
             [
@@ -315,7 +315,7 @@ class SnippetDataProviderTest extends TestCase
                 null,
                 5,
                 2,
-                [['uuid' => 1], ['uuid' => 2]],
+                [['id' => 1], ['id' => 2]],
                 false,
             ],
         ];
