@@ -93,6 +93,8 @@ class MediaOverview extends React.Component<ViewProps> {
                 parentId: this.collectionId,
             }
         );
+
+        this.collectionListStore.sort('title', 'asc');
     };
 
     createMediaListStore() {
