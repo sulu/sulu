@@ -174,7 +174,7 @@ class ContactAdmin extends Admin
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
                 ->setTitleProperty('name')
-                ->addRouterAttributesToBlacklist(['sortColumn', 'sortOrder'])
+                ->addRouterAttributesToBlacklist(['active', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
                 ->getRoute(),
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
                 ->setResourceKey('accounts')
