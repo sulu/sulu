@@ -1163,6 +1163,42 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
+    public function testPutWithNullMainContact()
+    {
+        $contact = $this->createContact(null, 'Max', 'Mustermann');
+        $account = $this->createAccount(
+            'Company',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $contact
+        );
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/' . $account->getId(),
+            [
+                'name' => 'ExampleCompany',
+                'mainContact' => null,
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(null, $response->mainContact);
+    }
+
     public function testPutNotExisting()
     {
         $client = $this->createAuthenticatedClient();
@@ -1991,7 +2027,8 @@ class AccountControllerTest extends SuluTestCase
         ?Note $note = null,
         ?string $placeOfJurisdiction = null,
         ?Media $logo = null,
-        ?array $categories = null
+        ?array $categories = null,
+        ?Contact $mainContact = null
     ) {
         $account = new Account();
         $account->setName($name);
@@ -2038,6 +2075,10 @@ class AccountControllerTest extends SuluTestCase
             foreach ($categories as $category) {
                 $account->addCategory($category);
             }
+        }
+
+        if ($mainContact) {
+            $account->setMainContact($mainContact);
         }
 
         $this->em->persist($account);
@@ -2193,7 +2234,7 @@ class AccountControllerTest extends SuluTestCase
     }
 
     private function createContact(
-        Account $account,
+        ?Account $account,
         string $firstName,
         string $lastName,
         ?string $middleName = null,
@@ -2205,14 +2246,16 @@ class AccountControllerTest extends SuluTestCase
         $contact->setMiddleName($middleName);
         $contact->setFormOfAddress($formOfAddress);
 
-        $accountContact = new AccountContact();
-        $accountContact->setContact($contact);
-        $accountContact->setAccount($account);
-        $accountContact->setMain(true);
-        $account->addAccountContact($accountContact);
+        if ($account) {
+            $accountContact = new AccountContact();
+            $accountContact->setContact($contact);
+            $accountContact->setAccount($account);
+            $accountContact->setMain(true);
+            $account->addAccountContact($accountContact);
+            $this->em->persist($accountContact);
+        }
 
         $this->em->persist($contact);
-        $this->em->persist($accountContact);
 
         return $contact;
     }

@@ -579,14 +579,14 @@ class AccountController extends RestController implements ClassResourceInterface
 
         $this->setParent($request->get('parent'), $account);
 
+        $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
             )->find($mainContactRequest['id']);
-            if ($mainContact) {
-                $account->setMainContact($mainContact);
-            }
         }
+
+        $account->setMainContact($mainContact);
 
         $user = $this->getUser();
         $account->setChanger($user);
@@ -701,14 +701,14 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setMedias($account, $request->get('medias'));
         }
 
+        $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
             )->find($mainContactRequest['id']);
-            if ($mainContact) {
-                $account->setMainContact($mainContact);
-            }
         }
+
+        $account->setMainContact($mainContact);
 
         if (null !== $request->get('bankAccounts')) {
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
