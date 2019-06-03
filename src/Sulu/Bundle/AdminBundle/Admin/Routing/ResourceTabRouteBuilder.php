@@ -58,6 +58,19 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToBlacklist(
+        array $routerAttributesToBlacklist
+    ): ResourceTabRouteBuilderInterface {
+        $oldRouterAttributesToBlacklist = $this->route->getOption('routerAttributesToBlacklist');
+        $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
+            ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
+            : $routerAttributesToBlacklist;
+
+        $this->route->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);
+
+        return $this;
+    }
+
     public function setTitleProperty(string $titleProperty): ResourceTabRouteBuilderInterface
     {
         $this->route->setOption('titleProperty', $titleProperty);
