@@ -489,7 +489,13 @@ export default class ListStore {
                     });
                 this.initialSelectionIds = undefined;
             }
-        }));
+        })).catch((response) => {
+            if (this.active.get() && response.status === 404) {
+                // need to set the user setting to null manually, because the autorun runs too late
+                ListStore.setActiveSetting(this.listKey, this.userSettingsKey, undefined);
+                this.setActive(undefined);
+            }
+        });
     };
 
     @action setDataLoading(dataLoading: boolean) {
