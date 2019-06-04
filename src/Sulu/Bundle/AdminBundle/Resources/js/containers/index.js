@@ -19,6 +19,7 @@ import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore, R
 import type {SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
+import ResourceSingleSelect from './ResourceSingleSelect';
 import MultiAutoComplete from './MultiAutoComplete';
 import MultiListOverlay from './MultiListOverlay';
 import MultiSelection from './MultiSelection';
@@ -57,6 +58,7 @@ export {
     ResourceLocator,
     ResourceLocatorHistory,
     ResourceMultiSelect,
+    ResourceSingleSelect,
     SingleAutoComplete,
     SingleListOverlay,
     SingleSelection,

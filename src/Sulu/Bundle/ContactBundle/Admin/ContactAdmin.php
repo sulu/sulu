@@ -201,7 +201,7 @@ class ContactAdmin extends Admin
                 ->addListAdapters(['table'])
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addRouterAttributesToListStore(['id'])
-                ->addToolbarActions(['sulu_admin.delete'])
+                ->addToolbarActions(['sulu_contact.add_contact', 'sulu_admin.delete'])
                 ->addRouterAttributesToListStore(['id' => 'accountId'])
                 ->setTabOrder(2048)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)

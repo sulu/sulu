@@ -15,6 +15,7 @@ import Fax from './components/ContactDetails/Fax';
 import Phone from './components/ContactDetails/Phone';
 import SocialMedia from './components/ContactDetails/SocialMedia';
 import Website from './components/ContactDetails/Website';
+import AddContactToolbarAction from './views/List/toolbarActions/AddContactToolbarAction';
 import AddMediaToolbarAction from './views/List/toolbarActions/AddMediaToolbarAction';
 import DeleteMediaToolbarAction from './views/List/toolbarActions/DeleteMediaToolbarAction';
 
@@ -22,6 +23,7 @@ fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
 
+listToolbarActionRegistry.add('sulu_contact.add_contact', AddContactToolbarAction);
 listToolbarActionRegistry.add('sulu_contact.add_media', AddMediaToolbarAction);
 listToolbarActionRegistry.add('sulu_contact.delete_media', DeleteMediaToolbarAction);
 
