@@ -20,9 +20,10 @@ interface SnippetTwigExtensionInterface extends \Twig_ExtensionInterface
      * Returns snippet.
      *
      * @param string $uuid
-     * @param string $locale
+     * @param string|null $locale
+     * @param bool $loadExcerpt
      *
      * @return array
      */
-    public function loadSnippet($uuid, $locale = null);
+    public function loadSnippet($uuid, $locale = null, $loadExcerpt = false);
 }
