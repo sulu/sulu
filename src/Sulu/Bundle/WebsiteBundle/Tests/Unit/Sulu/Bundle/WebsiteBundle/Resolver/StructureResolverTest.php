@@ -119,7 +119,7 @@ class StructureResolverTest extends TestCase
             'webspaceKey' => 'test',
         ];
 
-        $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal(), true));
+        $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
     }
 
     public function testResolveWithoutExtensions()
@@ -182,6 +182,6 @@ class StructureResolverTest extends TestCase
             'webspaceKey' => 'test',
         ];
 
-        $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
+        $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal(), false));
     }
 }

@@ -22,8 +22,9 @@ interface StructureResolverInterface
      * This method receives a structure, and should return an array for the template.
      *
      * @param StructureInterface $structure The structure to resolve
+     * @param bool $loadExcerpt Resolves also the extension data of the structure
      *
      * @return array
      */
-    public function resolve(StructureInterface $structure, bool $loadExcerpt = false);
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = true);
 }
