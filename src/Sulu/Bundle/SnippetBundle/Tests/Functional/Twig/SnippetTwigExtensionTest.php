@@ -185,4 +185,22 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals([], $snippet['view']['title']);
         $this->assertEquals([], $snippet['view']['description']);
     }
+
+    public function testLoadSnippetExcerpt()
+    {
+        /** @var SnippetDocument $snippet */
+        $snippet = $this->documentManager->create('snippet');
+        $snippet->setStructureType('car');
+        $snippet->setExtension('excerpt', ['tags' => ['Tag1', 'Tag2'], 'categories' => []]);
+        $snippet->setTitle('test-title');
+        $snippet->getStructure()->bind(['description' => 'test-description']);
+        $snippet->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($snippet, 'en');
+        $this->documentManager->flush();
+
+        $snippet = $this->extension->loadSnippet($snippet->getUuid(), null, true);
+
+        $this->assertEquals(['Tag1', 'Tag2'], $snippet['extension']['excerpt']['tags']);
+        $this->assertEquals([], $snippet['extension']['excerpt']['categories']);
+    }
 }
