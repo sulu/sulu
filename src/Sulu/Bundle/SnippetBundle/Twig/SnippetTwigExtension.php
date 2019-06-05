@@ -62,7 +62,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
     /**
      * {@inheritdoc}
      */
-    public function loadSnippet($uuid, $locale = null)
+    public function loadSnippet($uuid, $locale = null, $loadExcerpt = false)
     {
         if (null === $locale) {
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
@@ -71,7 +71,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
         try {
             $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getWebspace()->getKey(), $locale);
 
-            return $this->structureResolver->resolve($snippet);
+            return $this->structureResolver->resolve($snippet, $loadExcerpt);
         } catch (DocumentNotFoundException $ex) {
             return;
         }
