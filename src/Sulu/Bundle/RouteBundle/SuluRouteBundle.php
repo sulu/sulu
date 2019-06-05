@@ -15,6 +15,7 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -32,7 +33,7 @@ class SuluRouteBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new RouteGeneratorCompilerPass());
+        $container->addCompilerPass(new RouteGeneratorCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_route.routing.defaults_provider', 'sulu_route.defaults_provider')
         );
