@@ -27,44 +27,95 @@ exports[`Render WebspaceSelect closed 1`] = `
 exports[`Render WebspaceSelect closed 2`] = `""`;
 
 exports[`Render WebspaceSelect opened 1`] = `
-<div
-  class="webspaceSelect"
->
-  <button
-    class="button"
+Array [
+  <div
+    class="webspaceSelect"
   >
-    <span
-      aria-label="su-webspace"
-      class="su-webspace buttonIcon"
-    />
-    <span
-      class="buttonValue"
+    <button
+      class="button"
     >
-      Sulu
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down buttonIcon"
-    />
-  </button>
-</div>
-`;
-
-exports[`Render WebspaceSelect opened 2`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <div class=\\"arrow top right\\"></div>
-      <div class=\\"arrowMenu\\">
-        <div class=\\"section\\">
-          <div class=\\"title\\">Webspaces</div>
-          <div class=\\"children\\"><button class=\\"item active\\"><span class=\\"icon\\"><span aria-label=\\"su-webspace\\" class=\\"su-webspace icon\\"></span></span><span>Sulu</span></button><button class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Blog</span></button><button class=\\"item\\"><span class=\\"icon\\"></span><span>Sulu Doc</span></button></div>
+      <span
+        aria-label="su-webspace"
+        class="su-webspace buttonIcon"
+      />
+      <span
+        class="buttonValue"
+      >
+        Sulu
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down buttonIcon"
+      />
+    </button>
+  </div>,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <div
+        class="arrow top right"
+      />
+      <div
+        class="arrowMenu"
+      >
+        <div
+          class="section"
+        >
+          <div
+            class="title"
+          >
+            Webspaces
+          </div>
+          <div
+            class="children"
+          >
+            <button
+              class="item active"
+            >
+              <span
+                class="icon"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+              </span>
+              <span>
+                Sulu
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Sulu Blog
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Sulu Doc
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>"
+  </div>,
+]
 `;
