@@ -2,6 +2,48 @@
 
 ## dev-develop
 
+### RouteBundle API
+
+The API for routes under `/admin/api/routes` has changed a bit, in order to avoid having PHP class names in the
+frontent. Instead it uses the already known `resourceKey` now.
+
+Therefore the API has changed, instead of `entityClass` it now takes the `resourceKey`, and the `entityId` attribute has
+changed to just `id`.
+
+```
+# before
+/admin/api/routes?history=true&entityClass=Sulu\Bundle\ArticleBundle\Document\ArticleDocument&entityId=c88e4b89-7e2b-4161-b5d0-c33993535140&locale=en
+
+# after
+/admin/api/routes?history=true&resourceKey=articles&id=101b58ef-d422-4122-98f9-a4009bd74bd1&locale=en
+```
+
+This `resourceKey` now has to be configured in the `sulu_route` configuration as well:
+
+```yaml
+# before
+sulu_route:
+    mappings:
+        Sulu\Bundle\ArticleBundle\Document\ArticleDocument:
+            generator: "schema"
+            options:
+                route_schema: "/articles/{object.getTitle()}"
+
+# after
+sulu_route:
+    mappings:
+        Sulu\Bundle\ArticleBundle\Document\ArticleDocument:
+            resource_key: "articles"
+            generator: "schema"
+            options:
+                route_schema: "/articles/{object.getTitle()}"
+```
+
+### Page ResourceLocator API
+
+The API for the history of resource locators (`/admin/api/pages/<id>/resourcelocators`) for pages has changed in order
+to be more consistent with the API from the `RouteBundle`. The property `resourcelocator` has now be renamed to `path`.
+
 ### Display options in MediaSelection
 
 The `media_selection` content type showed all available display options(left top, top, right, ...) except for `middle`
