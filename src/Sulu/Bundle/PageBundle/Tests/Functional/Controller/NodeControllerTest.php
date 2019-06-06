@@ -1386,12 +1386,12 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/pages/' . $uuid . '/resourcelocators?webspace=sulu_io&language=en'
+            '/api/pages/' . $uuid . '/resourcelocators?webspace=sulu_io&locale=en'
         );
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['resourcelocator']);
-        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['resourcelocator']);
+        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['path']);
+        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['path']);
     }
 
     public function testMove()

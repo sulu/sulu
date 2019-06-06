@@ -100,7 +100,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 
             $result[] = [
                 'id' => $url->getId(),
-                'resourcelocator' => $url->getResourceLocator(),
+                'path' => $url->getResourceLocator(),
                 'created' => $url->getCreated(),
                 '_links' => [
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,

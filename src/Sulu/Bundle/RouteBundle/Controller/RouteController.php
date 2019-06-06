@@ -20,6 +20,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides api to handle routes.
@@ -39,13 +40,18 @@ class RouteController extends RestController implements ClassResourceInterface
     {
         // required parameter
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $entityClass = $this->getRequestParameter($request, 'entityClass', true);
-        $entityId = $this->getRequestParameter($request, 'entityId', true);
+        $resourceKey = $this->getRequestParameter($request, 'resourceKey', true);
+        $id = $this->getRequestParameter($request, 'id', true);
 
         // optional parameter
         $history = $this->getBooleanRequestParameter($request, 'history', false, false);
+        $entityClass = $this->getParameter('sulu_route.resource_key_mappings')[$resourceKey] ?? null;
 
-        $routes = $this->findRoutes($history, $entityClass, $entityId, $locale);
+        if (!$entityClass) {
+            throw new NotFoundHttpException(sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
+        }
+
+        $routes = $this->findRoutes($history, $entityClass, $id, $locale);
 
         return $this->handleView($this->view(new CollectionRepresentation($routes, 'routes')));
     }
@@ -75,24 +81,28 @@ class RouteController extends RestController implements ClassResourceInterface
     /**
      * Delete given history-route.
      *
-     * @param int $id
+     * @param int[] $ids
      *
      * @return Response
      *
      * @throws EntityNotFoundException
      */
-    public function deleteAction($id)
+    public function cdeleteAction(Request $request)
     {
         /** @var RouteRepositoryInterface $routeRespository */
         $routeRespository = $this->get('sulu.repository.route');
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $ids = explode(',', $request->get('ids'));
 
-        $route = $routeRespository->find($id);
-        if (!$route) {
-            throw new EntityNotFoundException(RouteInterface::class, $id);
+        foreach ($ids as $id) {
+            $route = $routeRespository->find($id);
+            if (!$route) {
+                throw new EntityNotFoundException(RouteInterface::class, $id);
+            }
+
+            $entityManager->remove($route);
         }
 
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-        $entityManager->remove($route);
         $entityManager->flush();
 
         return $this->handleView($this->view());

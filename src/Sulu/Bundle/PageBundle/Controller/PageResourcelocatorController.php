@@ -39,13 +39,13 @@ class PageResourcelocatorController extends RestController implements ClassResou
         $parts = $this->getRequestParameter($request, 'parts', true);
         $templateKey = $this->getRequestParameter($request, 'template', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $languageCode = $this->getLocale($request);
+        $locale = $this->getLocale($request);
 
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,
             $parentUuid,
             $webspaceKey,
-            $languageCode,
+            $locale,
             $templateKey
         );
 
@@ -62,8 +62,8 @@ class PageResourcelocatorController extends RestController implements ClassResou
      */
     public function cgetAction($id, Request $request)
     {
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage($request);
-        $result = $this->getResourceLocatorRepository()->getHistory($id, $webspaceKey, $languageCode);
+        list($webspaceKey, $locale) = $this->getWebspaceAndLanguage($request);
+        $result = $this->getResourceLocatorRepository()->getHistory($id, $webspaceKey, $locale);
 
         return $this->handleView($this->view($result));
     }
@@ -78,10 +78,10 @@ class PageResourcelocatorController extends RestController implements ClassResou
      */
     public function cdeleteAction($id, Request $request)
     {
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage($request);
+        list($webspaceKey, $locale) = $this->getWebspaceAndLanguage($request);
         $path = $this->getRequestParameter($request, 'ids', true); // TODO rename path to id in all function names
 
-        $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $languageCode);
+        $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $locale);
         $this->getDocumentManager()->flush();
 
         return $this->handleView($this->view());
@@ -92,14 +92,14 @@ class PageResourcelocatorController extends RestController implements ClassResou
      *
      * @param Request $request
      *
-     * @return array list($webspaceKey, $languageCode)
+     * @return array list($webspaceKey, $locale)
      */
     private function getWebspaceAndLanguage(Request $request)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $languageCode = $this->getRequestParameter($request, 'language', true);
+        $locale = $this->getRequestParameter($request, 'locale', true);
 
-        return [$webspaceKey, $languageCode];
+        return [$webspaceKey, $locale];
     }
 
     /**
@@ -123,6 +123,6 @@ class PageResourcelocatorController extends RestController implements ClassResou
      */
     public function getLocale(Request $request)
     {
-        return $this->getRequestParameter($request, 'language', true);
+        return $this->getRequestParameter($request, 'locale', true);
     }
 }

@@ -43,6 +43,7 @@ class Configuration implements ConfigurationInterface
                                 ->useAttributeAsKey('name')
                                 ->prototype('scalar')->end()
                             ->end()
+                            ->scalarNode('resource_key')->isRequired()->end()
                         ->end()
                     ->end()
                 ->end()

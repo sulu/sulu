@@ -14,7 +14,7 @@ import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
-import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore} from './Form';
+import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore, ResourceLocator} from './Form';
 import type {SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
@@ -51,6 +51,7 @@ export {
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     ResourceFormStore,
+    ResourceLocator,
     ResourceLocatorHistory,
     ResourceMultiSelect,
     SingleAutoComplete,

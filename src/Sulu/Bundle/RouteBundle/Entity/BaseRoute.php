@@ -27,8 +27,8 @@ use Sulu\Component\Persistence\Model\AuditableTrait;
  * @Relation(
  *     "delete",
  *     href = @HateoasRoute(
- *         "delete_route",
- *         parameters = { "id" = "expr(object.getId())" }
+ *         "delete_routes",
+ *         parameters = { "ids" = "expr(object.getId())" }
  *     )
  * )
  *

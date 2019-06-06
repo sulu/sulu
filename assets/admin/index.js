@@ -18,6 +18,7 @@ import 'sulu-custom-url-bundle';
 import 'sulu-media-bundle';
 import 'sulu-page-bundle';
 import 'sulu-preview-bundle';
+import 'sulu-route-bundle';
 import 'sulu-security-bundle';
 import 'sulu-snippet-bundle';
 import 'sulu-website-bundle';

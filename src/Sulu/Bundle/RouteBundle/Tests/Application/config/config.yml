@@ -23,3 +23,11 @@ security:
 twig:
     debug: "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+
+sulu_route:
+    mappings:
+        AppBundle\Entity\Test:
+            resource_key: tests
+            generator: schema
+            options:
+                route_schema: "/{object.getTitle()}"
