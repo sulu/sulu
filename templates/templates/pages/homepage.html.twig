@@ -1,9 +1,13 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
-    <h1 property="title">{{ content.title }}</h1>
+    <h1>{{ content.title }}</h1>
 
-    <div property="article">
-        {{ content.article|raw }}
-    </div>
+    <ul>
+        {% for page in content.pages  %}
+            <li>
+                <a href="{{sulu_content_path(page.url)}}">{{ page.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
