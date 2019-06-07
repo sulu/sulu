@@ -13,12 +13,7 @@ jest.mock('../toolbarActions/SaveToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/TypeToolbarAction', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.delete':
-                return 'Delete';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
@@ -30,15 +25,6 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
 
 jest.mock('../registries/ToolbarActionRegistry', () => ({
     get: jest.fn(),
-}));
-
-jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.save':
-                return 'Save';
-        }
-    },
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
@@ -666,18 +652,18 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     };
     const backRouteAttributes = {};
 
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.navigate)).toEqual(false);
     form.update();
-    expect(form.find('Dialog').prop('open')).toEqual(true);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
 
-    form.find('Dialog').prop('onCancel')();
+    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
     form.update();
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.navigate).not.toBeCalled();
 
     expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.navigate)).toEqual(false);
-    form.find('Dialog').prop('onConfirm')();
+    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
     expect(router.navigate).toBeCalledWith('test_route', backRouteAttributes);
 });
@@ -712,18 +698,18 @@ test('Should navigate to defined route after dialog has been confirmed using res
     };
     const backRouteAttributes = {};
 
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.restore)).toEqual(false);
     form.update();
-    expect(form.find('Dialog').prop('open')).toEqual(true);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
 
-    form.find('Dialog').prop('onCancel')();
+    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onCancel')();
     form.update();
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.restore).not.toBeCalled();
 
     expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.restore)).toEqual(false);
-    form.find('Dialog').prop('onConfirm')();
+    form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
     expect(router.restore).toBeCalledWith('test_route', backRouteAttributes);
 });
@@ -753,7 +739,7 @@ test('Should not close the window if formStore is still dirty', () => {
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(false);
 });
 
@@ -782,7 +768,7 @@ test('Should close the window if formStore is not dirty', () => {
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    expect(form.find('Dialog').prop('open')).toEqual(false);
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(checkFormStoreDirtyStateBeforeNavigation()).toEqual(true);
 });
 
@@ -969,7 +955,7 @@ test('Should initialize the ResourceStore with a schema', () => {
     });
 });
 
-test('Should save form when submitted', (done) => {
+test('Should save form when submitted', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -983,10 +969,7 @@ test('Should save form when submitted', (done) => {
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1012,23 +995,18 @@ test('Should save form when submitted', (done) => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit('publish');
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith(
-                'snippets',
-                {value: 'Value'},
-                {action: 'publish', id: 8, locale: 'en'}
-            );
-            done();
-        });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit('publish');
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith(
+            'snippets',
+            {value: 'Value'},
+            {action: 'publish', id: 8, locale: 'en'}
+        );
     });
-
-    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with mapped router attributes', (done) => {
+test('Should save form when submitted with mapped router attributes', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1042,10 +1020,7 @@ test('Should save form when submitted with mapped router attributes', (done) => 
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1074,24 +1049,19 @@ test('Should save form when submitted with mapped router attributes', (done) => 
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put)
-                .toBeCalledWith(
-                    'snippets',
-                    {value: 'Value'},
-                    {id: 8, locale: 'en', parentId: 3, webspace: 'sulu_io'}
-                );
-            done();
-        });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put)
+            .toBeCalledWith(
+                'snippets',
+                {value: 'Value'},
+                {id: 8, locale: 'en', parentId: 3, webspace: 'sulu_io'}
+            );
     });
-
-    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with given apiOptions', (done) => {
+test('Should save form when submitted with given apiOptions', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1105,10 +1075,7 @@ test('Should save form when submitted with given apiOptions', (done) => {
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1135,20 +1102,15 @@ test('Should save form when submitted with given apiOptions', (done) => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put)
-                .toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
-            done();
-        });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put)
+            .toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value'});
     });
-
-    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with mapped router attributes and given apiOptions', (done) => {
+test('Should save form when submitted with mapped router attributes and given apiOptions', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1162,10 +1124,7 @@ test('Should save form when submitted with mapped router attributes and given ap
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1196,23 +1155,18 @@ test('Should save form when submitted with mapped router attributes and given ap
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith(
-                'snippets',
-                {value: 'Value'},
-                {id: 8, locale: 'en', apiKey: 'api-option-value', webspace: 'sulu_io', title: 'Sulu is awesome'}
-            );
-            done();
-        });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith(
+            'snippets',
+            {value: 'Value'},
+            {id: 8, locale: 'en', apiKey: 'api-option-value', webspace: 'sulu_io', title: 'Sulu is awesome'}
+        );
     });
-
-    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted with mapped named router attributes and given apiOptions', (done) => {
+test('Should save form when submitted with mapped named router attributes and given apiOptions', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1226,10 +1180,7 @@ test('Should save form when submitted with mapped named router attributes and gi
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1257,18 +1208,160 @@ test('Should save form when submitted with mapped named router attributes and gi
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit();
-            expect(resourceStore.destroy).not.toBeCalled();
-            expect(ResourceRequester.put).toBeCalledWith(
-                'snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value', parentId: 8}
-            );
-            done();
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith(
+            'snippets', {value: 'Value'}, {id: 8, locale: 'en', apiKey: 'api-option-value', parentId: 8}
+        );
+    });
+});
+
+test('Should show warning when form is submitted but already changed on the server and cancel', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))});
+    ResourceRequester.put.mockReturnValue(putPromise);
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit('publish');
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith(
+            'snippets',
+            {value: 'Value'},
+            {action: 'publish', id: 8, locale: 'en'}
+        );
+
+        ResourceRequester.put.mockClear();
+
+        expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open')).toEqual(false);
+
+        return putPromise.catch(() => {
+            setTimeout(() => {
+                form.update();
+                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
+                    .toEqual(true);
+                form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"] Button[skin="secondary"]')
+                    .simulate('click');
+                form.update();
+                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
+                    .toEqual(false);
+                expect(ResourceRequester.put).not.toBeCalled();
+                done();
+            });
         });
     });
+});
 
-    jsonSchemaResolve({});
+test('Should show warning when form is submitted but already changed on the server and confirm', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))});
+    ResourceRequester.put.mockReturnValue(putPromise);
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).instance().submit('publish');
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith(
+            'snippets',
+            {value: 'Value'},
+            {action: 'publish', id: 8, locale: 'en'}
+        );
+
+        ResourceRequester.put.mockClear();
+
+        expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open')).toEqual(false);
+
+        return putPromise.catch(() => {
+            setTimeout(() => {
+                form.update();
+                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
+                    .toEqual(true);
+                form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"] Button[skin="primary"]')
+                    .simulate('click');
+                form.update();
+                expect(form.find('Dialog[title="sulu_admin.has_changed_warning_dialog_title"]').prop('open'))
+                    .toEqual(false);
+
+                expect(ResourceRequester.put).toBeCalledWith(
+                    'snippets',
+                    {value: 'Value'},
+                    {action: 'publish', force: true, id: 8, locale: 'en'}
+                );
+                done();
+            });
+        });
+    });
 });
 
 test('Should set showSuccess flag after form submission', (done) => {
@@ -1319,7 +1412,7 @@ test('Should set showSuccess flag after form submission', (done) => {
     });
 });
 
-test('Should show error if form has been tried to save although it is not valid', (done) => {
+test('Should show error if form has been tried to save although it is not valid', () => {
     const Form = require('../Form').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -1332,10 +1425,7 @@ test('Should show error if form has been tried to save although it is not valid'
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve({required: ['title']});
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1361,17 +1451,14 @@ test('Should show error if form has been tried to save although it is not valid'
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        return jsonSchemaPromise.then(() => {
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).not.toBeCalled();
             expect(form.instance().errors).toHaveLength(1);
-            done();
         });
     });
-
-    jsonSchemaResolve({required: ['title']});
 });
 
 test('Should keep errors after form submission has failed', (done) => {
@@ -1425,7 +1512,7 @@ test('Should keep errors after form submission has failed', (done) => {
     });
 });
 
-test('Should save form when submitted and redirect to editRoute', (done) => {
+test('Should save form when submitted and redirect to editRoute', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
@@ -1439,10 +1526,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve({});
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1470,22 +1554,17 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit().then(() => {
-                expect(resourceStore.destroy).toBeCalled();
-                expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
-                expect(router.navigate)
-                    .toBeCalledWith('editRoute', {id: undefined, locale: undefined, webspace: 'sulu_io'});
-                done();
-            });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        return form.find('Form').at(1).instance().submit().then(() => {
+            expect(resourceStore.destroy).toBeCalled();
+            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+            expect(router.navigate)
+                .toBeCalledWith('editRoute', {id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
-
-    jsonSchemaResolve({});
 });
 
-test('Should save form when submitted and redirect to editRoute', (done) => {
+test('Should save form when submitted and redirect to editRoute', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     const Form = require('../Form').default;
@@ -1499,10 +1578,7 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    let jsonSchemaResolve;
-    const jsonSchemaPromise = new Promise((resolve) => {
-        jsonSchemaResolve = resolve;
-    });
+    const jsonSchemaPromise = Promise.resolve();
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1530,19 +1606,14 @@ test('Should save form when submitted and redirect to editRoute', (done) => {
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        jsonSchemaPromise.then(() => {
-            form.find('Form').at(1).instance().submit().then(() => {
-                expect(resourceStore.destroy).toBeCalled();
-                expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
-                expect(router.navigate)
-                    .toBeCalledWith('editRoute', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
-                done();
-            });
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        return form.find('Form').at(1).instance().submit().then(() => {
+            expect(resourceStore.destroy).toBeCalled();
+            expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
+            expect(router.navigate)
+                .toBeCalledWith('editRoute', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
-
-    jsonSchemaResolve({});
 });
 
 test('Should pass store and schema handler to FormContainer', () => {
