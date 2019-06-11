@@ -2506,6 +2506,56 @@ ALTER TABLE ca_category_translation_medias ADD CONSTRAINT FK_39FC41BA17CA14DA FO
 ALTER TABLE ca_category_translation_medias ADD CONSTRAINT FK_39FC41BA7DE8E211 FOREIGN KEY (idMedia) REFERENCES me_media (id) ON DELETE CASCADE;
 ```
 
+In addition that also the PHPCR tables have to be changed to utf8mb4 in case jackalope-doctrine-dbal is used:
+
+```sql
+ALTER TABLE `phpcr_binarydata` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_internal_index_types` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_namespaces` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes_references` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes_weakreferences` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_childs` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_nodes` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_props` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_workspaces` CHARACTER SET = utf8mb4;
+
+ALTER TABLE `phpcr_binarydata` CHANGE `property_name` `property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_binarydata` CHANGE `workspace_name` `workspace_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_internal_index_types` CHANGE `type` `type` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_namespaces` CHANGE `prefix` `prefix` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_namespaces` CHANGE `uri` `uri` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_nodes` CHANGE `path` `path` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `parent` `parent` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `local_name` `local_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `namespace` `namespace` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `workspace_name` `workspace_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `identifier` `identifier` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `type` `type` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `props` `props` LONGTEXT  CHARACTER SET utf8mb4  NOT NULL;
+ALTER TABLE `phpcr_nodes` CHANGE `numerical_props` `numerical_props` LONGTEXT  CHARACTER SET utf8mb4  NULL;
+
+ALTER TABLE `phpcr_nodes_references` CHANGE `source_property_name` `source_property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_nodes_weakreferences` CHANGE `source_property_name` `source_property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_type_childs` CHANGE `name` `name` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_childs` CHANGE `primary_types` `primary_types` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_childs` CHANGE `default_type` `default_type` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_type_nodes` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_nodes` CHANGE `supertypes` `supertypes` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_nodes` CHANGE `primary_item` `primary_item` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_type_props` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_props` CHANGE `default_value` `default_value` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_workspaces` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+```
+
 **Migrations**
 
 Migrate values from ca_category_translations_keywords to ca_category_translation_keywords:
