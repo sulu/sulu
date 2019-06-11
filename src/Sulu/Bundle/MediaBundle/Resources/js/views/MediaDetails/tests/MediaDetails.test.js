@@ -83,17 +83,18 @@ test('Render a loading MediaDetails view', () => {
     )).toMatchSnapshot();
 });
 
-test('Should change locale via locale chooser', () => {
+test('Should change locale by navigating to different route via locale chooser', () => {
     const MediaDetails = require('../MediaDetails').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box('de')});
 
     const router = {
         navigate: jest.fn(),
         bind: jest.fn(),
         route: {
+            name: 'sulu_media.details',
             options: {
                 backRoute: 'test_route',
                 locales: [],
@@ -101,11 +102,10 @@ test('Should change locale via locale chooser', () => {
         },
     };
     const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
-    resourceStore.locale.set('de');
 
     const toolbarConfig = toolbarFunction.call(mediaDetails);
     toolbarConfig.locale.onChange('en');
-    expect(resourceStore.locale.get()).toBe('en');
+    expect(router.navigate).toBeCalledWith('sulu_media.details', {locale: 'en'});
 });
 
 test('Should navigate to defined route on back button click', () => {
@@ -113,7 +113,7 @@ test('Should navigate to defined route on back button click', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaDetails);
-    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box('de')});
 
     const router = {
         restore: jest.fn(),
@@ -126,7 +126,6 @@ test('Should navigate to defined route on back button click', () => {
         attributes: {},
     };
     const mediaDetails = mount(<MediaDetails resourceStore={resourceStore} router={router} />).get(0);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(mediaDetails);
     toolbarConfig.backButton.onClick();

@@ -75,8 +75,7 @@ test('Should set nested values', () => {
 test('Should load the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()}, {test: 10});
-    resourceStore.setLocale('en');
+    const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box('en')}, {test: 10});
     expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
@@ -128,8 +127,7 @@ test('Should not load the data with the ResourceRequester if locale should be pr
 test('Should load the data with the ResourceRequester if a reload is requested', () => {
     const promise1 = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise1);
-    const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box()}, {test: 10});
-    resourceStore.setLocale('en');
+    const resourceStore = new ResourceStore('snippets', '3', {locale: observable.box('en')}, {test: 10});
     expect(ResourceRequester.get).toBeCalledWith('snippets', {id: '3', locale: 'en', test: 10});
     return promise1.then(() => {
         expect(resourceStore.data).toEqual({value: 'Value'});
@@ -149,9 +147,8 @@ test('Should load the data with the ResourceRequester if a reload is requested',
 
 test('Loading flag should be set to true when loading', () => {
     ResourceRequester.get.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.loading = false;
-    resourceStore.setLocale('en');
 
     resourceStore.load();
     expect(resourceStore.loading).toBe(true);
@@ -160,9 +157,8 @@ test('Loading flag should be set to true when loading', () => {
 test('Loading flag should be set to false when loading has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.get.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     const oldData = resourceStore.data;
-    resourceStore.setLocale('en');
     resourceStore.loading = true;
 
     resourceStore.load();
@@ -174,9 +170,8 @@ test('Loading flag should be set to false when loading has finished', () => {
 
 test('Saving flag should be set to true when saving', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.saving = false;
-    resourceStore.setLocale('en');
 
     resourceStore.save();
     expect(resourceStore.saving).toBe(true);
@@ -185,8 +180,7 @@ test('Saving flag should be set to true when saving', () => {
 test('Saving flag should be set to false when saving has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.put.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
-    resourceStore.setLocale('en');
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.saving = true;
 
     resourceStore.save();
@@ -285,10 +279,9 @@ test('Saving and dirty flag should be set to false when creating has failed', (d
 
 test('Deleting flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.data = {id: 1};
     resourceStore.deleting = false;
-    resourceStore.setLocale('en');
 
     resourceStore.delete();
     expect(resourceStore.saving).toBe(false);
@@ -298,10 +291,9 @@ test('Deleting flag should be set to true when deleting', () => {
 test('Deleting flag and id should be reset to false when deleting has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.delete.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.data = {id: 1};
     const oldData = resourceStore.data;
-    resourceStore.setLocale('en');
     resourceStore.deleting = false;
 
     resourceStore.delete();
@@ -336,10 +328,9 @@ test('Calling the delete method with options should send a DELETE request', () =
 
 test('Moving flag should be set to true when moving', () => {
     ResourceRequester.post.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
     resourceStore.data = {id: 1};
     resourceStore.moving = false;
-    resourceStore.setLocale('en');
 
     resourceStore.move(1);
     expect(resourceStore.saving).toBe(false);
@@ -349,10 +340,9 @@ test('Moving flag should be set to true when moving', () => {
 test('Moving flag and id should be reset to false when moving has finished', () => {
     const promise = Promise.resolve({});
     ResourceRequester.post.mockReturnValue(promise);
-    const resourceStore = new ResourceStore('snippets', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippets', 1, {locale: observable.box('en')});
     resourceStore.data = {id: 1};
     const oldData = resourceStore.data;
-    resourceStore.setLocale('en');
     resourceStore.moving = false;
 
     resourceStore.move(5);
@@ -380,8 +370,7 @@ test('Calling the move method should send a POST request', () => {
 
 test('Calling the move method should send a POST request with locale', () => {
     ResourceRequester.post.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippets', 3, {locale: observable.box()});
-    resourceStore.setLocale('de');
+    const resourceStore = new ResourceStore('snippets', 3, {locale: observable.box('de')});
     resourceStore.data = {id: 3, title: 'Title'};
 
     resourceStore.move(9);
@@ -530,11 +519,6 @@ test('Copying the content from different locale should fail if no id is given', 
 test('Copying the content from different locale should fail if no locale is given', () => {
     const resourceStore = new ResourceStore('pages', 4);
     expect(() => resourceStore.copyFromLocale('de')).toThrow(/with locales/);
-});
-
-test('Calling setLocale on a non-localizable ResourceStore should throw an exception', () => {
-    const resourceStore = new ResourceStore('snippets', '1', {});
-    expect(() => resourceStore.setLocale('de')).toThrow();
 });
 
 test('Cloning should return a new instance of the ResourceStore with same data', () => {

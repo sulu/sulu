@@ -190,7 +190,7 @@ export default withToolbar(MediaDetails, function() {
         ? {
             value: resourceStore.locale.get(),
             onChange: (locale) => {
-                resourceStore.setLocale(locale);
+                router.navigate(router.route.name, {...router.attributes, locale});
             },
             options: locales.map((locale) => ({
                 value: locale,

@@ -18,7 +18,6 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.data = {
             thumbnails: {},
         };
-        this.setLocale = jest.fn();
     }),
 }));
 
@@ -215,7 +214,9 @@ test('Should change locale via locale chooser', () => {
 
     const router = {
         bind: jest.fn(),
+        navigate: jest.fn(),
         route: {
+            name: 'sulu_media.media_formats',
             options: {
                 locales: [],
             },
@@ -226,7 +227,7 @@ test('Should change locale via locale chooser', () => {
 
     const toolbarConfig = toolbarFunction.call(mediaFormats);
     toolbarConfig.locale.onChange('en');
-    expect(resourceStore.setLocale).toBeCalledWith('en');
+    expect(router.navigate).toBeCalledWith('sulu_media.media_formats', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {

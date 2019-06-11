@@ -314,7 +314,7 @@ test('Should not add PublishIndicator if no publish status is available', () => 
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
 
     const route = {
         options: {
@@ -331,7 +331,6 @@ test('Should not add PublishIndicator if no publish status is available', () => 
         attributes: {},
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
 
@@ -343,7 +342,7 @@ test('Should add PublishIndicator if publish status is available showing draft',
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
     resourceStore.data = {
         publishedState: false,
         published: false,
@@ -364,7 +363,6 @@ test('Should add PublishIndicator if publish status is available showing draft',
         attributes: {},
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
 
@@ -382,7 +380,7 @@ test('Should add PublishIndicator if publish status is available showing publish
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
     resourceStore.data = {
         publishedState: true,
         published: '2018-07-05',
@@ -403,7 +401,6 @@ test('Should add PublishIndicator if publish status is available showing publish
         attributes: {},
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
 
@@ -421,7 +418,7 @@ test('Should add PublishIndicator if publish status is available showing publish
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
     resourceStore.data = {
         publishedState: false,
         published: '2018-07-05',
@@ -442,7 +439,6 @@ test('Should add PublishIndicator if publish status is available showing publish
         attributes: {},
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
 
@@ -502,7 +498,7 @@ test('Should navigate to defined route on back button click', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
 
     const route = {
         options: {
@@ -520,7 +516,6 @@ test('Should navigate to defined route on back button click', () => {
         attributes: {},
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
@@ -532,7 +527,7 @@ test('Should navigate to defined route on back button click with routerAttribues
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
 
     const route = {
         options: {
@@ -553,7 +548,6 @@ test('Should navigate to defined route on back button click with routerAttribues
         route,
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
@@ -565,7 +559,7 @@ test('Should navigate to defined route on back button click with mixed routerAtt
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
 
     const route = {
         options: {
@@ -587,7 +581,6 @@ test('Should navigate to defined route on back button click with mixed routerAtt
         route,
     };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    resourceStore.setLocale('de');
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.backButton.onClick();
@@ -798,7 +791,7 @@ test('Should not render back button when no editLink is configured', () => {
     expect(toolbarConfig.backButton).toBe(undefined);
 });
 
-test('Should change locale in form store via locale chooser', () => {
+test('Should change locale by route navigation via locale chooser', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -806,6 +799,7 @@ test('Should change locale in form store via locale chooser', () => {
     const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box()});
 
     const route = {
+        name: 'sulu_admin.form',
         options: {
             backRoute: 'test_route',
             formKey: 'snippets',
@@ -825,7 +819,7 @@ test('Should change locale in form store via locale chooser', () => {
 
     const toolbarConfig = toolbarFunction.call(form.instance());
     toolbarConfig.locale.onChange('en');
-    expect(resourceStore.locale.get()).toBe('en');
+    expect(router.navigate).toBeCalledWith('sulu_admin.form', {locale: 'en'});
 });
 
 test('Should show locales from router options in toolbar', () => {
