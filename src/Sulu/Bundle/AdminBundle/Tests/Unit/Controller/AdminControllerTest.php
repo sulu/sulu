@@ -11,13 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Controller;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityRepository;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
@@ -31,7 +30,6 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -121,16 +119,6 @@ class AdminControllerTest extends TestCase
     private $dataProviderPool;
 
     /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $teaserProviderPool;
-
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
-
-    /**
      * @var LinkProviderPoolInterface
      */
     private $linkProviderPool;
@@ -175,16 +163,6 @@ class AdminControllerTest extends TestCase
     private $fallbackLocale = 'de';
 
     /**
-     * @var string
-     */
-    private $previewDelay = 500;
-
-    /**
-     * @var string
-     */
-    private $previewMode = 'off';
-
-    /**
      * @var AdminController
      */
     private $adminController;
@@ -208,8 +186,6 @@ class AdminControllerTest extends TestCase
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
-        $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
-        $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
@@ -229,8 +205,6 @@ class AdminControllerTest extends TestCase
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
-            $this->teaserProviderPool->reveal(),
-            $this->managerRegistry->reveal(),
             $this->linkProviderPool->reveal(),
             $this->environment,
             $this->suluVersion,
@@ -238,9 +212,7 @@ class AdminControllerTest extends TestCase
             $this->resources,
             $this->locales,
             $this->translations,
-            $this->fallbackLocale,
-            $this->previewDelay,
-            $this->previewMode
+            $this->fallbackLocale
         );
     }
 
@@ -280,55 +252,35 @@ class AdminControllerTest extends TestCase
         $dataProviders = [];
         $this->dataProviderPool->getAll()->willReturn($dataProviders);
 
-        $teaserProviders = [];
-        $this->teaserProviderPool->getConfiguration()->willReturn($teaserProviders);
+        $admin1 = $this->prophesize(Admin::class);
+        $admin1Config = ['test1' => 'value1'];
+        $admin1->getConfig()->willReturn($admin1Config);
+        $admin1->getConfigKey()->willReturn('admin1');
 
-        $addressTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:AddressType')
-             ->willReturn($addressTypeRepository->reveal());
+        $admin2 = $this->prophesize(Admin::class);
+        $admin2Config = ['test2' => 'value2'];
+        $admin2->getConfig()->willReturn($admin2Config);
+        $admin2->getConfigKey()->willReturn('admin2');
 
-        $countryRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:Country')
-             ->willReturn($countryRepository->reveal());
+        $admin3 = $this->prophesize(Admin::class);
+        $admin3->getConfig()->shouldBeCalled();
+        $admin3->getConfigKey()->shouldBeCalled();
 
-        $emailTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:EmailType')
-             ->willReturn($emailTypeRepository->reveal());
-
-        $faxTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:FaxType')
-             ->willReturn($faxTypeRepository->reveal());
-
-        $phoneTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:PhoneType')
-             ->willReturn($phoneTypeRepository->reveal());
-
-        $socialMediaProfileTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:SocialMediaProfileType')
-             ->willReturn($socialMediaProfileTypeRepository->reveal());
-
-        $urlTypeRepository = $this->prophesize(EntityRepository::class);
-        $this->managerRegistry
-             ->getRepository('SuluContactBundle:UrlType')
-             ->willReturn($urlTypeRepository->reveal());
+        $this->adminPool->getAdmins()->willReturn([$admin1, $admin2, $admin3]);
 
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($dataProviders, $teaserProviders, $fieldTypeOptions, $routes) {
-                    $data = $view->getData()['sulu_admin'];
+                function(View $view) use ($dataProviders, $fieldTypeOptions, $routes, $admin1Config, $admin2Config) {
+                    $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && $data['fieldTypeOptions'] === $fieldTypeOptions
-                        && $data['smartContent'] === $dataProviders
-                        && $data['routes'] === $routes
-                        && $data['navigation'] === ['navigation_item1', 'navigation_item2']
-                        && $data['resources'] === $this->resources;
+                        && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
+                        && $data['sulu_admin']['smartContent'] === $dataProviders
+                        && $data['sulu_admin']['routes'] === $routes
+                        && $data['sulu_admin']['navigation'] === ['navigation_item1', 'navigation_item2']
+                        && $data['sulu_admin']['resources'] === $this->resources
+                        && $data['admin1'] === $admin1Config
+                        && $data['admin2'] === $admin2Config;
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());

@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -59,16 +60,23 @@ class PageAdmin extends Admin
      */
     private $sessionManager;
 
+    /**
+     * @var TeaserProviderPoolInterface
+     */
+    private $teaserProviderPool;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
-        SessionManagerInterface $sessionManager
+        SessionManagerInterface $sessionManager,
+        TeaserProviderPoolInterface $teaserProviderPool
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
+        $this->teaserProviderPool = $teaserProviderPool;
     }
 
     public function getNavigation(): Navigation
@@ -236,6 +244,18 @@ class PageAdmin extends Admin
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_page';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'teaser' => $this->teaserProviderPool->getConfiguration(),
         ];
     }
 }

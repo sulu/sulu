@@ -7,6 +7,15 @@
     </parameters>
 
     <services>
+        <service id="sulu_preview.admin" class="Sulu\Bundle\PreviewBundle\Admin\PreviewAdmin">
+            <argument type="service" id="router"/>
+            <argument>%sulu_preview.delay%</argument>
+            <argument>%sulu_preview.mode%</argument>
+
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- preview -->
         <service id="sulu_preview.preview.kernel_factory"
                  class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>

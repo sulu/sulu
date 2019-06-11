@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SecurityAdmin extends Admin
 {
@@ -37,12 +38,19 @@ class SecurityAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function getNavigation(): Navigation
@@ -148,6 +156,20 @@ class SecurityAdmin extends Admin
                 ->setTabOrder(3072)
                 ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_security';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'endpoints' => [
+                'contexts' => $this->urlGenerator->generate('cget_contexts'),
+            ],
         ];
     }
 }

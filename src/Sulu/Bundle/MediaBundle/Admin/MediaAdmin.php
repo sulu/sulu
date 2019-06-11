@@ -21,6 +21,7 @@ use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
 {
@@ -49,14 +50,21 @@ class MediaAdmin extends Admin
      */
     private $localizationManager;
 
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        LocalizationManager $localizationManager
+        LocalizationManager $localizationManager,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function getNavigation(): Navigation
@@ -134,6 +142,23 @@ class MediaAdmin extends Admin
                         PermissionTypes::VIEW,
                     ],
                 ],
+            ],
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_media';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'endpoints' => [
+                'image_format' => $this->urlGenerator->generate(
+                    'sulu_media.redirect',
+                    ['id' => ':id']
+                ),
             ],
         ];
     }

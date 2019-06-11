@@ -18,6 +18,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class WebsiteAdmin extends Admin
 {
@@ -48,14 +49,21 @@ class WebsiteAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function getRoutes(): array
@@ -121,6 +129,20 @@ class WebsiteAdmin extends Admin
             PermissionTypes::ADD,
             PermissionTypes::EDIT,
             PermissionTypes::DELETE,
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_website';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'endpoints' => [
+                'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
+            ],
         ];
     }
 }

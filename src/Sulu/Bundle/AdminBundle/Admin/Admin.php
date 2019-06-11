@@ -72,4 +72,14 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
 
         return new Navigation($rootNavigationItem);
     }
+
+    public function getConfig(): ?array
+    {
+        return null;
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return null;
+    }
 }
