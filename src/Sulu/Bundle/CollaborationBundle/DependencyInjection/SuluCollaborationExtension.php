@@ -69,8 +69,6 @@ class SuluCollaborationExtension extends Extension implements PrependExtensionIn
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->processCollaboration($container, $config);
-
-        $loader->load('services.xml');
     }
 
     private function processCollaboration(ContainerBuilder $container, $config)

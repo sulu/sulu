@@ -14,9 +14,6 @@
         <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
         <parameter key="sulu_resource.operator_repository.class">Sulu\Bundle\ResourceBundle\Entity\OperatorRepository</parameter>
 
-        <!-- JS config -->
-        <parameter key="sulu_resource.jsconfig.preview.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
-
         <!-- Events -->
         <parameter key="sulu_resource.listener.listbuilder_listener.class">Sulu\Bundle\ResourceBundle\Listener\ListBuilderListener</parameter>
     </parameters>
@@ -54,17 +51,6 @@
         </service>
         <service id="sulu_resource.operator_manager" class="%sulu_resource.operator_manager.class%" public="true">
             <argument type="service" id="sulu_resource.operator_repository"/>
-        </service>
-
-        <!-- JS config -->
-        <service id="sulu_resource.jsconfig.contexts" class="%sulu_admin.js_config.class%">
-            <argument type="string">sulu.resource.contexts</argument>
-            <argument type="collection">
-                <argument key="contexts" type="string">%sulu_resource.filters.contexts%</argument>
-            </argument>
-
-            <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Event listener -->

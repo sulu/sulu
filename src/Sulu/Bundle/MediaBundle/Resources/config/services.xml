@@ -213,24 +213,6 @@
             <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
         </service>
 
-        <service id="sulu_media.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
-            <argument>sulu-media</argument>
-            <argument type="collection">
-                <argument key="permissions" type="expression">
-                    service('security.token_storage').getToken() ? service('sulu_security.access_control_manager').getUserPermissions(
-                        service('sulu_media.security_context'),
-                        service('security.token_storage').getToken().getUser()
-                    ) : null
-                </argument>
-                <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
-                <argument key="adobeCreativeKey" type="string">%sulu_media.adobe_creative_key%</argument>
-                <argument key="formats" type="string">%sulu_media.image.formats%</argument>
-            </argument>
-
-            <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
         <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
             <argument>sulu.media.collections</argument>
         </service>

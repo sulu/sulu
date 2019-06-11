@@ -12,12 +12,5 @@
 
             <tag name="sulu.link.provider" alias="page"/>
         </service>
-
-        <service id="sulu_page.link_tag.js_config" class="Sulu\Bundle\PageBundle\Admin\LinkProviderJsConfig">
-            <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
-
-            <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
     </services>
 </container>

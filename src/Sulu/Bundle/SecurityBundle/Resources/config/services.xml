@@ -181,15 +181,5 @@
             <tag name="kernel.event_listener" event="kernel.request" method="copyUserLocaleToRequest"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-
-        <service id="sulu_security.js_config" class="Sulu\Bundle\SecurityBundle\Security\SecurityConfig">
-            <argument type="string">sulu_security.contexts</argument>
-            <argument type="service" id="sulu_security.access_control_manager"/>
-            <argument type="service" id="sulu_admin.admin_pool"/>
-            <argument type="service" id="security.token_storage"/>
-
-            <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
     </services>
 </container>

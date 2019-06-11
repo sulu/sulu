@@ -3,8 +3,6 @@
     <parameters>
         <parameter key="sulu_admin.admin_controller.class">Sulu\Bundle\AdminBundle\Controller\AdminController</parameter>
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
-        <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
-        <parameter key="sulu_admin.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
     <services>
@@ -38,7 +36,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
-        <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
 
         <service
             id="sulu_admin.metadata_provider_registry"

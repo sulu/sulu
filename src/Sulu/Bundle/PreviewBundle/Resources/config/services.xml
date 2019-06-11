@@ -7,16 +7,6 @@
     </parameters>
 
     <services>
-        <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
-            <argument type="string">sulu_preview</argument>
-            <argument type="collection">
-                <argument key="mode" type="string">%sulu_preview.mode%</argument>
-                <argument key="delay" type="string">%sulu_preview.delay%</argument>
-            </argument>
-
-            <tag name="sulu.js_config"/>
-        </service>
-
         <!-- preview -->
         <service id="sulu_preview.preview.kernel_factory"
                  class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
