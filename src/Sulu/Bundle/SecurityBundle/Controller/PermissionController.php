@@ -77,8 +77,6 @@ class PermissionController implements ClassResourceInterface
 
             return $this->viewHandler->handle(View::create(
                 [
-                    'id' => $identifier,
-                    'type' => $type,
                     'permissions' => $permissions,
                 ]
             ));
@@ -87,7 +85,7 @@ class PermissionController implements ClassResourceInterface
         }
     }
 
-    public function postAction(Request $request)
+    public function cputAction(Request $request)
     {
         try {
             $identifier = $request->get('id');
@@ -125,8 +123,6 @@ class PermissionController implements ClassResourceInterface
             );
 
             return $this->viewHandler->handle(View::create([
-                'id' => $identifier,
-                'type' => $type,
                 'permissions' => $permissions,
             ]));
         } catch (RestException $exc) {

@@ -93,8 +93,6 @@ class PermissionControllerTest extends TestCase
         $this->viewHandler->handle(
             View::create(
                 [
-                    'id' => $id,
-                    'type' => $class,
                     'permissions' => [1 => $permissions],
                 ]
             )
@@ -106,13 +104,14 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider providePermissionData
      */
-    public function testPostAction($id, $class, $permissions)
+    public function testPutAction($id, $class, $permissions)
     {
         $request = new Request(
-            [],
             [
                 'id' => $id,
                 'type' => $class,
+            ],
+            [
                 'permissions' => [
                     1 => $permissions,
                 ],
@@ -129,8 +128,6 @@ class PermissionControllerTest extends TestCase
         $this->viewHandler->handle(
             View::create(
                 [
-                    'id' => $id,
-                    'type' => $class,
                     'permissions' => [
                         1 => $permissions,
                     ],
@@ -138,7 +135,7 @@ class PermissionControllerTest extends TestCase
             )
         )->shouldBeCalled();
 
-        $this->permissionController->postAction($request);
+        $this->permissionController->cputAction($request);
     }
 
     public function provideWrongPermissionData()
@@ -154,19 +151,20 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider provideWrongPermissionData
      */
-    public function testPostActionWithWrongData($id, $class, $permissions)
+    public function testPutActionWithWrongData($id, $class, $permissions)
     {
         $request = new Request(
-            [],
             [
                 'id' => $id,
                 'type' => $class,
+            ],
+            [
                 'permissions' => $permissions,
             ]
         );
 
         $this->accessControlManager->setPermissions(Argument::cetera())->shouldNotBeCalled();
 
-        $this->permissionController->postAction($request);
+        $this->permissionController->cputAction($request);
     }
 }
