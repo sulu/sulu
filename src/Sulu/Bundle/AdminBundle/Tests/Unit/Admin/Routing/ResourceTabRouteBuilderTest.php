@@ -42,6 +42,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'categories',
                 'sulu_category.list',
                 null,
+                ['webspace'],
                 'title',
             ],
             [
@@ -50,6 +51,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'tags',
                 null,
                 null,
+                ['sortColumn', 'sortOrder'],
                 null,
             ],
             [
@@ -58,6 +60,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'categories',
                 'sulu_category.list',
                 ['webspace'],
+                null,
                 'title',
             ],
             [
@@ -66,6 +69,7 @@ class ResourceTabRouteBuilderTest extends TestCase
                 'categories',
                 'sulu_category.list',
                 ['webspace', 'active' => 'id'],
+                ['sortColumn', 'sortOrder'],
                 'title',
             ],
         ];
@@ -80,6 +84,7 @@ class ResourceTabRouteBuilderTest extends TestCase
         string $resourceKey,
         ?string $backRoute,
         ?array $routerAttributesToBackRoute,
+        ?array $routerAttributesToBlacklist,
         ?string $titleProperty
     ) {
         $routeBuilder = (new ResourceTabRouteBuilder($name, $path))

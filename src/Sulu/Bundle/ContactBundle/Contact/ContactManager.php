@@ -581,19 +581,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Currently associated medias are replaced.
      *
      * @param Contact $contact
-     * @param $medias
+     * @param $mediaIds
      *
      * @throws EntityNotFoundException
      */
-    private function setMedias(Contact $contact, $medias)
+    private function setMedias(Contact $contact, $mediaIds)
     {
-        $mediaIds = array_map(
-            function($media) {
-                return $media['id'];
-            },
-            $medias
-        );
-
         $foundMedias = $this->mediaRepository->findById($mediaIds);
         $foundMediaIds = array_map(
             function($mediaEntity) {

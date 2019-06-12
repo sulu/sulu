@@ -95,8 +95,24 @@ class Tabs extends React.Component<Props> {
     };
 
     handleSelect = (index: number) => {
-        const {router} = this.props;
-        router.navigate(this.sortedTabRoutes[index].name, router.attributes);
+        const {route, router} = this.props;
+
+        const {
+            options: {
+                routerAttributesToBlacklist,
+            },
+        } = route;
+
+        const filteredAttributes = routerAttributesToBlacklist
+            ? Object.keys(router.attributes)
+                .filter((key) => !routerAttributesToBlacklist.includes(key))
+                .reduce((attributes, key) => {
+                    attributes[key] = router.attributes[key];
+                    return attributes;
+                }, {})
+            : router.attributes;
+
+        router.navigate(this.sortedTabRoutes[index].name, filteredAttributes);
     };
 
     render() {

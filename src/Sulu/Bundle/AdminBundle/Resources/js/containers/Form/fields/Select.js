@@ -3,8 +3,6 @@ import React from 'react';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
 
-const MISSING_VALUES_OPTIONS = 'The "values" option has to be set for the Select FieldType';
-
 type Props = FieldTypeProps<?Array<string | number>>;
 
 export default class Select extends React.Component<Props> {
@@ -12,10 +10,6 @@ export default class Select extends React.Component<Props> {
         super(props);
 
         const {onChange, schemaOptions, value} = this.props;
-
-        if (!schemaOptions) {
-            return;
-        }
 
         const {
             default_values: {
@@ -53,14 +47,10 @@ export default class Select extends React.Component<Props> {
 
     render() {
         const {schemaOptions, disabled, value} = this.props;
-        if (!schemaOptions) {
-            throw new Error(MISSING_VALUES_OPTIONS);
-        }
-
         const {values} = schemaOptions;
 
-        if (!Array.isArray(values.value)) {
-            throw new Error(MISSING_VALUES_OPTIONS);
+        if (!values || !Array.isArray(values.value)) {
+            throw new Error('The "values" option has to be set for the Select FieldType');
         }
 
         return (

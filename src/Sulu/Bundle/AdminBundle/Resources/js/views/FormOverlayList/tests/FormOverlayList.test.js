@@ -76,7 +76,6 @@ test('View should render with opened overlay', () => {
     formOverlayList.update();
 
     expect(formOverlayList.render()).toMatchSnapshot();
-    expect(formOverlayList.find(Overlay).render()).toMatchSnapshot();
 });
 
 test('Should pass correct props to List view', () => {

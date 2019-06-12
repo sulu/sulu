@@ -143,13 +143,11 @@ export default class Router {
     }
 
     @action navigate = (name: string, attributes: Object = {}): void => {
-        this.clearBindings();
         this.handleNavigation(name, attributes, this.navigate);
     };
 
     @action redirect = (name: string, attributes: Object = {}): void => {
         this.redirectFlag = true;
-        this.clearBindings();
         this.handleNavigation(name, attributes, this.redirect);
     };
 
@@ -199,7 +197,9 @@ export default class Router {
         this.attributes = updatedAttributes;
 
         for (const [key, observableValue] of this.bindings.entries()) {
-            const value: any = this.attributes[key] || this.bindingDefaults.get(key);
+            const value: any = this.attributes[key] !== undefined
+                ? this.attributes[key]
+                : this.bindingDefaults.get(key);
 
             // Type unsafe comparison to not trigger a new navigation when only data type changes
             if (value != observableValue.get()) {

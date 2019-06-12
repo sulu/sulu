@@ -1,0 +1,43 @@
+@import '../../containers/Application/colors.scss';
+
+$itemColor: $shakespeare;
+$itemBorderColor: $shakespeare;
+
+$itemBackgroundColorSelected: $shakespeare;
+$itemColorSelected: $white;
+
+$itemColorDisabled: $silver;
+$itemBorderColorDisabled: $silver;
+$itemColorDisabledSelected: $white;
+$itemBackgroundColorDisabledSelected: $silver;
+
+.item {
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid $itemBorderColor;
+    color: $itemColor;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 16px;
+    justify-content: center;
+    margin-right: 5px;
+    text-align: center;
+    height: 26px;
+    width: 26px;
+
+    &.selected {
+        background-color: $itemBackgroundColorSelected;
+        color: $itemColorSelected;
+    }
+
+    &.disabled {
+        cursor: default;
+        color: $itemColorDisabled;
+        border-color: $itemBorderColorDisabled;
+    }
+
+    &.selected.disabled {
+        background-color: $itemBackgroundColorDisabledSelected;
+        color: $itemColorDisabledSelected;
+    }
+}

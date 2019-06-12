@@ -5,7 +5,7 @@ import {computed} from 'mobx';
 import type {ChildrenArray, Element} from 'react';
 import {translate} from '../../utils/index';
 import Item from './Item';
-import matrixStyles from './matrix.scss';
+import rowStyles from './row.scss';
 import type {MatrixRowValue} from './types';
 
 type Props = {|
@@ -87,7 +87,7 @@ class Row extends React.Component<Props> {
 
     renderAllButton() {
         return (
-            <button className={matrixStyles.rowButton} onClick={this.handleAllButtonClick}>
+            <button className={rowStyles.rowButton} onClick={this.handleAllButtonClick}>
                 {translate(this.allItemsDeactivated ? 'sulu_admin.activate_all' : 'sulu_admin.deactivate_all')}
             </button>
         );
@@ -102,13 +102,13 @@ class Row extends React.Component<Props> {
         } = this.props;
 
         return (
-            <div className={matrixStyles.row}>
-                <div>{title ? title : name}</div>
-                <div>
+            <tr className={rowStyles.row}>
+                <td className={rowStyles.name}>{title ? title : name}</td>
+                <td className={rowStyles.items}>
                     {this.cloneItems(children)}
                     {!disabled && this.renderAllButton()}
-                </div>
-            </div>
+                </td>
+            </tr>
         );
     }
 }

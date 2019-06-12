@@ -15,15 +15,6 @@ Array [
     class="backdrop visible fixed"
     role="button"
   />,
-]
-`;
-
-exports[`View should render with opened overlay 2`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    role="button"
-  />,
   <div
     class="container isDown"
   >

@@ -13,6 +13,7 @@ const COLLECTION_ROUTE = 'sulu_media.overview';
 
 type Props = ViewProps & {
     resourceStore: ResourceStore,
+    title?: string,
 };
 
 @observer
@@ -49,7 +50,7 @@ class MediaHistory extends React.Component<Props> {
     };
 
     render() {
-        const {resourceStore} = this.props;
+        const {resourceStore, title} = this.props;
 
         const buttons = [
             {
@@ -60,6 +61,7 @@ class MediaHistory extends React.Component<Props> {
 
         return (
             <div className={mediaHistoryStyles.mediaHistory}>
+                {title && <h1>{title}</h1>}
                 {resourceStore.loading
                     ? <Loader />
                     : <Table buttons={buttons}>

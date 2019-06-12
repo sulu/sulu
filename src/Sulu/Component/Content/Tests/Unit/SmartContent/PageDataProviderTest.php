@@ -223,9 +223,9 @@ class PageDataProviderTest extends TestCase
     public function testResolveDataItemsHasNextPage()
     {
         $data = [
-            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
-            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
-            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
         $provider = new PageDataProvider(
@@ -256,9 +256,9 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
-        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
         $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
-        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1]['id'], $items[1]->getId());
         $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
@@ -266,9 +266,9 @@ class PageDataProviderTest extends TestCase
     public function testResolveDataItemsOnlyPublished()
     {
         $data = [
-            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
-            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
-            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
         $provider = new PageDataProvider(
@@ -299,9 +299,9 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
-        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
         $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
-        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1]['id'], $items[1]->getId());
         $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
@@ -309,9 +309,9 @@ class PageDataProviderTest extends TestCase
     public function testResolveResourceItems()
     {
         $data = [
-            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
-            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
-            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
         $referenceStore = new ReferenceStore();
@@ -343,9 +343,9 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
-        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
         $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
-        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1]['id'], $items[1]->getId());
         $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
@@ -354,9 +354,9 @@ class PageDataProviderTest extends TestCase
     public function testResolveDataItemsNoPagination()
     {
         $data = [
-            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
-            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
-            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
         $provider = new PageDataProvider(
@@ -388,11 +388,11 @@ class PageDataProviderTest extends TestCase
 
         $items = $result->getItems();
 
-        $this->assertEquals($data[0]['uuid'], $items[0]->getId());
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
         $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
-        $this->assertEquals($data[1]['uuid'], $items[1]->getId());
+        $this->assertEquals($data[1]['id'], $items[1]->getId());
         $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
-        $this->assertEquals($data[2]['uuid'], $items[2]->getId());
+        $this->assertEquals($data[2]['id'], $items[2]->getId());
         $this->assertEquals($data[2], $items[2]->getResource()->getWrappedValueHolderValue());
         $this->assertFalse($result->getHasNextPage());
     }
@@ -422,14 +422,14 @@ class PageDataProviderTest extends TestCase
 
     public function testResolveDatasource()
     {
-        $data = ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
+        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
 
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
-                ['ids' => [$data['uuid']], 'properties' => ['my-properties' => true], 'published' => false]
+                ['ids' => [$data['id']], 'properties' => ['my-properties' => true], 'published' => false]
             ),
             $this->getContentQueryExecutor(0, 1, [$data]),
-            $this->getDocumentManager([$data['uuid'] => $data]),
+            $this->getDocumentManager([$data['id'] => $data]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
@@ -437,13 +437,13 @@ class PageDataProviderTest extends TestCase
         );
 
         $result = $provider->resolveDatasource(
-            $data['uuid'],
+            $data['id'],
             ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
             ['webspaceKey' => 'sulu_io', 'locale' => 'en']
         );
 
         $this->assertInstanceOf(DatasourceItem::class, $result);
-        $this->assertEquals($data['uuid'], $result->getId());
+        $this->assertEquals($data['id'], $result->getId());
         $this->assertEquals($data['title'], $result->getTitle());
         $this->assertEquals($data['path'], $result->getPath());
         $this->assertNull($result->getImage());
@@ -451,11 +451,11 @@ class PageDataProviderTest extends TestCase
 
     public function testContentDataItem()
     {
-        $data = ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
+        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
         $resource = new \stdClass();
         $item = new ContentDataItem($data, $resource);
 
-        $this->assertEquals($data['uuid'], $item->getId());
+        $this->assertEquals($data['id'], $item->getId());
         $this->assertEquals($data['title'], $item->getTitle());
         $this->assertEquals($resource, $item->getResource());
 
@@ -465,9 +465,9 @@ class PageDataProviderTest extends TestCase
     public function testResolveResourceItemsExcluded()
     {
         $data = [
-            ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
-            ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
-            ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
         $referenceStore = new ReferenceStore();
@@ -505,7 +505,7 @@ class PageDataProviderTest extends TestCase
 
         $items = $result->getItems();
         for ($i = 0, $length = count($items); $i < $length; ++$i) {
-            $this->assertEquals($data[$i]['uuid'], $items[$i]->getId());
+            $this->assertEquals($data[$i]['id'], $items[$i]->getId());
             $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
 
             $this->assertEquals($data[$i], $items[$i]->getResource()->getWrappedValueHolderValue());

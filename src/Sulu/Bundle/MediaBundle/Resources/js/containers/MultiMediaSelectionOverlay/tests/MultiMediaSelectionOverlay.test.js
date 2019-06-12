@@ -73,6 +73,7 @@ test('Should pass correct props to media-selection-overlay', () => {
 
     const multiMediaSelectionOverlay = shallow(
         <MultiMediaSelectionOverlay
+            confirmLoading={true}
             excludedIds={[22, 44]}
             locale={locale}
             onClose={onClose}
@@ -82,6 +83,7 @@ test('Should pass correct props to media-selection-overlay', () => {
     );
     const mediaSelectionOverlay = multiMediaSelectionOverlay.find(MediaSelectionOverlay);
 
+    expect(mediaSelectionOverlay.prop('confirmLoading')).toEqual(true);
     expect(mediaSelectionOverlay.prop('mediaListStore')).toEqual(mediaListStoreMock);
     expect(mediaSelectionOverlay.prop('collectionListStore')).toEqual(collectionListStoreMock);
     expect(mediaSelectionOverlay.prop('locale')).toEqual(locale);

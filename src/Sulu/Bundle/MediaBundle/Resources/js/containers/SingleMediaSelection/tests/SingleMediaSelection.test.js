@@ -26,6 +26,32 @@ test('Component should render without selected media', () => {
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
+test('Component should render with display options', () => {
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            displayOptions={['top', 'bottom']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(singleMediaSelection.render()).toMatchSnapshot();
+});
+
+test('Component should render with display options and correctly selected icon', () => {
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            displayOptions={['top', 'bottom']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: 'left', id: undefined}}
+        />
+    );
+
+    expect(singleMediaSelection.render()).toMatchSnapshot();
+});
+
 test('Component should render with selected media', () => {
     // $FlowFixMe
     SingleSelectionStore.mockImplementationOnce(function() {
@@ -40,7 +66,11 @@ test('Component should render with selected media', () => {
     });
 
     const singleMediaSelection = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 33}}
+        />
     );
 
     expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
@@ -58,7 +88,11 @@ test('Component should render with selected media without thumbnails with MimeTy
     });
 
     const singleMediaSelection = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 33}}
+        />
     );
 
     expect(SingleSelectionStore).toBeCalledWith('media', 33, expect.anything());
@@ -90,7 +124,11 @@ test('Click on remove-button should clear the selection store', () => {
     });
 
     const singleMediaSelection = mount(
-        <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={{id: 33}} />
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 33}}
+        />
     );
 
     singleMediaSelection.find('.removeButton').simulate('click');
@@ -124,6 +162,24 @@ test('Media that is selected in the overlay should be set to the selection store
             'sulu-25x25': '/images/25x25/awesome.png',
         },
     }));
+});
+
+test('Should call the onChange handler if the displayOption changes', () => {
+    const changeSpy = jest.fn();
+
+    const singleMediaSelection = mount(
+        <SingleMediaSelection
+            displayOptions={['left']}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={undefined}
+        />
+    );
+
+    singleMediaSelection.find('Button[icon="su-display-default"]').simulate('click');
+    singleMediaSelection.find('Action[value="left"]').simulate('click');
+
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined});
 });
 
 test('Should call given onChange handler if value of selection store changes', () => {
@@ -188,7 +244,11 @@ test('Should not call the onChange callback if the component props change', () =
     const changeSpy = jest.fn();
 
     const singleMediaSelection = shallow(
-        <SingleMediaSelection locale={observable.box('en')} onChange={changeSpy} value={{id: 5}} />
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, id: 5}}
+        />
     );
 
     singleMediaSelection.setProps({disabled: true});

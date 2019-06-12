@@ -12,7 +12,7 @@ import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import type {Webspace} from '../../stores/WebspaceStore/types';
 import pageListStyles from './pageList.scss';
 
-const USER_SETTINGS_KEY = 'webspace_overview';
+const USER_SETTINGS_KEY = 'page_list';
 const PAGES_RESOURCE_KEY = 'pages';
 
 function getUserSettingsKeyForWebspace(webspace: string) {
@@ -159,7 +159,7 @@ class PageList extends React.Component<Props> {
 
     render() {
         return (
-            <div className={pageListStyles.webspaceOverview}>
+            <div className={pageListStyles.pageList}>
                 <List
                     adapters={['column_list', 'tree_table']}
                     onItemAdd={this.handleItemAdd}

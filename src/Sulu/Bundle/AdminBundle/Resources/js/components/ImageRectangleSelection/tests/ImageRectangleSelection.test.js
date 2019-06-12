@@ -42,6 +42,7 @@ test('The component should calculate the selection with respect to the image', (
     };
     onImageLoad();
 
+    view.update();
     expect(view.render()).toMatchSnapshot();
 });
 

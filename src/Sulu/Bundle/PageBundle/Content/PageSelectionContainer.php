@@ -141,7 +141,7 @@ class PageSelectionContainer implements ArrayableInterface
 
             // map pages
             foreach ($pages as $page) {
-                $map[$page['uuid']] = $page;
+                $map[$page['id']] = $page;
             }
 
             foreach ($this->ids as $id) {

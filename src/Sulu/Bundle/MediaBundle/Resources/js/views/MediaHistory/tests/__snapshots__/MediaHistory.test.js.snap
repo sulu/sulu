@@ -4,6 +4,9 @@ exports[`Render a MediaHistory view 1`] = `
 <div
   class="mediaHistory"
 >
+  <h1>
+    Test 2
+  </h1>
   <div
     class="tableContainer dark"
   >
@@ -123,6 +126,9 @@ exports[`Render a loading MediaHistory view 1`] = `
 <div
   class="mediaHistory"
 >
+  <h1>
+    Test 1
+  </h1>
   <div
     class="spinner"
     style="width:40px;height:40px"

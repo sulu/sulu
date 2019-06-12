@@ -64,9 +64,11 @@ export default class Matrix extends React.PureComponent<Props> {
         );
 
         return (
-            <div className={matrixClass}>
-                {this.cloneRows(children)}
-            </div>
+            <table className={matrixClass}>
+                <tbody>
+                    {this.cloneRows(children)}
+                </tbody>
+            </table>
         );
     }
 }

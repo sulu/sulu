@@ -242,7 +242,7 @@ test('Should load webspace and active route attribute from listStore and userSto
 
     // $FlowFixMe
     expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({active: 'some-uuid'});
-    expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'webspace_overview_abc');
+    expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'page_list_abc');
 });
 
 test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {

@@ -14,13 +14,14 @@ import ResourceStore from '../../stores/ResourceStore';
 import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import listStyles from './list.scss';
 
-const USER_SETTINGS_KEY = 'list';
+const DEFAULT_USER_SETTINGS_KEY = 'list';
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
     onItemAdd?: (parentId: string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     resourceStore?: ResourceStore,
+    title?: string,
 };
 
 @observer
@@ -36,15 +37,16 @@ class List extends React.Component<Props> {
     static getDerivedRouteAttributes(route: Route) {
         const {
             options: {
-                resourceKey,
+                listKey,
+                userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
             },
         } = route;
 
         return {
-            active: ListStore.getActiveSetting(resourceKey, USER_SETTINGS_KEY),
-            sortColumn: ListStore.getSortColumnSetting(resourceKey, USER_SETTINGS_KEY),
-            sortOrder: ListStore.getSortOrderSetting(resourceKey, USER_SETTINGS_KEY),
-            limit: ListStore.getLimitSetting(resourceKey, USER_SETTINGS_KEY),
+            active: ListStore.getActiveSetting(listKey, userSettingsKey),
+            sortColumn: ListStore.getSortColumnSetting(listKey, userSettingsKey),
+            sortOrder: ListStore.getSortOrderSetting(listKey, userSettingsKey),
+            limit: ListStore.getLimitSetting(listKey, userSettingsKey),
         };
     }
 
@@ -63,6 +65,7 @@ class List extends React.Component<Props> {
                     resourceKey,
                     routerAttributesToListStore = {},
                     resourceStorePropertiesToListStore = {},
+                    userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
                 },
             },
         } = router;
@@ -102,7 +105,7 @@ class List extends React.Component<Props> {
         this.listStore = new ListStore(
             resourceKey,
             listKey,
-            USER_SETTINGS_KEY,
+            userSettingsKey,
             observableOptions,
             listStoreOptions
         );
@@ -147,7 +150,7 @@ class List extends React.Component<Props> {
     }
 
     @action componentDidMount() {
-        const {router} = this.props;
+        const {resourceStore, router} = this.props;
         const {
             route: {
                 options: {
@@ -165,7 +168,8 @@ class List extends React.Component<Props> {
             this.listStore,
             this,
             router,
-            locales
+            locales,
+            resourceStore
         ));
     }
 
@@ -260,17 +264,20 @@ class List extends React.Component<Props> {
                         addRoute,
                         editRoute,
                         searchable,
-                        title,
+                        title: routeTitle,
                     },
                 },
             },
+            title: propTitle,
         } = this.props;
+
+        const title = routeTitle ? translate(routeTitle) : propTitle;
 
         return (
             <div>
                 <ListContainer
                     adapters={adapters}
-                    header={title && <h1 className={listStyles.header}>{translate(title)}</h1>}
+                    header={title && <h1 className={listStyles.header}>{title}</h1>}
                     onItemAdd={onItemAdd || addRoute ? this.addItem : undefined}
                     onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
                     ref={this.setListRef}

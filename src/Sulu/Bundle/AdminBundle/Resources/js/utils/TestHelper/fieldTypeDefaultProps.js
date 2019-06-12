@@ -13,6 +13,7 @@ const fieldTypeDefaultProps = {
     onChange: jest.fn(),
     // $FlowFixMe
     onFinish: jest.fn(),
+    schemaOptions: {},
     schemaPath: '/',
     showAllErrors: false,
     types: undefined,

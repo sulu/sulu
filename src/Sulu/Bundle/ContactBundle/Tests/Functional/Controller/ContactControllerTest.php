@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -740,6 +741,40 @@ class ContactControllerTest extends SuluTestCase
 
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
+    }
+
+    public function testGetListByAccountId()
+    {
+        $account = $this->createAccount('Musterfirma');
+        $this->em->persist($account);
+
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $accountContact1 = new AccountContact();
+        $accountContact1->setMain(false);
+        $accountContact1->setContact($contact1);
+        $accountContact1->setAccount($account);
+        $contact1->addAccountContact($accountContact1);
+        $this->em->persist($accountContact1);
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('Max');
+        $contact2->setLastName('Mustermann');
+        $this->em->persist($contact2);
+
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&accountId=' . $account->getId());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
@@ -2047,18 +2082,14 @@ class ContactControllerTest extends SuluTestCase
             '/api/contacts/' . $contact->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => $media2->getId(),
-                    ],
+                    $media1->getId(),
+                    $media2->getId(),
                 ],
             ]
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->medias));
+        $this->assertCount(2, $response->medias);
 
         // remove medias
         $client->request(
@@ -2078,12 +2109,8 @@ class ContactControllerTest extends SuluTestCase
             '/api/contacts/' . $contact->getId(),
             [
                 'medias' => [
-                    [
-                        'id' => $media1->getId(),
-                    ],
-                    [
-                        'id' => 101,
-                    ],
+                    $media1->getId(),
+                    101,
                 ],
             ]
         );

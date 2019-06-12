@@ -39,5 +39,14 @@
     "sulu_media.crop": "Crop",
     "sulu_media.cropped": "Cropped",
     "sulu_media.double_click_crop_and_maximize": "A double-click maximizes and centers the area",
-    "sulu_media.min_size_notification": "Minimal size reached"
+    "sulu_media.min_size_notification": "Minimal size reached",
+    "sulu_media.left_top": "Left top",
+    "sulu_media.top": "Top",
+    "sulu_media.right_top": "Right top",
+    "sulu_media.left": "Left",
+    "sulu_media.middle": "Middle",
+    "sulu_media.right": "Right",
+    "sulu_media.left_bottom": "Left bottom",
+    "sulu_media.bottom": "Bottom",
+    "sulu_media.right_bottom": "Right bottom"
 }

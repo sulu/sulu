@@ -49,7 +49,7 @@ class StructureResolver implements StructureResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(StructureInterface $structure, bool $loadExcerpt = false)
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = true)
     {
         $data = [
             'view' => [],

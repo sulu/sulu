@@ -139,7 +139,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $list = new ListRepresentation(
                 $values,
-                'contacts',
+                'account_contacts',
                 'get_account_contacts',
                 array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
@@ -288,24 +288,24 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @return Response
      */
-    public function deleteContactsAction($accountId, $contactId)
+    public function deleteContactsAction($accountId, $id)
     {
         try {
             // Check if relation exists.
             /** @var AccountContactEntity $accountContact */
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
-                ->findByForeignIds($accountId, $contactId);
+                ->findByForeignIds($accountId, $id);
 
             if (!$accountContact) {
-                throw new EntityNotFoundException('AccountContact', $accountId . $contactId);
+                throw new EntityNotFoundException('AccountContact', $accountId . $id);
             }
             $id = $accountContact->getId();
 
             $account = $accountContact->getAccount();
 
             // Remove main contact when relation with main was removed.
-            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId) {
+            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $id) {
                 $account->setMainContact(null);
             }
 
@@ -515,6 +515,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         try {
             $account = $this->getRepository()->findAccountById($id);
 
@@ -523,7 +525,7 @@ class AccountController extends RestController implements ClassResourceInterface
             } else {
                 $em = $this->getDoctrine()->getManager();
 
-                $this->doPut($account, $request);
+                $this->doPut($account, $request, $em);
 
                 $em->flush();
 
@@ -556,7 +558,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @throws EntityNotFoundException
      * @throws RestException
      */
-    protected function doPut(AccountInterface $account, Request $request)
+    protected function doPut(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
@@ -576,6 +578,15 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         $this->setParent($request->get('parent'), $account);
+
+        $mainContact = null;
+        if (null !== ($mainContactRequest = $request->get('mainContact'))) {
+            $mainContact = $entityManager->getRepository(
+                $this->container->getParameter('sulu.model.contact.class')
+            )->find($mainContactRequest['id']);
+        }
+
+        $account->setMainContact($mainContact);
 
         $user = $this->getUser();
         $account->setChanger($user);
@@ -690,17 +701,15 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setMedias($account, $request->get('medias'));
         }
 
-        // Check if mainContact is set
+        $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
             )->find($mainContactRequest['id']);
-            if ($mainContact) {
-                $account->setMainContact($mainContact);
-            }
         }
 
-        // Process details
+        $account->setMainContact($mainContact);
+
         if (null !== $request->get('bankAccounts')) {
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }

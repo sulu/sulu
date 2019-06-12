@@ -1,4 +1,5 @@
 // @flow
+import MultiMediaSelectionOverlay from './MultiMediaSelectionOverlay';
 import SingleMediaSelectionOverlay from './SingleMediaSelectionOverlay';
 
-export {SingleMediaSelectionOverlay};
+export {MultiMediaSelectionOverlay, SingleMediaSelectionOverlay};

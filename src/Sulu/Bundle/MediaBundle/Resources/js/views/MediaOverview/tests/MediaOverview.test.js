@@ -90,6 +90,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.clear = jest.fn();
             this.updateLoadingStrategy = jest.fn();
             this.updateStructureStrategy = jest.fn();
+            this.sort = jest.fn();
         }),
         FlatStructureStrategy: require(
             'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
@@ -178,6 +179,7 @@ test('Destroy all stores on unmount', () => {
     const collectionLimit = router.bind.mock.calls[5][1];
     const mediaLimit = router.bind.mock.calls[6][1];
 
+    expect(mediaOverviewInstance.collectionListStore.sort).toBeCalledWith('title', 'asc');
     expect(collectionPage.get()).toBe(undefined);
     expect(mediaPage.get()).toBe(1);
     expect(locale.get()).toBe(undefined);

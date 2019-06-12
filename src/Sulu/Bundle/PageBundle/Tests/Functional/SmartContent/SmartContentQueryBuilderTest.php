@@ -215,9 +215,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         foreach ($result as $item) {
             /** @var PageDocument $expectedDocument */
-            $expectedDocument = $documents[$item['uuid']];
+            $expectedDocument = $documents[$item['id']];
 
-            $this->assertEquals($expectedDocument->getUuid(), $item['uuid']);
+            $this->assertEquals($expectedDocument->getUuid(), $item['id']);
             $this->assertEquals($expectedDocument->getRedirectType(), $item['nodeType']);
             $this->assertEquals($expectedDocument->getChanged(), $item['changed']);
             $this->assertEquals($expectedDocument->getChanger(), $item['changer']);
@@ -300,9 +300,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertEquals(count($nodes), count($result));
         foreach ($result as $item) {
             /** @var PageDocument $expectedDocument */
-            $expectedDocument = $nodes[$item['uuid']];
+            $expectedDocument = $nodes[$item['id']];
 
-            $this->assertEquals($expectedDocument->getUuid(), $item['uuid']);
+            $this->assertEquals($expectedDocument->getUuid(), $item['id']);
             $this->assertEquals($expectedDocument->getRedirectType(), $item['nodeType']);
             $this->assertEquals($expectedDocument->getPath(), '/cmf/sulu_io/contents' . $item['path']);
             $this->assertEquals($expectedDocument->getTitle(), $item['title']);
@@ -340,9 +340,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $item = $result[$i];
 
             /** @var StructureInterface $expected */
-            $expected = $nodes[$item['uuid']];
+            $expected = $nodes[$item['id']];
 
-            $this->assertEquals($expected->getUuid(), $item['uuid']);
+            $this->assertEquals($expected->getUuid(), $item['id']);
             $this->assertEquals($expected->getRedirectType(), $item['nodeType']);
             $this->assertEquals($expected->getPath(), '/cmf/sulu_io/contents' . $item['path']);
             $this->assertEquals($expected->getTitle(), $item['title']);
@@ -1113,7 +1113,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         foreach ($result as $item) {
-            $expectedDocument = $documents[$item['uuid']];
+            $expectedDocument = $documents[$item['id']];
 
             $this->assertEquals($expectedDocument->getTitle(), $item['my_title']);
             $this->assertEquals($expectedDocument->getExtensionsData()['excerpt']['title'], $item['ext_title']);
@@ -1138,8 +1138,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(2, count($result));
-        $this->assertArrayHasKey($result[0]['uuid'], $nodes);
-        $this->assertArrayHasKey($result[1]['uuid'], $nodes);
+        $this->assertArrayHasKey($result[0]['id'], $nodes);
+        $this->assertArrayHasKey($result[1]['id'], $nodes);
     }
 
     public function testExcluded()
@@ -1160,7 +1160,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertEquals(14, count($result));
         unset($uuids[0]);
         foreach ($result as $item) {
-            $this->assertContains($item['uuid'], $uuids);
+            $this->assertContains($item['id'], $uuids);
         }
     }
 

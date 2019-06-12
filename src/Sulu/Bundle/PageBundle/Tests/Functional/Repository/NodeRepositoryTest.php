@@ -115,16 +115,16 @@ class NodeRepositoryTest extends SuluTestCase
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');
 
-        $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][0]['title']);
     }
 
     public function testGetWebspaceNodes()
     {
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
-        $this->assertEquals('Destination CMF', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][1]['title']);
-        $this->assertEquals('Test CMF', $result['_embedded']['nodes'][2]['title']);
+        $this->assertEquals('Destination CMF', $result['_embedded']['pages'][0]['title']);
+        $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][1]['title']);
+        $this->assertEquals('Test CMF', $result['_embedded']['pages'][2]['title']);
     }
 
     /**
@@ -137,7 +137,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Child 1', $structure->getTitle());
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, count($result['_embedded']['nodes']));
+        $this->assertEquals(2, count($result['_embedded']['pages']));
     }
 
     /**
@@ -149,10 +149,10 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, count($result['_embedded']['nodes']));
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
-        $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
+        $this->assertEquals(2, count($result['_embedded']['pages']));
+        $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
+        $this->assertTrue($result['_embedded']['pages'][0]['hasSub']);
     }
 
     /**
@@ -164,12 +164,12 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
-        $this->assertEquals(2, count($result['_embedded']['nodes']));
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
-        $this->assertEquals('ghost', $result['_embedded']['nodes'][0]['type']['name']);
-        $this->assertEquals('en', $result['_embedded']['nodes'][0]['type']['value']);
-        $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
+        $this->assertEquals(2, count($result['_embedded']['pages']));
+        $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
+        $this->assertEquals('ghost', $result['_embedded']['pages'][0]['type']['name']);
+        $this->assertEquals('en', $result['_embedded']['pages'][0]['type']['value']);
+        $this->assertTrue($result['_embedded']['pages'][0]['hasSub']);
     }
 
     private function prepareGetTreeTestData()
@@ -228,7 +228,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, count($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['pages']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -238,10 +238,10 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, count($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['pages']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
     }
 
     public function testGetByIdsNotExisitingID()
@@ -249,7 +249,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, count($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['pages']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -260,10 +260,10 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, count($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['pages']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
-        $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
+        $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
+        $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
     }
 
     public function testGetFilteredNodesInOrder()
@@ -447,8 +447,8 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/news/test1', $result['url']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['nodes']));
-        $nodes = $test['_embedded']['nodes'];
+        $this->assertEquals(4, count($test['_embedded']['pages']));
+        $nodes = $test['_embedded']['pages'];
 
         $this->assertEquals('Test4', $nodes[0]['title']);
         $this->assertEquals('Test2', $nodes[1]['title']);

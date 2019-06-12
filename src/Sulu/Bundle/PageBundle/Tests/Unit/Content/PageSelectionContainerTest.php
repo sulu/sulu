@@ -53,7 +53,7 @@ class PageSelectionContainerTest extends TestCase
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => false])->shouldBeCalled();
         $this->executor->execute('default', ['en'], $this->builder)->willReturn(
-            [['uuid' => 1], ['uuid' => 2], ['uuid' => 3]]
+            [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
         $this->container->getData();
@@ -73,7 +73,7 @@ class PageSelectionContainerTest extends TestCase
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => true])->shouldBeCalled();
         $this->executor->execute('default', ['en'], $this->builder)->willReturn(
-            [['uuid' => 1], ['uuid' => 2], ['uuid' => 3]]
+            [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
         $this->container->getData();
@@ -82,7 +82,7 @@ class PageSelectionContainerTest extends TestCase
     public function testGetDataOrder()
     {
         $this->executor->execute('default', ['en'], $this->builder)->willReturn(
-            [['uuid' => 1], ['uuid' => 2], ['uuid' => 3]]
+            [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
         $this->container = new PageSelectionContainer(
@@ -96,6 +96,6 @@ class PageSelectionContainerTest extends TestCase
         );
 
         $result = $this->container->getData();
-        $this->assertEquals([['uuid' => 2], ['uuid' => 3], ['uuid' => 1]], $result);
+        $this->assertEquals([['id' => 2], ['id' => 3], ['id' => 1]], $result);
     }
 }

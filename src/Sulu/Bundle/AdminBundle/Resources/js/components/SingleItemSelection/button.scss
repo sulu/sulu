@@ -1,0 +1,52 @@
+@import '../../containers/Application/colors.scss';
+@import './variables.scss';
+
+$singleItemSelectionButtonBackgroundColor: $white;
+$singleItemSelectionButtonColor: $dustyGray;
+$singleItemSelectionButtonActiveColor: $white;
+$singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
+
+.button {
+    height: 100%;
+    width: 28px;
+    background-color: $singleItemSelectionButtonBackgroundColor;
+    color: $singleItemSelectionButtonColor;
+    border: 1px solid $singleItemSelectionBorderColor;
+    cursor: pointer;
+    font-size: 14px;
+
+    &.left {
+        border-right: none;
+        border-radius: $singleItemSelectionBorderRadius 0 0 $singleItemSelectionBorderRadius;
+
+        &:hover {
+            background-color: $singleItemSelectionButtonActiveBackgroundColor;
+            border-color: $singleItemSelectionButtonActiveBackgroundColor;
+            color: $singleItemSelectionButtonActiveColor;
+        }
+    }
+
+    &.right {
+        border-left: none;
+        border-radius: 0 $singleItemSelectionBorderRadius  $singleItemSelectionBorderRadius 0;
+    }
+
+    &.has-options {
+        .icon {
+            margin-right: 5px;
+        }
+
+        width: 45px;
+    }
+
+    &:disabled {
+        cursor: default;
+        background-color: $singleItemSelectionDisabledBackgroundColor;
+
+        &:hover {
+            background-color: $singleItemSelectionDisabledBackgroundColor;
+            border-color: $singleItemSelectionBorderColor;
+            color: $singleItemSelectionButtonColor;
+        }
+    }
+}

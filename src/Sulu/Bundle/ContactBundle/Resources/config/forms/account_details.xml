@@ -37,7 +37,7 @@
                     </params>
                 </property>
 
-                <property name="corporation" type="text_line">
+                <property name="corporation" type="text_line" colspan="6">
                     <meta>
                         <title>sulu_contact.corporation</title>
                     </meta>
@@ -53,6 +53,19 @@
                     <meta>
                         <title>sulu_contact.uid</title>
                     </meta>
+                </property>
+
+                <property name="mainContact" type="single_contact_selection" colspan="6">
+                    <meta>
+                        <title>sulu_contact.main_contact</title>
+                    </meta>
+
+                    <params>
+                        <param name="type" value="auto_complete" />
+                        <param name="data_path_to_auto_complete" type="collection">
+                            <param name="id" value="accountId" />
+                        </param>
+                    </params>
                 </property>
 
                 <property name="note" type="text_area">

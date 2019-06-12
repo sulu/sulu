@@ -1,13 +1,14 @@
 // @flow
-export type Button = {|
+export type Button<T: string | number> = {|
     disabled?: boolean,
     icon?: string,
     label?: string,
-    onClick: (value: ?string) => void,
-    options?: Array<ButtonOption>,
+    onClick: (value: ?T) => void,
+    options?: Array<ButtonOption<T>>,
 |};
 
-type ButtonOption = {
+export type ButtonOption<T> = {|
+    icon?: string,
     label: string,
-    value: string,
-};
+    value: T,
+|};

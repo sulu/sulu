@@ -144,6 +144,8 @@ class SecurityAdmin extends Admin
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->setIdQueryParameter('contactId')
+                ->setTitleVisible(true)
+                ->setTabOrder(3072)
                 ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute(),
         ];

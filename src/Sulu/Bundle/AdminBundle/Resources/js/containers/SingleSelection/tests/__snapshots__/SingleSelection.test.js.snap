@@ -5,12 +5,12 @@ exports[`Render with selected item 1`] = `
   class="singleItemSelection"
 >
   <button
-    class="button"
+    class="button left"
     type="button"
   >
     <span
       aria-label="su-test"
-      class="su-test"
+      class="su-test icon"
     />
   </button>
   <div
@@ -52,13 +52,13 @@ exports[`Render with selected item in disabled state 1`] = `
   class="singleItemSelection disabled"
 >
   <button
-    class="button"
+    class="button left"
     disabled=""
     type="button"
   >
     <span
       aria-label="su-test"
-      class="su-test"
+      class="su-test icon"
     />
   </button>
   <div
@@ -102,12 +102,12 @@ Array [
     class="singleItemSelection"
   >
     <button
-      class="button"
+      class="button left"
       type="button"
     >
       <span
         aria-label="su-document"
-        class="su-document"
+        class="su-document icon"
       />
     </button>
     <div

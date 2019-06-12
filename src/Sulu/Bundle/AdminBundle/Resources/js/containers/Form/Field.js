@@ -87,7 +87,7 @@ class Field extends React.Component<Props> {
             label,
             maxOccurs,
             minOccurs,
-            options: schemaOptions,
+            options: schemaOptions = {},
             required,
             type,
         } = schema;

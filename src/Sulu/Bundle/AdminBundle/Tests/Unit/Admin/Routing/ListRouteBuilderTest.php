@@ -54,6 +54,7 @@ class ListRouteBuilderTest extends TestCase
                 '/categories',
                 'categories',
                 'categories',
+                null,
                 'Categories',
                 ['table', 'column_list'],
                 'sulu_category.add_form',
@@ -65,6 +66,7 @@ class ListRouteBuilderTest extends TestCase
                 '/tags',
                 'tags',
                 'other_tags',
+                'contact_tags',
                 'Tags',
                 ['table'],
                 'sulu_tag.add_form',
@@ -82,27 +84,34 @@ class ListRouteBuilderTest extends TestCase
         string $path,
         string $resourceKey,
         string $listKey,
+        ?string $userSettingsKey,
         string $title,
         array $listAdapters,
         string $addRoute,
         string $editRoute,
         string $rerenderAttribute
     ) {
-        $route = (new ListRouteBuilder($name, $path))
+        $routeBuilder = (new ListRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setListKey($listKey)
             ->setTitle($title)
             ->addListAdapters($listAdapters)
             ->setAddRoute($addRoute)
             ->setEditRoute($editRoute)
-            ->addRerenderAttribute($rerenderAttribute)
-            ->getRoute();
+            ->addRerenderAttribute($rerenderAttribute);
+
+        if ($userSettingsKey) {
+            $routeBuilder->setUserSettingsKey($userSettingsKey);
+        }
+
+        $route = $routeBuilder->getRoute();
 
         $this->assertSame($name, $route->getName());
         $this->assertSame($path, $route->getPath());
         $this->assertAttributeEquals([$rerenderAttribute], 'rerenderAttributes', $route);
         $this->assertSame($resourceKey, $route->getOption('resourceKey'));
         $this->assertSame($listKey, $route->getOption('listKey'));
+        $this->assertSame($userSettingsKey, $route->getOption('userSettingsKey'));
         $this->assertSame($title, $route->getOption('title'));
         $this->assertSame($listAdapters, $route->getOption('adapters'));
         $this->assertSame($addRoute, $route->getOption('addRoute'));

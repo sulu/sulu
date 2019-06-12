@@ -128,10 +128,20 @@ $darkIconColor: $doveGray;
         flex: 0 0 $inputPrependWidth;
         height: calc($inputHeight - 2 * $iconBorderPadding);
         width: $inputPrependWidth;
+
+        &.collapsed {
+            height: 100%;
+        }
     }
 
     .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
         font-size: 14px;
+        text-align: center;
     }
 
     &.headline {

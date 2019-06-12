@@ -172,7 +172,7 @@ test('Should render the list with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router} title="Test 1" />);
     expect(list).toMatchSnapshot();
 });
 
@@ -191,8 +191,90 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} />);
+    const list = render(<List router={router} title="Test 2" />);
     expect(list).toMatchSnapshot();
+});
+
+test('Pass correct arguments to ToolbarActions', () => {
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+
+    const ToolbarActionMock1 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+
+    const ToolbarActionMock2 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+
+    const ToolbarActionMock3 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+
+    toolbarActionRegistry.add('mock1', ToolbarActionMock1);
+    toolbarActionRegistry.add('mock2', ToolbarActionMock2);
+
+    const locales = ['de', 'en'];
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales,
+                resourceKey: 'snippets',
+                toolbarActions: ['mock1', 'mock2'],
+            },
+        },
+    };
+
+    const list = shallow(<List router={router} />);
+
+    expect(ToolbarActionMock1).toBeCalledWith(list.instance().listStore, list.instance(), router, locales, undefined);
+    expect(ToolbarActionMock2).toBeCalledWith(list.instance().listStore, list.instance(), router, locales, undefined);
+    expect(ToolbarActionMock3).not.toBeCalled();
+});
+
+test('Pass correct arguments with passed ResourceStore to ToolbarActions', () => {
+    const List = require('../List').default;
+    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry').default;
+    const resourceStore = new ResourceStore('tests', '123-456-789');
+
+    const ToolbarActionMock = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+
+    toolbarActionRegistry.add('mock1', ToolbarActionMock);
+
+    const locales = ['de', 'en'];
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales,
+                resourceKey: 'snippets',
+                toolbarActions: ['mock1'],
+            },
+        },
+    };
+
+    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+
+    expect(ToolbarActionMock).toBeCalledWith(
+        list.instance().listStore,
+        list.instance(),
+        router,
+        locales,
+        resourceStore
+    );
 });
 
 test('Should pass correct props to move list overlay', () => {
@@ -731,15 +813,52 @@ test('Should load the route attributes from the ListStore', () => {
 
     expect(List.getDerivedRouteAttributes({
         options: {
-            resourceKey: 'test',
             listKey: 'list_test',
+            resourceKey: 'test',
         },
     })).toEqual({
         active: 'some-uuid',
+        limit: 50,
         sortColumn: 'title',
         sortOrder: 'desc',
-        limit: 50,
     });
+
+    expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'list');
+});
+
+test('Should load the route attributes from the ListStore using the passed userSettingsKey', () => {
+    const List = require('../List').default;
+    const ListStore = require('../../../containers/List').ListStore;
+    ListStore.getActiveSetting = jest.fn();
+    ListStore.getSortColumnSetting = jest.fn();
+    ListStore.getSortOrderSetting = jest.fn();
+    ListStore.getLimitSetting = jest.fn();
+
+    ListStore.getActiveSetting.mockReturnValueOnce('some-uuid');
+    ListStore.getSortColumnSetting.mockReturnValueOnce('title');
+    ListStore.getSortOrderSetting.mockReturnValueOnce('desc');
+    ListStore.getLimitSetting.mockReturnValueOnce(50);
+
+    expect(List.getDerivedRouteAttributes({
+        options: {
+            listKey: 'list_test',
+            resourceKey: 'test',
+            userSettingsKey: 'user_key',
+        },
+    })).toEqual({
+        active: 'some-uuid',
+        limit: 50,
+        sortColumn: 'title',
+        sortOrder: 'desc',
+    });
+
+    expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'user_key');
+    expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'user_key');
+    expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'user_key');
+    expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'user_key');
 });
 
 test('Should render the delete item enabled only if something is selected', () => {

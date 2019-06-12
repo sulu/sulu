@@ -4,7 +4,6 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import React from 'react';
 import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
 import MediaSelectionOverlay from '../../MediaSelectionOverlay';
-import MediaCollection from '../../MediaCollection';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -137,7 +136,6 @@ test('Render an open MediaSelectionOverlay', () => {
     );
 
     expect(mediaSelectionOverlay.render()).toMatchSnapshot();
-    expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
 });
 
 test('Render an open MediaSelectionOverlay with selected items', () => {
@@ -157,7 +155,23 @@ test('Render an open MediaSelectionOverlay with selected items', () => {
     );
 
     expect(mediaSelectionOverlay.render()).toMatchSnapshot();
-    expect(mediaSelectionOverlay.find(MediaCollection).closest('Portal').render()).toMatchSnapshot();
+});
+
+test('Render the overlay with a loading confirm button', () => {
+    const mediaSelectionOverlay = mount(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            confirmLoading={true}
+            locale={observable.box()}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(mediaSelectionOverlay.find('Overlay').at(0).prop('confirmLoading')).toEqual(true);
 });
 
 test('Should call onConfirm callback with selected medias from media list', () => {

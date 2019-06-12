@@ -51,6 +51,8 @@ interface FormRouteBuilderInterface
 
     public function setIdQueryParameter(string $idQueryParameter): self;
 
+    public function setTitleVisible(bool $titleVisible): self;
+
     public function setParent(string $parent): self;
 
     public function getRoute(): Route;

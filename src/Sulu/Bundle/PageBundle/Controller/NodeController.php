@@ -53,7 +53,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     const WEBSPACE_NODES_ALL = 'all';
 
-    protected static $relationName = 'nodes';
+    protected static $relationName = 'pages';
 
     public function __construct()
     {

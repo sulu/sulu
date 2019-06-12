@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render component 1`] = `
-<div
-  class="roleAssignmentContainer"
+<tr
+  class="roleAssignment"
 >
-  <div>
+  <td>
     Role Name 5
-  </div>
-  <div>
+  </td>
+  <td>
     Sulu
-  </div>
-  <div>
+  </td>
+  <td>
     <div
       class="select"
     >
@@ -49,21 +49,21 @@ exports[`Render component 1`] = `
         />
       </button>
     </div>
-  </div>
-</div>
+  </td>
+</tr>
 `;
 
 exports[`Render component in disabled state 1`] = `
-<div
-  class="roleAssignmentContainer disabled"
+<tr
+  class="roleAssignment disabled"
 >
-  <div>
+  <td>
     Role Name 5
-  </div>
-  <div>
+  </td>
+  <td>
     Sulu
-  </div>
-  <div>
+  </td>
+  <td>
     <div
       class="select"
     >
@@ -103,6 +103,6 @@ exports[`Render component in disabled state 1`] = `
         />
       </button>
     </div>
-  </div>
-</div>
+  </td>
+</tr>
 `;

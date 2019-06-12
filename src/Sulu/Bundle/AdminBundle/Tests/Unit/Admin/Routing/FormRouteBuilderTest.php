@@ -73,6 +73,7 @@ class FormRouteBuilderTest extends TestCase
                 'sulu_category.edit_form',
                 'sulu_category.list',
                 ['webspace'],
+                true,
             ],
             [
                 'sulu_category.add_form',
@@ -86,6 +87,7 @@ class FormRouteBuilderTest extends TestCase
                 'sulu_category.edit_form',
                 'sulu_category.list',
                 ['webspace', 'id' => 'active'],
+                false,
             ],
         ];
     }
@@ -104,7 +106,8 @@ class FormRouteBuilderTest extends TestCase
         ?int $tabPriority,
         ?string $editRoute,
         ?string $backRoute,
-        ?array $routerAttributesToBackRoute = null
+        ?array $routerAttributesToBackRoute = null,
+        ?bool $titleVisible = null
     ) {
         $routeBuilder = (new FormRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -138,6 +141,10 @@ class FormRouteBuilderTest extends TestCase
             $routeBuilder->addRouterAttributesToBackRoute($routerAttributesToBackRoute);
         }
 
+        if (null !== $titleVisible) {
+            $routeBuilder->setTitleVisible($titleVisible);
+        }
+
         $route = $routeBuilder->getRoute();
 
         $this->assertSame($name, $route->getName());
@@ -151,6 +158,7 @@ class FormRouteBuilderTest extends TestCase
         $this->assertSame($editRoute, $route->getOption('editRoute'));
         $this->assertSame($backRoute, $route->getOption('backRoute'));
         $this->assertSame($routerAttributesToBackRoute, $route->getOption('routerAttributesToBackRoute'));
+        $this->assertSame($titleVisible, $route->getOption('titleVisible'));
         $this->assertNull($route->getParent());
         $this->assertSame('sulu_admin.form', $route->getView());
     }

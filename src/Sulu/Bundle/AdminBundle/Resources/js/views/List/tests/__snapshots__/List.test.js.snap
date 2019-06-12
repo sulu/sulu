@@ -517,6 +517,11 @@ exports[`Should render the list with the correct resourceKey 1`] = `
     <div
       class="headerContainer"
     >
+      <h1
+        class="header"
+      >
+        Test 1
+      </h1>
       <div
         class="toolbar"
       >

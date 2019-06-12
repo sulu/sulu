@@ -14,8 +14,12 @@ jest.mock('../../Sidebar/stores/SidebarStore', () => ({
 }));
 
 test('Render view returned from ViewRegistry', () => {
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        route: {view: 'test'},
+    };
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
-    const view = mount(<ViewRenderer router={{route: {view: 'test'}}} />);
+    const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
     expect(sidebarStore.clearConfig).toBeCalled();
@@ -190,6 +194,7 @@ test('Render view with not existing parent should throw', () => {
 
 test('Render view with route that has no rerenderAttributes', () => {
     const router = {
+        addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
             view: 'webspaceOverview',
@@ -218,6 +223,7 @@ test('Render view with route that has no rerenderAttributes', () => {
 
 test('Render view with route that has rerenderAttributes', () => {
     const router = {
+        addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
             view: 'webspaceOverview',
@@ -249,6 +255,7 @@ test('Render view with route that has rerenderAttributes', () => {
 
 test('Render view with route that has more than one rerenderAttributes', () => {
     const router = {
+        addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
             view: 'webspaceOverview',
@@ -281,6 +288,10 @@ test('Render view with route that has more than one rerenderAttributes', () => {
 });
 
 test('Render view and not clear the sidebarstore when component has sidebar', () => {
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        route: {view: 'test'},
+    };
     const Component = class Component extends React.Component {
         static hasSidebar = true;
 
@@ -290,13 +301,25 @@ test('Render view and not clear the sidebarstore when component has sidebar', ()
     };
 
     viewRegistry.get.mockReturnValue(Component);
-    const view = mount(<ViewRenderer router={{route: {view: 'test'}}} />);
+    const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
     expect(sidebarStore.clearConfig).not.toBeCalled();
 });
 
 test('Render view and not clear the sidebarstore when one of the parent component has sidebar', () => {
+    const route = {
+        view: 'test',
+        parent: {
+            view: 'parent',
+        },
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        route,
+    };
+
     const Component = class Component extends React.Component {
         static hasSidebar = false;
 
@@ -313,13 +336,6 @@ test('Render view and not clear the sidebarstore when one of the parent componen
         }
     };
 
-    const route = {
-        view: 'test',
-        parent: {
-            view: 'parent',
-        },
-    };
-
     viewRegistry.get.mockImplementation((view) => {
         switch (view) {
             case 'test':
@@ -329,9 +345,67 @@ test('Render view and not clear the sidebarstore when one of the parent componen
         }
     });
 
-    const view = mount(<ViewRenderer router={{route: route}} />);
+    const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
     expect(viewRegistry.get).toBeCalledWith('parent');
     expect(sidebarStore.clearConfig).not.toBeCalled();
+});
+
+test('Clear bindings of router everytime a new view is rendered', () => {
+    const route1 = {
+        name: 'test1',
+        view: 'test',
+    };
+
+    const route2 = {
+        name: 'test2',
+        view: 'test',
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        clearBindings: jest.fn(),
+        route: route1,
+    };
+
+    shallow(<ViewRenderer router={router} />);
+    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), -1024);
+
+    const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
+
+    updateRouteHook(route1, {});
+    expect(router.clearBindings).not.toBeCalled();
+
+    updateRouteHook(route2, {});
+    expect(router.clearBindings).toBeCalledWith();
+});
+
+test('Clear bindings of router when same view with a different rerender attribute is rendered', () => {
+    const route = {
+        name: 'test1',
+        view: 'test',
+        rerenderAttributes: ['webspace'],
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            locale: 'de',
+            webspace: 'sulu',
+        },
+        clearBindings: jest.fn(),
+        route: route,
+    };
+
+    shallow(<ViewRenderer router={router} />);
+    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), -1024);
+
+    const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
+
+    updateRouteHook(route, {locale: 'en', webspace: 'sulu'});
+    expect(router.clearBindings).not.toBeCalled();
+
+    updateRouteHook(route, {locale: 'de', webspace: 'example'});
+    expect(router.clearBindings).toBeCalledWith();
 });

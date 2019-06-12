@@ -1,17 +1,111 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Component should render with display options 1`] = `
+Array [
+  <div
+    class="singleItemSelection"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-image"
+        class="su-image icon"
+      />
+    </button>
+    <div
+      class="itemContainer hasRightButton"
+    >
+      <div
+        class="item"
+      >
+        <div
+          class="empty"
+        >
+          sulu_media.select_media_singular
+        </div>
+      </div>
+    </div>
+    <button
+      class="button right hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-display-default"
+        class="su-display-default icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;
+
+exports[`Component should render with display options and correctly selected icon 1`] = `
+Array [
+  <div
+    class="singleItemSelection"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-image"
+        class="su-image icon"
+      />
+    </button>
+    <div
+      class="itemContainer hasRightButton"
+    >
+      <div
+        class="item"
+      >
+        <div
+          class="empty"
+        >
+          sulu_media.select_media_singular
+        </div>
+      </div>
+    </div>
+    <button
+      class="button right hasOptions"
+      type="button"
+    >
+      <span
+        aria-label="su-display-center-left"
+        class="su-display-center-left icon"
+      />
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+  </div>,
+  <div>
+    single media selection overlay
+  </div>,
+]
+`;
+
 exports[`Component should render with selected media 1`] = `
 Array [
   <div
     class="singleItemSelection"
   >
     <button
-      class="button"
+      class="button left"
       type="button"
     >
       <span
         aria-label="su-image"
-        class="su-image"
+        class="su-image icon"
       />
     </button>
     <div
@@ -58,12 +152,12 @@ Array [
     class="singleItemSelection"
   >
     <button
-      class="button"
+      class="button left"
       type="button"
     >
       <span
         aria-label="su-image"
-        class="su-image"
+        class="su-image icon"
       />
     </button>
     <div
@@ -114,12 +208,12 @@ Array [
     class="singleItemSelection"
   >
     <button
-      class="button"
+      class="button left"
       type="button"
     >
       <span
         aria-label="su-image"
-        class="su-image"
+        class="su-image icon"
       />
     </button>
     <div

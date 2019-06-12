@@ -6,3 +6,14 @@ export type Media = {|
     title: string,
     url: string,
 |};
+
+export type DisplayOption =
+    | 'leftTop'
+    | 'top'
+    | 'rightTop'
+    | 'left'
+    | 'middle'
+    | 'right'
+    | 'leftBottom'
+    | 'bottom'
+    | 'rightBottom';

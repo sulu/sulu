@@ -44,7 +44,6 @@ test('Render WebspaceSelect opened', () => {
     expect(arrowMenu.instance().open).toBe(true);
 
     expect(arrowMenu.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
 test('Change event should be called correctly', () => {

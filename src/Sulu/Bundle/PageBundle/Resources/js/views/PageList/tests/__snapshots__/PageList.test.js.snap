@@ -2,7 +2,7 @@
 
 exports[`Render PageList 1`] = `
 <div
-  class="webspaceOverview"
+  class="pageList"
 >
   <div
     class="listContainer"

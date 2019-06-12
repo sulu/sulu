@@ -212,11 +212,11 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals(0, count($main[0]['children']));
         $this->assertEquals(0, count($main[1]['children']));
 
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['id']);
         $this->assertEquals('News-1', $main[0]['title']);
         $this->assertEquals('/news/news-1', $main[0]['url']);
 
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['id']);
         $this->assertEquals('News-2', $main[1]['title']);
         $this->assertEquals('/news/news-2', $main[1]['url']);
     }
@@ -464,11 +464,11 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals(0, count($main[0]['children']));
         $this->assertEquals(0, count($main[1]['children']));
 
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[0]['id']);
         $this->assertEquals('News-1', $main[0]['title']);
         $this->assertEquals('/news/news-1', $main[0]['url']);
 
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[1]['id']);
         $this->assertEquals('News-2', $main[1]['title']);
         $this->assertEquals('/news/news-2', $main[1]['url']);
 
@@ -482,11 +482,11 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals(0, count($main[0]['children']));
         $this->assertEquals(0, count($main[1]['children']));
 
-        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[0]['uuid']);
+        $this->assertEquals($this->data['news/news-2']->getUuid(), $main[0]['id']);
         $this->assertEquals('News-2', $main[0]['title']);
         $this->assertEquals('/news/news-2', $main[0]['url']);
 
-        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[1]['uuid']);
+        $this->assertEquals($this->data['news/news-1']->getUuid(), $main[1]['id']);
         $this->assertEquals('News-1', $main[1]['title']);
         $this->assertEquals('/news/news-1', $main[1]['url']);
     }
