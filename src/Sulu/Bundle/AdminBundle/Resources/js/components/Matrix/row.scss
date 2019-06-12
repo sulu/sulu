@@ -4,24 +4,25 @@ $rowFontColor: $blueZodiac;
 $rowBorderColor: $mercury;
 
 .row {
-    border-bottom: 1px solid $rowBorderColor;
     color: $rowFontColor;
-    padding: 8px 20px;
 
-    > div:first-child {
-        font-size: 12px;
-        line-height: 22px;
-        display: inline-block;
+    .name,
+    .items {
+        border-bottom: 1px solid $rowBorderColor;
         width: 50%;
+        padding: 8px 20px;
     }
 
-    > div:last-child {
-        display: inline-block;
-        width: 50%;
+    .name {
+        font-size: 12px;
+        line-height: 22px;
     }
 
     &:last-child {
-        border-bottom: none;
+        .name,
+        .items {
+            border-bottom: none;
+        }
     }
 
     &:hover {

@@ -102,13 +102,13 @@ class Row extends React.Component<Props> {
         } = this.props;
 
         return (
-            <div className={rowStyles.row}>
-                <div>{title ? title : name}</div>
-                <div>
+            <tr className={rowStyles.row}>
+                <td className={rowStyles.name}>{title ? title : name}</td>
+                <td className={rowStyles.items}>
                     {this.cloneItems(children)}
                     {!disabled && this.renderAllButton()}
-                </div>
-            </div>
+                </td>
+            </tr>
         );
     }
 }

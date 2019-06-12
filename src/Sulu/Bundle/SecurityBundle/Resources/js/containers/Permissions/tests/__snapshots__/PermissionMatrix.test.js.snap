@@ -4,100 +4,110 @@ exports[`Render in disabled state 1`] = `
 <div
   class="matrixContainer"
 >
-  <div
+  <table
     class="matrix disabled"
   >
-    <div
-      class="row"
-    >
-      <div>
-        people
-      </div>
-      <div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.view"
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.add"
+          people
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.edit"
+          <div
+            class="item selected disabled"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.delete"
+          organizations
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div>
-        organizations
-      </div>
-      <div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.view"
-        >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.add"
-        >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.edit"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected disabled"
-          title="sulu_security.delete"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
@@ -105,110 +115,120 @@ exports[`Render with minimal 1`] = `
 <div
   class="matrixContainer"
 >
-  <div
+  <table
     class="matrix"
   >
-    <div
-      class="row"
-    >
-      <div>
-        people
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
+          people
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
+          organizations
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div>
-        organizations
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
-        >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
-        >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-  </div>
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
@@ -219,110 +239,120 @@ exports[`Render with subTitle 1`] = `
   <h3>
     Contact
   </h3>
-  <div
+  <table
     class="matrix"
   >
-    <div
-      class="row"
-    >
-      <div>
-        people
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
+          people
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
+          organizations
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div>
-        organizations
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
-        >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
-        >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-  </div>
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
@@ -333,109 +363,119 @@ exports[`Render with title 1`] = `
   <h2>
     Contact
   </h2>
-  <div
+  <table
     class="matrix"
   >
-    <div
-      class="row"
-    >
-      <div>
-        people
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
+          people
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
         >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
+          organizations
+        </td>
+        <td
+          class="items"
         >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div>
-        organizations
-      </div>
-      <div>
-        <div
-          class="item selected"
-          title="sulu_security.view"
-        >
-          <span
-            aria-label="su-eye"
-            class="su-eye"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.add"
-        >
-          <span
-            aria-label="su-plus-circle"
-            class="su-plus-circle"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.edit"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen"
-          />
-        </div>
-        <div
-          class="item selected"
-          title="sulu_security.delete"
-        >
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt"
-          />
-        </div>
-        <button
-          class="rowButton"
-        >
-          sulu_admin.deactivate_all
-        </button>
-      </div>
-    </div>
-  </div>
+          <div
+            class="item selected"
+            title="sulu_security.view"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="sulu_security.delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;

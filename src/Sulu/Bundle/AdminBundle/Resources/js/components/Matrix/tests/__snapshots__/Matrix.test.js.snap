@@ -1,295 +1,337 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the Matrix component 1`] = `
-<div
+<table
   class="matrix"
 >
-  <div
-    class="row"
-  >
-    <div>
-      articles
-    </div>
-    <div>
-      <div
-        class="item"
-        title="View"
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item"
-        title="Edit"
+        articles
+      </td>
+      <td
+        class="items"
       >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-      <div
-        class="item"
-        title="Delete"
+        <div
+          class="item"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+        <div
+          class="item"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Activate all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt"
-        />
-      </div>
-      <button
-        class="rowButton"
+        redirects
+      </td>
+      <td
+        class="items"
       >
-        Activate all
-      </button>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      redirects
-    </div>
-    <div>
-      <div
-        class="item"
-        title="View"
+        <div
+          class="item"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Activate all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <button
-        class="rowButton"
+        settings
+      </td>
+      <td
+        class="items"
       >
-        Activate all
-      </button>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      settings
-    </div>
-    <div>
-      <div
-        class="item"
-        title="View"
-      >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item"
-        title="Edit"
-      >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-      <button
-        class="rowButton"
-      >
-        Activate all
-      </button>
-    </div>
-  </div>
-</div>
+        <div
+          class="item"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Activate all
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Matrix component with values 1`] = `
-<div
+<table
   class="matrix"
 >
-  <div
-    class="row"
-  >
-    <div>
-      articles
-    </div>
-    <div>
-      <div
-        class="item selected"
-        title="View"
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item selected"
-        title="Edit"
+        articles
+      </td>
+      <td
+        class="items"
       >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-      <div
-        class="item"
-        title="Delete"
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+        <div
+          class="item"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Deactivate all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt"
-        />
-      </div>
-      <button
-        class="rowButton"
+        redirects
+      </td>
+      <td
+        class="items"
       >
-        Deactivate all
-      </button>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      redirects
-    </div>
-    <div>
-      <div
-        class="item selected"
-        title="View"
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Deactivate all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <button
-        class="rowButton"
+        settings
+      </td>
+      <td
+        class="items"
       >
-        Deactivate all
-      </button>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      settings
-    </div>
-    <div>
-      <div
-        class="item selected"
-        title="View"
-      >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item"
-        title="Edit"
-      >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-      <button
-        class="rowButton"
-      >
-        Deactivate all
-      </button>
-    </div>
-  </div>
-</div>
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          Deactivate all
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
 
 exports[`Render the Matrix component with values in disabled state 1`] = `
-<div
+<table
   class="matrix disabled"
 >
-  <div
-    class="row"
-  >
-    <div>
-      articles
-    </div>
-    <div>
-      <div
-        class="item selected disabled"
-        title="View"
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item selected disabled"
-        title="Edit"
+        articles
+      </td>
+      <td
+        class="items"
       >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-      <div
-        class="item disabled"
-        title="Delete"
+        <div
+          class="item selected disabled"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected disabled"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+        <div
+          class="item disabled"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt"
-        />
-      </div>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      redirects
-    </div>
-    <div>
-      <div
-        class="item selected disabled"
-        title="View"
+        redirects
+      </td>
+      <td
+        class="items"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-    </div>
-  </div>
-  <div
-    class="row"
-  >
-    <div>
-      settings
-    </div>
-    <div>
-      <div
-        class="item selected disabled"
-        title="View"
+        <div
+          class="item selected disabled"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
       >
-        <span
-          aria-label="su-pen"
-          class="su-pen"
-        />
-      </div>
-      <div
-        class="item disabled"
-        title="Edit"
+        settings
+      </td>
+      <td
+        class="items"
       >
-        <span
-          aria-label="su-plus"
-          class="su-plus"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+        <div
+          class="item selected disabled"
+          title="View"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item disabled"
+          title="Edit"
+        >
+          <span
+            aria-label="su-plus"
+            class="su-plus"
+          />
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;

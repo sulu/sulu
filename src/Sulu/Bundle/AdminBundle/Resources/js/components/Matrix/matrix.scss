@@ -5,7 +5,8 @@ $matrixBackgroundColor: $white;
 .matrix {
     background-color: $matrixBackgroundColor;
     border-radius: 3px;
-    margin-top: 10px;
+    border-spacing: 0;
+    width: 100%;
 
     &.disabled {
         opacity: .5;
