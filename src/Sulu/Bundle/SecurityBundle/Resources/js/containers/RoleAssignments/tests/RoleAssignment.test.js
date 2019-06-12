@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, shallow} from 'enzyme';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import RoleAssignment from '../RoleAssignment';
@@ -125,7 +125,7 @@ test('The component should trigger the change callback', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignment = mount(
+    const roleAssignment = shallow(
         <RoleAssignment
             localizations={localizations}
             onChange={onChangeSpy}

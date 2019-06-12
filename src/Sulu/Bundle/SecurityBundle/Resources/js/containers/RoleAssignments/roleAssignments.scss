@@ -1,5 +1,11 @@
-.role-assignments-container {
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$roleAssignmentBackgroundColor: $white;
+
+.role-assignments {
+    width: 100%;
+    background: $roleAssignmentBackgroundColor;
     border-radius: 3px;
+    border-spacing: 0;
     margin-top: 20px;
-    overflow: hidden;
 }
