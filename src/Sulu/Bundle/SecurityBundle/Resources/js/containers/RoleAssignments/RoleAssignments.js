@@ -101,19 +101,21 @@ class RoleAssignments extends React.Component<Props> {
                 </Grid.Item>
                 {this.selectedRoles.length > 0 &&
                     <Grid.Item colSpan={12}>
-                        <div className={roleAssignmentsStyle.roleAssignmentsContainer}>
-                            {value.map((userRole, key) => {
-                                return (
-                                    <RoleAssignment
-                                        disabled={disabled}
-                                        key={key}
-                                        localizations={localizations}
-                                        onChange={this.handleRoleAssignmentChange}
-                                        value={userRole}
-                                    />
-                                );
-                            })}
-                        </div>
+                        <table className={roleAssignmentsStyle.roleAssignments}>
+                            <tbody>
+                                {value.map((userRole, key) => {
+                                    return (
+                                        <RoleAssignment
+                                            disabled={disabled}
+                                            key={key}
+                                            localizations={localizations}
+                                            onChange={this.handleRoleAssignmentChange}
+                                            value={userRole}
+                                        />
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     </Grid.Item>
                 }
             </Grid>

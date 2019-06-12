@@ -29,18 +29,18 @@ class RoleAssignment extends React.Component<Props> {
     render() {
         const {disabled, localizations, value} = this.props;
 
-        const roleAssignmentContainerClass = classNames(
-            roleAssignmentStyle.roleAssignmentContainer,
+        const roleAssignmentClass = classNames(
+            roleAssignmentStyle.roleAssignment,
             {
                 [roleAssignmentStyle.disabled]: disabled,
             }
         );
 
         return (
-            <div className={roleAssignmentContainerClass}>
-                <div>{value.role.name}</div>
-                <div>{value.role.system}</div>
-                <div>
+            <tr className={roleAssignmentClass}>
+                <td>{value.role.name}</td>
+                <td>{value.role.system}</td>
+                <td>
                     <MultiSelect
                         disabled={disabled}
                         onChange={this.handleChange}
@@ -52,8 +52,8 @@ class RoleAssignment extends React.Component<Props> {
                             </MultiSelect.Option>
                         ))}
                     </MultiSelect>
-                </div>
-            </div>
+                </td>
+            </tr>
         );
     }
 }

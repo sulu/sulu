@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
-import matrixStyles from './matrix.scss';
+import itemStyles from './item.scss';
 
 type Props = {|
     disabled: boolean,
@@ -42,10 +42,10 @@ export default class Item extends React.PureComponent<Props> {
             value,
         } = this.props;
         const itemClass = classNames(
-            matrixStyles.item,
+            itemStyles.item,
             {
-                [matrixStyles.selected]: value,
-                [matrixStyles.disabled]: disabled,
+                [itemStyles.selected]: value,
+                [itemStyles.disabled]: disabled,
             }
         );
 
