@@ -1585,7 +1585,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected function addTag($contact, $data)
     {
         $success = true;
-        $resolvedTag = $this->getTagManager()->findByName($data);
+        $resolvedTag = $this->getTagManager()->findOrCreateByName($data);
         $contact->addTag($resolvedTag);
 
         return $success;
