@@ -38,7 +38,6 @@ class NavigationItemTest extends TestCase
         $this->item1 = new NavigationItem('Root');
         $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
-        $this->item1->setAction('action');
         new NavigationItem('Portals', $this->item1);
         new NavigationItem('Settings', $this->item1);
         $this->item2 = new NavigationItem('Root');
@@ -71,12 +70,6 @@ class NavigationItemTest extends TestCase
     {
         $this->navigationItem->setIcon('icon');
         $this->assertEquals('icon', $this->navigationItem->getIcon());
-    }
-
-    public function testAction()
-    {
-        $this->navigationItem->setAction('/test/action');
-        $this->assertEquals('/test/action', $this->navigationItem->getAction());
     }
 
     public function testChildren()
@@ -121,7 +114,6 @@ class NavigationItemTest extends TestCase
     {
         $copy = $this->item1->copyChildless();
 
-        $this->assertEquals($this->item1->getAction(), $copy->getAction());
         $this->assertEquals($this->item1->getIcon(), $copy->getIcon());
         $this->assertEquals($this->item1->getHeaderIcon(), $copy->getHeaderIcon());
         $this->assertEquals($this->item1->getHeaderTitle(), $copy->getHeaderTitle());
@@ -145,15 +137,12 @@ class NavigationItemTest extends TestCase
         $array = $this->item1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertEquals('action', $array['action']);
         $this->assertEquals('logo', $array['header']['logo']);
         $this->assertEquals('title', $array['header']['title']);
 
         $this->assertContains('Portals', [$array['items'][0]['title'], $array['items'][1]['title']]);
-        $this->assertEquals(null, $array['items'][1]['action']);
 
         $this->assertContains('Settings', [$array['items'][0]['title'], $array['items'][1]['title']]);
-        $this->assertEquals(null, $array['items'][0]['action']);
 
         $array = $this->item2->toArray();
 

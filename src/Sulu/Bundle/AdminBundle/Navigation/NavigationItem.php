@@ -11,10 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
-/**
- * Represents an item in the navigation.
- * Contains the name and the coupled action for this specific NavigationItem.
- */
 class NavigationItem implements \Iterator
 {
     /**
@@ -42,13 +38,6 @@ class NavigationItem implements \Iterator
      * @var string
      */
     protected $icon;
-
-    /**
-     * The action which should be executed when clicking on this NavigationItem.
-     *
-     * @var string
-     */
-    protected $action;
 
     /**
      * @var string
@@ -198,33 +187,13 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * Returns the action of the NavigationItem.
+     * Returns the icon of the NavigationItem.
      *
      * @return string
      */
     public function getIcon()
     {
         return $this->icon;
-    }
-
-    /**
-     * Sets the action of the NavigationItem.
-     *
-     * @param string $action The action of the NavigationItem
-     */
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    /**
-     * Returns the action of the NavigationItem.
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     public function setMainRoute(string $mainRoute = null): void
@@ -413,7 +382,6 @@ class NavigationItem implements \Iterator
     public function copyChildless()
     {
         $new = $this->copyWithName();
-        $new->setAction($this->getAction());
         $new->setMainRoute($this->getMainRoute());
         $new->setChildRoutes($this->getChildRoutes());
         $new->setEvent($this->getEvent());
@@ -595,7 +563,6 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
-            'action' => $this->getAction(),
             'mainRoute' => $this->getMainRoute(),
             'event' => $this->getEvent(),
             'eventArguments' => $this->getEventArguments(),
