@@ -233,7 +233,7 @@ class AdminController
         ];
 
         return $this->engine->renderResponse(
-            'SuluAdminBundle:Admin:main.html.twig',
+            '@SuluAdmin\Admin\main.html.twig',
             [
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,
