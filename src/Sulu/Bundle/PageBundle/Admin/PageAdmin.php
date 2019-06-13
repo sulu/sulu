@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -201,6 +202,19 @@ class PageAdmin extends Admin
                 ->setTabOrder(4096)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
+            // TODO maybe even build a separate builder?
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                ->setResourceKey('permissions')
+                ->setFormKey('permission_details')
+                ->setTabTitle('sulu_security.permissions')
+                ->addToolbarActions(['sulu_admin.save'])
+                ->setTitleVisible(true)
+                ->setTabOrder(5120)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute()
+                // TODO replace with call to FormRouteBuilder
+                // TODO replacing with resourceKey requires API change, but allows loading available actions for Matrix
+                ->setOption('apiOptions', ['type' => SecurityBehavior::class]),
         ];
     }
 
