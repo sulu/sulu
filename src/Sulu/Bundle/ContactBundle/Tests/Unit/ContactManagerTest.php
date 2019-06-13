@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -36,26 +34,32 @@ class ContactManagerTest extends TestCase
      * @var ObjectManager
      */
     private $em;
+
     /**
      * @var TagManagerInterface
      */
     private $tagManager;
+
     /**
      * @var MediaManagerInterface
      */
     private $mediaManager;
+
     /**
      * @var AccountRepositoryInterface
      */
     private $accountRepository;
+
     /**
      * @var ContactTitleRepository
      */
     private $contactTitleRepository;
+
     /**
      * @var ContactRepository
      */
     private $contactRepository;
+
     /**
      * @var MediaRepositoryInterface
      */
@@ -71,7 +75,15 @@ class ContactManagerTest extends TestCase
         $this->contactRepository = $this->prophesize(ContactRepository::class);
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
 
-        $this->contactManager = new ContactManager($this->em->reveal(), $this->tagManager->reveal(), $this->mediaManager->reveal(), $this->accountRepository->reveal(), $this->contactTitleRepository->reveal(), $this->contactRepository->reveal(), $this->mediaRepository->reveal());
+        $this->contactManager = new ContactManager(
+            $this->em->reveal(),
+            $this->tagManager->reveal(),
+            $this->mediaManager->reveal(),
+            $this->accountRepository->reveal(),
+            $this->contactTitleRepository->reveal(),
+            $this->contactRepository->reveal(),
+            $this->mediaRepository->reveal()
+        );
     }
 
     public function testAddTag()
