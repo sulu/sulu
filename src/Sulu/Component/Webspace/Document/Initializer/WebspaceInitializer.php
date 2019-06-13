@@ -134,7 +134,7 @@ class WebspaceInitializer implements InitializerInterface
                 if ($routeDocument->getTargetDocument()
                     && $routeDocument->getTargetDocument()->getUuid() === $homeDocument->getUuid()
                 ) {
-                    $output->writeln(sprintf('  [ ] <info>homepage</info>: %s (%s)', $routePath, $webspaceLocale));
+                    $output->writeln(sprintf('  [ ] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
 
                     continue;
                 }
@@ -142,7 +142,7 @@ class WebspaceInitializer implements InitializerInterface
                 $routeDocument = $this->documentManager->create('route');
             }
 
-            $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $routePath, $webspaceLocale));
+            $output->writeln(sprintf('  [+] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
 
             $routeDocument->setTargetDocument($homeDocument);
             $this->documentManager->persist($routeDocument, $webspaceLocale, [
