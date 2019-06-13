@@ -140,8 +140,9 @@ class WebspaceInitializer implements InitializerInterface
                 }
             } catch (DocumentNotFoundException $e) {
                 $routeDocument = $this->documentManager->create('route');
-                $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $routePath, $webspaceLocale));
             }
+
+            $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $routePath, $webspaceLocale));
 
             $routeDocument->setTargetDocument($homeDocument);
             $this->documentManager->persist($routeDocument, $webspaceLocale, [
