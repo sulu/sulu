@@ -50,6 +50,38 @@ test('Pass props correctly to SingleSelect', () => {
     }));
 });
 
+test('Pass value if no title is given to SingleSelect', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const schemaOptions = observable({
+        values: {
+            value: [
+                {
+                    name: 'mr',
+                },
+                {
+                    name: 'ms',
+                },
+            ],
+        },
+    });
+    const singleSelect = shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+        value: 'mr',
+        children: 'mr',
+    }));
+    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+        value: 'ms',
+        children: 'ms',
+    }));
+});
+
 test('Should throw an exception if defaultValue is of wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {

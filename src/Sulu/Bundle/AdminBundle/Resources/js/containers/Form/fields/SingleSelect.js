@@ -53,7 +53,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
 
                     return (
                         <SingleSelectComponent.Option key={value} value={value}>
-                            {title}
+                            {title || value}
                         </SingleSelectComponent.Option>
                     );
                 })}
