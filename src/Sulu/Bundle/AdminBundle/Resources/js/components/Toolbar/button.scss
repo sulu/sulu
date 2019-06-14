@@ -54,6 +54,7 @@ $primaryBackgroundColor: $shakespeare;
     background-color: transparent;
     font-size: 12px;
     cursor: pointer;
+    white-space: nowrap;
 
     &:disabled {
         cursor: default;
