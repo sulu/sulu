@@ -44,6 +44,19 @@ sulu_route:
 The API for the history of resource locators (`/admin/api/pages/<id>/resourcelocators`) for pages has changed in order
 to be more consistent with the API from the `RouteBundle`. The property `resourcelocator` has now be renamed to `path`.
 
+### TargetGroup API
+
+The TargetGroup API available under `/admin/api/target-groups` changed the key in the `_embedded` object from
+`target-groups` to `target_groups`.
+
+Also the webspaces for the target groups are now set using the `webspaceKeys` field instead of the `webspaces` field.
+The `webspaceKeys` field accepts only the webspace key as a string instead of an object.
+
+### NavigationItem Action
+
+The `action` property of the `NavigationItem` class int he `Sulu\Bundle\Admin\Navigation` namespace is not needed
+anymore. Therefore it was removed.
+
 ### Display options in MediaSelection
 
 The `media_selection` content type showed all available display options(left top, top, right, ...) except for `middle`
