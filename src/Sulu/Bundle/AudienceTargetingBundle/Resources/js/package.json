@@ -1,0 +1,12 @@
+{
+    "name": "sulu-audience-targeting-bundle",
+    "description": "Adds support for audience targeting to Sulu",
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
+    "devDependencies": {
+        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
+    },
+    "peerDependencies": {
+        "sulu-admin-bundle": "*"
+    }
+}

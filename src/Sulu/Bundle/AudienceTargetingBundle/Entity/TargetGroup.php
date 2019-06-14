@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Entity class for target group.
@@ -171,6 +173,19 @@ class TargetGroup implements TargetGroupInterface
     public function getWebspaces()
     {
         return $this->webspaces;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("webspaceKeys")
+     */
+    public function getWebspaceKeys()
+    {
+        return array_values(
+            array_map(function(TargetGroupWebspaceInterface $targetGroupWebspace) {
+                return $targetGroupWebspace->getWebspaceKey();
+            }, $this->webspaces->toArray())
+        );
     }
 
     /**

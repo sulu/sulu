@@ -81,6 +81,19 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                             __DIR__ . '/../Resources/config/lists',
                         ],
                     ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'target_groups' => [
+                            'routes' => [
+                                'list' => 'get_target-groups',
+                                'detail' => 'get_target-group',
+                            ],
+                        ],
+                    ],
                 ]
             );
         }

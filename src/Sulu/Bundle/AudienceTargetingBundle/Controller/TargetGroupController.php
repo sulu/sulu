@@ -38,7 +38,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
     /**
      * {@inheritdoc}
      */
-    protected static $entityKey = 'target-groups';
+    protected static $entityKey = 'target_groups';
 
     /**
      * {@inheritdoc}
@@ -99,7 +99,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $results = $listBuilder->execute();
         $list = new ListRepresentation(
             $results,
-            'target-groups',
+            static::$entityKey,
             'get_target-groups',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
@@ -139,7 +139,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function postAction(Request $request)
     {
-        $targetGroup = $this->deserializeData($request->getContent());
+        $data = $this->convertFromRequest(json_decode($request->getContent(), true));
+        $targetGroup = $this->deserializeData(json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
 
         $this->getEntityManager()->flush();
@@ -162,6 +163,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
 
         // Id should be taken of request uri.
         $data['id'] = $id;
+
+        $data = $this->convertFromRequest($data);
 
         $targetGroup = $this->deserializeData(json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
@@ -214,6 +217,23 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $this->getEntityManager()->flush();
 
         return $this->handleView($this->view(null, 204));
+    }
+
+    private function convertFromRequest(array $data)
+    {
+        if ($data['webspaceKeys']) {
+            $data['webspaces'] = array_map(function($webspaceKey) {
+                return ['webspaceKey' => $webspaceKey];
+            }, $data['webspaceKeys']);
+        } else {
+            $data['webspaces'] = [];
+        }
+
+        if (!$data['rules']) {
+            $data['rules'] = [];
+        }
+
+        return $data;
     }
 
     /**
