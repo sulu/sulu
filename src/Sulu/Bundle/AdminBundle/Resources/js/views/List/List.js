@@ -15,6 +15,7 @@ import toolbarActionRegistry from './registries/ToolbarActionRegistry';
 import listStyles from './list.scss';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
+const DEFAULT_LIMIT = 10;
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
@@ -42,11 +43,13 @@ class List extends React.Component<Props> {
             },
         } = route;
 
+        const limit = ListStore.getLimitSetting(listKey, userSettingsKey);
+
         return {
             active: ListStore.getActiveSetting(listKey, userSettingsKey),
             sortColumn: ListStore.getSortColumnSetting(listKey, userSettingsKey),
             sortOrder: ListStore.getSortOrderSetting(listKey, userSettingsKey),
-            limit: ListStore.getLimitSetting(listKey, userSettingsKey),
+            limit: limit === DEFAULT_LIMIT ? undefined : limit,
         };
     }
 
@@ -114,7 +117,7 @@ class List extends React.Component<Props> {
         router.bind('sortColumn', this.listStore.sortColumn);
         router.bind('sortOrder', this.listStore.sortOrder);
         router.bind('search', this.listStore.searchTerm);
-        router.bind('limit', this.listStore.limit, 10);
+        router.bind('limit', this.listStore.limit, DEFAULT_LIMIT);
     }
 
     buildListStoreOptions(

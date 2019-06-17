@@ -1833,9 +1833,6 @@ test('Should call all disposers if destroy is called', () => {
     listStore.sortOrderDisposer = jest.fn();
     listStore.limitDisposer = jest.fn();
     listStore.activeSettingDisposer = jest.fn();
-    listStore.limitSettingDisposer = jest.fn();
-    listStore.sortColumnSettingDisposer = jest.fn();
-    listStore.sortOrderSettingDisposer = jest.fn();
 
     listStore.destroy();
 
@@ -1846,7 +1843,4 @@ test('Should call all disposers if destroy is called', () => {
     expect(listStore.sortOrderDisposer).toBeCalledWith();
     expect(listStore.limitDisposer).toBeCalledWith();
     expect(listStore.activeSettingDisposer).toBeCalledWith();
-    expect(listStore.limitSettingDisposer).toBeCalledWith();
-    expect(listStore.sortColumnSettingDisposer).toBeCalledWith();
-    expect(listStore.sortOrderSettingDisposer).toBeCalledWith();
 });
