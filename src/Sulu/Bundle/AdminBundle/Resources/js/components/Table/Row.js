@@ -202,6 +202,7 @@ export default class Row extends React.PureComponent<Props> {
                     key={key}
                     onClick={handleClick}
                     rowId={this.getIdentifier()}
+                    rowIndex={rowIndex}
                 />
             );
         });
