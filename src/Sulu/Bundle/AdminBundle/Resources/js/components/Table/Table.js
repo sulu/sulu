@@ -14,13 +14,13 @@ import tableStyles from './table.scss';
 
 const PLACEHOLDER_ICON = 'su-battery-low';
 
-type Props = {
+type Props<T: string | number> = {
     buttons?: Array<ButtonConfig>,
     children: ChildrenArray<?Element<typeof Header | typeof Body>>,
     onAllSelectionChange?: ?(checked: boolean) => void,
-    onRowCollapse?: (rowId: string | number) => void,
-    onRowExpand?: (rowId: string | number) => void,
-    onRowSelectionChange?: ?(rowId: string | number, selected?: boolean) => void,
+    onRowCollapse?: (rowId: T) => void,
+    onRowExpand?: (rowId: T) => void,
+    onRowSelectionChange?: ?(rowId: T, selected?: boolean) => void,
     placeholderText?: string,
     selectInFirstCell?: boolean,
     selectMode?: SelectMode,
@@ -28,7 +28,7 @@ type Props = {
 };
 
 @observer
-class Table extends React.Component<Props> {
+class Table<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         selectMode: 'none',
         skin: 'dark',
@@ -109,14 +109,14 @@ class Table extends React.Component<Props> {
         );
     };
 
-    handleRowExpand = (rowId: string | number) => {
+    handleRowExpand = (rowId: T) => {
         const {onRowExpand} = this.props;
         if (onRowExpand) {
             onRowExpand(rowId);
         }
     };
 
-    handleRowCollapse = (rowId: string | number) => {
+    handleRowCollapse = (rowId: T) => {
         const {onRowCollapse} = this.props;
         if (onRowCollapse) {
             onRowCollapse(rowId);
@@ -130,7 +130,7 @@ class Table extends React.Component<Props> {
         }
     };
 
-    handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
+    handleRowSelectionChange = (rowId: T, selected?: boolean) => {
         const {onRowSelectionChange} = this.props;
         if (onRowSelectionChange) {
             onRowSelectionChange(rowId, selected);

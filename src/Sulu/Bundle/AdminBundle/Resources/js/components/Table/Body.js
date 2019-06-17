@@ -4,23 +4,23 @@ import React from 'react';
 import type {ButtonConfig, SelectMode} from './types';
 import Row from './Row';
 
-type Props = {
+type Props<T: number | string> = {
     /** @ignore */
     buttons?: Array<ButtonConfig>,
     children?: ChildrenArray<Element<typeof Row>>,
     /** @ignore */
-    onRowCollapse?: (rowId: string | number) => void,
+    onRowCollapse?: (rowId: T) => void,
     /** @ignore */
-    onRowExpand?: (rowId: string | number) => void,
+    onRowExpand?: (rowId: T) => void,
     /** @ignore */
-    onRowSelectionChange?: (rowId: string | number, selected?: boolean) => void,
+    onRowSelectionChange?: (rowId: T, selected?: boolean) => void,
     /** @ignore */
     selectInFirstCell: boolean,
     /** @ignore */
     selectMode?: SelectMode,
 };
 
-export default class Body extends React.PureComponent<Props> {
+export default class Body<T: number | string> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         selectInFirstCell: false,
         selectMode: 'none',
@@ -48,21 +48,21 @@ export default class Body extends React.PureComponent<Props> {
         ));
     };
 
-    handleRowSelectionChange = (rowId: string | number, selected?: boolean) => {
+    handleRowSelectionChange = (rowId: T, selected?: boolean) => {
         const {onRowSelectionChange} = this.props;
         if (onRowSelectionChange) {
             onRowSelectionChange(rowId, selected);
         }
     };
 
-    handleRowExpand = (rowId: string | number) => {
+    handleRowExpand = (rowId: T) => {
         const {onRowExpand} = this.props;
         if (onRowExpand) {
             onRowExpand(rowId);
         }
     };
 
-    handleRowCollapse = (rowId: string | number) => {
+    handleRowCollapse = (rowId: T) => {
         const {onRowCollapse} = this.props;
         if (onRowCollapse) {
             onRowCollapse(rowId);
