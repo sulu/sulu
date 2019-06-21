@@ -22,12 +22,6 @@ interface TargetGroupRuleInterface
 
     const FREQUENCY_VISITOR = 3;
 
-    const FREQUENCY_HIT_NAME = 'hit';
-
-    const FREQUENCY_SESSION_NAME = 'session';
-
-    const FREQUENCY_VISITOR_NAME = 'visitor';
-
     /**
      * @return int
      */
