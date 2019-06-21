@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render RuleOverlay without value 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="container isDown"
+  >
+    <div
+      class="overlay small"
+    >
+      <section
+        class="content"
+      >
+        <header>
+          <h2>
+            sulu_audience_targeting.configure_rule
+          </h2>
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </header>
+        <article>
+          <div
+            class="overlay"
+          >
+            <div
+              class="grid grid"
+            >
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_admin.title *
+                  </label>
+                  <label
+                    class="input default left"
+                  >
+                    <input
+                      type="text"
+                      value=""
+                    />
+                  </label>
+                  <label
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_audience_targeting.assigned_at *
+                  </label>
+                  <div
+                    class="select"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                  <label
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <footer>
+          <button
+            class="button primary"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              sulu_admin.ok
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;

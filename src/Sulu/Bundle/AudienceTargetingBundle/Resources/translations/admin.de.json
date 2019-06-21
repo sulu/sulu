@@ -2,5 +2,9 @@
     "sulu_audience_targeting.target_groups": "Zielgruppen",
     "sulu_audience_targeting.active": "Aktiv",
     "sulu_audience_targeting.priority": "Priorität",
-    "sulu_audience_targeting.rules": "Regeln"
+    "sulu_audience_targeting.rules": "Regeln",
+    "sulu_audience_targeting.rules_info_text": "Besucher die zumindest EINER dieser Regeln entsprechen werden der Zielgrupper hinzugefügt",
+    "sulu_audience_targeting.assigned_at": "Zuweisung bei",
+    "sulu_audience_targeting.conditions": "Voraussetzung",
+    "sulu_audience_targeting.configure_rule": "Regel konfigurieren"
 }
