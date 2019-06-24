@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Admin;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
@@ -42,12 +43,19 @@ class ContactAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var ManagerRegistry
+     */
+    private $managerRegistry;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        ManagerRegistry $managerRegistry
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function getNavigationItemContacts(): NavigationItem
@@ -234,6 +242,25 @@ class ContactAdmin extends Admin
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_contact';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
+            'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
+            'emailTypes' => $this->managerRegistry->getRepository('SuluContactBundle:EmailType')->findAll(),
+            'faxTypes' => $this->managerRegistry->getRepository('SuluContactBundle:FaxType')->findAll(),
+            'phoneTypes' => $this->managerRegistry->getRepository('SuluContactBundle:PhoneType')->findAll(),
+            'socialMediaTypes' => $this->managerRegistry
+                ->getRepository('SuluContactBundle:SocialMediaProfileType')->findAll(),
+            'websiteTypes' => $this->managerRegistry->getRepository('SuluContactBundle:UrlType')->findAll(),
         ];
     }
 }

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -23,7 +22,6 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
-use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -104,16 +102,6 @@ class AdminController
     private $dataProviderPool;
 
     /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $teaserProviderPool;
-
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
-
-    /**
      * @var LinkProviderPoolInterface
      */
     private $linkProviderPool;
@@ -153,16 +141,6 @@ class AdminController
      */
     private $fallbackLocale;
 
-    /**
-     * @var int
-     */
-    private $previewDelay;
-
-    /**
-     * @var string
-     */
-    private $previewMode;
-
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
@@ -177,8 +155,6 @@ class AdminController
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
-        TeaserProviderPoolInterface $teaserProviderPool,
-        ManagerRegistry $managerRegistry,
         LinkProviderPoolInterface $linkProviderPool,
         string $environment,
         string $suluVersion,
@@ -186,9 +162,7 @@ class AdminController
         array $resources,
         array $locales,
         array $translations,
-        string $fallbackLocale,
-        int $previewDelay,
-        string $previewMode
+        string $fallbackLocale
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -203,8 +177,6 @@ class AdminController
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
-        $this->teaserProviderPool = $teaserProviderPool;
-        $this->managerRegistry = $managerRegistry;
         $this->linkProviderPool = $linkProviderPool;
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
@@ -213,8 +185,6 @@ class AdminController
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
-        $this->previewDelay = $previewDelay;
-        $this->previewMode = $previewMode;
     }
 
     public function indexAction()
@@ -252,7 +222,7 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
 
-        $view = View::create([
+        $config = [
             'sulu_admin' => [
                 'endpoints' => [
                     'metadata' => $this->urlGenerator->generate(
@@ -271,49 +241,18 @@ class AdminController
                 'user' => $user,
                 'contact' => $contact,
             ],
-            'sulu_contact' => [
-                'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
-                'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
-                'emailTypes' => $this->managerRegistry->getRepository('SuluContactBundle:EmailType')->findAll(),
-                'faxTypes' => $this->managerRegistry->getRepository('SuluContactBundle:FaxType')->findAll(),
-                'phoneTypes' => $this->managerRegistry->getRepository('SuluContactBundle:PhoneType')->findAll(),
-                'socialMediaTypes' => $this->managerRegistry
-                    ->getRepository('SuluContactBundle:SocialMediaProfileType')->findAll(),
-                'websiteTypes' => $this->managerRegistry->getRepository('SuluContactBundle:UrlType')->findAll(),
-            ],
-            'sulu_media' => [
-                'endpoints' => [
-                    'image_format' => $this->urlGenerator->generate(
-                        'sulu_media.redirect',
-                        ['id' => ':id']
-                    ),
-                ],
-            ],
-            'sulu_page' => [
-                'teaser' => $this->teaserProviderPool->getConfiguration(),
-            ],
-            'sulu_preview' => [
-                'endpoints' => [
-                    'start' => $this->urlGenerator->generate('sulu_preview.start'),
-                    'render' => $this->urlGenerator->generate('sulu_preview.render'),
-                    'update' => $this->urlGenerator->generate('sulu_preview.update'),
-                    'update-context' => $this->urlGenerator->generate('sulu_preview.update-context'),
-                    'stop' => $this->urlGenerator->generate('sulu_preview.stop'),
-                ],
-                'debounceDelay' => $this->previewDelay,
-                'mode' => $this->previewMode,
-            ],
-            'sulu_security' => [
-                'endpoints' => [
-                    'contexts' => $this->urlGenerator->generate('cget_contexts'),
-                ],
-            ],
-            'sulu_website' => [
-                'endpoints' => [
-                    'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
-                ],
-            ],
-        ]);
+        ];
+
+        foreach ($this->adminPool->getAdmins() as $admin) {
+            $adminConfigKey = $admin->getConfigKey();
+            $adminConfig = $admin->getConfig();
+
+            if ($adminConfigKey && $adminConfig) {
+                $config[$adminConfigKey] = $adminConfig;
+            }
+        }
+
+        $view = View::create($config);
 
         $context = new Context();
         $context->setGroups(['frontend', 'partialContact', 'fullRoute']);

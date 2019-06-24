@@ -9,6 +9,7 @@
         <service id="sulu_contact.admin" class="Sulu\Bundle\ContactBundle\Admin\ContactAdmin">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker" />
+            <argument type="service" id="doctrine" />
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
@@ -80,12 +81,6 @@
 
         <service id="sulu_contact.util.index_comparator" class="Sulu\Bundle\ContactBundle\Util\IndexComparator" public="true"/>
         <service id="sulu_contact.util.id_converter" class="Sulu\Bundle\ContactBundle\Util\CustomerIdConverter" public="false"/>
-
-        <service id="sulu_contact.js_config" class="Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection">
-            <argument type="service" id="sulu_media.system_collections.manager"/>
-
-            <tag name="sulu.js_config"/>
-        </service>
 
         <service id="sulu_contact.reference_store.contact"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">

@@ -3,8 +3,6 @@
     <parameters>
         <parameter key="sulu_admin.admin_controller.class">Sulu\Bundle\AdminBundle\Controller\AdminController</parameter>
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
-        <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
-        <parameter key="sulu_admin.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
     <services>
@@ -22,8 +20,6 @@
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_page.smart_content.data_provider_pool" />
-            <argument type="service" id="sulu_page.teaser.provider_pool" />
-            <argument type="service" id="doctrine" />
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <argument>%kernel.environment%</argument>
             <argument>%sulu.version%</argument>
@@ -32,13 +28,10 @@
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>
-            <argument>%sulu_preview.delay%</argument>
-            <argument>%sulu_preview.mode%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
-        <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
 
         <service
             id="sulu_admin.metadata_provider_registry"

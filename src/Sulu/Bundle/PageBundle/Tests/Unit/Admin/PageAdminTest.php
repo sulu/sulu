@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityChecker;
@@ -43,12 +44,18 @@ class PageAdminTest extends TestCase
      */
     private $sessionManager;
 
+    /**
+     * @var TeaserProviderPoolInterface
+     */
+    private $teaserProviderPool;
+
     public function setUp()
     {
         $this->routeBuilderFactory = new RouteBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
     }
 
     public function testGetRoutes()
@@ -76,7 +83,8 @@ class PageAdminTest extends TestCase
             $this->routeBuilderFactory,
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
-            $this->sessionManager->reveal()
+            $this->sessionManager->reveal(),
+            $this->teaserProviderPool->reveal()
         );
 
         $route = $admin->getRoutes()[0];

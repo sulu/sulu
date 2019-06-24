@@ -17,13 +17,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
-        </service>
-        <service id="sulu_page.js_config.webspace_input_types"
-                 class="Sulu\Bundle\PageBundle\Admin\WebspaceInputTypesJsConfig">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
-
-            <tag name="sulu.js_config"/>
+            <argument type="service" id="sulu_page.teaser.provider_pool" />
         </service>
 
         <!-- content -->
@@ -85,27 +79,6 @@
             <argument type="service" id="massive_search.factory" />
 
             <tag name="sulu.structure.extension"/>
-        </service>
-
-        <!-- JsConfig -->
-        <service id="sulu_page.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
-            <argument type="string">sulu-weebspace</argument>
-            <argument type="collection">
-                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
-                <argument key="versioning" type="collection">
-                    <argument key="enabled">%sulu_document_manager.versioning.enabled%</argument>
-                </argument>
-                <argument key="default_author">%sulu_page.default_author%</argument>
-                <argument key="seo">%sulu_page.seo%</argument>
-            </argument>
-
-            <tag name="sulu.js_config"/>
-        </service>
-        <service id="sulu_page.jsconfig.texteditor_toolbar" class="Sulu\Bundle\PageBundle\Admin\TextEditorJsConfig">
-            <argument type="service" id="security.token_storage"/>
-
-            <tag name="sulu.js_config"/>
-            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Content Repository -->

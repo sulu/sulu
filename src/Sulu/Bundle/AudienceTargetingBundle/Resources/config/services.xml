@@ -93,14 +93,6 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu.repository.target_group"/>
         </service>
-        <!--JS CONFIG-->
-        <service id="sulu_audience_targeting.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
-            <argument>sulu_audience_targeting</argument>
-            <argument type="collection">
-                <argument key="frequencies">%sulu_audience_targeting.frequencies%</argument>
-            </argument>
-            <tag name="sulu.js_config"/>
-        </service>
         <!--TARGET GROUPS-->
         <service id="sulu_audience_targeting.target_group_evaluation_controller"
                  class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController" public="true">

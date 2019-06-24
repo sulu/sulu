@@ -7,14 +7,13 @@
     </parameters>
 
     <services>
-        <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
-            <argument type="string">sulu_preview</argument>
-            <argument type="collection">
-                <argument key="mode" type="string">%sulu_preview.mode%</argument>
-                <argument key="delay" type="string">%sulu_preview.delay%</argument>
-            </argument>
+        <service id="sulu_preview.admin" class="Sulu\Bundle\PreviewBundle\Admin\PreviewAdmin">
+            <argument type="service" id="router"/>
+            <argument>%sulu_preview.delay%</argument>
+            <argument>%sulu_preview.mode%</argument>
 
-            <tag name="sulu.js_config"/>
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- preview -->
