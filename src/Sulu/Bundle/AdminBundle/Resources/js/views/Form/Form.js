@@ -24,6 +24,8 @@ type Props = ViewProps & {
 
 const FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
+const HAS_CHANGED_ERROR_CODE = 1102;
+
 @observer
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
@@ -32,7 +34,9 @@ class Form extends React.Component<Props> {
     @observable errors = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions = [];
-    @observable showDirtyWarning = false;
+    @observable showDirtyWarning: boolean = false;
+    @observable showHasChangedWarning: boolean = false;
+    postponedSaveOptions: Object;
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
     postponedRouteAttributes: ?AttributeMap;
@@ -225,6 +229,10 @@ class Form extends React.Component<Props> {
     };
 
     handleSubmit = (actionParameter: ?string) => {
+        return this.save({action: actionParameter});
+    };
+
+    save = (options: Object) => {
         const {resourceStore, router} = this.props;
 
         const {
@@ -241,9 +249,7 @@ class Form extends React.Component<Props> {
             resourceStore.destroy();
         }
 
-        const saveOptions = {
-            action: actionParameter,
-        };
+        const saveOptions = {...options};
 
         const editRouteParameters = {};
 
@@ -274,6 +280,12 @@ class Form extends React.Component<Props> {
                 return response;
             })
             .catch(action((error) => {
+                if (error.code === HAS_CHANGED_ERROR_CODE) {
+                    this.showHasChangedWarning = true;
+                    this.postponedSaveOptions = options;
+                    return;
+                }
+
                 this.errors.push(error);
             }));
     };
@@ -298,6 +310,17 @@ class Form extends React.Component<Props> {
         this.postponedUpdateRouteMethod = undefined;
         this.postponedRoute = undefined;
         this.postponedRouteAttributes = undefined;
+    };
+
+    @action handleHasChangedWarningCancelClick = () => {
+        this.showHasChangedWarning = false;
+        this.postponedSaveOptions = undefined;
+    };
+
+    @action handleHasChangedWarningConfirmClick = () => {
+        this.save({...this.postponedSaveOptions, force: true});
+        this.showHasChangedWarning = false;
+        this.postponedSaveOptions = undefined;
     };
 
     setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
@@ -333,6 +356,16 @@ class Form extends React.Component<Props> {
                     title={translate('sulu_admin.dirty_warning_dialog_title')}
                 >
                     {translate('sulu_admin.dirty_warning_dialog_text')}
+                </Dialog>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.confirm')}
+                    onCancel={this.handleHasChangedWarningCancelClick}
+                    onConfirm={this.handleHasChangedWarningConfirmClick}
+                    open={this.showHasChangedWarning}
+                    title={translate('sulu_admin.has_changed_warning_dialog_title')}
+                >
+                    {translate('sulu_admin.has_changed_warning_dialog_text')}
                 </Dialog>
             </div>
         );
