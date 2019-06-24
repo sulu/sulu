@@ -52,9 +52,6 @@ export default class ListStore {
     sortOrderDisposer: () => void;
     limitDisposer: () => void;
     activeSettingDisposer: () => void;
-    limitSettingDisposer: () => void;
-    sortColumnSettingDisposer: () => void;
-    sortOrderSettingDisposer: () => void;
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
 
@@ -145,34 +142,43 @@ export default class ListStore {
             if (this.initialized && change.object.get() !== change.newValue) {
                 this.reset();
             }
-            return change;
         };
 
         const {locale} = this.observableOptions;
         if (locale) {
-            this.localeDisposer = intercept(locale, '', callResetForChangedObservable);
+            this.localeDisposer = intercept(locale, '', (change: IValueWillChange<*>) => {
+                callResetForChangedObservable(change);
+                return change;
+            });
         }
 
-        this.searchDisposer = intercept(this.searchTerm, '', callResetForChangedObservable);
-        this.sortColumnDisposer = intercept(this.sortColumn, '', callResetForChangedObservable);
-        this.sortOrderDisposer = intercept(this.sortOrder, '', callResetForChangedObservable);
-        this.limitDisposer = intercept(this.limit, '', callResetForChangedObservable);
+        this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<*>) => {
+            callResetForChangedObservable(change);
+            return change;
+        });
 
-        this.activeSettingDisposer = autorun(
-            () => ListStore.setActiveSetting(this.listKey, this.userSettingsKey, this.active.get())
-        );
+        this.sortColumnDisposer = intercept(this.sortColumn, '', (change: IValueWillChange<*>) => {
+            ListStore.setSortColumnSetting(this.listKey, this.userSettingsKey, change.newValue);
+            callResetForChangedObservable(change);
+            return change;
+        });
 
-        this.limitSettingDisposer = autorun(
-            () => ListStore.setLimitSetting(this.listKey, this.userSettingsKey, this.limit.get())
-        );
+        this.sortOrderDisposer = intercept(this.sortOrder, '', (change: IValueWillChange<*>) => {
+            ListStore.setSortOrderSetting(this.listKey, this.userSettingsKey, change.newValue);
+            callResetForChangedObservable(change);
+            return change;
+        });
 
-        this.sortColumnSettingDisposer = autorun(
-            () => ListStore.setSortColumnSetting(this.listKey, this.userSettingsKey, this.sortColumn.get())
-        );
+        this.limitDisposer = intercept(this.limit, '', (change: IValueWillChange<*>) => {
+            ListStore.setLimitSetting(this.listKey, this.userSettingsKey, change.newValue);
+            callResetForChangedObservable(change);
+            return change;
+        });
 
-        this.sortOrderSettingDisposer = autorun(
-            () => ListStore.setSortOrderSetting(this.listKey, this.userSettingsKey, this.sortOrder.get())
-        );
+        this.activeSettingDisposer = intercept(this.active, '', (change: IValueWillChange<*>) => {
+            ListStore.setActiveSetting(this.listKey, this.userSettingsKey, change.newValue);
+            return change;
+        });
 
         metadataStore.getSchema(this.listKey)
             .then(action((schema) => {
@@ -617,9 +623,6 @@ export default class ListStore {
         this.limitDisposer();
 
         this.activeSettingDisposer();
-        this.limitSettingDisposer();
-        this.sortColumnSettingDisposer();
-        this.sortOrderSettingDisposer();
 
         if (this.localeDisposer) {
             this.localeDisposer();
