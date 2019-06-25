@@ -5,7 +5,7 @@
     <properties>
         <property
             name="id"
-            visibility="always"
+            visibility="no"
             sortable="false"
             translation="sulu_admin.id"
         />
@@ -15,15 +15,10 @@
             translation="sulu_admin.title"
         />
         <property
-            name="order"
-            visibility="always"
-            translation="sulu_page.order"
-        />
-        <property
             name="published"
             type="datetime"
-            visibility="always"
-            translation="sulu_page.published"
+            visibility="yes"
+            translation="sulu_admin.published"
         />
     </properties>
 </list>
