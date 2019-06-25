@@ -24,6 +24,7 @@ import MultiListOverlay from './MultiListOverlay';
 import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
+import SingleSelection from './SingleSelection';
 import TextEditor, {textEditorRegistry} from './TextEditor';
 
 export type {
@@ -58,6 +59,7 @@ export {
     ResourceMultiSelect,
     SingleAutoComplete,
     SingleListOverlay,
+    SingleSelection,
     Sidebar,
     sidebarStore,
     sidebarRegistry,

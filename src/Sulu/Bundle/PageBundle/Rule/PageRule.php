@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\InternalLink;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelection;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -121,7 +121,7 @@ class PageRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_page.rules.page', [], 'backend');
+        return $this->translator->trans('sulu_page.page', [], 'admin');
     }
 
     /**
@@ -129,6 +129,14 @@ class PageRule implements RuleInterface
      */
     public function getType()
     {
-        return new InternalLink(static::PAGE);
+        return new SingleSelection(
+            'page',
+            'pages',
+            'column_list',
+            'su-document',
+            ['title'],
+            $this->translator->trans('sulu_page.no_page_selected', [], 'admin'),
+            $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')
+        );
     }
 }

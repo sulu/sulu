@@ -5,7 +5,7 @@ import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import TargetGroupRule from '../../fields/TargetGroupRules';
-import TargetGroupRulesComponent from '../../../../components/TargetGroupRules';
+import TargetGroupRulesComponent from '../../../../containers/TargetGroupRules';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());

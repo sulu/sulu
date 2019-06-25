@@ -111,6 +111,41 @@ Array [
                   />
                 </div>
               </div>
+              <div
+                class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+              >
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label"
+                  >
+                    sulu_audience_targeting.conditions
+                  </label>
+                  <button
+                    class="button secondary"
+                    type="button"
+                  >
+                    <span
+                      aria-label="su-plus"
+                      class="su-plus buttonIcon"
+                    />
+                    <span
+                      class="text"
+                    >
+                      sulu_audience_targeting.add_condition
+                    </span>
+                  </button>
+                  <label
+                    class="descriptionLabel"
+                  >
+                    sulu_audience_targeting.conditions_info_text
+                  </label>
+                  <label
+                    class="errorLabel"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </article>

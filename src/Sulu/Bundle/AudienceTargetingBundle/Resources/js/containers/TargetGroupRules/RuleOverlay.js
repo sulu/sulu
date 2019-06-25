@@ -5,8 +5,9 @@ import {observer} from 'mobx-react';
 import {Form, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import ruleOverlayStyles from './ruleOverlay.scss';
+import ConditionList from './ConditionList';
 import {getFrequencyTranslation} from './utils';
-import type {Rule} from './types';
+import type {Condition, Rule} from './types';
 
 type Props = {|
     onClose: () => void,
@@ -19,6 +20,7 @@ type Props = {|
 class RuleOverlay extends React.Component<Props> {
     @observable title: ?string = undefined;
     @observable frequency: ?number = undefined;
+    @observable conditions: ?Array<Condition> = undefined;
     @observable showTitleError: boolean = false;
     @observable showFrequencyError: boolean = false;
 
@@ -32,9 +34,11 @@ class RuleOverlay extends React.Component<Props> {
             if (value) {
                 this.title = value.title;
                 this.frequency = value.frequency;
+                this.conditions = value.conditions;
             } else {
                 this.title = undefined;
                 this.frequency = undefined;
+                this.conditions = undefined;
             }
         }
     }
@@ -52,6 +56,10 @@ class RuleOverlay extends React.Component<Props> {
         this.validateFrequency();
     };
 
+    @action handleConditionChange = (conditions: Array<Condition>) => {
+        this.conditions = conditions;
+    };
+
     @action handleConfirm = () => {
         if (!this.validate() || !this.title || !this.frequency) {
             return;
@@ -59,7 +67,7 @@ class RuleOverlay extends React.Component<Props> {
 
         const {onConfirm} = this.props;
         onConfirm({
-            conditions: [], // TODO fill with real conditions
+            conditions: this.conditions || [],
             frequency: this.frequency,
             title: this.title,
         });
@@ -117,6 +125,12 @@ class RuleOverlay extends React.Component<Props> {
                                     {getFrequencyTranslation(3)}
                                 </SingleSelect.Option>
                             </SingleSelect>
+                        </Form.Field>
+                        <Form.Field
+                            description={translate('sulu_audience_targeting.conditions_info_text')}
+                            label={translate('sulu_audience_targeting.conditions')}
+                        >
+                            <ConditionList onChange={this.handleConditionChange} value={this.conditions || []} />
                         </Form.Field>
                     </Form>
                 </div>

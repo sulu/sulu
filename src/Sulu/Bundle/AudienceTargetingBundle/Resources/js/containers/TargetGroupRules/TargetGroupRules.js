@@ -4,6 +4,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, ButtonGroup, Table} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
+import ruleRegistry from './registries/RuleRegistry';
 import RuleOverlay from './RuleOverlay';
 import targetGroupRulesStyles from './targetGroupRules.scss';
 import {getFrequencyTranslation} from './utils';
@@ -119,7 +120,17 @@ class TargetGroupRules extends React.Component<Props> {
                             <Table.Row key={index} selected={this.selectedIndices.includes(index)}>
                                 <Table.Cell>{rule.title}</Table.Cell>
                                 <Table.Cell>{getFrequencyTranslation(rule.frequency)}</Table.Cell>
-                                <Table.Cell>TODO</Table.Cell>
+                                <Table.Cell>
+                                    {rule.conditions
+                                        .map(
+                                            (condition) => condition.type
+                                                ? ruleRegistry.get(condition.type).name
+                                                : undefined
+                                        )
+                                        .filter((conditionType) => conditionType)
+                                        .join(' & ')
+                                    }
+                                </Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>

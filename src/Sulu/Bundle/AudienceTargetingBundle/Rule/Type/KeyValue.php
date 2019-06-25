@@ -41,24 +41,18 @@ class KeyValue implements RuleTypeInterface
         $this->valuePlaceholder = $valuePlaceHolder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTemplate()
+    public function getName(): string
     {
-        return '<div class="grid-col-6">
-                <input class="form-element"
-                       type="text"
-                       data-rule-type="text"
-                       data-condition-name="' . $this->keyName . '"
-                       placeholder="' . $this->keyPlaceholder . '"/>
-            </div>
-            <div class="grid-col-6">
-                <input class="form-element"
-                       type="text"
-                       data-rule-type="text"
-                       data-condition-name="' . $this->valueName . '"
-                       placeholder="' . $this->valuePlaceholder . '"/>
-            </div>';
+        return 'key_value';
+    }
+
+    public function getOptions(): array
+    {
+        return [
+            'keyName' => $this->keyName,
+            'valueName' => $this->valueName,
+            'keyPlaceholder' => $this->keyPlaceholder,
+            'valuePlaceholder' => $this->valuePlaceholder,
+        ];
     }
 }

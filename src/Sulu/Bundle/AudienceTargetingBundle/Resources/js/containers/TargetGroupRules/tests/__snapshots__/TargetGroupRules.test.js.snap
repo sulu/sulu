@@ -151,7 +151,7 @@ Array [
             <div
               class="cellContent"
             >
-              TODO
+              Browser
             </div>
           </td>
         </tr>
@@ -217,7 +217,7 @@ Array [
             <div
               class="cellContent"
             >
-              TODO
+              Browser & Query String
             </div>
           </td>
         </tr>
@@ -282,9 +282,7 @@ Array [
           >
             <div
               class="cellContent"
-            >
-              TODO
-            </div>
+            />
           </td>
         </tr>
       </tbody>

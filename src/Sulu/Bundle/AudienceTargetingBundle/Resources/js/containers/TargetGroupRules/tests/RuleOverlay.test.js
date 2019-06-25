@@ -13,13 +13,23 @@ test('Render RuleOverlay without value', () => {
         .toMatchSnapshot();
 });
 
-test('Write passed values to input and single select when overlay is opened', () => {
+test('Write passed values to input, single select and condition list when overlay is opened', () => {
+    const conditions = [
+        {
+            condition: {
+                parameter: 'asdf',
+                value: 'jklö',
+            },
+            type: 'query_string',
+        },
+    ];
+
     const ruleOverlay = shallow(
         <RuleOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
-            value={{conditions: [], frequency: 2, title: 'Rule 1'}}
+            value={{conditions, frequency: 2, title: 'Rule 1'}}
         />
     );
 
@@ -28,9 +38,11 @@ test('Write passed values to input and single select when overlay is opened', ()
 
     expect(ruleOverlay.find('Input').prop('value')).toEqual('Rule 1');
     expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(2);
+    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual(conditions);
 
     ruleOverlay.find('Input').prop('onChange')('Rule 1 edited');
     ruleOverlay.find('SingleSelect').prop('onChange')(3);
+    ruleOverlay.find('ConditionList').prop('onChange')([]);
 
     ruleOverlay.setProps({open: false});
     ruleOverlay.update();
@@ -39,6 +51,7 @@ test('Write passed values to input and single select when overlay is opened', ()
 
     expect(ruleOverlay.find('Input').prop('value')).toEqual('Rule 1');
     expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(2);
+    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual(conditions);
 
     ruleOverlay.setProps({open: false});
     ruleOverlay.update();
@@ -47,6 +60,7 @@ test('Write passed values to input and single select when overlay is opened', ()
 
     expect(ruleOverlay.find('Input').prop('value')).toEqual(undefined);
     expect(ruleOverlay.find('SingleSelect').prop('value')).toEqual(undefined);
+    expect(ruleOverlay.find('ConditionList').prop('value')).toEqual([]);
 });
 
 test('Call confirm with the current values', () => {
@@ -58,11 +72,28 @@ test('Call confirm with the current values', () => {
 
     ruleOverlay.find('Input').prop('onChange')('Rule 11');
     ruleOverlay.find('SingleSelect').prop('onChange')(2);
+    ruleOverlay.find('ConditionList').prop('onChange')([
+        {
+            condition: {
+                parameter: 'asdf',
+                value: 'jklö',
+            },
+            type: 'query_string',
+        },
+    ]);
 
     ruleOverlay.find('Overlay').prop('onConfirm')();
 
     expect(confirmSpy).toBeCalledWith({
-        conditions: [],
+        conditions: [
+            {
+                condition: {
+                    parameter: 'asdf',
+                    value: 'jklö',
+                },
+                type: 'query_string',
+            },
+        ],
         frequency: 2,
         title: 'Rule 11',
     });

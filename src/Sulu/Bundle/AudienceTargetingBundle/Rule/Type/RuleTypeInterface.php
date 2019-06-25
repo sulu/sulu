@@ -17,9 +17,9 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule\Type;
 interface RuleTypeInterface
 {
     /**
-     * Returns the template for the rule type.
-     *
-     * @return string
+     * Returns a unique name along all the different rule types available.
      */
-    public function getTemplate();
+    public function getName(): string;
+
+    public function getOptions(): array;
 }

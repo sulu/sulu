@@ -2,9 +2,22 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import TargetGroupRules from '../TargetGroupRules';
+import ruleRegistry from '../registries/RuleRegistry';
+import ruleTypeRegistry from '../registries/RuleTypeRegistry';
+import KeyValue from '../ruleTypes/KeyValue';
+import SingleSelect from '../ruleTypes/SingleSelect';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
+}));
+
+jest.mock('../registries/RuleTypeRegistry', () => ({
+    get: jest.fn(),
+}));
+
+jest.mock('../registries/RuleRegistry', () => ({
+    getAll: jest.fn(),
+    get: jest.fn(),
 }));
 
 test('Render an empty list of rules', () => {
@@ -12,14 +25,58 @@ test('Render an empty list of rules', () => {
 });
 
 test('Render a list of rules', () => {
+    ruleRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'browser':
+                return {
+                    name: 'Browser',
+                    type: {
+                        name: 'select',
+                        options: {
+                            name: 'browser',
+                            options: [
+                                {id: 'firefox', name: 'Firefox'},
+                                {id: 'chrome', name: 'Chrome'},
+                            ],
+                        },
+                    },
+                };
+            case 'query_string':
+                return {
+                    name: 'Query String',
+                    type: {
+                        name: 'key_value',
+                        options: {
+                            keyName: 'parameter',
+                            valueName: 'value',
+                        },
+                    },
+                };
+        }
+    });
+
     const value = [
         {
-            conditions: [],
+            conditions: [
+                {
+                    condition: {browser: 'Opera'},
+                    type: 'browser',
+                },
+            ],
             frequency: 1,
             title: 'Rule 1',
         },
         {
-            conditions: [],
+            conditions: [
+                {
+                    condition: {browser: 'Opera'},
+                    type: 'browser',
+                },
+                {
+                    condition: {parameter: 'test', value: 'value'},
+                    type: 'query_string',
+                },
+            ],
             frequency: 2,
             title: 'Rule 2',
         },
@@ -70,6 +127,43 @@ test('Add a new rule', () => {
 });
 
 test('Edit an existing rule', () => {
+    ruleRegistry.getAll.mockReturnValue({
+        browser: {
+            name: 'Browser',
+            type: {
+                name: 'select',
+                options: {
+                    name: 'browser',
+                    options: [
+                        {id: 'firefox', name: 'Firefox'},
+                        {id: 'chrome', name: 'Chrome'},
+                    ],
+                },
+            },
+        },
+        query_string: {
+            name: 'Query String',
+            type: {
+                name: 'key_value',
+                options: {
+                    keyName: 'parameter',
+                    valueName: 'value',
+                },
+            },
+        },
+    });
+
+    ruleRegistry.get.mockImplementation((key) => ruleRegistry.getAll()[key]);
+
+    ruleTypeRegistry.get.mockImplementation((type) => {
+        switch (type) {
+            case 'select':
+                return SingleSelect;
+            case 'key_value':
+                return KeyValue;
+        }
+    });
+
     const changeSpy = jest.fn();
 
     const value = [
@@ -96,11 +190,44 @@ test('Edit an existing rule', () => {
     targetGroupRules.find('RuleOverlay Input').prop('onChange')('Rule 1 edited');
     targetGroupRules.find('RuleOverlay SingleSelect').prop('onChange')(3);
 
+    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
+    targetGroupRules.find('ConditionList Button[icon="su-plus"]').prop('onClick')();
+    targetGroupRules.update();
+
+    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').prop('onClick')();
+    targetGroupRules.update();
+    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
+    targetGroupRules.update();
+    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect DisplayValue').at(1).prop('onClick')();
+    targetGroupRules.update();
+    targetGroupRules.find('ConditionList Condition').at(0).find('SingleSelect Option button').at(0).prop('onClick')();
+
+    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect DisplayValue').prop('onClick')();
+    targetGroupRules.update();
+    targetGroupRules.find('ConditionList Condition').at(1).find('SingleSelect Option button').at(1).prop('onClick')();
+    targetGroupRules.update();
+    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(0).prop('onChange')('parameter');
+    targetGroupRules.find('ConditionList Condition').at(1).find('KeyValue Input').at(1).prop('onChange')('value');
+
     targetGroupRules.find('RuleOverlay Button[skin="primary"]').prop('onClick')();
 
     expect(changeSpy).toBeCalledWith([
         {
-            conditions: [],
+            conditions: [
+                {
+                    condition: {
+                        browser: 'firefox',
+                    },
+                    type: 'browser',
+                },
+                {
+                    condition: {
+                        parameter: 'parameter',
+                        value: 'value',
+                    },
+                    type: 'query_string',
+                },
+            ],
             frequency: 3,
             title: 'Rule 1 edited',
         },

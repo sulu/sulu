@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Select;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class BrowserRule implements RuleInterface
@@ -57,7 +57,7 @@ class BrowserRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.browser', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.browser', [], 'admin');
     }
 
     /**
@@ -65,7 +65,7 @@ class BrowserRule implements RuleInterface
      */
     public function getType()
     {
-        return new Select(static::BROWSER, array_map(function($browser) {
+        return new SingleSelect(static::BROWSER, array_map(function($browser) {
             return [
                 'id' => $browser,
                 'name' => $browser,

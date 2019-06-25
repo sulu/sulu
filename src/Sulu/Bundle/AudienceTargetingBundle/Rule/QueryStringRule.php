@@ -65,7 +65,7 @@ class QueryStringRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.query_string', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.query_string', [], 'admin');
     }
 
     /**
@@ -76,8 +76,8 @@ class QueryStringRule implements RuleInterface
         return new KeyValue(
             'parameter',
             'value',
-            $this->translator->trans('sulu_audience_targeting.rules.query_string_parameter', [], 'backend'),
-            $this->translator->trans('sulu_audience_targeting.rules.query_string_value', [], 'backend')
+            $this->translator->trans('sulu_audience_targeting.query_string_parameter', [], 'admin'),
+            $this->translator->trans('sulu_audience_targeting.query_string_value', [], 'admin')
         );
     }
 }

@@ -15,6 +15,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -41,11 +43,18 @@ class AudienceTargetingAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var RuleCollectionInterface
+     */
+    private $ruleCollection;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
+        RuleCollectionInterface $ruleCollection,
         SecurityCheckerInterface $securityChecker
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->ruleCollection = $ruleCollection;
         $this->securityChecker = $securityChecker;
     }
 
@@ -135,6 +144,28 @@ class AudienceTargetingAdmin extends Admin
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_audience_targeting';
+    }
+
+    public function getConfig(): ?array
+    {
+        return [
+            'targetGroupRules' => array_map(function(RuleInterface $rule) {
+                $type = $rule->getType();
+
+                return [
+                    'name' => $rule->getName(),
+                    'type' => [
+                        'name' => $type->getName(),
+                        'options' => $type->getOptions(),
+                    ],
+                ];
+            }, $this->ruleCollection->getRules()),
         ];
     }
 }
