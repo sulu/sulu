@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
