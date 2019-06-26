@@ -15,12 +15,12 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as PHPCRPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups;
+use Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
-class AudienceTargetingGroupsTest extends TestCase
+class TargetGroupSelectionTest extends TestCase
 {
     /**
      * @var TargetGroupRepositoryInterface
@@ -28,14 +28,14 @@ class AudienceTargetingGroupsTest extends TestCase
     private $targetGroupRepository;
 
     /**
-     * @var AudienceTargetingGroups
+     * @var TargetGroupSelection
      */
     private $audienceTargetingGroups;
 
     public function setUp()
     {
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
-        $this->audienceTargetingGroups = new AudienceTargetingGroups($this->targetGroupRepository->reveal());
+        $this->audienceTargetingGroups = new TargetGroupSelection($this->targetGroupRepository->reveal());
     }
 
     public function testRead()

@@ -97,9 +97,9 @@
             <tag name="sulu.audience_target_rule" alias="device"/>
         </service>
         <!--CONTENT TYPES-->
-        <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">
-            <tag name="sulu.content.type" alias="audience_targeting_groups"/>
+        <service id="sulu_audience_targeting.content.type.target_group_selection"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection">
+            <tag name="sulu.content.type" alias="target_group_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu.repository.target_group"/>
         </service>
