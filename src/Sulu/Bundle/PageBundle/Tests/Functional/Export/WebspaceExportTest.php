@@ -499,7 +499,7 @@ class WebspaceExportTest extends SuluTestCase
                     ),
                     'audience_targeting_groups' => $this->createItemArray(
                         'audience_targeting_groups',
-                        'audience_targeting_groups',
+                        'target_group_selection',
                         false,
                         $extensionData['excerpt']['audience_targeting_groups']
                     ),

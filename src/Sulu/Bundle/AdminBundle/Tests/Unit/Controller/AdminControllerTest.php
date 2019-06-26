@@ -27,7 +27,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
@@ -125,11 +124,6 @@ class AdminControllerTest extends TestCase
     private $linkProviderPool;
 
     /**
-     * @var RuleCollectionInterface
-     */
-    private $ruleCollection;
-
-    /**
      * @var string
      */
     private $environment = 'prod';
@@ -193,11 +187,9 @@ class AdminControllerTest extends TestCase
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
-        $this->ruleCollection = $this->prophesize(RuleCollectionInterface::class);
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
-        $this->ruleCollection->getRules()->willReturn([]);
 
         $this->adminController = new AdminController(
             $this->urlGenerator->reveal(),
@@ -214,7 +206,6 @@ class AdminControllerTest extends TestCase
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
             $this->linkProviderPool->reveal(),
-            $this->ruleCollection->reveal(),
             $this->environment,
             $this->suluVersion,
             $this->appVersion,

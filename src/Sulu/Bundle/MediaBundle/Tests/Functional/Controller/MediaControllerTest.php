@@ -926,20 +926,12 @@ class MediaControllerTest extends SuluTestCase
         $this->assertContains($this->category2->getId(), $response->categories);
 
         $targetGroups = [
-            [
-                'id' => $response->targetGroups[0]->id,
-            ],
-            [
-                'id' => $response->targetGroups[1]->id,
-            ],
+            $response->targetGroups[0],
+            $response->targetGroups[1],
         ];
 
-        $this->assertContains([
-            'id' => $targetGroup1->getId(),
-        ], $targetGroups);
-        $this->assertContains([
-            'id' => $targetGroup2->getId(),
-        ], $targetGroups);
+        $this->assertContains($targetGroup1->getId(), $targetGroups);
+        $this->assertContains($targetGroup2->getId(), $targetGroups);
     }
 
     /**
@@ -1228,6 +1220,40 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    public function testPutRemovingTargetGroups()
+    {
+        /** @var TargetGroupRepositoryInterface $targetGroupRepository */
+        $targetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
+
+        /** @var TargetGroup $targetGroup1 */
+        $targetGroup1 = $targetGroupRepository->createNew();
+        $targetGroup1->setTitle('Target Group 1');
+        $targetGroup1->setPriority(1);
+
+        $this->em->persist($targetGroup1);
+        $this->em->flush();
+
+        $media = $this->createMedia('photo');
+        $file = $media->getFiles()[0];
+        $file->getFileVersion($file->getVersion())->addTargetGroup($targetGroup1);
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'PUT',
+            '/api/media/' . $media->getId(),
+            [
+                'targetGroups' => [],
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals([], $response->targetGroups);
     }
 
     /**
