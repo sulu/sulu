@@ -157,6 +157,7 @@
                         <title>sulu_page.changelog</title>
                     </meta>
                 </property>
+                <property name="versions" type="page_settings_versions" />
             </properties>
         </section>
     </properties>

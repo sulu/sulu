@@ -30,6 +30,6 @@ sulu_page.teaser:
     type: rest
     resource: sulu_page.teaser_controller
 
-sulu_page.node.versioning:
+sulu_page.page.versioning:
     type: versioning_rest
     resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yml"

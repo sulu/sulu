@@ -37,18 +37,18 @@ class VersionController extends FOSRestController implements
     use RequestParametersTrait;
 
     /**
-     * Returns the versions for the node with the given UUID.
+     * Returns the versions for the page with the given UUID.
      *
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      *
      * @return Response
      */
-    public function cgetAction(Request $request, $uuid)
+    public function cgetAction(Request $request, $id)
     {
-        $locale = $this->getRequestParameter($request, 'language', true);
+        $locale = $this->getRequestParameter($request, 'locale', true);
 
-        $document = $this->get('sulu_document_manager.document_manager')->find($uuid, $request->query->get('language'));
+        $document = $this->get('sulu_document_manager.document_manager')->find($id, $request->query->get('locale'));
         $versions = array_reverse(array_filter($document->getVersions(), function($version) use ($locale) {
             /* @var Version $version */
             return $version->getLocale() === $locale;
@@ -84,11 +84,11 @@ class VersionController extends FOSRestController implements
 
         $versionCollection = new ListRepresentation(
             $versionData,
-            'versions',
-            'get_node_versions',
+            'page_versions',
+            'get_page_versions',
             [
-                'uuid' => $uuid,
-                'language' => $locale,
+                'id' => $id,
+                'locale' => $locale,
                 'webspace' => $request->get('webspace'),
             ],
             $listRestHelper->getPage(),
@@ -101,29 +101,29 @@ class VersionController extends FOSRestController implements
 
     /**
      * @param Request $request
-     * @param string $uuid
+     * @param string $id
      * @param int $version
      *
-     * @Post("/nodes/{uuid}/versions/{version}")
+     * @Post("/pages/{id}/versions/{version}")
      *
      * @return Response
      */
-    public function postTriggerAction(Request $request, $uuid, $version)
+    public function postTriggerAction(Request $request, $id, $version)
     {
         $action = $this->getRequestParameter($request, 'action', true);
-        $language = $this->getLocale($request);
+        $locale = $this->getLocale($request);
 
         switch ($action) {
             case 'restore':
-                $document = $this->getDocumentManager()->find($uuid, $language);
+                $document = $this->getDocumentManager()->find($id, $locale);
                 $this->getDocumentManager()->restore(
                     $document,
-                    $language,
+                    $locale,
                     str_replace('_', '.', $version)
                 );
                 $this->getDocumentManager()->flush();
 
-                $data = $this->getDocumentManager()->find($uuid, $language);
+                $data = $this->getDocumentManager()->find($id, $locale);
                 break;
         }
 
@@ -165,7 +165,7 @@ class VersionController extends FOSRestController implements
      */
     public function getLocale(Request $request)
     {
-        return $this->getRequestParameter($request, 'language', true);
+        return $this->getRequestParameter($request, 'locale', true);
     }
 
     /**
@@ -181,6 +181,6 @@ class VersionController extends FOSRestController implements
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('uuid');
+        return $request->get('id');
     }
 }
