@@ -45,7 +45,7 @@ class VersionControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/nodes/' . $document->getUuid() . '/versions/1_0?action=restore&locale=de&webspace=sulu_io'
+            '/api/pages/' . $document->getUuid() . '/versions/1_0?action=restore&locale=de&webspace=sulu_io'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -68,7 +68,7 @@ class VersionControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/nodes/' . $document->getUuid() . '/versions/2_0?action=restore&locale=de&webspace=sulu_io'
+            '/api/pages/' . $document->getUuid() . '/versions/2_0?action=restore&locale=de&webspace=sulu_io'
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
@@ -95,7 +95,7 @@ class VersionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/nodes/' . $document->getUuid() . '/versions?locale=de&webspace=sulu_io'
+            '/api/pages/' . $document->getUuid() . '/versions?locale=de&webspace=sulu_io'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
