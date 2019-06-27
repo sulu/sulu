@@ -58,7 +58,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         'page_versions' => [
                             'routes' => [
                                 'list' => 'get_page_versions',
-                                'detail' => 'post_page_version_trigger'
+                                'detail' => 'post_page_version_trigger',
                             ],
                         ],
                         'webspaces' => [
