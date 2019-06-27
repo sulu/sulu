@@ -31,12 +31,14 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * @var string
      * @Expose
+     * @Groups({"fullUser", "profile"})
      */
     protected $username;
 
     /**
      * @var string
      * @Expose
+     * @Groups({"fullUser", "profile"})
      */
     protected $email;
 
@@ -48,7 +50,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * @var string
      * @Expose
-     * @Groups({"frontend", "fullUser"})
+     * @Groups({"frontend", "fullUser", "profile"})
      */
     protected $locale;
 

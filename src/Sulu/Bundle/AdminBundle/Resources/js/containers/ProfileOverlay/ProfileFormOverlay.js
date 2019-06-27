@@ -8,7 +8,6 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {Overlay} from 'sulu-admin-bundle/components';
 import profileFormOverlayStyles from './profileFormOverlay.scss';
 
-
 //on then
 type Props = {
     onClose: () => void,
@@ -24,10 +23,11 @@ class ProfileFormOverlay extends React.Component<Props> {
     title: string;
     operationType: string;
     @observable formStore: ResourceFormStore;
+    locale: IObservableValue<string>;
 
     constructor(props: Props) {
         super(props);
-        const resourceStore = new ResourceStore(RESOURCE_KEY);
+        const resourceStore = new ResourceStore(RESOURCE_KEY, 1);
         this.formStore = new ResourceFormStore(resourceStore, FORM_KEY);
     }
 
@@ -38,11 +38,12 @@ class ProfileFormOverlay extends React.Component<Props> {
     //on then
     handleConfirm = () => {
         if (this.formRef) {
-            this.formRef.submit()
-                .then(() => {
-                    this.handleClose();
-                });
+            this.formRef.submit();
         }
+        //         .then(() => {
+        //           this.handleClose();
+        //     });
+        //}
     };
 
     handleClose = () => {
@@ -52,7 +53,7 @@ class ProfileFormOverlay extends React.Component<Props> {
     handleSubmit = () => {
         this.formStore.save()
             .then(() => {
-                this.formStore.set(this.formStore.data);
+                this.formStore.setMultiple(this.formStore.data);
             });
     };
 
@@ -61,7 +62,6 @@ class ProfileFormOverlay extends React.Component<Props> {
             open,
         } = this.props;
 
-        //  const open = operationType === 'create' || operationType === 'update';
         const confirmText = translate('sulu_admin.ok');
 
         return (

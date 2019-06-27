@@ -15,7 +15,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\Context\Context;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
@@ -51,21 +54,64 @@ class ProfileController implements ClassResourceInterface
     private $userSettingRepository;
 
     /**
+     * @var UserManager
+     */
+    private $userManager;
+
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager $objectManager
      * @param ViewHandlerInterface $viewHandler
      * @param UserSettingRepositoryInterface $userSettingRepository
+     * @param UserManagerInterface $userManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
         ViewHandlerInterface $viewHandler,
-        UserSettingRepositoryInterface $userSettingRepository
-    ) {
+        UserSettingRepositoryInterface $userSettingRepository,
+        UserManager $userManager
+    )
+    {
         $this->tokenStorage = $tokenStorage;
         $this->objectManager = $objectManager;
         $this->viewHandler = $viewHandler;
         $this->userSettingRepository = $userSettingRepository;
+        $this->userManager = $userManager;
+    }
+
+    public function getAction()
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $view = View::create($user);
+
+        $context = new Context();
+        $context->setGroups(['profile']);
+
+        $view->setContext($context);
+
+        return $this->viewHandler->handle($view);
+    }
+
+    public function putAction(Request $request)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $this->userManager->save($request->request->all(), $request->get('locale'), $user->getId(), true);
+
+        $user->setFirstName($request->get('firstName'));
+        $user->setLastName($request->get('lastName'));
+
+        $this->objectManager->flush();
+
+        $view = View::create($user);
+
+        $context = new Context();
+        $context->setGroups(['profile']);
+
+        $view->setContext($context);
+        return $this->viewHandler->handle($view);
+
     }
 
     /**

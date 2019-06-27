@@ -244,4 +244,43 @@ class User extends BaseUser
         return null !== $this->getContact() ?
             $this->getContact()->getFullName() : $this->getUsername();
     }
+
+    /**
+     * @VirtualProperty
+     * @Groups({"profile"})
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->contact->getFirstName();
+    }
+
+    /**
+     * @VirtualProperty
+     * @Groups({"profile"})
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->contact->getLastName();
+    }
+
+
+    public function setLastName($lastName)
+    {
+        $this->contact->setLastName($lastName);
+
+        return $this;
+    }
+
+    public function setFirstName($firstName)
+    {
+        $this->contact->setFirstName($firstName);
+
+        return $this;
+    }
+
+
 }

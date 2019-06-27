@@ -114,6 +114,11 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                                 'detail' => 'get_user',
                             ],
                         ],
+                        'profile' => [
+                            'routes' => [
+                                'detail' =>'get_profile',
+                            ]
+                        ],
                     ],
                 ]
             );
