@@ -15,6 +15,7 @@ import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
 import Login from '../Login';
 import applicationStyles from './application.scss';
+import ProfileFormOverlay from "../ProfileOverlay/ProfileFormOverlay";
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
@@ -28,6 +29,17 @@ type NavigationState = 'pinned' | 'hidden' | 'visible';
 
 @observer
 class Application extends React.Component<Props> {
+
+    @observable openedProfileFormOverlay: boolean = false;
+
+    @action openProfileFormOverlay() {
+        this.openedProfileFormOverlay = true;
+    }
+
+    @action closeProfileFormOverlay() {
+        this.openedProfileFormOverlay = false;
+    }
+
     @observable navigationState: NavigationState;
 
     @computed get navigationPinned() {
@@ -103,6 +115,13 @@ class Application extends React.Component<Props> {
             }
         });
     };
+    handleProfileOverlayClose = () => {
+        this.closeProfileFormOverlay();
+    }
+
+    handleProfileEditClick = () => {
+        this.openProfileFormOverlay();
+    };
 
     render() {
         const {router, suluVersion, appVersion} = this.props;
@@ -135,13 +154,14 @@ class Application extends React.Component<Props> {
         return (
             <Fragment>
                 {!loggedIn &&
-                    <Login
-                        backLink="/" // TODO: Get the correct link here from the backend
-                        initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
-                        onLoginSuccess={this.handleLoginSuccess}
-                    />
+                <Login
+                    backLink="/" // TODO: Get the correct link here from the backend
+                    initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
+                    onLoginSuccess={this.handleLoginSuccess}
+                />
                 }
                 {initializer.initialized &&
+                <Fragment>
                     <div className={rootClass}>
                         <nav className={applicationStyles.navigation}>
                             <Navigation
@@ -149,6 +169,7 @@ class Application extends React.Component<Props> {
                                 onLogout={this.handleLogout}
                                 onNavigate={this.handleNavigate}
                                 onPinToggle={this.handlePinToggle}
+                                onProfileClick={this.handleProfileEditClick}
                                 pinned={this.navigationPinned}
                                 router={router}
                                 suluVersion={suluVersion}
@@ -175,13 +196,19 @@ class Application extends React.Component<Props> {
                                 </header>
                                 <div className={applicationStyles.viewContainer}>
                                     {router.route &&
-                                    <ViewRenderer router={router} />
+                                    <ViewRenderer router={router}/>
                                     }
                                 </div>
                             </main>
-                            <Sidebar className={sidebarClass} />
+                            <Sidebar className={sidebarClass}/>
+
                         </div>
                     </div>
+                    <ProfileFormOverlay
+                        onClose={this.handleProfileOverlayClose}
+                        open={this.openedProfileFormOverlay}
+                    />
+                </Fragment>
                 }
             </Fragment>
         );

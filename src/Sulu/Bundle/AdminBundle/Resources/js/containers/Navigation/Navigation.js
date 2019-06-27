@@ -1,7 +1,7 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {computed} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import {Navigation as NavigationComponent} from '../../components';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
@@ -9,7 +9,8 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
-    appVersion: ?string,
+    appVersion: ? string,
+    locale: IObservableValue<boolean>,
     onLogout: () => void,
     onNavigate: (route: string) => void,
     onPinToggle: () => void,
@@ -17,6 +18,7 @@ type Props = {
     pinned: boolean,
     router: Router,
     suluVersion: string,
+
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
@@ -68,9 +70,11 @@ class Navigation extends React.Component<Props> {
     render() {
         const {suluVersion} = this.props;
         const {appVersion} = this.props;
+
         const navigationItems = navigationRegistry.getAll();
 
         return (
+
             <NavigationComponent
                 appVersion={appVersion}
                 onLogoutClick={this.props.onLogout}
@@ -93,19 +97,20 @@ class Navigation extends React.Component<Props> {
                         value={navigationItem.id}
                     >
                         {Array.isArray(navigationItem.items) &&
-                            navigationItem.items.map((subNavigationItem) => (
-                                <NavigationComponent.Item
-                                    active={this.isItemActive(subNavigationItem)}
-                                    key={subNavigationItem.id}
-                                    onClick={this.handleNavigationItemClick}
-                                    title={subNavigationItem.label}
-                                    value={subNavigationItem.id}
-                                />
-                            ))
+                        navigationItem.items.map((subNavigationItem) => (
+                            <NavigationComponent.Item
+                                active={this.isItemActive(subNavigationItem)}
+                                key={subNavigationItem.id}
+                                onClick={this.handleNavigationItemClick}
+                                title={subNavigationItem.label}
+                                value={subNavigationItem.id}
+                            />
+                        ))
                         }
                     </NavigationComponent.Item>
                 ))}
             </NavigationComponent>
+
         );
     }
 }
