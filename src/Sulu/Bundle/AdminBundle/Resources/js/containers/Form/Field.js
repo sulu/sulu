@@ -3,6 +3,7 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
+import Router from '../../services/Router';
 import {translate} from '../../utils';
 import FieldComponent from '../../components/Form/Field';
 import fieldRegistry from './registries/FieldRegistry';
@@ -17,6 +18,7 @@ type Props = {|
     name: string,
     onChange: (string, *) => void,
     onFinish: (dataPath: string, schemaPath: string) => void,
+    router: ?Router,
     schema: SchemaEntry,
     schemaPath: string,
     showAllErrors: boolean,
@@ -79,7 +81,7 @@ class Field extends React.Component<Props> {
     }
 
     render() {
-        const {dataPath, error, value, formInspector, schema, schemaPath, showAllErrors, name} = this.props;
+        const {dataPath, error, formInspector, name, router, schema, schemaPath, showAllErrors, value} = this.props;
         const {
             defaultType,
             description,
@@ -146,6 +148,7 @@ class Field extends React.Component<Props> {
                             minOccurs={minOccurs}
                             onChange={this.handleChange}
                             onFinish={this.handleFinish}
+                            router={router}
                             schemaOptions={schemaOptions}
                             schemaPath={schemaPath}
                             showAllErrors={showAllErrors}

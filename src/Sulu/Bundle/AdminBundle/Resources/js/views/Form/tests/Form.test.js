@@ -1616,7 +1616,7 @@ test('Should save form when submitted and redirect to editRoute', () => {
     });
 });
 
-test('Should pass store and schema handler to FormContainer', () => {
+test('Should pass router, store and schema handler to FormContainer', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
@@ -1639,6 +1639,7 @@ test('Should pass store and schema handler to FormContainer', () => {
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     const formContainer = form.find('Form').at(1);
 
+    expect(formContainer.prop('router')).toEqual(router);
     expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
     expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
 });

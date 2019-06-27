@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
+import Router from '../../../services/Router';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
@@ -8,6 +9,7 @@ import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/BlockPreviewTransformerRegistry';
 
+jest.mock('../../../services/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
     this.getSchemaEntryByPath = jest.fn();
@@ -121,7 +123,7 @@ test('Render collapsed blocks with block previews', () => {
         }
     });
 
-    const fieldBlocks = mount(
+    const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
@@ -232,7 +234,7 @@ test('Render collapsed blocks with block previews without tags', () => {
         'text_editor',
     ];
 
-    const fieldBlocks = mount(
+    const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -317,7 +319,7 @@ test('Render collapsed blocks with block previews', () => {
         }
     });
 
-    const fieldBlocks = mount(
+    const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -569,8 +571,9 @@ test('Should correctly pass props to the BlockCollection', () => {
     }));
 });
 
-test('Should pass correct schemaPath to FieldRender', () => {
+test('Should pass correct schemaPath and router to FieldRenderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const router = new Router();
 
     const types = {
         default: {
@@ -591,6 +594,7 @@ test('Should pass correct schemaPath to FieldRender', () => {
             dataPath=""
             defaultType="editor"
             formInspector={formInspector}
+            router={router}
             schemaPath=""
             types={types}
             value={[{type: 'default'}, {type: 'default'}]}
@@ -602,7 +606,9 @@ test('Should pass correct schemaPath to FieldRender', () => {
     fieldBlocks.update();
 
     expect(fieldBlocks.find('FieldRenderer').at(0).prop('schemaPath')).toEqual('/types/default/form');
+    expect(fieldBlocks.find('FieldRenderer').at(0).prop('router')).toEqual(router);
     expect(fieldBlocks.find('FieldRenderer').at(1).prop('schemaPath')).toEqual('/types/default/form');
+    expect(fieldBlocks.find('FieldRenderer').at(1).prop('router')).toEqual(router);
 });
 
 test('Should call onFinish when a field from the child renderer has finished editing', () => {
@@ -662,7 +668,7 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const finishSpy = jest.fn();
-    const fieldBlocks = mount(
+    const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"

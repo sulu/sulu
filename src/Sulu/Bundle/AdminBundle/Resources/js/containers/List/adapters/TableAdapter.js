@@ -30,6 +30,7 @@ class TableAdapter extends AbstractTableAdapter {
 
     render() {
         const {
+            actions,
             data,
             limit,
             loading,
@@ -51,6 +52,10 @@ class TableAdapter extends AbstractTableAdapter {
                 icon: 'su-pen',
                 onClick: (rowId) => onItemClick(rowId),
             });
+        }
+
+        if (actions) {
+            buttons.push(...actions);
         }
 
         const table = (

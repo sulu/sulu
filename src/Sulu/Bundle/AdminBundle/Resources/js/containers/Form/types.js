@@ -1,5 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx';
+import Router from '../../services/Router';
 import type {ColSpan} from '../../components/Grid';
 import FormInspector from './FormInspector';
 
@@ -85,6 +86,8 @@ export type Schema = {[string]: SchemaEntry};
 
 export type FinishFieldHandler = (dataPath: string, schemaPath: string) => void;
 
+export type SaveHandler = (action: ?string) => void;
+
 export interface FormStoreInterface {
     +change: (name: string, value: mixed) => void,
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
@@ -118,6 +121,7 @@ export type FieldTypeProps<T> = {|
     minOccurs: ?number,
     onChange: (value: T) => void,
     onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
+    router: ?Router,
     schemaOptions: SchemaOptions,
     schemaPath: string,
     showAllErrors: boolean,

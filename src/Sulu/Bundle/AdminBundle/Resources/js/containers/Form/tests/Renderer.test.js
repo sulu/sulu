@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import Router from '../../../services/Router';
+import ResourceStore from '../../../stores/ResourceStore';
 import Renderer from '../Renderer';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
-import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 
+jest.mock('../../../services/Router', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));
@@ -52,6 +54,7 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -89,6 +92,7 @@ test('Should render field types based on schema', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -129,6 +133,7 @@ test('Should render nested field types with based on schema', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -185,6 +190,7 @@ test('Should not render fields when the schema contains a visible flag of false'
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -224,6 +230,7 @@ test('Should pass correct schemaPath to fields', () => {
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath="/test"
         />
@@ -263,6 +270,7 @@ test('Should pass name, schema and formInspector to fields', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -275,11 +283,53 @@ test('Should pass name, schema and formInspector to fields', () => {
     expect(fields.at(0).prop('onChange')).toBe(changeSpy);
     expect(fields.at(0).prop('onFinish')).toBeInstanceOf(Function);
     expect(fields.at(0).prop('error')).toBe(undefined);
+    expect(fields.at(0).prop('router')).toBe(undefined);
     expect(fields.at(1).prop('formInspector')).toBe(formInspector);
     expect(fields.at(1).prop('name')).toBe('datetime');
     expect(fields.at(1).prop('onChange')).toBe(changeSpy);
     expect(fields.at(1).prop('onFinish')).toBeInstanceOf(Function);
     expect(fields.at(1).prop('error')).toBe(undefined);
+    expect(fields.at(1).prop('router')).toBe(undefined);
+});
+
+test('Should pass router to fields if given', () => {
+    const schema = {
+        text: {
+            label: 'Text',
+            type: 'text_line',
+            visible: true,
+        },
+        datetime: {
+            label: 'Datetime',
+            type: 'datetime',
+            visible: true,
+        },
+    };
+
+    const changeSpy = jest.fn();
+    const fieldFinishSpy = jest.fn();
+
+    const router = new Router();
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    const renderer = shallow(
+        <Renderer
+            data={{}}
+            dataPath=""
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFieldFinish={fieldFinishSpy}
+            router={router}
+            schema={schema}
+            schemaPath=""
+        />
+    );
+
+    const fields = renderer.find('Field');
+
+    expect(fields.at(0).prop('router')).toBe(router);
+    expect(fields.at(1).prop('router')).toBe(router);
 });
 
 test('Should pass errors to fields that have already been modified at least once', () => {
@@ -324,6 +374,7 @@ test('Should pass errors to fields that have already been modified at least once
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -374,6 +425,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
             showAllErrors={true}
@@ -432,6 +484,7 @@ test('Should render nested sections', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -479,6 +532,7 @@ test('Should render sections with colSpan', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />
@@ -525,6 +579,7 @@ test('Should render sections without label', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
         />

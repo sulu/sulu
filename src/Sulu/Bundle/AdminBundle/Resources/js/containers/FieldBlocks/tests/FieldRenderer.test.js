@@ -1,9 +1,12 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
+import Router from '../../../services/Router';
 import FieldRenderer from '../FieldRenderer';
 import {FormInspector, ResourceFormStore, Renderer} from '../../Form';
 import ResourceStore from '../../../stores/ResourceStore';
+
+jest.mock('../../../services/Router', () => jest.fn());
 
 jest.mock('../../Form', () => ({
     FormInspector: jest.fn(),
@@ -28,6 +31,7 @@ test('Should pass props correctly to Renderer', () => {
         text: {label: 'Label', type: 'text_line', visible: true},
     };
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const router = new Router();
 
     const formRenderer = shallow(
         <FieldRenderer
@@ -38,6 +42,7 @@ test('Should pass props correctly to Renderer', () => {
             index={1}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
+            router={router}
             schema={schema}
             schemaPath="/test"
         />
@@ -49,6 +54,7 @@ test('Should pass props correctly to Renderer', () => {
         errors,
         formInspector,
         onFieldFinish: fieldFinishSpy,
+        router,
         schema,
         schemaPath: '/test',
         showAllErrors: false,
@@ -66,6 +72,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
             index={2}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={{}}
             schemaPath=""
             showAllErrors={true}
@@ -87,6 +94,7 @@ test('Should call onChange callback with correct index', () => {
             index={2}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            router={undefined}
             schema={{}}
             schemaPath=""
         />
@@ -109,6 +117,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
             index={2}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
+            router={undefined}
             schema={{}}
             schemaPath=""
         />

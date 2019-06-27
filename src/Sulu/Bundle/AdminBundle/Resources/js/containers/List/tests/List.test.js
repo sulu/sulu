@@ -186,6 +186,7 @@ test('Render TableAdapter with correct values', () => {
 
     const tableAdapter = list.find('TableAdapter');
 
+    expect(tableAdapter.prop('actions')).toEqual(undefined);
     expect(tableAdapter.prop('data')).toEqual([{'id': 1, 'title': 'value'}]);
     expect(tableAdapter.prop('active')).toEqual(3);
     expect(tableAdapter.prop('activeItems')).toBe(listStore.activeItems);
@@ -201,6 +202,30 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('onItemClick')).toBe(editClickSpy);
     expect(tableAdapter.prop('onItemSelectionChange')).toBeInstanceOf(Function);
     expect(tableAdapter.prop('onAllSelectionChange')).toBeInstanceOf(Function);
+});
+
+test('Render TableAdapter with actions', () => {
+    const actions = [
+        {
+            icon: 'su-process',
+            onClick: undefined,
+        },
+    ];
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    mockStructureStrategyData = [
+        {
+            title: 'value',
+            id: 1,
+        },
+    ];
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    const list = shallow(<List actions={actions} adapters={['table']} store={listStore} />);
+
+    const tableAdapter = list.find('TableAdapter');
+    expect(tableAdapter.prop('actions')).toEqual(actions);
 });
 
 test('Render the adapter in non-selectable mode', () => {

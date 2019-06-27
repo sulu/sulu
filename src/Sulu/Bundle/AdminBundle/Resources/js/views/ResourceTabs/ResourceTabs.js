@@ -59,7 +59,7 @@ class ResourceTabs extends React.Component<Props> {
             return true;
         }
 
-        if (viewRoute.children.includes(route)) {
+        if (viewRoute.children.includes(route) || viewRoute === route) {
             this.resourceStore.reload();
         }
 

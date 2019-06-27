@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import jsonpointer from 'json-pointer';
 import Form from '../../components/Form';
+import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
 import type {ErrorCollection, Schema, SchemaEntry} from './types';
@@ -15,6 +16,7 @@ type Props = {|
     formInspector: FormInspector,
     onChange: (string, *) => void,
     onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
+    router: ?Router,
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
@@ -46,7 +48,7 @@ class Renderer extends React.Component<Props> {
     }
 
     renderField(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {data, dataPath, errors, formInspector, onChange, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onChange, router, showAllErrors} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
         const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
@@ -62,6 +64,7 @@ class Renderer extends React.Component<Props> {
                 name={schemaKey}
                 onChange={onChange}
                 onFinish={this.handleFieldFinish}
+                router={router}
                 schema={schemaField}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}

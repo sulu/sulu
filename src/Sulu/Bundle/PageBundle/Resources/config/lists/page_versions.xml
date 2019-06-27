@@ -14,6 +14,7 @@
             visibility="always"
             sortable="false"
             translation="sulu_admin.published"
+            type="datetime"
         />
     </properties>
 </list>

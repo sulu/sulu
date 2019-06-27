@@ -2,11 +2,13 @@
 import {render, shallow} from 'enzyme';
 import React from 'react';
 import ResourceStore from '../../../stores/ResourceStore';
+import Router from '../../../services/Router';
 import Field from '../Field';
 import fieldRegistry from '../registries/FieldRegistry';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
+jest.mock('../../../services/Router', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn());
 jest.mock('../stores/ResourceFormStore', () => jest.fn());
@@ -33,6 +35,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label1', type: 'text', visible: true}}
             schemaPath=""
         />
@@ -48,6 +51,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label2', type: 'datetime', visible: true}}
             schemaPath=""
         />
@@ -67,6 +71,7 @@ test('Render field with correct values for grid', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3, visible: true}}
             schemaPath=""
         />
@@ -86,6 +91,7 @@ test('Render a required field with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label1', required: true, type: 'text', visible: true}}
             schemaPath=""
         />
@@ -102,6 +108,7 @@ test('Render a field without a label', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{type: 'text', visible: true}}
             schemaPath=""
         />
@@ -118,6 +125,7 @@ test('Render a field with a description', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{
                 description: 'Small description describing the field',
                 label: 'label1',
@@ -144,6 +152,7 @@ test('Render a field with an error', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
+                router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
             />
@@ -166,6 +175,7 @@ test('Render a field without a const error', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
+                router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
             />
@@ -194,6 +204,7 @@ test('Render a field with a error collection', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
+                router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
             />
@@ -202,6 +213,7 @@ test('Render a field with a error collection', () => {
 });
 
 test('Pass correct props to FieldType', () => {
+    const router = new Router();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
@@ -223,6 +235,7 @@ test('Pass correct props to FieldType', () => {
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={router}
             schema={schema}
             schemaPath="/text"
             showAllErrors={true}
@@ -237,6 +250,7 @@ test('Pass correct props to FieldType', () => {
         label: 'Text',
         maxOccurs: 4,
         minOccurs: 2,
+        router,
         schemaPath: '/text',
         showAllErrors: true,
         types: {},
@@ -267,6 +281,7 @@ test('Pass disabled flag to disabled FieldType', () => {
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath="/text"
             showAllErrors={true}
@@ -316,6 +331,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={schema}
             schemaPath=""
             showAllErrors={true}
@@ -353,6 +369,7 @@ test('Call onChange callback when value of Field changes', () => {
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label', type: 'text', visible: true}}
             schemaPath=""
         />
@@ -378,6 +395,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label', type: 'text', disabled: true}}
             schemaPath=""
         />
@@ -403,6 +421,7 @@ test('Call onFinish callback after editing the field has finished', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={finishSpy}
+            router={undefined}
             schema={{label: 'label', type: 'text', visible: true}}
             schemaPath="/test"
         />

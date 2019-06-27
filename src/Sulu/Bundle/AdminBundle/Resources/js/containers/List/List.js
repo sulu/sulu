@@ -12,6 +12,7 @@ import Loader from '../../components/Loader';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
+    Action,
     ResolveCopyArgument,
     ResolveDeleteArgument,
     ResolveMoveArgument,
@@ -28,6 +29,7 @@ import listStyles from './list.scss';
 import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 
 type Props = {|
+    actions?: Array<Action>,
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
@@ -409,6 +411,7 @@ class List extends React.Component<Props> {
 
     render() {
         const {
+            actions,
             adapters,
             copyable,
             deletable,
@@ -455,6 +458,7 @@ class List extends React.Component<Props> {
                     {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
+                            actions={actions}
                             active={store.active.get()}
                             activeItems={store.activeItems}
                             data={store.data}
