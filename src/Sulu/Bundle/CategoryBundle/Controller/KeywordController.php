@@ -43,7 +43,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     /**
      * {@inheritdoc}
      */
-    protected static $entityKey = 'keywords';
+    protected static $entityKey = 'category_keywords';
 
     /**
      * Returns list of keywords filtered by the category.
@@ -118,21 +118,24 @@ class KeywordController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($keyword));
     }
 
+    public function getAction($categoryId, $id, Request $request)
+    {
+        $keyword = $this->getKeywordRepository()->findById($id);
+
+        if (!$keyword) {
+            return $this->handleView($this->view(null, 404));
+        }
+
+        return $this->handleView($this->view($keyword));
+    }
+
     /**
-     * Updates given keyword for given category.
-     *
-     * @param int $categoryId
-     * @param int $keywordId
-     * @param Request $request
-     *
-     * @return Response
-     *
      * @throws KeywordIsMultipleReferencedException
      * @throws KeywordNotUniqueException
      */
-    public function putAction($categoryId, $keywordId, Request $request)
+    public function putAction($categoryId, $id, Request $request)
     {
-        $keyword = $this->getKeywordRepository()->findById($keywordId);
+        $keyword = $this->getKeywordRepository()->findById($id);
 
         if (!$keyword) {
             return $this->handleView($this->view(null, 404));
@@ -158,9 +161,9 @@ class KeywordController extends RestController implements ClassResourceInterface
      *
      * @return Response
      */
-    public function deleteAction($categoryId, $keywordId)
+    public function deleteAction($categoryId, $id)
     {
-        $keyword = $this->getKeywordRepository()->findById($keywordId);
+        $keyword = $this->getKeywordRepository()->findById($id);
         $category = $this->getCategoryRepository()->findCategoryById($categoryId);
         $this->getKeywordManager()->delete($keyword, $category);
 
@@ -232,7 +235,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     public function getFieldDescriptors()
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
-        ->getFieldDescriptors('keywords');
+        ->getFieldDescriptors('category_keywords');
     }
 
     /**

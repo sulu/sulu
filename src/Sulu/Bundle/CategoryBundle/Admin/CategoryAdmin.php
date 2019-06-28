@@ -135,6 +135,18 @@ class CategoryAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
+            $this->routeBuilderFactory
+                ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
+                ->setResourceKey('category_keywords')
+                ->setListKey('category_keywords')
+                ->addListAdapters(['table'])
+                ->addRouterAttributesToListStore(['id' => 'categoryId'])
+                ->setFormKey('category_keywords')
+                ->addRouterAttributesToFormStore(['id' => 'categoryId'])
+                ->setTabTitle('sulu_category.keywords')
+                ->addToolbarActions(['sulu_admin.add', 'sulu_admin.delete'])
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

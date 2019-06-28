@@ -2,7 +2,8 @@
     "sulu_category.categories": "Categories",
     "sulu_category.key": "Key",
     "sulu_category.name": "Name",
-    "sulu_category.key_word": "Keywords",
+    "sulu_category.keywords": "Keywords",
+    "sulu_category.keyword": "Keyword",
     "sulu_category.multiple_usage": "Multiple Usage",
     "sulu_category.all_categories": "All categories"
 }
