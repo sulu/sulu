@@ -268,6 +268,12 @@ class User extends BaseUser
     }
 
 
+    /**
+     * Set lastName.
+     *
+     * @param $lastName
+     * @return $this
+     */
     public function setLastName($lastName)
     {
         $this->contact->setLastName($lastName);
@@ -275,6 +281,12 @@ class User extends BaseUser
         return $this;
     }
 
+    /**
+     * Set firstName.
+     *
+     * @param $firstName
+     * @return $this
+     */
     public function setFirstName($firstName)
     {
         $this->contact->setFirstName($firstName);

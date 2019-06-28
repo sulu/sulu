@@ -1,7 +1,7 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed} from 'mobx';
+import {computed} from 'mobx';
 import {Navigation as NavigationComponent} from '../../components';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';

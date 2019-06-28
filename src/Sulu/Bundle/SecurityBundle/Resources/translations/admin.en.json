@@ -14,6 +14,6 @@
     "sulu_security.delete": "Delete",
     "sulu_security.live": "Live",
     "sulu_security.security": "Security",
-    "sulu_security.first_name": "First Name",
-    "sulu_security.last_name": "Last Name"
+    "sulu_security.first_name": "First name",
+    "sulu_security.last_name": "Last name"
 }

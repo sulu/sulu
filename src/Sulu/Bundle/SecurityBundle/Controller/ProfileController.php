@@ -81,6 +81,11 @@ class ProfileController implements ClassResourceInterface
         $this->userManager = $userManager;
     }
 
+    /**
+     * Gets the profile information of a user.
+     *
+     * @return Response\
+     */
     public function getAction()
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -94,6 +99,13 @@ class ProfileController implements ClassResourceInterface
         return $this->viewHandler->handle($view);
     }
 
+    /**
+     * Sets the given profile information of a user.
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
     public function putAction(Request $request)
     {
         $user = $this->tokenStorage->getToken()->getUser();
