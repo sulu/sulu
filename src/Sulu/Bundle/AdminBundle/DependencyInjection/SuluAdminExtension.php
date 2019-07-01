@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -85,6 +86,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                         'codes' => [
                             MetadataNotFoundException::class => 404,
                             MetadataProviderNotFoundException::class => 404,
+                            MissingArgumentException::class => 400,
+
                         ],
                     ],
                 ]

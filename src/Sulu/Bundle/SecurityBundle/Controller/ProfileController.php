@@ -21,15 +21,16 @@ use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
 /**
  * This controller handles everything a user is allowed to change on its own.
  */
-class ProfileController implements ClassResourceInterface
+class ProfileController extends RestController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
@@ -108,6 +109,7 @@ class ProfileController implements ClassResourceInterface
      */
     public function putAction(Request $request)
     {
+        $this->checkArguments($request);
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($request->request->all(), $request->get('locale'), $user->getId(), true);
 
@@ -124,23 +126,6 @@ class ProfileController implements ClassResourceInterface
         $view->setContext($context);
         return $this->viewHandler->handle($view);
 
-    }
-
-    /**
-     * Sets the given language on the current user.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function putLanguageAction(Request $request)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $user->setLocale($request->get('locale'));
-
-        $this->objectManager->flush();
-
-        return $this->viewHandler->handle(View::create(['locale' => $user->getLocale()]));
     }
 
     /**
@@ -218,5 +203,32 @@ class ProfileController implements ClassResourceInterface
         }
 
         return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * Checks the arguments of the given request.
+     *
+     * @param Request $request
+     * @throws MissingArgumentException
+     */
+    private function checkArguments(Request $request)
+    {
+        if (null === $request->get('firstName')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'firstName');
+        }
+        if (null === $request->get('lastName')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'lastName');
+        }
+        if (null === $request->get('username')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
+        }
+        if (null === $request->get('email')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'email');
+        }
+        if (null === $request->get('locale')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
+        }
+
+
     }
 }
