@@ -21,6 +21,32 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'search' => [
+                            'routes' => [
+                                'list' => 'sulu_search_search',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'sulu_search_search',
+                    ],
+                ]
+            );
+        }
+
         $container->prependExtensionConfig('jms_serializer', [
             'metadata' => [
                 'directories' => [

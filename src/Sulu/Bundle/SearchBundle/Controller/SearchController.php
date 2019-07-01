@@ -28,9 +28,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Sulu search controller.
- */
 class SearchController
 {
     /**
@@ -63,14 +60,6 @@ class SearchController
      */
     private $indexConfigurationProvider;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     * @param ProviderInterface $metadataProvider
-     * @param SecurityCheckerInterface $securityChecker
-     * @param ViewHandlerInterface $viewHandler
-     * @param ListRestHelperInterface $listRestHelper
-     * @param IndexConfigurationProviderInterface $indexConfigurationProvider
-     */
     public function __construct(
         SearchManagerInterface $searchManager,
         ProviderInterface $metadataProvider,
