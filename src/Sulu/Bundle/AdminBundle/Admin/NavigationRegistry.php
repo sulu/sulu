@@ -92,11 +92,14 @@ class NavigationRegistry
         }
 
         // add child routes
-        if ($navigationItem->getMainRoute()) {
-            $mainPath = $this->routeRegistry->findRouteByName($navigationItem->getMainRoute())->getPath();
-            foreach ($this->routeRegistry->getRoutes() as $route) {
-                if (0 === strpos($route->getPath(), $mainPath)) {
-                    $navigationItem->addChildRoute($route->getName());
+        $mainRoute = $navigationItem->getMainRoute();
+        if ($mainRoute) {
+            $mainPath = $this->routeRegistry->findRouteByName($mainRoute)->getPath();
+            if ($mainPath !== '/') {
+                foreach ($this->routeRegistry->getRoutes() as $route) {
+                    if (0 === strpos($route->getPath(), $mainPath)) {
+                        $navigationItem->addChildRoute($route->getName());
+                    }
                 }
             }
         }
