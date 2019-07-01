@@ -148,4 +148,20 @@ class NavigationItemTest extends TestCase
 
         $this->assertNotContains('header', array_keys($array));
     }
+
+    public function testToArrayWithPosition()
+    {
+        $rootNavigationItem = new NavigationItem('Root');
+        $navigationItem2 = new NavigationItem('Item 2');
+        $navigationItem2->setPosition(10);
+        $navigationItem1 = new NavigationItem('Item 1');
+        $navigationItem1->setPosition(0);
+        $rootNavigationItem->addChild($navigationItem1);
+        $rootNavigationItem->addChild($navigationItem2);
+
+        $array = $rootNavigationItem->toArray();
+
+        $this->assertEquals('Item 1', $array['items'][0]['title']);
+        $this->assertEquals('Item 2', $array['items'][1]['title']);
+    }
 }
