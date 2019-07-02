@@ -126,7 +126,7 @@ test('Throw an exception if a non-valid mode is passed', () => {
     ).toThrow(/"leaf" or "full"/);
 });
 
-test('Throw an exception if no hisotryResourceKey is given', () => {
+test('Throw an exception if no historyResourceKey is given', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     expect(
