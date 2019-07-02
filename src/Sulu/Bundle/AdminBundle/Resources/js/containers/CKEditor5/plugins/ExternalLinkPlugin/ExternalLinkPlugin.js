@@ -10,8 +10,8 @@ import {render, unmountComponentAtNode} from 'react-dom';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
-import ExternalLinkOverlay from './ExternalLinkOverlay';
 import UnlinkCommand from '../../UnlinkCommand';
+import ExternalLinkOverlay from './ExternalLinkOverlay';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
