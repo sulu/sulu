@@ -95,7 +95,7 @@ class NavigationRegistry
         $mainRoute = $navigationItem->getMainRoute();
         if ($mainRoute) {
             $mainPath = $this->routeRegistry->findRouteByName($mainRoute)->getPath();
-            if ($mainPath !== '/') {
+            if ('/' !== $mainPath) {
                 foreach ($this->routeRegistry->getRoutes() as $route) {
                     if (0 === strpos($route->getPath(), $mainPath)) {
                         $navigationItem->addChildRoute($route->getName());

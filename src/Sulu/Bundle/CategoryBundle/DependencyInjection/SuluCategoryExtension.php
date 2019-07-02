@@ -130,7 +130,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                     'indexes' => [
                         'category' => [
                             'name' => 'sulu_category.categories',
-                            'security_context' => 'sulu.settings.categories'
+                            'security_context' => 'sulu.settings.categories',
                         ],
                     ],
                 ]

@@ -42,7 +42,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                     'indexes' => [
                         'media' => [
                             'name' => 'sulu_media.media',
-                            'security_context' => 'sulu.media.collections'
+                            'security_context' => 'sulu.media.collections',
                         ],
                     ],
                 ]
