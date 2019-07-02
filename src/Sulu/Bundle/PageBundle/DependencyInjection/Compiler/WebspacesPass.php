@@ -23,7 +23,7 @@ class WebspacesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $directory = $container->getParameter('sulu_core.webspace.config_dir');
+        $directory = $container->getParameterBag()->resolveValue($container->getParameter('sulu_core.webspace.config_dir'));
 
         if (!$container->hasExtension('sulu_search') || !file_exists($directory)) {
             return;

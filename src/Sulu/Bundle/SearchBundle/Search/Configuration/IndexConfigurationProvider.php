@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
+use Symfony\Component\Translation\TranslatorInterface;
+
 /**
  * Provides IndexConfigurations from the Symfony configuration stored in the container.
  */
@@ -24,12 +26,14 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
     /**
      * @param array $indexConfigurations
      */
-    public function __construct(array $indexConfigurations)
+    public function __construct(TranslatorInterface $translator, array $indexConfigurations)
     {
         foreach ($indexConfigurations as $indexName => $indexConfiguration) {
             $this->indexConfigurations[$indexName] = new IndexConfiguration(
                 $indexName,
-                isset($indexConfiguration['name']) ? $indexConfiguration['name'] : null,
+                isset($indexConfiguration['name'])
+                    ? $translator->trans($indexConfiguration['name'], [], 'admin')
+                    : null,
                 isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
                 isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
             );

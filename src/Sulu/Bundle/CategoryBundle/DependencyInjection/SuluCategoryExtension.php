@@ -122,5 +122,19 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                 ]
             );
         }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'indexes' => [
+                        'category' => [
+                            'name' => 'sulu_category.categories',
+                            'security_context' => 'sulu.settings.categories'
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 }

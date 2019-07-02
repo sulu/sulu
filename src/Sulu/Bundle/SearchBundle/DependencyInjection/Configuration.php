@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->root('sulu_search')
             ->children()
                 ->arrayNode('indexes')
-                    ->useAttributeAsKey('name')
+                    ->useAttributeAsKey('index_name')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('name')->end()

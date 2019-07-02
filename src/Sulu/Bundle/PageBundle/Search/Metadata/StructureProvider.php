@@ -200,9 +200,9 @@ class StructureProvider implements ProviderInterface
             if ($class->isSubclassOf(RedirectTypeBehavior::class)) {
                 $expression = <<<'EOT'
                     (object.getRedirectType() === %s
-                        ? (object.getRedirectTarget() ? object.getRedirectTarget().getResourceSegment()) 
-                        : (object.getRedirectType() === %s 
-                            ? object.getRedirectExternal() 
+                        ? (object.getRedirectTarget() ? object.getRedirectTarget().getResourceSegment())
+                        : (object.getRedirectType() === %s
+                            ? object.getRedirectExternal()
                             : object.getResourceSegment()
                         )
                     )

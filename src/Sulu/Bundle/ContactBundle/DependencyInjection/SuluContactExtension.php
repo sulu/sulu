@@ -40,9 +40,11 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 [
                     'indexes' => [
                         'contact' => [
+                            'name' => 'sulu_contact.people',
                             'security_context' => 'sulu.contact.people',
                         ],
                         'account' => [
+                            'name' => 'sulu_contact.organizations',
                             'security_context' => 'sulu.contact.organizations',
                         ],
                     ],

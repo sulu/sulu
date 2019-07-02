@@ -91,7 +91,14 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',
-                ['indexes' => ['snippet' => ['security_context' => 'sulu.global.snippets']]]
+                [
+                    'indexes' => [
+                        'snippet' => [
+                            'name' => 'sulu_snippet.snippets',
+                            'security_context' => 'sulu.global.snippets',
+                        ],
+                    ],
+                ]
             );
         }
 

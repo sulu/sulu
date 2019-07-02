@@ -38,7 +38,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',
-                ['indexes' => ['media' => ['security_context' => 'sulu.media.collections']]]
+                [
+                    'indexes' => [
+                        'media' => [
+                            'name' => 'sulu_media.media',
+                            'security_context' => 'sulu.media.collections'
+                        ],
+                    ],
+                ]
             );
         }
 

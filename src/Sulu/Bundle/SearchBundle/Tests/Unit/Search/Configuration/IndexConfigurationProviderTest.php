@@ -12,15 +12,29 @@
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IndexConfigurationProviderTest extends TestCase
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function setUp()
+    {
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+    }
+
     public function testGetIndexConfigurations()
     {
+        $this->translator->trans('test.index', [], 'admin')->willReturn('index 1');
+
         $indexConfigurationProvider = new IndexConfigurationProvider(
+            $this->translator->reveal(),
             [
                 'index1' => [
-                    'name' => 'index 1',
+                    'name' => 'test.index',
                     'security_context' => 'sulu.security.index1',
                     'contexts' => ['website'],
                 ],
@@ -43,6 +57,7 @@ class IndexConfigurationProviderTest extends TestCase
     public function testGetIndexConfiguration()
     {
         $indexConfigurationProvider = new IndexConfigurationProvider(
+            $this->translator->reveal(),
             [
                 'index1' => [
                     'security_context' => 'sulu.security.index1',

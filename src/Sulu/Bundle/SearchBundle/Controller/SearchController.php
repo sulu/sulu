@@ -147,13 +147,15 @@ class SearchController
     {
         return $this->viewHandler->handle(
             View::create(
-                array_map(
-                    function($indexName) {
-                        $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
-
-                        return $indexConfiguration ?: new IndexConfiguration($indexName);
-                    },
-                    $this->getAllowedIndexes()
+                array_values(
+                    array_filter(
+                        array_map(
+                            function($indexName) {
+                                return $this->indexConfigurationProvider->getIndexConfiguration($indexName);
+                            },
+                            $this->getAllowedIndexes()
+                        )
+                    )
                 )
             )
         );
