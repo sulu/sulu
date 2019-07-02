@@ -18,6 +18,8 @@ class RouteControllerTest extends SuluTestCase
 {
     const TEST_ENTITY = 'AppBundle\\Entity\\Test';
 
+    const TEST_RESOURCE_KEY = 'tests';
+
     const TEST_ID = 1;
 
     const TEST_LOCALE = 'de';
@@ -38,8 +40,8 @@ class RouteControllerTest extends SuluTestCase
         $client->request(
             'GET',
             sprintf(
-                '/api/routes?entityClass=%s&entityId=%s&locale=%s',
-                self::TEST_ENTITY,
+                '/api/routes?resourceKey=%s&id=%s&locale=%s',
+                self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )
@@ -53,6 +55,25 @@ class RouteControllerTest extends SuluTestCase
         $items = $result['_embedded']['routes'];
         $this->assertEquals($routes[0]->getId(), $items[0]['id']);
         $this->assertEquals($routes[0]->getPath(), $items[0]['path']);
+    }
+
+    public function testCGetActionNotExistingResourceKey()
+    {
+        $this->purgeDatabase();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            sprintf(
+                '/api/routes?resourceKey=%s&id=%s&locale=%s',
+                'articles',
+                self::TEST_ID,
+                self::TEST_LOCALE
+            )
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testCGetActionHistory()
@@ -70,8 +91,8 @@ class RouteControllerTest extends SuluTestCase
         $client->request(
             'GET',
             sprintf(
-                '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
-                self::TEST_ENTITY,
+                '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
+                self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )
@@ -109,14 +130,14 @@ class RouteControllerTest extends SuluTestCase
         ];
 
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/routes/' . $targetRoute->getId());
+        $client->request('DELETE', '/api/routes?ids=' . $targetRoute->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
             'GET',
             sprintf(
-                '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
-                self::TEST_ENTITY,
+                '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
+                self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )
@@ -138,15 +159,15 @@ class RouteControllerTest extends SuluTestCase
         ];
 
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/routes/' . $routes[0]->getId());
+        $client->request('DELETE', '/api/routes?ids=' . $routes[0]->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             sprintf(
-                '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
-                self::TEST_ENTITY,
+                '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
+                self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )

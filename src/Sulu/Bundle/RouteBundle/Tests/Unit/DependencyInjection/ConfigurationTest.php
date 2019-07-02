@@ -37,6 +37,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             [
                 'mappings' => [
                     'Sulu\Bundle\ArticleBundle\Document\ArticleDocument' => [
+                        'resource_key' => 'articles',
                         'generator' => 'template',
                         'options' => [
                             'test' => '/{object.getTitle()}',

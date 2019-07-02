@@ -96,7 +96,7 @@ class ResourceLocatorHistory extends React.Component<Props> {
                                 <Table.Body>
                                     {historyRoutes.map((historyRoute) => (
                                         <Table.Row id={historyRoute.id} key={historyRoute.id}>
-                                            <Table.Cell>{historyRoute.resourcelocator}</Table.Cell>
+                                            <Table.Cell>{historyRoute.path}</Table.Cell>
                                             <Table.Cell>{(new Date(historyRoute.created)).toLocaleString()}</Table.Cell>
                                         </Table.Row>
                                     ))}

@@ -15,6 +15,11 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
         const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
 
         const {generationUrl} = fieldTypeOptions;
+
+        if (!generationUrl) {
+            return;
+        }
+
         if (typeof generationUrl !== 'string') {
             throw new Error('The "generationUrl" fieldTypeOption must be a string!');
         }
@@ -60,6 +65,22 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
 
     render() {
         const {
+            fieldTypeOptions: {
+                defaultMode = 'leaf',
+                historyResourceKey,
+                options = {},
+            },
+        } = this.props;
+
+        if (!historyResourceKey || typeof historyResourceKey !== 'string') {
+            throw new Error('The "historyResourceKey" field type option must be set to a string!');
+        }
+
+        if (typeof options !== 'object') {
+            throw new Error('The "options" field type must be an object if given!');
+        }
+
+        const {
             dataPath,
             disabled,
             formInspector,
@@ -67,7 +88,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
             schemaOptions: {
                 mode: {
                     value: mode,
-                } = {value: 'leaf'},
+                } = {value: defaultMode},
             } = {},
             value,
         } = this.props;
@@ -92,8 +113,13 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
                     <div className={resourceLocatorStyles.resourceLocatorHistory}>
                         <ResourceLocatorHistory
                             id={formInspector.id}
-                            options={{language: formInspector.locale, webspace: formInspector.options.webspace}}
-                            resourceKey="page_resourcelocators"
+                            options={{
+                                locale: formInspector.locale,
+                                resourceKey: formInspector.resourceKey,
+                                webspace: formInspector.options.webspace,
+                                ...options,
+                            }}
+                            resourceKey={historyResourceKey}
                         />
                     </div>
                 }

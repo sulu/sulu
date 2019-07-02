@@ -48,7 +48,10 @@ test('Pass props correctly to ResourceLocator', () => {
         <ResourceLocator
             {...fieldTypeDefaultProps}
             disabled={true}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
             value="/"
@@ -58,6 +61,46 @@ test('Pass props correctly to ResourceLocator', () => {
     expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/');
     expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
     expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
+});
+
+test('Do not render history link if new entity is created', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(0);
+});
+
+test('Render history link if entity already existed including passed options', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(new ResourceStore('test', 1), 'test', {webspace: 'sulu'})
+    );
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+                options: {history: true},
+            }}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(1);
+    expect(resourceLocator.find('ResourceLocatorHistory').prop('options')).toEqual({history: true, webspace: 'sulu'});
+    expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('page_resourcelocators');
+    expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
 });
 
 test('Throw an exception if a non-valid mode is passed', () => {
@@ -72,7 +115,10 @@ test('Throw an exception if a non-valid mode is passed', () => {
         () => shallow(
             <ResourceLocator
                 {...fieldTypeDefaultProps}
-                fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+                fieldTypeOptions={{
+                    generationUrl: '/admin/api/resourcelocators?action=generate',
+                    historyResourceKey: 'page_resourcelocators',
+                }}
                 formInspector={formInspector}
                 schemaOptions={schemaOptions}
             />
@@ -80,17 +126,113 @@ test('Throw an exception if a non-valid mode is passed', () => {
     ).toThrow(/"leaf" or "full"/);
 });
 
-test('Throw an exception if a no generationUrl is passed', () => {
+test('Throw an exception if no historyResourceKey is given', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     expect(
         () => shallow(
             <ResourceLocator
                 {...fieldTypeDefaultProps}
+                fieldTypeOptions={{
+                    generationUrl: '/admin/api/resourcelocators?action=generate',
+                }}
                 formInspector={formInspector}
             />
         )
-    ).toThrow(/"generationUrl"/);
+    ).toThrow(/"historyResourceKey"/);
+});
+
+test('Throw an exception if given options are not an object', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    expect(
+        () => shallow(
+            <ResourceLocator
+                {...fieldTypeDefaultProps}
+                fieldTypeOptions={{
+                    generationUrl: '/admin/api/resourcelocators?action=generate',
+                    historyResourceKey: 'page_resourcelocators',
+                    options: true,
+                }}
+                formInspector={formInspector}
+            />
+        )
+    ).toThrow(/"options"/);
+});
+
+test('Do not add an addFinishFieldHandler for URL generation if no generationUrl was passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).not.toBeCalled();
+});
+
+test('Set mode to leaf by default', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+            value="/test/xxx"
+        />
+    );
+
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('leaf');
+});
+
+test('Set mode to full if set as defaultMode', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                defaultMode: 'full',
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+            value="/test/xxx"
+        />
+    );
+
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
+});
+
+test('Ignore defaultMode when a concrete mode is passed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const schemaOptions = {
+        mode: {
+            value: 'leaf',
+        },
+    };
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                defaultMode: 'full',
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('leaf');
 });
 
 test('Set default mode correctly', () => {
@@ -98,7 +240,10 @@ test('Set default mode correctly', () => {
     const resourceLocator = mount(
         <ResourceLocator
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             value="/test/xxx"
         />
@@ -114,7 +259,10 @@ test('Should not pass any argument to onFinish callback', () => {
     const resourceLocator = mount(
         <ResourceLocator
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             onFinish={finishSpy}
         />
@@ -136,7 +284,10 @@ test('Should not request a new URL if on an edit form', () =>{
     shallow(
         <ResourceLocator
             {...fieldTypeDefaultProps}
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaPath="/url"
         />
@@ -161,7 +312,10 @@ test('Should request a new URL if no URL was defined', () => {
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             onChange={changeSpy}
             schemaPath="/url"
@@ -208,7 +362,10 @@ test('Should not request a new URL if URL was defined', () => {
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             onChange={changeSpy}
             schemaPath="/url"
@@ -246,7 +403,10 @@ test('Should request a new URL including the options from the ResourceFormStore 
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             onChange={changeSpy}
             schemaPath="/url"
@@ -287,7 +447,10 @@ test('Should not request a new URL if no parts are available', () => {
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaPath="/url"
         />
@@ -314,7 +477,10 @@ test('Should not request a new URL if only empty parts are available', () => {
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaPath="/url"
         />
@@ -341,7 +507,10 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaPath="/url"
         />
@@ -368,7 +537,10 @@ test('Should not request a new URL if a field without any tags has finished edit
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             schemaPath="/url"
         />
@@ -398,7 +570,10 @@ test('Should not request a new URL if the resource locator field has already bee
         <ResourceLocator
             {...fieldTypeDefaultProps}
             dataPath="/block/0/url"
-            fieldTypeOptions={{generationUrl: '/admin/api/resourcelocators?action=generate'}}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
             formInspector={formInspector}
             onChange={changeSpy}
             schemaPath="/url"

@@ -10,11 +10,11 @@ import ListItemView from '@ckeditor/ckeditor5-ui/src/list/listitemview';
 import {createDropdown} from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
-import internalLinkTypeRegistry from './registries/InternalLinkTypeRegistry';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
+import internalLinkTypeRegistry from './registries/InternalLinkTypeRegistry';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 

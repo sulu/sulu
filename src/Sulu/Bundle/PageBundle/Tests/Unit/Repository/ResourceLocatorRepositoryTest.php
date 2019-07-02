@@ -133,8 +133,8 @@ class ResourceLocatorRepositoryTest extends TestCase
         $result = $this->repository->getHistory($uuid, $webspace, $locale);
         $this->assertEquals(3, $result['total']);
         $this->assertEquals(3, count($result['_embedded']['page_resourcelocators']));
-        $this->assertEquals('/test1', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
-        $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['resourcelocator']);
+        $this->assertEquals('/test1', $result['_embedded']['page_resourcelocators'][0]['path']);
+        $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['path']);
     }
 
     public function testDelete()

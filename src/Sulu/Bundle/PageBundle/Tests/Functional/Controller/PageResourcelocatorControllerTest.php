@@ -112,15 +112,15 @@ class PageResourcelocatorControllerTest extends SuluTestCase
                 'PHP_AUTH_PW' => 'test',
             ]
         );
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data[0]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data[1]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;
@@ -130,7 +130,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     {
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?webspace=sulu_io&language=en&template=default',
+            '/api/pages/resourcelocators/generates?webspace=sulu_io&locale=en&template=default',
             ['parts' => ['title' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -139,7 +139,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
+            '/api/pages/resourcelocators/generates?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&locale=en&template=default',
             ['parts' => ['title' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -148,7 +148,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
+            '/api/pages/resourcelocators/generates?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&locale=en&template=default',
             ['parts' => ['title' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -157,7 +157,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
+            '/api/pages/resourcelocators/generates?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&locale=en&template=default',
             ['parts' => ['title' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -169,7 +169,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     {
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            '/api/pages/resourcelocators/generates?webspace=sulu_io&locale=en&template=overview',
             ['parts' => ['title' => 'test1', 'subtitle' => 'test2']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -178,7 +178,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            '/api/pages/resourcelocators/generates?webspace=sulu_io&locale=en&template=overview',
             ['parts' => ['title' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -187,7 +187,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            '/api/pages/resourcelocators/generates?webspace=sulu_io&locale=en&template=overview',
             ['parts' => ['subtitle' => 'test']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -202,7 +202,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $newsData['url'] = '/test';
         $this->client->request(
             'PUT',
-            '/api/pages/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
+            '/api/pages/' . $newsData['id'] . '?webspace=sulu_io&locale=en&action=publish',
             $newsData
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -210,14 +210,14 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&locale=en'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(1, count($result['_embedded']['page_resourcelocators']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('/news', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
+        $this->assertEquals('/news', $result['_embedded']['page_resourcelocators'][0]['path']);
     }
 
     public function testDelete()
@@ -227,7 +227,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $newsData['url'] = '/test';
         $this->client->request(
             'PUT',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&locale=en&action=publish',
             $newsData
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -235,7 +235,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&locale=en'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $history = (array) json_decode($this->client->getResponse()->getContent(), true);
@@ -243,7 +243,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->client->request(
             'DELETE',
             sprintf(
-                '/api/pages/%s/resourcelocators?ids=%s&webspace=sulu_io&language=en',
+                '/api/pages/%s/resourcelocators?ids=%s&webspace=sulu_io&locale=en',
                 $newsData['id'],
                 $history['_embedded']['page_resourcelocators'][0]['id']
             )
@@ -252,7 +252,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
+            '/api/pages/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&locale=en'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
