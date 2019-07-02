@@ -193,8 +193,8 @@ class SearchControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
-        $this->assertEquals('contact', $result[0]['indexName']);
-        $this->assertEquals([], $result[0]['contexts']);
+        $this->assertEquals('contact', $result['_embedded']['search_indexes'][0]['indexName']);
+        $this->assertEquals([], $result['_embedded']['search_indexes'][0]['contexts']);
     }
 
     private function createUser()

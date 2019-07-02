@@ -1,4 +1,4 @@
-sulu_search_categories:
+sulu_search_indexes:
     path: /indexes
     defaults: { _controller: "sulu_search.controller.search:indexesAction", _format: json }
 

@@ -92,7 +92,7 @@ class SearchControllerTest extends TestCase
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
 
-        $view = View::create([$indexConfiguration1, $indexConfiguration2]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration1, $indexConfiguration2]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();
@@ -111,7 +111,7 @@ class SearchControllerTest extends TestCase
         $this->securityChecker->hasPermission('security-context-1', PermissionTypes::VIEW)->willReturn(true);
         $this->securityChecker->hasPermission('security-context-2', PermissionTypes::VIEW)->willReturn(false);
 
-        $view = View::create([$indexConfiguration1]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration1]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();
@@ -129,7 +129,7 @@ class SearchControllerTest extends TestCase
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
 
-        $view = View::create([$indexConfiguration2]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration2]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();

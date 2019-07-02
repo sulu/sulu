@@ -31,6 +31,11 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'sulu_search_search',
                             ],
                         ],
+                        'search_indexes' => [
+                            'routes' => [
+                                'list' => 'sulu_search_indexes',
+                            ],
+                        ],
                     ],
                 ]
             );
@@ -41,6 +46,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
+                        'sulu_search_indexes',
                         'sulu_search_search',
                     ],
                 ]
