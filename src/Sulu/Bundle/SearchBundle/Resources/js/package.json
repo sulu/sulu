@@ -7,6 +7,8 @@
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
     },
     "peerDependencies": {
+        "mobx": "^4.0.0",
+        "mobx-react": "^5.0.0",
         "react": "^16.2.0",
         "sulu-admin-bundle": "*"
     }
