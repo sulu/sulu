@@ -11,9 +11,11 @@ beforeEach(() => {
 });
 
 test.each([
-    ['test1'],
-    ['test2'],
-])('Search results for "%s" should be loaded from server', (query) => {
+    ['test1', undefined],
+    ['test2', undefined],
+    ['test1', 'page'],
+    ['test2', 'snippet'],
+])('Search results for "%s" in index "%s" should be loaded from server', (query, index) => {
     const result = [
         {id: 1},
     ];
@@ -26,8 +28,8 @@ test.each([
 
     ResourceRequester.getList.mockReturnValue(searchPromise);
 
-    searchStore.search(query);
-    expect(ResourceRequester.getList).toBeCalledWith('search', {q: query});
+    searchStore.search(query, index);
+    expect(ResourceRequester.getList).toBeCalledWith('search', {q: query, index});
 
     return searchPromise.then(() => {
         expect(searchStore.result).toEqual(result);
