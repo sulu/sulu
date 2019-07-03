@@ -96,6 +96,7 @@ class Configuration implements ConfigurationInterface
                             'Expires' => '+1 month',
                             'Pragma' => 'public',
                             'Cache-Control' => 'public',
+                            'X-SULU-MEDIA-CACHE' => 'MISS',
                         ])
                     ->end()
                     ->arrayNode('default_imagine_options')

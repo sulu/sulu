@@ -21,9 +21,14 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Lock;
+use Symfony\Component\Lock\Store\FlockStore;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 
 class MediaStreamController extends Controller
 {
@@ -57,6 +62,20 @@ class MediaStreamController extends Controller
             $url = $request->getPathInfo();
 
             list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
+
+            $lockingKey = sprintf('media-cache_%s_%s', $id, $format);
+
+            $lock = $this->createLock($lockingKey);
+
+            if ($lock && !$lock->acquire()) {
+                // wait for releasing of lock
+                if ($lock->acquire(true)) {
+                    // when getting the lock release it as soon as possible
+                    $lock->release();
+                }
+
+                return new RedirectResponse($request->getUri());
+            }
 
             return $this->getCacheManager()->returnImage($id, $format);
         } catch (ImageProxyException $e) {
@@ -273,5 +292,21 @@ class MediaStreamController extends Controller
         }
 
         return $this->storage;
+    }
+
+    private function createLock(string $key): ?Lock
+    {
+        if (!class_exists(Factory::class)) {
+            // for locking the symfony/lock is required if not installed the media stream is not locked
+            return null;
+        }
+
+        if (SemaphoreStore::isSupported()) {
+            $store = new SemaphoreStore();
+        } else {
+            $store = new FlockStore();
+        }
+
+        return (new Factory($store))->createLock($key);
     }
 }
