@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>keywords</key>
+    <key>category_keywords</key>
 
     <properties>
         <property name="id" translation="sulu_admin.id" visibility="no" type="string">
@@ -30,7 +30,12 @@
             </joins>
         </group-concat-property>
 
-        <count-property name="categoryTranslationCount" visibility="always" translation="sulu_category.multiple_usage">
+        <count-property
+            name="categoryTranslationCount"
+            visibility="always"
+            translation="sulu_category.multiple_usage"
+            type="category_keywords_multiple_usage"
+        >
             <field-name>id</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
 

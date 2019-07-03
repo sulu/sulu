@@ -85,12 +85,40 @@ class KeywordControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
 
-        usort($response->_embedded->keywords, function($key1, $key2) {
+        usort($response->_embedded->category_keywords, function($key1, $key2) {
             return $key1->id > $key2->id;
         });
 
-        $this->assertEquals('keyword1', $response->_embedded->keywords[0]->keyword);
-        $this->assertEquals('keyword2', $response->_embedded->keywords[1]->keyword);
+        $this->assertEquals('keyword1', $response->_embedded->category_keywords[0]->keyword);
+        $this->assertEquals('keyword2', $response->_embedded->category_keywords[1]->keyword);
+    }
+
+    public function testGet()
+    {
+        $keyword = $this->testPost('keyword1', 'de', $this->category1->getId());
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category1->getId() . '/keywords/' . $keyword['id'] . '?locale=de'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('keyword1', $response->keyword);
+    }
+
+    public function testGetNotExisting()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/categories/' . $this->category1->getId() . '/keywords/1?locale=de'
+        );
+
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testPost($keyword = 'Test', $locale = 'de', $categoryId = null)
