@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render only with title 1`] = `
+<div
+  class="searchResult"
+>
+  <div
+    class="imageContainer"
+  />
+  <div
+    class="resultContainer"
+  >
+    <div
+      class="title"
+    >
+      Result
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with all data 1`] = `
+<div
+  class="searchResult"
+>
+  <div
+    class="imageContainer"
+  >
+    <img
+      class="image"
+      src="/image.jpg"
+    />
+  </div>
+  <div
+    class="resultContainer"
+  >
+    <div
+      class="resource"
+    >
+      Page
+    </div>
+    <div
+      class="title"
+    >
+      Result
+      <span
+        class="locale"
+      >
+         (de)
+      </span>
+    </div>
+    <div
+      class="description"
+    >
+      Description
+    </div>
+  </div>
+</div>
+`;

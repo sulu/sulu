@@ -28,10 +28,13 @@ test.each([
 
     ResourceRequester.getList.mockReturnValue(searchPromise);
 
+    expect(searchStore.loading).toEqual(false);
     searchStore.search(query, index);
     expect(ResourceRequester.getList).toBeCalledWith('search', {q: query, index});
+    expect(searchStore.loading).toEqual(true);
 
     return searchPromise.then(() => {
+        expect(searchStore.loading).toEqual(false);
         expect(searchStore.result).toEqual(result);
     });
 });

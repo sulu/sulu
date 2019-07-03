@@ -1,0 +1,21 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$searchHintColor: $gray;
+
+.search {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.nothing-hint {
+    font-size: 18px;
+    font-weight: bold;
+    color: $searchHintColor;
+    width: 360px;
+    text-align: center;
+}
+
+.nothing-icon {
+    font-size: 32px;
+}

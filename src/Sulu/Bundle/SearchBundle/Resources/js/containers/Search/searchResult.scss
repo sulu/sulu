@@ -1,0 +1,58 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$searchResultBackgroundColor: $white;
+$searchResultBorderRadius: 3px;
+$searchResultResourceColor: $shakespeare;
+$searchResultLocaleColor: $scorpion;
+$searchResultDescriptionColor: $scorpion;
+
+.search-result {
+    display: flex;
+    background: $searchResultBackgroundColor;
+    border-radius: $searchResultBorderRadius;
+    width: 100%;
+    height: 84px;
+    max-width: 540px;
+    margin-bottom: 4px;
+    padding: 10px;
+}
+
+.image-container,
+.image {
+    width: 64px;
+    height: 64px;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 20px;
+}
+
+.resource {
+    color: $searchResultResourceColor;
+    font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+.locale {
+    color: $searchResultLocaleColor;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.description {
+    color: $searchResultDescriptionColor;
+    font-size: 12px;
+    line-height: 12px;
+    margin-top: 5px;
+}

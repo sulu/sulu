@@ -1,0 +1,68 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$searchFieldBackgroundColor: $white;
+$searchFieldIndexButtonColor: $white;
+$searchFieldIndexButtonBackgroundColor: $java;
+$searchFieldBorderRadius: 3px;
+$searchFieldBorderColor: $silver;
+$searchFieldHintColor: $gray;
+
+.search-field {
+    display: flex;
+    width: 100%;
+    max-width: 820px;
+    height: 40px;
+    background: $searchFieldBackgroundColor;
+    border-radius: 0 $searchFieldBorderRadius $searchFieldBorderRadius 0;
+}
+
+.index-button {
+    display: flex;
+    background: $searchFieldIndexButtonBackgroundColor;
+    color: $searchFieldIndexButtonColor;
+    border: none;
+    border-radius: $searchFieldBorderRadius 0 0 $searchFieldBorderRadius;
+    height: 100%;
+    width: 140px;
+    font-weight: bold;
+    text-align: left;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.index {
+    width: 100%;
+}
+
+.input-container,
+.input {
+    border-radius: 0 $searchFieldBorderRadius $searchFieldBorderRadius 0;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid $searchFieldBorderColor;
+    border-left: none;
+}
+
+.input {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.hint {
+    color: $searchFieldHintColor;
+    margin: 20px 0 60px;
+}
