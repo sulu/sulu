@@ -310,6 +310,7 @@ class Form extends React.Component<Props> {
         this.postponedUpdateRouteMethod = undefined;
         this.postponedRoute = undefined;
         this.postponedRouteAttributes = undefined;
+        this.showDirtyWarning = false;
     };
 
     @action handleHasChangedWarningCancelClick = () => {
@@ -413,7 +414,7 @@ export default withToolbar(Form, function() {
         ? {
             value: resourceStore.locale.get(),
             onChange: (locale) => {
-                resourceStore.setLocale(locale);
+                router.navigate(router.route.name, {...router.attributes, locale});
             },
             options: this.locales.map((locale) => ({
                 value: locale,

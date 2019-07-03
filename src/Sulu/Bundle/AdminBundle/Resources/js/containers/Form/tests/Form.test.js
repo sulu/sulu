@@ -30,7 +30,7 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
     this.data = resourceStore.data;
-    this.locale = resourceStore.locale;
+    this.locale = resourceStore.observableOptions.locale;
     this.loading = resourceStore.loading;
     this.validate = jest.fn().mockReturnValue(true);
     this.schema = {};
@@ -47,8 +47,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, i
     this.resourceKey = resourceKey;
     this.id = id;
     this.data = {};
-    this.locale = observableOptions.locale;
-    this.setLocale = jest.fn((locale) => this.locale.set(locale));
+    this.observableOptions = observableOptions;
     this.loading = false;
 }));
 
@@ -368,7 +367,11 @@ test('Should show a GhostDialog after the locale has been switched to a non-tran
 
     expect(form.find('GhostDialog').prop('open')).toEqual(false);
 
-    resourceStore.setLocale('de');
+    const {locale} = resourceStore.observableOptions;
+    if (!locale) {
+        throw new Error('The "locale" must be set!');
+    }
+    locale.set('de');
 
     form.update();
     expect(form.find('GhostDialog').prop('open')).toEqual(true);

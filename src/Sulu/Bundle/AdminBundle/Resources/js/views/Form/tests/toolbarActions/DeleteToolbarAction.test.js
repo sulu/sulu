@@ -1,5 +1,6 @@
 // @flow
 import {shallow} from 'enzyme';
+import {observable} from 'mobx';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -10,15 +11,9 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
+jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.id = id;
-    this.locale = {
-        get: jest.fn(),
-    };
-
-    this.setLocale = jest.fn((locale) => {
-        this.locale.get.mockReturnValue(locale);
-    });
+    this.observableOptions = observableOptions;
 }));
 
 jest.mock('../../../../containers/Form', () => ({
@@ -33,7 +28,7 @@ jest.mock('../../../../containers/Form', () => ({
         }
 
         get locale() {
-            return this.resourceStore.locale;
+            return this.resourceStore.observableOptions.locale;
         }
 
         delete = jest.fn();
@@ -52,7 +47,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
 }));
 
 function createDeleteToolbarAction() {
-    const resourceStore = new ResourceStore('test');
+    const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
     const form = new Form({
@@ -129,7 +124,6 @@ test('Close dialog on cancel click', () => {
 test('Call delete when dialog is confirmed', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
-    deleteToolbarAction.resourceFormStore.resourceStore.setLocale('en');
     deleteToolbarAction.router.route.options.backRoute = 'sulu_test.list';
 
     const deletePromise = Promise.resolve();

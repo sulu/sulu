@@ -98,17 +98,6 @@ export default class ResourceStore {
         this.loading = loading;
     }
 
-    @action setLocale(locale: string) {
-        const {locale: observableLocale} = this.observableOptions;
-        if (!observableLocale) {
-            throw new Error(
-                '"setLocale" should not be called on a ResourceStore which got no locale passed in the constructor'
-            );
-        }
-
-        observableLocale.set(locale);
-    }
-
     @action save(options: Object = {}): Promise<*> {
         const {locale} = this.observableOptions;
 
