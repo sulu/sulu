@@ -96,7 +96,7 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                                 'types' => [
                                     'list' => [
                                         'adapter' => 'tree_table_slim',
-                                        'list_key' => 'target_groups',
+                                        'list_key' => 'target_groups_selection',
                                     ],
                                 ],
                             ],
