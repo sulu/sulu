@@ -234,14 +234,18 @@ exports[`Render search results 1`] = `
       class="resultContainer"
     >
       <div
-        class="title"
+        class="titleContainer"
       >
-        Test1
-        <span
+        <div
+          class="title"
+        >
+          Test1
+        </div>
+        <div
           class="locale"
         >
            (de)
-        </span>
+        </div>
       </div>
       <div
         class="description"
@@ -265,9 +269,13 @@ exports[`Render search results 1`] = `
       class="resultContainer"
     >
       <div
-        class="title"
+        class="titleContainer"
       >
-        Max Mustermann
+        <div
+          class="title"
+        >
+          Max Mustermann
+        </div>
       </div>
       <div
         class="description"

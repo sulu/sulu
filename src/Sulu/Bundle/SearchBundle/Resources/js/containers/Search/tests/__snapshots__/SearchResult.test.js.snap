@@ -11,9 +11,13 @@ exports[`Render only with title 1`] = `
     class="resultContainer"
   >
     <div
-      class="title"
+      class="titleContainer"
     >
-      Result
+      <div
+        class="title"
+      >
+        Result
+      </div>
     </div>
   </div>
 </div>
@@ -40,14 +44,18 @@ exports[`Render with all data 1`] = `
       Page
     </div>
     <div
-      class="title"
+      class="titleContainer"
     >
-      Result
-      <span
+      <div
+        class="title"
+      >
+        Result
+      </div>
+      <div
         class="locale"
       >
          (de)
-      </span>
+      </div>
     </div>
     <div
       class="description"

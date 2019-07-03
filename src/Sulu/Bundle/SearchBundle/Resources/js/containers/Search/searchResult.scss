@@ -15,12 +15,14 @@ $searchResultDescriptionColor: $scorpion;
     max-width: 540px;
     margin-bottom: 4px;
     padding: 10px;
+    overflow: hidden;
 }
 
 .image-container,
 .image {
     width: 64px;
     height: 64px;
+    flex-shrink: 0;
 }
 
 .result-container {
@@ -28,6 +30,7 @@ $searchResultDescriptionColor: $scorpion;
     flex-direction: column;
     justify-content: center;
     margin-left: 20px;
+    overflow: hidden;
 }
 
 .resource {
@@ -35,6 +38,11 @@ $searchResultDescriptionColor: $scorpion;
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 5px;
+}
+
+.title-container {
+    display: flex;
+    align-items: baseline;
 }
 
 .title {
@@ -48,6 +56,7 @@ $searchResultDescriptionColor: $scorpion;
     font-weight: normal;
     font-size: 10px;
     line-height: 12px;
+    margin-left: 4px;
 }
 
 .description {
@@ -55,4 +64,11 @@ $searchResultDescriptionColor: $scorpion;
     font-size: 12px;
     line-height: 12px;
     margin-top: 5px;
+}
+
+.description,
+.title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

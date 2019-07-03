@@ -27,9 +27,11 @@ export default class SearchResult extends React.Component<Props> {
                             {resource}
                         </div>
                     }
-                    <div className={searchResultStyles.title}>
-                        {title}
-                        {locale && <span className={searchResultStyles.locale}> ({locale})</span>}
+                    <div className={searchResultStyles.titleContainer}>
+                        <div className={searchResultStyles.title}>
+                            {title}
+                        </div>
+                        {locale && <div className={searchResultStyles.locale}> ({locale})</div>}
                     </div>
                     {description &&
                         <div className={searchResultStyles.description}>
