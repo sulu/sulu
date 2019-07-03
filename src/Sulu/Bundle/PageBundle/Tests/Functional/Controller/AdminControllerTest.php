@@ -41,7 +41,6 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('order', $response);
         $this->assertObjectHasAttribute('published', $response);
 
         $this->assertEquals('ID', $response->id->label);
