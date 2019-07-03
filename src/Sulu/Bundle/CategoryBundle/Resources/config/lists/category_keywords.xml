@@ -30,7 +30,12 @@
             </joins>
         </group-concat-property>
 
-        <count-property name="categoryTranslationCount" visibility="always" translation="sulu_category.multiple_usage">
+        <count-property
+            name="categoryTranslationCount"
+            visibility="always"
+            translation="sulu_category.multiple_usage"
+            type="category_keywords_multiple_usage"
+        >
             <field-name>id</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
 

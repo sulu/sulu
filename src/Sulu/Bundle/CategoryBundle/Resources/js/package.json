@@ -1,0 +1,13 @@
+{
+    "name": "sulu-category-bundle",
+    "description": "Adds support for categories to Sulu",
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
+    "devDependencies": {
+        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
+    },
+    "peerDependencies": {
+        "react": "^16.2.0",
+        "sulu-admin-bundle": "*"
+    }
+}

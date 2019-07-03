@@ -3,6 +3,7 @@ import {internalLinkTypeRegistry} from './CKEditor5';
 import List, {
     ListStore,
     listAdapterRegistry,
+    listFieldTransformerRegistry,
     AbstractAdapter,
     FlatStructureStrategy,
     InfiniteLoadingStrategy,
@@ -41,6 +42,7 @@ export {
     List,
     ListStore,
     listAdapterRegistry,
+    listFieldTransformerRegistry,
     fieldRegistry,
     FlatStructureStrategy,
     Form,
