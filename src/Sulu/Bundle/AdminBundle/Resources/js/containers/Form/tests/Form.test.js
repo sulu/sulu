@@ -3,9 +3,12 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import Form from '../Form';
+import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../stores/ResourceFormStore';
 import metadataStore from '../stores/MetadataStore';
+
+jest.mock('../../../services/Router', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
@@ -73,6 +76,41 @@ test('Should call onSubmit callback', () => {
 
     expect(errorSpy).not.toBeCalled();
     expect(submitSpy).toBeCalled();
+});
+
+test.each([
+    [undefined],
+    ['draft'],
+    ['publish'],
+])('Call saveHandlers with the action "%s" as argument when form is submitted', (action) => {
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    const submitPromise = Promise.resolve();
+    const submitSpy = jest.fn().mockReturnValue(submitPromise);
+
+    const resourceStore = new ResourceStore('snippet', '1');
+    resourceStore.data = {
+        block: [
+            {
+                text: 'Test',
+                type: 'default',
+            },
+        ],
+    };
+
+    const store = new ResourceFormStore(resourceStore, 'snippet');
+
+    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
+
+    form.instance().formInspector.addSaveHandler(handler1);
+    form.instance().formInspector.addSaveHandler(handler2);
+
+    form.instance().submit(action);
+
+    return submitPromise.then(() => {
+        expect(handler1).toBeCalledWith(action);
+        expect(handler2).toBeCalledWith(action);
+    });
 });
 
 test('Should call onError callback', () => {
@@ -220,15 +258,17 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
 });
 
 test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {
+    const router = new Router();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     // $FlowFixMe
     store.schema = {};
     store.data.title = 'Title';
     store.data.description = 'Description';
-    const form = shallow(<Form onSubmit={jest.fn()} store={store} />);
+    const form = shallow(<Form onSubmit={jest.fn()} router={router} store={store} />);
 
     expect(form.find('Renderer').props()).toEqual(expect.objectContaining({
         data: store.data,
+        router,
         schema: store.schema,
     }));
 

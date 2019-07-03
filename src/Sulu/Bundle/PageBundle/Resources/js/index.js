@@ -7,6 +7,7 @@ import TeaserSelection from './containers/Form/fields/TeaserSelection';
 import {teaserProviderRegistry} from './containers/TeaserSelection';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
+import PageSettingsVersions from './containers/Form/fields/PageSettingsVersions';
 import EditToolbarAction from './views/Form/toolbarActions/EditToolbarAction';
 import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAction';
 import PageTabs from './views/PageTabs';
@@ -24,6 +25,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
 
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
+    fieldRegistry.add('page_settings_versions', PageSettingsVersions);
     fieldRegistry.add('search_result', SearchResult);
     fieldRegistry.add('teaser_selection', TeaserSelection);
 

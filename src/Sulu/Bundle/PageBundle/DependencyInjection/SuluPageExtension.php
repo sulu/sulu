@@ -55,6 +55,12 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'detail' => 'get_page',
                             ],
                         ],
+                        'page_versions' => [
+                            'routes' => [
+                                'list' => 'get_page_versions',
+                                'detail' => 'post_page_version_trigger',
+                            ],
+                        ],
                         'webspaces' => [
                             'routes' => [
                                 'list' => 'get_webspaces',
@@ -182,6 +188,17 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         'codes' => [
                             ResourceLocatorAlreadyExistsException::class => 409,
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'post_page_version_trigger',
                     ],
                 ]
             );

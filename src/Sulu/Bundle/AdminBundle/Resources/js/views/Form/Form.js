@@ -334,6 +334,7 @@ class Form extends React.Component<Props> {
                     titleVisible = false,
                 },
             },
+            router,
             title,
         } = this.props;
 
@@ -344,6 +345,7 @@ class Form extends React.Component<Props> {
                     onError={this.handleError}
                     onSubmit={this.handleSubmit}
                     ref={this.setFormRef}
+                    router={router}
                     store={this.resourceFormStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}

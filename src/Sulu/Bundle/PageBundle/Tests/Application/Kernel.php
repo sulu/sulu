@@ -22,7 +22,7 @@ class Kernel extends SuluTestKernel
 
         $loader->load(__DIR__ . '/config/config.yml');
 
-        if ('jackrabbit' === getenv('SULU_PHPCR_TRANSPORT')) {
+        if ('jackrabbit' === getenv('PHPCR_TRANSPORT')) {
             $loader->load(__DIR__ . '/config/versioning.yml');
         }
 

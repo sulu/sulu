@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import Router from '../../services/Router';
 import type {ErrorCollection} from '../Form/types';
 import {FormInspector, Renderer} from '../Form';
 import type {Schema} from '../Form';
@@ -12,6 +13,7 @@ type Props = {|
     index: number,
     onChange: (index: number, name: string, value: *) => void,
     onFieldFinish: ?() => void,
+    router: ?Router,
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
@@ -28,7 +30,17 @@ export default class FieldRenderer extends React.Component<Props> {
     };
 
     render() {
-        const {data, dataPath, errors, formInspector, onFieldFinish, schema, schemaPath, showAllErrors} = this.props;
+        const {
+            data,
+            dataPath,
+            errors,
+            formInspector,
+            onFieldFinish,
+            router,
+            schema,
+            schemaPath,
+            showAllErrors,
+        } = this.props;
 
         return (
             <Renderer
@@ -38,6 +50,7 @@ export default class FieldRenderer extends React.Component<Props> {
                 formInspector={formInspector}
                 onChange={this.handleChange}
                 onFieldFinish={onFieldFinish}
+                router={router}
                 schema={schema}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}

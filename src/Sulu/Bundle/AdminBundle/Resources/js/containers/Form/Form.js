@@ -4,16 +4,18 @@ import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
 import Loader from '../../components/Loader';
+import Router from '../../services/Router';
 import Renderer from './Renderer';
 import type {FormStoreInterface} from './types';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
 
-type Props = {
+type Props = {|
     onError?: (errors: Object) => void,
     onSubmit: (action: ?string) => ?Promise<Object>,
+    router?: Router,
     store: FormStoreInterface,
-};
+|};
 
 @observer
 class Form extends React.Component<Props> {
@@ -67,7 +69,15 @@ class Form extends React.Component<Props> {
         this.showAllErrors = true;
 
         if (store.validate()) {
-            return onSubmit(action);
+            const submitPromise = onSubmit(action);
+            if (submitPromise) {
+                return submitPromise.then((response) => {
+                    this.formInspector.triggerSaveHandler(action);
+                    return response;
+                });
+            }
+
+            return submitPromise;
         }
 
         if (onError) {
@@ -114,7 +124,7 @@ class Form extends React.Component<Props> {
     };
 
     render() {
-        const {store} = this.props;
+        const {router, store} = this.props;
         const {
             data: {
                 availableLocales,
@@ -141,6 +151,7 @@ class Form extends React.Component<Props> {
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
                         ref={this.setRendererRef}
+                        router={router}
                         schema={store.schema}
                         schemaPath=""
                         showAllErrors={this.showAllErrors}

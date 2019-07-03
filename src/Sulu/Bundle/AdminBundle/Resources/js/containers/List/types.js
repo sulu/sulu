@@ -23,7 +23,13 @@ export type Schema = {
 
 export type SortOrder = 'asc' | 'desc';
 
+export type Action = {|
+    icon: string,
+    onClick: ?(itemId: string | number) => void,
+|};
+
 export type ListAdapterProps = {
+    actions?: Array<Action>,
     active: ?string | number,
     activeItems: ?Array<string | number>,
     data: Array<*>,

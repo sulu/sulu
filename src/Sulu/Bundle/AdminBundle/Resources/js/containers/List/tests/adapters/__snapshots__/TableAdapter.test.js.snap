@@ -466,6 +466,264 @@ exports[`Render data with all different visibility types schema 1`] = `
 </section>
 `;
 
+exports[`Render data with pencil button and given actions when onItemEdit callback is passed 1`] = `
+<section>
+  <div
+    class="tableContainer dark"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-pen"
+                class="su-pen"
+              />
+            </span>
+          </th>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-process"
+                class="su-process"
+              />
+            </span>
+          </th>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-trash"
+                class="su-trash"
+              />
+            </span>
+          </th>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              Description
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-process"
+                  class="su-process"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-trash"
+                  class="su-trash"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-process"
+                  class="su-process"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-trash"
+                  class="su-trash"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Description 2
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+    </span>
+    <div
+      class="loader"
+    />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark center"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
+    <span
+      class="display"
+    >
+      of 3
+    </span>
+    <button
+      class="previous"
+      disabled=""
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left"
+      />
+    </button>
+    <button
+      class="next"
+    >
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right"
+      />
+    </button>
+  </nav>
+</section>
+`;
+
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div

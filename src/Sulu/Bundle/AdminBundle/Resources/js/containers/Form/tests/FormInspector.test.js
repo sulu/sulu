@@ -114,6 +114,22 @@ test('Should call registered onFinishField handlers', () => {
     expect(finishFieldHandler2).toBeCalledWith('/block/0/test', '/test');
 });
 
+test.each([
+    [undefined],
+    ['draft'],
+    ['action'],
+])('Should call registered save handlers', (action) => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 3), 'test'));
+    const saveHandler1 = jest.fn();
+    const saveHandler2 = jest.fn();
+    formInspector.addSaveHandler(saveHandler1);
+    formInspector.addSaveHandler(saveHandler2);
+
+    formInspector.triggerSaveHandler(action);
+    expect(saveHandler1).toBeCalledWith(action);
+    expect(saveHandler2).toBeCalledWith(action);
+});
+
 test('Should return the SchemaEntry for a given path by using the ResourceFormStore', () => {
     const schemaEntry = {
         type: 'text_line',

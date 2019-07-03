@@ -1,11 +1,11 @@
 // @flow
 import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import type {FinishFieldHandler, FormStoreInterface} from './types';
+import type {FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
 
 export default class FormInspector {
     formStore: FormStoreInterface;
-
+    saveHandlers: Array<SaveHandler> = [];
     finishFieldHandlers: Array<FinishFieldHandler> = [];
 
     constructor(formStore: FormStoreInterface) {
@@ -42,6 +42,14 @@ export default class FormInspector {
 
     getSchemaEntryByPath(schemaPath: string) {
         return this.formStore.getSchemaEntryByPath(schemaPath);
+    }
+
+    addSaveHandler(saveHandler: SaveHandler) {
+        this.saveHandlers.push(saveHandler);
+    }
+
+    triggerSaveHandler(action: ?string) {
+        this.saveHandlers.forEach((saveHandler) => saveHandler(action));
     }
 
     addFinishFieldHandler(finishFieldHandler: FinishFieldHandler) {

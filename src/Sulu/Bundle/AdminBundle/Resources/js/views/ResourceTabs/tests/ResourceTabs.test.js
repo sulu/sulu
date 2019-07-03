@@ -932,10 +932,10 @@ test('Should not reload ResourceStore if route is about to change to same route'
 
     router.addUpdateRouteHook.mock.calls[0][0](childRoute1);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalled();
 });
 
-test('Should not reload ResourceStore if route is about to change to parent route', () => {
+test('Should reload ResourceStore if route is about to change to parent route', () => {
     ResourceStore.mockImplementation(function() {
         this.initialized = true;
         this.load = jest.fn();
@@ -972,7 +972,7 @@ test('Should not reload ResourceStore if route is about to change to parent rout
 
     router.addUpdateRouteHook.mock.calls[0][0](route);
 
-    expect(resourceTabs.instance().resourceStore.reload).not.toBeCalledWith();
+    expect(resourceTabs.instance().resourceStore.reload).toBeCalledWith();
 });
 
 test('Should not reload ResourceStore if route is about to change to route outside of tabs', () => {

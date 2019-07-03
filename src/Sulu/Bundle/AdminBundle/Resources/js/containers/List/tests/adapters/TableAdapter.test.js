@@ -345,6 +345,60 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data with pencil button and given actions when onItemEdit callback is passed', () => {
+    const rowEditClickSpy = jest.fn();
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            description: 'Description 2',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const actions = [
+        {
+            icon: 'su-process',
+            onClick: undefined,
+        },
+        {
+            icon: 'su-trash',
+            onClick: undefined,
+        },
+    ];
+
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            actions={actions}
+            data={data}
+            onItemClick={rowEditClickSpy}
+            page={1}
+            pageCount={3}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Render column with ascending sort icon', () => {
     const data = [
         {
@@ -463,6 +517,60 @@ test('Click on pencil should execute onItemClick callback', () => {
 
     buttons[0].onClick(1);
     expect(rowEditClickSpy).toBeCalledWith(1);
+});
+
+test('Click on action should execute its callback', () => {
+    const rowEditClickSpy = jest.fn();
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            description: 'Description 2',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const actions = [
+        {
+            icon: 'su-process',
+            onClick: jest.fn(),
+        },
+    ];
+
+    const tableAdapter = shallow(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            actions={actions}
+            data={data}
+            onItemClick={rowEditClickSpy}
+            page={1}
+            pageCount={3}
+            schema={schema}
+        />
+    );
+    const buttons = tableAdapter.find('Table').prop('buttons');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[1].icon).toBe('su-process');
+
+    buttons[1].onClick(1);
+    expect(actions[0].onClick).toBeCalledWith(1);
 });
 
 test('Click on checkbox should call onItemSelectionChange callback', () => {
