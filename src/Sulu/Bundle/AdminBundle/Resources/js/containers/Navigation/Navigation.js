@@ -13,6 +13,7 @@ type Props = {
     onLogout: () => void,
     onNavigate: (route: string) => void,
     onPinToggle: () => void,
+    onProfileClick: () => void,
     pinned: boolean,
     router: Router,
     suluVersion: string,
@@ -46,7 +47,7 @@ class Navigation extends React.Component<Props> {
     };
 
     handleProfileEditClick = () => {
-        // TODO: Open profile edit overlay here.
+        this.props.onProfileClick();
     };
 
     handlePinToggle = () => {
