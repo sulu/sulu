@@ -74,7 +74,9 @@ class UserStore {
     }
 
     @action setFullName(fullName: string){
-        this.contact.fullName = fullName;
+        if (this.contact){
+            this.contact.fullName = fullName;
+        }
     }
 
     login = (user: string, password: string) => {

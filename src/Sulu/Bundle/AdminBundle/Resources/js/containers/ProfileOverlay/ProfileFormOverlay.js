@@ -2,18 +2,17 @@
 import React from 'react';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
-import {Form} from 'sulu-admin-bundle/containers';
-import {translate} from 'sulu-admin-bundle/utils';
-import {Overlay} from 'sulu-admin-bundle/components';
+import Form from '../../containers/Form';
+import {translate} from '../../utils/Translator';
+import Overlay from '../../components/Overlay';
 import ResourceRequester from '../../services/ResourceRequester';
 import type {RawSchema} from '../Form/types';
 import MemoryFormStore from '../Form/stores/MemoryFormStore';
 import MetadataStore from '../Form/stores/MetadataStore';
 import Loader from '../../components/Loader/Loader';
-import profileFormOverlayStyles from './profileFormOverlay.scss';
 import userStore from '../../stores/UserStore';
+import profileFormOverlayStyles from './profileFormOverlay.scss';
 
-//on then
 type Props = {
     onClose: () => void,
     open: boolean,
@@ -26,10 +25,8 @@ const RESOURCE_KEY = 'profile';
 class ProfileFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     title: string;
-    operationType: string;
     @observable formStore: MemoryFormStore;
     saving: boolean = false;
-    locale: IObservableValue<string>;
 
     constructor(props: Props) {
         super(props);
@@ -69,27 +66,29 @@ class ProfileFormOverlay extends React.Component<Props> {
     };
 
     render() {
-        return (<Overlay
-            confirmLoading={!this.formStore || this.saving}
-            confirmText={translate('sulu_admin.ok')}
-            onClose={this.handleClose}
-            onConfirm={this.handleConfirm}
-            open={this.props.open}
-            size="large"
-            title={translate('sulu_admin.edit_profile')}
-        >
-            {this.formStore !== undefined
-                ? <div className={profileFormOverlayStyles.overlay}>
-                    <Form
-                        onSubmit={this.handleSubmit}
-                        ref={this.setFormRef}
-                        store={this.formStore}
-                    />
-                </div>
-                : <Loader />
-            }
+        return (
+            <Overlay
+                confirmLoading={!this.formStore || this.saving}
+                confirmText={translate('sulu_admin.save')}
+                onClose={this.handleClose}
+                onConfirm={this.handleConfirm}
+                open={this.props.open}
+                size="large"
+                title={translate('sulu_admin.edit_profile')}
+            >
+                {this.formStore !== undefined
+                    ? <div className={profileFormOverlayStyles.overlay}>
+                        <Form
+                            onSubmit={this.handleSubmit}
+                            ref={this.setFormRef}
+                            store={this.formStore}
+                        />
+                    </div>
+                    : <Loader />
+                }
 
-        </Overlay>);
+            </Overlay>
+        );
     }
 }
 

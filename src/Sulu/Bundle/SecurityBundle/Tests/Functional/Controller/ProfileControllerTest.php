@@ -11,11 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-use function PHPSTORM_META\expectedArguments;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
+
 
 class ProfileControllerTest extends SuluTestCase
 {
@@ -44,7 +41,8 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
     }
 
-    public function testGet(){
+    public function testGet()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/security/profile');
@@ -60,7 +58,8 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('Mustermann', $response->lastName);
     }
 
-    public function testPut(){
+    public function testPut()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -85,7 +84,8 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->locale);
     }
 
-    public function testPutEmailNotUnique(){
+    public function testPutEmailNotUnique()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -103,10 +103,15 @@ class ProfileControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $client->getResponse());
+        $this->assertEquals(
+            'The email "" is not unique!',
+            $response->message
+        );
 
     }
 
-    public function testPutUsernameNotUnique(){
+    public function testPutUsernameNotUnique()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -124,10 +129,15 @@ class ProfileControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $client->getResponse());
+        $this->assertEquals(
+            'a username has to be unique!',
+            $response->message
+        );
 
     }
 
-    public function testPutWithoutFirstName(){
+    public function testPutWithoutFirstName()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -150,7 +160,8 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutLastName(){
+    public function testPutWithoutLastName()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -174,7 +185,8 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutUsername(){
+    public function testPutWithoutUsername()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -198,7 +210,8 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutEmail(){
+    public function testPutWithoutEmail()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -222,7 +235,8 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutLocale(){
+    public function testPutWithoutLocale()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -246,7 +260,8 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutPassword(){
+    public function testPutWithoutPassword()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(

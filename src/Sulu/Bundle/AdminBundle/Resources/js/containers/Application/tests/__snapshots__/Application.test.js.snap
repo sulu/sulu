@@ -545,6 +545,7 @@ exports[`Render opened navigation 1`] = `
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
+        onProfileClick={[Function]}
         pinned={false}
         router={
           Object {
@@ -884,6 +885,30 @@ exports[`Render opened navigation 1`] = `
       />
     </div>
   </div>
+  <ProfileFormOverlay
+    onClose={[Function]}
+    open={false}
+  >
+    <Overlay
+      actions={Array []}
+      confirmDisabled={false}
+      confirmLoading={true}
+      confirmText="sulu_admin.save"
+      onClose={[Function]}
+      onConfirm={[Function]}
+      open={false}
+      size="large"
+      title="sulu_admin.edit_profile"
+    >
+      <Backdrop
+        fixed={true}
+        local={false}
+        onClick={[Function]}
+        open={false}
+        visible={true}
+      />
+    </Overlay>
+  </ProfileFormOverlay>
 </Application>
 `;
 

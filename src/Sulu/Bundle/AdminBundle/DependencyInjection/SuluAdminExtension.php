@@ -87,7 +87,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             MetadataNotFoundException::class => 404,
                             MetadataProviderNotFoundException::class => 404,
                             MissingArgumentException::class => 400,
-
                         ],
                     ],
                 ]

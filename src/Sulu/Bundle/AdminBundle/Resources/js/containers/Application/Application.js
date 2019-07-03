@@ -14,8 +14,8 @@ import ViewRenderer from '../ViewRenderer';
 import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
 import Login from '../Login';
+import ProfileFormOverlay from '../ProfileOverlay/ProfileFormOverlay';
 import applicationStyles from './application.scss';
-import ProfileFormOverlay from "../ProfileOverlay/ProfileFormOverlay";
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
@@ -28,8 +28,7 @@ type Props = {
 type NavigationState = 'pinned' | 'hidden' | 'visible';
 
 @observer
-class Application extends React.Component<Props> {
-
+class Application extends React.Component<Props>{
     @observable openedProfileFormOverlay: boolean = false;
 
     @action openProfileFormOverlay() {
@@ -117,7 +116,7 @@ class Application extends React.Component<Props> {
     };
     handleProfileOverlayClose = () => {
         this.closeProfileFormOverlay();
-    }
+    };
 
     handleProfileEditClick = () => {
         this.openProfileFormOverlay();
@@ -196,11 +195,11 @@ class Application extends React.Component<Props> {
                                 </header>
                                 <div className={applicationStyles.viewContainer}>
                                     {router.route &&
-                                    <ViewRenderer router={router}/>
+                                    <ViewRenderer router={router} />
                                     }
                                 </div>
                             </main>
-                            <Sidebar className={sidebarClass}/>
+                            <Sidebar className={sidebarClass} />
 
                         </div>
                     </div>
