@@ -15,8 +15,8 @@ import userStore from '../../stores/UserStore';
 import {Backdrop} from '../../components';
 import Login from '../Login';
 import ProfileFormOverlay from '../ProfileOverlay/ProfileFormOverlay';
-import applicationStyles from './application.scss';
 import Loader from '../../components/Loader/Loader';
+import applicationStyles from './application.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
