@@ -120,8 +120,8 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                         ],
                         'profile' => [
                             'routes' => [
-                                'detail' =>'get_profile',
-                            ]
+                                'detail' => 'get_profile',
+                            ],
                         ],
                     ],
                 ]

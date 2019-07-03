@@ -13,14 +13,13 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-
 class ProfileControllerTest extends SuluTestCase
 {
-
     public function setUp()
     {
         $this->purgeDatabase();
     }
+
     public function testPatchSettings()
     {
         $client = $this->createAuthenticatedClient();
@@ -107,7 +106,6 @@ class ProfileControllerTest extends SuluTestCase
             'The email "" is not unique!',
             $response->message
         );
-
     }
 
     public function testPutUsernameNotUnique()
@@ -133,7 +131,6 @@ class ProfileControllerTest extends SuluTestCase
             'a username has to be unique!',
             $response->message
         );
-
     }
 
     public function testPutWithoutFirstName()
@@ -280,9 +277,6 @@ class ProfileControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
     }
-
-
-
 
     public function testDeleteSettings()
     {
