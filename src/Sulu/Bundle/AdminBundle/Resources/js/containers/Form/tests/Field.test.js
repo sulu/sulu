@@ -446,6 +446,7 @@ test('Do not render anything if field does not exist and onInvalid is set to ign
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
+            router={undefined}
             schema={{label: 'label', type: 'not-existing', onInvalid: 'ignore'}}
             schemaPath="/test"
         />
