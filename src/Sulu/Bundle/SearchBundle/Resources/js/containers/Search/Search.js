@@ -105,7 +105,7 @@ class Search extends React.Component<Props> {
                             description={result.document.description}
                             image={result.document.imageUrl}
                             index={index}
-                            key={result.document.index + '_' + result.document.id}
+                            key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
                             locale={result.document.locale}
                             onClick={this.handleResultClick}
                             resource={

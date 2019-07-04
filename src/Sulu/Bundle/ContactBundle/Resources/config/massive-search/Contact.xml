@@ -3,7 +3,7 @@
     <mapping class="Sulu\Bundle\ContactBundle\Entity\Contact">
         <id property="id" />
         <title expr="join(' ', [object.getTitle(), object.getFirstName(), object.getLastName()])" />
-        <description expr="'&lt;p&gt;' ~ join(' ', map(object.getEmails(), 'el.getEmail()')) ~ '&lt;/p&gt;&lt;p&gt;' ~ (object.getMainAddress() ? join(',', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : '') ~ '&lt;/p&gt;'" />
+        <description expr="(object.getMainAddress() ? join(' ', [object.getMainAddress().getStreet(), object.getMainAddress().getNumber(), object.getMainAddress().getZip(), object.getMainAddress().getCity(), object.getMainAddress().getState()]) : '') ~ ' ' ~ join(' ', map(object.getEmails(), 'el.getEmail()'))" />
         <index value="contact" />
 
         <fields>

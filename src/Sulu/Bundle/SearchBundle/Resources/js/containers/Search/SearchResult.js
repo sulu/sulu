@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import textVersion from 'textversionjs';
 import searchResultStyles from './searchResult.scss';
 
 type Props = {|
@@ -42,7 +43,7 @@ export default class SearchResult extends React.Component<Props> {
                     </div>
                     {description &&
                         <div className={searchResultStyles.description}>
-                            {description}
+                            {textVersion(description)}
                         </div>
                     }
                 </div>

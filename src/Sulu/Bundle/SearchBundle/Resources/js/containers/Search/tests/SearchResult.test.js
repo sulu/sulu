@@ -31,6 +31,20 @@ test('Render with all data', () => {
     )).toMatchSnapshot();
 });
 
+test('Render with html description', () => {
+    expect(render(
+        <SearchResult
+            description="<p>Description</p>"
+            image="/image.jpg"
+            index={5}
+            locale="de"
+            onClick={jest.fn()}
+            resource="Page"
+            title="Result"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Call callback with index when result is clicked', () => {
     const clickSpy = jest.fn();
 

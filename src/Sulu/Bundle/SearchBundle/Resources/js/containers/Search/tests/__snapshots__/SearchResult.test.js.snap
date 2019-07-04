@@ -63,6 +63,52 @@ exports[`Render with all data 1`] = `
       class="description"
     >
       Description
+
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with html description 1`] = `
+<div
+  class="searchResult"
+  role="button"
+>
+  <div
+    class="imageContainer"
+  >
+    <img
+      class="image"
+      src="/image.jpg"
+    />
+  </div>
+  <div
+    class="resultContainer"
+  >
+    <div
+      class="resource"
+    >
+      Page
+    </div>
+    <div
+      class="titleContainer"
+    >
+      <div
+        class="title"
+      >
+        Result
+      </div>
+      <div
+        class="locale"
+      >
+         (de)
+      </div>
+    </div>
+    <div
+      class="description"
+    >
+      Description
+
     </div>
   </div>
 </div>
