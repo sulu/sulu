@@ -66,7 +66,7 @@ class SearchIntegrationTest extends SuluTestCase
     public function provideIndex()
     {
         return [
-            ['sulu-170x170', null],
+            ['sulu-100x100', null],
             ['invalid', '\InvalidArgumentException'],
         ];
     }
