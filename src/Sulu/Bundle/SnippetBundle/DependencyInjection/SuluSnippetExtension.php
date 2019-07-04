@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection;
 
+use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Form\SnippetType;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
@@ -95,6 +96,10 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'indexes' => [
                         'snippet' => [
                             'name' => 'sulu_snippet.snippets',
+                            'route' => [
+                                'name' => SnippetAdmin::EDIT_FORM_ROUTE,
+                                'result_to_route' => ['id' => 'id', 'locale' => 'locale'],
+                            ],
                             'security_context' => 'sulu.global.snippets',
                         ],
                     ],

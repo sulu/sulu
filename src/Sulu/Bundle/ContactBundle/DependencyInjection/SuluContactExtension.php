@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,10 +42,24 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     'indexes' => [
                         'contact' => [
                             'name' => 'sulu_contact.people',
+                            'route' => [
+                                'name' => ContactAdmin::CONTACT_EDIT_FORM_ROUTE,
+                                'result_to_route' => [
+                                    'id' => 'id',
+                                    'locale' => 'locale',
+                                ],
+                            ],
                             'security_context' => 'sulu.contact.people',
                         ],
                         'account' => [
                             'name' => 'sulu_contact.organizations',
+                            'route' => [
+                                'name' => ContactAdmin::ACCOUNT_EDIT_FORM_ROUTE,
+                                'result_to_route' => [
+                                    'id' => 'id',
+                                    'locale' => 'locale',
+                                ],
+                            ],
                             'security_context' => 'sulu.contact.organizations',
                         ],
                     ],

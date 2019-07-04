@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {mount, render} from 'enzyme';
 import SearchResult from '../SearchResult';
 
 test('Render only with title', () => {
@@ -8,7 +8,9 @@ test('Render only with title', () => {
         <SearchResult
             description={undefined}
             image={undefined}
+            index={2}
             locale={undefined}
+            onClick={jest.fn()}
             resource={undefined}
             title="Result"
         />
@@ -20,9 +22,31 @@ test('Render with all data', () => {
         <SearchResult
             description="Description"
             image="/image.jpg"
+            index={5}
             locale="de"
+            onClick={jest.fn()}
             resource="Page"
             title="Result"
         />
     )).toMatchSnapshot();
+});
+
+test('Call callback with index when result is clicked', () => {
+    const clickSpy = jest.fn();
+
+    const searchResult = mount(
+        <SearchResult
+            description="Description"
+            image="/image.jpg"
+            index={5}
+            locale="de"
+            onClick={clickSpy}
+            resource="Page"
+            title="Result"
+        />
+    );
+
+    searchResult.find('div').at(0).simulate('click');
+
+    expect(clickSpy).toBeCalledWith(5);
 });

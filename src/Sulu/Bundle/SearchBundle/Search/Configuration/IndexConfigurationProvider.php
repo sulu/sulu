@@ -31,9 +31,8 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
         foreach ($indexConfigurations as $indexName => $indexConfiguration) {
             $this->indexConfigurations[$indexName] = new IndexConfiguration(
                 $indexName,
-                isset($indexConfiguration['name'])
-                    ? $translator->trans($indexConfiguration['name'], [], 'admin')
-                    : null,
+                $translator->trans($indexConfiguration['name'], [], 'admin'),
+                new Route($indexConfiguration['route']['name'], $indexConfiguration['route']['result_to_route']),
                 isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
                 isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
             );

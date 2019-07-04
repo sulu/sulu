@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\DependencyInjection\Compiler;
 
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
@@ -41,12 +42,20 @@ class WebspacesPass implements CompilerPassInterface
             $webspaceKey = (string) $webspaceConfig->xpath('/x:webspace/x:key')[0];
             $webspaceName = (string) $webspaceConfig->xpath('/x:webspace/x:name')[0];
             $indexes['page_' . $webspaceKey] = [
-                'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'name' => $webspaceName,
+                'route' => [
+                    'name' => PageAdmin::EDIT_FORM_ROUTE,
+                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                ],
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
             ];
             $indexes['page_' . $webspaceKey . '_published'] = [
-                'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'name' => $webspaceName,
+                'route' => [
+                    'name' => PageAdmin::EDIT_FORM_ROUTE,
+                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                ],
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'contexts' => ['website'],
             ];
         }

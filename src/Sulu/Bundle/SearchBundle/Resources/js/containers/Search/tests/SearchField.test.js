@@ -24,10 +24,18 @@ test('Render with selected and query', () => {
         contact: {
             indexName: 'contact',
             name: 'Contact',
+            route: {
+                name: 'sulu_contact.edit_form',
+                resultToRoute: {},
+            },
         },
         page: {
             indexName: 'page',
             name: 'Page',
+            route: {
+                name: 'sulu_page.edit_form',
+                resultToRoute: {},
+            },
         },
     };
 
@@ -50,10 +58,18 @@ test('Call callback when index changes', () => {
         contact: {
             indexName: 'contact',
             name: 'Contact',
+            route: {
+                name: 'sulu_contact.edit_form',
+                resultToRoute: {},
+            },
         },
         page: {
             indexName: 'page',
             name: 'Page',
+            route: {
+                name: 'sulu_page.edit_form',
+                resultToRoute: {},
+            },
         },
     };
 

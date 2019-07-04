@@ -3,6 +3,7 @@
 exports[`Render only with title 1`] = `
 <div
   class="searchResult"
+  role="button"
 >
   <div
     class="imageContainer"
@@ -26,6 +27,7 @@ exports[`Render only with title 1`] = `
 exports[`Render with all data 1`] = `
 <div
   class="searchResult"
+  role="button"
 >
   <div
     class="imageContainer"

@@ -6,8 +6,10 @@ import SearchContainer from '../../containers/Search';
 
 class Search extends React.Component<ViewProps> {
     render() {
+        const {router} = this.props;
+
         return (
-            <SearchContainer />
+            <SearchContainer router={router} />
         );
     }
 }

@@ -221,6 +221,7 @@ exports[`Render search results 1`] = `
   </p>
   <div
     class="searchResult"
+    role="button"
   >
     <div
       class="imageContainer"
@@ -256,6 +257,7 @@ exports[`Render search results 1`] = `
   </div>
   <div
     class="searchResult"
+    role="button"
   >
     <div
       class="imageContainer"

@@ -20,5 +20,6 @@ test('Render search component', () => {
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Search);
 
     expect(search.find(SearchContainer)).toHaveLength(1);
+    expect(search.find(SearchContainer).prop('router')).toEqual(router);
     expect(toolbarFunction()).toEqual({});
 });

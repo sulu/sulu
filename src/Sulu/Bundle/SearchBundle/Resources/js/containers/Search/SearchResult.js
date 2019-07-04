@@ -5,17 +5,24 @@ import searchResultStyles from './searchResult.scss';
 type Props = {|
     description: ?string,
     image: ?string,
+    index: number,
     locale: ?string,
+    onClick: (index: number) => void,
     resource: ?string,
     title: string,
 |};
 
 export default class SearchResult extends React.Component<Props> {
+    handleClick = () => {
+        const {index, onClick} = this.props;
+        onClick(index);
+    };
+
     render() {
         const {description, image, locale, resource, title} = this.props;
 
         return (
-            <div className={searchResultStyles.searchResult}>
+            <div className={searchResultStyles.searchResult} onClick={this.handleClick} role="button">
                 <div className={searchResultStyles.imageContainer}>
                     {image &&
                         <img className={searchResultStyles.image} src={image} />
