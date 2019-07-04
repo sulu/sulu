@@ -2,6 +2,38 @@
 
 ## dev-develop
 
+### Search indexes
+
+The configuration for the search indexes are not generated on the fly anymore. Instead every index that should be listed
+in the search should be registered using the `sulu_search.indexes` configuration.
+
+### Search description
+
+If the description of the XML configuration files in the `Resources/config/massive-search` directories contain HTML it
+will still be shown as plain text without the HTML tags in the search result. While it is still possible to define HTML
+in the `description` tag it will not be shown anymore.
+
+### Controller for search indexes
+
+The controller returning the search indexes will now embed the indexes in an `_embedded` and `search_indexes` keys:
+
+```javascript
+// before
+[
+    // indexes
+]
+
+// after
+
+{
+    _embedded: {
+        search_indexes: [
+            // indexes
+        ]
+    }
+}
+```
+
 ### RouteBundle API
 
 The API for routes under `/admin/api/routes` has changed a bit, in order to avoid having PHP class names in the

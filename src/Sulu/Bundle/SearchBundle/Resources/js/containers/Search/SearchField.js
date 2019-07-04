@@ -119,9 +119,9 @@ class SearchField extends React.Component<Props> {
                             value={query}
                         />
                         {query &&
-                            <Icon className={searchFieldStyles.icon} name="su-times" onClick={this.handleClearClick} />
+                            <Icon className={searchFieldStyles.clearIcon} name="su-times" onClick={this.handleClearClick} />
                         }
-                        <Icon className={searchFieldStyles.icon} name="su-search" onClick={onSearch} />
+                        <Icon className={searchFieldStyles.searchIcon} name="su-search" onClick={onSearch} />
                     </div>
                 </div>
                 <p className={searchFieldStyles.hint}>

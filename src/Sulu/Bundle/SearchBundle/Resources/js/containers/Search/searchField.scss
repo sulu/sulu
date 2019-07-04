@@ -57,9 +57,25 @@ $searchFieldHintColor: $gray;
     font-weight: bold;
 }
 
-.icon {
-    font-size: 20px;
+.clear-icon,
+.search-icon {
     margin-right: 10px;
+}
+
+.search-icon {
+    font-size: 20px;
+}
+
+.clear-icon {
+    font-size: 10px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .hint {
