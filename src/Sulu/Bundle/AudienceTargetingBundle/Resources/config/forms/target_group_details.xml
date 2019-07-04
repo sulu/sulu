@@ -59,11 +59,17 @@
             </params>
         </property>
 
-        <property name="rules" type="target_group_rules">
+        <section name="rules">
             <meta>
                 <title>sulu_audience_targeting.rules</title>
-                <info_text>sulu_audience_targeting.rules_info_text</info_text>
             </meta>
-        </property>
+            <properties>
+                <property name="rules" type="target_group_rules">
+                    <meta>
+                        <info_text>sulu_audience_targeting.rules_info_text</info_text>
+                    </meta>
+                </property>
+            </properties>
+        </section>
     </properties>
 </form>
