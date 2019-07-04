@@ -85,8 +85,8 @@ class SearchControllerTest extends TestCase
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
-        $indexConfiguration1 = new IndexConfiguration('index1', 'index 1', new Route('test1', []));
-        $indexConfiguration2 = new IndexConfiguration('index2', 'index 2', new Route('test2', []));
+        $indexConfiguration1 = new IndexConfiguration('index1', 'su-test', 'index 1', new Route('test1', []));
+        $indexConfiguration2 = new IndexConfiguration('index2', 'su-test', 'index 2', new Route('test2', []));
 
         $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
         $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
@@ -105,12 +105,14 @@ class SearchControllerTest extends TestCase
 
         $indexConfiguration1 = new IndexConfiguration(
             'index1',
+            'su-test',
             'index 1',
             new Route('test1', []),
             'security-context-1'
         );
         $indexConfiguration2 = new IndexConfiguration(
             'index2',
+            'su-test',
             'index 2',
             new Route('test2', []),
             'security-context-2'
@@ -135,6 +137,7 @@ class SearchControllerTest extends TestCase
         $indexConfiguration1 = new IndexConfiguration(
             'index1',
             'index 1',
+            'su-test',
             new Route('test1', []),
             'security-context-1',
             ['website']
@@ -142,6 +145,7 @@ class SearchControllerTest extends TestCase
         $indexConfiguration2 = new IndexConfiguration(
             'index2',
             'index 2',
+            'su-icon',
             new Route('test2', []),
             'security-context-2',
             ['admin']

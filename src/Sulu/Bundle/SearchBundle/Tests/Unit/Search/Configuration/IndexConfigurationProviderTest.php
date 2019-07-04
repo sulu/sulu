@@ -35,6 +35,7 @@ class IndexConfigurationProviderTest extends TestCase
             [
                 'index1' => [
                     'name' => 'test.index',
+                    'icon' => 'su-test',
                     'route' => [
                         'name' => 'test1',
                         'result_to_route' => ['webspace_key' => 'webspace'],
@@ -44,6 +45,7 @@ class IndexConfigurationProviderTest extends TestCase
                 ],
                 'index2' => [
                     'name' => 'test.index2',
+                    'icon' => 'su-icon',
                     'route' => [
                         'name' => 'test2',
                         'result_to_route' => [],
@@ -56,6 +58,7 @@ class IndexConfigurationProviderTest extends TestCase
         $indexConfigurations = $indexConfigurationProvider->getIndexConfigurations();
 
         $this->assertEquals('index1', $indexConfigurations['index1']->getIndexName());
+        $this->assertEquals('su-test', $indexConfigurations['index1']->getIcon());
         $this->assertEquals('test.index', $indexConfigurations['index1']->getName());
         $this->assertEquals('sulu.security.index1', $indexConfigurations['index1']->getSecurityContext());
         $this->assertEquals(['website'], $indexConfigurations['index1']->getContexts());
@@ -64,6 +67,7 @@ class IndexConfigurationProviderTest extends TestCase
             $indexConfigurations['index1']->getRoute()
         );
         $this->assertEquals('index2', $indexConfigurations['index2']->getIndexName());
+        $this->assertEquals('su-icon', $indexConfigurations['index2']->getIcon());
         $this->assertEquals('sulu.security.index2', $indexConfigurations['index2']->getSecurityContext());
         $this->assertEquals(new Route('test2', []), $indexConfigurations['index2']->getRoute());
     }
@@ -75,6 +79,7 @@ class IndexConfigurationProviderTest extends TestCase
             [
                 'index1' => [
                     'name' => 'index1',
+                    'icon' => 'su-test',
                     'route' => [
                         'name' => 'test1',
                         'result_to_route' => ['webspace_key' => 'webspace'],
@@ -84,6 +89,7 @@ class IndexConfigurationProviderTest extends TestCase
                 ],
                 'index2' => [
                     'name' => 'index2',
+                    'icon' => 'su-icon',
                     'route' => [
                         'name' => 'test2',
                         'result_to_route' => [],
@@ -97,6 +103,7 @@ class IndexConfigurationProviderTest extends TestCase
         $indexConfiguration = $indexConfigurationProvider->getIndexConfiguration('index2');
 
         $this->assertEquals('index2', $indexConfiguration->getIndexName());
+        $this->assertEquals('su-icon', $indexConfiguration->getIcon());
         $this->assertEquals(new Route('test2', []), $indexConfiguration->getRoute());
         $this->assertEquals('sulu.security.index2', $indexConfiguration->getSecurityContext());
     }

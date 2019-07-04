@@ -5,6 +5,7 @@ $searchResultBorderRadius: 3px;
 $searchResultResourceColor: $shakespeare;
 $searchResultLocaleColor: $scorpion;
 $searchResultDescriptionColor: $scorpion;
+$searchResultIconBackgroundColor: $concrete;
 
 .search-result {
     display: flex;
@@ -20,10 +21,20 @@ $searchResultDescriptionColor: $scorpion;
 }
 
 .image-container,
-.image {
+.image,
+.icon {
     width: 64px;
     height: 64px;
     flex-shrink: 0;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $searchResultIconBackgroundColor;
+    border-radius: $searchResultBorderRadius;
+    font-size: 30px;
 }
 
 .result-container {

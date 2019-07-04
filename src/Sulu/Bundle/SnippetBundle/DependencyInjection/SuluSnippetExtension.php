@@ -96,6 +96,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'indexes' => [
                         'snippet' => [
                             'name' => 'sulu_snippet.snippets',
+                            'icon' => 'su-snippet',
                             'route' => [
                                 'name' => SnippetAdmin::EDIT_FORM_ROUTE,
                                 'result_to_route' => ['id' => 'id', 'locale' => 'locale'],

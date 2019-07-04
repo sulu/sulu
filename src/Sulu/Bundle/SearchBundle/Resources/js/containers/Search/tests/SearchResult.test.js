@@ -7,6 +7,7 @@ test('Render only with title', () => {
     expect(render(
         <SearchResult
             description={undefined}
+            icon={undefined}
             image={undefined}
             index={2}
             locale={undefined}
@@ -21,7 +22,23 @@ test('Render with all data', () => {
     expect(render(
         <SearchResult
             description="Description"
+            icon={undefined}
             image="/image.jpg"
+            index={5}
+            locale="de"
+            onClick={jest.fn()}
+            resource="Page"
+            title="Result"
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render with icon instead of image', () => {
+    expect(render(
+        <SearchResult
+            description="Description"
+            icon="su-test"
+            image={undefined}
             index={5}
             locale="de"
             onClick={jest.fn()}
@@ -35,6 +52,7 @@ test('Render with html description', () => {
     expect(render(
         <SearchResult
             description="<p>Description</p>"
+            icon={undefined}
             image="/image.jpg"
             index={5}
             locale="de"
@@ -51,6 +69,7 @@ test('Call callback with index when result is clicked', () => {
     const searchResult = mount(
         <SearchResult
             description="Description"
+            icon={undefined}
             image="/image.jpg"
             index={5}
             locale="de"

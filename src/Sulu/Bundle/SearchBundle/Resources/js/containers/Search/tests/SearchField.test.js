@@ -22,6 +22,7 @@ test('Render without selected index', () => {
 test('Render with selected and query', () => {
     const indexes = {
         contact: {
+            icon: 'su-test',
             indexName: 'contact',
             name: 'Contact',
             route: {
@@ -30,6 +31,7 @@ test('Render with selected and query', () => {
             },
         },
         page: {
+            icon: 'su-test',
             indexName: 'page',
             name: 'Page',
             route: {
@@ -56,6 +58,7 @@ test('Call callback when index changes', () => {
 
     const indexes = {
         contact: {
+            icon: 'su-test',
             indexName: 'contact',
             name: 'Contact',
             route: {
@@ -64,6 +67,7 @@ test('Call callback when index changes', () => {
             },
         },
         page: {
+            icon: 'su-test',
             indexName: 'page',
             name: 'Page',
             route: {

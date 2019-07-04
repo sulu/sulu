@@ -103,6 +103,7 @@ class Search extends React.Component<Props> {
                     searchStore.result.map((result, index) => (
                         <SearchResult
                             description={result.document.description}
+                            icon={indexes[result.document.index].icon}
                             image={result.document.imageUrl}
                             index={index}
                             key={result.document.index + '_' + result.document.id + '_' + result.document.locale}

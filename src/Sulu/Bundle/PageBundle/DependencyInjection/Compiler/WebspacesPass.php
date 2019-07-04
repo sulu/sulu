@@ -43,6 +43,7 @@ class WebspacesPass implements CompilerPassInterface
             $webspaceName = (string) $webspaceConfig->xpath('/x:webspace/x:name')[0];
             $indexes['page_' . $webspaceKey] = [
                 'name' => $webspaceName,
+                'icon' => 'su-document',
                 'route' => [
                     'name' => PageAdmin::EDIT_FORM_ROUTE,
                     'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
@@ -51,6 +52,7 @@ class WebspacesPass implements CompilerPassInterface
             ];
             $indexes['page_' . $webspaceKey . '_published'] = [
                 'name' => $webspaceName,
+                'icon' => 'su-document',
                 'route' => [
                     'name' => PageAdmin::EDIT_FORM_ROUTE,
                     'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],

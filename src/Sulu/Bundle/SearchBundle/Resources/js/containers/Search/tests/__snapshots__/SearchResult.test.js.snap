@@ -113,3 +113,52 @@ exports[`Render with html description 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render with icon instead of image 1`] = `
+<div
+  class="searchResult"
+  role="button"
+>
+  <div
+    class="imageContainer"
+  >
+    <div
+      class="icon"
+    >
+      <span
+        aria-label="su-test"
+        class="su-test"
+      />
+    </div>
+  </div>
+  <div
+    class="resultContainer"
+  >
+    <div
+      class="resource"
+    >
+      Page
+    </div>
+    <div
+      class="titleContainer"
+    >
+      <div
+        class="title"
+      >
+        Result
+      </div>
+      <div
+        class="locale"
+      >
+         (de)
+      </div>
+    </div>
+    <div
+      class="description"
+    >
+      Description
+
+    </div>
+  </div>
+</div>
+`;

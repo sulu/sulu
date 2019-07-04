@@ -24,6 +24,11 @@ class IndexConfiguration
     private $name;
 
     /**
+     * @var string
+     */
+    private $icon;
+
+    /**
      * @var Route
      */
     private $route;
@@ -40,12 +45,14 @@ class IndexConfiguration
 
     public function __construct(
         string $indexName,
+        string $icon,
         string $name,
         Route $route,
         string $securityContext = null,
         array $contexts = []
     ) {
         $this->indexName = $indexName;
+        $this->icon = $icon;
         $this->name = $name;
         $this->route = $route;
         $this->securityContext = $securityContext;
@@ -55,6 +62,11 @@ class IndexConfiguration
     public function getIndexName()
     {
         return $this->indexName;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
     }
 
     public function getName()

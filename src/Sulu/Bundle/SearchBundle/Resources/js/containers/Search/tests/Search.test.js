@@ -120,6 +120,7 @@ test('Render search results', () => {
 
     const indexes = [
         {
+            icon: 'su-page',
             indexName: 'page',
             name: 'Page',
             route: {
@@ -128,6 +129,7 @@ test('Render search results', () => {
             },
         },
         {
+            icon: 'su-contact',
             indexName: 'contact',
             name: 'Contact',
             route: {
@@ -147,6 +149,7 @@ test('Render search results', () => {
                 description: 'something',
                 id: 3,
                 imageUrl: '/image.jgp',
+                index: 'page',
                 locale: 'de',
                 resource: 'page',
                 title: 'Test1',
@@ -156,7 +159,8 @@ test('Render search results', () => {
             document: {
                 description: 'something 2',
                 id: 5,
-                imageUrl: '/image2.jgp',
+                imageUrl: undefined,
+                index: 'contact',
                 locale: undefined,
                 resource: 'contact',
                 title: 'Max Mustermann',

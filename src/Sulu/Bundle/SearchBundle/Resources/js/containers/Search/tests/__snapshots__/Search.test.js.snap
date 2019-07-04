@@ -235,6 +235,11 @@ exports[`Render search results 1`] = `
       class="resultContainer"
     >
       <div
+        class="resource"
+      >
+        Page
+      </div>
+      <div
         class="titleContainer"
       >
         <div
@@ -252,6 +257,7 @@ exports[`Render search results 1`] = `
         class="description"
       >
         something
+
       </div>
     </div>
   </div>
@@ -262,14 +268,23 @@ exports[`Render search results 1`] = `
     <div
       class="imageContainer"
     >
-      <img
-        class="image"
-        src="/image2.jgp"
-      />
+      <div
+        class="icon"
+      >
+        <span
+          aria-label="su-contact"
+          class="su-contact"
+        />
+      </div>
     </div>
     <div
       class="resultContainer"
     >
+      <div
+        class="resource"
+      >
+        Contact
+      </div>
       <div
         class="titleContainer"
       >
@@ -283,6 +298,7 @@ exports[`Render search results 1`] = `
         class="description"
       >
         something 2
+
       </div>
     </div>
   </div>

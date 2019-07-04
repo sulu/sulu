@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
 import textVersion from 'textversionjs';
+import {Icon} from 'sulu-admin-bundle/components';
 import searchResultStyles from './searchResult.scss';
 
 type Props = {|
     description: ?string,
+    icon: ?string,
     image: ?string,
     index: number,
     locale: ?string,
@@ -20,13 +22,18 @@ export default class SearchResult extends React.Component<Props> {
     };
 
     render() {
-        const {description, image, locale, resource, title} = this.props;
+        const {description, icon, image, locale, resource, title} = this.props;
 
         return (
             <div className={searchResultStyles.searchResult} onClick={this.handleClick} role="button">
                 <div className={searchResultStyles.imageContainer}>
                     {image &&
                         <img className={searchResultStyles.image} src={image} />
+                    }
+                    {!image && icon &&
+                        <div className={searchResultStyles.icon}>
+                            <Icon name={icon} />
+                        </div>
                     }
                 </div>
                 <div className={searchResultStyles.resultContainer}>
