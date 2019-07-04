@@ -12,7 +12,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
 import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
-import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
+import {MediaSelection, MediaVersionUpload, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import {
     MediaSelectionBlockPreviewTransformer,
     SingleMediaSelectionBlockPreviewTransformer,
@@ -41,6 +41,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);
     fieldRegistry.add('single_media_upload', SingleMediaUpload);
+    fieldRegistry.add('media_version_upload', MediaVersionUpload);
 
     const imageFormatUrl = config.endpoints.image_format;
     blockPreviewTransformerRegistry.add(

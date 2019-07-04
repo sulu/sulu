@@ -6,25 +6,32 @@
     <key>media_details</key>
 
     <properties>
-        <property name="title" type="text_line" mandatory="true">
-            <meta>
-                <title>sulu_admin.title</title>
-            </meta>
-            <params>
-                <param name="headline" value="true"/>
-            </params>
-        </property>
+        <section name="media" colspan="4">
+            <properties>
+                <property name="media_version_upload" type="media_version_upload"></property>
+            </properties>
+        </section>
+        <section name="media_details" colspan="8">
+            <properties>
+                <property name="title" type="text_line" mandatory="true">
+                    <meta>
+                        <title>sulu_admin.title</title>
+                    </meta>
+                    <params>
+                        <param name="headline" value="true"/>
+                    </params>
+                </property>
 
-        <property name="description" type="text_area">
-            <meta>
-                <title>sulu_admin.description</title>
-            </meta>
-        </property>
+                <property name="description" type="text_area">
+                    <meta>
+                        <title>sulu_admin.description</title>
+                    </meta>
+                </property>
 
-        <section name="license">
-            <meta>
-                <title>sulu_media.license</title>
-            </meta>
+                <section name="license">
+                    <meta>
+                        <title>sulu_media.license</title>
+                    </meta>
 
             <properties>
                 <property name="copyright" type="text_area">
