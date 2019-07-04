@@ -42,6 +42,13 @@ class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
         return $this;
     }
 
+    public function setApiOptions(array $apiOptions): PreviewFormRouteBuilderInterface
+    {
+        $this->setApiOptionsToRoute($this->route, $apiOptions);
+
+        return $this;
+    }
+
     public function addLocales(array $locales): PreviewFormRouteBuilderInterface
     {
         $this->addLocalesToRoute($this->route, $locales);

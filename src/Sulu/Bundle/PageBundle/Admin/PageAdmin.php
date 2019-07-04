@@ -202,19 +202,17 @@ class PageAdmin extends Admin
                 ->setTabOrder(4096)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
-            // TODO maybe even build a separate builder?
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                 ->setResourceKey('permissions')
                 ->setFormKey('permission_details')
+                // TODO replacing with resourceKey requires API change, but allows loading available actions for Matrix
+                ->setApiOptions(['type' => SecurityBehavior::class])
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->setTitleVisible(true)
                 ->setTabOrder(5120)
                 ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute()
-                // TODO replace with call to FormRouteBuilder
-                // TODO replacing with resourceKey requires API change, but allows loading available actions for Matrix
-                ->setOption('apiOptions', ['type' => SecurityBehavior::class]),
+                ->getRoute(),
         ];
     }
 

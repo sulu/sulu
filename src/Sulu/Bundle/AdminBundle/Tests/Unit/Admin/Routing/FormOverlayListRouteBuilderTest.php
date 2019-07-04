@@ -62,6 +62,7 @@ class FormOverlayListRouteBuilderTest extends TestCase
                 'sulu_category.add_category',
                 'sulu_category.edit_category',
                 'small',
+                ['test1' => 'value1'],
             ],
             [
                 'sulu_tag.list',
@@ -74,6 +75,7 @@ class FormOverlayListRouteBuilderTest extends TestCase
                 'sulu_tag.add_tag',
                 'sulu_tag.edit_tag',
                 'large',
+                ['test2' => 'value2'],
             ],
         ];
     }
@@ -91,7 +93,8 @@ class FormOverlayListRouteBuilderTest extends TestCase
         array $listAdapters,
         string $addOverlayTitle,
         string $editOverlayTitle,
-        string $overlaySize
+        string $overlaySize,
+        array $apiOptions
     ) {
         $route = (new FormOverlayListRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -102,6 +105,7 @@ class FormOverlayListRouteBuilderTest extends TestCase
             ->setAddOverlayTitle($addOverlayTitle)
             ->setEditOverlayTitle($editOverlayTitle)
             ->setOverlaySize($overlaySize)
+            ->setApiOptions($apiOptions)
             ->getRoute();
 
         $this->assertEquals($name, $route->getName());
@@ -114,6 +118,7 @@ class FormOverlayListRouteBuilderTest extends TestCase
         $this->assertEquals($addOverlayTitle, $route->getOption('addOverlayTitle'));
         $this->assertEquals($editOverlayTitle, $route->getOption('editOverlayTitle'));
         $this->assertEquals($overlaySize, $route->getOption('overlaySize'));
+        $this->assertEquals($apiOptions, $route->getOption('apiOptions'));
         $this->assertEquals('sulu_admin.form_overlay_list', $route->getView());
     }
 
