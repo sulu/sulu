@@ -10,7 +10,7 @@ import SingleSelect from './containers/TargetGroupRules/ruleTypes/SingleSelect';
 import SingleSelection from './containers/TargetGroupRules/ruleTypes/SingleSelection';
 
 initializer.addUpdateConfigHook('sulu_audience_targeting', (config: Object, initialized: boolean) => {
-    if (initialized) {
+    if (initialized || !config) {
         return;
     }
 
