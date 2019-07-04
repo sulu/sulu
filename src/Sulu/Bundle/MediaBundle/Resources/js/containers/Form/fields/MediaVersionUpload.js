@@ -7,6 +7,7 @@ import {action, observable, when} from 'mobx';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
+import Loader from 'sulu-admin-bundle/components/Loader';
 import SingleMediaUpload from '../../SingleMediaUpload';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import mediaDetailsStyles from '../../../views/MediaDetails/mediaDetails.scss';
@@ -23,15 +24,22 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
 
     constructor(props: FieldTypeProps<void>) {
         super(props);
-        this.resourceStore = this.props.formInspector.formStore.resourceStore;
 
+        const {formInspector, router} = this.props;
+
+        // $FlowFixMe
+        if (!formInspector.formStore.resourceStore){
+            throw new Error();
+        }
+
+        this.resourceStore = (formInspector.formStore.resourceStore: ResourceStore);
         const locale = this.resourceStore.locale;
-        const router = this.props.router;
         if (!locale) {
             throw new Error('The resourceStore for the MediaVersionUpload must have a locale');
         }
-        router.bind('locale', locale);
-
+        if (router){
+            router.bind('locale', locale);
+        }
         when(
             () => !this.resourceStore.loading,
             (): void => {
@@ -39,6 +47,10 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
             }
         );
     }
+
+    handleUploadComplete = (media: Object) => {
+        this.resourceStore.setMultiple(media);
+    };
 
     @action handleFocusPointButtonClick = () => {
         this.showFocusPointOverlay = true;
@@ -71,6 +83,21 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
     }
 
     render() {
+        if (!this.resourceStore) {
+            return (
+                <Loader />
+            );
+        }
+
+        const {id, locale} = this.resourceStore;
+        if (!id) {
+            throw new Error('The "MediaVersionUpload" field type only works with an id!');
+        }
+
+        if (!locale) {
+            throw new Error('The "MediaVersionUpload" field type only works with a locale!');
+        }
+
         return (
             <Fragment>
                 <SingleMediaUpload
@@ -104,9 +131,9 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
                     resourceStore={this.resourceStore}
                 />
                 <CropOverlay
-                    id={this.resourceStore.id}
+                    id={id}
                     image={this.resourceStore.data.url}
-                    locale={this.resourceStore.locale.get()}
+                    locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}
                     open={this.showCropOverlay}
