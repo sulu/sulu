@@ -9,9 +9,9 @@ in the search should be registered using the `sulu_search.indexes` configuration
 
 ### Search description
 
-If the description of the XML configuration files in the `Resources/config/massive-search` directories contain HTML it
-will still be shown as plain text without the HTML tags in the search result. While it is still possible to define HTML
-in the `description` tag it will not be shown anymore.
+If the `description` tag of the XML configuration files in the `Resources/config/massive-search` bundle directory contain HTML it
+will strip the HTML tags in the search result. While it is still possible to define HTML in the `description` tag it
+will not be shown anymore.
 
 ### Controller for search indexes
 
