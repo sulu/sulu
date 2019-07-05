@@ -1,21 +1,22 @@
 // @flow
-import classNames from 'classnames';
-import log from 'loglevel';
-import {action, observable, autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
+import {action, observable, autorun, computed} from 'mobx';
+import classNames from 'classnames';
 import React, {Fragment} from 'react';
-import {Backdrop, Loader} from '../../components';
+import log from 'loglevel';
+import Navigation from '../Navigation';
+import Backdrop from '../../components/Backdrop';
+import Loader from '../../components/Loader';
 import initializer from '../../services/Initializer';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
 import Login from '../Login';
-import Navigation from '../Navigation';
-import ProfileFormOverlay from '../ProfileOverlay/ProfileFormOverlay';
-import Toolbar from '../Toolbar';
+import ProfileFormOverlay from '../ProfileFormOverlay';
 import Sidebar, {sidebarStore} from '../Sidebar';
+import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
-import applicationStyles from './application.scss';
 import './global.scss';
+import applicationStyles from './application.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
@@ -208,7 +209,9 @@ class Application extends React.Component<Props>{
                             open={this.openedProfileFormOverlay}
                         />
                     </Fragment>
-                    : <Loader />
+                    : <div className={applicationStyles.loader}>
+                        <Loader />
+                    </div>
                 }
             </Fragment>
         );
