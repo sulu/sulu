@@ -750,6 +750,56 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
+    public function testGetListSearchWithExcludedAccountId()
+    {
+        $account1 = $this->createAccount('Musterfirma 1');
+        $account2 = $this->createAccount('Musterfirma 2');
+        $account3 = $this->createAccount('Musterfirma 3');
+
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $accountContact1 = new AccountContact();
+        $accountContact1->setMain(false);
+        $accountContact1->setContact($contact1);
+        $accountContact1->setAccount($account1);
+        $contact1->addAccountContact($accountContact1);
+        $accountContact2 = new AccountContact();
+        $accountContact2->setMain(false);
+        $accountContact2->setContact($contact1);
+        $accountContact2->setAccount($account2);
+        $contact1->addAccountContact($accountContact2);
+
+        $this->em->persist($account1);
+        $this->em->persist($account2);
+        $this->em->persist($account3);
+        $this->em->persist($contact1);
+        $this->em->persist($accountContact1);
+        $this->em->persist($accountContact2);
+
+        $this->em->flush();
+
+        // dont use max here because the user for tests also is called max
+
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account1->getId());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->_embedded->contacts));
+
+        $client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account2->getId());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, count($response->_embedded->contacts));
+
+        $client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account3->getId());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
+    }
+
     public function testGetListByAccountId()
     {
         $account = $this->createAccount('Musterfirma');

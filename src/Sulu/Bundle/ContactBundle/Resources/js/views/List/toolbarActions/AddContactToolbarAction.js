@@ -33,7 +33,7 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
                             <SingleAutoComplete
                                 displayProperty="fullName"
                                 onChange={this.handleContactChange}
-                                options={{excludedAccountId: this.listStore.options.accountId}}
+                                options={{excludedAccountId: this.listStore.options.accountId, flat: false}}
                                 resourceKey="contacts"
                                 searchProperties={['fullName']}
                                 value={this.contact}
@@ -42,6 +42,7 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
                         <Form.Field label={translate('sulu_contact.position')}>
                             <ResourceSingleSelect
                                 displayProperty="position"
+                                editable={true}
                                 idProperty="id"
                                 onChange={this.handlePositionChange}
                                 resourceKey="contact_positions"

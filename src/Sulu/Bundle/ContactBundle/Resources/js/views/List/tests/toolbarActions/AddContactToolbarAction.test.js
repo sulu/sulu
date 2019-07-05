@@ -61,6 +61,18 @@ test('Open dialog if button is clicked', () => {
     expect(shallow(addContactToolbarAction.getNode()).instance().props.open).toEqual(true);
 });
 
+test('Pass correct options to components', () => {
+    const addContactToolbarAction = createAddContactToolbarAction();
+    addContactToolbarAction.listStore.options.accountId = 4;
+
+    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
+    clickHandler();
+
+    const node = shallow(addContactToolbarAction.getNode());
+    expect(node.find('ResourceSingleSelect').prop('editable')).toEqual(true);
+    expect(node.find('SingleAutoComplete').prop('options')).toEqual({excludedAccountId: 4, flat: false});
+});
+
 test('Reset fields if overlay is just closed', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
     const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
