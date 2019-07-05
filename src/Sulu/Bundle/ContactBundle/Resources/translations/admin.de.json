@@ -68,5 +68,6 @@
     "sulu_contact.edit_position_overlay_title": "Positionen editieren",
     "sulu_contact.documents": "Dokumente",
     "sulu_contact.delete_media_warning_title": "Dokumentenzuweisung löschen?",
-    "sulu_contact.delete_media_warning_text": "Diese Operation löscht die ausgewählten Dokumentzuweisungen. Das Dokument selbst wird nicht gelöscht. Wollen Sie wirklich fortfahren?"
+    "sulu_contact.delete_media_warning_text": "Diese Operation löscht die ausgewählten Dokumentzuweisungen. Das Dokument selbst wird nicht gelöscht. Wollen Sie wirklich fortfahren?",
+    "sulu_contact.add_contact_to_organization": "Person zu Organisation hinzufügen"
 }

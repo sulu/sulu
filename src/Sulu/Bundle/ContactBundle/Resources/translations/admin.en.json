@@ -68,5 +68,6 @@
     "sulu_contact.edit_position_overlay_title": "Edit positions",
     "sulu_contact.documents": "Documents",
     "sulu_contact.delete_media_warning_title": "Remove document assignment?",
-    "sulu_contact.delete_media_warning_text": "This operation removes the selected document assignments. The document itself will not be deleted. Do you really wish to proceed?"
+    "sulu_contact.delete_media_warning_text": "This operation removes the selected document assignments. The document itself will not be deleted. Do you really wish to proceed?",
+    "sulu_contact.add_contact_to_organization": "Add contact to organization"
 }

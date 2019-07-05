@@ -182,12 +182,18 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $serializationGroups = [];
         $locale = $this->getLocale($request);
+        $excludedAccountId = $request->query->get('excludedAccountId');
 
         if ('true' == $request->get('flat')) {
             $list = $this->getList($request, $locale);
         } else {
             if (true == $request->get('bySystem')) {
                 $contacts = $this->getContactsByUserSystem();
+                $serializationGroups[] = 'select';
+            } elseif ($excludedAccountId) {
+                $contacts = $this->getDoctrine()->getRepository(
+                    $this->container->getParameter('sulu.model.contact.class')
+                )->findByExcludedAccountId($excludedAccountId, $request->get('search'));
                 $serializationGroups[] = 'select';
             } else {
                 $contacts = $this->getDoctrine()->getRepository(
@@ -198,6 +204,7 @@ class ContactController extends RestController implements ClassResourceInterface
                     static::$contactSerializationGroups
                 );
             }
+
             // convert to api-contacts
             $apiContacts = [];
             foreach ($contacts as $contact) {

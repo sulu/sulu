@@ -27,6 +27,7 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -1163,6 +1164,36 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
+    public function testPutContacts()
+    {
+        $account = $this->createAccount('Company');
+        $contact = $this->createContact(null, 'Max', 'Mustermann');
+        $position = $this->createPosition('CEO');
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/accounts/' . $account->getId() . '/contacts/' . $contact->getId(),
+            [
+                'position' => $position->getId(),
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $accountContacts = $response->_embedded->account_contacts;
+        $this->assertCount(1, $accountContacts);
+        $this->assertEquals('Max', $accountContacts[0]->firstName);
+        $this->assertEquals('Mustermann', $accountContacts[0]->lastName);
+        $this->assertEquals('CEO', $accountContacts[0]->position);
+    }
+
     public function testPutWithNullMainContact()
     {
         $contact = $this->createContact(null, 'Max', 'Mustermann');
@@ -2189,6 +2220,16 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($phone);
 
         return $phone;
+    }
+
+    private function createPosition(string $positionName)
+    {
+        $position = new Position();
+        $position->setPosition($positionName);
+
+        $this->em->persist($position);
+
+        return $position;
     }
 
     private function createAddress(

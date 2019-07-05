@@ -439,6 +439,29 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         }
     }
 
+    public function findByExcludedAccountId(int $excludedAccountId, ?string $search = null)
+    {
+        $subQueryBuilder = $this->_em->createQueryBuilder()
+            ->addSelect('IDENTITY(account_contacts.contact)')
+            ->from(AccountContact::class, 'account_contacts')
+            ->where('IDENTITY(account_contacts.account) = :excludedAccountId');
+
+        $queryBuilder = $this->createQueryBuilder('contact')
+            ->where(sprintf('contact.id NOT IN (%s)', $subQueryBuilder->getDQL()));
+
+        if ($search) {
+            $queryBuilder->andWhere('contact.firstName LIKE :firstNameSearch or contact.lastName LIKE :lastNameSearch');
+            $queryBuilder->setParameter('firstNameSearch', '%' . $search . '%');
+            $queryBuilder->setParameter('lastNameSearch', '%' . $search . '%');
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        $query->setParameter('excludedAccountId', $excludedAccountId);
+
+        return $query->getResult();
+    }
+
     /**
      * {@inheritdoc}
      */

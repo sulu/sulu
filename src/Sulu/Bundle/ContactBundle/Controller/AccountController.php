@@ -243,9 +243,15 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContact->setContact($contact);
 
             // Set position on contact.
-            $position = $this->getAccountManager()->getPosition($request->get('position', null));
-            $accountContact->setPosition($position);
-            $contact->setCurrentPosition($position);
+            $positionId = $request->get('position');
+
+            if ($positionId) {
+                $position = $this->getDoctrine()
+                    ->getRepository(static::$positionEntityName)
+                    ->find($positionId);
+
+                $accountContact->setPosition($position);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($accountContact);
@@ -262,7 +268,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 'isMainContact' => $isMainContact,
             ];
 
-            if ($position) {
+            if ($positionId) {
                 $contactArray['position'] = $position->getPosition();
             }
 

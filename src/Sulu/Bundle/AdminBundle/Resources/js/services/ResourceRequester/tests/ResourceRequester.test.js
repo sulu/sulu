@@ -53,27 +53,34 @@ test('Should send a list get request and return the promise', () => {
 });
 
 test('Should send a list get request to the correct URL with page and limit parameters', () => {
-    resourceRouteRegistry.getListUrl.mockImplementation((resourceKey, {page, limit}) => {
-        return '/snippets?page=' + page + '&limit=' + limit + '&flat=true';
+    resourceRouteRegistry.getListUrl.mockImplementation((resourceKey, {flat, limit, page}) => {
+        return '/snippets?page=' + page + '&limit=' + limit + '&flat=' + flat;
     });
 
     ResourceRequester.getList('snippets', {
-        page: 3,
         limit: 20,
+        page: 3,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?page=3&limit=20&flat=true');
+    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=3&limit=20&flat=true');
 
     ResourceRequester.getList('snippets', {
-        page: 5,
         limit: 10,
+        page: 5,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?page=5&limit=10&flat=true');
+    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=5&limit=10&flat=true');
 
     ResourceRequester.getList('snippets', {
-        page: 1,
         limit: 5,
+        page: 1,
     });
-    expect(Requester.get).toBeCalledWith('/snippets?page=1&limit=5&flat=true');
+    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=1&limit=5&flat=true');
+
+    ResourceRequester.getList('snippets', {
+        flat: false,
+        limit: 5,
+        page: 1,
+    });
+    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=1&limit=5&flat=false');
 });
 
 test('Should send a put request and return the promise', () => {
