@@ -204,7 +204,6 @@ class PageAdmin extends Admin
             $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                 ->setResourceKey('permissions')
                 ->setFormKey('permission_details')
-                // TODO replacing with resourceKey requires API change, but allows loading available actions for Matrix
                 ->setApiOptions(['resourceKey' => 'pages'])
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
