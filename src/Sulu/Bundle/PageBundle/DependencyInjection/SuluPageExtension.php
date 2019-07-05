@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\PageBundle\DependencyInjection;
 
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Bundle\PageBundle\Form\Type\HomeDocumentType;
 use Sulu\Bundle\PageBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -54,6 +56,8 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'get_pages',
                                 'detail' => 'get_page',
                             ],
+                            'security_context' => PageAdmin::SECURITY_CONTEXT_PREFIX . '#webspace#',
+                            'security_class' => SecurityBehavior::class,
                         ],
                         'page_versions' => [
                             'routes' => [

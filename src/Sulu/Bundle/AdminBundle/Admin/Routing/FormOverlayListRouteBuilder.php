@@ -55,6 +55,13 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
         return $this;
     }
 
+    public function setApiOptions(array $apiOptions): FormOverlayListRouteBuilderInterface
+    {
+        $this->setApiOptionsToRoute($this->route, $apiOptions);
+
+        return $this;
+    }
+
     public function setTitle(string $title): FormOverlayListRouteBuilderInterface
     {
         $this->setTitleToRoute($this->route, $title);

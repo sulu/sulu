@@ -45,7 +45,7 @@ export default class Matrix extends React.PureComponent<Props> {
                 disabled: disabled,
                 key: `matrix-row-${index}`,
                 onChange: this.handleChange,
-                values: values[row.props.name],
+                values: values.hasOwnProperty(row.props.name) ? values[row.props.name] : {},
             }
         ));
     };

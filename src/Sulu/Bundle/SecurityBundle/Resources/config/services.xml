@@ -43,6 +43,7 @@
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="router"/>
+            <argument>%sulu_admin.resources%</argument>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -112,6 +113,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="fos_rest.view_handler"/>
+            <argument>%sulu_admin.resources%</argument>
             <tag name="sulu.context" context="admin"/>
         </service>
 

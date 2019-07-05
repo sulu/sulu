@@ -42,6 +42,13 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
+    public function setApiOptions(array $apiOptions): FormRouteBuilderInterface
+    {
+        $this->setApiOptionsToRoute($this->route, $apiOptions);
+
+        return $this;
+    }
+
     public function addLocales(array $locales): FormRouteBuilderInterface
     {
         $this->addLocalesToRoute($this->route, $locales);

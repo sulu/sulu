@@ -1,0 +1,281 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render matrix with correct all values selected if not given 1`] = `
+<div
+  class="spinner"
+  style="width: 40px; height: 40px;"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render matrix with correct all values selected if not given 2`] = `
+<table
+  class="matrix"
+>
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
+      >
+        Administrator
+      </td>
+      <td
+        class="items"
+      >
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Live"
+        >
+          <span
+            aria-label="fa-signal"
+            class="fa fa-signal"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
+      >
+        Account Manager
+      </td>
+      <td
+        class="items"
+      >
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Live"
+        >
+          <span
+            aria-label="fa-signal"
+            class="fa fa-signal"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`Render matrix with correct given values 1`] = `
+<div
+  class="spinner"
+  style="width: 40px; height: 40px;"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render matrix with correct given values 2`] = `
+<table
+  class="matrix"
+>
+  <tbody>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
+      >
+        Admin
+      </td>
+      <td
+        class="items"
+      >
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item"
+          title="Add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="row"
+    >
+      <td
+        class="name"
+      >
+        Contact Manager
+      </td>
+      <td
+        class="items"
+      >
+        <div
+          class="item selected"
+          title="View"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Add"
+        >
+          <span
+            aria-label="su-plus-circle"
+            class="su-plus-circle"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Edit"
+        >
+          <span
+            aria-label="su-pen"
+            class="su-pen"
+          />
+        </div>
+        <div
+          class="item"
+          title="Delete"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt"
+          />
+        </div>
+        <button
+          class="rowButton"
+        >
+          sulu_admin.deactivate_all
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

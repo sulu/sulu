@@ -2,10 +2,11 @@
 import React from 'react';
 import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import Matrix from 'sulu-admin-bundle/components/Matrix';
+import {Matrix} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {Actions, SecurityContexts} from '../../stores/SecurityContextStore/types';
+import {getActionIcon} from '../../utils/Permission';
 import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 
@@ -22,25 +23,6 @@ type Props = {|
 class PermissionMatrix extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-    };
-
-    getIcon = (action: string) => {
-        switch (action) {
-            case 'view':
-                return 'su-eye';
-            case 'add':
-                return 'su-plus-circle';
-            case 'edit':
-                return 'su-pen';
-            case 'delete':
-                return 'su-trash-alt';
-            case 'security':
-                return 'su-lock';
-            case 'live':
-                return 'fa-signal';
-            default:
-                throw new Error('No icon defined for "' + action + '"');
-        }
     };
 
     getMatrixValueFromContextPermission = (securityContextKey: string) => {
@@ -86,7 +68,7 @@ class PermissionMatrix extends React.Component<Props> {
             <Matrix.Row key={'row-' + rowIndex} name={securityContextKey} title={title}>
                 {actions.map((action, itemIndex) => (
                     <Matrix.Item
-                        icon={this.getIcon(action)}
+                        icon={getActionIcon(action)}
                         key={'item-' + itemIndex}
                         name={action}
                         title={translate('sulu_security.' + action)}

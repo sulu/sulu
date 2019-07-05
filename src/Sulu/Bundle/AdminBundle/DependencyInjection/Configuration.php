@@ -43,6 +43,8 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('detail')->end()
                                 ->end()
                             ->end()
+                            ->scalarNode('security_context')->end()
+                            ->scalarNode('security_class')->end()
                         ->end()
                     ->end()
                 ->end()

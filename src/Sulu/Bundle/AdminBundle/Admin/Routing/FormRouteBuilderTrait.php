@@ -23,6 +23,11 @@ trait FormRouteBuilderTrait
         $route->setOption('formKey', $formKey);
     }
 
+    private function setApiOptionsToRoute(Route $route, array $apiOptions): void
+    {
+        $route->setOption('apiOptions', $apiOptions);
+    }
+
     private function setBackRouteToRoute(Route $route, string $backRoute): void
     {
         $route->setOption('backRoute', $backRoute);

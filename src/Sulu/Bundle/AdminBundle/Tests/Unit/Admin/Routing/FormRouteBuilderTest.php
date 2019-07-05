@@ -48,12 +48,18 @@ class FormRouteBuilderTest extends TestCase
                 512,
                 'sulu_category.edit_form',
                 'sulu_category.list',
+                null,
+                null,
+                ['test1' => 'value1'],
             ],
             [
                 'sulu_tag.edit_form',
                 '/tags/:id',
                 'tags',
                 'tags',
+                null,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -74,6 +80,7 @@ class FormRouteBuilderTest extends TestCase
                 'sulu_category.list',
                 ['webspace'],
                 true,
+                null,
             ],
             [
                 'sulu_category.add_form',
@@ -88,6 +95,7 @@ class FormRouteBuilderTest extends TestCase
                 'sulu_category.list',
                 ['webspace', 'id' => 'active'],
                 false,
+                null,
             ],
         ];
     }
@@ -106,8 +114,9 @@ class FormRouteBuilderTest extends TestCase
         ?int $tabPriority,
         ?string $editRoute,
         ?string $backRoute,
-        ?array $routerAttributesToBackRoute = null,
-        ?bool $titleVisible = null
+        ?array $routerAttributesToBackRoute,
+        ?bool $titleVisible,
+        ?array $apiOptions
     ) {
         $routeBuilder = (new FormRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -145,6 +154,10 @@ class FormRouteBuilderTest extends TestCase
             $routeBuilder->setTitleVisible($titleVisible);
         }
 
+        if ($apiOptions) {
+            $routeBuilder->setApiOptions($apiOptions);
+        }
+
         $route = $routeBuilder->getRoute();
 
         $this->assertSame($name, $route->getName());
@@ -159,6 +172,7 @@ class FormRouteBuilderTest extends TestCase
         $this->assertSame($backRoute, $route->getOption('backRoute'));
         $this->assertSame($routerAttributesToBackRoute, $route->getOption('routerAttributesToBackRoute'));
         $this->assertSame($titleVisible, $route->getOption('titleVisible'));
+        $this->assertSame($apiOptions, $route->getOption('apiOptions'));
         $this->assertNull($route->getParent());
         $this->assertSame('sulu_admin.form', $route->getView());
     }

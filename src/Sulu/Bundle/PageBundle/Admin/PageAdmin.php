@@ -201,6 +201,16 @@ class PageAdmin extends Admin
                 ->setTabOrder(4096)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute(),
+            $this->routeBuilderFactory->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                ->setResourceKey('permissions')
+                ->setFormKey('permission_details')
+                ->setApiOptions(['resourceKey' => 'pages'])
+                ->setTabTitle('sulu_security.permissions')
+                ->addToolbarActions(['sulu_admin.save'])
+                ->setTitleVisible(true)
+                ->setTabOrder(5120)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->getRoute(),
         ];
     }
 

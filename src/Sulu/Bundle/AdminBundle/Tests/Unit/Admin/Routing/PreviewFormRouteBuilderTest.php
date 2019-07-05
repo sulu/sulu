@@ -49,6 +49,7 @@ class PreviewFormRouteBuilderTest extends TestCase
                 'sulu_category.edit_form',
                 'sulu_category.list',
                 false,
+                ['test1' => 'value1'],
             ],
             [
                 'sulu_tag.edit_form',
@@ -62,6 +63,7 @@ class PreviewFormRouteBuilderTest extends TestCase
                 null,
                 null,
                 true,
+                null,
             ],
         ];
     }
@@ -80,7 +82,8 @@ class PreviewFormRouteBuilderTest extends TestCase
         ?int $tabPriority,
         ?string $editRoute,
         ?string $backRoute,
-        ?bool $titleVisible = null
+        ?bool $titleVisible,
+        ?array $apiOptions
     ) {
         $routeBuilder = (new PreviewFormRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -114,6 +117,10 @@ class PreviewFormRouteBuilderTest extends TestCase
             $routeBuilder->setTitleVisible($titleVisible);
         }
 
+        if ($apiOptions) {
+            $routeBuilder->setApiOptions($apiOptions);
+        }
+
         $route = $routeBuilder->getRoute();
 
         $this->assertSame($name, $route->getName());
@@ -127,6 +134,7 @@ class PreviewFormRouteBuilderTest extends TestCase
         $this->assertSame($editRoute, $route->getOption('editRoute'));
         $this->assertSame($backRoute, $route->getOption('backRoute'));
         $this->assertSame($titleVisible, $route->getOption('titleVisible'));
+        $this->assertSame($apiOptions, $route->getOption('apiOptions'));
         $this->assertNull($route->getParent());
         $this->assertSame('sulu_admin.preview_form', $route->getView());
     }
