@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -36,11 +35,6 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
 
         $container->setParameter('sulu_audience_targeting.enabled', true);
         $container->setParameter('sulu_audience_targeting.number_of_priorities', $config['number_of_priorities']);
-        $container->setParameter('sulu_audience_targeting.frequencies', [
-            TargetGroupRuleInterface::FREQUENCY_HIT => TargetGroupRuleInterface::FREQUENCY_HIT_NAME,
-            TargetGroupRuleInterface::FREQUENCY_SESSION => TargetGroupRuleInterface::FREQUENCY_SESSION_NAME,
-            TargetGroupRuleInterface::FREQUENCY_VISITOR => TargetGroupRuleInterface::FREQUENCY_VISITOR_NAME,
-        ]);
 
         $container->setParameter('sulu_audience_targeting.headers.target_group', $config['headers']['target_group']);
         $container->setParameter('sulu_audience_targeting.headers.url', $config['headers']['url']);
@@ -79,6 +73,33 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                     'lists' => [
                         'directories' => [
                             __DIR__ . '/../Resources/config/lists',
+                        ],
+                    ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'target_groups' => [
+                            'routes' => [
+                                'list' => 'get_target-groups',
+                                'detail' => 'get_target-group',
+                            ],
+                        ],
+                    ],
+                    'field_type_options' => [
+                        'selection' => [
+                            'target_group_selection' => [
+                                'default_type' => 'list',
+                                'resource_key' => 'target_groups',
+                                'types' => [
+                                    'list' => [
+                                        'adapter' => 'tree_table_slim',
+                                        'list_key' => 'target_groups_selection',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ]

@@ -89,6 +89,7 @@ class Field extends React.Component<Props> {
             label,
             maxOccurs,
             minOccurs,
+            onInvalid,
             options: schemaOptions = {},
             required,
             type,
@@ -99,6 +100,10 @@ class Field extends React.Component<Props> {
         try {
             FieldType = fieldRegistry.get(type);
         } catch (e) {
+            if (onInvalid === 'ignore') {
+                return null;
+            }
+
             log.error(e);
 
             return (

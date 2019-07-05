@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a condition 1`] = `
+<div
+  class="conditionContainer"
+>
+  <div
+    class="condition"
+  >
+    <div
+      class="select"
+    >
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue default"
+          type="button"
+        >
+          <div
+            aria-label="Browser"
+            class="croppedText"
+            title="Browser"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Brow
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                ser
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Browser
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="type"
+    />
+  </div>
+  <button
+    class="button icon icon"
+    type="button"
+  >
+    <span
+      aria-label="su-trash-alt"
+      class="su-trash-alt buttonIcon"
+    />
+  </button>
+</div>
+`;

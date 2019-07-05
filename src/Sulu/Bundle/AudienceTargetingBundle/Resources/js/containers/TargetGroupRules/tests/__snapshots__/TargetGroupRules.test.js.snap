@@ -1,0 +1,394 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a list of rules 1`] = `
+Array [
+  <div
+    class="buttons"
+  >
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt buttonIcon"
+        />
+      </button>
+    </div>
+  </div>,
+  <div
+    class="tableContainer dark"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-pen"
+                class="su-pen"
+              />
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_admin.title
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_audience_targeting.assigned_at
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_audience_targeting.conditions
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell small"
+          >
+            <div
+              class="cellContent"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="0"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Rule 1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              sulu_audience_targeting.each_page_visit
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Browser
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell small"
+          >
+            <div
+              class="cellContent"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="1"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Rule 2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              sulu_audience_targeting.each_session
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Browser & Query String
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-pen"
+                  class="su-pen"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="cell small"
+          >
+            <div
+              class="cellContent"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox dark"
+                >
+                  <input
+                    type="checkbox"
+                    value="2"
+                  />
+                  <span />
+                </span>
+              </label>
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Rule 3
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              sulu_audience_targeting.first_visit
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>,
+]
+`;
+
+exports[`Render an empty list of rules 1`] = `
+Array [
+  <div
+    class="buttons"
+  >
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-trash-alt"
+          class="su-trash-alt buttonIcon"
+        />
+      </button>
+    </div>
+  </div>,
+  <div
+    class="tableContainer dark"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-pen"
+                class="su-pen"
+              />
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_admin.title
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_audience_targeting.assigned_at
+            </span>
+          </th>
+          <th
+            class="headerCell"
+          >
+            <span>
+              sulu_audience_targeting.conditions
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody />
+    </table>
+    <div
+      class="tablePlaceholderArea"
+    >
+      <span
+        aria-label="su-battery-low"
+        class="su-battery-low tablePlaceholderIcon"
+      />
+    </div>
+  </div>,
+]
+`;

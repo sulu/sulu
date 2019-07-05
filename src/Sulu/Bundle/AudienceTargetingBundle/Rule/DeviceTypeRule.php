@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use DeviceDetector\DeviceDetector;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Select;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -72,7 +72,7 @@ class DeviceTypeRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.device_type', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.device_type', [], 'admin');
     }
 
     /**
@@ -80,13 +80,13 @@ class DeviceTypeRule implements RuleInterface
      */
     public function getType()
     {
-        return new Select(static::DEVICE_TYPE, array_map(function($deviceTypes) {
+        return new SingleSelect(static::DEVICE_TYPE, array_map(function($deviceTypes) {
             return [
                 'id' => $deviceTypes,
                 'name' => $this->translator->trans(
-                    'sulu_audience_targeting.device_types.' . $deviceTypes,
+                    'sulu_audience_targeting.' . $deviceTypes,
                     [],
-                    'backend'
+                    'admin'
                 ),
             ];
         }, static::$deviceTypes));

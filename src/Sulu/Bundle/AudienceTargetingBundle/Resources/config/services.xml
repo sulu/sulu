@@ -4,13 +4,23 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!--ADMIN-->
-        <service id="sulu_audience_targeting.admin"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin">
+        <service
+            id="sulu_audience_targeting.admin"
+            class="Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin"
+        >
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="sulu_audience_targeting.rules_collection"/>
             <argument type="service" id="sulu_security.security_checker"/>
-            <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+        <service
+            id="sulu_audience_targeting.webspace_select_helper"
+            class="Sulu\Bundle\AudienceTargetingBundle\Admin\Helper\WebspaceSelect"
+            public="true"
+        >
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
         <!--SERIALIZER-->
         <service id="sulu_audience_targeting.serializer.target_group_subscriber"
@@ -87,9 +97,9 @@
             <tag name="sulu.audience_target_rule" alias="device"/>
         </service>
         <!--CONTENT TYPES-->
-        <service id="sulu_audience_targeting.content.type.audience_targeting_groups"
-                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\AudienceTargetingGroups">
-            <tag name="sulu.content.type" alias="audience_targeting_groups"/>
+        <service id="sulu_audience_targeting.content.type.target_group_selection"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection">
+            <tag name="sulu.content.type" alias="target_group_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
             <argument type="service" id="sulu.repository.target_group"/>
         </service>

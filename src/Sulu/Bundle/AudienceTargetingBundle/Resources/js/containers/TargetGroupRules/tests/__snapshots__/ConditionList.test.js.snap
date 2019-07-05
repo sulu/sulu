@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render an empty ConditionList 1`] = `
+<button
+  class="button secondary"
+  type="button"
+>
+  <span
+    aria-label="su-plus"
+    class="su-plus buttonIcon"
+  />
+  <span
+    class="text"
+  >
+    sulu_audience_targeting.add_condition
+  </span>
+</button>
+`;

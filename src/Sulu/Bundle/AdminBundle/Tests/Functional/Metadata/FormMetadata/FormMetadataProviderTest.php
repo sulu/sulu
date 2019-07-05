@@ -28,6 +28,16 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->formMetadataProvider = $this->getContainer()->get('sulu_admin_test.form_metadata_provider');
     }
 
+    public function testGetMetadataWithOnInvalid()
+    {
+        $form = $this->formMetadataProvider->getMetadata('form_with_on_invalid', 'en');
+        $this->assertCount(1, $form->getItems());
+        $this->assertEquals(
+            'ignore',
+            $form->getItems()['audience_targeting_groups']->getOnInvalid()
+        );
+    }
+
     public function testGetMetadataWithSchema()
     {
         $form = $this->formMetadataProvider->getMetadata('form_with_schema', 'en');

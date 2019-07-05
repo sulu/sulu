@@ -26,6 +26,11 @@
                 <title>sulu_category.categories</title>
             </meta>
         </property>
+        <property name="ext/excerpt/audience_targeting_groups" type="target_group_selection" onInvalid="ignore">
+            <meta>
+                <title>sulu_audience_targeting.target_groups</title>
+            </meta>
+        </property>
         <property name="ext/excerpt/tags" type="tag_selection">
             <meta>
                 <title>sulu_tag.tags</title>

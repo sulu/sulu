@@ -86,7 +86,6 @@ class SnippetAdmin extends Admin
             $snippet = new NavigationItem('sulu_snippet.snippets');
             $snippet->setPosition(20);
             $snippet->setIcon('su-snippet');
-            $snippet->setAction('snippet/snippets');
             $snippet->setMainRoute(static::LIST_ROUTE);
 
             $rootNavigationItem->addChild($snippet);

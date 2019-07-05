@@ -4,18 +4,19 @@ import Icon from '../Icon';
 import Cell from './Cell';
 import tableStyles from './table.scss';
 
-type Props = {
+type Props = {|
     icon: string,
-    onClick: ?(rowId: string | number) => void,
+    onClick: ?(rowId: string | number, rowIndex: number) => void,
     rowId: string | number,
-};
+    rowIndex: number,
+|};
 
 export default class ButtonCell extends React.PureComponent<Props> {
     handleClick = () => {
-        const {rowId, onClick} = this.props;
+        const {rowIndex, onClick, rowId} = this.props;
 
         if (onClick) {
-            onClick(rowId);
+            onClick(rowId, rowIndex);
         }
     };
 

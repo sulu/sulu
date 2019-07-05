@@ -1,0 +1,24 @@
+.condition-container {
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.condition {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.select {
+    width: 33%;
+    margin-right: 10px;
+}
+
+.type {
+    width: 67%;
+}
+
+.icon {
+    margin-left: 10px;
+}

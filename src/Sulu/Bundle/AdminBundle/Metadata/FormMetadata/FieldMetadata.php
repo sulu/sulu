@@ -39,6 +39,11 @@ class FieldMetadata extends ItemMetadata
     protected $spaceAfter;
 
     /**
+     * @var string
+     */
+    protected $onInvalid;
+
+    /**
      * @var TagMetadata[]
      */
     protected $tags;
@@ -99,6 +104,16 @@ class FieldMetadata extends ItemMetadata
     public function setSpaceAfter(int $spaceAfter = null): void
     {
         $this->spaceAfter = $spaceAfter;
+    }
+
+    public function setOnInvalid(string $onInvalid = null): void
+    {
+        $this->onInvalid = $onInvalid;
+    }
+
+    public function getOnInvalid(): ?string
+    {
+        return $this->onInvalid;
     }
 
     /**

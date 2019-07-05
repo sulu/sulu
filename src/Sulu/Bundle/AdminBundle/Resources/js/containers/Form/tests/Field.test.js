@@ -431,3 +431,26 @@ test('Call onFinish callback after editing the field has finished', () => {
 
     expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
 });
+
+test('Do not render anything if field does not exist and onInvalid is set to ignore', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockImplementation(() => {
+        throw new Error();
+    });
+
+    const field = shallow(
+        <Field
+            dataPath="/test"
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            router={undefined}
+            schema={{label: 'label', type: 'not-existing', onInvalid: 'ignore'}}
+            schemaPath="/test"
+        />
+    );
+
+    expect(field.isEmptyRender()).toEqual(true);
+});

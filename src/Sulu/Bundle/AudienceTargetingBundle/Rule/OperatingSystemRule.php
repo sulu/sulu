@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\OperatingSystem;
-use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Select;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OperatingSystemRule implements RuleInterface
@@ -57,7 +57,7 @@ class OperatingSystemRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.operating_system', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.operating_system', [], 'admin');
     }
 
     /**
@@ -65,7 +65,7 @@ class OperatingSystemRule implements RuleInterface
      */
     public function getType()
     {
-        return new Select(static::OPERATING_SYSTEM, array_map(function($operatingSystem) {
+        return new SingleSelect(static::OPERATING_SYSTEM, array_map(function($operatingSystem) {
             return [
                 'id' => $operatingSystem,
                 'name' => $operatingSystem,

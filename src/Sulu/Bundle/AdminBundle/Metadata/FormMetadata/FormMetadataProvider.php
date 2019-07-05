@@ -325,6 +325,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $field->setType($property->getType());
         $field->setColSpan($property->getColSpan());
         $field->setRequired($property->isRequired());
+        $field->setOnInvalid($property->getOnInvalid());
         $field->setSpaceAfter($property->getSpaceAfter());
 
         foreach ($property->getParameters() as $parameter) {

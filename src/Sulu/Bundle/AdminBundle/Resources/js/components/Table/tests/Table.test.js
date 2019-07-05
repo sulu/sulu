@@ -174,7 +174,12 @@ test('Table buttons should implement an onClick handler', () => {
                 <HeaderCell>Column Title</HeaderCell>
             </Header>
             <Body>
-                <Row>
+                <Row id={19}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row id={25}>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
                     <Cell>Column Text</Cell>
@@ -184,8 +189,11 @@ test('Table buttons should implement an onClick handler', () => {
     );
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
-    table.find('.buttonCell button').simulate('click');
-    expect(clickSpy).toHaveBeenCalledTimes(1);
+    table.find('.buttonCell button').at(0).simulate('click');
+    table.find('.buttonCell button').at(1).simulate('click');
+    expect(clickSpy).toBeCalledWith(19, 0);
+    expect(clickSpy).toBeCalledWith(25, 1);
+    expect(clickSpy).toHaveBeenCalledTimes(2);
 });
 
 test('Render the Table component in single selection mode', () => {

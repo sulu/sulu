@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
-use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Text;
+use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Input;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -69,7 +69,7 @@ class ReferrerRule implements RuleInterface
      */
     public function getName()
     {
-        return $this->translator->trans('sulu_audience_targeting.rules.referrer', [], 'backend');
+        return $this->translator->trans('sulu_audience_targeting.referrer', [], 'admin');
     }
 
     /**
@@ -77,6 +77,6 @@ class ReferrerRule implements RuleInterface
      */
     public function getType()
     {
-        return new Text(static::REFERRER);
+        return new Input(static::REFERRER);
     }
 }

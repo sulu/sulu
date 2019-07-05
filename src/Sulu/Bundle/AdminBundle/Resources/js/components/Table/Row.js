@@ -202,6 +202,7 @@ export default class Row extends React.PureComponent<Props> {
                     key={key}
                     onClick={handleClick}
                     rowId={this.getIdentifier()}
+                    rowIndex={rowIndex}
                 />
             );
         });
@@ -230,7 +231,7 @@ export default class Row extends React.PureComponent<Props> {
 
     handleMultipleSelectionChange = (checked: boolean, rowId?: string | number) => {
         const {onSelectionChange} = this.props;
-        if (onSelectionChange && rowId) {
+        if (onSelectionChange && rowId !== null && rowId !== undefined) {
             onSelectionChange(rowId, checked);
         }
     };

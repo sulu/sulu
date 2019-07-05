@@ -48,7 +48,7 @@
             <tag name="sulu.search.field" type="array"/>
         </property>
 
-        <property name="audience_targeting_groups" type="audience_targeting_groups" onInvalid="ignore">
+        <property name="audience_targeting_groups" type="target_group_selection" onInvalid="ignore">
             <meta>
                 <title lang="de">Zielgruppen</title>
                 <title lang="en">Audience targeting groups</title>

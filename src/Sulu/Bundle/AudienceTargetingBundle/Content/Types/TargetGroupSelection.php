@@ -20,7 +20,7 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 /**
  * Content Type for target groups from the audience targeting.
  */
-class AudienceTargetingGroups extends ComplexContentType implements ContentTypeExportInterface
+class TargetGroupSelection extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for persisting the categories in the database.

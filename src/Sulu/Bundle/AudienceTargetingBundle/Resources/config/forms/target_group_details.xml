@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>target_group_details</key>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>sulu_admin.title</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+        </property>
+
+        <property name="description" type="text_area">
+            <meta>
+                <title>sulu_admin.description</title>
+            </meta>
+        </property>
+
+        <property name="webspaceKeys" type="select" colspan="6">
+            <meta>
+                <title>sulu_page.webspaces</title>
+            </meta>
+            <params>
+                <param
+                    name="values"
+                    type="expression"
+                    value="service('sulu_audience_targeting.webspace_select_helper').getValues()"
+                />
+            </params>
+        </property>
+
+        <property name="priority" type="single_select" mandatory="required" colspan="4">
+            <meta>
+                <title>sulu_audience_targeting.priority</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="5" value="5" />
+                    <param name="4" value="4" />
+                    <param name="3" value="3" />
+                    <param name="2" value="2" />
+                    <param name="1" value="1" />
+                </param>
+            </params>
+        </property>
+
+        <property name="active" type="checkbox" colspan="2">
+            <meta>
+                <title>sulu_audience_targeting.active</title>
+            </meta>
+            <params>
+                <param name="type" value="toggler" />
+                <param name="default_value" value="true" />
+            </params>
+        </property>
+
+        <section name="rules">
+            <meta>
+                <title>sulu_audience_targeting.rules</title>
+            </meta>
+            <properties>
+                <property name="rules" type="target_group_rules">
+                    <meta>
+                        <info_text>sulu_audience_targeting.rules_info_text</info_text>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

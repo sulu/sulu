@@ -59,6 +59,7 @@ type BaseSchemaEntry = {
     label?: string,
     maxOccurs?: number,
     minOccurs?: number,
+    onInvalid?: string,
     options?: SchemaOptions,
     required?: boolean,
     spaceAfter?: ColSpan,

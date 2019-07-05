@@ -6,7 +6,6 @@ import Button from '../Button';
 import buttonGroupStyles from './buttonGroup.scss';
 
 type Props = {
-    /** Array of Button components */
     children: ChildrenArray<Element<typeof Button>>,
 };
 

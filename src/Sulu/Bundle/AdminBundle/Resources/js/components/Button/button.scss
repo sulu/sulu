@@ -112,8 +112,12 @@ $iconColorActive: $white;
     font-size: $iconFontSize;
     padding: 0 5px;
 
-    &:hover {
+    &:hover:not(:disabled) {
         background-color: $silver;
+    }
+
+    &:disabled {
+        color: $iconDisabledColor;
     }
 
     &.active {
