@@ -63,7 +63,7 @@ class PermissionControllerTest extends TestCase
             'example' => [
                 'security_context' => 'sulu_example.example',
                 'security_class' => 'Acme\Example',
-            ]
+            ],
         ];
 
         $this->permissionController = new PermissionController(
