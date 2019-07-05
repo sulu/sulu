@@ -1,16 +1,16 @@
 // @flow
-import React from 'react';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
-import Form from '../../containers/Form';
-import {translate} from '../../utils/Translator';
+import React from 'react';
+import Loader from '../../components/Loader/Loader';
 import Overlay from '../../components/Overlay';
+import Form from '../../containers/Form';
 import ResourceRequester from '../../services/ResourceRequester';
-import type {RawSchema} from '../Form/types';
+import userStore from '../../stores/UserStore';
+import {translate} from '../../utils/Translator';
 import MemoryFormStore from '../Form/stores/MemoryFormStore';
 import MetadataStore from '../Form/stores/MetadataStore';
-import Loader from '../../components/Loader/Loader';
-import userStore from '../../stores/UserStore';
+import type {RawSchema} from '../Form/types';
 import profileFormOverlayStyles from './profileFormOverlay.scss';
 
 type Props = {

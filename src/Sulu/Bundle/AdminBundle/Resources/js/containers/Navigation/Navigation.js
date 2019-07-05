@@ -10,7 +10,6 @@ import type {NavigationItem} from './types';
 
 type Props = {
     appVersion: ? string,
-    locale: IObservableValue<boolean>,
     onLogout: () => void,
     onNavigate: (route: string) => void,
     onPinToggle: () => void,
@@ -68,13 +67,10 @@ class Navigation extends React.Component<Props> {
     };
 
     render() {
-        const {suluVersion} = this.props;
-        const {appVersion} = this.props;
-
+        const {appVersion, suluVersion} = this.props;
         const navigationItems = navigationRegistry.getAll();
 
         return (
-
             <NavigationComponent
                 appVersion={appVersion}
                 onLogoutClick={this.props.onLogout}
@@ -97,20 +93,19 @@ class Navigation extends React.Component<Props> {
                         value={navigationItem.id}
                     >
                         {Array.isArray(navigationItem.items) &&
-                        navigationItem.items.map((subNavigationItem) => (
-                            <NavigationComponent.Item
-                                active={this.isItemActive(subNavigationItem)}
-                                key={subNavigationItem.id}
-                                onClick={this.handleNavigationItemClick}
-                                title={subNavigationItem.label}
-                                value={subNavigationItem.id}
-                            />
-                        ))
+                            navigationItem.items.map((subNavigationItem) => (
+                                <NavigationComponent.Item
+                                    active={this.isItemActive(subNavigationItem)}
+                                    key={subNavigationItem.id}
+                                    onClick={this.handleNavigationItemClick}
+                                    title={subNavigationItem.label}
+                                    value={subNavigationItem.id}
+                                />
+                            ))
                         }
                     </NavigationComponent.Item>
                 ))}
             </NavigationComponent>
-
         );
     }
 }

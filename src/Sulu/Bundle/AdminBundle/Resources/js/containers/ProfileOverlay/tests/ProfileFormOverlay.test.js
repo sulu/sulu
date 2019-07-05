@@ -1,12 +1,11 @@
 // @flow
-import mockReact from 'react';
 import {shallow, mount} from 'enzyme/build';
-import ProfileFormOverlay from '../ProfileFormOverlay';
+import mockReact from 'react';
 import Overlay from '../../../components/Overlay';
-import Form from '../../Form';
 import ResourceRequester from '../../../services/ResourceRequester';
 import userStore from '../../../stores/UserStore';
-
+import Form from '../../Form';
+import ProfileFormOverlay from '../ProfileFormOverlay';
 const React = mockReact;
 
 jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());

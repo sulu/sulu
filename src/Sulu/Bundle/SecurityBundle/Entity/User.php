@@ -257,6 +257,20 @@ class User extends BaseUser
     }
 
     /**
+     * Set firstName.
+     *
+     * @param $firstName
+     *
+     * @return $this
+     */
+    public function setFirstName($firstName)
+    {
+        $this->contact->setFirstName($firstName);
+
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @Groups({"profile"})
      *
@@ -277,20 +291,6 @@ class User extends BaseUser
     public function setLastName($lastName)
     {
         $this->contact->setLastName($lastName);
-
-        return $this;
-    }
-
-    /**
-     * Set firstName.
-     *
-     * @param $firstName
-     *
-     * @return $this
-     */
-    public function setFirstName($firstName)
-    {
-        $this->contact->setFirstName($firstName);
 
         return $this;
     }

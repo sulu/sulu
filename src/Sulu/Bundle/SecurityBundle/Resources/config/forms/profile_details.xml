@@ -8,13 +8,13 @@
     <properties>
         <property name="firstName" type="text_line" mandatory="true" colspan="6">
             <meta>
-                <title>sulu_security.first_name</title>
+                <title>sulu_contact.first_name</title>
             </meta>
         </property>
 
         <property name="lastName" type="text_line" mandatory="true" colspan="6">
             <meta>
-                <title>sulu_security.last_name</title>
+                <title>sulu_contact.last_name</title>
             </meta>
         </property>
 
@@ -42,9 +42,9 @@
             </meta>
             <params>
                 <param
-                        name="values"
-                        type="expression"
-                        value="service('sulu_security.system_language_select_helper').getValues()"
+                    name="values"
+                    type="expression"
+                    value="service('sulu_security.system_language_select_helper').getValues()"
                 />
             </params>
         </property>

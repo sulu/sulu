@@ -13,7 +13,5 @@
     "sulu_security.edit": "Bearbeiten",
     "sulu_security.delete": "Löschen",
     "sulu_security.live": "Live",
-    "sulu_security.security": "Sicherheit",
-    "sulu_security.first_name": "Vorname",
-    "sulu_security.last_name": "Nachname"
+    "sulu_security.security": "Sicherheit"
 }

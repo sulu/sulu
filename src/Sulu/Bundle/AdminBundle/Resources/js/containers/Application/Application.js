@@ -1,22 +1,21 @@
 // @flow
-import './global.scss';
-import {observer} from 'mobx-react';
-import {action, observable, autorun, computed} from 'mobx';
 import classNames from 'classnames';
-import React, {Fragment} from 'react';
 import log from 'loglevel';
-import Navigation from '../Navigation';
-import Router from '../../services/Router';
+import {action, observable, autorun, computed} from 'mobx';
+import {observer} from 'mobx-react';
+import React, {Fragment} from 'react';
+import {Backdrop, Loader} from '../../components';
 import initializer from '../../services/Initializer';
-import Sidebar, {sidebarStore} from '../Sidebar';
-import Toolbar from '../Toolbar';
-import ViewRenderer from '../ViewRenderer';
+import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
-import {Backdrop} from '../../components';
 import Login from '../Login';
+import Navigation from '../Navigation';
 import ProfileFormOverlay from '../ProfileOverlay/ProfileFormOverlay';
-import Loader from '../../components/Loader/Loader';
+import Toolbar from '../Toolbar';
+import Sidebar, {sidebarStore} from '../Sidebar';
+import ViewRenderer from '../ViewRenderer';
 import applicationStyles from './application.scss';
+import './global.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
 
@@ -154,11 +153,11 @@ class Application extends React.Component<Props>{
         return (
             <Fragment>
                 {!loggedIn &&
-                <Login
-                    backLink="/" // TODO: Get the correct link here from the backend
-                    initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
-                    onLoginSuccess={this.handleLoginSuccess}
-                />
+                    <Login
+                        backLink="/" // TODO: Get the correct link here from the backend
+                        initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
+                        onLoginSuccess={this.handleLoginSuccess}
+                    />
                 }
                 {initializer.initialized && initializer.initializedTranslationsLocale
                     ? <Fragment>

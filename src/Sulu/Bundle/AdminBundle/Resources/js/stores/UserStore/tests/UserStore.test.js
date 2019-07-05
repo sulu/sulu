@@ -34,6 +34,7 @@ test('Should clear the user store', () => {
     userStore.setUser(user);
     userStore.setContact(contact);
     userStore.setPersistentSetting('something', 'somevalue');
+    userStore.setFullName(contact.firstName + ' ' + contact.lastName);
 
     expect(userStore.loggedIn).toBe(true);
     expect(userStore.loading).toBe(true);
@@ -41,6 +42,9 @@ test('Should clear the user store', () => {
     expect(userStore.resetSuccess).toBe(true);
     expect(userStore.user).toEqual(user);
     expect(userStore.contact).toEqual(contact);
+    if (userStore.contact){
+        expect(userStore.contact.fullName).toEqual(contact.firstName + ' ' + contact.lastName);
+    }
     expect(userStore.persistentSettings.size).toBe(1);
 
     userStore.clear();

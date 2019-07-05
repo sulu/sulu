@@ -545,7 +545,7 @@ exports[`Render opened navigation 1`] = `
 <Application
   appVersion={null}
   router={
-    Object {
+    mockConstructor {
       "route": Object {
         "attributeDefaults": Object {},
         "children": Array [],
@@ -574,7 +574,7 @@ exports[`Render opened navigation 1`] = `
         onProfileClick={[Function]}
         pinned={false}
         router={
-          Object {
+          mockConstructor {
             "route": Object {
               "attributeDefaults": Object {},
               "children": Array [],
@@ -881,7 +881,7 @@ exports[`Render opened navigation 1`] = `
         >
           <Test
             router={
-              Object {
+              mockConstructor {
                 "route": Object {
                   "attributeDefaults": Object {},
                   "children": Array [],
