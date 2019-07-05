@@ -7,6 +7,10 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 }));
 
 test('Load available actions for permissions with given keys', () => {
+    securityContextStore.resourceKeyMapping = {
+        'test': 'sulu.test',
+    };
+
     Requester.get.mockReturnValue(Promise.resolve({
         'Sulu': {
             'Global': {
@@ -18,12 +22,16 @@ test('Load available actions for permissions with given keys', () => {
         },
     }));
 
-    return securityContextStore.loadAvailableActions('sulu.test').then((actions) => {
+    return securityContextStore.loadAvailableActions('test').then((actions) => {
         expect(actions).toEqual(['view', 'add', 'edit']);
     });
 });
 
 test('Load security contexts for entire system', () => {
+    securityContextStore.resourceKeyMapping = {
+        'test': 'sulu.test',
+    };
+
     const suluSecurityContexts = {
         'Global': {
             'sulu.snippets': ['view', 'add'],

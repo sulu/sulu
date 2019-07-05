@@ -48,18 +48,30 @@ class PermissionControllerTest extends TestCase
      */
     private $viewHandler;
 
+    /**
+     * @var array
+     */
+    private $resources;
+
     public function setUp()
     {
         $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $this->resources = [
+            'example' => [
+                'security_context' => 'sulu_example.example',
+                'security_class' => 'Acme\Example',
+            ]
+        ];
 
         $this->permissionController = new PermissionController(
             $this->accessControlManager->reveal(),
             $this->securityChecker->reveal(),
             $this->roleRepository->reveal(),
-            $this->viewHandler->reveal()
+            $this->viewHandler->reveal(),
+            $this->resources
         );
     }
 
@@ -68,7 +80,7 @@ class PermissionControllerTest extends TestCase
         return [
             [
                 '1',
-                'Acme\Example',
+                'example',
                 [
                     'add' => 'true',
                     'view' => true,
@@ -85,10 +97,10 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider providePermissionData
      */
-    public function testGetAction($id, $class, $permissions)
+    public function testGetAction($id, $resourceKey, $permissions)
     {
-        $request = new Request(['id' => $id, 'type' => $class]);
-        $this->accessControlManager->getPermissions($class, $id)->willReturn([1 => $permissions]);
+        $request = new Request(['id' => $id, 'resourceKey' => $resourceKey]);
+        $this->accessControlManager->getPermissions($this->resources[$resourceKey]['security_class'], $id)->willReturn([1 => $permissions]);
 
         $this->viewHandler->handle(
             View::create(
@@ -104,12 +116,12 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider providePermissionData
      */
-    public function testPutAction($id, $class, $permissions)
+    public function testPutAction($id, $resourceKey, $permissions)
     {
         $request = new Request(
             [
                 'id' => $id,
-                'type' => $class,
+                'resourceKey' => $resourceKey,
             ],
             [
                 'permissions' => [

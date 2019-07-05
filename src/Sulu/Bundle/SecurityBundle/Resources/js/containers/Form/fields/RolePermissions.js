@@ -13,12 +13,17 @@ class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType
     };
 
     render() {
-        const {disabled, value} = this.props;
+        const {disabled, formInspector, value} = this.props;
+
+        if (!formInspector.options.resourceKey) {
+            throw new Error('The "resourceKey" must be available in order to load the available permissions!');
+        }
 
         return (
             <RolePermissionsContainer
                 disabled={disabled || undefined}
                 onChange={this.handleChange}
+                resourceKey={formInspector.options.resourceKey}
                 value={value ? value : {}}
             />
         );

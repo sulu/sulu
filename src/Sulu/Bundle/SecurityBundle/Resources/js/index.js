@@ -10,4 +10,5 @@ fieldRegistry.add('role_permissions', RolePermissions);
 
 initializer.addUpdateConfigHook('sulu_security', (config: Object) => {
     securityContextStore.endpoint = config.endpoints.contexts;
+    securityContextStore.resourceKeyMapping = config.resourceKeySecurityContextMapping;
 });

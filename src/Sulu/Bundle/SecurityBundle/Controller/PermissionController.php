@@ -47,33 +47,47 @@ class PermissionController implements ClassResourceInterface
      */
     private $viewHandler;
 
+    /**
+     * @var array
+     */
+    private $resources;
+
     public function __construct(
         AccessControlManagerInterface $accessControlManager,
         SecurityCheckerInterface $securityChecker,
         RoleRepositoryInterface $roleRepository,
-        ViewHandlerInterface $viewHandler
+        ViewHandlerInterface $viewHandler,
+        array $resources
     ) {
         $this->accessControlManager = $accessControlManager;
         $this->securityChecker = $securityChecker;
         $this->roleRepository = $roleRepository;
         $this->viewHandler = $viewHandler;
+        $this->resources = $resources;
     }
 
     public function cgetAction(Request $request)
     {
         try {
             $identifier = $request->get('id');
-            $type = $request->get('type');
+            $resourceKey = $request->get('resourceKey');
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');
             }
 
-            if (!$type) {
-                throw new MissingParameterException(static::class, 'type');
+            if (!$resourceKey) {
+                throw new MissingParameterException(static::class, 'resourceKey');
             }
 
-            $permissions = $this->accessControlManager->getPermissions($type, $identifier);
+            if (!$this->resources[$resourceKey]) {
+                throw new RestException('The resourceKey "' . $resourceKey . '" does not exist!');
+            }
+
+            $permissions = $this->accessControlManager->getPermissions(
+                $this->resources[$resourceKey]['security_class'],
+                $identifier
+            );
 
             return $this->viewHandler->handle(View::create(
                 [
@@ -89,20 +103,24 @@ class PermissionController implements ClassResourceInterface
     {
         try {
             $identifier = $request->get('id');
-            $type = $request->get('type');
+            $resourceKey = $request->get('resourceKey');
             $permissions = $request->get('permissions');
-            $securityContext = $request->get('securityContext');
+            $securityContext = $request->get('securityContext'); // TODO don't rely on securityContext passed in request
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');
             }
 
-            if (!$type) {
-                throw new MissingParameterException(static::class, 'class');
+            if (!$resourceKey) {
+                throw new MissingParameterException(static::class, 'resourceKey');
             }
 
             if (!is_array($permissions)) {
                 throw new RestException('The "permissions" must be passed as an array');
+            }
+
+            if (!$this->resources[$resourceKey]) {
+                throw new RestException('The resourceKey "' . $resourceKey . '" does not exist!');
             }
 
             if ($securityContext) {
@@ -117,7 +135,7 @@ class PermissionController implements ClassResourceInterface
             }
 
             $this->accessControlManager->setPermissions(
-                $type,
+                $this->resources[$resourceKey]['security_class'],
                 $identifier,
                 $permissions
             );

@@ -206,7 +206,7 @@ class PageAdmin extends Admin
                 ->setResourceKey('permissions')
                 ->setFormKey('permission_details')
                 // TODO replacing with resourceKey requires API change, but allows loading available actions for Matrix
-                ->setApiOptions(['type' => SecurityBehavior::class])
+                ->setApiOptions(['resourceKey' => 'pages'])
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->setTitleVisible(true)

@@ -12,6 +12,7 @@ import type {RolePermissions as RolePermissionsType} from './types';
 type Props = {|
     disabled: boolean,
     onChange: (value: RolePermissionsType) => void,
+    resourceKey: string,
     value: RolePermissionsType,
 |};
 
@@ -25,8 +26,9 @@ class RolePermissions extends React.Component<Props> {
     @observable actions: ?Array<string>;
 
     componentDidMount() {
-        // TODO do not hardcode permission key, maybe even load based on resourceKey?
-        securityContextStore.loadAvailableActions('sulu.webspaces.#webspace#').then(action((actions) => {
+        const {resourceKey} = this.props;
+
+        securityContextStore.loadAvailableActions(resourceKey).then(action((actions) => {
             this.actions = actions.filter((action) => action !== 'security');
         }));
 

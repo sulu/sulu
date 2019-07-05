@@ -43,14 +43,21 @@ class SecurityAdmin extends Admin
      */
     private $urlGenerator;
 
+    /**
+     * @var array
+     */
+    private $resources;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        array $resources
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
+        $this->resources = $resources;
     }
 
     public function getNavigation(): Navigation
@@ -170,6 +177,9 @@ class SecurityAdmin extends Admin
             'endpoints' => [
                 'contexts' => $this->urlGenerator->generate('cget_contexts'),
             ],
+            'resourceKeySecurityContextMapping' => array_filter(array_map(function(array $resource) {
+                return $resource['security_context'] ?? null;
+            }, $this->resources)),
         ];
     }
 }

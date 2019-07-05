@@ -34,7 +34,7 @@ test('Render matrix with correct all values selected if not given', () => {
     securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
 
     const value = {};
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} value={value} />);
+    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
 
     expect(rolePermissions.render()).toMatchSnapshot();
 
@@ -74,7 +74,7 @@ test('Render matrix with correct given values', () => {
             delete: false,
         },
     };
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} value={value} />);
+    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
 
     expect(rolePermissions.render()).toMatchSnapshot();
 
@@ -103,7 +103,9 @@ test('Render matrix with correct all values selected if not given', () => {
     securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
 
     const value = {};
-    const rolePermissions = shallow(<RolePermissions onChange={changeSpy} value={value} />);
+    const rolePermissions = shallow(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
+
+    expect(securityContextStore.loadAvailableActions).toBeCalledWith('snippets');
 
     return Promise.all([rolePromise, actionPromise]).then(() => {
         const newValue = {

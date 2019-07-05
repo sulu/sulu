@@ -5,6 +5,7 @@ import type {SecurityContextGroups, Systems} from './types';
 class SecurityContextStore {
     endpoint: string;
     promise: Promise<Systems>;
+    resourceKeyMapping: {[resourceKey: string]: string};
 
     sendRequest(): Promise<Systems> {
         if (!this.promise) {
@@ -20,14 +21,14 @@ class SecurityContextStore {
         });
     }
 
-    loadAvailableActions(searchPermissionKey: string) {
+    loadAvailableActions(resourceKey: string) {
         return this.sendRequest().then((systems: Systems) => {
             for (const systemKey in systems) {
                 const system = systems[systemKey];
                 for (const groupKey in system) {
                     const group = system[groupKey];
                     for (const permissionKey in group) {
-                        if (permissionKey === searchPermissionKey) {
+                        if (permissionKey === this.resourceKeyMapping[resourceKey]) {
                             return group[permissionKey];
                         }
                     }
