@@ -27,13 +27,13 @@ Array [
       />
       <span
         aria-label="su-times"
-        class="su-times clickable icon"
+        class="su-times clickable clearIcon"
         role="button"
         tabindex="0"
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />
@@ -74,7 +74,7 @@ Array [
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />

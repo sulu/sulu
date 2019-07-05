@@ -29,13 +29,13 @@ exports[`Render hint that nothing was found 1`] = `
       />
       <span
         aria-label="su-times"
-        class="su-times clickable icon"
+        class="su-times clickable clearIcon"
         role="button"
         tabindex="0"
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />
@@ -105,7 +105,7 @@ exports[`Render loader while loading indexes and show SearchField afterwards 2`]
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />
@@ -148,7 +148,7 @@ exports[`Render loader while loading search results 1`] = `
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />
@@ -202,13 +202,13 @@ exports[`Render search results 1`] = `
       />
       <span
         aria-label="su-times"
-        class="su-times clickable icon"
+        class="su-times clickable clearIcon"
         role="button"
         tabindex="0"
       />
       <span
         aria-label="su-search"
-        class="su-search clickable icon"
+        class="su-search clickable searchIcon"
         role="button"
         tabindex="0"
       />
