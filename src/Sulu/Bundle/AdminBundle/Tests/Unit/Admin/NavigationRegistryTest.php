@@ -212,4 +212,38 @@ class NavigationRegistryTest extends TestCase
 
         $this->assertEquals(['route1', 'route11'], $navigation->getRoot()->getChildren()[0]->getChildRoutes());
     }
+
+    public function testGetNavigationWithChildrenSlashOnly()
+    {
+        $rootItem = new NavigationItem('Root');
+        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem));
+        $this->admin2->getNavigation()->willReturn(new Navigation());
+
+        $navigationItem1 = new NavigationItem('navigation_1');
+        $navigationItem1->setMainRoute('route1');
+
+        $navigationItem2 = new NavigationItem('navigation_2');
+        $navigationItem2->setMainRoute('route2');
+
+        $rootItem->addChild($navigationItem1);
+        $rootItem->addChild($navigationItem2);
+
+        $route1 = $this->prophesize(Route::class);
+        $route1->getPath()->willReturn('/');
+        $route1->getName()->willReturn('route1');
+
+        $route2 = $this->prophesize(Route::class);
+        $route2->getPath()->willReturn('/route2');
+        $route2->getName()->willReturn('route2');
+
+        $this->routeRegistry->getRoutes()->willReturn([$route1, $route2]);
+        $this->routeRegistry->findRouteByName('route1')->willReturn($route1);
+        $this->routeRegistry->findRouteByName('route2')->willReturn($route2);
+
+        $navigation = $this->navigationRegistry->getNavigation();
+        $rootNavigationItems = $navigation->getRoot()->getChildren();
+
+        $this->assertEquals([], $rootNavigationItems[0]->getChildRoutes());
+        $this->assertEquals(['route2'], $rootNavigationItems[1]->getChildRoutes());
+    }
 }

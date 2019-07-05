@@ -68,10 +68,6 @@ class SearchControllerTest extends SuluTestCase
                         'result' => [
                         ],
                     ],
-                    'totals' => [
-                        'product' => 0,
-                        'contact' => 0,
-                    ],
                     'total' => 0,
                 ],
             ],
@@ -109,10 +105,6 @@ class SearchControllerTest extends SuluTestCase
                                 'score' => -1,
                             ],
                         ],
-                    ],
-                    'totals' => [
-                        'product' => 1,
-                        'contact' => 0,
                     ],
                     'total' => 1,
                 ],
@@ -152,10 +144,6 @@ class SearchControllerTest extends SuluTestCase
                             ],
                         ],
                     ],
-                    'totals' => [
-                        'product' => 2,
-                        'contact' => 0,
-                    ],
                     'total' => 2,
                 ],
             ],
@@ -193,8 +181,8 @@ class SearchControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
-        $this->assertEquals('product', $result[0]['indexName']);
-        $this->assertEquals([], $result[0]['contexts']);
+        $this->assertEquals('snippet', $result['_embedded']['search_indexes'][0]['indexName']);
+        $this->assertEquals([], $result['_embedded']['search_indexes'][0]['contexts']);
     }
 
     private function createUser()

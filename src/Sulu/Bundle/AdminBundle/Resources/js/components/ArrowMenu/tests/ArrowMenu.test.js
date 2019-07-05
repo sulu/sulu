@@ -105,6 +105,25 @@ test('Render ArrowMenu open', () => {
     expect(arrowMenu.find('Popover > Portal').render()).toMatchSnapshot();
 });
 
+test('Render the correct item active with a value of undefined', () => {
+    const button = (<button>Nice button</button>);
+
+    const arrowMenu = mount(
+        <ArrowMenu anchorElement={button} onClose={jest.fn()} open={true}>
+            <ArrowMenu.SingleItemSection
+                icon="su-webspace"
+                onChange={jest.fn()}
+                title="Webspaces"
+                value={undefined}
+            >
+                <ArrowMenu.Item value={undefined}>Everything</ArrowMenu.Item>
+            </ArrowMenu.SingleItemSection>
+        </ArrowMenu>
+    );
+
+    expect(arrowMenu.find('Item').at(0).prop('active')).toEqual(true);
+});
+
 test('Events should be called correctly', () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();

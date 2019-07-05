@@ -28,9 +28,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Sulu search controller.
- */
 class SearchController
 {
     /**
@@ -63,14 +60,6 @@ class SearchController
      */
     private $indexConfigurationProvider;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     * @param ProviderInterface $metadataProvider
-     * @param SecurityCheckerInterface $securityChecker
-     * @param ViewHandlerInterface $viewHandler
-     * @param ListRestHelperInterface $listRestHelper
-     * @param IndexConfigurationProviderInterface $indexConfigurationProvider
-     */
     public function __construct(
         SearchManagerInterface $searchManager,
         ProviderInterface $metadataProvider,
@@ -104,7 +93,18 @@ class SearchController
         $limit = $this->listRestHelper->getLimit();
         $startTime = microtime(true);
 
-        $indexes = $index ? [$index] : $this->getAllowedIndexes();
+        $indexNames = $this->searchManager->getIndexNames();
+
+        $indexes = array_filter(
+            $index
+                ? [$index]
+                : array_map(function(IndexConfiguration $index) {
+                    return $index->getIndexName();
+                }, $this->getAllowedIndexes()),
+            function(string $indexName) use ($indexNames) {
+                return false !== array_search($indexName, $indexNames);
+            }
+        );
 
         $query = $this->searchManager->createSearch($queryString);
 
@@ -137,7 +137,6 @@ class SearchController
             'limit',
             false,
             $adapter->getNbResults(),
-            $this->getIndexTotals($adapter->getArray()),
             number_format($time, 8)
         );
 
@@ -158,65 +157,29 @@ class SearchController
     {
         return $this->viewHandler->handle(
             View::create(
-                array_map(
-                    function($indexName) {
-                        $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
-
-                        return $indexConfiguration ?: new IndexConfiguration($indexName);
-                    },
-                    $this->getAllowedIndexes()
-                )
+                [
+                    '_embedded' => [
+                        'search_indexes' => array_values($this->getAllowedIndexes()),
+                    ],
+                ]
             )
         );
     }
 
     /**
-     * Return the category totals for the search results.
-     *
-     * @param Hit[]
-     *
-     * @return array
-     */
-    private function getIndexTotals($hits)
-    {
-        $indexNames = $this->searchManager->getIndexNames();
-        $indexCount = array_combine(
-            $indexNames,
-            array_fill(0, count($indexNames), 0)
-        );
-
-        foreach ($hits as $hit) {
-            ++$indexCount[$hit->getDocument()->getIndex()];
-        }
-
-        return $indexCount;
-    }
-
-    /**
-     * @return array
+     * @return IndexConfiguration[]
      */
     private function getAllowedIndexes()
     {
-        $allowedIndexNames = [];
-        $indexNames = $this->searchManager->getIndexNames();
+        return array_filter(
+            $this->indexConfigurationProvider->getIndexConfigurations(),
+            function(IndexConfiguration $indexConfiguration) {
+                $securityContext = $indexConfiguration->getSecurityContext();
+                $contexts = $indexConfiguration->getContexts();
 
-        foreach ($indexNames as $indexName) {
-            $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
-            if (!$indexConfiguration) {
-                $allowedIndexNames[] = $indexName;
-
-                continue;
+                return $this->securityChecker->hasPermission($securityContext, PermissionTypes::VIEW)
+                    && empty($contexts) || false !== array_search('admin', $contexts);
             }
-
-            $contexts = $indexConfiguration->getContexts();
-
-            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)
-                && (empty($contexts) || false !== array_search('admin', $contexts))
-            ) {
-                $allowedIndexNames[] = $indexName;
-            }
-        }
-
-        return $allowedIndexNames;
+        );
     }
 }

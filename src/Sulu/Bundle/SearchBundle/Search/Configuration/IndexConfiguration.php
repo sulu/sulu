@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
-/**
- * Contains the configuration for an index.
- */
 class IndexConfiguration
 {
     /**
@@ -29,6 +26,16 @@ class IndexConfiguration
     /**
      * @var string
      */
+    private $icon;
+
+    /**
+     * @var Route
+     */
+    private $route;
+
+    /**
+     * @var string
+     */
     private $securityContext;
 
     /**
@@ -36,56 +43,47 @@ class IndexConfiguration
      */
     private $contexts;
 
-    /**
-     * @param string $indexName The name of the index
-     * @param string $name The name of the index for the user interface
-     * @param string $securityContext The required security context to access the index
-     * @param array $contexts The contexts for which this index should be returned
-     */
-    public function __construct($indexName, $name = null, $securityContext = null, array $contexts = [])
-    {
+    public function __construct(
+        string $indexName,
+        string $icon,
+        string $name,
+        Route $route,
+        string $securityContext = null,
+        array $contexts = []
+    ) {
         $this->indexName = $indexName;
+        $this->icon = $icon;
         $this->name = $name;
+        $this->route = $route;
         $this->securityContext = $securityContext;
         $this->contexts = $contexts;
     }
 
-    /**
-     * Returns the name of the index.
-     *
-     * @return string
-     */
     public function getIndexName()
     {
         return $this->indexName;
     }
 
-    /**
-     * Returns the already translated name for the index. Should only be used for non-translatable names. Useful for
-     * displaying in the user interface.
-     *
-     * @return string
-     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Returns the security context required to access index.
-     *
-     * @return string
-     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
     public function getSecurityContext()
     {
         return $this->securityContext;
     }
 
-    /**
-     * Returns the contexts for which the index should be returned.
-     *
-     * @return array
-     */
     public function getContexts()
     {
         return $this->contexts;

@@ -28,7 +28,7 @@ export default class SingleItemSection extends React.PureComponent<Props> {
             return React.cloneElement(
                 item,
                 {
-                    active: (!!value && value === item.props.value),
+                    active: value === item.props.value,
                     onClick: this.handleItemClick,
                     icon: icon,
                 }

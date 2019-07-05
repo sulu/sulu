@@ -21,23 +21,10 @@ class SearchResultRepresentation extends PaginatedRepresentation
      * @Expose
      * @XmlAttribute
      *
-     * @var array
-     */
-    protected $totals;
-
-    /**
-     * @Expose
-     * @XmlAttribute
-     *
      * @var float
      */
     protected $time;
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param array $totals
-     */
     public function __construct(
         $inline,
         $route,
@@ -49,7 +36,6 @@ class SearchResultRepresentation extends PaginatedRepresentation
         $limitParameterName,
         $absolute,
         $total,
-        $totals,
         $time
     ) {
         parent::__construct(
@@ -65,7 +51,6 @@ class SearchResultRepresentation extends PaginatedRepresentation
             $total
         );
 
-        $this->totals = $totals;
         $this->time = $time;
     }
 }

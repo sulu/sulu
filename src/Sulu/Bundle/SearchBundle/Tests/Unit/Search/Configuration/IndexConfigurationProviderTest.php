@@ -12,19 +12,44 @@
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IndexConfigurationProviderTest extends TestCase
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function setUp()
+    {
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->translator->trans(Argument::cetera())->willReturnArgument(0);
+    }
+
     public function testGetIndexConfigurations()
     {
         $indexConfigurationProvider = new IndexConfigurationProvider(
+            $this->translator->reveal(),
             [
                 'index1' => [
-                    'name' => 'index 1',
+                    'name' => 'test.index',
+                    'icon' => 'su-test',
+                    'route' => [
+                        'name' => 'test1',
+                        'result_to_route' => ['webspace_key' => 'webspace'],
+                    ],
                     'security_context' => 'sulu.security.index1',
                     'contexts' => ['website'],
                 ],
                 'index2' => [
+                    'name' => 'test.index2',
+                    'icon' => 'su-icon',
+                    'route' => [
+                        'name' => 'test2',
+                        'result_to_route' => [],
+                    ],
                     'security_context' => 'sulu.security.index2',
                 ],
             ]
@@ -33,22 +58,44 @@ class IndexConfigurationProviderTest extends TestCase
         $indexConfigurations = $indexConfigurationProvider->getIndexConfigurations();
 
         $this->assertEquals('index1', $indexConfigurations['index1']->getIndexName());
-        $this->assertEquals('index 1', $indexConfigurations['index1']->getName());
+        $this->assertEquals('su-test', $indexConfigurations['index1']->getIcon());
+        $this->assertEquals('test.index', $indexConfigurations['index1']->getName());
         $this->assertEquals('sulu.security.index1', $indexConfigurations['index1']->getSecurityContext());
         $this->assertEquals(['website'], $indexConfigurations['index1']->getContexts());
+        $this->assertEquals(
+            new Route('test1', ['webspace_key' => 'webspace']),
+            $indexConfigurations['index1']->getRoute()
+        );
         $this->assertEquals('index2', $indexConfigurations['index2']->getIndexName());
+        $this->assertEquals('su-icon', $indexConfigurations['index2']->getIcon());
         $this->assertEquals('sulu.security.index2', $indexConfigurations['index2']->getSecurityContext());
+        $this->assertEquals(new Route('test2', []), $indexConfigurations['index2']->getRoute());
     }
 
     public function testGetIndexConfiguration()
     {
         $indexConfigurationProvider = new IndexConfigurationProvider(
+            $this->translator->reveal(),
             [
                 'index1' => [
+                    'name' => 'index1',
+                    'icon' => 'su-test',
+                    'route' => [
+                        'name' => 'test1',
+                        'result_to_route' => ['webspace_key' => 'webspace'],
+                    ],
                     'security_context' => 'sulu.security.index1',
+                    'contexts' => [],
                 ],
                 'index2' => [
+                    'name' => 'index2',
+                    'icon' => 'su-icon',
+                    'route' => [
+                        'name' => 'test2',
+                        'result_to_route' => [],
+                    ],
                     'security_context' => 'sulu.security.index2',
+                    'contexts' => [],
                 ],
             ]
         );
@@ -56,6 +103,8 @@ class IndexConfigurationProviderTest extends TestCase
         $indexConfiguration = $indexConfigurationProvider->getIndexConfiguration('index2');
 
         $this->assertEquals('index2', $indexConfiguration->getIndexName());
+        $this->assertEquals('su-icon', $indexConfiguration->getIcon());
+        $this->assertEquals(new Route('test2', []), $indexConfiguration->getRoute());
         $this->assertEquals('sulu.security.index2', $indexConfiguration->getSecurityContext());
     }
 }

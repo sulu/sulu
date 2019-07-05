@@ -25,6 +25,10 @@ test('Add view to ViewRegistry', () => {
     expect(viewRegistry.get('test2')).toBe(component2);
 });
 
+test('Get a view which does not exist should throw', () => {
+    expect(() => viewRegistry.get('not_existing')).toThrow(/not_existing/);
+});
+
 test('Add view with existing key should throw', () => {
     const component1 = () => (<h1>Test1</h1>);
     viewRegistry.add('test1', component1);

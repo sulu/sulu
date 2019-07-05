@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\SearchBundle\Controller\SearchController;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
+use Sulu\Bundle\SearchBundle\Search\Configuration\Route;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -84,15 +85,17 @@ class SearchControllerTest extends TestCase
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
-        $indexConfiguration1 = new IndexConfiguration('index1', 'index 1');
-        $indexConfiguration2 = new IndexConfiguration('index2', 'index 2');
+        $indexConfiguration1 = new IndexConfiguration('index1', 'su-test', 'index 1', new Route('test1', []));
+        $indexConfiguration2 = new IndexConfiguration('index2', 'su-test', 'index 2', new Route('test2', []));
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
         $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
 
-        $view = View::create([$indexConfiguration1, $indexConfiguration2]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration1, $indexConfiguration2]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();
@@ -102,16 +105,29 @@ class SearchControllerTest extends TestCase
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
-        $indexConfiguration1 = new IndexConfiguration('index1', 'index 1', 'security-context-1');
-        $indexConfiguration2 = new IndexConfiguration('index2', 'index 2', 'security-context-2');
+        $indexConfiguration1 = new IndexConfiguration(
+            'index1',
+            'su-test',
+            'index 1',
+            new Route('test1', []),
+            'security-context-1'
+        );
+        $indexConfiguration2 = new IndexConfiguration(
+            'index2',
+            'su-test',
+            'index 2',
+            new Route('test2', []),
+            'security-context-2'
+        );
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
-        $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
 
         $this->securityChecker->hasPermission('security-context-1', PermissionTypes::VIEW)->willReturn(true);
         $this->securityChecker->hasPermission('security-context-2', PermissionTypes::VIEW)->willReturn(false);
 
-        $view = View::create([$indexConfiguration1]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration1]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();
@@ -121,15 +137,30 @@ class SearchControllerTest extends TestCase
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
-        $indexConfiguration1 = new IndexConfiguration('index1', 'index 1', 'security-context-1', ['website']);
-        $indexConfiguration2 = new IndexConfiguration('index2', 'index 2', 'security-context-2', ['admin']);
+        $indexConfiguration1 = new IndexConfiguration(
+            'index1',
+            'index 1',
+            'su-test',
+            new Route('test1', []),
+            'security-context-1',
+            ['website']
+        );
+        $indexConfiguration2 = new IndexConfiguration(
+            'index2',
+            'index 2',
+            'su-icon',
+            new Route('test2', []),
+            'security-context-2',
+            ['admin']
+        );
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
-        $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
 
-        $view = View::create([$indexConfiguration2]);
+        $view = View::create(['_embedded' => ['search_indexes' => [$indexConfiguration2]]]);
         $this->viewHandler->handle($view)->shouldBeCalled();
 
         $this->searchController->indexesAction();

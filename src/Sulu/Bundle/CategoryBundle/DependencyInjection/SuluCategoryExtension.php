@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\DependencyInjection;
 
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
@@ -117,6 +118,28 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                     ],
                                 ],
                             ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'indexes' => [
+                        'category' => [
+                            'name' => 'sulu_category.categories',
+                            'icon' => 'su-tag',
+                            'route' => [
+                                'name' => CategoryAdmin::EDIT_FORM_ROUTE,
+                                'result_to_route' => [
+                                    'id' => 'id',
+                                    'locale' => 'locale',
+                                ],
+                            ],
+                            'security_context' => 'sulu.settings.categories',
                         ],
                     ],
                 ]

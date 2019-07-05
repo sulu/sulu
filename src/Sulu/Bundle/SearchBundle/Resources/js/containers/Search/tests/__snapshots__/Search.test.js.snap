@@ -1,0 +1,306 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render hint that nothing was found 1`] = `
+<div
+  class="search"
+>
+  <div
+    class="searchField"
+  >
+    <button
+      class="indexButton"
+    >
+      <span
+        class="index"
+      >
+        sulu_search.everything
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="inputContainer"
+    >
+      <input
+        class="input"
+        value="something"
+      />
+      <span
+        aria-label="su-times"
+        class="su-times clickable clearIcon"
+        role="button"
+        tabindex="0"
+      />
+      <span
+        aria-label="su-search"
+        class="su-search clickable searchIcon"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <p
+    class="hint"
+  >
+    sulu_search.search_hint
+  </p>
+  <div
+    class="nothingHint"
+  >
+    <div
+      class="nothingIcon"
+    >
+      <span
+        aria-label="su-battery-low"
+        class="su-battery-low"
+      />
+    </div>
+    sulu_search.nothing_found
+  </div>
+</div>
+`;
+
+exports[`Render loader while loading indexes and show SearchField afterwards 1`] = `
+<div
+  class="spinner"
+  style="width: 40px; height: 40px;"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render loader while loading indexes and show SearchField afterwards 2`] = `
+<div
+  class="search"
+>
+  <div
+    class="searchField"
+  >
+    <button
+      class="indexButton"
+    >
+      <span
+        class="index"
+      >
+        sulu_search.everything
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="inputContainer"
+    >
+      <input
+        class="input"
+        value=""
+      />
+      <span
+        aria-label="su-search"
+        class="su-search clickable searchIcon"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <p
+    class="hint"
+  >
+    sulu_search.search_hint
+  </p>
+</div>
+`;
+
+exports[`Render loader while loading search results 1`] = `
+<div
+  class="search"
+>
+  <div
+    class="searchField"
+  >
+    <button
+      class="indexButton"
+    >
+      <span
+        class="index"
+      >
+        sulu_search.everything
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="inputContainer"
+    >
+      <input
+        class="input"
+        value=""
+      />
+      <span
+        aria-label="su-search"
+        class="su-search clickable searchIcon"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <p
+    class="hint"
+  >
+    sulu_search.search_hint
+  </p>
+  <div
+    class="spinner"
+    style="width: 40px; height: 40px;"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
+</div>
+`;
+
+exports[`Render search results 1`] = `
+<div
+  class="search"
+>
+  <div
+    class="searchField"
+  >
+    <button
+      class="indexButton"
+    >
+      <span
+        class="index"
+      >
+        sulu_search.everything
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </button>
+    <div
+      class="inputContainer"
+    >
+      <input
+        class="input"
+        value="something"
+      />
+      <span
+        aria-label="su-times"
+        class="su-times clickable clearIcon"
+        role="button"
+        tabindex="0"
+      />
+      <span
+        aria-label="su-search"
+        class="su-search clickable searchIcon"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+  <p
+    class="hint"
+  >
+    sulu_search.search_hint
+  </p>
+  <div
+    class="searchResult"
+    role="button"
+  >
+    <div
+      class="imageContainer"
+    >
+      <img
+        class="image"
+        src="/image.jgp"
+      />
+    </div>
+    <div
+      class="resultContainer"
+    >
+      <div
+        class="resource"
+      >
+        Page
+      </div>
+      <div
+        class="titleContainer"
+      >
+        <div
+          class="title"
+        >
+          Test1
+        </div>
+        <div
+          class="locale"
+        >
+           (de)
+        </div>
+      </div>
+      <div
+        class="description"
+      >
+        something
+
+      </div>
+    </div>
+  </div>
+  <div
+    class="searchResult"
+    role="button"
+  >
+    <div
+      class="imageContainer"
+    >
+      <div
+        class="icon"
+      >
+        <span
+          aria-label="su-contact"
+          class="su-contact"
+        />
+      </div>
+    </div>
+    <div
+      class="resultContainer"
+    >
+      <div
+        class="resource"
+      >
+        Contact
+      </div>
+      <div
+        class="titleContainer"
+      >
+        <div
+          class="title"
+        >
+          Max Mustermann
+        </div>
+      </div>
+      <div
+        class="description"
+      >
+        something 2
+
+      </div>
+    </div>
+  </div>
+</div>
+`;

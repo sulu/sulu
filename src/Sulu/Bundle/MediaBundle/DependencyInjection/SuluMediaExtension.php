@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use FFMpeg\FFMpeg;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
@@ -38,7 +39,22 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',
-                ['indexes' => ['media' => ['security_context' => 'sulu.media.collections']]]
+                [
+                    'indexes' => [
+                        'media' => [
+                            'name' => 'sulu_media.media',
+                            'icon' => 'su-image',
+                            'route' => [
+                                'name' => MediaAdmin::EDIT_FORM_ROUTE,
+                                'result_to_route' => [
+                                    'id' => 'id',
+                                    'locale' => 'locale',
+                                ],
+                            ],
+                            'security_context' => 'sulu.media.collections',
+                        ],
+                    ],
+                ]
             );
         }
 

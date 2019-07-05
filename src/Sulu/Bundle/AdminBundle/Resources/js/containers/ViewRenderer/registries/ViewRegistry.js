@@ -21,7 +21,11 @@ class ViewRegistry {
     }
 
     get(name: string): View {
-        return this.views[name];
+        if (name in this.views) {
+            return this.views[name];
+        }
+
+        throw new Error('There is not view for the key "' + name + '" registered');
     }
 }
 

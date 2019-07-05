@@ -17,15 +17,42 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class SuluSearchExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'search' => [
+                            'routes' => [
+                                'list' => 'sulu_search_search',
+                            ],
+                        ],
+                        'search_indexes' => [
+                            'routes' => [
+                                'list' => 'sulu_search_indexes',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'sulu_search_indexes',
+                        'sulu_search_search',
+                    ],
+                ]
+            );
+        }
+
         $container->prependExtensionConfig('jms_serializer', [
             'metadata' => [
                 'directories' => [
@@ -71,6 +98,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_search.indexes', $config['indexes']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
         $loader->load('search.xml');
         $loader->load('build.xml');
     }

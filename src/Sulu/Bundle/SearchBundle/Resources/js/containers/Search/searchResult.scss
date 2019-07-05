@@ -1,0 +1,86 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$searchResultBackgroundColor: $white;
+$searchResultBorderRadius: 3px;
+$searchResultResourceColor: $shakespeare;
+$searchResultLocaleColor: $scorpion;
+$searchResultDescriptionColor: $scorpion;
+$searchResultIconBackgroundColor: $concrete;
+
+.search-result {
+    display: flex;
+    background: $searchResultBackgroundColor;
+    border-radius: $searchResultBorderRadius;
+    width: 100%;
+    height: 84px;
+    max-width: 540px;
+    margin-bottom: 4px;
+    padding: 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.image-container,
+.image,
+.icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $searchResultIconBackgroundColor;
+    border-radius: $searchResultBorderRadius;
+    font-size: 30px;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+.resource {
+    color: $searchResultResourceColor;
+    font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 5px;
+}
+
+.title-container {
+    display: flex;
+    align-items: baseline;
+}
+
+.title {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+.locale {
+    color: $searchResultLocaleColor;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+    margin-left: 4px;
+}
+
+.description {
+    color: $searchResultDescriptionColor;
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 5px;
+}
+
+.description,
+.title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
