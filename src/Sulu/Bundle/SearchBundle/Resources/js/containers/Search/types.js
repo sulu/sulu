@@ -4,8 +4,8 @@ export type Index = {|
     icon: string,
     indexName: string,
     name: string,
-    route: {
+    route: {|
         name: string,
         resultToRoute: {[key: string]: string},
-    },
+    |},
 |};
