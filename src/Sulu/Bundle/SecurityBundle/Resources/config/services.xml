@@ -122,6 +122,7 @@
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_security.user_setting_repository"/>
+            <argument type="service" id="sulu_security.user_manager"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

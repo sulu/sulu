@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
-import {Navigation as NavigationComponent} from '../../components';
+import {default as NavigationComponent} from '../../components/Navigation';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
 import navigationRegistry from './registries/NavigationRegistry';
@@ -13,6 +13,7 @@ type Props = {
     onLogout: () => void,
     onNavigate: (route: string) => void,
     onPinToggle: () => void,
+    onProfileClick: () => void,
     pinned: boolean,
     router: Router,
     suluVersion: string,
@@ -46,7 +47,7 @@ class Navigation extends React.Component<Props> {
     };
 
     handleProfileEditClick = () => {
-        // TODO: Open profile edit overlay here.
+        this.props.onProfileClick();
     };
 
     handlePinToggle = () => {
@@ -65,8 +66,7 @@ class Navigation extends React.Component<Props> {
     };
 
     render() {
-        const {suluVersion} = this.props;
-        const {appVersion} = this.props;
+        const {appVersion, suluVersion} = this.props;
         const navigationItems = navigationRegistry.getAll();
 
         return (

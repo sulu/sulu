@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,6 +61,8 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                     'exception' => [
                         'codes' => [
                             RoleNameAlreadyExistsException::class => 409,
+                            UsernameNotUniqueException::class => 409,
+                            EmailNotUniqueException::class => 409,
                         ],
                     ],
                 ]
@@ -112,6 +116,11 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                             'routes' => [
                                 'list' => 'get_users',
                                 'detail' => 'get_user',
+                            ],
+                        ],
+                        'profile' => [
+                            'routes' => [
+                                'detail' => 'get_profile',
                             ],
                         ],
                     ],

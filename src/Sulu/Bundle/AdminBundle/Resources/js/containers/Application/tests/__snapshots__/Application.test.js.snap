@@ -352,174 +352,208 @@ exports[`Render based on current route with app version 1`] = `
 `;
 
 exports[`Render login when user is not logged in 1`] = `
-<div
-  class="login"
->
+Array [
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
+        class="formContainer"
       >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.welcome
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.username_or_email
+              </div>
+              <label
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-user"
+                    class="su-user icon default"
+                  />
+                </div>
+                <input
+                  type="text"
+                  value=""
+                />
+              </label>
+            </label>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.password
+              </div>
+              <label
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  type="password"
+                  value=""
+                />
+              </label>
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link"
+                type="button"
+              >
+                <span
+                  class="text"
+                >
+                  sulu_admin.forgot_password
+                </span>
+              </button>
+              <button
+                class="button primary"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="text"
+                >
+                  sulu_admin.login
+                </span>
+              </button>
+            </div>
+          </fieldset>
+        </form>
       </div>
       <div
-        class="header"
+        class="backLinkContainer"
       >
-        sulu_admin.welcome
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
       </div>
-      <form
-        class="form"
-      >
-        <fieldset>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.username_or_email
-            </div>
-            <label
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-user"
-                  class="su-user icon default"
-                />
-              </div>
-              <input
-                type="text"
-                value=""
-              />
-            </label>
-          </label>
-          <label
-            class="inputField"
-          >
-            <div
-              class="labelText"
-            >
-              sulu_admin.password
-            </div>
-            <label
-              class="input default left"
-            >
-              <div
-                class="prependedContainer default"
-              >
-                <span
-                  aria-label="su-lock"
-                  class="su-lock icon default"
-                />
-              </div>
-              <input
-                type="password"
-                value=""
-              />
-            </label>
-          </label>
-          <div
-            class="buttons"
-          >
-            <button
-              class="button link"
-              type="button"
-            >
-              <span
-                class="text"
-              >
-                sulu_admin.forgot_password
-              </span>
-            </button>
-            <button
-              class="button primary"
-              disabled=""
-              type="submit"
-            >
-              <span
-                class="text"
-              >
-                sulu_admin.login
-              </span>
-            </button>
-          </div>
-        </fieldset>
-      </form>
     </div>
+  </div>,
+  <div
+    class="loader"
+  >
     <div
-      class="backLinkContainer"
+      class="spinner"
+      style="width: 40px; height: 40px;"
     >
-      <a
-        class="backLink"
-        href="/"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left backLinkIcon"
-        />
-        sulu_admin.back_to_website
-      </a>
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
     </div>
-  </div>
-</div>
+  </div>,
+]
 `;
 
 exports[`Render login with loader 1`] = `
-<div
-  class="login"
->
+Array [
   <div
-    class="loginContainer"
+    class="login"
   >
     <div
-      class="formContainer"
+      class="loginContainer"
     >
       <div
-        class="logoContainer"
-      >
-        <span
-          aria-label="su-sulu"
-          class="su-sulu"
-        />
-      </div>
-      <div
-        class="loaderContainer"
+        class="formContainer"
       >
         <div
-          class="spinner"
-          style="width: 20px; height: 20px;"
+          class="logoContainer"
         >
-          <div
-            class="doubleBounce1"
-          />
-          <div
-            class="doubleBounce2"
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
           />
         </div>
+        <div
+          class="loaderContainer"
+        >
+          <div
+            class="spinner"
+            style="width: 20px; height: 20px;"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
+        </div>
       </div>
+      <div
+        class="backLinkContainer"
+      />
     </div>
+  </div>,
+  <div
+    class="loader"
+  >
     <div
-      class="backLinkContainer"
-    />
-  </div>
-</div>
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>,
+]
 `;
 
 exports[`Render opened navigation 1`] = `
 <Application
   appVersion={null}
   router={
-    Object {
+    mockConstructor {
       "route": Object {
         "attributeDefaults": Object {},
         "children": Array [],
@@ -545,9 +579,10 @@ exports[`Render opened navigation 1`] = `
         onLogout={[Function]}
         onNavigate={[Function]}
         onPinToggle={[Function]}
+        onProfileClick={[Function]}
         pinned={false}
         router={
-          Object {
+          mockConstructor {
             "route": Object {
               "attributeDefaults": Object {},
               "children": Array [],
@@ -854,7 +889,7 @@ exports[`Render opened navigation 1`] = `
         >
           <Test
             router={
-              Object {
+              mockConstructor {
                 "route": Object {
                   "attributeDefaults": Object {},
                   "children": Array [],
@@ -884,6 +919,30 @@ exports[`Render opened navigation 1`] = `
       />
     </div>
   </div>
+  <ProfileFormOverlay
+    onClose={[Function]}
+    open={false}
+  >
+    <Overlay
+      actions={Array []}
+      confirmDisabled={false}
+      confirmLoading={true}
+      confirmText="sulu_admin.save"
+      onClose={[Function]}
+      onConfirm={[Function]}
+      open={false}
+      size="large"
+      title="sulu_admin.edit_profile"
+    >
+      <Backdrop
+        fixed={true}
+        local={false}
+        onClick={[Function]}
+        open={false}
+        visible={true}
+      />
+    </Overlay>
+  </ProfileFormOverlay>
 </Application>
 `;
 

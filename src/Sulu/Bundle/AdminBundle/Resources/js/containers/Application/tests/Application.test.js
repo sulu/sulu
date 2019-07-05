@@ -1,10 +1,22 @@
 //@flow
 import React from 'react';
 import {render, mount} from 'enzyme';
-import Application from '../Application';
 import Router from '../../../services/Router';
+import Application from '../Application';
 
-jest.mock('../../../services/Router', () => function() {});
+jest.mock('../../../services/Router', () => jest.fn());
+
+jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () => ({
+    get: jest.fn(),
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+    getSchema: jest.fn(),
+    getJsonSchema: jest.fn(),
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn(
+    (memoryStore) =>({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();

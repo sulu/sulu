@@ -73,6 +73,12 @@ class UserStore {
         this.contact = contact;
     }
 
+    @action setFullName(fullName: string){
+        if (this.contact){
+            this.contact.fullName = fullName;
+        }
+    }
+
     login = (user: string, password: string) => {
         this.setLoading(true);
 

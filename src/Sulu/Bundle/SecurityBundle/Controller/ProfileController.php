@@ -12,12 +12,16 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * This controller handles everything a user is allowed to change on its own.
  */
-class ProfileController implements ClassResourceInterface
+class ProfileController extends RestController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
@@ -51,38 +55,77 @@ class ProfileController implements ClassResourceInterface
     private $userSettingRepository;
 
     /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager $objectManager
      * @param ViewHandlerInterface $viewHandler
      * @param UserSettingRepositoryInterface $userSettingRepository
+     * @param UserManagerInterface $userManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
         ViewHandlerInterface $viewHandler,
-        UserSettingRepositoryInterface $userSettingRepository
+        UserSettingRepositoryInterface $userSettingRepository,
+        UserManager $userManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->objectManager = $objectManager;
         $this->viewHandler = $viewHandler;
         $this->userSettingRepository = $userSettingRepository;
+        $this->userManager = $userManager;
     }
 
     /**
-     * Sets the given language on the current user.
+     * Gets the profile information of a user.
+     *
+     * @return Response\
+     */
+    public function getAction()
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $view = View::create($user);
+
+        $context = new Context();
+        $context->setGroups(['profile']);
+
+        $view->setContext($context);
+
+        return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * Sets the given profile information of a user.
      *
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws \Exception
      */
-    public function putLanguageAction(Request $request)
+    public function putAction(Request $request)
     {
+        $this->checkArguments($request);
         $user = $this->tokenStorage->getToken()->getUser();
-        $user->setLocale($request->get('locale'));
+        $this->userManager->save($request->request->all(), $request->get('locale'), $user->getId(), true);
+
+        $user->setFirstName($request->get('firstName'));
+        $user->setLastName($request->get('lastName'));
 
         $this->objectManager->flush();
 
-        return $this->viewHandler->handle(View::create(['locale' => $user->getLocale()]));
+        $view = View::create($user);
+
+        $context = new Context();
+        $context->setGroups(['profile']);
+
+        $view->setContext($context);
+
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -160,5 +203,31 @@ class ProfileController implements ClassResourceInterface
         }
 
         return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * Checks the arguments of the given request.
+     *
+     * @param Request $request
+     *
+     * @throws MissingArgumentException
+     */
+    private function checkArguments(Request $request)
+    {
+        if (null === $request->get('firstName')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'firstName');
+        }
+        if (null === $request->get('lastName')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'lastName');
+        }
+        if (null === $request->get('username')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
+        }
+        if (null === $request->get('email')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'email');
+        }
+        if (null === $request->get('locale')) {
+            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
+        }
     }
 }

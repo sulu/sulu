@@ -1,19 +1,21 @@
 // @flow
-import './global.scss';
 import {observer} from 'mobx-react';
 import {action, observable, autorun, computed} from 'mobx';
 import classNames from 'classnames';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
 import Navigation from '../Navigation';
-import Router from '../../services/Router';
+import Backdrop from '../../components/Backdrop';
+import Loader from '../../components/Loader';
 import initializer from '../../services/Initializer';
+import Router from '../../services/Router';
+import userStore from '../../stores/UserStore';
+import Login from '../Login';
+import ProfileFormOverlay from '../ProfileFormOverlay';
 import Sidebar, {sidebarStore} from '../Sidebar';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
-import userStore from '../../stores/UserStore';
-import {Backdrop} from '../../components';
-import Login from '../Login';
+import './global.scss';
 import applicationStyles from './application.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
@@ -27,7 +29,17 @@ type Props = {
 type NavigationState = 'pinned' | 'hidden' | 'visible';
 
 @observer
-class Application extends React.Component<Props> {
+class Application extends React.Component<Props>{
+    @observable openedProfileFormOverlay: boolean = false;
+
+    @action openProfileFormOverlay() {
+        this.openedProfileFormOverlay = true;
+    }
+
+    @action closeProfileFormOverlay() {
+        this.openedProfileFormOverlay = false;
+    }
+
     @observable navigationState: NavigationState;
 
     @computed get navigationPinned() {
@@ -103,6 +115,13 @@ class Application extends React.Component<Props> {
             }
         });
     };
+    handleProfileOverlayClose = () => {
+        this.closeProfileFormOverlay();
+    };
+
+    handleProfileEditClick = () => {
+        this.openProfileFormOverlay();
+    };
 
     render() {
         const {router, suluVersion, appVersion} = this.props;
@@ -141,46 +160,57 @@ class Application extends React.Component<Props> {
                         onLoginSuccess={this.handleLoginSuccess}
                     />
                 }
-                {initializer.initialized &&
-                    <div className={rootClass}>
-                        <nav className={applicationStyles.navigation}>
-                            <Navigation
-                                appVersion={appVersion}
-                                onLogout={this.handleLogout}
-                                onNavigate={this.handleNavigate}
-                                onPinToggle={this.handlePinToggle}
-                                pinned={this.navigationPinned}
-                                router={router}
-                                suluVersion={suluVersion}
-                            />
-                        </nav>
-                        <div className={contentClass}>
-                            <Backdrop
-                                fixed={false}
-                                local={true}
-                                onClick={this.handleNavigationButtonClick}
-                                open={this.navigationVisible && !this.navigationPinned}
-                                visible={false}
-                            />
-                            <main className={applicationStyles.main}>
-                                <header className={applicationStyles.header}>
-                                    <Toolbar
-                                        navigationOpen={this.navigationVisible}
-                                        onNavigationButtonClick={
-                                            this.navigationPinned
-                                                ? undefined
-                                                : this.handleNavigationButtonClick
+                {initializer.initialized && initializer.initializedTranslationsLocale
+                    ? <Fragment>
+                        <div className={rootClass}>
+                            <nav className={applicationStyles.navigation}>
+                                <Navigation
+                                    appVersion={appVersion}
+                                    onLogout={this.handleLogout}
+                                    onNavigate={this.handleNavigate}
+                                    onPinToggle={this.handlePinToggle}
+                                    onProfileClick={this.handleProfileEditClick}
+                                    pinned={this.navigationPinned}
+                                    router={router}
+                                    suluVersion={suluVersion}
+                                />
+                            </nav>
+                            <div className={contentClass}>
+                                <Backdrop
+                                    fixed={false}
+                                    local={true}
+                                    onClick={this.handleNavigationButtonClick}
+                                    open={this.navigationVisible && !this.navigationPinned}
+                                    visible={false}
+                                />
+                                <main className={applicationStyles.main}>
+                                    <header className={applicationStyles.header}>
+                                        <Toolbar
+                                            navigationOpen={this.navigationVisible}
+                                            onNavigationButtonClick={
+                                                this.navigationPinned
+                                                    ? undefined
+                                                    : this.handleNavigationButtonClick
+                                            }
+                                        />
+                                    </header>
+                                    <div className={applicationStyles.viewContainer}>
+                                        {router.route &&
+                                        <ViewRenderer router={router} />
                                         }
-                                    />
-                                </header>
-                                <div className={applicationStyles.viewContainer}>
-                                    {router.route &&
-                                    <ViewRenderer router={router} />
-                                    }
-                                </div>
-                            </main>
-                            <Sidebar className={sidebarClass} />
+                                    </div>
+                                </main>
+                                <Sidebar className={sidebarClass} />
+
+                            </div>
                         </div>
+                        <ProfileFormOverlay
+                            onClose={this.handleProfileOverlayClose}
+                            open={this.openedProfileFormOverlay}
+                        />
+                    </Fragment>
+                    : <div className={applicationStyles.loader}>
+                        <Loader />
                     </div>
                 }
             </Fragment>

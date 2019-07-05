@@ -2,6 +2,10 @@
 @import '../../components/Navigation/variables.scss';
 @import '../../components/Toolbar/variables.scss';
 
+.loader {
+    margin-top: calc($toolbarHeight + $viewPadding);
+}
+
 .root {
     width: calc(100vw + $navigationWidth);
     display: none;

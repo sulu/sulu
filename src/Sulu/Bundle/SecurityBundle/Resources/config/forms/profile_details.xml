@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>profile_details</key>
+
+    <properties>
+        <property name="firstName" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title>sulu_contact.first_name</title>
+            </meta>
+        </property>
+
+        <property name="lastName" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title>sulu_contact.last_name</title>
+            </meta>
+        </property>
+
+        <property name="username" type="text_line" mandatory="true" colspan="6">
+            <meta>
+                <title>sulu_security.user_name</title>
+            </meta>
+        </property>
+
+        <property name="email" type="email" mandatory="true" colspan="6">
+            <meta>
+                <title>sulu_security.email</title>
+            </meta>
+        </property>
+
+        <property name="password" type="password_confirmation">
+            <meta>
+                <title>sulu_security.password</title>
+            </meta>
+        </property>
+
+        <property name="locale" type="single_select" mandatory="true" colspan="6">
+            <meta>
+                <title>sulu_security.system_language</title>
+            </meta>
+            <params>
+                <param
+                    name="values"
+                    type="expression"
+                    value="service('sulu_security.system_language_select_helper').getValues()"
+                />
+            </params>
+        </property>
+    </properties>
+</form>
