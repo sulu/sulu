@@ -9,7 +9,7 @@ import navigationRegistry from './registries/NavigationRegistry';
 import type {NavigationItem} from './types';
 
 type Props = {
-    appVersion: ? string,
+    appVersion: ?string,
     onLogout: () => void,
     onNavigate: (route: string) => void,
     onPinToggle: () => void,
@@ -17,7 +17,6 @@ type Props = {
     pinned: boolean,
     router: Router,
     suluVersion: string,
-
 };
 
 const SULU_CHANGELOG_URL = 'https://github.com/sulu/sulu/releases';
