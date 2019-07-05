@@ -68,7 +68,7 @@ class SingleSelection implements RuleTypeInterface
 
     public function getName(): string
     {
-        return 'single_selection'; // TODO should probably change
+        return 'single_selection';
     }
 
     public function getOptions(): array

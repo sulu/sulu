@@ -11,13 +11,13 @@ export type Rule = {|
     title: string,
 |};
 
-export type RuleType = {
+export type RuleType = {|
     name: string,
     type: {|
         name: string,
         options: Object,
     |},
-};
+|};
 
 export type RuleTypes = {[key: string]: RuleType};
 
