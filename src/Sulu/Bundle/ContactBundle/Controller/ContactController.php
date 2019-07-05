@@ -190,7 +190,7 @@ class ContactController extends RestController implements ClassResourceInterface
             if (true == $request->get('bySystem')) {
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
-            } else if($excludedAccountId) {
+            } elseif ($excludedAccountId) {
                 $contacts = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.contact.class')
                 )->findByExcludedAccountId($excludedAccountId, $request->get('search'));
