@@ -95,16 +95,16 @@ class SearchController
 
         $indexNames = $this->searchManager->getIndexNames();
 
-        $indexes = $index
-            ? [$index]
-            : array_filter(
-                array_map(function(IndexConfiguration $index) {
+        $indexes = array_filter(
+            $index
+                ? [$index]
+                : array_map(function(IndexConfiguration $index) {
                     return $index->getIndexName();
                 }, $this->getAllowedIndexes()),
-                function(string $indexName) use ($indexNames) {
-                    return false !== array_search($indexName, $indexNames);
-                }
-            );
+            function(string $indexName) use ($indexNames) {
+                return false !== array_search($indexName, $indexNames);
+            }
+        );
 
         $query = $this->searchManager->createSearch($queryString);
 
