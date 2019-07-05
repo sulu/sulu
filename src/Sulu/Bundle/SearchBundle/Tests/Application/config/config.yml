@@ -6,3 +6,12 @@ sulu_page:
         mapping:
             Sulu\Bundle\PageBundle\Document\PageDocument:
                 index: page
+sulu_search:
+    indexes:
+        product:
+            name: 'sulu_product.products'
+            icon: 'su-product'
+            route:
+                name: 'sulu_product.edit_form'
+                result_to_route: []
+            security_context: 'sulu.products'

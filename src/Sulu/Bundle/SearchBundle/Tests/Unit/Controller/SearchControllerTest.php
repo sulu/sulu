@@ -88,7 +88,9 @@ class SearchControllerTest extends TestCase
         $indexConfiguration1 = new IndexConfiguration('index1', 'su-test', 'index 1', new Route('test1', []));
         $indexConfiguration2 = new IndexConfiguration('index2', 'su-test', 'index 2', new Route('test2', []));
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
         $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
@@ -118,8 +120,9 @@ class SearchControllerTest extends TestCase
             'security-context-2'
         );
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
-        $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
 
         $this->securityChecker->hasPermission('security-context-1', PermissionTypes::VIEW)->willReturn(true);
         $this->securityChecker->hasPermission('security-context-2', PermissionTypes::VIEW)->willReturn(false);
@@ -151,8 +154,9 @@ class SearchControllerTest extends TestCase
             ['admin']
         );
 
-        $this->indexConfigurationProvider->getIndexConfiguration('index1')->willReturn($indexConfiguration1);
-        $this->indexConfigurationProvider->getIndexConfiguration('index2')->willReturn($indexConfiguration2);
+        $this->indexConfigurationProvider->getIndexConfigurations()->willReturn(
+            [$indexConfiguration1, $indexConfiguration2]
+        );
 
         $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
 
