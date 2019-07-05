@@ -170,8 +170,20 @@ define([
                     }
                 );
             } else {
-                this.data = this.content.toJSON();
-                promise.resolve();
+                var baseContent = new Content();
+                baseContent.fullFetch(
+                  this.options.webspace,
+                  this.options.language,
+                  true,
+                  template,
+                  {
+                      success: function(content) {
+                          this.data = this.content.toJSON();
+                          this.data._permissions = content._permissions;
+                          promise.resolve();
+                      }.bind(this)
+                  }
+                );
             }
 
             return promise;

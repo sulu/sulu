@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.5
+    * BUGFIX      #4589 [ContentBundle]         Set user permissions on new content page
     * BUGFIX      #4572 [WebsiteBundle]         Fix false 406 status code for controller InvalidArgumentExceptions
     * BUGFIX      #4571 [WebsiteBundle]         Fix language switcher for static routes
     * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
