@@ -83,7 +83,7 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
     }
 
     render() {
-        if (!this.resourceStore) {
+        if (!this.mediaUploadStore) {
             return (
                 <Loader />
             );
@@ -91,7 +91,7 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
 
         const {id, locale} = this.resourceStore;
         if (!id) {
-            throw new Error('The "MediaVersionUpload" field type only works with an id!');
+            return null;
         }
 
         if (!locale) {
