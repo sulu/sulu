@@ -6,7 +6,7 @@
     <key>media_details</key>
 
     <properties>
-        <section name="media" colspan="4">
+        <section name="media_upload" colspan="4">
             <properties>
                 <property name="media_version_upload" type="media_version_upload"></property>
             </properties>

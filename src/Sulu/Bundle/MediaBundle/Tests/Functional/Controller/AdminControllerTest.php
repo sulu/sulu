@@ -57,10 +57,14 @@ class AdminControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
+        $this->assertObjectHasAttribute('media_upload', $form);
+        $this->assertObjectHasAttribute('media_details', $form);
 
-        $this->assertObjectHasAttribute('title', $form);
-        $this->assertObjectHasAttribute('description', $form);
-        $this->assertObjectHasAttribute('license', $form);
+        $items = $form->media_details->items;
+        $this->assertObjectHasAttribute('title', $items);
+        $this->assertObjectHasAttribute('description', $items);
+        $this->assertObjectHasAttribute('license', $items);
+        $this->assertObjectHasAttribute('taxonomies', $items);
 
         $schema = $response->schema;
 
