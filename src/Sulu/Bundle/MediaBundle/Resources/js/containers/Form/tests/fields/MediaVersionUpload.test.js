@@ -1,9 +1,10 @@
 // @flow
+import {mount, render} from 'enzyme/build';
+import {observable} from 'mobx';
 import React from 'react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers/Form';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {observable} from 'mobx';
-import {mount, render, shallow} from 'enzyme/build';
+import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaVersionUpload from '../../fields/MediaVersionUpload';
 
@@ -28,6 +29,16 @@ jest.mock('sulu-media-bundle/views/MediaDetails/CropOverlay', () => function Cro
     return <div />;
 });
 
+jest.mock('../../../../stores/MediaUploadStore', () => jest.fn(function() {
+    this.id = 1;
+    this.media = {};
+    this.update = jest.fn().mockReturnValue(Promise.resolve({name: 'test.jpg'}));
+    this.upload = jest.fn();
+    this.getThumbnail = jest.fn((size) => size);
+}));
+
+jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () => jest.fn());
+
 test('Render a loading MediaVersionUpload field', () => {
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
@@ -37,22 +48,11 @@ test('Render a loading MediaVersionUpload field', () => {
             resourceStore, 'test'
         )
     );
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
+
     expect(render(
         <MediaVersionUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            router={router}
         />
     )).toMatchSnapshot();
 });
@@ -66,76 +66,17 @@ test('Render a non loading MediaVersionUpload field', () => {
             resourceStore, 'test'
         )
     );
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
+
     expect(render(
         <MediaVersionUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            router={router}
         />
     )).toMatchSnapshot();
 });
 
-test('Should initialize the ResourceStore', () => {
-    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const metadataStore = require('sulu-admin-bundle/containers/Form/stores/MetadataStore');
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('media', 4, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
-
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const metadataPromise = Promise.resolve({
-        title: {},
-        description: {},
-    });
-
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-    shallow(<MediaVersionUpload {...fieldTypeDefaultProps} formInspector={formInspector} router={router} />);
-
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
-        if (!formInspector.formStore.resourceStore){
-            throw new Error();
-        }
-        const resourceStore = (formInspector.formStore.resourceStore: ResourceStore);
-        expect(resourceStore.resourceKey).toBe('media');
-        expect(resourceStore.id).toBe(4);
-        expect(resourceStore.data).toEqual({
-            title: undefined,
-            description: undefined,
-        });
-    });
-});
-
-test('Should update resourceStore after SingleMediaUpload has completed upload', (done) => {
+test('Should update resourceStore after SingleMediaUpload has completed upload', () => {
     const testFile = {name: 'test.jpg'};
-    const MediaVersionUpload = require('../../fields/MediaVersionUpload').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
@@ -144,50 +85,20 @@ test('Should update resourceStore after SingleMediaUpload has completed upload',
             resourceStore, 'test'
         )
     );
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
     const mediaVersionUpload = mount(<MediaVersionUpload
         {...fieldTypeDefaultProps}
         formInspector={formInspector}
-        router={router}
     />);
 
     mediaVersionUpload.update();
     mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
     expect(resourceStore.data).toEqual(testFile);
-    done();
 });
 
 test('Should open and close crop overlay', () => {
-    jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-        put: jest.fn().mockReturnValue(Promise.resolve({})),
-    }));
-    const MediaVersionUpload = require('../../fields/MediaVersionUpload').default;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
-
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
 
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -198,7 +109,6 @@ test('Should open and close crop overlay', () => {
     const mediaVersionUpload = mount(<MediaVersionUpload
         {...fieldTypeDefaultProps}
         formInspector={formInspector}
-        router={router}
     />);
 
     mediaVersionUpload.update();
@@ -217,28 +127,11 @@ test('Should open and close crop overlay', () => {
 });
 
 test('Should open and close focus point overlay', () => {
-    jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-        put: jest.fn().mockReturnValue(Promise.resolve({})),
-    }));
-
-    const MediaVersionUpload = require('../../fields/MediaVersionUpload').default;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
 
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
     const formInspector = new FormInspector(
         new ResourceFormStore(
             resourceStore, 'test'
@@ -248,8 +141,8 @@ test('Should open and close focus point overlay', () => {
     const mediaVersionUpload = mount(<MediaVersionUpload
         {...fieldTypeDefaultProps}
         formInspector={formInspector}
-        router={router}
     />);
+
     mediaVersionUpload.update();
     expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
 
@@ -263,10 +156,6 @@ test('Should open and close focus point overlay', () => {
 });
 
 test('Should save focus point overlay', (done) => {
-    const ResourceRequester = require('sulu-admin-bundle/services/ResourceRequester');
-    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
-
-    const MediaVersionUpload = require('../../fields/MediaVersionUpload').default;
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
 
     resourceStore.loading = false;
@@ -278,22 +167,9 @@ test('Should save focus point overlay', (done) => {
         )
     );
 
-    const router = {
-        bind: jest.fn(),
-        navigate: jest.fn(),
-        route: {
-            options: {
-                locales: [],
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
     const mediaVersionUpload = mount(<MediaVersionUpload
         {...fieldTypeDefaultProps}
         formInspector={formInspector}
-        router={router}
     />);
 
     mediaVersionUpload.update();
@@ -310,9 +186,35 @@ test('Should save focus point overlay', (done) => {
         {focusPointX: 0, focusPointY: 2, url: 'image.jpg'},
         {id: 4, locale: 'de'}
     );
+
     setTimeout(() => {
         mediaVersionUpload.update();
         expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
         done();
     });
+});
+
+test('Should call update method of MediaUploadStore if a file was dropped', () => {
+    const testId = 1;
+    const testFile = {name: 'test.jpg'};
+
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+    resourceStore.set('id', testId);
+    resourceStore.loading = false;
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            resourceStore, 'test'
+        )
+    );
+
+    const mediaVersionUpload = mount(<MediaVersionUpload
+        {...fieldTypeDefaultProps}
+        formInspector={formInspector}
+    />);
+    mediaVersionUpload.update();
+    mediaVersionUpload.find('SingleMediaDropzone').prop('onDrop')(testFile);
+
+    expect(mediaVersionUpload.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
 });

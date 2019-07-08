@@ -33,34 +33,36 @@
                         <title>sulu_media.license</title>
                     </meta>
 
-            <properties>
-                <property name="copyright" type="text_area">
+                    <properties>
+                        <property name="copyright" type="text_area">
+                            <meta>
+                                <title>sulu_media.copyright</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
+                <section name="taxonomies">
                     <meta>
-                        <title>sulu_media.copyright</title>
+                        <title>sulu_media.taxonomies</title>
                     </meta>
-                </property>
-            </properties>
-        </section>
-        <section name="taxonomies">
-            <meta>
-                <title>sulu_media.taxonomies</title>
-            </meta>
-            <properties>
-                <property name="categories" type="category_selection">
-                    <meta>
-                        <title>sulu_category.categories</title>
-                    </meta>
-                </property>
-                <property name="targetGroups" type="target_group_selection" onInvalid="ignore">
-                    <meta>
-                        <title>sulu_audience_targeting.target_groups</title>
-                    </meta>
-                </property>
-                <property name="tags" type="tag_selection">
-                    <meta>
-                        <title>sulu_tag.tags</title>
-                    </meta>
-                </property>
+                    <properties>
+                        <property name="categories" type="category_selection">
+                            <meta>
+                                <title>sulu_category.categories</title>
+                            </meta>
+                        </property>
+                        <property name="targetGroups" type="target_group_selection" onInvalid="ignore">
+                            <meta>
+                                <title>sulu_audience_targeting.target_groups</title>
+                            </meta>
+                        </property>
+                        <property name="tags" type="tag_selection">
+                            <meta>
+                                <title>sulu_tag.tags</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
             </properties>
         </section>
     </properties>

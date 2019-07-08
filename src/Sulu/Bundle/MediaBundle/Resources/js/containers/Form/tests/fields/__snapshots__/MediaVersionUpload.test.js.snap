@@ -21,14 +21,10 @@ Array [
     class="mediaContainer default"
     style="position:relative"
   >
-    <div
-      class="emptyIndicator"
-    >
-      <span
-        aria-label="su-image"
-        class="su-image"
-      />
-    </div>
+    <img
+      class="thumbnail"
+      src="sulu-400x400-inset"
+    />
     <div
       class="uploadIndicatorContainer"
     >
@@ -54,6 +50,9 @@ Array [
       type="file"
     />
   </div>,
+  <div
+    class="buttons"
+  />,
   <div
     class="buttons"
   >

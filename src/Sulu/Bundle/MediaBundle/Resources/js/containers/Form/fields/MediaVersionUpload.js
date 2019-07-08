@@ -1,18 +1,17 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
-import {Button} from 'sulu-admin-bundle/components';
-import {action, observable, when} from 'mobx';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
-import Loader from 'sulu-admin-bundle/components/Loader';
-import SingleMediaUpload from '../../SingleMediaUpload';
+import {action, observable, when} from 'mobx';
+import {Button, Loader} from 'sulu-admin-bundle/components';
+import {ResourceStore} from 'sulu-admin-bundle/stores';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
-import mediaDetailsStyles from '../../../views/MediaDetails/mediaDetails.scss';
-import FocusPointOverlay from '../../../views/MediaDetails/FocusPointOverlay';
 import CropOverlay from '../../../views/MediaDetails/CropOverlay';
+import FocusPointOverlay from '../../../views/MediaDetails/FocusPointOverlay';
+import mediaDetailsStyles from '../../../views/MediaDetails/mediaDetails.scss';
+import SingleMediaUpload from '../../SingleMediaUpload';
 
 @observer
 class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
