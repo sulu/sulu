@@ -723,7 +723,7 @@ class FileVersion implements AuditableInterface
      */
     public function removeTargetGroups()
     {
-        if ($this->targetGroups){
+        if ($this->targetGroups) {
             $this->targetGroups->clear();
         }
     }
