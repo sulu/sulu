@@ -514,4 +514,34 @@ class PageDataProviderTest extends TestCase
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-456-789', '123-123-123', '123-123-456'], $referenceStore->getAll());
     }
+
+    public function testResolveResourceItemsNullDataSource()
+    {
+        $referenceStore = new ReferenceStore();
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(),
+            $this->getContentQueryExecutor(),
+            $this->getDocumentManager(),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            $referenceStore,
+            true
+        );
+
+        $result = $provider->resolveResourceItems(
+            ['dataSource' => null],
+            [
+                'properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection'),
+                'exclude_duplicates' => new PropertyParameter('exclude_duplicates', true),
+            ],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+
+        $this->assertEquals([], $result->getItems());
+    }
 }

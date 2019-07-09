@@ -239,6 +239,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $emptyFilterResult = [[], false];
 
         if (!array_key_exists('dataSource', $filters)
+            || null === $filters['dataSource']
             || '' === $filters['dataSource']
             || (null !== $limit && $limit < 1)
         ) {
