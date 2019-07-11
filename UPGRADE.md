@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 2.0.0-RC1
 
 ### Search indexes
 
