@@ -2,13 +2,13 @@
 import {action, observable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
-import {translate} from "sulu-admin-bundle/utils/Translator";
+import {translate} from 'sulu-admin-bundle/utils';
+import type {ButtonItemConfig} from 'sulu-admin-bundle/containers/Toolbar/types';
 
 export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
     @observable loading: boolean = false;
 
-    getToolbarItemConfig(): ToolbarItemConfig {
+    getToolbarItemConfig(): ButtonItemConfig {
         const userIsEnabled = this.resourceFormStore.data.enabled;
 
         return {
@@ -23,8 +23,10 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
 
     @action handleEnableUserButtonClick = () => {
         const {
-            id,
             locale,
+            data: {
+                id,
+            },
         } = this.resourceFormStore;
 
         this.loading = true;
@@ -37,13 +39,12 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
                 id,
             }
         ).then(action((response) => {
-            this.resourceFormStore.setMultiple(response);
-            this.resourceFormStore.dirty = false;
+            this.resourceFormStore.set('enabled', response.enabled);
             this.loading = false;
             this.form.showSuccessSnackbar();
         })).catch(action((error) => {
             this.form.errors.push(error);
             this.loading = false;
         }));
-    }
+    };
 }
