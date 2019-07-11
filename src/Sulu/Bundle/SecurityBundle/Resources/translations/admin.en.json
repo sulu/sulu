@@ -15,5 +15,6 @@
     "sulu_security.edit": "Edit",
     "sulu_security.delete": "Delete",
     "sulu_security.live": "Live",
-    "sulu_security.security": "Security"
+    "sulu_security.security": "Security",
+    "sulu_security.locked": "Locked"
 }

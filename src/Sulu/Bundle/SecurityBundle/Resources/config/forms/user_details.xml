@@ -12,6 +12,7 @@
                     <property name="id" mandatory="true" />
                 </properties>
             </schema>
+
             <schema>
                 <properties>
                     <property name="password" mandatory="true" />
@@ -43,12 +44,23 @@
             <meta>
                 <title>sulu_security.system_language</title>
             </meta>
+
             <params>
                 <param
                     name="values"
                     type="expression"
                     value="service('sulu_security.system_language_select_helper').getValues()"
                 />
+            </params>
+        </property>
+
+        <property name="locked" type="checkbox" colspan="6">
+            <meta>
+                <title>sulu_security.locked</title>
+            </meta>
+
+            <params>
+                <param name="type" value="toggler"/>
             </params>
         </property>
 
