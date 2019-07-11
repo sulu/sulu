@@ -13,7 +13,7 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
 
         return {
             type: 'button',
-            icon: 'su-check-circle',
+            icon: 'su-enter',
             onClick: this.handleEnableUserButtonClick,
             disabled: this.resourceFormStore.loading || !this.resourceFormStore.data.id || userIsEnabled,
             label: translate(userIsEnabled ? 'sulu_security.user_enabled' : 'sulu_security.enable_user'),

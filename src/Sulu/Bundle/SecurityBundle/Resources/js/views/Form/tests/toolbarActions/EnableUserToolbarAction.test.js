@@ -78,7 +78,7 @@ test('Return item config with correct disabled, loading, icon, type and label', 
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'button',
-        icon: 'su-check-circle',
+        icon: 'su-enter',
         disabled: false,
         label: 'sulu_security.enable_user',
         loading: false,
