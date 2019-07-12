@@ -724,7 +724,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/foo?bar=baz', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionTrailingSlashWithoutLocalization()
+    public function testGetCollectionTrailingSlashWithoutPrefix()
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
