@@ -148,7 +148,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 return $collection;
             }
 
-            if (preg_match('/\/$/', $resourceLocator) && $resourceLocator !== '/') {
+            if (preg_match('/\/$/', $resourceLocator) && '/' !== $resourceLocator) {
                 if (is_null($prefix)) {
                     $prefix = '';
                 }
