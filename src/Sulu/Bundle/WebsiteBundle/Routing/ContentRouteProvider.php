@@ -166,7 +166,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 if ($request->getQueryString()) {
                     $redirectUrl .= '?' . $request->getQueryString();
                 }
-
+ 
                 $collection->add(
                     $document->getStructureType() . '_' . $document->getUuid(),
                     $this->getRedirectRoute($request, $redirectUrl)
