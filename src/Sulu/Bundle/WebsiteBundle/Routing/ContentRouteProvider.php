@@ -152,7 +152,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 if (is_null($prefix)) {
                     $prefix = '';
                 }
-                
+
                 // redirect page to page without slash at the end
                 $url = $prefix . rtrim($resourceLocator, '/');
                 if ($request->getQueryString()) {

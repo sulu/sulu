@@ -38,7 +38,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
-    use SecuredEntityRepositoryTrait, EncodeAliasTrait;
+    use SecuredEntityRepositoryTrait;
+    use EncodeAliasTrait;
 
     /**
      * @var EventDispatcherInterface
