@@ -831,6 +831,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de_at')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(UuidBehavior::class);
 
