@@ -164,15 +164,21 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $data['id'] = $id;
 
         // Unset IDs of Conditions, otherwise they won't be able to save as id is null.
-        foreach ($data['rules'] as $ruleKey => $rule) {
-            foreach ($rule['conditions'] as $key => $condition) {
-                if (is_null($condition['id'])) {
-                    unset($condition['id']);
-                    $rule['conditions'][$key] = $condition;
+        if (array_key_exists('rules', $data)) {
+            foreach ($data['rules'] as $ruleKey => $rule) {
+                if (array_key_exists('conditions', $rule)) {
+                    foreach ($rule['conditions'] as $key => $condition) {
+                        if (array_key_exists('id', $condition)) {
+                            if (is_null($condition['id'])) {
+                                unset($condition['id']);
+                                $rule['conditions'][$key] = $condition;
+                            }
+                        }
+                    }
+
+                    $data['rules'][$ruleKey] = $rule;
                 }
             }
-
-            $data['rules'][$ruleKey] = $rule;
         }
 
         $targetGroup = $this->deserializeData(json_encode($data));

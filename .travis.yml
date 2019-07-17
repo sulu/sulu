@@ -22,6 +22,7 @@ matrix:
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction -vvv"
         - SYMFONY_DEPRECATIONS_HELPER="disabled"
+        - TEST_FLAGS="--jackrabbit-restart"
       services:
         - postgresql
     - php: 7.3
