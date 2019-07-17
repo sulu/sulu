@@ -14,18 +14,19 @@ env:
     - SYMFONY__PHPCR__TRANSPORT=doctrinedbal
     - TEST_FLAGS=""
     - SYMFONY__DATABASE__DRIVER=pdo_mysql
-    - SYMFONY_DEPRECATIONS_HELPER="disabled"
 
 matrix:
   include:
     - php: 5.5
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction -vvv"
+        - SYMFONY_DEPRECATIONS_HELPER="disabled"
       services:
         - mysql
     - php: 7.3
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction
+        - SYMFONY_DEPRECATIONS_HELPER="disabled"
         - SYMFONY__DATABASE__DRIVER=pdo_pgsql
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
@@ -48,9 +49,6 @@ matrix:
 #        - SYMFONY__DATABASE__USER=postgres
 #        - SYMFONY__DATABASE__PASSWORD=postgres
 #  fast_finish: true # do not wait for allowed failures, as they do not affect the build.
-
-before_install:
-  - composer global require hirak/prestissimo
 
 before_script:
   - if [ ! -d downloads ]; then mkdir downloads; fi
