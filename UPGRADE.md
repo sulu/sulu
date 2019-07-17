@@ -2,6 +2,9 @@
 
 ## 2.0.0-RC1
 
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-alpha6...2.0.0-RC1).
+
 ### Search indexes
 
 The configuration for the search indexes are not generated on the fly anymore. Instead every index that should be listed
