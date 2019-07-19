@@ -10,7 +10,7 @@ import type {IObservableValue} from 'mobx';
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {DisplayOption, Media} from '../../types';
+import type {DisplayOption, Media, MediaType} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {Value} from './types';
 
@@ -19,6 +19,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
+    types: Array<MediaType>,
     value: Value,
 |}
 
@@ -30,6 +31,7 @@ class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        types: [],
         value: {displayOption: undefined, ids: []},
     };
 
@@ -117,7 +119,7 @@ class MultiMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, disabled, displayOptions, value} = this.props;
+        const {locale, disabled, displayOptions, types, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
@@ -181,6 +183,7 @@ class MultiMediaSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    types={types}
                 />
             </Fragment>
         );

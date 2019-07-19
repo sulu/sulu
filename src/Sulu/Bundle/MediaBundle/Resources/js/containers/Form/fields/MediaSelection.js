@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/UserStore';
 import {observable} from 'mobx';
-import {convertDisplayOptionsFromParams, validateDisplayOption} from '../../../utils/MediaSelectionHelper';
+import {convertDisplayOptionsFromParams, convertMediaTypesFromParams, validateDisplayOption} from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
 
@@ -50,7 +50,11 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             displayOptions: {
                 value: displayOptions,
             } = {},
+            types: {
+                value: mediaTypes,
+            } = {},
         } = schemaOptions;
+
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
         if (displayOptions !== undefined && displayOptions !== null && !Array.isArray(displayOptions)) {
@@ -59,12 +63,15 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
+        const mediaTypeValues = convertMediaTypesFromParams(mediaTypes);
+
         return (
             <MultiMediaSelection
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
                 locale={locale}
                 onChange={this.handleChange}
+                types={mediaTypeValues}
                 value={value ? value : undefined}
             />
         );

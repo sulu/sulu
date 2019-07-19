@@ -17,3 +17,9 @@ export type DisplayOption =
     | 'leftBottom'
     | 'bottom'
     | 'rightBottom';
+
+export type MediaType =
+    | 'audio'
+    | 'document'
+    | 'image'
+    | 'video'
