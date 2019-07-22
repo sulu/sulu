@@ -251,10 +251,10 @@ class CustomUrlManagerTest extends TestCase
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_routes%'])
             ->willReturn('/cmf/sulu_io/custom_urls/routes');
 
-        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'en', ['load_ghost_content' => true])
+        $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'de', ['load_ghost_content' => true])
             ->willReturn($routeDocument->reveal());
 
-        $result = $this->manager->findByUrl('sulu.io/test', 'sulu_io');
+        $result = $this->manager->findByUrl('sulu.io/test', 'sulu_io', 'de');
 
         $this->assertEquals($customUrlDocument->reveal(), $result);
     }
@@ -269,7 +269,7 @@ class CustomUrlManagerTest extends TestCase
         $this->documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'en', ['load_ghost_content' => true])
             ->willReturn($routeDocument->reveal());
 
-        $result = $this->manager->findRouteByUrl('sulu.io/test', 'sulu_io');
+        $result = $this->manager->findRouteByUrl('sulu.io/test', 'sulu_io', 'en');
 
         $this->assertEquals($routeDocument->reveal(), $result);
     }

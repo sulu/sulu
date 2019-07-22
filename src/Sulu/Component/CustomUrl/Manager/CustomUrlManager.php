@@ -182,9 +182,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByUrl($url, $webspaceKey)
+    public function findByUrl($url, $webspaceKey, $locale = null)
     {
-        $routeDocument = $this->findRouteByUrl($url, $webspaceKey);
+        $routeDocument = $this->findRouteByUrl($url, $webspaceKey, $locale);
 
         if (null === $routeDocument) {
             return;
@@ -211,13 +211,13 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findRouteByUrl($url, $webspaceKey)
+    public function findRouteByUrl($url, $webspaceKey, $locale = null)
     {
         try {
             /** @var RouteDocument $routeDocument */
             $routeDocument = $this->documentManager->find(
                 sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
-                LOCALE,
+                $locale,
                 ['load_ghost_content' => true]
             );
         } catch (DocumentNotFoundException $ex) {
