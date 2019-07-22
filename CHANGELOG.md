@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.28 (2019-07-23)
+    * BUGFIX      #4627  [WebsiteBundle]        Fix Routing when no prefix is Provided.
+
 * 1.6.27 (2019-05-16)
     * BUGFIX      #4540  [ContentBundle]        Fix copying of teaser selection in WebspaceCopyCommand
     * BUGFIX      #4562  [WebsiteBundle]        Fix BinaryFileResponse of html files.
