@@ -138,19 +138,21 @@ class SingleSelection extends React.Component<Props> {
                         </div>
                     }
                 </SingleItemSelection>
-                <SingleListOverlay
-                    adapter={adapter}
-                    disabledIds={disabledIds}
-                    listKey={listKey}
-                    locale={locale}
-                    onClose={this.handleOverlayClose}
-                    onConfirm={this.handleOverlayConfirm}
-                    open={this.overlayOpen}
-                    options={listOptions}
-                    preSelectedItem={item}
-                    resourceKey={resourceKey}
-                    title={overlayTitle}
-                />
+                {!loading &&
+                    <SingleListOverlay
+                        adapter={adapter}
+                        disabledIds={disabledIds}
+                        listKey={listKey}
+                        locale={locale}
+                        onClose={this.handleOverlayClose}
+                        onConfirm={this.handleOverlayConfirm}
+                        open={this.overlayOpen}
+                        options={listOptions}
+                        preSelectedItem={item}
+                        resourceKey={resourceKey}
+                        title={overlayTitle}
+                    />
+                }
             </Fragment>
         );
     }

@@ -432,4 +432,5 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(false);
     singleSelection.instance().singleSelectionStore.loading = true;
     expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
+    expect(singleSelection.find(SingleListOverlay)).toHaveLength(0);
 });
