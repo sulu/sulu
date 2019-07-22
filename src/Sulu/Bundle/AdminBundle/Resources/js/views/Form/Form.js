@@ -22,7 +22,7 @@ type Props = ViewProps & {
     title?: string,
 };
 
-const FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY = 1024;
+const FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY = 2048;
 
 const HAS_CHANGED_ERROR_CODE = 1102;
 
