@@ -18,7 +18,6 @@ import {
     SingleMediaSelectionBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import MediaOverview from './views/MediaOverview';
-import MediaDetails from './views/MediaDetails';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 
@@ -31,7 +30,6 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     }
 
     viewRegistry.add('sulu_media.overview', MediaOverview);
-    viewRegistry.add('sulu_media.details', MediaDetails);
     viewRegistry.add('sulu_media.formats', MediaFormats);
     viewRegistry.add('sulu_media.history', MediaHistory);
 
