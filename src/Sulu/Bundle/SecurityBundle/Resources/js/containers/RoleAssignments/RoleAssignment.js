@@ -40,7 +40,7 @@ class RoleAssignment extends React.Component<Props> {
             <tr className={roleAssignmentClass}>
                 <td>{value.role.name}</td>
                 <td>{value.role.system}</td>
-                <td>
+                <td className={roleAssignmentStyle.locale}>
                     <MultiSelect
                         disabled={disabled}
                         onChange={this.handleChange}

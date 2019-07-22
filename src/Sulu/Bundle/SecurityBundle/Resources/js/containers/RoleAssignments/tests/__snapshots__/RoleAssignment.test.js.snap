@@ -10,7 +10,9 @@ exports[`Render component 1`] = `
   <td>
     Sulu
   </td>
-  <td>
+  <td
+    class="locale"
+  >
     <div
       class="select"
     >
@@ -63,7 +65,9 @@ exports[`Render component in disabled state 1`] = `
   <td>
     Sulu
   </td>
-  <td>
+  <td
+    class="locale"
+  >
     <div
       class="select"
     >
