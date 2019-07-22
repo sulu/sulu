@@ -370,7 +370,7 @@ test('Clear bindings of router everytime a new view is rendered', () => {
     };
 
     shallow(<ViewRenderer router={router} />);
-    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), -1024);
+    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
 
@@ -399,7 +399,7 @@ test('Clear bindings of router when same view with a different rerender attribut
     };
 
     shallow(<ViewRenderer router={router} />);
-    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), -1024);
+    expect(router.addUpdateRouteHook).toBeCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
 

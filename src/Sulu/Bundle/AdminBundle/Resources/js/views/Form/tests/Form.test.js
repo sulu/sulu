@@ -1749,7 +1749,7 @@ test('Should add and remove the UpdateRouteHook on mounting and unmounting', () 
 
     const checkFormStoreDirtyStateBeforeNavigation = form.instance().checkFormStoreDirtyStateBeforeNavigation;
 
-    expect(router.addUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 1024);
+    expect(router.addUpdateRouteHook).toBeCalledWith(checkFormStoreDirtyStateBeforeNavigation, 2048);
     expect(checkFormStoreDirtyStateBeforeNavigationDisposerSpy).not.toBeCalledWith();
 
     form.unmount();

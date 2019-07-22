@@ -12,7 +12,7 @@ type Props = {
     router: Router,
 };
 
-const UPDATE_ROUTE_HOOK_PRIORITY = -1024;
+const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
 @observer
 class ViewRenderer extends React.Component<Props> {
