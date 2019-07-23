@@ -2,6 +2,8 @@
     "sulu_security.roles": "Benutzerrollen",
     "sulu_security.user_name": "Username",
     "sulu_security.enable_user": "Benutzer aktivieren",
+    "sulu_security.lock_user": "Benutzer sperren",
+    "sulu_security.user_locked": "Benutzer gesperrt",
     "sulu_security.permissions": "Berechtigungen",
     "sulu_security.password": "Passwort",
     "sulu_security.email": "Email",
