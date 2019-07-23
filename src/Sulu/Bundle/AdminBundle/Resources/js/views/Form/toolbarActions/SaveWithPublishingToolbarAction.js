@@ -1,6 +1,6 @@
 // @flow
-import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import {translate} from '../../../utils/Translator';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class SaveWithPublishingToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {

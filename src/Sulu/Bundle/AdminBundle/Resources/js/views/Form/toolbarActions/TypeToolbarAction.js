@@ -1,6 +1,6 @@
 // @flow
-import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig(): ToolbarItemConfig {
