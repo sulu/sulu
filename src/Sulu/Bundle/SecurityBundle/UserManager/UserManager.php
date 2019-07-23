@@ -329,6 +329,38 @@ class UserManager implements UserManagerInterface
     }
 
     /**
+     * @param int $id
+     *
+     * @return UserInterface
+     */
+    public function lockUser($id)
+    {
+        /** @var UserInterface $user */
+        $user = $this->userRepository->findUserById($id);
+        $user->setLocked(true);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return UserInterface
+     */
+    public function unlockUser($id)
+    {
+        /** @var UserInterface $user */
+        $user = $this->userRepository->findUserById($id);
+        $user->setLocked(false);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
+    }
+
+    /**
      * Checks if the given password is a valid one.
      *
      * @param string $password The password to check
