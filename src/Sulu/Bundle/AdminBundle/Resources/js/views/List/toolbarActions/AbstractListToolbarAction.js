@@ -35,7 +35,7 @@ export default class AbstractListToolbarAction implements ToolbarAction {
         return null;
     }
 
-    getToolbarItemConfig(): ToolbarItemConfig {
+    getToolbarItemConfig(): ?ToolbarItemConfig {
         throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
     }
 }

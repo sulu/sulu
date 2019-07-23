@@ -425,7 +425,7 @@ export default withToolbar(Form, function() {
 
     const items = this.toolbarActions
         .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
-        .filter((item) => item !== undefined);
+        .filter((item) => item != null);
 
     const icons = [];
     const formData = this.resourceFormStore.data;

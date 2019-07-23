@@ -332,7 +332,7 @@ export default withToolbar(List, function() {
 
     const items = this.toolbarActions
         .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
-        .filter((item) => item !== undefined);
+        .filter((item) => item != null);
 
     return {
         backButton,
