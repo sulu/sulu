@@ -3,20 +3,21 @@ import {action, observable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {ButtonItemConfig} from 'sulu-admin-bundle/containers/Toolbar/types';
 
 export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
     @observable loading: boolean = false;
 
-    getToolbarItemConfig(): ButtonItemConfig {
-        const userIsEnabled = this.resourceFormStore.data.enabled;
+    getToolbarItemConfig() {
+        if (this.resourceFormStore.data.enabled) {
+            return null;
+        }
 
         return {
             type: 'button',
             icon: 'su-enter',
             onClick: this.handleEnableUserButtonClick,
-            disabled: this.resourceFormStore.loading || !this.resourceFormStore.data.id || userIsEnabled,
-            label: translate(userIsEnabled ? 'sulu_security.user_enabled' : 'sulu_security.enable_user'),
+            disabled: this.resourceFormStore.loading || !this.resourceFormStore.data.id,
+            label: translate('sulu_security.enable_user'),
             loading: this.loading,
         };
     }
