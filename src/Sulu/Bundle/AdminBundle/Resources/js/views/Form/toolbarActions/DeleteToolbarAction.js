@@ -3,9 +3,9 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils/Translator';
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
-export default class DeleteToolbarAction extends AbstractToolbarAction {
+export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog = false;
 
     getNode() {

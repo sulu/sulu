@@ -1,6 +1,6 @@
 // @flow
 import Form, {
-    AbstractToolbarAction as AbstractFormToolbarAction,
+    AbstractFormToolbarAction as AbstractFormToolbarAction,
     toolbarActionRegistry as formToolbarActionRegistry,
 } from './Form';
 import List, {

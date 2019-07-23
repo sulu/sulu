@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
+import AbstractFormToolbarAction from '../toolbarActions/AbstractFormToolbarAction';
 
 jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
@@ -255,7 +255,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
-    class SaveToolbarAction extends AbstractToolbarAction {
+    class SaveToolbarAction extends AbstractFormToolbarAction {
         getToolbarItemConfig() {
             return {
                 type: 'button',
@@ -264,7 +264,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         }
     }
 
-    class DeleteToolbarAction extends AbstractToolbarAction {
+    class DeleteToolbarAction extends AbstractFormToolbarAction {
         getNode() {
             return <p key="delete">This is the delete button test!</p>;
         }
@@ -457,7 +457,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
 
-    class SaveToolbarAction extends AbstractToolbarAction {
+    class SaveToolbarAction extends AbstractFormToolbarAction {
         getToolbarItemConfig() {
             return {
                 type: 'button',
