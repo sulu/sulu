@@ -1,9 +1,9 @@
 // @flow
 import {action} from 'mobx';
 import {translate} from '../../../utils/Translator';
-import AbstractToolbarAction from './AbstractToolbarAction';
+import AbstractListToolbarAction from './AbstractListToolbarAction';
 
-export default class AddToolbarAction extends AbstractToolbarAction {
+export default class AddToolbarAction extends AbstractListToolbarAction {
     getToolbarItemConfig() {
         return {
             icon: 'su-plus-circle',

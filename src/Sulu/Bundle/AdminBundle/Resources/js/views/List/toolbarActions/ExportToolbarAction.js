@@ -7,9 +7,9 @@ import Form from '../../../components/Form';
 import SingleSelect from '../../../components/SingleSelect';
 import resourceRouteRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
 import exportToolbarActionStyles from './exportToolbarAction.scss';
-import AbstractToolbarAction from './AbstractToolbarAction';
+import AbstractListToolbarAction from './AbstractListToolbarAction';
 
-export default class ExportToolbarAction extends AbstractToolbarAction {
+export default class ExportToolbarAction extends AbstractListToolbarAction {
     @observable showOverlay = false;
     @observable delimiter: string = ';';
     @observable enclosure: string = '"';
