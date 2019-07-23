@@ -51,6 +51,8 @@ class SubscriberDebugCommand extends Command
         $eventName = self::PREFIX . $eventName;
         $listeners = $this->eventDispatcher->getListeners($eventName);
 
+        $rows = [];
+
         foreach ($listeners as $listenerTuple) {
             list($listener, $methodName) = $listenerTuple;
             $refl = new \ReflectionClass(get_class($listener));

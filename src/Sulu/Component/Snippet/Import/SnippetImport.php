@@ -135,11 +135,11 @@ class SnippetImport extends Import implements SnippetImportInterface
      */
     protected function importDocument(array $parsedData, $locale, $format)
     {
-        try {
-            $uuid = $parsedData['uuid'];
-            $data = $parsedData['data'];
-            $documentType = Structure::TYPE_SNIPPET;
+        $uuid = $parsedData['uuid'];
+        $data = $parsedData['data'];
+        $documentType = Structure::TYPE_SNIPPET;
 
+        try {
             /** @var SnippetDocument $document */
             $document = $this->documentManager->find(
                 $uuid,

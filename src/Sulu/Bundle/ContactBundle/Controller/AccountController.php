@@ -269,7 +269,7 @@ class AccountController extends RestController implements ClassResourceInterface
             ];
 
             if ($positionId) {
-                $contactArray['position'] = $position->getPosition();
+                $contactArray['position'] = $accountContact->getPosition()->getPosition();
             }
 
             $view = $this->view($contactArray, 200);

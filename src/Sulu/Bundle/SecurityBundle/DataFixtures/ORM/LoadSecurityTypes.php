@@ -47,6 +47,9 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
         if (!is_null($elements)) {
             /** @var $element \DOMNode */
             foreach ($elements as $element) {
+                $typeId = null;
+                $typeName = null;
+
                 /** @var $child \DOMNode */
                 foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {

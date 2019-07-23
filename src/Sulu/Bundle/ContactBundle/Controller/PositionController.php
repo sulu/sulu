@@ -151,6 +151,7 @@ class PositionController extends RestController implements ClassResourceInterfac
 
     public function cdeleteAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
         try {
@@ -164,7 +165,6 @@ class PositionController extends RestController implements ClassResourceInterfac
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
-                $em = $this->getDoctrine()->getManager();
                 $em->remove($title);
             }
 

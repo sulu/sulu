@@ -151,6 +151,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
     public function cdeleteAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
         try {
@@ -163,8 +164,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 if (!$title) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
-
-                $em = $this->getDoctrine()->getManager();
                 $em->remove($title);
             }
 
