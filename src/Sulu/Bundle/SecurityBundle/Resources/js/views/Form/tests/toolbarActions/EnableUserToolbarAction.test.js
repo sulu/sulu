@@ -107,16 +107,13 @@ test('Return item config with disabled button when user has no id yet', () => {
     }));
 });
 
-test('Return item config with disabled button and correct label when user is already enabled', () => {
+test('Return null as item config when user is already enabled', () => {
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
 
-    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        disabled: true,
-        label: 'sulu_security.user_enabled',
-    }));
+    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
 test('Call ResourceRequester with correct parameters when button is clicked', () => {
@@ -130,7 +127,10 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
     // $FlowFixMe
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
 
-    toolbarAction.getToolbarItemConfig().onClick();
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).not.toBeFalsy();
+    // $FlowFixMe
+    toolbarItemConfig.onClick();
 
     expect(ResourceRequester.post).toBeCalledWith(
         'users',
@@ -148,13 +148,23 @@ test('Return item config with loading button during request', () => {
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
 
-    expect(toolbarAction.getToolbarItemConfig().loading).toBeFalsy();
+    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        loading: false,
+    }));
 
-    toolbarAction.getToolbarItemConfig().onClick();
-    expect(toolbarAction.getToolbarItemConfig().loading).toBeTruthy();
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).not.toBeFalsy();
+    // $FlowFixMe
+    toolbarItemConfig.onClick();
+
+    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        loading: true,
+    }));
 
     return deleteDraftPromise.then(() => {
-        expect(toolbarAction.getToolbarItemConfig().loading).toBeFalsy();
+        expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+            loading: false,
+        }));
     });
 });
 
@@ -167,7 +177,10 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
 
-    toolbarAction.getToolbarItemConfig().onClick();
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).not.toBeFalsy();
+    // $FlowFixMe
+    toolbarItemConfig.onClick();
 
     return deleteDraftPromise.then(() => {
         expect(toolbarAction.resourceFormStore.set).toBeCalledWith('enabled', true);
@@ -186,7 +199,10 @@ test('Push error to form view on failed request', (done) => {
 
     expect(toolbarAction.form.errors).toHaveLength(0);
 
-    toolbarAction.getToolbarItemConfig().onClick();
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).not.toBeFalsy();
+    // $FlowFixMe
+    toolbarItemConfig.onClick();
 
     setTimeout(() => {
         expect(toolbarAction.form.errors).toHaveLength(1);
