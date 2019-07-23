@@ -112,8 +112,8 @@ test('Return null as item config when user is already enabled', () => {
 });
 
 test('Call ResourceRequester with correct parameters when button is clicked', () => {
-    const deleteDraftPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(deleteDraftPromise);
+    const enableUserPromise = Promise.resolve({enabled: true});
+    ResourceRequester.post.mockReturnValue(enableUserPromise);
 
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
@@ -136,8 +136,8 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
 });
 
 test('Return item config with loading button during request', () => {
-    const deleteDraftPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(deleteDraftPromise);
+    const enableUserPromise = Promise.resolve({enabled: true});
+    ResourceRequester.post.mockReturnValue(enableUserPromise);
 
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
@@ -158,7 +158,7 @@ test('Return item config with loading button during request', () => {
         loading: true,
     }));
 
-    return deleteDraftPromise.then(() => {
+    return enableUserPromise.then(() => {
         expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
             loading: false,
         }));
@@ -166,8 +166,8 @@ test('Return item config with loading button during request', () => {
 });
 
 test('Set new enabled value to ResourceFormStore and show success-snackbar on successful request', () => {
-    const deleteDraftPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(deleteDraftPromise);
+    const enableUserPromise = Promise.resolve({enabled: true});
+    ResourceRequester.post.mockReturnValue(enableUserPromise);
 
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
@@ -180,15 +180,15 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     }
     toolbarItemConfig.onClick();
 
-    return deleteDraftPromise.then(() => {
+    return enableUserPromise.then(() => {
         expect(toolbarAction.resourceFormStore.set).toBeCalledWith('enabled', true);
         expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
     });
 });
 
 test('Push error to form view on failed request', (done) => {
-    const deleteDraftPromise = Promise.reject();
-    ResourceRequester.post.mockReturnValue(deleteDraftPromise);
+    const enableUserPromise = Promise.reject();
+    ResourceRequester.post.mockReturnValue(enableUserPromise);
 
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
