@@ -631,6 +631,7 @@ class NodeRepository implements NodeRepositoryInterface
         $tier = array_shift($tiers);
 
         $found = false;
+        $node = null;
         if (is_array($result)) {
             foreach ($result as &$node) {
                 if ($node['id'] === $uuid) {

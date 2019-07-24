@@ -81,6 +81,8 @@ class Focus implements FocusInterface
                 case static::FOCUS_RIGHT:
                     $cropX = $imageSize->getWidth() - $width;
                     break;
+                default:
+                    $cropX = null;
             }
         } else {
             $width = $imageSize->getWidth();
@@ -98,6 +100,8 @@ class Focus implements FocusInterface
                 case static::FOCUS_BOTTOM:
                     $cropY = $imageSize->getHeight() - $height;
                     break;
+                default:
+                    $cropY = null;
             }
         }
 
