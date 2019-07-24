@@ -1,7 +1,7 @@
 // @flow
 import AbstractListToolbarAction from '../toolbarActions/AbstractListToolbarAction';
 
-class ToolbarActionRegistry {
+class ListToolbarActionRegistry {
     toolbarActions: {[name: string]: Class<AbstractListToolbarAction>} = {};
 
     constructor() {
@@ -29,4 +29,4 @@ class ToolbarActionRegistry {
     }
 }
 
-export default new ToolbarActionRegistry();
+export default new ListToolbarActionRegistry();

@@ -4,8 +4,8 @@ import Form, {
     formToolbarActionRegistry,
 } from './Form';
 import List, {
-    AbstractListToolbarAction as AbstractListToolbarAction,
-    toolbarActionRegistry as listToolbarActionRegistry,
+    AbstractListToolbarAction,
+    listToolbarActionRegistry,
 } from './List';
 import Tabs from './Tabs';
 import ResourceTabs from './ResourceTabs';

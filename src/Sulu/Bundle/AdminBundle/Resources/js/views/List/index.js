@@ -1,6 +1,6 @@
 // @flow
 import List from './List';
-import toolbarActionRegistry from './registries/ToolbarActionRegistry';
+import listToolbarActionRegistry from './registries/ListToolbarActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import AddToolbarAction from './toolbarActions/AddToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
@@ -11,7 +11,7 @@ export default List;
 
 export {
     AbstractListToolbarAction,
-    toolbarActionRegistry,
+    listToolbarActionRegistry,
     AddToolbarAction,
     DeleteToolbarAction,
     MoveToolbarAction,
