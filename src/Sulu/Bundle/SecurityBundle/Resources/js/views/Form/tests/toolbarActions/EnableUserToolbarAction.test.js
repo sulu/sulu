@@ -79,21 +79,18 @@ test('Return item config with correct disabled, loading, icon, type and label', 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'button',
         icon: 'su-enter',
-        disabled: false,
         label: 'sulu_security.enable_user',
         loading: false,
     }));
 });
 
-test('Return item config with disabled button when resource store is loading', () => {
+test('Return null as item config when resource store is loading', () => {
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
 
-    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
 test('Return null as item config when user has no id yet', () => {
