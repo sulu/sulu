@@ -248,7 +248,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
 });
 
 test('Should add items defined in ToolbarActions to Toolbar', () => {
-    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
@@ -277,7 +277,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         }
     }
 
-    toolbarActionRegistry.get.mockImplementation((name) => {
+    formToolbarActionRegistry.get.mockImplementation((name) => {
         switch (name) {
             case 'save':
                 return SaveToolbarAction;
@@ -452,7 +452,7 @@ test('Should add PublishIndicator if publish status is available showing publish
 });
 
 test('Should set and update locales defined in ToolbarActions', () => {
-    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
@@ -466,7 +466,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
         }
     }
 
-    toolbarActionRegistry.get.mockImplementation((name) => {
+    formToolbarActionRegistry.get.mockImplementation((name) => {
         switch (name) {
             case 'save':
                 return SaveToolbarAction;

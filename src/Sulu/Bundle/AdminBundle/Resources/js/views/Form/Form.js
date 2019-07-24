@@ -13,7 +13,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
 import {translate} from '../../utils/Translator';
-import toolbarActionRegistry from './registries/ToolbarActionRegistry';
+import formToolbarActionRegistry from './registries/FormToolbarActionRegistry';
 import formStyles from './form.scss';
 
 type Props = ViewProps & {
@@ -191,7 +191,7 @@ class Form extends React.Component<Props> {
             throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
         }
 
-        this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
+        this.toolbarActions = toolbarActions.map((toolbarAction) => new (formToolbarActionRegistry.get(toolbarAction))(
             this.resourceFormStore,
             this,
             router,

@@ -75,10 +75,10 @@ import {
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
+    formToolbarActionRegistry,
     DeleteToolbarAction as FormDeleteToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
-    toolbarActionRegistry as formToolbarActionRegistry,
     TypeToolbarAction as FormTypeToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';

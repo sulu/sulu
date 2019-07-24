@@ -1,6 +1,6 @@
 // @flow
 import Form from './Form';
-import toolbarActionRegistry from './registries/ToolbarActionRegistry';
+import formToolbarActionRegistry from './registries/FormToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
@@ -10,7 +10,7 @@ import TypeToolbarAction from './toolbarActions/TypeToolbarAction';
 export default Form;
 
 export {
-    toolbarActionRegistry,
+    formToolbarActionRegistry,
     AbstractFormToolbarAction,
     DeleteToolbarAction,
     SaveWithPublishingToolbarAction,
