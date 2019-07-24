@@ -128,8 +128,9 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     expect(ResourceRequester.post).toBeCalledWith(
@@ -153,8 +154,9 @@ test('Return item config with loading button during request', () => {
     }));
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -178,8 +180,9 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     return deleteDraftPromise.then(() => {
@@ -200,8 +203,9 @@ test('Push error to form view on failed request', (done) => {
     expect(toolbarAction.form.errors).toHaveLength(0);
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     setTimeout(() => {
