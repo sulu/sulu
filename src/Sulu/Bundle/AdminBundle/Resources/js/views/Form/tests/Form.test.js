@@ -23,7 +23,7 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../registries/ToolbarActionRegistry', () => ({
+jest.mock('../registries/FormToolbarActionRegistry', () => ({
     get: jest.fn(),
 }));
 
