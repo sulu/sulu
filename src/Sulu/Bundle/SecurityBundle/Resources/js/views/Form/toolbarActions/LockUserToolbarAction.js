@@ -12,14 +12,13 @@ export default class LockUserToolbarAction extends AbstractFormToolbarAction {
     }
 
     getToolbarItemConfig() {
-        if (!this.resourceFormStore.data.enabled) {
+        if (this.resourceFormStore.loading || !this.resourceFormStore.data.id || !this.resourceFormStore.data.enabled) {
             return null;
         }
 
         return {
             type: 'toggler',
             onClick: this.handleLockUserTogglerClick,
-            disabled: this.resourceFormStore.loading || !this.resourceFormStore.data.id,
             label: translate(this.userIsLocked ? 'sulu_security.user_locked' : 'sulu_security.lock_user'),
             loading: this.loading,
             value: this.userIsLocked,

@@ -79,7 +79,6 @@ test('Return item config with correct disabled, loading, icon, type and label', 
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'toggler',
-        disabled: false,
         label: 'sulu_security.lock_user',
         loading: false,
         value: false,
@@ -88,8 +87,8 @@ test('Return item config with correct disabled, loading, icon, type and label', 
 
 test('Return correct label and value when user is already locked', () => {
     const toolbarAction = createLockUserToolbarAction();
-    toolbarAction.resourceFormStore.resourceStore.loading = true;
-    toolbarAction.resourceFormStore.resourceStore.data.id = null;
+    toolbarAction.resourceFormStore.resourceStore.loading = false;
+    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
     toolbarAction.resourceFormStore.resourceStore.data.locked = true;
 
@@ -99,28 +98,24 @@ test('Return correct label and value when user is already locked', () => {
     }));
 });
 
-test('Return item config with disabled button when resource store is loading', () => {
+test('Return null as item config when resource store is loading', () => {
     const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
     toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
-    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
-test('Return item config with disabled button when user has no id yet', () => {
+test('Return null as item config when user has no id yet', () => {
     const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = null;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
     toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
-    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
 test('Return null as item config when user is not enabled yet', () => {
