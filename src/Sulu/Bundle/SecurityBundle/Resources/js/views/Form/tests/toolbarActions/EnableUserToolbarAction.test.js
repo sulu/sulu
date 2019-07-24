@@ -96,15 +96,13 @@ test('Return item config with disabled button when resource store is loading', (
     }));
 });
 
-test('Return item config with disabled button when user has no id yet', () => {
+test('Return null as item config when user has no id yet', () => {
     const toolbarAction = createEnableUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = null;
     toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
 
-    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
 test('Return null as item config when user is already enabled', () => {

@@ -8,7 +8,7 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
     @observable loading: boolean = false;
 
     getToolbarItemConfig() {
-        if (this.resourceFormStore.data.enabled) {
+        if (!this.resourceFormStore.data.id || this.resourceFormStore.data.enabled) {
             return null;
         }
 
@@ -16,7 +16,7 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
             type: 'button',
             icon: 'su-enter',
             onClick: this.handleEnableUserButtonClick,
-            disabled: this.resourceFormStore.loading || !this.resourceFormStore.data.id,
+            disabled: this.resourceFormStore.loading,
             label: translate('sulu_security.enable_user'),
             loading: this.loading,
         };
