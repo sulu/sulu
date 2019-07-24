@@ -220,6 +220,20 @@ abstract class ItemMetadata
     }
 
     /**
+     * Set the children of this item.
+     *
+     * @param $children
+     *
+     * @return $this
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    /**
      * Return the localized name of this ItemMetadata.
      *
      * @param string $locale Localization

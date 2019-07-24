@@ -26,7 +26,6 @@ use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadat
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInterface
@@ -66,6 +65,11 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
      */
     private $debug;
 
+    /**
+     * @var FormMetadataLoaderInterface[]
+     */
+    private $formMetadataLoaders;
+
     public function __construct(
         FormXmlLoader $formXmlLoader,
         StructureMetadataFactory $structureMetadataFactory,
@@ -73,7 +77,8 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         array $locales,
         array $formDirectories,
         string $cacheDir,
-        bool $debug
+        bool $debug,
+        iterable $formMetadataLoaders
     ) {
         $this->formXmlLoader = $formXmlLoader;
         $this->structureMetadataFactory = $structureMetadataFactory;
@@ -82,6 +87,7 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         $this->formDirectories = $formDirectories;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
+        $this->formMetadataLoaders = $formMetadataLoaders;
     }
 
     public function getMetadata(string $key, string $locale)
@@ -136,14 +142,8 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     public function warmUp($cacheDir)
     {
         $formsMetadata = [];
-        $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
-        foreach ($formFinder as $formFile) {
-            $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
-            $formKey = $formMetadata->getKey();
-            if (!array_key_exists($formKey, $formsMetadata)) {
-                $formsMetadata[$formKey] = [];
-            }
-            $formsMetadata[$formKey][] = $formMetadata;
+        foreach ($this->formMetadataLoaders as $metadataLoader) {
+            $formsMetadata = array_merge_recursive($metadataLoader->load(), $formsMetadata);
         }
 
         $structuresMetadataByTypes = [];
