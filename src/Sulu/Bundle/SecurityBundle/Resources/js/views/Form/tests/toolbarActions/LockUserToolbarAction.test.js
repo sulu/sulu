@@ -146,8 +146,9 @@ test('Call ResourceRequester with correct parameters when user is not locked and
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     expect(ResourceRequester.post).toBeCalledWith(
@@ -170,8 +171,9 @@ test('Call ResourceRequester with correct parameters when user is already locked
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     expect(ResourceRequester.post).toBeCalledWith(
@@ -196,8 +198,9 @@ test('Return item config with loading button during request', () => {
     }));
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -222,8 +225,9 @@ test('Set new locked value to ResourceFormStore and show success-snackbar on suc
     toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     return lockUserPromise.then(() => {
@@ -245,8 +249,9 @@ test('Push error to form view on failed request', (done) => {
     expect(toolbarAction.form.errors).toHaveLength(0);
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
-    expect(toolbarItemConfig).not.toBeFalsy();
-    // $FlowFixMe
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
     toolbarItemConfig.onClick();
 
     setTimeout(() => {
