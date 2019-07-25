@@ -741,7 +741,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
         $attributes->getAttribute('resourceLocator', null)->willReturn('/qwertz/');
-        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('');
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
         $attributes->getAttribute('redirect', null)->willReturn('sulu.lo/qwertz');
         $attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo');
 
