@@ -724,6 +724,46 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/foo?bar=baz', $route->getDefaults()['url']);
     }
 
+    public function testGetCollectionTrailingSlashWithoutPrefix()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $localization = new Localization('de', 'at');
+        $attributes->getAttribute('localization', null)->willReturn($localization);
+
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocator', null)->willReturn('/qwertz/');
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
+        $attributes->getAttribute('redirect', null)->willReturn('sulu.lo/qwertz');
+        $attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])->willReturn(
+            $document->reveal()
+        );
+
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/qwertz/')]
+        );
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/qwertz', $route->getDefaults()['url']);
+    }
+
     public function testGetCollectionTrailingSlashForHomepage()
     {
         $attributes = $this->prophesize(RequestAttributes::class);

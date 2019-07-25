@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.6.28 (2019-07-23)
+    * BUGFIX      #4627  [WebsiteBundle]        Fix Routing when no prefix is Provided.
     * BUGFIX      #4633  [AudienceTargetingBundle] Fixed conditions saving for Audience Targeting.
 
 * 1.6.27 (2019-05-16)
