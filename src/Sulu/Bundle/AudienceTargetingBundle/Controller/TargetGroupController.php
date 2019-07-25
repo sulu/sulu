@@ -139,7 +139,9 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function postAction(Request $request)
     {
-        $targetGroup = $this->deserializeData($request->getContent());
+        $data = json_decode($request->getContent(), true);
+        $data = $this->convertFromRequest($data);
+        $targetGroup = $this->deserializeData(json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
 
         $this->getEntityManager()->flush();
@@ -162,6 +164,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
 
         // Id should be taken of request uri.
         $data['id'] = $id;
+
+        $data = $this->convertFromRequest($data);
 
         $targetGroup = $this->deserializeData(json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
@@ -234,6 +238,31 @@ class TargetGroupController extends RestController implements ClassResourceInter
         );
 
         return $result;
+    }
+
+    /**
+     * Converts Request Data for Serialization.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function convertFromRequest($data)
+    {
+        // Unset IDs of Conditions, otherwise they won't be able to save as id is null.
+        if (array_key_exists('rules', $data)) {
+            foreach ($data['rules'] as $ruleKey => &$rule) {
+                if (array_key_exists('conditions', $rule)) {
+                    foreach ($rule['conditions'] as $key => &$condition) {
+                        if (array_key_exists('id', $condition) && is_null($condition['id'])) {
+                            unset($condition['id']);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**

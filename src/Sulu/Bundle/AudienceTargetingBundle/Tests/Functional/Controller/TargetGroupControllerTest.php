@@ -322,6 +322,68 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1->getConditions()[0]->getCondition());
     }
 
+    public function testPutWithCreateTargetGroupCondition()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            'title' => 'Target Group Title 2',
+            'description' => 'Target group description number 2',
+            'priority' => 4,
+            'active' => false,
+            'webspaces' => [
+                [
+                    'webspaceKey' => 'my-webspace-1',
+                ],
+            ],
+            'rules' => [
+                [
+                    'title' => 'rule-1',
+                    'frequency' => 1,
+                    'conditions' => [
+                        [
+                            'id' => null,
+                            'type' => 'locale',
+                            'condition' => [
+                                'locale' => 'de',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $client->request('PUT', self::BASE_URL . '/' . $this->targetGroup->getId(), [], [], [], json_encode($data));
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['title'], $response['title']);
+        $this->assertEquals($data['description'], $response['description']);
+        $this->assertEquals($data['priority'], $response['priority']);
+        $this->assertEquals($data['active'], $response['active']);
+        $this->assertCount(count($data['webspaces']), $response['webspaces']);
+        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertEquals($data['webspaces'][0]['webspaceKey'], $response['webspaces'][0]['webspaceKey']);
+
+        $this->getEntityManager()->clear();
+
+        $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
+        $this->assertNotNull($targetGroup);
+        $this->assertCount(count($data['webspaces']), $targetGroup->getWebspaces());
+        $this->assertCount(count($data['rules']), $targetGroup->getRules());
+        $webspace1 = $targetGroup->getWebspaces()[0];
+        $rule1 = $targetGroup->getRules()[0];
+        $rule1Conditions = $rule1->getConditions()[0];
+        $this->assertCount(count($data['webspaces']), $response['webspaces']);
+        $this->assertEquals($data['webspaces'][0]['webspaceKey'], $webspace1->getWebspaceKey());
+        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertEquals($data['rules'][0]['title'], $rule1->getTitle());
+        $this->assertEquals($data['rules'][0]['frequency'], $rule1->getFrequency());
+        $this->assertEquals($data['rules'][0]['conditions'][0]['type'], $rule1Conditions->getType());
+        $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1Conditions->getCondition());
+    }
+
     public function testSingleDelete()
     {
         $client = $this->createAuthenticatedClient();
