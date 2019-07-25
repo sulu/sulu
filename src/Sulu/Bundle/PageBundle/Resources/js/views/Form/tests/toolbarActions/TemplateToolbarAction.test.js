@@ -30,7 +30,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/services', () => ({
-    Router: jest.fn(function() {}),
+    Router: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/views', () => ({

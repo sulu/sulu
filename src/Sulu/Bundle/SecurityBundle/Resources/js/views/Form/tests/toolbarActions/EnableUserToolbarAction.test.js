@@ -42,7 +42,7 @@ jest.mock('sulu-admin-bundle/containers/Form', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {}));
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
     this.errors = [];

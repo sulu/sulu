@@ -9,7 +9,7 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {}));
+jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../../../../containers/Form', () => ({
     ResourceFormStore: class {
@@ -30,7 +30,7 @@ jest.mock('../../../../containers/Form', () => ({
     },
 }));
 
-jest.mock('../../../../services/Router', () => jest.fn(function() {}));
+jest.mock('../../../../services/Router', () => jest.fn());
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
