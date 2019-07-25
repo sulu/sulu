@@ -4,7 +4,7 @@ import Router from 'sulu-admin-bundle/services/Router';
 import Form from 'sulu-admin-bundle/views/Form/Form';
 import {ResourceFormStore} from 'sulu-admin-bundle/containers/Form';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import EnableUserToolbarAction from '../../toolbarActions/EnableUserToolbarAction';
+import LockUserToolbarAction from '../../toolbarActions/LockUserToolbarAction';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
@@ -56,7 +56,7 @@ jest.mock('sulu-admin-bundle/services', () => ({
     },
 }));
 
-function createEnableUserToolbarAction() {
+function createLockUserToolbarAction() {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -67,58 +67,75 @@ function createEnableUserToolbarAction() {
         router,
     });
 
-    return new EnableUserToolbarAction(resourceFormStore, form, router);
+    return new LockUserToolbarAction(resourceFormStore, form, router);
 }
 
-test('Return item config with correct disabled, loading, icon, type and label', () => {
-    const toolbarAction = createEnableUserToolbarAction();
+test('Return item config with correct type, label, loading and value', () => {
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        type: 'button',
-        icon: 'su-enter',
-        label: 'sulu_security.enable_user',
+        type: 'toggler',
+        label: 'sulu_security.user_locked',
         loading: false,
+        value: false,
+    }));
+});
+
+test('Return correct value when user is already locked', () => {
+    const toolbarAction = createLockUserToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.loading = false;
+    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = true;
+
+    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        value: true,
     }));
 });
 
 test('Return null as item config when resource store is loading', () => {
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
 test('Return null as item config when user has no id yet', () => {
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = null;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
-test('Return null as item config when user is already enabled', () => {
-    const toolbarAction = createEnableUserToolbarAction();
+test('Return null as item config when user is not enabled yet', () => {
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = true;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.getToolbarItemConfig()).toBeFalsy();
 });
 
-test('Call ResourceRequester with correct parameters when button is clicked', () => {
-    const enableUserPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(enableUserPromise);
+test('Call ResourceRequester with correct parameters when user is not locked and toggler is clicked', () => {
+    const lockUserPromise = Promise.resolve({locked: true});
+    ResourceRequester.post.mockReturnValue(lockUserPromise);
 
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
     // $FlowFixMe
     toolbarAction.resourceFormStore.resourceStore.locale = 'de';
 
@@ -131,18 +148,44 @@ test('Call ResourceRequester with correct parameters when button is clicked', ()
     expect(ResourceRequester.post).toBeCalledWith(
         'users',
         undefined,
-        {action: 'enable', id: 1234, locale: 'de'}
+        {action: 'lock', id: 1234, locale: 'de'}
     );
 });
 
-test('Return item config with loading button during request', () => {
-    const enableUserPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(enableUserPromise);
+test('Call ResourceRequester with correct parameters when user is already locked and toggler is clicked', () => {
+    const unlockUserPromise = Promise.resolve({locked: false});
+    ResourceRequester.post.mockReturnValue(unlockUserPromise);
 
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = true;
+    // $FlowFixMe
+    toolbarAction.resourceFormStore.resourceStore.locale = 'de';
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The ToolbarItemConfig should not be undefined or null');
+    }
+    toolbarItemConfig.onClick();
+
+    expect(ResourceRequester.post).toBeCalledWith(
+        'users',
+        undefined,
+        {action: 'unlock', id: 1234, locale: 'de'}
+    );
+});
+
+test('Return item config with loading toggler during request', () => {
+    const lockUserPromise = Promise.resolve({locked: true});
+    ResourceRequester.post.mockReturnValue(lockUserPromise);
+
+    const toolbarAction = createLockUserToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.loading = false;
+    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         loading: false,
@@ -158,21 +201,22 @@ test('Return item config with loading button during request', () => {
         loading: true,
     }));
 
-    return enableUserPromise.then(() => {
+    return lockUserPromise.then(() => {
         expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
             loading: false,
         }));
     });
 });
 
-test('Set new enabled value to ResourceFormStore and show success-snackbar on successful request', () => {
-    const enableUserPromise = Promise.resolve({enabled: true});
-    ResourceRequester.post.mockReturnValue(enableUserPromise);
+test('Set new locked value to ResourceFormStore and show success-snackbar on successful request', () => {
+    const lockUserPromise = Promise.resolve({locked: true});
+    ResourceRequester.post.mockReturnValue(lockUserPromise);
 
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
     if (!toolbarItemConfig) {
@@ -180,20 +224,21 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     }
     toolbarItemConfig.onClick();
 
-    return enableUserPromise.then(() => {
-        expect(toolbarAction.resourceFormStore.set).toBeCalledWith('enabled', true);
+    return lockUserPromise.then(() => {
+        expect(toolbarAction.resourceFormStore.set).toBeCalledWith('locked', true);
         expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
     });
 });
 
 test('Push error to form view on failed request', (done) => {
-    const enableUserPromise = Promise.reject();
-    ResourceRequester.post.mockReturnValue(enableUserPromise);
+    const lockUserPromise = Promise.reject();
+    ResourceRequester.post.mockReturnValue(lockUserPromise);
 
-    const toolbarAction = createEnableUserToolbarAction();
+    const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
-    toolbarAction.resourceFormStore.resourceStore.data.enabled = false;
+    toolbarAction.resourceFormStore.resourceStore.data.enabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.locked = false;
 
     expect(toolbarAction.form.errors).toHaveLength(0);
 

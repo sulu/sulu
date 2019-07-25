@@ -15,7 +15,7 @@ jest.mock('../../../containers/SingleListOverlay', () => jest.fn(function() {
     return <div />;
 }));
 
-jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(function() {}));
+jest.mock('../../../containers/List/stores/ListStore', () => jest.fn());
 
 jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function() {
     this.set = jest.fn((item) => {

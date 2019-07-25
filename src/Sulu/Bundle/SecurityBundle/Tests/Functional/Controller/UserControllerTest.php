@@ -65,6 +65,11 @@ class UserControllerTest extends SuluTestCase
     private $user2;
 
     /**
+     * @var User
+     */
+    private $user3;
+
+    /**
      * @var Group
      */
     private $group1;
@@ -115,6 +120,13 @@ class UserControllerTest extends SuluTestCase
         $this->em->persist($contact3);
         $this->contact3 = $contact3;
 
+        $contact4 = new Contact();
+        $contact4->setFirstName('Locked');
+        $contact4->setLastName('User');
+        $contact4->addEmail($email);
+        $this->em->persist($contact4);
+        $this->contact3 = $contact4;
+
         $this->em->flush();
 
         $role1 = new Role();
@@ -130,45 +142,57 @@ class UserControllerTest extends SuluTestCase
         $this->role2 = $role2;
 
         // User 1
-        $user = new User();
-        $user->setUsername('admin');
-        $user->setEmail('admin@test.com');
-        $user->setPassword('securepassword');
-        $user->setSalt('salt');
-        $user->setLocale('de');
-        $user->setContact($contact2);
-        $this->em->persist($user);
-        $this->user1 = $user;
-
-        // User 2
         $user1 = new User();
-        $user1->setUsername('disabled');
-        $user1->setEmail('disabled@test.com');
+        $user1->setUsername('admin');
+        $user1->setEmail('admin@test.com');
         $user1->setPassword('securepassword');
         $user1->setSalt('salt');
         $user1->setLocale('de');
-        $user1->setContact($contact3);
-        $user1->setEnabled(false);
+        $user1->setContact($contact2);
         $this->em->persist($user1);
-        $this->user2 = $user1;
+        $this->user1 = $user1;
+
+        // User 2
+        $user2 = new User();
+        $user2->setUsername('disabled');
+        $user2->setEmail('disabled@test.com');
+        $user2->setPassword('securepassword');
+        $user2->setSalt('salt');
+        $user2->setLocale('de');
+        $user2->setContact($contact3);
+        $user2->setEnabled(false);
+        $this->em->persist($user2);
+        $this->user2 = $user2;
+
+        // User 3
+        $user3 = new User();
+        $user3->setUsername('locked');
+        $user3->setEmail('locked@test.com');
+        $user3->setPassword('securepassword');
+        $user3->setSalt('salt');
+        $user3->setLocale('de');
+        $user3->setContact($contact4);
+        $user3->setLocked(true);
+        $this->em->persist($user3);
+        $this->user3 = $user3;
 
         $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
-        $userRole1->setUser($user);
+        $userRole1->setUser($user1);
         $userRole1->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
-        $userRole2->setUser($user);
+        $userRole2->setUser($user1);
         $userRole2->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole2);
 
         $userRole3 = new UserRole();
         $userRole3->setRole($role2);
-        $userRole3->setUser($user);
+        $userRole3->setUser($user1);
         $userRole3->setLocale(json_encode(['de', 'en']));
         $this->em->persist($userRole3);
 
@@ -212,7 +236,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(3, count($response->_embedded->users));
+        $this->assertEquals(4, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('admin@test.com', $response->_embedded->users[0]->email);
         $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
@@ -875,7 +899,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(3, count($response->_embedded->users));
+        $this->assertEquals(4, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
@@ -1109,5 +1133,33 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(true, $response->enabled);
+    }
+
+    public function testLockUser()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/users/' . $this->user1->getId() . '?action=lock'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(true, $response->locked);
+    }
+
+    public function testUnlockUser()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/users/' . $this->user3->getId() . '?action=unlock'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(false, $response->locked);
     }
 }

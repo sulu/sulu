@@ -157,7 +157,7 @@ class SecurityAdmin extends Admin
                 ->setResourceKey('users')
                 ->setFormKey('user_details')
                 ->setTabTitle('sulu_security.permissions')
-                ->addToolbarActions(['sulu_admin.save', 'sulu_security.enable_user'])
+                ->addToolbarActions(['sulu_admin.save', 'sulu_security.enable_user', 'sulu_security.lock_user'])
                 ->setIdQueryParameter('contactId')
                 ->setTitleVisible(true)
                 ->setTabOrder(3072)

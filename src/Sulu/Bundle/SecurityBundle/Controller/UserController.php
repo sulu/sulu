@@ -147,15 +147,20 @@ class UserController extends RestController implements ClassResourceInterface, S
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postEnableUserAction($id, Request $request)
+    public function postTriggerAction($id, Request $request)
     {
         $action = $request->get('action');
 
         try {
             switch ($action) {
                 case 'enable':
-                    // call repository method
                     $user = $this->getUserManager()->enableUser($id);
+                    break;
+                case 'lock':
+                    $user = $this->getUserManager()->lockUser($id);
+                    break;
+                case 'unlock':
+                    $user = $this->getUserManager()->unlockUser($id);
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);

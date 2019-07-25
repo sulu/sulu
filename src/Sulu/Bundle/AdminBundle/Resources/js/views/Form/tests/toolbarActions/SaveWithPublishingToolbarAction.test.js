@@ -34,7 +34,7 @@ jest.mock('../../../../containers/Form', () => ({
     },
 }));
 
-jest.mock('../../../../services/Router', () => jest.fn(function() {}));
+jest.mock('../../../../services/Router', () => jest.fn());
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
