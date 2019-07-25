@@ -70,7 +70,7 @@ function createLockUserToolbarAction() {
     return new LockUserToolbarAction(resourceFormStore, form, router);
 }
 
-test('Return item config with correct disabled, loading, icon, type and label', () => {
+test('Return item config with correct type, label, loading and value', () => {
     const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
@@ -79,13 +79,13 @@ test('Return item config with correct disabled, loading, icon, type and label', 
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'toggler',
-        label: 'sulu_security.lock_user',
+        label: 'sulu_security.user_locked',
         loading: false,
         value: false,
     }));
 });
 
-test('Return correct label and value when user is already locked', () => {
+test('Return correct value when user is already locked', () => {
     const toolbarAction = createLockUserToolbarAction();
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
@@ -93,7 +93,6 @@ test('Return correct label and value when user is already locked', () => {
     toolbarAction.resourceFormStore.resourceStore.data.locked = true;
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
-        label: 'sulu_security.user_locked',
         value: true,
     }));
 });
@@ -178,7 +177,7 @@ test('Call ResourceRequester with correct parameters when user is already locked
     );
 });
 
-test('Return item config with loading button during request', () => {
+test('Return item config with loading toggler during request', () => {
     const lockUserPromise = Promise.resolve({locked: true});
     ResourceRequester.post.mockReturnValue(lockUserPromise);
 

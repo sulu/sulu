@@ -19,7 +19,7 @@ export default class LockUserToolbarAction extends AbstractFormToolbarAction {
         return {
             type: 'toggler',
             onClick: this.handleLockUserTogglerClick,
-            label: translate(this.userIsLocked ? 'sulu_security.user_locked' : 'sulu_security.lock_user'),
+            label: translate('sulu_security.user_locked'),
             loading: this.loading,
             value: this.userIsLocked,
         };
