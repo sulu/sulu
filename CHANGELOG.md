@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.6.28 (2019-07-23)
+* dev-master
+    * BUGFIX      #4644  [CustomUrlBundle]      Fix loading custom url list if creator has been deleted
     * BUGFIX      #4627  [WebsiteBundle]        Fix Routing when no prefix is Provided.
     * BUGFIX      #4633  [AudienceTargetingBundle] Fixed conditions saving for Audience Targeting.
 

@@ -259,7 +259,13 @@ class UserManager implements UserManagerInterface
      */
     public function getFullNameByUserId($id)
     {
-        return $this->getUserById($id)->getFullName();
+        $user = $this->getUserById($id);
+
+        if (!$user) {
+            return null;
+        }
+
+        return $user->getFullName();
     }
 
     /**
