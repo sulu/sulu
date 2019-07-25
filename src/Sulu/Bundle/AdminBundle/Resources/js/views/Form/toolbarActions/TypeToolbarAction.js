@@ -1,8 +1,8 @@
 // @flow
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
-export default class TypeToolbarAction extends AbstractToolbarAction {
+export default class TypeToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig(): ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
         const formKeys = Object.keys(formTypes);

@@ -11,7 +11,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
-import toolbarActionRegistry from './registries/ToolbarActionRegistry';
+import listToolbarActionRegistry from './registries/ListToolbarActionRegistry';
 import listStyles from './list.scss';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
@@ -167,7 +167,7 @@ class List extends React.Component<Props> {
             return;
         }
 
-        this.toolbarActions = toolbarActions.map((toolbarAction) => new (toolbarActionRegistry.get(toolbarAction))(
+        this.toolbarActions = toolbarActions.map((toolbarAction) => new (listToolbarActionRegistry.get(toolbarAction))(
             this.listStore,
             this,
             router,
@@ -332,7 +332,7 @@ export default withToolbar(List, function() {
 
     const items = this.toolbarActions
         .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
-        .filter((item) => item !== undefined);
+        .filter((item) => item != null);
 
     return {
         backButton,

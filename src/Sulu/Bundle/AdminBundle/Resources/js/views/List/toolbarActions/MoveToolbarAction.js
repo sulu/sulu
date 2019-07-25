@@ -3,9 +3,9 @@ import {action, observable} from 'mobx';
 import React from 'react';
 import {translate} from '../../../utils/Translator';
 import SingleListOverlay from '../../../containers/SingleListOverlay';
-import AbstractToolbarAction from './AbstractToolbarAction';
+import AbstractListToolbarAction from './AbstractListToolbarAction';
 
-export default class MoveToolbarAction extends AbstractToolbarAction {
+export default class MoveToolbarAction extends AbstractListToolbarAction {
     @observable showOverlay = false;
 
     getNode() {

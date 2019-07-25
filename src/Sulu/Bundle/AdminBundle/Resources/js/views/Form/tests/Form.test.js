@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
+import AbstractFormToolbarAction from '../toolbarActions/AbstractFormToolbarAction';
 
 jest.mock('../../../services/Initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
@@ -23,7 +23,7 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../registries/ToolbarActionRegistry', () => ({
+jest.mock('../registries/FormToolbarActionRegistry', () => ({
     get: jest.fn(),
 }));
 
@@ -248,14 +248,14 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
 });
 
 test('Should add items defined in ToolbarActions to Toolbar', () => {
-    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
-    class SaveToolbarAction extends AbstractToolbarAction {
+    class SaveToolbarAction extends AbstractFormToolbarAction {
         getToolbarItemConfig() {
             return {
                 type: 'button',
@@ -264,7 +264,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         }
     }
 
-    class DeleteToolbarAction extends AbstractToolbarAction {
+    class DeleteToolbarAction extends AbstractFormToolbarAction {
         getNode() {
             return <p key="delete">This is the delete button test!</p>;
         }
@@ -277,7 +277,7 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         }
     }
 
-    toolbarActionRegistry.get.mockImplementation((name) => {
+    formToolbarActionRegistry.get.mockImplementation((name) => {
         switch (name) {
             case 'save':
                 return SaveToolbarAction;
@@ -452,12 +452,12 @@ test('Should add PublishIndicator if publish status is available showing publish
 });
 
 test('Should set and update locales defined in ToolbarActions', () => {
-    const toolbarActionRegistry = require('../registries/ToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
 
-    class SaveToolbarAction extends AbstractToolbarAction {
+    class SaveToolbarAction extends AbstractFormToolbarAction {
         getToolbarItemConfig() {
             return {
                 type: 'button',
@@ -466,7 +466,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
         }
     }
 
-    toolbarActionRegistry.get.mockImplementation((name) => {
+    formToolbarActionRegistry.get.mockImplementation((name) => {
         switch (name) {
             case 'save':
                 return SaveToolbarAction;

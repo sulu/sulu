@@ -1,8 +1,8 @@
 // @flow
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 import {translate} from '../../../utils/Translator';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
-export default class SaveToolbarAction extends AbstractToolbarAction {
+export default class SaveToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {
         return {
             disabled: !this.resourceFormStore.dirty,

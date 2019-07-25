@@ -1,8 +1,8 @@
 // @flow
 import {translate} from '../../../utils/Translator';
-import AbstractToolbarAction from './AbstractToolbarAction';
+import AbstractListToolbarAction from './AbstractListToolbarAction';
 
-export default class DeleteToolbarAction extends AbstractToolbarAction {
+export default class DeleteToolbarAction extends AbstractListToolbarAction {
     getToolbarItemConfig() {
         return {
             disabled: this.listStore.selectionIds.length === 0,

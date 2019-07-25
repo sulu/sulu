@@ -1,8 +1,8 @@
 // @flow
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
+import AbstractListToolbarAction from '../toolbarActions/AbstractListToolbarAction';
 
-class ToolbarActionRegistry {
-    toolbarActions: {[name: string]: Class<AbstractToolbarAction>} = {};
+class ListToolbarActionRegistry {
+    toolbarActions: {[name: string]: Class<AbstractListToolbarAction>} = {};
 
     constructor() {
         this.clear();
@@ -12,7 +12,7 @@ class ToolbarActionRegistry {
         this.toolbarActions = {};
     }
 
-    add(name: string, item: Class<AbstractToolbarAction>) {
+    add(name: string, item: Class<AbstractListToolbarAction>) {
         if (name in this.toolbarActions) {
             throw new Error('The key "' + name + '" has already been used for another ToolbarAction!');
         }
@@ -29,4 +29,4 @@ class ToolbarActionRegistry {
     }
 }
 
-export default new ToolbarActionRegistry();
+export default new ListToolbarActionRegistry();

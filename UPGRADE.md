@@ -1,5 +1,16 @@
 # Upgrade
 
+## dev-develop
+
+### Rename ToolbarActionRegistry and AbstractToolbarAction javscript classes
+
+**This change only affects you if you have used a 2.0.0 release before**
+
+The `ToolbarActionRegistry` class and the `AbstractToolbarAction` class of the javascript Form view were renamed to `FormToolbarActionRegistry` and `AbstractFormToolbarAction`.
+Furthermore the `ToolbarActionRegistry` class and the `AbstractToolbarAction` class of the javascript List view were renamed to `ListToolbarActionRegistry` and `AbstractListToolbarAction`.
+
+This change does not affect you if you have imported these classes via the `index.js` file of the `AdminBundle` as these classes were already exported with view specific names there.
+
 ## 2.0.0-RC1
 
 When upgrading also have a look at the changes in the

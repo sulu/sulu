@@ -1,11 +1,11 @@
 // @flow
 import Form, {
-    AbstractToolbarAction as AbstractFormToolbarAction,
-    toolbarActionRegistry as formToolbarActionRegistry,
+    AbstractFormToolbarAction,
+    formToolbarActionRegistry,
 } from './Form';
 import List, {
-    AbstractToolbarAction as AbstractListToolbarAction,
-    toolbarActionRegistry as listToolbarActionRegistry,
+    AbstractListToolbarAction,
+    listToolbarActionRegistry,
 } from './List';
 import Tabs from './Tabs';
 import ResourceTabs from './ResourceTabs';

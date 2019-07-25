@@ -16,11 +16,11 @@ import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/Initializer';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
+    listToolbarActionRegistry,
     AddToolbarAction as ListAddToolbarAction,
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
     ExportToolbarAction as ListExportToolbarAction,
-    toolbarActionRegistry as listToolbarActionRegistry,
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
@@ -75,10 +75,10 @@ import {
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
+    formToolbarActionRegistry,
     DeleteToolbarAction as FormDeleteToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
-    toolbarActionRegistry as formToolbarActionRegistry,
     TypeToolbarAction as FormTypeToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';

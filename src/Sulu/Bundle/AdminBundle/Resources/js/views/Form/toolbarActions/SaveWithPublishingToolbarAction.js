@@ -1,8 +1,8 @@
 // @flow
-import AbstractToolbarAction from '../toolbarActions/AbstractToolbarAction';
 import {translate} from '../../../utils/Translator';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
-export default class SaveWithPublishingToolbarAction extends AbstractToolbarAction {
+export default class SaveWithPublishingToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {
         const {dirty, data, saving} = this.resourceFormStore;
         return {
