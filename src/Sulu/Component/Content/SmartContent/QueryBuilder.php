@@ -180,16 +180,14 @@ class QueryBuilder extends ContentQueryBuilder
         $sql2Order = [];
         $sortBy = $this->getConfig('sortBy', []);
 
-        if (!empty($sortBy) && is_array($sortBy)) {
-            foreach ($sortBy as $sortColumn) {
-                // TODO implement more generic
-                $order = 'page.[i18n:' . $locale . '-' . $sortColumn . '] ';
-                if (!in_array($sortColumn, ['published', 'created', 'changed', 'authored'])) {
-                    $order = sprintf('lower(%s)', $order);
-                }
-
-                $sql2Order[] = $order . ' ' . $sortOrder;
+        if (!empty($sortBy)) {
+            // TODO implement more generic
+            $order = 'page.[i18n:' . $locale . '-' . $sortBy . '] ';
+            if (!in_array($sortBy, ['published', 'created', 'changed', 'authored'])) {
+                $order = sprintf('lower(%s)', $order);
             }
+
+            $sql2Order[] = $order . ' ' . $sortOrder;
         } else {
             $sql2Order[] = 'page.[sulu:order] ' . $sortOrder;
         }
