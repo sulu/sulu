@@ -305,7 +305,7 @@ class NodeRepositoryTest extends SuluTestCase
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            ['sortBy' => ['published'], 'sortMethod' => 'asc'],
+            ['sortBy' => 'published', 'sortMethod' => 'asc'],
             'en',
             'sulu_io'
         );
@@ -314,7 +314,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Testtitle2', $nodes[1]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            ['sortBy' => ['published'], 'sortMethod' => 'desc'],
+            ['sortBy' => 'published', 'sortMethod' => 'desc'],
             'en',
             'sulu_io'
         );
@@ -371,7 +371,7 @@ class NodeRepositoryTest extends SuluTestCase
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            ['sortBy' => ['title'], 'sortMethod' => 'asc'],
+            ['sortBy' => 'title', 'sortMethod' => 'asc'],
             'en',
             'sulu_io'
         );
@@ -381,7 +381,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test', $nodes[2]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
-            ['sortBy' => ['title'], 'sortMethod' => 'desc'],
+            ['sortBy' => 'title', 'sortMethod' => 'desc'],
             'en',
             'sulu_io'
         );
