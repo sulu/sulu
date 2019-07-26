@@ -1003,7 +1003,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // order by title
         $builder->init(
-            ['config' => ['dataSource' => $root->getIdentifier(), 'sortBy' => ['title']]]
+            ['config' => ['dataSource' => $root->getIdentifier(), 'sortBy' => 'title']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
@@ -1017,7 +1017,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             [
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
-                    'sortBy' => ['title'],
+                    'sortBy' => 'title',
                     'sortMethod' => 'desc',
                 ],
             ]
