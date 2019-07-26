@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/sulu/sulu.svg)](https://github.com/sulu/sulu/blob/develop/LICENSE)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
-[![GitHub tag (latest by date)](https://img.shields.io/github/tag-date/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
+[![GitHub tag (latest pre-release)](https://img.shields.io/github/tag-pre/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
 [![Travis](https://travis-ci.org/sulu/sulu.png?branch=develop)](https://travis-ci.org/sulu/sulu)
 [![CircleCI](https://circleci.com/gh/sulu/sulu/tree/develop.svg?style=shield)](https://circleci.com/gh/sulu/sulu/tree/develop)
 [![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/sulu/sulu.svg)](https://github.com/sulu/sulu/graphs/contributors)
