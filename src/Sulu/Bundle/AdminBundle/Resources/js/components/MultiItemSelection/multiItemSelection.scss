@@ -1,5 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
+$listBorderColor: $alto;
+$listBorderRadius: 3px;
 $listElementBackgroundColor: $white;
 $listElementBorderBottomColor: $silver;
 $listElementDragBoxShadowColor: rgba($black, .1);
@@ -16,6 +18,9 @@ $listElementDragBoxShadowColor: rgba($black, .1);
     padding: 0;
     max-height: 225px;
     overflow: auto;
+    border: 1px $listBorderColor solid;
+    border-top: 0;
+    border-radius: 0 0 $listBorderRadius $listBorderRadius;
 }
 
 .list-element {
