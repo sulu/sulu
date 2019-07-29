@@ -17,7 +17,7 @@ use Sulu\Component\Content\Metadata\PropertiesMetadata;
 
 class PropertiesXmlLoader extends AbstractLoader
 {
-    const SCHEMA_PATH = '/schema/template-1.0.xsd';
+    const SCHEMA_PATH = '/schema/properties-1.0.xsd';
 
     const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
