@@ -117,10 +117,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'framework',
                 [
-                    'session' => [
-                        'handler_id' => 'session.handler.native_file',
-                        'save_path' => '%kernel.project_dir%/var/sessions/%sulu.context%/%kernel.environment%',
-                    ],
                     'templating' => [
                         'engines' => [
                             'twig',
