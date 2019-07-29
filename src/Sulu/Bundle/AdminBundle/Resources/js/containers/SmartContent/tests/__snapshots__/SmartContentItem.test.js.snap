@@ -7,17 +7,89 @@ exports[`Render item with additional columns except for id 1`] = `
   <div
     class="title"
   >
-    Title with URL
+    <div
+      aria-label="Title with URL"
+      class="croppedText"
+      title="Title with URL"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Title w
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          ith URL
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Title with URL
+      </div>
+    </div>
   </div>
   <div
     class="column"
   >
-    /url
+    <div
+      aria-label="/url"
+      class="croppedText"
+      title="/url"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        /u
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          rl
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        /url
+      </div>
+    </div>
   </div>
   <div
     class="column"
   >
-    Test
+    <div
+      aria-label="Test"
+      class="croppedText"
+      title="Test"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Te
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          st
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Test
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -29,7 +101,31 @@ exports[`Render item with only title 1`] = `
   <div
     class="title"
   >
-    Only title
+    <div
+      aria-label="Only title"
+      class="croppedText"
+      title="Only title"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Only 
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          title
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Only title
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -51,7 +147,31 @@ exports[`Render item with title and draft with published state 1`] = `
         class="draft"
       />
     </div>
-    Draft and published
+    <div
+      aria-label="Draft and published"
+      class="croppedText"
+      title="Draft and published"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Draft and 
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          published
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Draft and published
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -70,7 +190,31 @@ exports[`Render item with title and image 1`] = `
   <div
     class="title"
   >
-    Image
+    <div
+      aria-label="Image"
+      class="croppedText"
+      title="Image"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Ima
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          ge
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Image
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -82,7 +226,31 @@ exports[`Render item with title and published state 1`] = `
   <div
     class="title"
   >
-    Published
+    <div
+      aria-label="Published"
+      class="croppedText"
+      title="Published"
+    >
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        Publi
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          shed
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        Published
+      </div>
+    </div>
   </div>
 </div>
 `;
