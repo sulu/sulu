@@ -83,7 +83,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
         const {id, locale} = this.props.resourceStore;
         if (!id) {
-            throw new Error('The "MediaVersionUpload" field type only works with an id!');
+            return null;
         }
 
         if (!locale) {

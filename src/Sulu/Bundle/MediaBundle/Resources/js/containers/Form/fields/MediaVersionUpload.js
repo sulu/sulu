@@ -13,7 +13,7 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
 
         // $FlowFixMe
         if (!formInspector.formStore.resourceStore){
-            throw new Error('The formStore must provide a resource store!');
+            throw new Error('The formStore must provide a resourceStore!');
         }
         this.resourceStore = (formInspector.formStore.resourceStore: ResourceStore);
 
