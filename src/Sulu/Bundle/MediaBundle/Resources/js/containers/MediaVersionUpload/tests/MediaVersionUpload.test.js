@@ -1,9 +1,10 @@
 // @flow
-import {mount} from 'enzyme/build';
+import {mount, render} from 'enzyme';
 import {observable} from 'mobx';
 import React from 'react';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import FormatStore from '../../../stores/FormatStore';
 import MediaVersionUpload from '../MediaVersionUpload';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -17,10 +18,6 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     put: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
-jest.mock('sulu-media-bundle/containers/MediaVersionUpload/CropOverlay', () => function CropOverlay() {
-    return <div />;
-});
-
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.id = 1;
     this.media = {};
@@ -28,6 +25,52 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.upload = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
 }));
+
+jest.mock('../../../stores/FormatStore', () => ({
+    loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
+}));
+
+jest.mock('../../../stores/MediaFormatStore', () => jest.fn(function() {
+    this.getFormatOptions = jest.fn();
+    this.updateFormatOptions = jest.fn();
+    this.loading = false;
+}));
+
+test('Render a loading MediaVersionUpload field', () => {
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = true;
+
+    expect(render(
+        <MediaVersionUpload
+            resourceStore={resourceStore}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render a non loading MediaVersionUpload field', () => {
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = false;
+
+    expect(render(
+        <MediaVersionUpload
+            resourceStore={resourceStore}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Should update resourceStore after SingleMediaUpload has completed upload', () => {
+    const testFile = {name: 'test.jpg'};
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = false;
+
+    const mediaVersionUpload = mount(<MediaVersionUpload
+        resourceStore={resourceStore}
+    />);
+
+    mediaVersionUpload.update();
+    mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
+    expect(resourceStore.data).toEqual(testFile);
+});
 
 test('Should open and close crop overlay', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
@@ -88,6 +131,7 @@ test('Should save focus point overlay', (done) => {
 
     mediaVersionUpload.update();
     expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(true);
+    expect(mediaVersionUpload.find('FocusPointOverlay Overlay').prop('confirmDisabled')).toEqual(false);
 
     mediaVersionUpload.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
     mediaVersionUpload.find('FocusPointOverlay Overlay').prop('onConfirm')();
@@ -100,8 +144,61 @@ test('Should save focus point overlay', (done) => {
 
     setTimeout(() => {
         mediaVersionUpload.update();
+        expect(mediaVersionUpload.find('FocusPointOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
         expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
         done();
+    });
+});
+
+test('Should save crop overlay', () => {
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = false;
+    resourceStore.data.url = 'image.jpg';
+
+    const mediaVersionUpload = mount(<MediaVersionUpload
+        resourceStore={resourceStore}
+    />);
+
+    const formatsPromise = Promise.resolve([]);
+    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+
+    mediaVersionUpload.find('Button[icon="su-cut"]').prop('onClick')();
+    mediaVersionUpload.update();
+    expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(true);
+
+    return formatsPromise.then(() => {
+        mediaVersionUpload.update();
+        mediaVersionUpload.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
+            {height: 60, left: 200, top: 20, width: 20}
+        );
+        mediaVersionUpload.update();
+        expect(mediaVersionUpload.find('CropOverlay Overlay').prop('confirmDisabled')).toEqual(false);
+        expect(mediaVersionUpload.find('withContainerSize(ImageRectangleSelection)').props())
+            .toEqual(expect.objectContaining({
+                value: {
+                    height: 60,
+                    left: 200,
+                    top: 20,
+                    width: 20,
+                },
+            }));
+
+        const putPromise = Promise.resolve({});
+        mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions
+            .mockReturnValue(putPromise);
+        mediaVersionUpload.find('CropOverlay').find('Overlay').prop('onConfirm')();
+
+        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions).toBeCalledWith(
+            {
+                test: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
+            }
+        );
+
+        return putPromise.then(() => {
+            mediaVersionUpload.find('CropOverlay').update();
+            expect(mediaVersionUpload.find('CropOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
+            expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
+        });
     });
 });
 

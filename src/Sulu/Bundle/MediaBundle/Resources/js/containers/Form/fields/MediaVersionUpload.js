@@ -9,20 +9,17 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
 
     constructor(props: FieldTypeProps<void>) {
         super(props);
-        const {formInspector, router} = this.props;
+        const {formInspector} = this.props;
 
         // $FlowFixMe
         if (!formInspector.formStore.resourceStore){
-            throw new Error();
+            throw new Error('The formStore must provide a resource store!');
         }
         this.resourceStore = (formInspector.formStore.resourceStore: ResourceStore);
 
         const locale = this.resourceStore.locale;
         if (!locale) {
             throw new Error('The resourceStore for the MediaVersionUpload must have a locale');
-        }
-        if (router){
-            router.bind('locale', locale);
         }
     }
 

@@ -5,7 +5,7 @@ import type {IObservableValue} from 'mobx';
 import {action, observable, when} from 'mobx';
 import {Button, Loader} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
+import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../SingleMediaUpload';
 import CropOverlay from './CropOverlay';
@@ -19,7 +19,6 @@ type Props = {|
 @observer
 class MediaVersionUpload extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
-    resourceStore: ResourceStore;
     @observable showFocusPointOverlay: boolean = false;
     @observable showCropOverlay: boolean = false;
     showSuccess: IObservableValue<boolean> = observable.box(false);
@@ -27,26 +26,22 @@ class MediaVersionUpload extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.resourceStore = this.props.resourceStore;
-        const locale = this.resourceStore.locale;
+        const {resourceStore} = this.props;
+        const locale = resourceStore.locale;
         if (!locale) {
             throw new Error('The resourceStore for the MediaVersionUpload must have a locale');
         }
 
         when(
-            () => !this.resourceStore.loading,
+            () => !resourceStore.loading,
             (): void => {
-                this.mediaUploadStore = new MediaUploadStore(this.resourceStore.data, locale);
+                this.mediaUploadStore = new MediaUploadStore(resourceStore.data, locale);
             }
         );
     }
 
     handleUploadComplete = (media: Object) => {
-        this.resourceStore.setMultiple(media);
-    };
-
-    @action handleFocusPointButtonClick = () => {
-        this.showFocusPointOverlay = true;
+        this.props.resourceStore.setMultiple(media);
     };
 
     @action handleCropButtonClick = () => {
@@ -60,6 +55,10 @@ class MediaVersionUpload extends React.Component<Props> {
     @action handleCropOverlayConfirm = () => {
         this.showCropOverlay = false;
         this.showSuccessSnackbar();
+    };
+
+    @action handleFocusPointButtonClick = () => {
+        this.showFocusPointOverlay = true;
     };
 
     @action handleFocusPointOverlayClose = () => {
@@ -82,9 +81,9 @@ class MediaVersionUpload extends React.Component<Props> {
             );
         }
 
-        const {id, locale} = this.resourceStore;
+        const {id, locale} = this.props.resourceStore;
         if (!id) {
-            return null;
+            throw new Error('The "MediaVersionUpload" field type only works with an id!');
         }
 
         if (!locale) {
@@ -121,11 +120,11 @@ class MediaVersionUpload extends React.Component<Props> {
                     onClose={this.handleFocusPointOverlayClose}
                     onConfirm={this.handleFocusPointOverlayConfirm}
                     open={this.showFocusPointOverlay}
-                    resourceStore={this.resourceStore}
+                    resourceStore={this.props.resourceStore}
                 />
                 <CropOverlay
                     id={id}
-                    image={this.resourceStore.data.url}
+                    image={this.props.resourceStore.data.url}
                     locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}

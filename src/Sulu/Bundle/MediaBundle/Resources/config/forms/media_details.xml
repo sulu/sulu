@@ -8,7 +8,7 @@
     <properties>
         <section name="media_upload" colspan="4">
             <properties>
-                <property name="media_version_upload" type="media_version_upload"></property>
+                <property name="media_version_upload" type="media_version_upload"/>
             </properties>
         </section>
         <section name="media_details" colspan="8">
