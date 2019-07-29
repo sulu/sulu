@@ -182,13 +182,59 @@ exports[`Show with passed values as items in right locale 1`] = `
               class="itemColumn"
               style="width:50%"
             >
-              1
+              <div
+                aria-label="1"
+                class="croppedText"
+                title="1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  1
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span />
+                </div>
+                <div
+                  class="whole"
+                >
+                  1
+                </div>
+              </div>
             </span>
             <span
               class="itemColumn"
               style="width:50%"
             >
-              Title 1
+              <div
+                aria-label="Title 1"
+                class="croppedText"
+                title="Title 1"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Titl
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Title 1
+                </div>
+              </div>
             </span>
           </div>
         </div>
@@ -234,13 +280,59 @@ exports[`Show with passed values as items in right locale 1`] = `
               class="itemColumn"
               style="width:50%"
             >
-              2
+              <div
+                aria-label="2"
+                class="croppedText"
+                title="2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  2
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span />
+                </div>
+                <div
+                  class="whole"
+                >
+                  2
+                </div>
+              </div>
             </span>
             <span
               class="itemColumn"
               style="width:50%"
             >
-              Title 2
+              <div
+                aria-label="Title 2"
+                class="croppedText"
+                title="Title 2"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Titl
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 2
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Title 2
+                </div>
+              </div>
             </span>
           </div>
         </div>
@@ -286,13 +378,59 @@ exports[`Show with passed values as items in right locale 1`] = `
               class="itemColumn"
               style="width:50%"
             >
-              5
+              <div
+                aria-label="5"
+                class="croppedText"
+                title="5"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  5
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span />
+                </div>
+                <div
+                  class="whole"
+                >
+                  5
+                </div>
+              </div>
             </span>
             <span
               class="itemColumn"
               style="width:50%"
             >
-              Title 5
+              <div
+                aria-label="Title 5"
+                class="croppedText"
+                title="Title 5"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Titl
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e 5
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Title 5
+                </div>
+              </div>
             </span>
           </div>
         </div>

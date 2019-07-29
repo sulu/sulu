@@ -8,8 +8,12 @@ $multiSelectionColumnColor: $scorpion;
     display: inline-block;
     height: 40px;
     line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 10px;
 
     &:first-child {
         color: $multiSelectionMainColumnColor;
+        padding-left: 0;
     }
 }

@@ -4,7 +4,8 @@ import {action, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
-import {MultiItemSelection} from '../../components';
+import CroppedText from '../../components/CroppedText';
+import MultiItemSelection from '../../components/MultiItemSelection';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
@@ -140,7 +141,7 @@ class MultiSelection extends React.Component<Props> {
                                         key={displayProperty}
                                         style={{width: 100 / columns + '%'}}
                                     >
-                                        {item[displayProperty]}
+                                        <CroppedText>{item[displayProperty]}</CroppedText>
                                     </span>
                                 ))}
                             </div>

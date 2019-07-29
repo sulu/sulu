@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import {action, toJS, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
-import {MultiItemSelection} from 'sulu-admin-bundle/components';
+import {CroppedText, MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {MultiSelectionStore} from 'sulu-admin-bundle/stores';
 import type {IObservableValue} from 'mobx';
@@ -169,7 +169,9 @@ class MultiMediaSelection extends React.Component<Props> {
                                             width={25}
                                         />
                                     }
-                                    <div className={multiMediaSelectionStyle.mediaTitle}>{media.title}</div>
+                                    <div className={multiMediaSelectionStyle.mediaTitle}>
+                                        <CroppedText>{media.title}</CroppedText>
+                                    </div>
                                 </div>
                             </MultiItemSelection.Item>
                         );
