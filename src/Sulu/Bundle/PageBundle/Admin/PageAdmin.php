@@ -207,6 +207,7 @@ class PageAdmin extends Admin
                 ->setApiOptions(['resourceKey' => 'pages'])
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
+                ->addRouterAttributesToFormStore(['webspace'])
                 ->setTitleVisible(true)
                 ->setTabOrder(5120)
                 ->setParent(static::EDIT_FORM_ROUTE)
