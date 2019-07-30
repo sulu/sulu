@@ -26,7 +26,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      *
      * @param $key string The key to search for
      *
-     * @return Webspace
+     * @return Webspace|null
      */
     public function findWebspaceByKey($key);
 
@@ -35,7 +35,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      *
      * @param string $key The key to search for
      *
-     * @return Portal
+     * @return Portal|null
      */
     public function findPortalByKey($key);
 
