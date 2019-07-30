@@ -6,3 +6,5 @@ export type {InternalLinkTypeOverlayProps};
 export type AttributeMap = {
     [string]: string,
 };
+
+export type ConfigHook = (options: Object) => Object;
