@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import CroppedText from '../../components/CroppedText';
 import PublishIndicator from '../../components/PublishIndicator';
 import smartContentItemStyles from './smartContentItem.scss';
 
@@ -35,11 +36,11 @@ export default class SmartContentItem extends React.Component<Props> {
                             />
                         </div>
                     }
-                    {title}
+                    <CroppedText>{title}</CroppedText>
                 </div>
                 {Object.keys(rest).map((key) => (
                     <div className={smartContentItemStyles.column} key={key}>
-                        {rest[key]}
+                        <CroppedText>{rest[key]}</CroppedText>
                     </div>
                 ))}
             </div>

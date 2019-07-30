@@ -59,7 +59,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 1
+                <div
+                  aria-label="Media 1"
+                  class="croppedText"
+                  title="Media 1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 1
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 1
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -111,7 +135,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 2
+                <div
+                  aria-label="Media 2"
+                  class="croppedText"
+                  title="Media 2"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 2
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 2
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -163,7 +211,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 3
+                <div
+                  aria-label="Media 3"
+                  class="croppedText"
+                  title="Media 3"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 3
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 3
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -262,7 +334,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 1
+                <div
+                  aria-label="Media 1"
+                  class="croppedText"
+                  title="Media 1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 1
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 1
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -361,7 +457,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 1
+                <div
+                  aria-label="Media 1"
+                  class="croppedText"
+                  title="Media 1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 1
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 1
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -451,7 +571,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 1
+                <div
+                  aria-label="Media 1"
+                  class="croppedText"
+                  title="Media 1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 1
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 1
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -507,7 +651,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 2
+                <div
+                  aria-label="Media 2"
+                  class="croppedText"
+                  title="Media 2"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 2
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 2
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -563,7 +731,31 @@ Array [
               <div
                 class="mediaTitle"
               >
-                Media 3
+                <div
+                  aria-label="Media 3"
+                  class="croppedText"
+                  title="Media 3"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Medi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      a 3
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Media 3
+                  </div>
+                </div>
               </div>
             </div>
           </div>
