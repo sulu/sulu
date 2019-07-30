@@ -102,10 +102,13 @@ class PermissionController implements ClassResourceInterface
     public function cputAction(Request $request)
     {
         try {
-            $identifier = $request->get('id');
             $resourceKey = $request->get('resourceKey');
+            $identifier = $request->get('id');
             $permissions = $request->get('permissions');
-            $securityContext = $request->get('securityContext'); // TODO don't rely on securityContext passed in request
+            $webspace = $request->get('webspace');
+
+            $rawSecurityContext = $this->resources[$resourceKey]['security_context'] ?? null;
+            $securityContext = $rawSecurityContext ? str_replace('#webspace#', $webspace, $rawSecurityContext) : null;
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');

@@ -20,6 +20,7 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PermissionControllerTest extends TestCase
 {
@@ -63,6 +64,10 @@ class PermissionControllerTest extends TestCase
             'example' => [
                 'security_context' => 'sulu_example.example',
                 'security_class' => 'Acme\Example',
+            ],
+            'pages' => [
+                'security_context' => 'sulu_page.#webspace#',
+                'security_class' => 'Acme\Page',
             ],
         ];
 
@@ -176,6 +181,69 @@ class PermissionControllerTest extends TestCase
         );
 
         $this->accessControlManager->setPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $this->permissionController->cputAction($request);
+    }
+
+    public function testPutActionWithMissingPermissionsAndWebspace()
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $this->securityChecker->checkPermission('sulu_page.example', 'security')
+             ->willThrow(AccessDeniedException::class);
+
+        $request = new Request(
+            [
+                'id' => 1,
+                'resourceKey' => 'pages',
+                'webspace' => 'example',
+            ],
+            [
+                'permissions' => [
+                    1 => [
+                        'add' => true,
+                        'view' => true,
+                        'delete' => false,
+                        'edit' => false,
+                        'archive' => false,
+                        'live' => false,
+                        'security' => false,
+                    ],
+                ],
+            ]
+        );
+
+        $this->viewHandler->handle(Argument::cetera())->shouldNotBeCalled();
+
+        $this->permissionController->cputAction($request);
+    }
+
+    public function testPutActionWithPermissionsAndWebspace()
+    {
+        $this->securityChecker->checkPermission('sulu_page.example', 'security')->willReturn(true);
+
+        $request = new Request(
+            [
+                'id' => 1,
+                'resourceKey' => 'pages',
+                'webspace' => 'example',
+            ],
+            [
+                'permissions' => [
+                    1 => [
+                        'add' => true,
+                        'view' => true,
+                        'delete' => false,
+                        'edit' => false,
+                        'archive' => false,
+                        'live' => false,
+                        'security' => false,
+                    ],
+                ],
+            ]
+        );
+
+        $this->viewHandler->handle(Argument::cetera())->shouldBeCalled();
 
         $this->permissionController->cputAction($request);
     }
