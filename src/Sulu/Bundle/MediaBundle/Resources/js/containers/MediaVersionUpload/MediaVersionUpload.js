@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
 import {action, observable, when} from 'mobx';
-import {Button, Loader} from 'sulu-admin-bundle/components';
+import {Button} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -76,9 +76,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
     render() {
         if (!this.mediaUploadStore) {
-            return (
-                <Loader />
-            );
+            return null;
         }
 
         const {id, locale} = this.props.resourceStore;
