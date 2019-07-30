@@ -222,7 +222,7 @@ abstract class KernelTestCase extends \PHPUnit\Framework\TestCase
     {
         $httpCode = $response->getStatusCode();
 
-        $message = null;
+        $message = '';
         if ($code !== $httpCode) {
             $message = $response->getContent();
 
