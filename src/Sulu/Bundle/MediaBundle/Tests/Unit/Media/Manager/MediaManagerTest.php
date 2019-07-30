@@ -278,7 +278,8 @@ class MediaManagerTest extends TestCase
         )->shouldBeCalled();
 
         $this->storage->remove(['segment' => '01', 'fileName' => 'test.jpg'])->shouldBeCalled();
-
+        $this->em->detach($fileVersion->reveal())->shouldBeCalled();
+        $this->em->detach($file->reveal())->shouldBeCalled();
         $this->em->remove($media->reveal())->shouldBeCalled();
         $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
