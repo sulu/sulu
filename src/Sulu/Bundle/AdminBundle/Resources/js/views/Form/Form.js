@@ -232,6 +232,10 @@ class Form extends React.Component<Props> {
         return this.save({action: actionParameter});
     };
 
+    handleSuccess = () => {
+        this.showSuccessSnackbar();
+    };
+
     save = (options: Object) => {
         const {resourceStore, router} = this.props;
 
@@ -345,6 +349,7 @@ class Form extends React.Component<Props> {
                 <FormContainer
                     onError={this.handleError}
                     onSubmit={this.handleSubmit}
+                    onSuccess={this.handleSuccess}
                     ref={this.setFormRef}
                     router={router}
                     store={this.resourceFormStore}

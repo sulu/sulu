@@ -13,6 +13,7 @@ type Props = {|
     index: number,
     onChange: (index: number, name: string, value: *) => void,
     onFieldFinish: ?() => void,
+    onSuccess: ?() => void,
     router: ?Router,
     schema: Schema,
     schemaPath: string,
@@ -36,6 +37,7 @@ export default class FieldRenderer extends React.Component<Props> {
             errors,
             formInspector,
             onFieldFinish,
+            onSuccess,
             router,
             schema,
             schemaPath,
@@ -50,6 +52,7 @@ export default class FieldRenderer extends React.Component<Props> {
                 formInspector={formInspector}
                 onChange={this.handleChange}
                 onFieldFinish={onFieldFinish}
+                onSuccess={onSuccess}
                 router={router}
                 schema={schema}
                 schemaPath={schemaPath}

@@ -36,40 +36,32 @@ jest.mock('../../../stores/MediaFormatStore', () => jest.fn(function() {
     this.loading = false;
 }));
 
-test('Render a loading MediaVersionUpload field', () => {
-    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
-    resourceStore.loading = true;
-
-    expect(render(
-        <MediaVersionUpload
-            resourceStore={resourceStore}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render a non loading MediaVersionUpload field', () => {
+test('Render a MediaVersionUpload field', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
 
     expect(render(
         <MediaVersionUpload
+            onSuccess={jest.fn()}
             resourceStore={resourceStore}
         />
     )).toMatchSnapshot();
 });
 
-test('Should update resourceStore after SingleMediaUpload has completed upload', () => {
+test('Should update resourceStore and call onSuccess after SingleMediaUpload has completed upload', () => {
     const testFile = {name: 'test.jpg'};
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 
     mediaVersionUpload.update();
     mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
     expect(resourceStore.data).toEqual(testFile);
+    expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
 });
 
 test('Should open and close crop overlay', () => {
@@ -78,6 +70,7 @@ test('Should open and close crop overlay', () => {
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 
@@ -102,6 +95,7 @@ test('Should open and close focus point overlay', () => {
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 
@@ -117,12 +111,13 @@ test('Should open and close focus point overlay', () => {
     expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
 });
 
-test('Should save focus point overlay', (done) => {
+test('Should save focus point overlay and call onSuccess', (done) => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 
@@ -146,16 +141,18 @@ test('Should save focus point overlay', (done) => {
         mediaVersionUpload.update();
         expect(mediaVersionUpload.find('FocusPointOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
         expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
+        expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
         done();
     });
 });
 
-test('Should save crop overlay', () => {
+test('Should save crop overlay and call onSuccess', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 
@@ -198,6 +195,7 @@ test('Should save crop overlay', () => {
             mediaVersionUpload.find('CropOverlay').update();
             expect(mediaVersionUpload.find('CropOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
             expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
+            expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
         });
     });
 });
@@ -210,6 +208,7 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     resourceStore.loading = false;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={jest.fn()}
         resourceStore={resourceStore}
     />);
 

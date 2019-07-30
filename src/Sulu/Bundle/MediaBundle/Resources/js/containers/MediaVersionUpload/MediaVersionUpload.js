@@ -1,7 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import type {IObservableValue} from 'mobx';
 import {action, observable, when} from 'mobx';
 import {Button} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -13,6 +12,7 @@ import FocusPointOverlay from './FocusPointOverlay';
 import mediaDetailsStyles from './mediaVersionUpload.scss';
 
 type Props = {|
+    onSuccess: ?() => void,
     resourceStore: ResourceStore,
 |};
 
@@ -21,7 +21,6 @@ class MediaVersionUpload extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     @observable showFocusPointOverlay: boolean = false;
     @observable showCropOverlay: boolean = false;
-    showSuccess: IObservableValue<boolean> = observable.box(false);
 
     constructor(props: Props) {
         super(props);
@@ -42,6 +41,14 @@ class MediaVersionUpload extends React.Component<Props> {
 
     handleUploadComplete = (media: Object) => {
         this.props.resourceStore.setMultiple(media);
+        this.callSuccess();
+    };
+
+    callSuccess = () => {
+        const {onSuccess} = this.props;
+        if (onSuccess) {
+            onSuccess();
+        }
     };
 
     @action handleCropButtonClick = () => {
@@ -54,7 +61,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
     @action handleCropOverlayConfirm = () => {
         this.showCropOverlay = false;
-        this.showSuccessSnackbar();
+        this.callSuccess();
     };
 
     @action handleFocusPointButtonClick = () => {
@@ -67,19 +74,16 @@ class MediaVersionUpload extends React.Component<Props> {
 
     @action handleFocusPointOverlayConfirm = () => {
         this.showFocusPointOverlay = false;
-        this.showSuccessSnackbar();
+        this.callSuccess();
     };
-
-    @action showSuccessSnackbar() {
-        this.showSuccess.set(true);
-    }
 
     render() {
         if (!this.mediaUploadStore) {
             return null;
         }
+        const {resourceStore} = this.props;
 
-        const {id, locale} = this.props.resourceStore;
+        const {id, locale} = resourceStore;
         if (!id) {
             return null;
         }
@@ -118,11 +122,11 @@ class MediaVersionUpload extends React.Component<Props> {
                     onClose={this.handleFocusPointOverlayClose}
                     onConfirm={this.handleFocusPointOverlayConfirm}
                     open={this.showFocusPointOverlay}
-                    resourceStore={this.props.resourceStore}
+                    resourceStore={resourceStore}
                 />
                 <CropOverlay
                     id={id}
-                    image={this.props.resourceStore.data.url}
+                    image={resourceStore.data.url}
                     locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}

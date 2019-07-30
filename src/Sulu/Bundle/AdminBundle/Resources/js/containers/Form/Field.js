@@ -18,6 +18,7 @@ type Props = {|
     name: string,
     onChange: (string, *) => void,
     onFinish: (dataPath: string, schemaPath: string) => void,
+    onSuccess: ?() => void,
     router: ?Router,
     schema: SchemaEntry,
     schemaPath: string,
@@ -81,7 +82,19 @@ class Field extends React.Component<Props> {
     }
 
     render() {
-        const {dataPath, error, formInspector, name, router, schema, schemaPath, showAllErrors, value} = this.props;
+        const {
+            dataPath,
+            error,
+            formInspector,
+            name,
+            onSuccess,
+            router,
+            schema,
+            schemaPath,
+            showAllErrors,
+            value,
+        } = this.props;
+
         const {
             defaultType,
             description,
@@ -153,6 +166,7 @@ class Field extends React.Component<Props> {
                             minOccurs={minOccurs}
                             onChange={this.handleChange}
                             onFinish={this.handleFinish}
+                            onSuccess={onSuccess}
                             router={router}
                             schemaOptions={schemaOptions}
                             schemaPath={schemaPath}

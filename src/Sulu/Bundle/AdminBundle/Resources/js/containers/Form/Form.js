@@ -13,6 +13,7 @@ import GhostDialog from './GhostDialog';
 type Props = {|
     onError?: (errors: Object) => void,
     onSubmit: (action: ?string) => ?Promise<Object>,
+    onSuccess?: () => void,
     router?: Router,
     store: FormStoreInterface,
 |};
@@ -124,7 +125,7 @@ class Form extends React.Component<Props> {
     };
 
     render() {
-        const {router, store} = this.props;
+        const {router, store, onSuccess} = this.props;
         const {
             data: {
                 availableLocales,
@@ -150,6 +151,7 @@ class Form extends React.Component<Props> {
                         formInspector={this.formInspector}
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
+                        onSuccess={onSuccess}
                         ref={this.setRendererRef}
                         router={router}
                         schema={store.schema}

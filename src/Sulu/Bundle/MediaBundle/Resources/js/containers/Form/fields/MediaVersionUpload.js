@@ -26,6 +26,7 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
     render() {
         return (
             <MediaVersionUploadComponent
+                onSuccess={this.props.onSuccess}
                 resourceStore={this.resourceStore}
             />
         );
