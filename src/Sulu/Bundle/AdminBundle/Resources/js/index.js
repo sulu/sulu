@@ -80,6 +80,7 @@ import Form, {
     SaveToolbarAction as FormSaveToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     TypeToolbarAction as FormTypeToolbarAction,
+    PublishTogglerToolbarAction as FormPublishTogglerToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
@@ -254,6 +255,7 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.save_with_publishing', FormSaveWithPublishingToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.publish_toggler', FormPublishTogglerToolbarAction);
 }
 
 function registerListToolbarActions() {

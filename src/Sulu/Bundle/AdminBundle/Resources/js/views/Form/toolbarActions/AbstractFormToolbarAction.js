@@ -3,7 +3,7 @@ import type {Node} from 'react';
 import {ResourceFormStore} from '../../../containers/Form';
 import type {ToolbarAction, ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import Router from '../../../services/Router';
-import Form from '../../../views/Form';
+import Form from '../Form';
 
 export default class AbstractFormToolbarAction implements ToolbarAction {
     resourceFormStore: ResourceFormStore;
