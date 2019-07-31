@@ -4,6 +4,16 @@ import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import CKEditor5 from '../CKEditor5';
+import configRegistry from '../registries/ConfigRegistry';
+import pluginRegistry from '../registries/PluginRegistry';
+
+jest.mock('../registries/PluginRegistry', () => ({
+    plugins: [],
+}));
+
+jest.mock('../registries/ConfigRegistry', () => ({
+    configs: [],
+}));
 
 jest.mock('@ckeditor/ckeditor5-editor-classic/src/classiceditor', () => ({
     create: jest.fn(),
@@ -78,6 +88,40 @@ test('Create a CKEditor5 instance', () => {
         internalLinks: {
             locale: 'en',
         },
+    }));
+});
+
+test('Create a CKEditor5 instance with an additional plugin', () => {
+    const Plugin = class {};
+    pluginRegistry.plugins = [Plugin];
+
+    const config = jest.fn((config) => ({
+        toolbar: [...config.toolbar, 'plugin1', 'plugin2'],
+    }));
+    configRegistry.configs = [config];
+
+    const editor = {
+        editing: {
+            view: {
+                document: {
+                    on: jest.fn(),
+                },
+            },
+        },
+        model: {
+            document: {
+                on: jest.fn(),
+            },
+        },
+        setData: jest.fn(),
+    };
+    ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
+
+    mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    expect(ClassicEditor.create).toBeCalledWith(expect.anything(), expect.objectContaining({
+        plugins: expect.arrayContaining([Plugin]),
+        toolbar: expect.arrayContaining(['bold', 'italic', 'underline', 'plugin1', 'plugin2']),
     }));
 });
 

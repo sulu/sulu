@@ -6,10 +6,10 @@ const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
 
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
-
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
     const basePath = env && env.base_path ? env.base_path : 'build/admin';
@@ -34,6 +34,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             new MiniCssExtractPlugin({
                 filename: basePath + '/[name].[chunkhash].css',
             }),
+            new OptimizeCssAssetsPlugin(),
             new ManifestPlugin({
                 fileName: basePath + '/manifest.json',
             }),

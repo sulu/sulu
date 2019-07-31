@@ -18,6 +18,8 @@ import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
+import configRegistry from './registries/ConfigRegistry';
+import pluginRegistry from './registries/PluginRegistry';
 import './ckeditor5.scss';
 
 type Props = {|
@@ -76,6 +78,80 @@ export default class CKEditor5 extends React.Component<Props> {
     componentDidMount() {
         const {formats, locale} = this.props;
 
+        const defaultConfig = {
+            toolbar: [
+                'heading',
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                'alignment:left',
+                'alignment:center',
+                'alignment:right',
+                'alignment:justify',
+                'bulletedlist',
+                'numberedlist',
+                'externalLink',
+                'internalLink',
+                'insertTable',
+            ],
+            heading: {
+                options: [
+                    {
+                        model: 'paragraph',
+                        title: translate('sulu_admin.paragraph'),
+                        class: 'ck-heading_paragraph',
+                    },
+                    formats.includes('h1') ? {
+                        model: 'heading1',
+                        view: 'h1',
+                        title: translate('sulu_admin.heading1'),
+                        class: 'ck-heading_heading1',
+                    } : undefined,
+                    formats.includes('h2') ? {
+                        model: 'heading2',
+                        view: 'h2',
+                        title: translate('sulu_admin.heading2'),
+                        class: 'ck-heading_heading2',
+                    } : undefined,
+                    formats.includes('h3') ? {
+                        model: 'heading3',
+                        view: 'h3',
+                        title: translate('sulu_admin.heading3'),
+                        class: 'ck-heading_heading3',
+                    } : undefined,
+                    formats.includes('h4') ? {
+                        model: 'heading4',
+                        view: 'h4',
+                        title: translate('sulu_admin.heading4'),
+                        class: 'ck-heading_heading4',
+                    } : undefined,
+                    formats.includes('h5') ? {
+                        model: 'heading5',
+                        view: 'h5',
+                        title: translate('sulu_admin.heading5'),
+                        class: 'ck-heading_heading5',
+                    } : undefined,
+                    formats.includes('h6') ? {
+                        model: 'heading6',
+                        view: 'h6',
+                        title: translate('sulu_admin.heading6'),
+                        class: 'ck-heading_heading6',
+                    } : undefined,
+                ].filter((entry) => entry !== undefined),
+            },
+            internalLinks: {
+                locale: locale && locale.get(),
+            },
+            table: {
+                contentToolbar: [
+                    'tableColumn',
+                    'tableRow',
+                    'mergeTableCells',
+                ],
+            },
+        };
+
         ClassicEditor
             .create(this.containerRef, {
                 plugins: [
@@ -92,78 +168,11 @@ export default class CKEditor5 extends React.Component<Props> {
                     UnderlinePlugin,
                     TablePlugin,
                     TableToolbarPlugin,
+                    ...pluginRegistry.plugins,
                 ],
-                toolbar: [
-                    'heading',
-                    'bold',
-                    'italic',
-                    'underline',
-                    'strikethrough',
-                    'alignment:left',
-                    'alignment:center',
-                    'alignment:right',
-                    'alignment:justify',
-                    'bulletedlist',
-                    'numberedlist',
-                    'externalLink',
-                    'internalLink',
-                    'insertTable',
-                ],
-                heading: {
-                    options: [
-                        {
-                            model: 'paragraph',
-                            title: translate('sulu_admin.paragraph'),
-                            class: 'ck-heading_paragraph',
-                        },
-                        formats.includes('h1') ? {
-                            model: 'heading1',
-                            view: 'h1',
-                            title: translate('sulu_admin.heading1'),
-                            class: 'ck-heading_heading1',
-                        } : undefined,
-                        formats.includes('h2') ? {
-                            model: 'heading2',
-                            view: 'h2',
-                            title: translate('sulu_admin.heading2'),
-                            class: 'ck-heading_heading2',
-                        } : undefined,
-                        formats.includes('h3') ? {
-                            model: 'heading3',
-                            view: 'h3',
-                            title: translate('sulu_admin.heading3'),
-                            class: 'ck-heading_heading3',
-                        } : undefined,
-                        formats.includes('h4') ? {
-                            model: 'heading4',
-                            view: 'h4',
-                            title: translate('sulu_admin.heading4'),
-                            class: 'ck-heading_heading4',
-                        } : undefined,
-                        formats.includes('h5') ? {
-                            model: 'heading5',
-                            view: 'h5',
-                            title: translate('sulu_admin.heading5'),
-                            class: 'ck-heading_heading5',
-                        } : undefined,
-                        formats.includes('h6') ? {
-                            model: 'heading6',
-                            view: 'h6',
-                            title: translate('sulu_admin.heading6'),
-                            class: 'ck-heading_heading6',
-                        } : undefined,
-                    ].filter((entry) => entry !== undefined),
-                },
-                internalLinks: {
-                    locale: locale && locale.get(),
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn',
-                        'tableRow',
-                        'mergeTableCells',
-                    ],
-                },
+                ...configRegistry.configs.reduce((previousConfig, config) => {
+                    return {...previousConfig, ...config(previousConfig)};
+                }, defaultConfig),
             })
             .then((editor) => {
                 this.editorInstance = editor;

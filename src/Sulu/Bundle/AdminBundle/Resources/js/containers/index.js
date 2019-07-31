@@ -1,5 +1,9 @@
 // @flow
-import {internalLinkTypeRegistry} from './CKEditor5';
+import {
+    configRegistry as ckeditorConfigRegistry,
+    pluginRegistry as ckeditorPluginRegistry,
+    internalLinkTypeRegistry,
+} from './CKEditor5';
 import List, {
     ListStore,
     listAdapterRegistry,
@@ -39,6 +43,8 @@ export type {
 export {
     AbstractAdapter,
     blockPreviewTransformerRegistry,
+    ckeditorConfigRegistry,
+    ckeditorPluginRegistry,
     CardCollection,
     internalLinkTypeRegistry,
     List,
