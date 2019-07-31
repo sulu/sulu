@@ -719,7 +719,9 @@ class MediaManager implements MediaManagerInterface
                     // this will trigger massive-search deindex
                     $this->em->remove($fileVersionMeta);
                 }
+                $this->em->detach($fileVersion);
             }
+            $this->em->detach($file);
         }
 
         $this->em->remove($mediaEntity);
