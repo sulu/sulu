@@ -16,6 +16,7 @@ type Props = {|
     formInspector: FormInspector,
     onChange: (string, *) => void,
     onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
+    onSuccess: ?() => void,
     router: ?Router,
     schema: Schema,
     schemaPath: string,
@@ -48,7 +49,7 @@ class Renderer extends React.Component<Props> {
     }
 
     renderField(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {data, dataPath, errors, formInspector, onChange, router, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
         const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
@@ -64,6 +65,7 @@ class Renderer extends React.Component<Props> {
                 name={schemaKey}
                 onChange={onChange}
                 onFinish={this.handleFieldFinish}
+                onSuccess={onSuccess}
                 router={router}
                 schema={schemaField}
                 schemaPath={schemaPath}

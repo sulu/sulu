@@ -1406,6 +1406,35 @@ test('Should set showSuccess flag after form submission', (done) => {
     });
 });
 
+test('Should set showSuccess flag after calling onSuccess', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(form.instance().showSuccess.get()).toEqual(false);
+    expect(form.find('Form').at(1).prop('onSuccess')).toBeInstanceOf(Function);
+    form.find('Form').at(1).prop('onSuccess')();
+    expect(form.instance().showSuccess.get()).toEqual(true);
+});
+
 test('Should show error if form has been tried to save although it is not valid', () => {
     const Form = require('../Form').default;
     const ResourceRequester = require('../../../services/ResourceRequester');

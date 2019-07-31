@@ -18,6 +18,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 test('Should pass props correctly to Renderer', () => {
     const fieldFinishSpy = jest.fn();
+    const successSpy = jest.fn();
     const data = {
         content: 'test',
     };
@@ -42,6 +43,7 @@ test('Should pass props correctly to Renderer', () => {
             index={1}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
+            onSuccess={successSpy}
             router={router}
             schema={schema}
             schemaPath="/test"
@@ -54,6 +56,7 @@ test('Should pass props correctly to Renderer', () => {
         errors,
         formInspector,
         onFieldFinish: fieldFinishSpy,
+        onSuccess: successSpy,
         router,
         schema,
         schemaPath: '/test',
@@ -72,6 +75,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
             index={2}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{}}
             schemaPath=""
@@ -94,6 +98,7 @@ test('Should call onChange callback with correct index', () => {
             index={2}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
+            onSuccess={jest.fn()}
             router={undefined}
             schema={{}}
             schemaPath=""
@@ -117,6 +122,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
             index={2}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
+            onSuccess={jest.fn()}
             router={undefined}
             schema={{}}
             schemaPath=""

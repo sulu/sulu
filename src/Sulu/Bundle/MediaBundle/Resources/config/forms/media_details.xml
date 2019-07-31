@@ -6,54 +6,63 @@
     <key>media_details</key>
 
     <properties>
-        <property name="title" type="text_line" mandatory="true">
-            <meta>
-                <title>sulu_admin.title</title>
-            </meta>
-            <params>
-                <param name="headline" value="true"/>
-            </params>
-        </property>
-
-        <property name="description" type="text_area">
-            <meta>
-                <title>sulu_admin.description</title>
-            </meta>
-        </property>
-
-        <section name="license">
-            <meta>
-                <title>sulu_media.license</title>
-            </meta>
-
+        <section name="media_upload" colspan="4">
             <properties>
-                <property name="copyright" type="text_area">
-                    <meta>
-                        <title>sulu_media.copyright</title>
-                    </meta>
-                </property>
+                <property name="media_version_upload" type="media_version_upload"/>
             </properties>
         </section>
-        <section name="taxonomies">
-            <meta>
-                <title>sulu_media.taxonomies</title>
-            </meta>
+        <section name="media_details" colspan="8">
             <properties>
-                <property name="categories" type="category_selection">
+                <property name="title" type="text_line" mandatory="true">
                     <meta>
-                        <title>sulu_category.categories</title>
+                        <title>sulu_admin.title</title>
+                    </meta>
+                    <params>
+                        <param name="headline" value="true"/>
+                    </params>
+                </property>
+
+                <property name="description" type="text_area">
+                    <meta>
+                        <title>sulu_admin.description</title>
                     </meta>
                 </property>
-                <property name="targetGroups" type="target_group_selection" onInvalid="ignore">
+
+                <section name="license">
                     <meta>
-                        <title>sulu_audience_targeting.target_groups</title>
+                        <title>sulu_media.license</title>
                     </meta>
-                </property>
-                <property name="tags" type="tag_selection">
+
+                    <properties>
+                        <property name="copyright" type="text_area">
+                            <meta>
+                                <title>sulu_media.copyright</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
+                <section name="taxonomies">
                     <meta>
-                        <title>sulu_tag.tags</title>
+                        <title>sulu_media.taxonomies</title>
                     </meta>
-                </property>
+                    <properties>
+                        <property name="categories" type="category_selection">
+                            <meta>
+                                <title>sulu_category.categories</title>
+                            </meta>
+                        </property>
+                        <property name="targetGroups" type="target_group_selection" onInvalid="ignore">
+                            <meta>
+                                <title>sulu_audience_targeting.target_groups</title>
+                            </meta>
+                        </property>
+                        <property name="tags" type="tag_selection">
+                            <meta>
+                                <title>sulu_tag.tags</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
             </properties>
         </section>
     </properties>

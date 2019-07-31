@@ -101,7 +101,10 @@ class MediaAdmin extends Admin
             )
         );
 
-        $toolbarActions = ['sulu_admin.save'];
+        $toolbarActions = [
+            'sulu_admin.save',
+            'sulu_admin.delete',
+        ];
 
         return [
             (new Route(static::MEDIA_OVERVIEW_ROUTE, '/collections/:locale/:id?', 'sulu_media.overview'))
@@ -112,11 +115,15 @@ class MediaAdmin extends Admin
                 ->addLocales($mediaLocales)
                 ->setTitleProperty('title')
                 ->getRoute(),
-            (new Route(static::EDIT_FORM_DETAILS_ROUTE, '/details', 'sulu_media.details'))
-                ->setOption('tabTitle', 'sulu_media.information_taxonomy')
-                ->setOption('locales', $mediaLocales)
-                ->setOption('toolbarActions', $toolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE),
+            $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
+                ->setResourceKey('media')
+                ->setFormKey('media_details')
+                ->setTabTitle('sulu_media.information_taxonomy')
+                ->setEditRoute(static::EDIT_FORM_DETAILS_ROUTE)
+                ->addToolbarActions($toolbarActions)
+                ->setParent(static::EDIT_FORM_ROUTE)
+                ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
+                ->getRoute(),
             (new Route(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats'))
                 ->setOption('tabTitle', 'sulu_media.formats')
                 ->setParent(static::EDIT_FORM_ROUTE),

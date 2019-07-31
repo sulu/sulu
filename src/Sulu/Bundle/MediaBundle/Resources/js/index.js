@@ -12,13 +12,12 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
 import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
-import {MediaSelection, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
+import {MediaSelection, MediaVersionUpload, SingleMediaUpload, SingleMediaSelection} from './containers/Form';
 import {
     MediaSelectionBlockPreviewTransformer,
     SingleMediaSelectionBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import MediaOverview from './views/MediaOverview';
-import MediaDetails from './views/MediaDetails';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 
@@ -31,7 +30,6 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     }
 
     viewRegistry.add('sulu_media.overview', MediaOverview);
-    viewRegistry.add('sulu_media.details', MediaDetails);
     viewRegistry.add('sulu_media.formats', MediaFormats);
     viewRegistry.add('sulu_media.history', MediaHistory);
 
@@ -41,6 +39,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);
     fieldRegistry.add('single_media_upload', SingleMediaUpload);
+    fieldRegistry.add('media_version_upload', MediaVersionUpload);
 
     const imageFormatUrl = config.endpoints.image_format;
     blockPreviewTransformerRegistry.add(

@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a MediaVersionUpload field 1`] = `
+Array [
+  <div
+    aria-disabled="false"
+    class="mediaContainer default"
+    style="position:relative"
+  >
+    <img
+      class="thumbnail"
+      src="sulu-400x400-inset"
+    />
+    <div
+      class="uploadIndicatorContainer"
+    >
+      <div
+        class="uploadIndicator"
+      >
+        <div>
+          <span
+            aria-label="fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
+          />
+          <div
+            class="uploadInfoText"
+          >
+            sulu_media.upload_or_replace
+          </div>
+        </div>
+      </div>
+    </div>
+    <input
+      autocomplete="off"
+      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      type="file"
+    />
+  </div>,
+  <div
+    class="buttons"
+  />,
+  <div
+    class="buttons"
+  >
+    <button
+      class="button link"
+      type="button"
+    >
+      <span
+        aria-label="su-focus"
+        class="su-focus buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_media.set_focus_point
+      </span>
+    </button>
+    <button
+      class="button link"
+      type="button"
+    >
+      <span
+        aria-label="su-cut"
+        class="su-cut buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_media.crop
+      </span>
+    </button>
+  </div>,
+]
+`;

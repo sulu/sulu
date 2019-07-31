@@ -256,17 +256,20 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     expect(handler2).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
 });
 
-test('Should pass formInspector, schema, data and showAllErrors flag to Renderer', () => {
+test('Should pass data, onSuccess, router and schema to Renderer', () => {
     const router = new Router();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    const successSpy = jest.fn();
+
     // $FlowFixMe
     store.schema = {};
     store.data.title = 'Title';
     store.data.description = 'Description';
-    const form = shallow(<Form onSubmit={jest.fn()} router={router} store={store} />);
+    const form = shallow(<Form onSubmit={jest.fn()} onSuccess={successSpy} router={router} store={store} />);
 
     expect(form.find('Renderer').props()).toEqual(expect.objectContaining({
         data: store.data,
+        onSuccess: successSpy,
         router,
         schema: store.schema,
     }));

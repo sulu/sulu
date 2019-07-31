@@ -37,7 +37,17 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     renderExpandedBlockContent = (value: Object, type: string, index: number) => {
-        const {dataPath, error, formInspector, onFinish, router, schemaPath, showAllErrors, types} = this.props;
+        const {
+            dataPath,
+            error,
+            formInspector,
+            onFinish,
+            onSuccess,
+            router,
+            schemaPath,
+            showAllErrors,
+            types,
+        } = this.props;
 
         if (!formInspector) {
             throw new Error('The FieldBlocks field type needs a formInspector to work properly');
@@ -60,6 +70,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 index={index}
                 onChange={this.handleBlockChange}
                 onFieldFinish={onFinish}
+                onSuccess={onSuccess}
                 router={router}
                 schema={blockType.form}
                 schemaPath={schemaPath + '/types/' + type + '/form'}
