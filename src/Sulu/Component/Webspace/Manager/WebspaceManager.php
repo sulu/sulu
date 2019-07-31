@@ -61,7 +61,7 @@ class WebspaceManager implements WebspaceManagerInterface
      *
      * @param $key string The key to search for
      *
-     * @return Webspace
+     * @return Webspace|null
      */
     public function findWebspaceByKey($key)
     {
@@ -73,7 +73,7 @@ class WebspaceManager implements WebspaceManagerInterface
      *
      * @param string $key The key to search for
      *
-     * @return Portal
+     * @return Portal|null
      */
     public function findPortalByKey($key)
     {

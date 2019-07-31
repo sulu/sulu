@@ -26,13 +26,13 @@ class EntityNotFoundException extends RestException
     /**
      * The id of the entity, which was not found.
      *
-     * @var int
+     * @var int|string
      */
     protected $id;
 
     /**
      * @param string $entity The type of the entity, which was not found
-     * @param int $id The id of the entity, which was not found
+     * @param int|string $id The id of the entity, which was not found
      */
     public function __construct($entity, $id, $previous = null)
     {
@@ -55,7 +55,7 @@ class EntityNotFoundException extends RestException
     /**
      * Returns the id of the entity, which was not found.
      *
-     * @return int
+     * @return int|string
      */
     public function getId()
     {

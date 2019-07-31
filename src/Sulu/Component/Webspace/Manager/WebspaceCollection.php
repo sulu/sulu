@@ -76,7 +76,7 @@ class WebspaceCollection implements \IteratorAggregate
      *
      * @param $key string The index of the portal
      *
-     * @return Portal
+     * @return Portal|null
      */
     public function getPortal($key)
     {
@@ -115,7 +115,7 @@ class WebspaceCollection implements \IteratorAggregate
      *
      * @param $key string The key of the webspace
      *
-     * @return Webspace
+     * @return Webspace|null
      */
     public function getWebspace($key)
     {
