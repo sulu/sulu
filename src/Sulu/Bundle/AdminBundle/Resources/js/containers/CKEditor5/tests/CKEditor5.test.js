@@ -4,15 +4,15 @@ import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import CKEditor5 from '../CKEditor5';
-import configHookRegistry from '../registries/ConfigHookRegistry';
+import configRegistry from '../registries/ConfigRegistry';
 import pluginRegistry from '../registries/PluginRegistry';
 
 jest.mock('../registries/PluginRegistry', () => ({
     plugins: [],
 }));
 
-jest.mock('../registries/ConfigHookRegistry', () => ({
-    configHooks: [],
+jest.mock('../registries/ConfigRegistry', () => ({
+    configs: [],
 }));
 
 jest.mock('@ckeditor/ckeditor5-editor-classic/src/classiceditor', () => ({
@@ -95,10 +95,10 @@ test('Create a CKEditor5 instance with an additional plugin', () => {
     const Plugin = class {};
     pluginRegistry.plugins = [Plugin];
 
-    const configHook = jest.fn((config) => ({
+    const config = jest.fn((config) => ({
         toolbar: [...config.toolbar, 'plugin1', 'plugin2'],
     }));
-    configHookRegistry.configHooks = [configHook];
+    configRegistry.configs = [config];
 
     const editor = {
         editing: {

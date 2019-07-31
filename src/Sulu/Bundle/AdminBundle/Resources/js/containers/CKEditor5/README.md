@@ -20,19 +20,19 @@ const handleBlur = () => alert('Text editing finished!');
 ```
 
 The editor can be extended by adding more plugins and more configuration. That's what the `PluginRegistry` and
-`ConfigHookRegistry` are for:
+`ConfigRegistry` are for:
 
 ```javascript
-import {ckeditorPluginRegistry, ckeditorConfigHookRegistry} from 'sulu-admin-bundle/containers';
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
 import Font from '@ckeditor/ckeditor5-font/src/font';
 
 ckeditorPluginRegistry.add(Font);
-ckeditorConfigHookRegistry.add((config) => ({
+ckeditorConfigRegistry.add((config) => ({
     toolbar: [...config.toolbar, 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'],
 }));
 ```
 
-The `PluginRegistry` has an `add` method which takes the plugin class for the CKEditor, while the `ConfigHookRegistry`
+The `PluginRegistry` has an `add` method which takes the plugin class for the CKEditor, while the `ConfigRegistry`
 takes a function, which receives the config which is already there. The return value of this function will be shallow
 merged with the previously existing config. You can reuse the old values from the config, as seen e.g. in the above code
 snippet.

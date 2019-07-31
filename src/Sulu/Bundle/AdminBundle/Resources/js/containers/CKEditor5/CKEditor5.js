@@ -18,7 +18,7 @@ import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
-import configHookRegistry from './registries/ConfigHookRegistry';
+import configRegistry from './registries/ConfigRegistry';
 import pluginRegistry from './registries/PluginRegistry';
 import './ckeditor5.scss';
 
@@ -170,8 +170,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     TableToolbarPlugin,
                     ...pluginRegistry.plugins,
                 ],
-                ...configHookRegistry.configHooks.reduce((config, configHook) => {
-                    return {...config, ...configHook(config)};
+                ...configRegistry.configs.reduce((previousConfig, config) => {
+                    return {...previousConfig, ...config(previousConfig)};
                 }, defaultConfig),
             })
             .then((editor) => {
