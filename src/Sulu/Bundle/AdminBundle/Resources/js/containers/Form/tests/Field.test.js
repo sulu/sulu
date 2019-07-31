@@ -24,6 +24,7 @@ jest.mock('../../../utils', () => ({
 
 test('Render correct label with correct field type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const successSpy = jest.fn();
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="text" />;
@@ -35,7 +36,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={successSpy}
             router={undefined}
             schema={{label: 'label1', type: 'text', visible: true}}
             schemaPath=""
@@ -52,7 +53,7 @@ test('Render correct label with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={successSpy}
             router={undefined}
             schema={{label: 'label2', type: 'datetime', visible: true}}
             schemaPath=""
@@ -73,7 +74,7 @@ test('Render field with correct values for grid', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3, visible: true}}
             schemaPath=""
@@ -94,7 +95,7 @@ test('Render a required field with correct field type', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label1', required: true, type: 'text', visible: true}}
             schemaPath=""
@@ -112,7 +113,7 @@ test('Render a field without a label', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{type: 'text', visible: true}}
             schemaPath=""
@@ -130,7 +131,7 @@ test('Render a field with a description', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{
                 description: 'Small description describing the field',
@@ -158,7 +159,7 @@ test('Render a field with an error', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
-                onSuccess={jest.fn()}
+                onSuccess={undefined}
                 router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
@@ -182,7 +183,7 @@ test('Render a field without a const error', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
-                onSuccess={jest.fn()}
+                onSuccess={undefined}
                 router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
@@ -212,7 +213,7 @@ test('Render a field with a error collection', () => {
                 name="test"
                 onChange={jest.fn()}
                 onFinish={jest.fn()}
-                onSuccess={jest.fn()}
+                onSuccess={undefined}
                 router={undefined}
                 schema={{label: 'label1', type: 'text', visible: true}}
                 schemaPath=""
@@ -224,6 +225,7 @@ test('Render a field with a error collection', () => {
 test('Pass correct props to FieldType', () => {
     const router = new Router();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const successSpy = jest.fn();
 
     fieldRegistry.get.mockReturnValue(function Text() {
         return <input type="date" />;
@@ -244,7 +246,7 @@ test('Pass correct props to FieldType', () => {
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={successSpy}
             router={router}
             schema={schema}
             schemaPath="/text"
@@ -260,6 +262,7 @@ test('Pass correct props to FieldType', () => {
         label: 'Text',
         maxOccurs: 4,
         minOccurs: 2,
+        onSuccess: successSpy,
         router,
         schemaPath: '/text',
         showAllErrors: true,
@@ -291,7 +294,7 @@ test('Pass disabled flag to disabled FieldType', () => {
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath="/text"
@@ -342,7 +345,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
             name="text"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -381,7 +384,7 @@ test('Call onChange callback when value of Field changes', () => {
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label', type: 'text', visible: true}}
             schemaPath=""
@@ -408,7 +411,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
             name="test"
             onChange={changeSpy}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label', type: 'text', disabled: true}}
             schemaPath=""
@@ -435,7 +438,7 @@ test('Call onFinish callback after editing the field has finished', () => {
             name="test"
             onChange={jest.fn()}
             onFinish={finishSpy}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label', type: 'text', visible: true}}
             schemaPath="/test"
@@ -445,6 +448,33 @@ test('Call onFinish callback after editing the field has finished', () => {
     field.find('Text').simulate('finish');
 
     expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
+});
+
+test('Call onSuccess callback after editing the field has finished', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const successSpy = jest.fn();
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const finishSpy = jest.fn();
+    const field = shallow(
+        <Field
+            dataPath="/block/0/test"
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            onSuccess={successSpy}
+            router={undefined}
+            schema={{label: 'label', type: 'text', visible: true}}
+            schemaPath="/test"
+        />
+    );
+
+    field.find('Text').simulate('success');
+
+    expect(successSpy).toBeCalled();
 });
 
 test('Do not render anything if field does not exist and onInvalid is set to ignore', () => {
@@ -461,7 +491,7 @@ test('Do not render anything if field does not exist and onInvalid is set to ign
             name="test"
             onChange={jest.fn()}
             onFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={{label: 'label', type: 'not-existing', onInvalid: 'ignore'}}
             schemaPath="/test"

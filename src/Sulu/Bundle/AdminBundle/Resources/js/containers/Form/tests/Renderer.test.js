@@ -54,7 +54,7 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={fieldFinishSpy}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -93,7 +93,7 @@ test('Should render field types based on schema', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -135,7 +135,7 @@ test('Should render nested field types with based on schema', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -193,7 +193,7 @@ test('Should not render fields when the schema contains a visible flag of false'
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -234,7 +234,7 @@ test('Should pass correct schemaPath to fields', () => {
             formInspector={formInspector}
             onChange={jest.fn()}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath="/test"
@@ -265,6 +265,7 @@ test('Should pass name, schema and formInspector to fields', () => {
 
     const changeSpy = jest.fn();
     const fieldFinishSpy = jest.fn();
+    const successSpy = jest.fn();
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
@@ -275,7 +276,7 @@ test('Should pass name, schema and formInspector to fields', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
-            onSuccess={jest.fn()}
+            onSuccess={successSpy}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -294,6 +295,7 @@ test('Should pass name, schema and formInspector to fields', () => {
     expect(fields.at(1).prop('name')).toBe('datetime');
     expect(fields.at(1).prop('onChange')).toBe(changeSpy);
     expect(fields.at(1).prop('onFinish')).toBeInstanceOf(Function);
+    expect(fields.at(1).prop('onSuccess')).toBe(successSpy);
     expect(fields.at(1).prop('error')).toBe(undefined);
     expect(fields.at(1).prop('router')).toBe(undefined);
 });
@@ -326,7 +328,7 @@ test('Should pass router to fields if given', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={fieldFinishSpy}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={router}
             schema={schema}
             schemaPath=""
@@ -381,7 +383,7 @@ test('Should pass errors to fields that have already been modified at least once
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -433,7 +435,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -493,7 +495,7 @@ test('Should render nested sections', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -542,7 +544,7 @@ test('Should render sections with colSpan', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""
@@ -590,7 +592,7 @@ test('Should render sections without label', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
+            onSuccess={undefined}
             router={undefined}
             schema={schema}
             schemaPath=""

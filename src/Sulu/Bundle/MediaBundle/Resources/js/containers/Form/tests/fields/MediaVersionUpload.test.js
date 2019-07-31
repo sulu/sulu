@@ -22,17 +22,20 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 
 test('Pass ResourceStore from FormInspector to MediaVersionUpload component', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
-
+    const successSpy = jest.fn();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             resourceStore, 'test'
         )
     );
+    const fieldTypeProps = fieldTypeDefaultProps;
+    fieldTypeProps.onSuccess = successSpy;
 
     const mediaVersionUpload = shallow(<MediaVersionUpload
-        {...fieldTypeDefaultProps}
+        {...fieldTypeProps}
         formInspector={formInspector}
     />);
 
     expect(mediaVersionUpload.find(MediaVersionUploadComponent).prop('resourceStore')).toEqual(resourceStore);
+    expect(mediaVersionUpload.find(MediaVersionUploadComponent).prop('onSuccess')).toEqual(successSpy);
 });

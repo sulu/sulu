@@ -49,19 +49,20 @@ test('Render a MediaVersionUpload field', () => {
 });
 
 test('Should update resourceStore and call onSuccess after SingleMediaUpload has completed upload', () => {
+    const successSpy = jest.fn();
     const testFile = {name: 'test.jpg'};
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
     mediaVersionUpload.update();
     mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
     expect(resourceStore.data).toEqual(testFile);
-    expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
+    expect(successSpy).toBeCalled();
 });
 
 test('Should open and close crop overlay', () => {
@@ -70,7 +71,7 @@ test('Should open and close crop overlay', () => {
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 
@@ -95,7 +96,7 @@ test('Should open and close focus point overlay', () => {
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 
@@ -113,11 +114,12 @@ test('Should open and close focus point overlay', () => {
 
 test('Should save focus point overlay and call onSuccess', (done) => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    const successSpy = jest.fn();
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
@@ -141,18 +143,19 @@ test('Should save focus point overlay and call onSuccess', (done) => {
         mediaVersionUpload.update();
         expect(mediaVersionUpload.find('FocusPointOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
         expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
-        expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
+        expect(successSpy).toBeCalled();
         done();
     });
 });
 
 test('Should save crop overlay and call onSuccess', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    const successSpy = jest.fn();
     resourceStore.loading = false;
     resourceStore.data.url = 'image.jpg';
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
@@ -195,7 +198,7 @@ test('Should save crop overlay and call onSuccess', () => {
             mediaVersionUpload.find('CropOverlay').update();
             expect(mediaVersionUpload.find('CropOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
             expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
-            expect(mediaVersionUpload.instance().props.onSuccess).toBeCalled();
+            expect(successSpy).toBeCalled();
         });
     });
 });
@@ -204,11 +207,12 @@ test('Should call update method of MediaUploadStore if a file was dropped', () =
     const testId = 1;
     const testFile = {name: 'test.jpg'};
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+
     resourceStore.set('id', testId);
     resourceStore.loading = false;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={jest.fn()}
+        onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 

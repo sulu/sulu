@@ -125,7 +125,7 @@ class Form extends React.Component<Props> {
     };
 
     render() {
-        const {router, store, onSuccess} = this.props;
+        const {onSuccess, router, store} = this.props;
         const {
             data: {
                 availableLocales,
