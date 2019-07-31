@@ -28,12 +28,11 @@ test('Pass ResourceStore from FormInspector to MediaVersionUpload component', ()
             resourceStore, 'test'
         )
     );
-    const fieldTypeProps = fieldTypeDefaultProps;
-    fieldTypeProps.onSuccess = successSpy;
 
     const mediaVersionUpload = shallow(<MediaVersionUpload
-        {...fieldTypeProps}
+        {...fieldTypeDefaultProps}
         formInspector={formInspector}
+        onSuccess={successSpy}
     />);
 
     expect(mediaVersionUpload.find(MediaVersionUploadComponent).prop('resourceStore')).toEqual(resourceStore);

@@ -450,7 +450,7 @@ test('Call onFinish callback after editing the field has finished', () => {
     expect(finishSpy).toBeCalledWith('/block/0/test', '/test');
 });
 
-test('Call onSuccess callback after editing the field has finished', () => {
+test('Call onSuccess callback when field calls onSuccess', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
     const successSpy = jest.fn();
     fieldRegistry.get.mockReturnValue(function Text() {
