@@ -38,6 +38,11 @@ class FormMetadata
      */
     private $schema;
 
+    /**
+     * @var string
+     */
+    private $key;
+
     public function setName(string $name)
     {
         $this->name = $name;
@@ -46,6 +51,16 @@ class FormMetadata
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
     }
 
     public function setTitle(string $title)
