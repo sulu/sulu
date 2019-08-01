@@ -1,4 +1,5 @@
 // @flow
+import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
@@ -20,7 +21,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         }
 
         const newValues = toJS(oldValues);
-        newValues[index][name] = value;
+        jsonpointer.set(newValues[index], '/' + name, value);
 
         onChange(newValues);
     };
