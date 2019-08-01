@@ -102,6 +102,7 @@ class ColumnList extends React.Component<Props> {
             return;
         }
 
+        // TODO don't set if it is the same
         this.activeColumnIndex = index;
     };
 

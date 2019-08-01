@@ -179,8 +179,13 @@ class ColumnListAdapter extends AbstractAdapter {
         const toolbarItems = [];
         const parentColumn = data[index - 1];
         const parentItem = parentColumn ? parentColumn.find((item) => item.id === activeItems[index]) : undefined;
+        const {
+            _permissions: {
+                add: parentAddPermission = true,
+            } = {},
+        } = parentItem || {};
 
-        if (onItemAdd && (!parentItem || !parentItem._permissions || parentItem._permissions.add)) {
+        if (onItemAdd && parentAddPermission) {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
@@ -192,12 +197,20 @@ class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
-        const hasActiveItem = activeItems[index + 1] === undefined;
+        const hasActiveItem = activeItems[index + 1] !== undefined;
+        const column = data[index];
+        const item = column ? column.find((item) => item.id === activeItems[index + 1]) : undefined;
+        const {
+            _permissions: {
+                delete: deletePermission = true,
+                edit: editPermission = true,
+            } = {},
+        } = item || {};
 
         const settingOptions = [];
         if (onRequestItemDelete) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !deletePermission,
                 label: translate('sulu_admin.delete'),
                 onClick: () => {
                     const itemId = activeItems[index + 1];
@@ -214,7 +227,7 @@ class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemMove) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !editPermission,
                 label: translate('sulu_admin.move'),
                 onClick: () => {
                     const itemId = activeItems[index + 1];
@@ -231,7 +244,7 @@ class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemCopy) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !editPermission,
                 label: translate('sulu_admin.copy'),
                 onClick: () => {
                     const itemId = activeItems[index + 1];
