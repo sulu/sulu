@@ -5,7 +5,6 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
-import type {MediaType} from '../../types';
 
 type Props = {|
     confirmLoading: boolean,
@@ -14,7 +13,7 @@ type Props = {|
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
     open: boolean,
-    types: Array<MediaType>,
+    types: Array<string>,
 |};
 
 @observer

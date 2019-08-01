@@ -10,7 +10,7 @@ import type {IObservableValue} from 'mobx';
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {DisplayOption, Media, MediaType} from '../../types';
+import type {DisplayOption, Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {Value} from './types';
 
@@ -19,7 +19,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
-    types: Array<MediaType>,
+    types: Array<string>,
     value: Value,
 |}
 

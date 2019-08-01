@@ -4,7 +4,6 @@ import convertMediaTypesFromParams from './convertMediaTypesFromParams';
 import getIconForDisplayOption from './getIconForDisplayOption';
 import getTranslationForDisplayOption from './getTranslationForDisplayOption';
 import validateDisplayOption from './validateDisplayOption';
-import validateMediaType from './validateMediaType';
 
 export {
     convertDisplayOptionsFromParams,
@@ -12,5 +11,4 @@ export {
     getIconForDisplayOption,
     getTranslationForDisplayOption,
     validateDisplayOption,
-    validateMediaType,
 };

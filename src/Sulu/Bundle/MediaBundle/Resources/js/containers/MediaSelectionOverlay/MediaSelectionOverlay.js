@@ -55,7 +55,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
         collectionId: IObservableValue<?string | number>,
         excludedIds: IObservableValue<?Array<number>>,
         locale: IObservableValue<string>,
-        types: IObservableValue<?Array<string>>,
+        types: ?Array<string>
     ) {
         const options = {};
 
@@ -71,7 +71,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ];
 
-        if(types.length > 0) {
+        if (types.length > 0) {
             options.types = types.join(',');
         }
 

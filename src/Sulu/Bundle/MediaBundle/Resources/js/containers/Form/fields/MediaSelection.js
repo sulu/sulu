@@ -4,7 +4,11 @@ import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/UserStore';
 import {observable} from 'mobx';
-import {convertDisplayOptionsFromParams, convertMediaTypesFromParams, validateDisplayOption} from '../../../utils/MediaSelectionHelper';
+import {
+    convertDisplayOptionsFromParams,
+    convertMediaTypesFromParams,
+    validateDisplayOption,
+} from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {Value} from '../../MultiMediaSelection';
 
