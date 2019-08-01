@@ -18,6 +18,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_page.teaser.provider_pool" />
+            <argument>%sulu_document_manager.versioning.enabled%</argument>
         </service>
 
         <!-- content -->

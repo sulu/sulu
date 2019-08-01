@@ -65,18 +65,25 @@ class PageAdmin extends Admin
      */
     private $teaserProviderPool;
 
+    /**
+     * @var bool
+     */
+    private $versioningEnabled;
+
     public function __construct(
         RouteBuilderFactoryInterface $routeBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
-        TeaserProviderPoolInterface $teaserProviderPool
+        TeaserProviderPoolInterface $teaserProviderPool,
+        bool $versioningEnabled
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
         $this->teaserProviderPool = $teaserProviderPool;
+        $this->versioningEnabled = $versioningEnabled;
     }
 
     public function getNavigation(): Navigation
@@ -267,6 +274,7 @@ class PageAdmin extends Admin
     {
         return [
             'teaser' => $this->teaserProviderPool->getConfiguration(),
+            'versioning' => $this->versioningEnabled,
         ];
     }
 }
