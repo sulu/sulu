@@ -239,6 +239,53 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render without add button in toolbar when onItemAdd callback is given but permission is not granted', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: true,
+            },
+            {
+                id: 4,
+                title: 'Page 1.2',
+                hasChildren: false,
+                _permissions: {
+                    add: false,
+                },
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1, 4]}
+            data={data}
+            onItemAdd={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Column').at(2).find('div').simulate('mouseEnter');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar ToolbarButton[icon="su-plus-circle"]')).toHaveLength(0);
+});
+
 test('Render data with loading column', () => {
     const data = [
         [

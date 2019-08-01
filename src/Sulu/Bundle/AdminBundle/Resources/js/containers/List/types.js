@@ -31,7 +31,7 @@ export type Action = {|
 export type ListAdapterProps = {
     actions?: Array<Action>,
     active: ?string | number,
-    activeItems: ?Array<string | number>,
+    activeItems: ?Array<?string | number>,
     data: Array<*>,
     disabledIds: Array<string | number>,
     limit: number,

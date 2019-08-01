@@ -149,12 +149,20 @@ class ColumnListAdapter extends AbstractAdapter {
     getToolbarItems = (index: number) => {
         const {
             activeItems,
+            data,
             onItemAdd,
             onRequestItemCopy,
             onRequestItemDelete,
             onRequestItemMove,
             onRequestItemOrder,
         } = this.props;
+
+        if (!activeItems) {
+            throw new Error(
+                'The ColumnListAdapter does not work without activeItems. '
+                + 'This error should not happen and is likely a bug.'
+            );
+        }
 
         if (this.orderColumn === index) {
             return [
@@ -169,8 +177,10 @@ class ColumnListAdapter extends AbstractAdapter {
         }
 
         const toolbarItems = [];
+        const parentColumn = data[index - 1];
+        const parentItem = parentColumn ? parentColumn.find((item) => item.id === activeItems[index]) : undefined;
 
-        if (onItemAdd) {
+        if (onItemAdd && (!parentItem || !parentItem._permissions || parentItem._permissions.add)) {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
@@ -182,13 +192,6 @@ class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
-        if (!activeItems) {
-            throw new Error(
-                'The ColumnListAdapter does not work without activeItems. '
-                + 'This error should not happen and is likely a bug.'
-            );
-        }
-
         const hasActiveItem = activeItems[index + 1] === undefined;
 
         const settingOptions = [];
@@ -197,7 +200,14 @@ class ColumnListAdapter extends AbstractAdapter {
                 disabled: hasActiveItem,
                 label: translate('sulu_admin.delete'),
                 onClick: () => {
-                    onRequestItemDelete(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemDelete(itemId);
                 },
             });
         }
@@ -207,7 +217,14 @@ class ColumnListAdapter extends AbstractAdapter {
                 disabled: hasActiveItem,
                 label: translate('sulu_admin.move'),
                 onClick: () => {
-                    onRequestItemMove(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemMove(itemId);
                 },
             });
         }
@@ -217,7 +234,14 @@ class ColumnListAdapter extends AbstractAdapter {
                 disabled: hasActiveItem,
                 label: translate('sulu_admin.copy'),
                 onClick: () => {
-                    onRequestItemCopy(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemCopy(itemId);
                 },
             });
         }

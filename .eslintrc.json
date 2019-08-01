@@ -27,11 +27,6 @@
         "flowtype",
         "jsx-a11y"
     ],
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
     "rules": {
         "indent": [
             "error",
