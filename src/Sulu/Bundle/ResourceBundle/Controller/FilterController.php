@@ -278,22 +278,6 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns all fields that can be used by list.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return mixed
-     */
-    public function fieldsAction(Request $request)
-    {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-
-        return $this->handleView(
-            $this->view(array_values($this->getManager()->getFieldDescriptors($locale)), 200)
-        );
-    }
-
-    /**
      * Returns the manager for filters.
      *
      * @return FilterManagerInterface
