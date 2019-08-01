@@ -198,18 +198,6 @@ abstract class AbstractMediaController extends RestController
     }
 
     /**
-     * Returns the the media fields for the current entity.
-     *
-     * @param $entityName
-     *
-     * @return Response
-     */
-    protected function getFieldsView($entityName)
-    {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityName, null)), 200));
-    }
-
-    /**
      * Returns the field-descriptors. Ensures that the descriptors get only instantiated once.
      *
      * @param $entityName

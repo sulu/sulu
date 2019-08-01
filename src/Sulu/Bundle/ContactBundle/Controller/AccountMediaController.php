@@ -45,11 +45,6 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
         );
     }
 
-    public function fieldsAction()
-    {
-        return $this->getFieldsView($this->getAccountEntityName());
-    }
-
     private function getAccountEntityName()
     {
         return $this->container->getParameter('sulu.model.account.class');

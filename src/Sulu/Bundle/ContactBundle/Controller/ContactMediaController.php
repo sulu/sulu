@@ -45,11 +45,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         );
     }
 
-    public function fieldsAction()
-    {
-        return $this->getFieldsView($this->getContactEntityName());
-    }
-
     private function getContactEntityName()
     {
         return $this->container->getParameter('sulu.model.contact.class');
