@@ -84,7 +84,8 @@ class PageAdminTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
-            $this->teaserProviderPool->reveal()
+            $this->teaserProviderPool->reveal(),
+            false
         );
 
         $route = $admin->getRoutes()[0];
@@ -98,5 +99,37 @@ class PageAdminTest extends TestCase
         $this->assertAttributeEquals([
             'locale' => 'de',
         ], 'attributeDefaults', $route);
+    }
+
+    public function testGetConfigWithVersioning()
+    {
+        $admin = new PageAdmin(
+            $this->routeBuilderFactory,
+            $this->webspaceManager->reveal(),
+            $this->securityChecker->reveal(),
+            $this->sessionManager->reveal(),
+            $this->teaserProviderPool->reveal(),
+            true
+        );
+
+        $config = $admin->getConfig();
+
+        $this->assertEquals(true, $config['versioning']);
+    }
+
+    public function testGetConfigWithoutVersioning()
+    {
+        $admin = new PageAdmin(
+            $this->routeBuilderFactory,
+            $this->webspaceManager->reveal(),
+            $this->securityChecker->reveal(),
+            $this->sessionManager->reveal(),
+            $this->teaserProviderPool->reveal(),
+            false
+        );
+
+        $config = $admin->getConfig();
+
+        $this->assertEquals(false, $config['versioning']);
     }
 }

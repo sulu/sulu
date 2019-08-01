@@ -25,9 +25,12 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
 
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
-    fieldRegistry.add('page_settings_versions', PageSettingsVersions);
     fieldRegistry.add('search_result', SearchResult);
     fieldRegistry.add('teaser_selection', TeaserSelection);
+
+    if (config.versioning) {
+        fieldRegistry.add('page_settings_versions', PageSettingsVersions);
+    }
 
     formToolbarActionRegistry.add('sulu_page.edit', EditToolbarAction);
     formToolbarActionRegistry.add('sulu_page.templates', TemplateToolbarAction);
