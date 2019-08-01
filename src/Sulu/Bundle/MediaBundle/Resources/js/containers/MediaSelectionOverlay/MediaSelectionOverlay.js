@@ -71,7 +71,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ];
 
-        if (types.length > 0) {
+        if (Array.isArray(types) && types.length > 0) {
             options.types = types.join(',');
         }
 

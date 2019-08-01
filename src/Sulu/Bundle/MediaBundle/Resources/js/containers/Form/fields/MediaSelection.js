@@ -67,6 +67,10 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
+        if (mediaTypes !== undefined && mediaTypes !== null && typeof mediaTypes !== 'string') {
+            throw new Error('The "mediaTypes" option has to be a string if set.');
+        }
+
         const mediaTypeValues = convertMediaTypesFromParams(mediaTypes);
 
         return (
