@@ -650,6 +650,50 @@ test('Should call onFinish when a field from the child renderer has finished edi
     expect(finishSpy).toBeCalledWith();
 });
 
+test ('Should set nested properties in handleBlockChange and call onChange with new values', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [{__id: 1, type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const changeSpy = jest.fn();
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            dataPath=""
+            defaultType="editor"
+            fieldTypeOptions={{}}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaPath=""
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').simulate('click');
+    fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test1', 'value1');
+
+    const expectedArray1 = [{__id: 1, type: 'default', options: {test1: 'value1'}}];
+    expect(changeSpy).toBeCalledWith(expectedArray1);
+
+    fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test2/test3', 'value2');
+    const expectedArray2 = [{__id: 1, type: 'default', options: {test1: 'value1', test2: {test3: 'value2'}}}];
+    expect(changeSpy).toBeCalledWith(expectedArray2);
+});
+
 test('Should call onFinish when the order of the blocks has changed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
