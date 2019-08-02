@@ -64,7 +64,7 @@ class AudienceTargetingAdmin extends Admin
 
         $settings = Admin::getNavigationItemSettings();
 
-        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $targetGroups = new NavigationItem('sulu_audience_targeting.target_groups');
             $targetGroups->setPosition(10);
             $targetGroups->setMainRoute(static::LIST_ROUTE);
@@ -80,19 +80,29 @@ class AudienceTargetingAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $listToolbarActions = [
-            'sulu_admin.add',
-            'sulu_admin.delete',
-            'sulu_admin.export',
-        ];
+        $listToolbarActions = [];
+        $formToolbarActions = [];
 
-        $formToolbarActions = [
-            'sulu_admin.save',
-            'sulu_admin.delete',
-        ];
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
+            $listToolbarActions[] = 'sulu_admin.add';
+        }
 
-        return [
-            $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/target-groups')
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $formToolbarActions[] = 'sulu_admin.save';
+        }
+
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+            $listToolbarActions[] = 'sulu_admin.delete';
+            $formToolbarActions[] = 'sulu_admin.delete';
+        }
+
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            $listToolbarActions[] = 'sulu_admin.export';
+        }
+
+        $routes = [];
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/target-groups')
                 ->setResourceKey('target_groups')
                 ->setListKey('target_groups')
                 ->setTitle('sulu_audience_targeting.target_groups')
@@ -100,32 +110,38 @@ class AudienceTargetingAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/target-groups/add')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/target-groups/add')
                 ->setResourceKey('target_groups')
                 ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_audience_targeting.add_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_audience_targeting.add_form.details', '/details')
                 ->setResourceKey('target_groups')
                 ->setFormKey('target_group_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/target-groups/:id')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/target-groups/:id')
                 ->setResourceKey('target_groups')
                 ->setBackRoute(static::LIST_ROUTE)
                 ->setTitleProperty('title')
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_audience_targeting.edit_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_audience_targeting.edit_form.details', '/details')
                 ->setResourceKey('target_groups')
                 ->setFormKey('target_group_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute(),
-        ];
+                ->getRoute();
+        }
+
+        return $routes;
     }
 
     /**

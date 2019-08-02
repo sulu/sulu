@@ -21,6 +21,10 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactAdmin extends Admin
 {
+    const CONTACT_SECURITY_CONTEXT = 'sulu.contact.people';
+
+    const ACCOUNT_SECURITY_CONTEXT = 'sulu.contact.organizations';
+
     const CONTACT_LIST_ROUTE = 'sulu_contact.contacts_list';
 
     const CONTACT_ADD_FORM_ROUTE = 'sulu_contact.contact_add_form';
@@ -72,7 +76,7 @@ class ContactAdmin extends Admin
         $rootNavigationItem = $this->getNavigationItemRoot();
         $contacts = $this->getNavigationItemContacts();
 
-        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
             $people->setMainRoute(static::CONTACT_LIST_ROUTE);
@@ -80,7 +84,7 @@ class ContactAdmin extends Admin
             $contacts->addChild($people);
         }
 
-        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $companies = new NavigationItem('sulu_contact.organizations');
             $companies->setPosition(20);
             $companies->setMainRoute(static::ACCOUNT_LIST_ROUTE);
@@ -97,107 +101,152 @@ class ContactAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $formToolbarActions = [
-            'sulu_admin.save',
-            'sulu_admin.delete',
-        ];
+        $routes = [];
 
-        $listToolbarActions = [
-            'sulu_admin.add',
-            'sulu_admin.delete',
-            'sulu_admin.export',
-        ];
+        if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $contactFormToolbarActions = [];
+            $contactListToolbarActions = [];
+            $contactDocumentsToolbarAction = [];
 
-        $documentsToolbarAction = [
-            'sulu_contact.add_media',
-            'sulu_contact.delete_media',
-        ];
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
+                $contactListToolbarActions[] = 'sulu_admin.add';
+            }
 
-        return [
-            $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+                $contactFormToolbarActions[] = 'sulu_admin.save';
+                $contactDocumentsToolbarAction[] = 'sulu_contact.add_media';
+                $contactDocumentsToolbarAction[] = 'sulu_contact.delete_media';
+            }
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+                $contactFormToolbarActions[] = 'sulu_admin.delete';
+                $contactListToolbarActions[] = 'sulu_admin.delete';
+            }
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+                $contactListToolbarActions[] = 'sulu_admin.export';
+            }
+
+            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
                 ->setResourceKey('contacts')
                 ->setListKey('contacts')
                 ->setTitle('sulu_contact.people')
                 ->addListAdapters(['table'])
                 ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
+                ->addToolbarActions($contactListToolbarActions)
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_LIST_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
                 ->setResourceKey('contacts')
                 ->setFormKey('contact_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($contactFormToolbarActions)
                 ->setParent(static::CONTACT_ADD_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_LIST_ROUTE)
                 ->setTitleProperty('fullName')
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
                 ->setResourceKey('contacts')
                 ->setFormKey('contact_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($contactFormToolbarActions)
                 ->setTabOrder(1024)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.contact_documents_list', '/documents')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createListRouteBuilder('sulu_contact.contact_documents_list', '/documents')
                 ->setResourceKey('contact_media')
                 ->setListKey('media')
                 ->setUserSettingsKey('contact_media')
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
-                ->addToolbarActions($documentsToolbarAction)
+                ->addToolbarActions($contactDocumentsToolbarAction)
                 ->addRouterAttributesToListStore(['id' => 'contactId'])
                 ->setTabOrder(2048)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
+                ->getRoute();
+        }
+
+        if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $accountFormToolbarActions = [];
+            $accountListToolbarActions = [];
+            $accountDocumentsToolbarAction = [];
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
+                $accountListToolbarActions[] = 'sulu_admin.add';
+            }
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+                $accountFormToolbarActions[] = 'sulu_admin.save';
+                $accountDocumentsToolbarAction[] = 'sulu_account.add_media';
+                $accountDocumentsToolbarAction[] = 'sulu_account.delete_media';
+            }
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+                $accountFormToolbarActions[] = 'sulu_admin.delete';
+                $accountListToolbarActions[] = 'sulu_admin.delete';
+            }
+
+            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+                $accountListToolbarActions[] = 'sulu_admin.export';
+            }
+
+            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
                 ->setResourceKey('accounts')
                 ->setListKey('accounts')
                 ->setTitle('sulu_contact.organizations')
                 ->addListAdapters(['table'])
                 ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
+                ->addToolbarActions($accountListToolbarActions)
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_add_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_contact.account_add_form.details', '/details')
                 ->setResourceKey('accounts')
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($accountFormToolbarActions)
                 ->setParent(static::ACCOUNT_ADD_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
                 ->setResourceKey('accounts')
                 ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
                 ->setTitleProperty('name')
                 ->addRouterAttributesToBlacklist(['active', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
                 ->setResourceKey('accounts')
                 ->setFormKey('account_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions($accountFormToolbarActions)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
                 ->setTabOrder(1024)
-                ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_contacts_list', '/contacts')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createListRouteBuilder('sulu_contact.account_contacts_list', '/contacts')
                 ->setResourceKey('account_contacts')
                 ->setListKey('account_contacts')
-                ->setTabTitle('sulu_contact.people')
+                ->setTabTitle(static::CONTACT_SECURITY_CONTEXT)
                 ->addListAdapters(['table'])
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addRouterAttributesToListStore(['id'])
@@ -205,19 +254,22 @@ class ContactAdmin extends Admin
                 ->addRouterAttributesToListStore(['id' => 'accountId'])
                 ->setTabOrder(2048)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createListRouteBuilder('sulu_contact.account_documents_list', '/documents')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory
+                ->createListRouteBuilder('sulu_contact.account_documents_list', '/documents')
                 ->setResourceKey('account_media')
                 ->setListKey('media')
                 ->setUserSettingsKey('contact_media')
                 ->setTabTitle('sulu_contact.documents')
                 ->addListAdapters(['table'])
                 ->addRouterAttributesToListStore(['id' => 'contactId'])
-                ->addToolbarActions($documentsToolbarAction)
+                ->addToolbarActions($accountDocumentsToolbarAction)
                 ->setTabOrder(3072)
                 ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
-                ->getRoute(),
-        ];
+                ->getRoute();
+        }
+
+        return $routes;
     }
 
     /**
@@ -228,13 +280,13 @@ class ContactAdmin extends Admin
         return [
             'Sulu' => [
                 'Contacts' => [
-                    'sulu.contact.people' => [
+                    static::CONTACT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
                     ],
-                    'sulu.contact.organizations' => [
+                    static::ACCOUNT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
