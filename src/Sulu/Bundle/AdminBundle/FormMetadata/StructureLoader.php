@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
 class StructureLoader
@@ -35,17 +36,36 @@ class StructureLoader
     private $locales;
 
     /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * StructureLoader constructor.
      *
      * @param $structureMetadataFactory
      * @param $formMetadataMapper
      * @param $locales
+     * @param string $cacheDir
+     * @param bool $debug
      */
-    public function __construct($structureMetadataFactory, $formMetadataMapper, $locales)
-    {
+    public function __construct(
+        $structureMetadataFactory,
+        $formMetadataMapper,
+        $locales,
+        string $cacheDir,
+        bool $debug
+    ) {
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->formMetadataMapper = $formMetadataMapper;
         $this->locales = $locales;
+        $this->cacheDir = $cacheDir;
+        $this->debug = $debug;
     }
 
     public function load()
@@ -63,10 +83,10 @@ class StructureLoader
 
         foreach ($this->locales as $locale) {
             foreach ($structuresMetadataByTypes as $structureType => $structuresMetadata) {
-                $form = $this->mapStructureMetadata($structuresMetadata, $locale);
-                $configCache = $this->formMetadataMapper->getConfigCache($structureType, $locale);
+                $structure = $this->mapStructureMetadata($structuresMetadata, $locale);
+                $configCache = $this->getConfigCache($structureType, $locale);
                 $configCache->write(
-                    serialize($form),
+                    serialize($structure),
                     array_map(function(ContentStructureMetadata $structureMetadata) {
                         return new FileResource($structureMetadata->getResource());
                     }, $structuresMetadata)
@@ -98,5 +118,10 @@ class StructureLoader
         }
 
         return $typedForm;
+    }
+
+    private function getConfigCache(string $key, string $locale): ConfigCache
+    {
+        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }

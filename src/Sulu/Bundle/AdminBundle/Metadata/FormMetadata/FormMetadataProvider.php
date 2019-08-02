@@ -15,7 +15,6 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
@@ -42,16 +41,6 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
     private $formDirectories;
 
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
      * @var FormMetadataLoaderInterface[]
      */
     private $formMetadataLoaders;
@@ -61,32 +50,27 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
         StructureLoader $structureLoader,
         ExpressionLanguage $expressionLanguage,
         array $formDirectories,
-        string $cacheDir,
-        bool $debug,
         iterable $formMetadataLoaders
     ) {
         $this->formXmlLoader = $formXmlLoader;
         $this->structureLoader = $structureLoader;
         $this->expressionLanguage = $expressionLanguage;
         $this->formDirectories = $formDirectories;
-        $this->cacheDir = $cacheDir;
-        $this->debug = $debug;
         $this->formMetadataLoaders = $formMetadataLoaders;
     }
 
     public function getMetadata(string $key, string $locale)
     {
-        $configCache = $this->getConfigCache($key, $locale);
-
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
+        $form = null;
+        foreach ($this->formMetadataLoaders as $metadataLoader) {
+            $form = $metadataLoader->getMetadata($key, $locale);
+            if ($form) {
+                break;
+            }
         }
-
-        if (!file_exists($configCache->getPath())) {
+        if (!$form) {
             throw new MetadataNotFoundException('form', $key);
         }
-
-        $form = unserialize(file_get_contents($configCache->getPath()));
 
         if ($form instanceof FormMetadata) {
             $this->evaluateFormItemExpressions($form->getItems());
@@ -125,21 +109,17 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
 
     public function warmUp($cacheDir)
     {
-        $formsMetadata = [];
+        /*
         foreach ($this->formMetadataLoaders as $metadataLoader) {
-            $formsMetadata = array_merge_recursive($metadataLoader->load(), $formsMetadata);
+            $metadataLoader->load();
         }
-
+        */
+        // TODO handle caching of structure loader
         $this->structureLoader->load();
     }
 
     public function isOptional()
     {
         return false;
-    }
-
-    private function getConfigCache(string $key, string $locale): ConfigCache
-    {
-        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }

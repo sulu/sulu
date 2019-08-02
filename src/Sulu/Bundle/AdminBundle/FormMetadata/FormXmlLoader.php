@@ -16,7 +16,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * Load structure from an XML file.
@@ -72,7 +71,7 @@ class FormXmlLoader extends AbstractLoader
         );
     }
 
-    protected function parse($resource, \DOMXPath $xpath, $type): FormMetadata
+    protected function parse($resource, \DOMXPath $xpath, $type): array
     {
         // init running vars
         $tags = [];
@@ -100,18 +99,12 @@ class FormXmlLoader extends AbstractLoader
         }
         $form->burnProperties();
 
+        $forms = [];
         foreach ($this->locales as $locale) {
-            $newForm = $this->mapFormsMetadata($form, $locale);
-            $configCache = $this->formMetadataMapper->getConfigCache($formKey, $locale);
-            $configCache->write(
-                serialize($newForm),
-                array_map(function(ExternalFormMetadata $form) {
-                    return new FileResource($form->getResource());
-                }, [$form])
-            );
+            $forms[$locale] = $this->mapFormsMetadata($form, $locale);
         }
 
-        return $newForm;
+        return $forms;
     }
 
     /**

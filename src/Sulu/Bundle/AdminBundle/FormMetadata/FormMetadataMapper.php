@@ -22,32 +22,9 @@ use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
-use Symfony\Component\Config\ConfigCache;
 
 class FormMetadataMapper
 {
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * FormMetadataMapper constructor.
-     *
-     * @param $cacheDir
-     * @param $debug
-     */
-    public function __construct($cacheDir, $debug)
-    {
-        $this->cacheDir = $cacheDir;
-        $this->debug = $debug;
-    }
-
     /**
      * @param array $children
      * @param FormMetadata $form
@@ -229,16 +206,5 @@ class FormMetadataMapper
 
             return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
         }, $itemsMetadata));
-    }
-
-    /**
-     * @param string $key
-     * @param string $locale
-     *
-     * @return ConfigCache
-     */
-    public function getConfigCache(string $key, string $locale): ConfigCache
-    {
-        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }
