@@ -19,6 +19,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
+    types: Array<string>,
     value: Value,
 |}
 
@@ -30,6 +31,7 @@ class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        types: [],
         value: {displayOption: undefined, ids: []},
     };
 
@@ -117,7 +119,7 @@ class MultiMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, disabled, displayOptions, value} = this.props;
+        const {locale, disabled, displayOptions, types, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
@@ -183,6 +185,7 @@ class MultiMediaSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    types={types}
                 />
             </Fragment>
         );

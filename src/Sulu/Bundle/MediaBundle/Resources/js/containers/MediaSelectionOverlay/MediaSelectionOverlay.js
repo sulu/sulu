@@ -54,7 +54,8 @@ class MediaSelectionOverlay extends React.Component<Props> {
     static createMediaListStore(
         collectionId: IObservableValue<?string | number>,
         excludedIds: IObservableValue<?Array<number>>,
-        locale: IObservableValue<string>
+        locale: IObservableValue<string>,
+        types: ?Array<string>
     ) {
         const options = {};
 
@@ -69,6 +70,10 @@ class MediaSelectionOverlay extends React.Component<Props> {
             'subVersion',
             'thumbnails',
         ];
+
+        if (Array.isArray(types) && types.length > 0) {
+            options.types = types.join(',');
+        }
 
         return new ListStore(
             MEDIA_RESOURCE_KEY,

@@ -35,7 +35,8 @@ test('Should create list-stores with correct locale and excluded-ids', () => {
     expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        locale
+        locale,
+        []
     );
     expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual([44, 22]);
     expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
@@ -55,7 +56,30 @@ test('Should create list-stores without excluded-ids', () => {
     expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        locale
+        locale,
+        []
+    );
+    expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
+    expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
+});
+
+test('Should create list-stores with correct media type', () => {
+    const locale = observable.box('en');
+    shallow(
+        <MultiMediaSelectionOverlay
+            locale={locale}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            types={['image']}
+        />
+    ).render();
+
+    expect(MediaSelectionOverlay.createMediaListStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale,
+        ['image']
     );
     expect(MediaSelectionOverlay.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
     expect(MediaSelectionOverlay.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);

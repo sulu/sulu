@@ -13,6 +13,7 @@ type Props = {|
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
     open: boolean,
+    types: Array<string>,
 |};
 
 @observer
@@ -20,6 +21,7 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         confirmLoading: false,
         excludedIds: [],
+        types: [],
     };
 
     collectionId: IObservableValue<?string | number> = observable.box();
@@ -36,7 +38,8 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
         this.mediaListStore = MediaSelectionOverlay.createMediaListStore(
             this.collectionId,
             excludedIds,
-            props.locale
+            props.locale,
+            props.types
         );
         this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,
