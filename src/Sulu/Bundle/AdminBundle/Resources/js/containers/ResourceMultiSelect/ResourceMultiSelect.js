@@ -1,7 +1,9 @@
 // @flow
-import React from 'react';
 import type {Element} from 'react';
+import React from 'react';
+import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
@@ -27,18 +29,33 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
         values: [],
     };
 
-    resourceListStore: ResourceListStore;
+    @observable resourceListStore: ResourceListStore;
 
     constructor(props: Props<T>) {
         super(props);
 
+        this.createResourceListStore();
+    }
+
+    componentDidUpdate(prevProps: Props<T>) {
+        const {
+            resourceKey,
+            apiOptions,
+        } = this.props;
+
+        if (!equals(prevProps.apiOptions, apiOptions) || prevProps.resourceKey !== resourceKey) {
+            this.createResourceListStore();
+        }
+    }
+
+    @action createResourceListStore = () => {
         const {
             resourceKey,
             apiOptions,
         } = this.props;
 
         this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
-    }
+    };
 
     // TODO: Remove explicit type annotation when flow bug is fixed
     // https://github.com/facebook/flow/issues/6978

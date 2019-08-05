@@ -135,6 +135,87 @@ test('Render with data and apiOptions', () => {
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
+test('Render with data and apiOptions when apiOptions props changed', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+        ];
+    });
+
+    const apiOptions1 = {};
+    const apiOptions2 = {'testOption': 'testValue'};
+
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
+            apiOptions={apiOptions1}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    resourceMultiSelect.setProps({
+        apiOptions: apiOptions2,
+        displayProperty: 'name',
+        onChange: jest.fn(),
+        resourceKey: 'test',
+        values: undefined,
+    });
+
+    // $FlowFixMe
+    expect(ResourceListStore.mock.calls).toEqual([
+        ['test', apiOptions1],
+        ['test', apiOptions2],
+    ]);
+});
+
+test('Render with data and apiOptions when resourceKey props changed', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+        ];
+    });
+
+    const apiOptions = {};
+
+    const resourceMultiSelect = mount(
+        <ResourceMultiSelect
+            apiOptions={apiOptions}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test1"
+            values={undefined}
+        />
+    );
+
+    resourceMultiSelect.setProps({
+        apiOptions: apiOptions,
+        displayProperty: 'name',
+        onChange: jest.fn(),
+        resourceKey: 'test2',
+        values: undefined,
+    });
+
+    // $FlowFixMe
+    expect(ResourceListStore.mock.calls).toEqual([
+        ['test1', apiOptions],
+        ['test2', apiOptions],
+    ]);
+});
+
 test('Render with values', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
