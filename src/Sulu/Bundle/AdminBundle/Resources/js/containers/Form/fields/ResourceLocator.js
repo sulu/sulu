@@ -8,6 +8,8 @@ import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
 
+const HOMEPAGE_RESOURCE_LOCATOR = '/';
+
 export default class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     constructor(props: FieldTypeProps<?string>) {
         super(props);
@@ -22,6 +24,10 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
 
         if (typeof generationUrl !== 'string') {
             throw new Error('The "generationUrl" fieldTypeOption must be a string!');
+        }
+
+        if (value === HOMEPAGE_RESOURCE_LOCATOR) {
+            return;
         }
 
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
@@ -95,6 +101,10 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
 
         if (mode !== 'leaf' && mode !== 'full') {
             throw new Error('The "mode" schema option must be either "leaf" or "full"!');
+        }
+
+        if (value === HOMEPAGE_RESOURCE_LOCATOR) {
+            return '/';
         }
 
         return (
