@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\PropertiesMetadata;
 
 /**
- * @deprecated use Metadata\FormMetadata\FormMetadata instead.
+ * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata instead.
  *
  * Represents metadata for a form structure.
  */

@@ -23,6 +23,9 @@ use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
 
+/**
+ * Maps the deprecated form metadata objects to the actual ones.
+ */
 class FormMetadataMapper
 {
     /**
@@ -47,6 +50,16 @@ class FormMetadataMapper
 
             $form->addItem($item);
         }
+    }
+
+    /**
+     * @param array $itemsMetadata
+     *
+     * @return SchemaMetadata
+     */
+    public function mapSchema(array $itemsMetadata): SchemaMetadata
+    {
+        return new SchemaMetadata($this->mapSchemaProperties($itemsMetadata));
     }
 
     private function mapSection(ContentSectionMetadata $property, string $locale): SectionMetadata
@@ -178,21 +191,6 @@ class FormMetadataMapper
         }
     }
 
-    /**
-     * @param array $itemsMetadata
-     *
-     * @return SchemaMetadata
-     */
-    public function mapSchema(array $itemsMetadata): SchemaMetadata
-    {
-        return new SchemaMetadata($this->mapSchemaProperties($itemsMetadata));
-    }
-
-    /**
-     * @param array $itemsMetadata
-     *
-     * @return array
-     */
     private function mapSchemaProperties(array $itemsMetadata)
     {
         return array_filter(array_map(function(ContentItemMetadata $itemMetadata) {

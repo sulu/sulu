@@ -12,13 +12,14 @@
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
-class StructureLoader
+class StructureLoader implements FormMetadataLoaderInterface
 {
     /**
      * @var StructureMetadataFactory
@@ -68,7 +69,30 @@ class StructureLoader
         $this->debug = $debug;
     }
 
-    public function load()
+    /**
+     * @param string $key
+     * @param string $locale
+     *
+     * @return TypedFormMetadata
+     */
+    public function getMetadata(string $key, string $locale): TypedFormMetadata
+    {
+        $configCache = $this->getConfigCache($key, $locale);
+
+        if (!$configCache->isFresh()) {
+            $this->warmUp($this->cacheDir);
+        }
+
+        if (!file_exists($configCache->getPath())) {
+            return null;
+        }
+
+        $form = unserialize(file_get_contents($configCache->getPath()));
+
+        return $form;
+    }
+
+    public function warmUp($cacheDir)
     {
         $structuresMetadataByTypes = [];
         foreach ($this->structureMetadataFactory->getStructureTypes() as $structureType) {
@@ -118,6 +142,11 @@ class StructureLoader
         }
 
         return $typedForm;
+    }
+
+    public function isOptional()
+    {
+        return false;
     }
 
     private function getConfigCache(string $key, string $locale): ConfigCache

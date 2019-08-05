@@ -37,6 +37,14 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
      */
     private $debug;
 
+    /**
+     * FormMetadataXmlLoader constructor.
+     *
+     * @param FormXmlLoader $formXmlLoader
+     * @param array $formDirectories
+     * @param string $cacheDir
+     * @param bool $debug
+     */
     public function __construct(
         FormXmlLoader $formXmlLoader,
         array $formDirectories,
@@ -49,12 +57,18 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale)
+    /**
+     * @param string $key
+     * @param string $locale
+     *
+     * @return FormMetadata
+     */
+    public function getMetadata(string $key, string $locale): FormMetadata
     {
         $configCache = $this->getConfigCache($key, $locale);
 
         if (!$configCache->isFresh()) {
-            $this->warmUp();
+            $this->warmUp($this->cacheDir);
         }
 
         if (!file_exists($configCache->getPath())) {
@@ -66,17 +80,32 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
         return $form;
     }
 
-    public function warmUp()
+    public function warmUp($cacheDir)
     {
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
+        $formsMetadataCollection = [];
         foreach ($formFinder as $formFile) {
-            $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
-
-            foreach ($formMetadata as $locale => $localizedFormMetadata) {
-                $configCache = $this->getConfigCache($localizedFormMetadata->getKey(), $locale);
-                $configCache->write(serialize($localizedFormMetadata));
+            $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
+            $items = $formMetadataCollection->getItems();
+            $formKey = reset($items)->getKey();
+            if (!array_key_exists($formKey, $formsMetadataCollection)) {
+                $formsMetadataCollection[$formKey] = $formMetadataCollection;
+            } else {
+                $formsMetadataCollection[$formKey] = $formsMetadataCollection[$formKey]->merge($formMetadataCollection);
             }
         }
+
+        foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
+            foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
+                $configCache = $this->getConfigCache($key, $locale);
+                $configCache->write(serialize($formMetadata));
+            }
+        }
+    }
+
+    public function isOptional()
+    {
+        return false;
     }
 
     private function getConfigCache(string $key, string $locale): ConfigCache

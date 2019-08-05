@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Component\Content\Metadata\Loader\AbstractLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
@@ -71,11 +72,19 @@ class FormXmlLoader extends AbstractLoader
         );
     }
 
-    protected function parse($resource, \DOMXPath $xpath, $type): array
+    /**
+     * @param $resource
+     * @param \DOMXPath $xpath
+     * @param $type
+     *
+     * @return LocalizedFormMetadataCollection
+     *
+     * @throws \Exception
+     */
+    protected function parse($resource, \DOMXPath $xpath, $type): LocalizedFormMetadataCollection
     {
         // init running vars
         $tags = [];
-        $newForm = null;
 
         $form = new ExternalFormMetadata();
         $formKey = $xpath->query('/x:form/x:key')->item(0)->nodeValue;
@@ -99,12 +108,12 @@ class FormXmlLoader extends AbstractLoader
         }
         $form->burnProperties();
 
-        $forms = [];
+        $formMetadataCollection = new LocalizedFormMetadataCollection();
         foreach ($this->locales as $locale) {
-            $forms[$locale] = $this->mapFormsMetadata($form, $locale);
+            $formMetadataCollection->add($locale, $this->mapFormsMetadata($form, $locale));
         }
 
-        return $forms;
+        return $formMetadataCollection;
     }
 
     /**

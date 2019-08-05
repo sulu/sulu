@@ -42,13 +42,9 @@
             id="sulu_admin.form_metadata_provider"
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider"
         >
-            <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
-            <argument type="service" id="sulu_admin.form_metadata.structure_loader"/>
             <argument type="service" id="sulu_core.expression_language" />
-            <argument>%sulu_admin.forms.directories%</argument>
             <argument type="tagged" tag="sulu_admin.form_metadata_loader"></argument>
             <tag name="sulu_admin.metadata_provider" type="form" />
-            <tag name="kernel.cache_warmer" />
         </service>
 
         <service
@@ -60,6 +56,7 @@
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
             <tag name="sulu_admin.form_metadata_loader"/>
+            <tag name="kernel.cache_warmer" />
         </service>
 
         <service
@@ -94,6 +91,8 @@
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
+            <tag name="sulu_admin.form_metadata_loader"/>
+            <tag name="kernel.cache_warmer" />
         </service>
 
         <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\RouteRegistry">

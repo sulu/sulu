@@ -15,6 +15,8 @@ namespace Sulu\Component\Content\Metadata;
  * Represents only a collection of properties.
  *
  * Used in blocks.
+ *
+ * @deprecated
  */
 class ComponentMetadata extends ItemMetadata
 {

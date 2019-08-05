@@ -12,53 +12,43 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
-use Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInterface
+class FormMetadataProvider implements MetadataProviderInterface
 {
-    /**
-     * @var FormXmlLoader
-     */
-    private $formXmlLoader;
-
-    /**
-     * @var StructureLoader
-     */
-    private $structureLoader;
-
     /**
      * @var ExpressionLanguage
      */
     private $expressionLanguage;
 
     /**
-     * @var string[]
-     */
-    private $formDirectories;
-
-    /**
      * @var FormMetadataLoaderInterface[]
      */
     private $formMetadataLoaders;
 
+    /**
+     * FormMetadataProvider constructor.
+     *
+     * @param ExpressionLanguage $expressionLanguage
+     * @param iterable $formMetadataLoaders
+     */
     public function __construct(
-        FormXmlLoader $formXmlLoader,
-        StructureLoader $structureLoader,
         ExpressionLanguage $expressionLanguage,
-        array $formDirectories,
         iterable $formMetadataLoaders
     ) {
-        $this->formXmlLoader = $formXmlLoader;
-        $this->structureLoader = $structureLoader;
         $this->expressionLanguage = $expressionLanguage;
-        $this->formDirectories = $formDirectories;
         $this->formMetadataLoaders = $formMetadataLoaders;
     }
 
+    /**
+     * @param string $key
+     * @param string $locale
+     *
+     * @return FormMetadata|TypedFormMetadata
+     *
+     * @throws MetadataNotFoundException
+     */
     public function getMetadata(string $key, string $locale)
     {
         $form = null;
@@ -105,21 +95,5 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 }
             }
         }
-    }
-
-    public function warmUp($cacheDir)
-    {
-        /*
-        foreach ($this->formMetadataLoaders as $metadataLoader) {
-            $metadataLoader->load();
-        }
-        */
-        // TODO handle caching of structure loader
-        $this->structureLoader->load();
-    }
-
-    public function isOptional()
-    {
-        return false;
     }
 }

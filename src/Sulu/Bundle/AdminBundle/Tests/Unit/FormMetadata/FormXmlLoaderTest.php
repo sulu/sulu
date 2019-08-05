@@ -12,8 +12,10 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -45,38 +47,46 @@ class FormXmlLoaderTest extends TestCase
             ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
         );
         $schemaXmlParser = new SchemaXmlParser();
-        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser);
+        $locales = ['de', 'en'];
+        $formMetadataMapper = new FormMetadataMapper('../../Application/var/cache', true);
+        $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $locales, $formMetadataMapper);
     }
 
     public function testLoadForm()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form.xml');
 
-        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+        $this->assertInstanceOf(LocalizedFormMetadataCollection::class, $formMetadataCollection);
+
+        $this->assertCount(2, $formMetadataCollection->getItems());
+
+        /** @var FormMetadata $formMetadata */
+        $formMetadata = $formMetadataCollection->get('en');
 
         $this->assertEquals('form', $formMetadata->getKey());
-        $this->assertCount(4, $formMetadata->getProperties());
+        $this->assertCount(4, $formMetadata->getItems());
 
-        $this->assertEquals('formOfAddress', $formMetadata->getProperties()['formOfAddress']->getName());
+        $this->assertEquals('formOfAddress', $formMetadata->getItems()['formOfAddress']->getName());
         $this->assertEquals(
             'default_value',
-            $formMetadata->getProperties()['formOfAddress']->getParameter(0)['name']
+            $formMetadata->getItems()['formOfAddress']->getOptions()['default_value']->getName()
         );
-        $this->assertSame(0, $formMetadata->getProperties()['formOfAddress']->getParameter(0)['value']);
+        $this->assertSame(0, $formMetadata->getItems()['formOfAddress']->getOptions()['default_value']->getValue());
         $this->assertSame(
             0,
-            ($formMetadata->getProperties()['formOfAddress']->getParameter(1)['value'][0]['name'])
+            ($formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getName())
         );
         $this->assertSame(
             1,
-            ($formMetadata->getProperties()['formOfAddress']->getParameter(1)['value'][1]['name'])
+            ($formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getName())
         );
-        $this->assertEquals('firstName', $formMetadata->getProperties()['firstName']->getName());
-        $this->assertEquals('lastName', $formMetadata->getProperties()['lastName']->getName());
-        $this->assertEquals('salutation', $formMetadata->getProperties()['salutation']->getName());
+        $this->assertEquals('firstName', $formMetadata->getItems()['firstName']->getName());
+        $this->assertEquals('lastName', $formMetadata->getItems()['lastName']->getName());
+        $this->assertEquals('salutation', $formMetadata->getItems()['salutation']->getName());
 
-        $this->assertNull($formMetadata->getSchema());
+        //TODO checkSchema
+        //$this->assertNull($formMetadata->getSchema());
     }
 
     public function testLoadFormWithLocalization()
@@ -111,139 +121,142 @@ class FormXmlLoaderTest extends TestCase
         $this->translator->trans('salutation', [], 'admin', 'fr')->willReturn('fr_salutation');
         $this->translator->trans('salutation', [], 'admin', 'nl')->willReturn('nl_salutation');
 
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_localizations.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_localizations.xml');
 
-        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
-        $this->assertCount(4, $formMetadata->getProperties());
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadataEn = $formMetadataCollection->get('en');
 
-        $this->assertEquals('en_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('en'));
-        $this->assertEquals('de_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('de'));
-        $this->assertEquals('fr_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('fr'));
-        $this->assertEquals('nl_form_of_address', $formMetadata->getProperties()['formOfAddress']->getTitle('nl'));
-        $this->assertEquals('en_first_name', $formMetadata->getProperties()['firstName']->getTitle('en'));
-        $this->assertEquals('de_first_name', $formMetadata->getProperties()['firstName']->getTitle('de'));
-        $this->assertEquals('fr_first_name', $formMetadata->getProperties()['firstName']->getTitle('fr'));
-        $this->assertEquals('nl_first_name', $formMetadata->getProperties()['firstName']->getTitle('nl'));
-        $this->assertEquals('en_last_name', $formMetadata->getProperties()['lastName']->getTitle('en'));
-        $this->assertEquals('Deutscher Nachname', $formMetadata->getProperties()['lastName']->getTitle('de'));
-        $this->assertEquals('fr_last_name', $formMetadata->getProperties()['lastName']->getTitle('fr'));
-        $this->assertEquals('nl_last_name', $formMetadata->getProperties()['lastName']->getTitle('nl'));
-        $this->assertEquals('en_salutation', $formMetadata->getProperties()['salutation']->getTitle('en'));
-        $this->assertEquals('de_salutation', $formMetadata->getProperties()['salutation']->getTitle('de'));
-        $this->assertEquals('fr_salutation', $formMetadata->getProperties()['salutation']->getTitle('fr'));
-        $this->assertEquals('nl_salutation', $formMetadata->getProperties()['salutation']->getTitle('nl'));
+        $this->assertInstanceOf(FormMetadata::class, $formMetadataEn);
+        $this->assertCount(4, $formMetadataEn->getItems());
+        $this->assertEquals('en_form_of_address', $formMetadataEn->getItems()['formOfAddress']->getLabel());
+        $this->assertEquals('en_first_name', $formMetadataEn->getItems()['firstName']->getLabel());
+        $this->assertEquals('en_last_name', $formMetadataEn->getItems()['lastName']->getLabel());
+        $this->assertEquals('en_salutation', $formMetadataEn->getItems()['salutation']->getLabel());
+        $this->assertEquals('en_mr', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
+            ->getValue()[0]->getTitle());
+        $this->assertEquals('en_ms', $formMetadataEn->getItems()['formOfAddress']->getOptions()['values']
+            ->getValue()[1]->getTitle());
 
-        $this->assertEquals(
-            [
-                'en' => 'en_mr',
-                'de' => 'de_mr',
-                'fr' => 'fr_mr',
-                'nl' => 'nl_mr',
-            ],
-            $formMetadata->getProperties()['formOfAddress']->getParameters()[1]['value'][0]['meta']['title']
-        );
-        $this->assertEquals(
-            [
-                'en' => 'en_ms',
-                'de' => 'de_ms',
-                'fr' => 'fr_ms',
-                'nl' => 'nl_ms',
-            ],
-            $formMetadata->getProperties()['formOfAddress']->getParameters()[1]['value'][1]['meta']['title']
-        );
+        /** @var FormMetadata $formMetadataDe */
+        $formMetadataDe = $formMetadataCollection->get('de');
+        $this->assertCount(4, $formMetadataDe->getItems());
+        $this->assertEquals('de_form_of_address', $formMetadataDe->getItems()['formOfAddress']->getLabel());
+        $this->assertEquals('de_first_name', $formMetadataDe->getItems()['firstName']->getLabel());
+        $this->assertEquals('Deutscher Nachname', $formMetadataDe->getItems()['lastName']->getLabel());
+        $this->assertEquals('de_salutation', $formMetadataDe->getItems()['salutation']->getLabel());
+        $this->assertEquals('de_mr', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle());
+        $this->assertEquals('de_ms', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle());
 
-        $this->assertNull($formMetadata->getSchema());
+        //TODO checkSchema
+        //$this->assertNull($formMetadata->getSchema());
     }
 
     public function testLoadFormWithEvaluations()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_evaluations.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_evaluations.xml');
+
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadata = $formMetadataCollection->get('en');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
-        $this->assertCount(5, $formMetadata->getProperties());
+        $this->assertCount(5, $formMetadata->getItems());
 
         $this->assertEquals(
             'lastName == \'section_property\'',
-            $formMetadata->getProperties()['formOfAddress']->getDisabledCondition()
+            $formMetadata->getItems()['highlight']->getItems()['formOfAddress']->getDisabledCondition()
         );
         $this->assertEquals(
             'firstName == \'section_property\'',
-            $formMetadata->getProperties()['formOfAddress']->getVisibleCondition()
+            $formMetadata->getItems()['highlight']->getItems()['formOfAddress']->getVisibleCondition()
         );
 
         $this->assertEquals(
             'lastName == \'block\'',
-            $formMetadata->getProperties()['block']->getDisabledCondition()
+            $formMetadata->getItems()['block']->getDisabledCondition()
         );
         $this->assertEquals(
             'firstName == \'block\'',
-            $formMetadata->getProperties()['block']->getVisibleCondition()
+            $formMetadata->getItems()['block']->getVisibleCondition()
         );
 
         $this->assertEquals(
             'lastName == \'block_property\'',
-            $formMetadata->getProperties()['block']->getComponents()[0]->getChild('name')->getDisabledCondition()
+            $formMetadata->getItems()['block']->getTypes()['test']->getItems()['name']->getDisabledCondition()
         );
         $this->assertEquals(
             'firstName == \'block_property\'',
-            $formMetadata->getProperties()['block']->getComponents()[0]->getChild('name')->getVisibleCondition()
+            $formMetadata->getItems()['block']->getTypes()['test']->getItems()['name']->getVisibleCondition()
         );
 
         $this->assertEquals(
             'lastName == \'property\'',
-            $formMetadata->getProperties()['salutation']->getDisabledCondition()
+            $formMetadata->getItems()['salutation']->getDisabledCondition()
         );
         $this->assertEquals(
             'firstName == \'property\'',
-            $formMetadata->getProperties()['salutation']->getVisibleCondition()
+            $formMetadata->getItems()['salutation']->getVisibleCondition()
         );
     }
 
     public function testLoadFormWithSchema()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_schema.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_schema.xml');
+
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadata = $formMetadataCollection->get('en');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
-        $this->assertCount(4, $formMetadata->getProperties());
+        $this->assertCount(3, $formMetadata->getItems());
 
-        $this->assertEquals('first', $formMetadata->getProperties()['first']->getName());
-        $this->assertEquals('second', $formMetadata->getProperties()['second']->getName());
+        $this->assertEquals('first', $formMetadata->getItems()['first']->getName());
+        $this->assertEquals('second', $formMetadata->getItems()['second']->getName());
 
         $this->assertEquals(
             [
                 'required' => [],
-                'anyOf' => [
-                    [
-                        'required' => [],
-                        'properties' => [
-                            'first' => [
-                                'name' => 'first',
-                                'const' => 1,
-                            ],
-                        ],
-                    ],
-                    [
-                        'required' => [],
-                        'properties' => [
-                            'second' => [
-                                'name' => 'second',
-                                'const' => 2,
-                            ],
-                        ],
-                    ],
-                ],
                 'allOf' => [
                     [
+                        'required' => [
+                            'first',
+                            'third',
+                        ],
+                    ],
+                    [
                         'required' => [],
-                        'properties' => [
-                            'first' => [
-                                'name' => 'first',
-                                'const' => 1,
+                        'anyOf' => [
+                            [
+                                'required' => [],
+                                'properties' => [
+                                    'first' => [
+                                        'name' => 'first',
+                                        'const' => 1,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'required' => [],
+                                'properties' => [
+                                    'second' => [
+                                        'name' => 'second',
+                                        'const' => 2,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'allOf' => [
+                            [
+                                'required' => [],
+                                'properties' => [
+                                    'first' => [
+                                        'name' => 'first',
+                                        'const' => 1,
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -255,44 +268,52 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormWithoutLabel()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_without_label.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_without_label.xml');
+
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadata = $formMetadataCollection->get('en');
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
     }
 
     public function testLoadFormWithExpressionParam()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_expression_param.xml');
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_expression_param.xml');
+
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadata = $formMetadataCollection->get('en');
 
         $this->assertEquals(
             'service(\'test\').getId()',
-            $formMetadata->getProperties()['name']->getParameters()[0]['value']
+            $formMetadata->getItems()['name']->getOptions()['id']->getValue()
         );
 
         $this->assertEquals(
             'expression',
-            $formMetadata->getProperties()['name']->getParameters()[0]['type']
+            $formMetadata->getItems()['name']->getOptions()['id']->getType()
         );
     }
 
     public function testLoadFormWithSizedSections()
     {
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->loader->load(
-            $this->getFormDirectory() . 'form_with_sections.xml'
-        );
+        /** @var LocalizedFormMetadataCollection $formMetadataCollection */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_sections.xml');
+
+        /** @var FormMetadata $formMetadataEn */
+        $formMetadata = $formMetadataCollection->get('en');
+        /* @var FormMetadata $formMetadata */
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
-        $this->assertCount(2, $formMetadata->getChildren());
-        $this->assertEquals('logo', $formMetadata->getChildren()['logo']->getName());
-        $this->assertEquals(4, $formMetadata->getChildren()['logo']->getColSpan());
-        $this->assertCount(1, $formMetadata->getChildren()['logo']->getChildren());
-        $this->assertEquals('name', $formMetadata->getChildren()['name']->getName());
-        $this->assertEquals(8, $formMetadata->getChildren()['name']->getColSpan());
-        $this->assertCount(1, $formMetadata->getChildren()['name']->getChildren());
+        $this->assertCount(2, $formMetadata->getItems());
+        $this->assertEquals('logo', $formMetadata->getItems()['logo']->getName());
+        $this->assertEquals(4, $formMetadata->getItems()['logo']->getColSpan());
+        $this->assertCount(1, $formMetadata->getItems()['logo']->getItems());
+        $this->assertEquals('name', $formMetadata->getItems()['name']->getName());
+        $this->assertEquals(8, $formMetadata->getItems()['name']->getColSpan());
+        $this->assertCount(1, $formMetadata->getItems()['name']->getItems());
     }
 
     public function testLoadFormInvalid()
