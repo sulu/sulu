@@ -212,6 +212,7 @@ class PageAdmin extends Admin
                 ->setResourceKey('permissions')
                 ->setFormKey('permission_details')
                 ->setApiOptions(['resourceKey' => 'pages'])
+                ->setTabCondition('_permissions.security')
                 ->setTabTitle('sulu_security.permissions')
                 ->addToolbarActions(['sulu_admin.save'])
                 ->addRouterAttributesToFormStore(['webspace'])
