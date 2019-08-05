@@ -217,6 +217,11 @@ export default withToolbar(MediaOverview, function() {
         route: {
             options: {
                 locales,
+                permissions: {
+                    add: addPermission,
+                    delete: deletePermission,
+                    edit: editPermission,
+                },
             },
         },
     } = this.props.router;
@@ -233,6 +238,43 @@ export default withToolbar(MediaOverview, function() {
             })),
         }
         : undefined;
+
+    const items = [];
+
+    if (addPermission) {
+        items.push({
+            disabled: !this.collectionId.get(),
+            icon: 'su-upload',
+            label: translate('sulu_media.upload'),
+            onClick: action(() => {
+                this.showMediaUploadOverlay = true;
+            }),
+            type: 'button',
+        });
+    }
+
+    if (deletePermission) {
+        items.push({
+            disabled: this.mediaListStore.selectionIds.length === 0,
+            icon: 'su-trash-alt',
+            label: translate('sulu_admin.delete'),
+            loading: this.mediaListStore.deletingSelection,
+            onClick: this.mediaList.requestSelectionDelete,
+            type: 'button',
+        });
+    }
+
+    if (editPermission) {
+        items.push({
+            disabled: this.mediaListStore.selectionIds.length === 0,
+            icon: 'su-arrows-alt',
+            label: translate('sulu_admin.move_selected'),
+            onClick: action(() => {
+                this.showMediaMoveOverlay = true;
+            }),
+            type: 'button',
+        });
+    }
 
     return {
         locale,
@@ -252,33 +294,6 @@ export default withToolbar(MediaOverview, function() {
                 },
             }
             : undefined,
-        items: [
-            {
-                disabled: !this.collectionId.get(),
-                icon: 'su-upload',
-                label: translate('sulu_media.upload'),
-                onClick: action(() => {
-                    this.showMediaUploadOverlay = true;
-                }),
-                type: 'button',
-            },
-            {
-                disabled: this.mediaListStore.selectionIds.length === 0,
-                icon: 'su-trash-alt',
-                label: translate('sulu_admin.delete'),
-                loading: this.mediaListStore.deletingSelection,
-                onClick: this.mediaList.requestSelectionDelete,
-                type: 'button',
-            },
-            {
-                disabled: this.mediaListStore.selectionIds.length === 0,
-                icon: 'su-arrows-alt',
-                label: translate('sulu_admin.move_selected'),
-                onClick: action(() => {
-                    this.showMediaMoveOverlay = true;
-                }),
-                type: 'button',
-            },
-        ],
+        items,
     };
 });
