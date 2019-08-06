@@ -1,0 +1,70 @@
+{
+    "forbidden": [
+        {
+            "name": "components-not-to-containers",
+            "severity": "error",
+            "from": {"path": "Resources/js/components"},
+            "to": {"path": "containers"}
+        },
+        {
+            "name": "components-not-to-services",
+            "severity": "error",
+            "from": {"path": "Resources/js/components"},
+            "to": {"path": "services"}
+        },
+        {
+            "name": "components-not-to-stores",
+            "severity": "error",
+            "from": {"path": "Resources/js/components"},
+            "to": {"path": "stores"}
+        },
+        {
+            "name": "components-not-to-views",
+            "severity": "error",
+            "from": {"path": "Resources/js/components"},
+            "to": {"path": "views"}
+        },
+        {
+            "name": "containers-not-to-views",
+            "severity": "error",
+            "from": {"path": "Resources/js/containers"},
+            "to": {"path": "views"}
+        },
+        {
+            "name": "services-not-to-components",
+            "severity": "error",
+            "from": {"path": "Resources/js/services"},
+            "to": {"path": "components"}
+        },
+        {
+            "name": "services-not-to-containers",
+            "severity": "error",
+            "from": {"path": "Resources/js/services"},
+            "to": {"path": "containers"}
+        },
+        {
+            "name": "services-not-to-views",
+            "severity": "error",
+            "from": {"path": "Resources/js/services"},
+            "to": {"path": "views"}
+        },
+        {
+            "name": "stores-not-to-components",
+            "severity": "error",
+            "from": {"path": "Resources/js/stores"},
+            "to": {"path": "components"}
+        },
+        {
+            "name": "stores-not-to-containers",
+            "severity": "error",
+            "from": {"path": "Resources/js/stores"},
+            "to": {"path": "containers"}
+        },
+        {
+            "name": "stores-not-to-views",
+            "severity": "error",
+            "from": {"path": "Resources/js/stores"},
+            "to": {"path": "views"}
+        }
+    ]
+}
