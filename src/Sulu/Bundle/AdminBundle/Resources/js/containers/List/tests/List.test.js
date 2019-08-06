@@ -157,6 +157,16 @@ test('Render Loader instead of Adapter if nothing was loaded yet', () => {
     expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
+test('Render permission hint if permissions are missing', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.loading = true;
+    listStore.pageCount = 0;
+    listStore.forbidden = true;
+
+    expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
+});
+
 test('Do not render Loader instead of Adapter if no page count is given', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     // $FlowFixMe

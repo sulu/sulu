@@ -795,6 +795,28 @@ test('Set loading flag to false after request', (done) => {
     });
 });
 
+test('Set forbidden flag to true if the response returned a 403', (done) => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    listStore.schema = {};
+    const promise = Promise.reject({
+        status: 403,
+    });
+
+    const loadingStrategy = new LoadingStrategy();
+    loadingStrategy.load.mockReturnValue(promise);
+    const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.sendRequest();
+    expect(listStore.forbidden).toEqual(false);
+
+    setTimeout(() => {
+        expect(listStore.forbidden).toEqual(true);
+        done();
+    });
+});
+
 test('Set active to undefined if the response returned a 404', (done) => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     listStore.schema = {};

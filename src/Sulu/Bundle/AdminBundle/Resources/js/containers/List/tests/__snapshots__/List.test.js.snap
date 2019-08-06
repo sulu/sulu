@@ -88,6 +88,21 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
 </div>
 `;
 
+exports[`Render permission hint if permissions are missing 1`] = `
+<div
+  class="permissionHint"
+>
+  <div
+    class="permissionIcon"
+  >
+    <span
+      aria-label="su-lock"
+      class="su-lock"
+    />
+  </div>
+</div>
+`;
+
 exports[`Render the adapter in disabled state 1`] = `
 <div
   class="listContainer"

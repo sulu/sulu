@@ -133,5 +133,6 @@
     "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?",
     "sulu_admin.has_changed_warning_dialog_title": "Inhalte werden überschrieben!",
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
-    "sulu_admin.edit_profile": "Profil bearbeiten"
+    "sulu_admin.edit_profile": "Profil bearbeiten",
+    "sulu_admin.no_permissions": "Keine Berechtigung"
 }

@@ -37,6 +37,7 @@ export default class ListStore {
     @observable structureStrategy: StructureStrategyInterface;
     @observable options: Object;
     @observable schema: Schema;
+    @observable forbidden: boolean;
     active: IObservableValue<?string | number> = observable.box();
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
@@ -445,6 +446,7 @@ export default class ListStore {
         }
 
         this.setDataLoading(true);
+        this.setForbidden(false);
 
         const active = this.active.get();
         const options = {...observableOptions, ...this.options};
@@ -500,12 +502,23 @@ export default class ListStore {
                 // need to set the user setting to null manually, because the autorun runs too late
                 ListStore.setActiveSetting(this.listKey, this.userSettingsKey, undefined);
                 this.setActive(undefined);
+                return;
             }
+
+            if (response.status === 403) {
+                this.setForbidden(true);
+            }
+
+            this.setDataLoading(false);
         });
     };
 
     @action setDataLoading(dataLoading: boolean) {
         this.dataLoading = dataLoading;
+    }
+
+    @action setForbidden(forbidden: boolean) {
+        this.forbidden = forbidden;
     }
 
     @action setShouldReload(shouldReload: boolean) {
