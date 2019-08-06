@@ -33,6 +33,8 @@ export default function withToolbar<P, C: Class<Component<P>>>(
             }
 
             this.toolbarDisposer();
+
+            toolbarStorePool.setToolbarConfig(toolbarStoreKey, {});
         }
     };
 

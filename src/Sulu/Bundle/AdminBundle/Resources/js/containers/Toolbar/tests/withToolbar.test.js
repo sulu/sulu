@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, render} from 'enzyme';
@@ -10,21 +10,22 @@ jest.mock('../stores/ToolbarStorePool', () => ({
 }));
 
 test('Pass props to rendered component', () => {
-    const Component = class Component extends React.Component {
+    const Component = class Component extends React.Component<*> {
         render() {
             return <h1>{this.props.title}</h1>;
         }
     };
 
-    const ComponentWithToolbar = withToolbar(Component, () => {});
+    const ComponentWithToolbar = withToolbar(Component, () => ({}));
 
     expect(render(<ComponentWithToolbar title="Test" />)).toMatchSnapshot();
 });
 
 test('Bind toolbar method to component instance', () => {
     const storeKey = 'testKey';
+    const clickSpy = jest.fn();
 
-    const Component = class Component extends React.Component {
+    const Component = class Component extends React.Component<*> {
         test = true;
 
         render() {
@@ -36,9 +37,11 @@ test('Bind toolbar method to component instance', () => {
         return {
             items: [
                 {
-                    label: 'Save',
-                    icon: 'su-save',
                     disabled: this.test,
+                    icon: 'su-save',
+                    label: 'Save',
+                    onClick: clickSpy,
+                    type: 'button',
                 },
             ],
         };
@@ -51,18 +54,20 @@ test('Bind toolbar method to component instance', () => {
                 label: 'Save',
                 icon: 'su-save',
                 disabled: true,
+                onClick: clickSpy,
+                type: 'button',
             },
         ],
     });
 });
 
 test('Call life-cycle events of rendered component', () => {
-    const Component = class Component extends React.Component {
+    const Component = class Component extends React.Component<*> {
         componentWillUnmount = jest.fn();
         render = jest.fn();
     };
 
-    const ComponentWithToolbar = withToolbar(Component, () => {});
+    const ComponentWithToolbar = withToolbar(Component, () => ({}));
 
     const component = mount(<ComponentWithToolbar />);
     expect(component.instance().render).toBeCalled();
@@ -72,8 +77,25 @@ test('Call life-cycle events of rendered component', () => {
     expect(componentWillUnmount).toBeCalled();
 });
 
+test('Reset config of toolbarStore when component is unmounted', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const config = {
+        items: [],
+    };
+    const ComponentWithToolbar = withToolbar(Component, () => config, 'default');
+
+    const component = mount(<ComponentWithToolbar />);
+    expect(toolbarStorePool.setToolbarConfig).toBeCalledWith('default', config);
+
+    component.unmount();
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {});
+});
+
 test('Recall toolbar-function when changing observable', () => {
-    const Component = class Component extends React.Component {
+    const Component = class Component extends React.Component<*> {
         @observable test = true;
 
         render() {
@@ -102,7 +124,7 @@ test('Throw error when component has property toolbarDisposer', () => {
     // until better solution is availble
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    const Component = class Component extends React.Component {
+    const Component = class Component extends React.Component<*> {
         toolbarDisposer = true;
 
         componentDidCatch() {}
