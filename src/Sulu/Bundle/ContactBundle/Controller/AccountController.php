@@ -244,6 +244,7 @@ class AccountController extends RestController implements ClassResourceInterface
 
             // Set position on contact.
             $positionId = $request->get('position');
+            $position = null;
 
             if ($positionId) {
                 $position = $this->getDoctrine()
@@ -268,7 +269,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 'isMainContact' => $isMainContact,
             ];
 
-            if ($positionId) {
+            if ($position) {
                 $contactArray['position'] = $position->getPosition();
             }
 

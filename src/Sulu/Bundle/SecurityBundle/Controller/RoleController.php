@@ -194,14 +194,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
     {
         /** @var RoleInterface $role */
         $role = $this->getRoleRepository()->findRoleById($id);
+        $name = $request->get('name');
 
         try {
             if (!$role) {
                 throw new EntityNotFoundException($this->getRoleRepository()->getClassName(), $id);
             } else {
                 $em = $this->getDoctrine()->getManager();
-
-                $name = $request->get('name');
 
                 $role->setName($name);
                 $role->setSystem($request->get('system'));

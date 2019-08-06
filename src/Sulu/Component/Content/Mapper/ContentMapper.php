@@ -485,6 +485,8 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $document = $this->documentManager->find($uuid, $srcLocale);
+
+        $resourceLocatorStrategy = null;
         if ($document instanceof ResourceSegmentBehavior) {
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
         }
@@ -582,11 +584,11 @@ class ContentMapper implements ContentMapperInterface
         } else {
             if ($currentPosition < $position) {
                 $targetSibling = $siblings[$position];
+                $this->documentManager->reorder($document, $targetSibling->getUuid());
             } elseif ($currentPosition > $position) {
                 $targetSibling = $siblings[$position - 1];
+                $this->documentManager->reorder($document, $targetSibling->getUuid());
             }
-
-            $this->documentManager->reorder($document, $targetSibling->getUuid());
         }
 
         $this->documentManager->flush();

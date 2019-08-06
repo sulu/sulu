@@ -86,7 +86,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $media = $this->mediaManager->getEntityById($mediaId);
         $fileVersion = $this->getFileVersionForMedia($media);
 
-        /** @var FormatOptions $formatOptions */
+        /** @var ?FormatOptions $formatOptions */
         $formatOptions = $this->formatOptionsRepository->find(
             [
                 'fileVersion' => $fileVersion,
@@ -185,7 +185,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
      */
     private function getFileVersionForMedia(MediaInterface $media)
     {
-        /** @var File $file */
+        /** @var ?File $file */
         $file = $media->getFiles()->get(0);
         if (!isset($file)) {
             throw new FileVersionNotFoundException($media->getId(), 'latest');

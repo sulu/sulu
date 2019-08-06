@@ -75,11 +75,12 @@ class Focus implements FocusInterface
                 case static::FOCUS_LEFT:
                     $cropX = 0;
                     break;
-                case static::FOCUS_CENTER:
-                    $cropX = ($imageSize->getWidth() - $width) / 2;
-                    break;
                 case static::FOCUS_RIGHT:
                     $cropX = $imageSize->getWidth() - $width;
+                    break;
+                case static::FOCUS_CENTER:
+                default:
+                    $cropX = ($imageSize->getWidth() - $width) / 2;
                     break;
             }
         } else {
@@ -92,11 +93,12 @@ class Focus implements FocusInterface
                 case static::FOCUS_TOP:
                     $cropY = 0;
                     break;
-                case static::FOCUS_MIDDLE:
-                    $cropY = ($imageSize->getHeight() - $height) / 2;
-                    break;
                 case static::FOCUS_BOTTOM:
                     $cropY = $imageSize->getHeight() - $height;
+                    break;
+                case static::FOCUS_MIDDLE:
+                default:
+                    $cropY = ($imageSize->getHeight() - $height) / 2;
                     break;
             }
         }

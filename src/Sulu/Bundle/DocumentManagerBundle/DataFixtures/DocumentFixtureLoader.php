@@ -47,6 +47,8 @@ class DocumentFixtureLoader
         $finder->in($paths);
         $finder->name('*Fixture.php');
 
+        $fixtures = [];
+
         foreach ($finder as $file) {
             $declaredClasses = get_declared_classes();
             require_once $file;

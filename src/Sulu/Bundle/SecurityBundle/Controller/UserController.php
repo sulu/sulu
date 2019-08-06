@@ -307,6 +307,7 @@ class UserController extends RestController implements ClassResourceInterface, S
                 $listBuilder->getLimit(),
                 $listBuilder->count()
             );
+            $view = $this->view($list, 200);
         } else {
             $contactId = $request->get('contactId');
 
@@ -319,11 +320,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             } else {
                 $entities = $this->getUserManager()->findAll();
                 $list = new CollectionRepresentation($entities, static::$entityKey);
+                $view = $this->view($list, 200);
             }
-        }
-
-        if (!$view) {
-            $view = $this->view($list, 200);
         }
 
         $this->addSerializationGroups($view);

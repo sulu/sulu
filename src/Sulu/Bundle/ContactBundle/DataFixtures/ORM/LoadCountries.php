@@ -40,6 +40,9 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
         if (!is_null($elements)) {
             /** @var $element DOMNode */
             foreach ($elements as $element) {
+                $countryName = null;
+                $countryCode = null;
+
                 /** @var $child DOMNode */
                 foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {

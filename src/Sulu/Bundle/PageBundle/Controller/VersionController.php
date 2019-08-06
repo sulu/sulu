@@ -113,6 +113,8 @@ class VersionController extends FOSRestController implements
         $action = $this->getRequestParameter($request, 'action', true);
         $locale = $this->getLocale($request);
 
+        $data = null;
+
         switch ($action) {
             case 'restore':
                 $document = $this->getDocumentManager()->find($id, $locale);
