@@ -36,6 +36,20 @@ test('ResourceLocator should render when disabled', () => {
         .toMatchSnapshot();
 });
 
+test('ResourceLocator should update the split leaf representation when value changes', () => {
+    const resourceLocator = mount(
+        <ResourceLocator mode="leaf" onBlur={jest.fn()} onChange={jest.fn()} value="/child" />
+    );
+
+    expect(resourceLocator.find('.fixed').prop('children')).toEqual('/');
+    expect(resourceLocator.find('Input').prop('value')).toEqual('child');
+
+    resourceLocator.setProps({value: '/child/test'});
+    resourceLocator.update();
+    expect(resourceLocator.find('.fixed').prop('children')).toEqual('/child/');
+    expect(resourceLocator.find('Input').prop('value')).toEqual('test');
+});
+
 test('ResourceLocator should call the onChange callback when the input changes with type full', () => {
     const onChange = jest.fn();
     const value = '/parent';
