@@ -54,13 +54,39 @@ test('Pass props correctly to ResourceLocator', () => {
             }}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
+            value="/url"
+        />
+    );
+
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/url');
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
+    expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
+});
+
+test('Render just slash instead of ResourceLocatorComponent if used on the homepage', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const schemaOptions = {
+        mode: {
+            value: 'full',
+        },
+    };
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
             value="/"
         />
     );
 
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
-    expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
+    expect(resourceLocator.find(ResourceLocatorComponent)).toHaveLength(0);
+    expect(resourceLocator.text()).toEqual('/');
 });
 
 test('Do not render history link if new entity is created', () => {
@@ -170,6 +196,24 @@ test('Do not add an addFinishFieldHandler for URL generation if no generationUrl
                 historyResourceKey: 'page_resourcelocators',
             }}
             formInspector={formInspector}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).not.toBeCalled();
+});
+
+test('Do not add an addFinishFieldHandler for URL generation if used on the homepage', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+            }}
+            formInspector={formInspector}
+            value="/"
         />
     );
 
