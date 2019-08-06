@@ -85,7 +85,7 @@
             id="sulu_admin.form_metadata.form_metadata_mapper"
             class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper"/>
 
-        <service id="sulu_admin.form_metadata.structure_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader">
+        <service id="sulu_admin.form_metadata_structure_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader">
             <argument type="service" id="sulu_page.structure.factory"/>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>

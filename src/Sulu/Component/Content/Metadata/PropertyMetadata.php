@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Metadata;
 /**
  * Metadata for a property. Contains both UI and model metadata.
  *
- * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata instead.
+ * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata instead
  */
 class PropertyMetadata extends ItemMetadata
 {

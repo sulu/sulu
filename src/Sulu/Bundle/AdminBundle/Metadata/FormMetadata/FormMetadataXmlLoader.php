@@ -61,9 +61,9 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
      * @param string $key
      * @param string $locale
      *
-     * @return FormMetadata
+     * @return FormMetadata | null
      */
-    public function getMetadata(string $key, string $locale): FormMetadata
+    public function getMetadata(string $key, string $locale)
     {
         $configCache = $this->getConfigCache($key, $locale);
 

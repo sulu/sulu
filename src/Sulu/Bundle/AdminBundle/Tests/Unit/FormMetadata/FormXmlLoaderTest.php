@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -85,8 +86,10 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('lastName', $formMetadata->getItems()['lastName']->getName());
         $this->assertEquals('salutation', $formMetadata->getItems()['salutation']->getName());
 
-        //TODO checkSchema
-        //$this->assertNull($formMetadata->getSchema());
+        /** @var SchemaMetadata $schemaMetadata */
+        $schemaMetadata = $formMetadata->getSchema();
+        $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadata);
+        $this->assertCount(3, $schemaMetadata->toJsonSchema()['required']);
     }
 
     public function testLoadFormWithLocalization()
@@ -148,8 +151,15 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('de_mr', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getTitle());
         $this->assertEquals('de_ms', $formMetadataDe->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getTitle());
 
-        //TODO checkSchema
-        //$this->assertNull($formMetadata->getSchema());
+        /** @var SchemaMetadata $schemaMetadataEn */
+        $schemaMetadataEn = $formMetadataEn->getSchema();
+        $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadataEn);
+        $this->assertCount(3, $schemaMetadataEn->toJsonSchema()['required']);
+
+        /** @var SchemaMetadata $schemaMetadataDe */
+        $schemaMetadataDe = $formMetadataDe->getSchema();
+        $this->assertInstanceOf(SchemaMetadata::class, $schemaMetadataDe);
+        $this->assertCount(3, $schemaMetadataDe->toJsonSchema()['required']);
     }
 
     public function testLoadFormWithEvaluations()

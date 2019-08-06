@@ -15,7 +15,7 @@ namespace Sulu\Component\Content\Metadata;
  * Metadata for a section. A section is a UI component which
  * groups a bunch of properties.
  *
- * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata instead.
+ * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata instead
  */
 class SectionMetadata extends ItemMetadata
 {

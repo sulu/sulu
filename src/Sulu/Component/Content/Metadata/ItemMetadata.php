@@ -15,7 +15,6 @@ namespace Sulu\Component\Content\Metadata;
  * Base class for all structure related metadata classes.
  *
  * @deprecated use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata instead.
-
  */
 abstract class ItemMetadata
 {

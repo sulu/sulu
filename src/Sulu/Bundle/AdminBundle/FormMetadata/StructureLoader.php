@@ -73,9 +73,9 @@ class StructureLoader implements FormMetadataLoaderInterface
      * @param string $key
      * @param string $locale
      *
-     * @return TypedFormMetadata
+     * @return TypedFormMetadata | null
      */
-    public function getMetadata(string $key, string $locale): TypedFormMetadata
+    public function getMetadata(string $key, string $locale)
     {
         $configCache = $this->getConfigCache($key, $locale);
 
@@ -127,7 +127,7 @@ class StructureLoader implements FormMetadataLoaderInterface
      *
      * @throws \Exception
      */
-    public function mapStructureMetadata(array $structuresMetadata, string $locale)
+    private function mapStructureMetadata(array $structuresMetadata, string $locale)
     {
         $typedForm = new TypedFormMetadata();
 
