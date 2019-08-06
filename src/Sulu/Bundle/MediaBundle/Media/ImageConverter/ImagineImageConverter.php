@@ -125,6 +125,7 @@ class ImagineImageConverter implements ImageConverterInterface
             $fileVersion->getFormatOptions()->get($formatKey),
             $this->formats[$formatKey]
         );
+
         if (isset($cropParameters)) {
             $image = $this->applyFormatCrop($image, $cropParameters);
         } elseif (isset($format['scale']) && ImageInterface::THUMBNAIL_INSET !== $format['scale']['mode']) {
@@ -295,10 +296,10 @@ class ImagineImageConverter implements ImageConverterInterface
      * the image should not be cropped.
      *
      * @param ImageInterface $image
-     * @param FormatOptions $formatOptions
+     * @param ?FormatOptions $formatOptions
      * @param array $format
      *
-     * @return array The crop parameters or null
+     * @return ?array
      */
     private function getCropParameters(ImageInterface $image, $formatOptions, array $format)
     {
@@ -323,7 +324,7 @@ class ImagineImageConverter implements ImageConverterInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**

@@ -76,7 +76,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             $data = $node->getProperty($property->getName())->getString();
         }
 
-        $refs = isset($data) ? $data : [];
+        $refs = $data ?? [];
         $property->setValue($refs);
     }
 
