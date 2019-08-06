@@ -101,7 +101,16 @@ class ContactAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $routes = [];
+        $routes = [
+            // This route has to be registered even if permissions for contacts are missing
+            // Otherwise the application breaks when other bundles try to add child routes to this one
+            $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
+                ->setResourceKey('contacts')
+                ->setBackRoute(static::CONTACT_LIST_ROUTE)
+                ->setTitleProperty('fullName')
+                ->getRoute(),
+        ];
 
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $contactFormToolbarActions = [];
@@ -149,12 +158,6 @@ class ContactAdmin extends Admin
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addToolbarActions($contactFormToolbarActions)
                 ->setParent(static::CONTACT_ADD_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
-                ->setResourceKey('contacts')
-                ->setBackRoute(static::CONTACT_LIST_ROUTE)
-                ->setTitleProperty('fullName')
                 ->getRoute();
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')

@@ -73,8 +73,10 @@ class WebsiteAdmin extends Admin
             'sulu_admin.delete',
         ];
 
-        return [
-            $this->routeBuilderFactory
+        $routes = [];
+
+        if ($this->hasSomeWebspaceAnalyticsPermission()) {
+            $routes[] = $this->routeBuilderFactory
                 ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
                 ->setResourceKey('analytics')
                 ->setListKey('analytics')
@@ -88,8 +90,10 @@ class WebsiteAdmin extends Admin
                 ->addToolbarActions($listToolbarActions)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')
-                ->getRoute(),
-        ];
+                ->getRoute();
+        }
+
+        return $routes;
     }
 
     /**
@@ -144,5 +148,21 @@ class WebsiteAdmin extends Admin
                 'clearCache' => $this->urlGenerator->generate('sulu_website.cache.remove'),
             ],
         ];
+    }
+
+    private function hasSomeWebspaceAnalyticsPermission(): bool
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $hasWebspaceAnalyticsPermission = $this->securityChecker->hasPermission(
+                self::getAnalyticsSecurityContext($webspace->getKey()),
+                PermissionTypes::EDIT
+            );
+
+            if ($hasWebspaceAnalyticsPermission) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

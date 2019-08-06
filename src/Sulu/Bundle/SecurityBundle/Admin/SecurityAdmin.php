@@ -134,6 +134,8 @@ class SecurityAdmin extends Admin
             $listToolbarActions[] = 'sulu_admin.export';
         }
 
+        $routes = [];
+
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/roles')
                 ->setResourceKey('roles')
