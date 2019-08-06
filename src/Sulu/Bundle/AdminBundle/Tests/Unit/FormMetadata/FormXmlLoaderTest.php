@@ -19,7 +19,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollectio
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FormXmlLoaderTest extends TestCase
@@ -30,18 +29,12 @@ class FormXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function setUp()
     {
-        $this->expressionLanguage = $this->prophesize(ExpressionLanguage::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $propertiesXmlParser = new PropertiesXmlParser(
             $this->translator->reveal(),
