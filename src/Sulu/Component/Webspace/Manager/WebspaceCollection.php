@@ -15,7 +15,6 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
-use Traversable;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
