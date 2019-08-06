@@ -182,6 +182,7 @@ class ColumnListAdapter extends AbstractAdapter {
         const {
             _permissions: {
                 add: parentAddPermission = true,
+                edit: parentEditPermission = true,
             } = {},
         } = parentItem || {};
 
@@ -261,6 +262,7 @@ class ColumnListAdapter extends AbstractAdapter {
 
         if (onRequestItemOrder) {
             settingOptions.push({
+                disabled: !parentEditPermission,
                 label: translate('sulu_admin.order'),
                 onClick: action(() => {
                     this.orderColumn = index;
