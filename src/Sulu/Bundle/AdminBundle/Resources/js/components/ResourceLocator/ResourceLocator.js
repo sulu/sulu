@@ -42,7 +42,11 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     }
 
     handleChange = (value: ?string) => {
-        const {onChange} = this.props;
+        const {mode, onChange} = this.props;
+
+        if (value && mode === 'leaf' && value.endsWith('/')) {
+            return;
+        }
 
         onChange(value ? this.fixed + value : undefined);
     };

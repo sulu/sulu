@@ -56,6 +56,26 @@ test('ResourceLocator should call the onChange callback when the input changes w
     expect(onChange).toHaveBeenCalledWith('/parent/child-new');
 });
 
+test('ResourceLocator should not call the onChange callback when a slash is typed in leaf mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const resourceLocator = mount(
+        <ResourceLocator mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('/parent/child/');
+    expect(onChange).not.toBeCalled();
+});
+
+test('ResourceLocator should call the onChange callback when a slash is typed in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const resourceLocator = mount(
+        <ResourceLocator mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent/child/');
+    expect(onChange).toBeCalledWith('/parent/child/');
+});
+
 test('ResourceLocator should call the onChange callback with undefined if no input is given', () => {
     const onChange = jest.fn();
     const resourceLocator = mount(<ResourceLocator mode="leaf" onChange={onChange} value="/url" />);
