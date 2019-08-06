@@ -1,6 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import {arrayMove} from '../../../components';
+import {arrayMove} from '../../../utils';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
 function removeColumnsAfterIndex(parentIds, columnIndex: number, rawData) {

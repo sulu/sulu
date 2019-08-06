@@ -1,6 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import {arrayMove} from '../../../components';
+import {arrayMove} from '../../../utils';
 import type {StructureStrategyInterface, TreeItem} from '../types';
 
 function flattenData(items: Array<TreeItem>, data: Array<Object> = []) {

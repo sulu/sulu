@@ -1,5 +1,4 @@
 // @flow
-import {arrayMove} from 'react-sortable-hoc';
 import ArrowMenu from './ArrowMenu';
 import Backdrop from './Backdrop';
 import Breadcrumb from './Breadcrumb';
@@ -37,7 +36,6 @@ import Url from './Url';
 import withContainerSize from './withContainerSize';
 
 export {
-    arrayMove,
     ArrowMenu,
     Backdrop,
     Breadcrumb,
