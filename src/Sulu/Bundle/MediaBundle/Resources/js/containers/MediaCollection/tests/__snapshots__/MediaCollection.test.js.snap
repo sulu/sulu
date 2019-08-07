@@ -384,6 +384,17 @@ exports[`Render the MediaCollection 1`] = `
                       src="http://lorempixel.com/240/100"
                     />
                     <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
+                    <div
                       class="cover"
                     >
                       <span
@@ -504,6 +515,17 @@ exports[`Render the MediaCollection 1`] = `
                       alt="Title 1"
                       src="http://lorempixel.com/240/100"
                     />
+                    <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
                     <div
                       class="cover"
                     >
@@ -895,6 +917,17 @@ exports[`Render the MediaCollection for all media 1`] = `
                       src="http://lorempixel.com/240/100"
                     />
                     <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
+                    <div
                       class="cover"
                     >
                       <span
@@ -1015,6 +1048,17 @@ exports[`Render the MediaCollection for all media 1`] = `
                       alt="Title 1"
                       src="http://lorempixel.com/240/100"
                     />
+                    <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
                     <div
                       class="cover"
                     >
