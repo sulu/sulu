@@ -3,7 +3,7 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import withContainerSize from '../withContainerSize';
 
-jest.mock('../../../services/DOM/afterElementsRendered');
+jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('Pass props to rendered component', () => {
     const Component = (props) => (<h1>{props.title}</h1>);

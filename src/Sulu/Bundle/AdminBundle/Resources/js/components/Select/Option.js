@@ -2,7 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
-import {afterElementsRendered} from '../../services/DOM';
+import {afterElementsRendered} from '../../utils/DOM';
 import Icon from '../Icon';
 import Checkbox from '../Checkbox';
 import type {OptionSelectedVisualization} from './types';

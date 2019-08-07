@@ -13,6 +13,7 @@ jobs:
       - run: npm run lint:js
       - run: npm run lint:scss
       - run: npm run flow -- check
+      - run: npm run depcruise
       - run: npm run styleguide:build
       - run: npm test -- --maxWorkers=4
       - run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction

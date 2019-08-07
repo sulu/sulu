@@ -3,7 +3,7 @@ import {render, mount, shallow} from 'enzyme';
 import React from 'react';
 import Option from '../Option';
 
-jest.mock('../../../services/DOM/afterElementsRendered');
+jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('The component should render', () => {
     const option = render(<Option value="my-option">My option</Option>);

@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 import React from 'react';
 import {ImageRectangleSelection} from '../ImageRectangleSelection';
 
-jest.mock('../../../services/DOM/afterElementsRendered');
+jest.mock('../../../utils/DOM/afterElementsRendered');
 
 jest.mock('../../withContainerSize/withContainerSize');
 

@@ -8,7 +8,7 @@ import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import Icon from '../Icon';
 import Button from '../Button';
-import {afterElementsRendered} from '../../services/DOM';
+import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import type {Action, Size} from './types';
 import Actions from './Actions';
