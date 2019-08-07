@@ -3,8 +3,8 @@ import React from 'react';
 import type {Element} from 'react';
 import {observer} from 'mobx-react';
 import {sidebarStore} from '../Sidebar';
-import Router from '../../services/Router';
-import type {AttributeMap, Route} from '../../services/Router';
+import Router, {getViewKeyFromRoute} from '../../services/Router';
+import type {Route} from '../../services/Router';
 import viewRegistry from './registries/ViewRegistry';
 import type {View} from './types';
 
@@ -27,7 +27,7 @@ class ViewRenderer extends React.Component<Props> {
 
         router.addUpdateRouteHook((newRoute, newAttributes) => {
             const {attributes: oldAttributes, route: oldRoute} = router;
-            if (this.getKey(newRoute, newAttributes) !== this.getKey(oldRoute, oldAttributes)) {
+            if (getViewKeyFromRoute(newRoute, newAttributes) !== getViewKeyFromRoute(oldRoute, oldAttributes)) {
                 router.clearBindings();
             }
 
@@ -60,24 +60,6 @@ class ViewRenderer extends React.Component<Props> {
         return false;
     }
 
-    getKey = (route: ?Route, attributes: ?AttributeMap) => {
-        if (!route) {
-            return null;
-        }
-
-        const rerenderAttributeValues = [];
-
-        if (route.rerenderAttributes) {
-            route.rerenderAttributes.forEach((rerenderAttribute) => {
-                if (attributes && attributes.hasOwnProperty(rerenderAttribute)) {
-                    rerenderAttributeValues.push(attributes[rerenderAttribute]);
-                }
-            });
-        }
-
-        return route.name + (rerenderAttributeValues.length > 0 ? '-' + rerenderAttributeValues.join('__') : '');
-    };
-
     getView = (route: Route): View => {
         const View = viewRegistry.get(route.view);
 
@@ -93,7 +75,7 @@ class ViewRenderer extends React.Component<Props> {
         const View = this.getView(route);
 
         const element = (
-            <View key={this.getKey(route, router.attributes)} route={route} router={router}>
+            <View key={getViewKeyFromRoute(route, router.attributes)} route={route} router={router}>
                 {(props) => child ? React.cloneElement(child, props) : null}
             </View>
         );
