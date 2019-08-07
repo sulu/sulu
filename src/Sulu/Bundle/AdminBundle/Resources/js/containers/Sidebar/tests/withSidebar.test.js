@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {extendObservable, observable} from 'mobx';
 import {mount, render} from 'enzyme';
 import sidebarStore from '../stores/SidebarStore';
 import withSidebar from '../withSidebar';
@@ -39,7 +39,11 @@ test('Bind sidebar method to component instance', () => {
         };
     });
 
-    mount(<ComponentWithSidebar />);
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+    };
+
+    mount(<ComponentWithSidebar router={router} />);
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'preview',
     });
@@ -55,12 +59,63 @@ test('Call life-cycle events of rendered component', () => {
         return null;
     });
 
-    const component = mount(<ComponentWithSidebar />);
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+    };
+
+    const component = mount(<ComponentWithSidebar router={router} />);
     expect(component.instance().render).toBeCalled();
 
     const componentWillUnmount = component.instance().componentWillUnmount;
     component.unmount();
     expect(componentWillUnmount).toBeCalled();
+});
+
+test('Reset config of toolbarStore when component is unmounted', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withSidebar(Component, () => ({view: 'test1'}));
+
+    const updateRouteHookDisposer = jest.fn();
+    const router = {
+        addUpdateRouteHook: jest.fn().mockReturnValue(updateRouteHookDisposer),
+    };
+
+    const component = mount(<ComponentWithToolbar router={router} />);
+    expect(sidebarStore.setConfig).toBeCalledWith({view: 'test1'});
+
+    component.unmount();
+    expect(updateRouteHookDisposer).toBeCalledWith();
+    expect(sidebarStore.clearConfig).toBeCalledWith();
+});
+
+test('Dispose toolbar when a new view is rendered', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const config = {};
+    extendObservable(config, {view: 'test1'});
+    const ComponentWithSidebar = withSidebar(Component, () => ({view: config.view}));
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        route: {
+            name: 'route1',
+        },
+    };
+
+    mount(<ComponentWithSidebar router={router} />);
+    expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test1'});
+
+    config.view = 'test2';
+    expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test2'});
+
+    router.addUpdateRouteHook.mock.calls[0][0]();
+    config.view = 'test3';
+    expect(sidebarStore.setConfig).toHaveBeenLastCalledWith({view: 'test2'});
 });
 
 test('Recall sidebar-function when changing observable', () => {
@@ -76,7 +131,11 @@ test('Recall sidebar-function when changing observable', () => {
         return {view: this.sidebarView};
     });
 
-    const component = mount(<ComponentWithSidebar />);
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+    };
+
+    const component = mount(<ComponentWithSidebar router={router} />);
 
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'preview',
@@ -86,25 +145,4 @@ test('Recall sidebar-function when changing observable', () => {
     expect(sidebarStore.setConfig).toBeCalledWith({
         view: 'test',
     });
-});
-
-test('Throw error when component has property sidebarDisposer', () => {
-    // catch error logging as described in https://github.com/facebook/react/issues/11098#issuecomment-335290556
-    // until better solution is availble
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    const Component = class Component extends React.Component<*> {
-        sidebarDisposer = true;
-
-        render() {
-            return <h1>Test</h1>;
-        }
-    };
-
-    const ComponentWithSidebar = withSidebar(Component, function() {
-        return null;
-    });
-
-    expect(() => mount(<ComponentWithSidebar />))
-        .toThrowError('Component passed to withSidebar cannot declare a property called "sidebarDisposer".');
 });

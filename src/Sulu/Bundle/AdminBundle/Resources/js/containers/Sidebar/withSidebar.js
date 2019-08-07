@@ -1,29 +1,30 @@
 // @flow
 import {autorun} from 'mobx';
 import type {Component} from 'react';
+import log from 'loglevel';
+import {getViewKeyFromRoute} from '../../services/Router';
 import {buildHocDisplayName} from '../../utils/react';
+import type {ViewProps} from '../index';
 import type {SidebarConfig} from './types';
 import sidebarStore from './stores/SidebarStore';
 
-export default function withSidebar<P, C: Class<Component<P>>>(
+const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
+
+export default function withSidebar<P: ViewProps, C: Class<Component<P>>>(
     Component: C,
     sidebar: () => ?SidebarConfig
 ): C {
     const WithSidebarComponent = class extends Component {
-        static hasSidebar = true;
-
-        sidebarDisposer: Function;
+        updateRouteHookDisposer: () => void;
 
         componentDidMount() {
             if (super.componentDidMount) {
                 super.componentDidMount();
             }
 
-            if (super.hasOwnProperty('sidebarDisposer')) {
-                throw new Error('Component passed to withSidebar cannot declare a property called "sidebarDisposer".');
-            }
+            const {router} = this.props;
 
-            this.sidebarDisposer = autorun(() => {
+            const sidebarDisposer = autorun(() => {
                 const sidebarConfig = sidebar.call(this);
                 if (!sidebarConfig) {
                     sidebarStore.clearConfig();
@@ -32,7 +33,18 @@ export default function withSidebar<P, C: Class<Component<P>>>(
                 }
 
                 sidebarStore.setConfig(sidebarConfig);
+
+                log.info((WithSidebarComponent.displayName || '') + ' configured sidebar', sidebarConfig);
             });
+
+            this.updateRouteHookDisposer = router.addUpdateRouteHook((newRoute, newAttributes) => {
+                const {attributes: oldAttributes, route: oldRoute} = router;
+                if (getViewKeyFromRoute(newRoute, newAttributes) !== getViewKeyFromRoute(oldRoute, oldAttributes)) {
+                    sidebarDisposer();
+                }
+
+                return true;
+            }, UPDATE_ROUTE_HOOK_PRIORITY);
         }
 
         componentWillUnmount() {
@@ -40,7 +52,8 @@ export default function withSidebar<P, C: Class<Component<P>>>(
                 super.componentWillUnmount();
             }
 
-            this.sidebarDisposer();
+            this.updateRouteHookDisposer();
+            sidebarStore.clearConfig();
         }
     };
 

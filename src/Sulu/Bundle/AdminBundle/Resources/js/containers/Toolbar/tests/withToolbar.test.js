@@ -105,7 +105,7 @@ test('Reset config of toolbarStore when component is unmounted', () => {
     expect(toolbarStorePool.setToolbarConfig).toBeCalledWith('default', config);
 
     component.unmount();
-    expect(updateRouteHookDisposer).toBeCalled();
+    expect(updateRouteHookDisposer).toBeCalledWith();
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenLastCalledWith('default', {});
 });
 
