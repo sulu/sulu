@@ -3,7 +3,7 @@ import {action, observable} from 'mobx';
 import type {ComponentType, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
-import {buildHocDisplayName} from '../../services/react';
+import {buildHocDisplayName} from '../../utils/react';
 import {afterElementsRendered} from '../../utils/DOM';
 import styles from './withContainerSize.scss';
 import type {WithContainerSizeElement} from './types';

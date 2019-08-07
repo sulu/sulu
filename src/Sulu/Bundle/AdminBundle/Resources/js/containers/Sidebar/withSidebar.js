@@ -1,7 +1,7 @@
 // @flow
 import {autorun} from 'mobx';
 import type {Component} from 'react';
-import {buildHocDisplayName} from '../../services/react';
+import {buildHocDisplayName} from '../../utils/react';
 import type {SidebarConfig} from './types';
 import sidebarStore from './stores/SidebarStore';
 

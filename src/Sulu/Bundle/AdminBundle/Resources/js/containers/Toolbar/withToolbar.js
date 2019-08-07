@@ -1,7 +1,7 @@
 // @flow
 import {autorun} from 'mobx';
 import type {Component} from 'react';
-import {buildHocDisplayName} from '../../services/react';
+import {buildHocDisplayName} from '../../utils/react';
 import type {ToolbarConfig} from './types';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 
