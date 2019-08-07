@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {action, computed, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
@@ -13,16 +14,27 @@ type Props = {|
     value: ?string,
 |};
 
-export default class ResourceLocator extends React.PureComponent<Props> {
+@observer
+export default class ResourceLocator extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
 
-    fixed: string = '/';
+    @observable fixed: string = '/';
 
     constructor(props: Props) {
         super(props);
 
+        this.splitLeafValue();
+    }
+
+    @action componentDidUpdate(prevProps: Props) {
+        if (this.props.value !== prevProps.value) {
+            this.splitLeafValue();
+        }
+    }
+
+    splitLeafValue() {
         const {value, mode} = this.props;
 
         if (mode === 'leaf' && value) {
@@ -42,7 +54,11 @@ export default class ResourceLocator extends React.PureComponent<Props> {
     }
 
     handleChange = (value: ?string) => {
-        const {onChange} = this.props;
+        const {mode, onChange} = this.props;
+
+        if (value && mode === 'leaf' && value.endsWith('/')) {
+            return;
+        }
 
         onChange(value ? this.fixed + value : undefined);
     };
