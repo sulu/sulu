@@ -21,12 +21,12 @@ class LocalizedFormMetadataCollection
      */
     private $items = [];
 
-    public function add($locale, $formMetadata)
+    public function add(string $locale, FormMetadata $formMetadata)
     {
         $this->items[$locale] = $formMetadata;
     }
 
-    public function get($locale): FormMetadata
+    public function get(string $locale): FormMetadata
     {
         if (!isset($this->items[$locale])) {
             throw new \InvalidArgumentException(sprintf('Locale "%s" does not exist in collection.', $locale));
@@ -35,6 +35,9 @@ class LocalizedFormMetadataCollection
         return $this->items[$locale];
     }
 
+    /**
+     * @return FormMetadata[]
+     */
     public function getItems(): array
     {
         return $this->items;

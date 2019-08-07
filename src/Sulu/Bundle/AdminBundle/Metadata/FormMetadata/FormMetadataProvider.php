@@ -27,12 +27,6 @@ class FormMetadataProvider implements MetadataProviderInterface
      */
     private $formMetadataLoaders;
 
-    /**
-     * FormMetadataProvider constructor.
-     *
-     * @param ExpressionLanguage $expressionLanguage
-     * @param iterable $formMetadataLoaders
-     */
     public function __construct(
         ExpressionLanguage $expressionLanguage,
         iterable $formMetadataLoaders
@@ -42,12 +36,7 @@ class FormMetadataProvider implements MetadataProviderInterface
     }
 
     /**
-     * @param string $key
-     * @param string $locale
-     *
      * @return FormMetadata|TypedFormMetadata
-     *
-     * @throws MetadataNotFoundException
      */
     public function getMetadata(string $key, string $locale)
     {

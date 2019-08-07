@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
@@ -29,14 +30,11 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
 class FormMetadataMapper
 {
     /**
-     * @param array $children
-     * @param FormMetadata $form
-     * @param string $locale
-     *
-     * @throws \Exception
+     * @return ItemMetadata[]
      */
-    public function mapChildren(array $children, FormMetadata $form, string $locale)
+    public function mapChildren(array $children, string $locale): array
     {
+        $items = [];
         foreach ($children as $child) {
             if ($child instanceof BlockMetadata) {
                 $item = $this->mapBlock($child, $locale);
@@ -48,14 +46,14 @@ class FormMetadataMapper
                 throw new \Exception('Unsupported property given "' . get_class($child) . '"');
             }
 
-            $form->addItem($item);
+            $items[$item->getName()] = $item;
         }
+
+        return $items;
     }
 
     /**
-     * @param array $itemsMetadata
-     *
-     * @return SchemaMetadata
+     * @param ContentItemMetadata[] $itemsMetadata
      */
     public function mapSchema(array $itemsMetadata): SchemaMetadata
     {
@@ -142,7 +140,7 @@ class FormMetadataMapper
         return $field;
     }
 
-    private function mapOption($parameter, string $locale): OptionMetadata
+    private function mapOption(array $parameter, string $locale): OptionMetadata
     {
         $option = new OptionMetadata();
         $option->setName($parameter['name']);
@@ -168,7 +166,7 @@ class FormMetadataMapper
         return $option;
     }
 
-    private function mapOptionMeta($parameterValue, string $locale, OptionMetadata $option)
+    private function mapOptionMeta(array $parameterValue, string $locale, OptionMetadata $option): void
     {
         if (!array_key_exists('meta', $parameterValue)) {
             return;
@@ -191,7 +189,12 @@ class FormMetadataMapper
         }
     }
 
-    private function mapSchemaProperties(array $itemsMetadata)
+    /**
+     * @param ContentItemMetadata[] $itemsMetadata
+     *
+     * @return ItemMetadata[]
+     */
+    private function mapSchemaProperties(array $itemsMetadata): array
     {
         return array_filter(array_map(function(ContentItemMetadata $itemMetadata) {
             if ($itemMetadata instanceof ContentSectionMetadata) {

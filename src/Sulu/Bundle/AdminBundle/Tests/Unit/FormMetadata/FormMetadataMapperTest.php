@@ -25,20 +25,22 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ExternalSectionMetadata;
 
 class FormMetadataMapperTest extends TestCase
 {
-    /** @var FormMetadataMapper */
+    /**
+     * @var FormMetadataMapper
+     */
     private $formMetadataMapper;
 
     public function setUp()
     {
-        $this->formMetadataMapper = new FormMetadataMapper('../../Application/var/cache', true);
+        $this->formMetadataMapper = new FormMetadataMapper();
     }
 
     public function testMapPropertiesEnglish()
     {
         $form = $this->createFormWithBasicProperties();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'en');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(3, $newForm->getItems());
         $this->assertContains('property1', array_keys($newForm->getItems()));
@@ -62,9 +64,9 @@ class FormMetadataMapperTest extends TestCase
     public function testMapPropertiesGerman()
     {
         $form = $this->createFormWithBasicProperties();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'de');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
 
         $this->assertCount(3, $newForm->getItems());
         $this->assertContains('property1', array_keys($newForm->getItems()));
@@ -88,9 +90,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapPropertiesWithTags()
     {
         $form = $this->createFormWithAdvancedProperty();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'en');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
+
         $this->assertCount(1, $newForm->getItems());
         $this->assertContains('name', array_keys($newForm->getItems()));
 
@@ -107,9 +110,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapPropertiesWithParametersEnglish()
     {
         $form = $this->createFormWithAdvancedProperty();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'en');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
+
         $this->assertCount(1, $newForm->getItems());
         $this->assertContains('name', array_keys($newForm->getItems()));
 
@@ -137,9 +141,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapPropertiesWithParametersGerman()
     {
         $form = $this->createFormWithAdvancedProperty();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'de');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
+
         $this->assertCount(1, $newForm->getItems());
         $this->assertContains('name', array_keys($newForm->getItems()));
 
@@ -157,9 +162,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapChildrenWithSection()
     {
         $form = $this->createFormWithSection();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'en');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
+
         $this->assertCount(2, $newForm->getItems());
         $this->assertContains('section', array_keys($newForm->getItems()));
         $this->assertContains('property4', array_keys($newForm->getItems()));
@@ -182,9 +188,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapChildrenWithBlockEnglish()
     {
         $form = $this->createFormWithBlock();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'en');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
+
         $this->assertCount(1, $newForm->getItems());
         $this->assertContains('block', array_keys($newForm->getItems()));
 
@@ -209,9 +216,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapChildrenWithBlockGerman()
     {
         $form = $this->createFormWithBlock();
-        $newForm = new FormMetadata();
 
-        $this->formMetadataMapper->mapChildren($form->getChildren(), $newForm, 'de');
+        $newForm = new FormMetadata();
+        $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
+
         $this->assertCount(1, $newForm->getItems());
         $this->assertContains('block', array_keys($newForm->getItems()));
 

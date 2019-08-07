@@ -48,7 +48,7 @@ class FormMetadata
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -99,12 +99,12 @@ class FormMetadata
         $this->schema = $schema;
     }
 
-    public function getSchema()
+    public function getSchema(): SchemaMetadata
     {
         return $this->schema;
     }
 
-    public function merge(self $otherForm)
+    public function merge(self $otherForm): FormMetadata
     {
         $mergedForm = new self();
         if ($this->name) {

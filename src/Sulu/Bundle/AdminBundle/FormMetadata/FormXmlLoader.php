@@ -47,14 +47,6 @@ class FormXmlLoader extends AbstractLoader
      */
     private $formMetadataMapper;
 
-    /**
-     * FormXmlLoader constructor.
-     *
-     * @param PropertiesXmlParser $propertiesXmlParser
-     * @param SchemaXmlParser $schemaXmlParser
-     * @param array $locales
-     * @param FormMetadataMapper $formMetadataMapper
-     */
     public function __construct(
         PropertiesXmlParser $propertiesXmlParser,
         SchemaXmlParser $schemaXmlParser,
@@ -72,15 +64,6 @@ class FormXmlLoader extends AbstractLoader
         );
     }
 
-    /**
-     * @param $resource
-     * @param \DOMXPath $xpath
-     * @param $type
-     *
-     * @return LocalizedFormMetadataCollection
-     *
-     * @throws \Exception
-     */
     protected function parse($resource, \DOMXPath $xpath, $type): LocalizedFormMetadataCollection
     {
         // init running vars
@@ -115,18 +98,10 @@ class FormXmlLoader extends AbstractLoader
         return $formMetadataCollection;
     }
 
-    /**
-     * @param $formMetadata
-     * @param $locale
-     *
-     * @return FormMetadata
-     *
-     * @throws \Exception
-     */
-    private function mapFormsMetadata($formMetadata, $locale)
+    private function mapFormsMetadata(ExternalFormMetadata $formMetadata, string $locale): FormMetadata
     {
         $form = new FormMetadata();
-        $this->formMetadataMapper->mapChildren($formMetadata->getChildren(), $form, $locale);
+        $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren(), $locale));
 
         $schema = $this->formMetadataMapper->mapSchema($formMetadata->getProperties());
         $formSchema = $formMetadata->getSchema();

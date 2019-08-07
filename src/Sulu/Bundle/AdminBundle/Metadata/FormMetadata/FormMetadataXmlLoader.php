@@ -58,10 +58,7 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
     }
 
     /**
-     * @param string $key
-     * @param string $locale
-     *
-     * @return FormMetadata | null
+     *  @return TypedFormMetadata|FormMetadata|null
      */
     public function getMetadata(string $key, string $locale)
     {

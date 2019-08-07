@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -46,15 +47,6 @@ class StructureLoader implements FormMetadataLoaderInterface
      */
     private $debug;
 
-    /**
-     * StructureLoader constructor.
-     *
-     * @param $structureMetadataFactory
-     * @param $formMetadataMapper
-     * @param $locales
-     * @param string $cacheDir
-     * @param bool $debug
-     */
     public function __construct(
         $structureMetadataFactory,
         $formMetadataMapper,
@@ -70,10 +62,7 @@ class StructureLoader implements FormMetadataLoaderInterface
     }
 
     /**
-     * @param string $key
-     * @param string $locale
-     *
-     * @return TypedFormMetadata | null
+     * @return TypedFormMetadata|FormMetadata|null
      */
     public function getMetadata(string $key, string $locale)
     {
@@ -120,14 +109,9 @@ class StructureLoader implements FormMetadataLoaderInterface
     }
 
     /**
-     * @param array $structuresMetadata
-     * @param string $locale
-     *
-     * @return TypedFormMetadata
-     *
-     * @throws \Exception
+     * @param StructureMetadata[] $structuresMetadata
      */
-    private function mapStructureMetadata(array $structuresMetadata, string $locale)
+    private function mapStructureMetadata(array $structuresMetadata, string $locale): TypedFormMetadata
     {
         $typedForm = new TypedFormMetadata();
 
@@ -135,7 +119,7 @@ class StructureLoader implements FormMetadataLoaderInterface
             $form = new FormMetadata();
             $form->setName($structureMetadata->getName());
             $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
-            $this->formMetadataMapper->mapChildren($structureMetadata->getChildren(), $form, $locale);
+            $form->setItems($this->formMetadataMapper->mapChildren($structureMetadata->getChildren(), $locale));
             $form->setSchema($this->formMetadataMapper->mapSchema($structureMetadata->getProperties()));
 
             $typedForm->addForm($structureMetadata->getName(), $form);
