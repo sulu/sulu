@@ -8,7 +8,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../withContainerSize/withContainerSize');
-jest.mock('../../../services/DOM/afterElementsRendered');
+jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('The component should render with children', () => {
     const view = render(

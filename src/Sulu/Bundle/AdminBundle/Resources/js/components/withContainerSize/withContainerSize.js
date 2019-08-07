@@ -4,7 +4,7 @@ import type {ComponentType, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import {buildHocDisplayName} from '../../services/react';
-import {afterElementsRendered} from '../../services/DOM';
+import {afterElementsRendered} from '../../utils/DOM';
 import styles from './withContainerSize.scss';
 import type {WithContainerSizeElement} from './types';
 

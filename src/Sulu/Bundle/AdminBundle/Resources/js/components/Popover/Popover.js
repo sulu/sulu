@@ -4,7 +4,7 @@ import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import type {ElementRef, Node} from 'react';
-import {afterElementsRendered} from '../../services/DOM';
+import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import type {PopoverDimensions} from './types';
 import PopoverPositioner from './PopoverPositioner';
