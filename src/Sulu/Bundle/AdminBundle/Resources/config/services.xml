@@ -48,8 +48,8 @@
         </service>
 
         <service
-            id="sulu_admin.form_metadata_xml_loader"
-            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataXmlLoader"
+            id="sulu_admin.xml_form_metadata_loader"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader"
         >
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
             <argument>%sulu_admin.forms.directories%</argument>
@@ -85,7 +85,7 @@
             id="sulu_admin.form_metadata.form_metadata_mapper"
             class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper"/>
 
-        <service id="sulu_admin.form_metadata_structure_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader">
+        <service id="sulu_admin.structure_form_metadata_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\StructureFormMetadataLoader">
             <argument type="service" id="sulu_page.structure.factory"/>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
             <argument>%sulu_core.locales%</argument>

@@ -12,25 +12,25 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
-class FormMetadataXmlLoaderTest extends KernelTestCase
+class XmlFormMetadataLoaderTest extends KernelTestCase
 {
     /**
-     * @var FormMetadataXmlLoader
+     * @var XmlFormMetadataLoader
      */
-    private $formMetadataXmlLoader;
+    private $xmlFormMetadataLoader;
 
     public function setUp()
     {
-        $this->formMetadataXmlLoader = $this->getContainer()->get('sulu_admin_test.form_metadata_xml_loader');
+        $this->xmlFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.xml_form_metadata_loader');
     }
 
     public function testGetMetadataWithOnInvalid()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_on_invalid', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_on_invalid', 'en');
         $this->assertCount(1, $form->getItems());
         $this->assertEquals(
             'ignore',
@@ -40,7 +40,7 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithSchema()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_schema', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_schema', 'en');
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(2, array_keys($schema));
         $this->assertCount(0, $schema['required']);
@@ -50,7 +50,7 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithEvaluations()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_evaluations', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_evaluations', 'en');
 
         $this->assertEquals(
             'lastName == \'section_property\'',
@@ -91,7 +91,7 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithExpressionParam()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_expression_param', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_expression_param', 'en');
         $this->assertNotNull($form);
         $this->assertContains('name', array_keys($form->getItems()));
         $this->assertEquals('expression', $form->getItems()['name']->getOptions()['id']->getType());
@@ -100,13 +100,13 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithoutLabel()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_without_label', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_without_label', 'en');
         $this->assertNull($form->getItems()['name']->getLabel());
     }
 
     public function testGetMetadataFromMultipleFiles()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('merged_form', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('merged_form', 'en');
         $this->assertContains('field1', array_keys($form->getItems()));
         $this->assertContains('field2', array_keys($form->getItems()));
 
@@ -116,7 +116,7 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithNestedSections()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_nested_sections', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_nested_sections', 'en');
 
         $section1 = $form->getItems()['test1'];
         $section2 = $form->getItems()['test2'];
@@ -133,7 +133,7 @@ class FormMetadataXmlLoaderTest extends KernelTestCase
 
     public function testGetMetadataWithBlocks()
     {
-        $form = $this->formMetadataXmlLoader->getMetadata('form_with_blocks', 'en');
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_blocks', 'en');
 
         $blocks = $form->getItems()['blocks'];
 

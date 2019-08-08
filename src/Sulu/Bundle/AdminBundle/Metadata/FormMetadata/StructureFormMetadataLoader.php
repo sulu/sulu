@@ -9,18 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\FormMetadata;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataLoaderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class StructureLoader implements FormMetadataLoaderInterface
+class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
     /**
      * @var StructureMetadataFactory

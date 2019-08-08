@@ -11,27 +11,26 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\FormMetadata\StructureLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
-class StructureLoaderTest extends KernelTestCase
+class StructureFormMetadataLoaderTest extends KernelTestCase
 {
     /**
-     * @var StructureLoader
+     * @var StructureFormMetadataLoader
      */
-    private $structureLoader;
+    private $structureFormMetadataLoader;
 
     public function setUp()
     {
-        $this->structureLoader = $this->getContainer()->get('sulu_admin_test.form_metadata_structure_loader');
+        $this->structureFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.structure_form_metadata_loader');
     }
 
     public function testGetMetadataEnglish()
     {
-        $typedForm = $this->structureLoader->getMetadata('page', 'en');
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'en');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(2, $typedForm->getForms());
 
@@ -54,7 +53,7 @@ class StructureLoaderTest extends KernelTestCase
 
     public function testGetMetadataGerman()
     {
-        $typedForm = $this->structureLoader->getMetadata('page', 'de');
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(2, $typedForm->getForms());
 
@@ -77,9 +76,9 @@ class StructureLoaderTest extends KernelTestCase
 
     public function testGetMetadataWhichDoesNotExist()
     {
-        $typedForm = $this->structureLoader->getMetadata('does_not_exist', 'en');
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('does_not_exist', 'en');
         $this->assertNull($typedForm);
-        $typedForm = $this->structureLoader->getMetadata('does_not_exist', 'de');
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('does_not_exist', 'de');
         $this->assertNull($typedForm);
     }
 }

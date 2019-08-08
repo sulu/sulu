@@ -15,8 +15,9 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class FormMetadataXmlLoader implements FormMetadataLoaderInterface
+class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
     /**
      * @var FormXmlLoader

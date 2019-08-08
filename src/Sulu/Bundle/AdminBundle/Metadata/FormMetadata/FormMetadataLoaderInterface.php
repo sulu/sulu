@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-
-interface FormMetadataLoaderInterface extends CacheWarmerInterface
+interface FormMetadataLoaderInterface
 {
     public function getMetadata(string $key, string $locale);
 }
