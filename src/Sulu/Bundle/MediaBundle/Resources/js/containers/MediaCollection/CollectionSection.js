@@ -15,6 +15,9 @@ import collectionSectionStyles from './collectionSection.scss';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
+    addable: boolean,
+    deletable: boolean,
+    editable: boolean,
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
@@ -145,6 +148,9 @@ class CollectionSection extends React.Component<Props> {
 
     render() {
         const {
+            addable,
+            deletable,
+            editable,
             listStore,
             locale,
             overlayType,
@@ -164,32 +170,40 @@ class CollectionSection extends React.Component<Props> {
                             />
                             {resourceStore.id &&
                                 <div className={collectionSectionStyles.icons}>
-                                    <Icon
-                                        className={collectionSectionStyles.icon}
-                                        name="su-pen"
-                                        onClick={this.handleEditCollectionClick}
-                                    />
-                                    <Icon
-                                        className={collectionSectionStyles.icon}
-                                        name="su-trash-alt"
-                                        onClick={this.handleRemoveCollectionClick}
-                                    />
-                                    <Icon
-                                        className={collectionSectionStyles.icon}
-                                        name="su-arrows-alt"
-                                        onClick={this.handleMoveCollectionClick}
-                                    />
+                                    {editable &&
+                                        <Icon
+                                            className={collectionSectionStyles.icon}
+                                            name="su-pen"
+                                            onClick={this.handleEditCollectionClick}
+                                        />
+                                    }
+                                    {deletable &&
+                                        <Icon
+                                            className={collectionSectionStyles.icon}
+                                            name="su-trash-alt"
+                                            onClick={this.handleRemoveCollectionClick}
+                                        />
+                                    }
+                                    {editable &&
+                                        <Icon
+                                            className={collectionSectionStyles.icon}
+                                            name="su-arrows-alt"
+                                            onClick={this.handleMoveCollectionClick}
+                                        />
+                                    }
                                 </div>
                             }
                         </div>
 
-                        <div className={collectionSectionStyles.right}>
-                            <ButtonGroup>
-                                <Button onClick={this.handleAddCollectionClick}>
-                                    <Icon name="su-plus" />
-                                </Button>
-                            </ButtonGroup>
-                        </div>
+                        {addable &&
+                            <div className={collectionSectionStyles.right}>
+                                <ButtonGroup>
+                                    <Button onClick={this.handleAddCollectionClick}>
+                                        <Icon name="su-plus" />
+                                    </Button>
+                                </ButtonGroup>
+                            </div>
+                        }
                     </div>
                 }
                 <List

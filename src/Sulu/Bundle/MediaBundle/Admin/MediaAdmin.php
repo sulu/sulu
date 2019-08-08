@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
 {
+    const SECURITY_CONTEXT = 'sulu.media.collections';
+
     const MEDIA_OVERVIEW_ROUTE = 'sulu_media.overview';
 
     const EDIT_FORM_ROUTE = 'sulu_media.form';
@@ -71,7 +73,7 @@ class MediaAdmin extends Admin
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
-        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $media = new NavigationItem('sulu_media.media');
             $media->setPosition(30);
             $media->setIcon('su-image');
@@ -101,21 +103,34 @@ class MediaAdmin extends Admin
             )
         );
 
-        $toolbarActions = [
-            'sulu_admin.save',
-            'sulu_admin.delete',
-        ];
+        $toolbarActions = [];
 
-        return [
-            (new Route(static::MEDIA_OVERVIEW_ROUTE, '/collections/:locale/:id?', 'sulu_media.overview'))
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $toolbarActions[] = 'sulu_admin.save';
+        }
+
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+            $toolbarActions[] = 'sulu_admin.delete';
+        }
+
+        $routes = [];
+
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $routes[] = (new Route(static::MEDIA_OVERVIEW_ROUTE, '/collections/:locale/:id?', 'sulu_media.overview'))
                 ->setOption('locales', $mediaLocales)
-                ->setAttributeDefault('locale', $mediaLocales[0]),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
+                ->setOption('permissions', [
+                    'add' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD),
+                    'delete' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE),
+                    'edit' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT),
+                ])
+                ->setAttributeDefault('locale', $mediaLocales[0]);
+            $routes[] = $this->routeBuilderFactory
+                ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
                 ->setResourceKey('media')
                 ->addLocales($mediaLocales)
                 ->setTitleProperty('title')
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
                 ->setResourceKey('media')
                 ->setFormKey('media_details')
                 ->setTabTitle('sulu_media.information_taxonomy')
@@ -123,14 +138,16 @@ class MediaAdmin extends Admin
                 ->addToolbarActions($toolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
-                ->getRoute(),
-            (new Route(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats'))
+                ->getRoute();
+            $routes[] = (new Route(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats'))
                 ->setOption('tabTitle', 'sulu_media.formats')
-                ->setParent(static::EDIT_FORM_ROUTE),
-            (new Route(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history'))
+                ->setParent(static::EDIT_FORM_ROUTE);
+            $routes[] = (new Route(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history'))
                 ->setOption('tabTitle', 'sulu_media.history')
-                ->setParent(static::EDIT_FORM_ROUTE),
-        ];
+                ->setParent(static::EDIT_FORM_ROUTE);
+        }
+
+        return $routes;
     }
 
     public function getSecurityContexts()
@@ -138,7 +155,7 @@ class MediaAdmin extends Admin
         return [
             'Sulu' => [
                 'Media' => [
-                    'sulu.media.collections' => [
+                    static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
@@ -166,6 +183,11 @@ class MediaAdmin extends Admin
                     'sulu_media.redirect',
                     ['id' => ':id']
                 ),
+            ],
+            'media_permissions' => [
+                'add' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD),
+                'delete' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE),
+                'edit' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT),
             ],
         ];
     }

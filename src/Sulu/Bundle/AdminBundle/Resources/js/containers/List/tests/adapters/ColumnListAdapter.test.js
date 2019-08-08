@@ -239,6 +239,53 @@ test('Render with add button in toolbar when onItemAdd callback is given', () =>
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render without add button in toolbar when onItemAdd callback is given but permission is not granted', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: true,
+            },
+            {
+                id: 4,
+                title: 'Page 1.2',
+                hasChildren: false,
+                _permissions: {
+                    add: false,
+                },
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1, 4]}
+            data={data}
+            onItemAdd={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Column').at(2).find('div').simulate('mouseEnter');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar ToolbarButton[icon="su-plus-circle"]')).toHaveLength(0);
+});
+
 test('Render data with loading column', () => {
     const data = [
         [
@@ -306,6 +353,152 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
     columnListAdapter.find('Item').at(1).simulate('click');
 
     expect(itemActivateSpy).toBeCalledWith(2);
+});
+
+test('Show all setting buttons', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1]}
+            data={data}
+            onRequestItemCopy={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
+            onRequestItemOrder={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+});
+
+test('Disable delete button if permission is missing', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+                _permissions: {
+                    delete: false,
+                },
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1]}
+            data={data}
+            onRequestItemCopy={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
+            onRequestItemOrder={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(true);
+    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+});
+
+test('Disable move and copy button if permission is missing', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+                _permissions: {
+                    edit: false,
+                },
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1]}
+            data={data}
+            onRequestItemCopy={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
+            onRequestItemOrder={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(true);
+    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(true);
+    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(false);
+});
+
+test('Disable sort button if edit permission on parent is missing', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+                _permissions: {
+                    edit: false,
+                },
+            },
+        ],
+        [
+            {
+                id: 2,
+                title: 'Page 1.1',
+                hasChildren: true,
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1, 2]}
+            data={data}
+            onRequestItemCopy={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+            onRequestItemMove={jest.fn()}
+            onRequestItemOrder={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Column > div').at(1).simulate('mouseEnter');
+    columnListAdapter.find('Toolbar ToolbarDropdown').simulate('click');
+    columnListAdapter.update();
+
+    expect(columnListAdapter.find('Toolbar Action').at(0).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(1).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(2).prop('disabled')).toEqual(false);
+    expect(columnListAdapter.find('Toolbar Action').at(3).prop('disabled')).toEqual(true);
 });
 
 test('Do not show order button if onRequestItemOrder callback is undefined', () => {

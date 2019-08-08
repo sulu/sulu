@@ -33,6 +33,10 @@ class MediaCollection extends React.Component<Props> {
         overlayType: 'overlay',
     };
 
+    static addable: boolean = true;
+    static deletable: boolean = true;
+    static editable: boolean = true;
+
     handleMediaClick = (mediaId: string | number) => {
         const {onMediaNavigate} = this.props;
 
@@ -73,7 +77,7 @@ class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
-                collectionId={collectionStore.id}
+                collectionId={MediaCollection.addable ? collectionStore.id : undefined}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}
@@ -81,6 +85,9 @@ class MediaCollection extends React.Component<Props> {
                 open={uploadOverlayOpen}
             >
                 <CollectionSection
+                    addable={MediaCollection.addable}
+                    deletable={MediaCollection.deletable}
+                    editable={MediaCollection.editable}
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}

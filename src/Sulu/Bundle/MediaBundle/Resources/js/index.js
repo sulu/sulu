@@ -17,6 +17,7 @@ import {
     MediaSelectionBlockPreviewTransformer,
     SingleMediaSelectionBlockPreviewTransformer,
 } from './containers/FieldBlocks';
+import MediaCollection from './containers/MediaCollection';
 import MediaOverview from './views/MediaOverview';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
@@ -25,6 +26,12 @@ const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
 
 initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: boolean) => {
+    const {media_permissions: mediaPermissions} = config;
+
+    MediaCollection.addable = mediaPermissions.add;
+    MediaCollection.deletable = mediaPermissions.delete;
+    MediaCollection.editable = mediaPermissions.edit;
+
     if (initialized) {
         return;
     }

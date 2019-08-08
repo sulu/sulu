@@ -60,6 +60,8 @@ class PageAdminTest extends TestCase
 
     public function testGetRoutes()
     {
+        $this->securityChecker->hasPermission('sulu.webspaces.test-1', 'edit')->willReturn(true);
+
         $localization1 = new Localization('de');
 
         $webspace1 = new Webspace();

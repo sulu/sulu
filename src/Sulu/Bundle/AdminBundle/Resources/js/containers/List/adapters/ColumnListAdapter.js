@@ -149,12 +149,20 @@ class ColumnListAdapter extends AbstractAdapter {
     getToolbarItems = (index: number) => {
         const {
             activeItems,
+            data,
             onItemAdd,
             onRequestItemCopy,
             onRequestItemDelete,
             onRequestItemMove,
             onRequestItemOrder,
         } = this.props;
+
+        if (!activeItems) {
+            throw new Error(
+                'The ColumnListAdapter does not work without activeItems. '
+                + 'This error should not happen and is likely a bug.'
+            );
+        }
 
         if (this.orderColumn === index) {
             return [
@@ -169,8 +177,16 @@ class ColumnListAdapter extends AbstractAdapter {
         }
 
         const toolbarItems = [];
+        const parentColumn = data[index - 1];
+        const parentItem = parentColumn ? parentColumn.find((item) => item.id === activeItems[index]) : undefined;
+        const {
+            _permissions: {
+                add: parentAddPermission = true,
+                edit: parentEditPermission = true,
+            } = {},
+        } = parentItem || {};
 
-        if (onItemAdd) {
+        if (onItemAdd && parentAddPermission) {
             toolbarItems.push({
                 icon: 'su-plus-circle',
                 type: 'button',
@@ -182,48 +198,71 @@ class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
-        if (!activeItems) {
-            throw new Error(
-                'The ColumnListAdapter does not work without activeItems. '
-                + 'This error should not happen and is likely a bug.'
-            );
-        }
-
-        const hasActiveItem = activeItems[index + 1] === undefined;
+        const hasActiveItem = activeItems[index + 1] !== undefined;
+        const column = data[index];
+        const item = column ? column.find((item) => item.id === activeItems[index + 1]) : undefined;
+        const {
+            _permissions: {
+                delete: deletePermission = true,
+                edit: editPermission = true,
+            } = {},
+        } = item || {};
 
         const settingOptions = [];
         if (onRequestItemDelete) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !deletePermission,
                 label: translate('sulu_admin.delete'),
                 onClick: () => {
-                    onRequestItemDelete(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemDelete(itemId);
                 },
             });
         }
 
         if (onRequestItemMove) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !editPermission,
                 label: translate('sulu_admin.move'),
                 onClick: () => {
-                    onRequestItemMove(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemMove(itemId);
                 },
             });
         }
 
         if (onRequestItemCopy) {
             settingOptions.push({
-                disabled: hasActiveItem,
+                disabled: !hasActiveItem || !editPermission,
                 label: translate('sulu_admin.copy'),
                 onClick: () => {
-                    onRequestItemCopy(activeItems[index + 1]);
+                    const itemId = activeItems[index + 1];
+                    if (!itemId) {
+                        throw new Error(
+                            'An undefined itemId cannot be deleted! This should not happen and is likely a bug.'
+                        );
+                    }
+
+                    onRequestItemCopy(itemId);
                 },
             });
         }
 
         if (onRequestItemOrder) {
             settingOptions.push({
+                disabled: !parentEditPermission,
                 label: translate('sulu_admin.order'),
                 onClick: action(() => {
                     this.orderColumn = index;

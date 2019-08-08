@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
@@ -45,12 +46,19 @@ class CustomUrlAdmin extends Admin
      */
     private $routeBuilderFactory;
 
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        RouteBuilderFactoryInterface $routeBuilderFactory
+        RouteBuilderFactoryInterface $routeBuilderFactory,
+        SecurityCheckerInterface $securityChecker
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->securityChecker = $securityChecker;
     }
 
     public function getRoutes(): array
@@ -60,8 +68,10 @@ class CustomUrlAdmin extends Admin
             'sulu_admin.delete',
         ];
 
-        return [
-            $this->routeBuilderFactory
+        $routes = [];
+
+        if ($this->hasSomeWebspaceCustomUrlPermission()) {
+            $routes[] = $this->routeBuilderFactory
                 ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
                 ->setResourceKey('custom_urls')
                 ->setListKey('custom_urls')
@@ -75,8 +85,10 @@ class CustomUrlAdmin extends Admin
                 ->setTabOrder(1024)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
                 ->addRerenderAttribute('webspace')
-                ->getRoute(),
-        ];
+                ->getRoute();
+        }
+
+        return $routes;
     }
 
     /**
@@ -117,5 +129,21 @@ class CustomUrlAdmin extends Admin
             PermissionTypes::EDIT,
             PermissionTypes::DELETE,
         ];
+    }
+
+    private function hasSomeWebspaceCustomUrlPermission(): bool
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $hasWebspaceAnalyticsPermission = $this->securityChecker->hasPermission(
+                self::getCustomUrlSecurityContext($webspace->getKey()),
+                PermissionTypes::EDIT
+            );
+
+            if ($hasWebspaceAnalyticsPermission) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

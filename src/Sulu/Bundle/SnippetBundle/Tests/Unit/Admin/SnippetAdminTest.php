@@ -63,6 +63,11 @@ class SnippetAdminTest extends TestCase
             'Test'
         );
 
+        $this->securityChecker->hasPermission('sulu.global.snippets', 'add')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.global.snippets', 'edit')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.global.snippets', 'delete')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.global.snippets', 'view')->willReturn(true);
+
         $this->webspaceManager->getAllLocalizations()->willReturn(array_map(function($localization) {
             return new Localization($localization);
         }, $locales));

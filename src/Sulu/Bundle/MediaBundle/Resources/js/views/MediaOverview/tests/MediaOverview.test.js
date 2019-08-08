@@ -156,8 +156,17 @@ beforeEach(() => {
 test('Render a simple MediaOverview', () => {
     const MediaOverview = require('../MediaOverview').default;
     const router = {
-        bind: jest.fn(),
         attributes: {},
+        bind: jest.fn(),
+        route: {
+            options: {
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
     };
 
     const mediaOverview = render(<MediaOverview router={router} />);
@@ -167,8 +176,17 @@ test('Render a simple MediaOverview', () => {
 test('Destroy all stores on unmount', () => {
     const MediaOverview = require('../MediaOverview').default;
     const router = {
-        bind: jest.fn(),
         attributes: {},
+        bind: jest.fn(),
+        route: {
+            options: {
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
     };
 
     const mediaOverview = mount(<MediaOverview router={router} />);
@@ -206,6 +224,11 @@ test('Should navigate to defined route on back button click', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -238,6 +261,11 @@ test('Router navigate should be called when a media was clicked', () => {
         route: {
             options: {
                 locales: [locale],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -264,6 +292,11 @@ test('The collectionId should be update along with the content when a collection
         route: {
             options: {
                 locales: [locale],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -300,7 +333,11 @@ test('Should delete selected items when delete button is clicked', () => {
         bind: jest.fn(),
         route: {
             options: {
-
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
     };
@@ -328,6 +365,11 @@ test('Upload button should be disabled if nothing is selected', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
     };
@@ -350,6 +392,11 @@ test('Upload overlay should be opened and closed as it requests', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -368,6 +415,35 @@ test('Upload overlay should be opened and closed as it requests', () => {
     expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(false);
 });
 
+test('Toolbar buttons should disappear when permissions are missing', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: false,
+                    delete: false,
+                    edit: false,
+                },
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.collectionId.set(4);
+    mediaOverview.locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(0);
+});
+
 test('Move overlay button should be disabled if nothing is selected', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
@@ -379,6 +455,11 @@ test('Move overlay button should be disabled if nothing is selected', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -408,6 +489,11 @@ test('Move overlay should disappear when overlay is closed', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {
@@ -444,6 +530,11 @@ test('Media should be moved when overlay is confirmed', () => {
         route: {
             options: {
                 locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
             },
         },
         attributes: {

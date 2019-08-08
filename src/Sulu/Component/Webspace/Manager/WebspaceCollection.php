@@ -15,7 +15,6 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
-use Traversable;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -132,15 +131,6 @@ class WebspaceCollection implements \IteratorAggregate
         return count($this->webspaces);
     }
 
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Retrieve an external iterator.
-     *
-     * @see http://php.net/manual/en/iteratoraggregate.getiterator.php
-     *
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     *                     <b>Traversable</b>
-     */
     public function getIterator()
     {
         return new \ArrayIterator($this->webspaces);

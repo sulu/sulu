@@ -3,14 +3,9 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/ViewRegistry';
-import sidebarStore from '../../Sidebar/stores/SidebarStore';
 
 jest.mock('../registries/ViewRegistry', () => ({
     get: jest.fn(),
-}));
-
-jest.mock('../../Sidebar/stores/SidebarStore', () => ({
-    clearConfig: jest.fn(),
 }));
 
 test('Render view returned from ViewRegistry', () => {
@@ -22,7 +17,6 @@ test('Render view returned from ViewRegistry', () => {
     const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
-    expect(sidebarStore.clearConfig).toBeCalled();
 });
 
 test('Render view returned from ViewRegistry with passed router', () => {
@@ -287,72 +281,9 @@ test('Render view with route that has more than one rerenderAttributes', () => {
     expect(viewRenderer.key()).toBe('route-test__de');
 });
 
-test('Render view and not clear the sidebarstore when component has sidebar', () => {
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route: {view: 'test'},
-    };
-    const Component = class Component extends React.Component {
-        static hasSidebar = true;
-
-        render() {
-            return <h1>{this.props.title}</h1>;
-        }
-    };
-
-    viewRegistry.get.mockReturnValue(Component);
-    const view = mount(<ViewRenderer router={router} />);
-    expect(render(view)).toMatchSnapshot();
-    expect(viewRegistry.get).toBeCalledWith('test');
-    expect(sidebarStore.clearConfig).not.toBeCalled();
-});
-
-test('Render view and not clear the sidebarstore when one of the parent component has sidebar', () => {
-    const route = {
-        view: 'test',
-        parent: {
-            view: 'parent',
-        },
-    };
-
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route,
-    };
-
-    const Component = class Component extends React.Component {
-        static hasSidebar = false;
-
-        render() {
-            return <h1>{this.props.title}</h1>;
-        }
-    };
-
-    const ParentComponent = class Component extends React.Component {
-        static hasSidebar = true;
-
-        render() {
-            return <h1>{this.props.title}</h1>;
-        }
-    };
-
-    viewRegistry.get.mockImplementation((view) => {
-        switch (view) {
-            case 'test':
-                return Component;
-            case 'parent':
-                return ParentComponent;
-        }
-    });
-
-    const view = mount(<ViewRenderer router={router} />);
-    expect(render(view)).toMatchSnapshot();
-    expect(viewRegistry.get).toBeCalledWith('test');
-    expect(viewRegistry.get).toBeCalledWith('parent');
-    expect(sidebarStore.clearConfig).not.toBeCalled();
-});
-
 test('Clear bindings of router everytime a new view is rendered', () => {
+    viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
+
     const route1 = {
         name: 'test1',
         view: 'test',
@@ -382,6 +313,8 @@ test('Clear bindings of router everytime a new view is rendered', () => {
 });
 
 test('Clear bindings of router when same view with a different rerender attribute is rendered', () => {
+    viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
+
     const route = {
         name: 'test1',
         view: 'test',
