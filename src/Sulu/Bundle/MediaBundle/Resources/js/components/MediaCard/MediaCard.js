@@ -211,11 +211,7 @@ class MediaCard extends React.Component<Props> {
                     {image
                         ? (
                             <Fragment>
-                                <img
-                                    alt={title}
-                                    onLoad={this.handleImageLoad}
-                                    src={this.image.src}
-                                />
+                                <img alt={title} src={this.image.src} />
                                 {this.imageLoading && <Loader />}
                             </Fragment>
                         )
