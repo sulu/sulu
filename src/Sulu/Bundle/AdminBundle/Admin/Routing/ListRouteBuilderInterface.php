@@ -59,6 +59,12 @@ interface ListRouteBuilderInterface
      */
     public function addRouterAttributesToListStore(array $routerAttributesToListStore): self;
 
+
+    /**
+     * @param string[] $routerAttributesToListMetadata
+     */
+    public function addRouterAttributesToListMetadata(array $routerAttributesToListMetadata): self;
+
     /**
      * @param string[] $resourceStorePropertiesToListStore
      */

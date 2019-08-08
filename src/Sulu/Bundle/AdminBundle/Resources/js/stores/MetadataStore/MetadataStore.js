@@ -1,20 +1,27 @@
 // @flow
+import symfonyRouting from 'fos-jsrouting/router';
 import {Requester} from '../../services';
 
 class MetadataStore {
-    endpoint: string;
     metadataPromises: {[string]: {[string]: Promise<Object>}} = {};
 
-    loadMetadata(type: string, key: string): Promise<Object> {
+    loadMetadata(type: string, key: string, metadataOptions: Object): Promise<Object> {
+        const parameters = {
+            type: type,
+            key: key,
+            metadataOptions: {},
+        };
+        if (metadataOptions) {
+            parameters.metadataOptions = metadataOptions;
+        }
+
         if (!this.metadataPromises[type]) {
             this.metadataPromises[type] = {};
         }
 
         if (!this.metadataPromises[type][key]) {
             this.metadataPromises[type][key] = Requester.get(
-                this.endpoint
-                    .replace(':type', type)
-                    .replace(':key', key)
+                symfonyRouting.generate('sulu_admin.metadata', parameters)
             );
         }
 

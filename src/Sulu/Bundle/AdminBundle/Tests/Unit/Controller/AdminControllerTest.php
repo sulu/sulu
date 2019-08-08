@@ -295,14 +295,14 @@ class AdminControllerTest extends TestCase
         $this->user->getLocale()->willReturn('en');
 
         $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
-        $metadataProvider->getMetadata('pages', 'en')->willReturn($form);
+        $metadataProvider->getMetadata('pages', 'en', [])->willReturn($form);
         $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
 
         $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
             return $form === $view->getData();
         }))->shouldBeCalled()->willReturn(new Response());
 
-        $this->adminController->metadataAction('form', 'pages');
+        $this->adminController->metadataAction('form', 'pages', new Request());
     }
 
     public function provideTranslationsAction()

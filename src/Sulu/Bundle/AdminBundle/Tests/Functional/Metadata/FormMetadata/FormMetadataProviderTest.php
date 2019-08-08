@@ -32,12 +32,12 @@ class FormMetadataProviderTest extends KernelTestCase
     public function testMetadataNotFound()
     {
         $this->expectException(MetadataNotFoundException::class);
-        $this->formMetadataProvider->getMetadata('form_without_metadata', 'en');
+        $this->formMetadataProvider->getMetadata('form_without_metadata', 'en', []);
     }
 
     public function testGetMetadataFromFormMetadataXmlLoader()
     {
-        $form = $this->formMetadataProvider->getMetadata('form_with_schema', 'en');
+        $form = $this->formMetadataProvider->getMetadata('form_with_schema', 'en', []);
         $this->assertInstanceOf(FormMetadata::class, $form);
         $this->assertCount(3, $form->getItems());
         $schema = $form->getSchema()->toJsonSchema();
@@ -46,7 +46,7 @@ class FormMetadataProviderTest extends KernelTestCase
 
     public function testGetMetadataFromStructureLoader()
     {
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'en');
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'en', []);
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(2, $typedForm->getForms());
     }

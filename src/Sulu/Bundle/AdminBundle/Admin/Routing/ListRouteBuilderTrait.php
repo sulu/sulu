@@ -72,6 +72,16 @@ trait ListRouteBuilderTrait
         $route->setOption('routerAttributesToListStore', $newRouterAttributesToListStore);
     }
 
+    private function addRouterAttributesToListMetadataToRoute(Route $route, array $routerAttributesToListMetadata): void
+    {
+        $oldRouterAttributesToListMetadata = $route->getOption('routerAttributesToListMetadata');
+        $newRouterAttributesToListMetadata = $oldRouterAttributesToListMetadata
+            ? array_merge($oldRouterAttributesToListMetadata, $routerAttributesToListMetadata)
+            : $routerAttributesToListMetadata;
+
+        $route->setOption('routerAttributesToListMetadata', $newRouterAttributesToListMetadata);
+    }
+
     private function addLocalesToRoute(Route $route, array $locales): void
     {
         $oldLocales = $route->getOption('locales');

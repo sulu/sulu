@@ -1,4 +1,5 @@
 // @flow
+import SymfonyRouting from 'fos-jsrouting/router';
 import metadataStore from '../MetadataStore';
 import Requester from '../../../services/Requester';
 
@@ -7,8 +8,6 @@ jest.mock('../../../services/Requester', () => ({
 }));
 
 test('Load metadata for given type and key', () => {
-    metadataStore.endpoint = '/metadata/:type/:key';
-
     const snippetMetadata = {
         form: {
             title: {
@@ -37,6 +36,10 @@ test('Load metadata for given type and key', () => {
 
     const snippetPromise = Promise.resolve(snippetMetadata);
     const tagPromise = Promise.resolve(tagMetadata);
+
+    SymfonyRouting.generate.mockImplementation((routeName, value) => {
+        return '/metadata/' + value.type + '/' + value.key;
+    });
 
     Requester.get.mockImplementation((key) => {
         switch (key) {

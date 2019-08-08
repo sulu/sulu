@@ -36,7 +36,7 @@ class ListMetadataProvider implements MetadataProviderInterface
         $this->translator = $translator;
     }
 
-    public function getMetadata(string $key, string $locale)
+    public function getMetadata(string $key, string $locale, array $metadataOptions)
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($key);
 

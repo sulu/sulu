@@ -84,7 +84,7 @@ class ListMetadataProviderTest extends TestCase
             ]
         );
 
-        $contactListMetadata = $this->listMetadataProvider->getMetadata('contact', 'de');
+        $contactListMetadata = $this->listMetadataProvider->getMetadata('contact', 'de', []);
         $contactListFields = $contactListMetadata->getFields();
 
         $this->assertEquals('firstName', $contactListFields['firstName']->getName());
@@ -104,7 +104,7 @@ class ListMetadataProviderTest extends TestCase
             $contactListFields['lastName']->getVisibility()
         );
 
-        $accountListMetadata = $this->listMetadataProvider->getMetadata('account', 'en');
+        $accountListMetadata = $this->listMetadataProvider->getMetadata('account', 'en', []);
         $accountListFields = $accountListMetadata->getFields();
 
         $this->assertEquals('name', $accountListFields['name']->getName());
@@ -121,6 +121,6 @@ class ListMetadataProviderTest extends TestCase
     {
         $this->expectException(MetadataNotFoundException::class);
 
-        $this->listMetadataProvider->getMetadata('not-existing', 'de');
+        $this->listMetadataProvider->getMetadata('not-existing', 'de', []);
     }
 }

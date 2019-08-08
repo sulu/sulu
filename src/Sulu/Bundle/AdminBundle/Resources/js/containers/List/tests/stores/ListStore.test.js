@@ -620,6 +620,7 @@ test('The loading strategy should be called with expandedIds if some items are a
             page,
         },
         {},
+        {},
         [1, 5, 10]
     );
     listStore.schema = {};
@@ -886,7 +887,7 @@ test('Get schema from MetadataStore for correct resourceKey', () => {
     });
     listStore.updateLoadingStrategy(new LoadingStrategy());
     listStore.updateStructureStrategy(new StructureStrategy());
-    expect(metadataStore.getSchema).toBeCalledWith('tests');
+    expect(metadataStore.getSchema).toBeCalledWith('tests', undefined);
     return schemaPromise.then(() => {
         expect(listStore.schema).toEqual(schema);
         listStore.destroy();

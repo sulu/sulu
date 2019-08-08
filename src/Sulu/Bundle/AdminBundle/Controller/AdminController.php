@@ -224,12 +224,6 @@ class AdminController
 
         $config = [
             'sulu_admin' => [
-                'endpoints' => [
-                    'metadata' => $this->urlGenerator->generate(
-                        'sulu_admin.metadata',
-                        ['type' => ':type', 'key' => ':key']
-                    ),
-                ],
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
@@ -276,12 +270,17 @@ class AdminController
         return new JsonResponse($translations);
     }
 
-    public function metadataAction(string $type, string $key): Response
+    public function metadataAction(string $type, string $key, Request $request): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
+        $metadataOptions = [];
+        if ($request->query->get('metadataOptions')) {
+            $metadataOptions = $request->query->get('metadataOptions');
+        }
+
         $view = View::create(
-            $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale())
+            $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale(), $metadataOptions)
         );
         $view->setFormat('json');
 
