@@ -233,6 +233,19 @@ class TargetGroupController extends RestController implements ClassResourceInter
             $data['rules'] = [];
         }
 
+        // Unset IDs of Conditions, otherwise they won't be able to save as id is null.
+        if (array_key_exists('rules', $data)) {
+            foreach ($data['rules'] as $ruleKey => &$rule) {
+                if (array_key_exists('conditions', $rule)) {
+                    foreach ($rule['conditions'] as $key => &$condition) {
+                        if (array_key_exists('id', $condition) && is_null($condition['id'])) {
+                            unset($condition['id']);
+                        }
+                    }
+                }
+            }
+        }
+
         return $data;
     }
 

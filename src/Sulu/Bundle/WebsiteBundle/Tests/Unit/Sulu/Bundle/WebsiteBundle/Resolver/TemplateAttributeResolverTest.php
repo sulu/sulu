@@ -23,6 +23,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class TemplateAttributeResolverTest extends TestCase
@@ -132,8 +133,8 @@ class TemplateAttributeResolverTest extends TestCase
         $this->request->get('_route')->willReturn('test');
         $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', 'prefix' => '/de']);
 
-        $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/de'], true)->willReturn('http://sulu.io/de/test');
-        $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/en'], true)->willReturn('http://sulu.io/en/test');
+        $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/de'], UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('http://sulu.io/de/test');
+        $this->router->generate('test', ['host' => 'sulu.io', 'prefix' => '/en'], UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('http://sulu.io/en/test');
 
         $this->requestAnalyzerResolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
@@ -152,6 +153,44 @@ class TemplateAttributeResolverTest extends TestCase
 
     public function testResolve()
     {
+        $resolved = $this->templateAttributeResolver->resolve(['custom' => 'test']);
+
+        $this->assertEquals([
+            'extension' => [
+                'seo' => [],
+                'excerpt' => [],
+            ],
+            'content' => [],
+            'view' => [],
+            'shadowBaseLocale' => null,
+            'custom' => 'test',
+            'urls' => [
+                'en' => 'http://sulu.io/en/test',
+                'de' => 'http://sulu.io/de/test',
+            ],
+            'request' => [
+                'webspaceKey' => 'sulu_io',
+                'webspaceName' => 'Sulu',
+                'defaultLocale' => 'en',
+                'portalKey' => 'sulu_io',
+                'portalName' => 'Sulu',
+                'portalUrl' => 'sulu.io/de',
+                'resourceLocatorPrefix' => '/de',
+                'resourceLocator' => '/test',
+            ],
+        ], $resolved);
+    }
+
+    public function testResolveStaticRoute()
+    {
+        $this->request->get('_route')->willReturn('test_static')->shouldBeCalled();
+        $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', '_locale' => 'de']);
+
+        $this->router->generate('test_static', ['host' => 'sulu.io', '_locale' => 'de'], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('http://sulu.io/de/test')->shouldBeCalledTimes(1);
+        $this->router->generate('test_static', ['host' => 'sulu.io', '_locale' => 'en'], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('http://sulu.io/en/test')->shouldBeCalledTimes(1);
+
         $resolved = $this->templateAttributeResolver->resolve(['custom' => 'test']);
 
         $this->assertEquals([
