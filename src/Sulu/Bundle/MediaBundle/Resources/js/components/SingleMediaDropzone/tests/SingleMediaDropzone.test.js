@@ -1,5 +1,5 @@
 // @flow
-import {shallow, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import SingleMediaDropzone from '../SingleMediaDropzone';
 
@@ -20,6 +20,19 @@ test('Render a SingleMediaDropzone with the default empty icon', () => {
 
 test('Render a SingleMediaDropzone with the passed empty icon', () => {
     expect(render(<SingleMediaDropzone emptyIcon="su-user" image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
+});
+
+test('Render a SingleMediaDropzone with a loader if image has not been loaded yet', () => {
+    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
+    expect(singleMediaDropzone.render()).toMatchSnapshot();
+});
+
+test('Render a SingleMediaDropzone without a loader if image has been loaded yet', () => {
+    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
+
+    singleMediaDropzone.instance().image.onload();
+
+    expect(singleMediaDropzone.render()).toMatchSnapshot();
 });
 
 test('Render a SingleMediaDropzone in disabled state', () => {

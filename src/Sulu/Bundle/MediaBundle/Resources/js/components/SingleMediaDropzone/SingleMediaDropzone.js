@@ -1,10 +1,10 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {observable, action} from 'mobx';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
-import {CircularProgressbar, Icon} from 'sulu-admin-bundle/components';
+import {CircularProgressbar, Icon, Loader} from 'sulu-admin-bundle/components';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 
@@ -33,7 +33,38 @@ class SingleMediaDropzone extends React.Component<Props> {
         uploading: false,
     };
 
+    image: Image;
+
     @observable uploadIndicatorVisibility: boolean;
+    @observable imageLoading: boolean = false;
+
+    componentDidMount() {
+        this.preloadImage();
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (this.props.image !== prevProps.image) {
+            this.preloadImage();
+        }
+    }
+
+    @action preloadImage() {
+        const {image: src} = this.props;
+
+        if (src) {
+            this.imageLoading = true;
+
+            this.image = new Image();
+            this.image.onload = this.handleImageLoad;
+            this.image.src = src;
+        } else {
+            this.handleImageLoad();
+        }
+    }
+
+    @action handleImageLoad = () => {
+        this.imageLoading = false;
+    };
 
     @action setUploadIndicatorVisibility(visibility: boolean) {
         this.uploadIndicatorVisibility = visibility;
@@ -86,7 +117,10 @@ class SingleMediaDropzone extends React.Component<Props> {
                 onDrop={this.handleDrop}
             >
                 {image &&
-                    <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
+                    <Fragment>
+                        <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
+                        {this.imageLoading && <Loader />}
+                    </Fragment>
                 }
                 {!image && mimeType &&
                     <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
