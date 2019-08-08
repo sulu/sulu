@@ -2,9 +2,13 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * BUGFIX      #4644  [CustomUrlBundle]      Fix loading custom url list if creator has been deleted
-    * BUGFIX      #4627  [WebsiteBundle]        Fix Routing when no prefix is Provided.
+    * BUGFIX      #4644  [CustomUrlBundle]         Fix loading custom url list if creator has been deleted
+    * BUGFIX      #4627  [WebsiteBundle]           Fix Routing when no prefix is Provided.
     * BUGFIX      #4633  [AudienceTargetingBundle] Fixed conditions saving for Audience Targeting.
+    * BUGFIX      #4605  [Webspace]                Fix sulu document init routes generation
+    * BUGFIX      #4572  [WebsiteBundle]           Fix false 406 status code for controller InvalidArgumentExceptions
+    * BUGFIX      #4571  [WebsiteBundle]           Fix language switcher for static routes
+    * BUGFIX      #4579  [ContentBundle]           Fix controller reference validation with FQCN
 
 * 1.6.27 (2019-05-16)
     * BUGFIX      #4540  [ContentBundle]        Fix copying of teaser selection in WebspaceCopyCommand
@@ -296,12 +300,18 @@ CHANGELOG for Sulu
     * FEATURE     #3278 [Util]                  Introduced new parameter `app.version` read from composer.json
     * ENHANCEMENT #3154 [All]                   Upgrade symfony to ^3.0
 
+* 1.5.24 (2019-08-08)
+    * BUGFIX      #4605 [Webspace]              Fix sulu document init routes generation
+    * BUGFIX      #4572 [WebsiteBundle]         Fix false 406 status code for controller InvalidArgumentExceptions
+    * BUGFIX      #4571 [WebsiteBundle]         Fix language switcher for static routes
+    * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
+
 * 1.5.23 (2019-05-16)
     * BUGFIX      #4538 [Component]             Fixed Redirect- and SeoEnhancer to respect current request schema.
     
 * 1.5.22 (2019-03-26)
     * HOTFIX      #4491 [ContentBundle]         Set ghost-locale to first available-locale if locale not exists in webspace
-    * BUGFIX      #4433 [SecurityBundle]       Fix fresh User object comparison to the deserialized User object
+    * BUGFIX      #4433 [SecurityBundle]        Fix fresh User object comparison to the deserialized User object
     
 * 1.5.21 (2019-02-28)
     * ENHANCEMENT #4367 [WebsiteBundle]         Remove false deprecation of WebsiteController::renderStructure

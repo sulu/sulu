@@ -327,9 +327,12 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
      */
     private function validateControllerAction($controllerAction)
     {
-        $result = $this->controllerNameConverter->parse($controllerAction);
+        try {
+            $controllerAction = $this->controllerNameConverter->parse($controllerAction);
+        } catch (\InvalidArgumentException $e) {
+        }
 
-        list($class, $method) = explode('::', $result);
+        list($class, $method) = explode('::', $controllerAction);
 
         if (!method_exists($class, $method)) {
             $reflector = new \ReflectionClass($class);

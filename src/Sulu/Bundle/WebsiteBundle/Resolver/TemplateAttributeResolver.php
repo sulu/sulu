@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -138,10 +139,14 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
                         $routeParams['prefix'] = $portalInformation->getPrefix();
                     }
 
+                    if (isset($routeParams['_locale'])) {
+                        $routeParams['_locale'] = $portalInformation->getLocale();
+                    }
+
                     $url = $this->router->generate(
                         $routeName,
                         $routeParams,
-                        true
+                        UrlGeneratorInterface::ABSOLUTE_URL
                     );
 
                     $urls[$portalInformation->getLocale()] = $url;

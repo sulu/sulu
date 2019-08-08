@@ -124,14 +124,26 @@ class WebspaceInitializer implements InitializerInterface
 
             $this->documentManager->persist($homeDocument, $webspaceLocale, $persistOptions);
             $this->documentManager->publish($homeDocument, $webspaceLocale);
+        }
 
+        foreach ($webspaceLocales as $webspaceLocale) {
             $routePath = $routesPath . '/' . $webspaceLocale;
 
             try {
                 $routeDocument = $this->documentManager->find($routePath);
+
+                if ($routeDocument->getTargetDocument()
+                    && $routeDocument->getTargetDocument()->getUuid() === $homeDocument->getUuid()
+                ) {
+                    $output->writeln(sprintf('  [ ] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
+
+                    continue;
+                }
             } catch (DocumentNotFoundException $e) {
                 $routeDocument = $this->documentManager->create('route');
             }
+
+            $output->writeln(sprintf('  [+] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
 
             $routeDocument->setTargetDocument($homeDocument);
             $this->documentManager->persist($routeDocument, $webspaceLocale, [
