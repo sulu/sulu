@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
