@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.5
+* 1.5.24 (2019-08-08)
+    * BUGFIX      #4605 [Webspace]              Fix sulu document init routes generation
     * BUGFIX      #4572 [WebsiteBundle]         Fix false 406 status code for controller InvalidArgumentExceptions
     * BUGFIX      #4571 [WebsiteBundle]         Fix language switcher for static routes
     * BUGFIX      #4579 [ContentBundle]         Fix controller reference validation with FQCN
