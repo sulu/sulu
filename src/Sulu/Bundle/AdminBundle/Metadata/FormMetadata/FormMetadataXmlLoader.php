@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
 
 class FormMetadataXmlLoader implements FormMetadataLoaderInterface
@@ -23,7 +24,7 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
     private $formXmlLoader;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $formDirectories;
 
@@ -37,14 +38,6 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
      */
     private $debug;
 
-    /**
-     * FormMetadataXmlLoader constructor.
-     *
-     * @param FormXmlLoader $formXmlLoader
-     * @param array $formDirectories
-     * @param string $cacheDir
-     * @param bool $debug
-     */
     public function __construct(
         FormXmlLoader $formXmlLoader,
         array $formDirectories,
@@ -57,19 +50,16 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
         $this->debug = $debug;
     }
 
-    /**
-     *  @return TypedFormMetadata|FormMetadata|null
-     */
-    public function getMetadata(string $key, string $locale)
+    public function getMetadata(string $key, string $locale): ?FormMetadata
     {
         $configCache = $this->getConfigCache($key, $locale);
 
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
-        }
-
         if (!file_exists($configCache->getPath())) {
             return null;
+        }
+
+        if (!$configCache->isFresh()) {
+            $this->warmUp($this->cacheDir);
         }
 
         $form = unserialize(file_get_contents($configCache->getPath()));
@@ -81,10 +71,12 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
     {
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         $formsMetadataCollection = [];
+        $formsMetadataDirectory = [];
         foreach ($formFinder as $formFile) {
             $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
             $items = $formMetadataCollection->getItems();
             $formKey = reset($items)->getKey();
+            $formsMetadataDirectory[$formKey] = $formFile->getPathName();
             if (!array_key_exists($formKey, $formsMetadataCollection)) {
                 $formsMetadataCollection[$formKey] = $formMetadataCollection;
             } else {
@@ -95,7 +87,7 @@ class FormMetadataXmlLoader implements FormMetadataLoaderInterface
         foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
             foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
                 $configCache = $this->getConfigCache($key, $locale);
-                $configCache->write(serialize($formMetadata));
+                $configCache->write(serialize($formMetadata), [new FileResource($formsMetadataDirectory[$key])]);
             }
         }
     }

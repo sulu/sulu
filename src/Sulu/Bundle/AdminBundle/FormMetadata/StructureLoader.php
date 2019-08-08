@@ -61,19 +61,16 @@ class StructureLoader implements FormMetadataLoaderInterface
         $this->debug = $debug;
     }
 
-    /**
-     * @return TypedFormMetadata|FormMetadata|null
-     */
-    public function getMetadata(string $key, string $locale)
+    public function getMetadata(string $key, string $locale): ?TypedFormMetadata
     {
         $configCache = $this->getConfigCache($key, $locale);
 
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
-        }
-
         if (!file_exists($configCache->getPath())) {
             return null;
+        }
+
+        if (!$configCache->isFresh()) {
+            $this->warmUp($this->cacheDir);
         }
 
         $form = unserialize(file_get_contents($configCache->getPath()));
