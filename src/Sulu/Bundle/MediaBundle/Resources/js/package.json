@@ -14,7 +14,6 @@
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
-        "pretty": "^2.0.0",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
         "sulu-page-bundle": "file:../../../PageBundle/Resources/js"
     },

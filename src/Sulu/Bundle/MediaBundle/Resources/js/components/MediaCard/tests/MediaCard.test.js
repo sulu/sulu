@@ -1,28 +1,59 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
-import pretty from 'pretty';
+// @flow
+import {mount} from 'enzyme';
 import React from 'react';
 import MediaCard from '../MediaCard';
 
 test('Render a MediaCard component', () => {
-    expect(render(
+    const mediaCard = mount(
         <MediaCard
+            downloadText=""
+            downloadUrl=""
+            id="test"
             image="http://lorempixel.com/300/200"
             meta="Test/Test"
+            mimeType="image/jpeg"
             title="Test"
         />
-    )).toMatchSnapshot();
+    );
+
+    mediaCard.instance().image.onload();
+
+    expect(mediaCard.render()).toMatchSnapshot();
+});
+
+test('Render a MediaCard component with loader if image has not been loaded yet', () => {
+    const mediaCard = mount(
+        <MediaCard
+            downloadText=""
+            downloadUrl=""
+            id="test"
+            image="http://lorempixel.com/300/200"
+            meta="Test/Test"
+            mimeType="image/jpeg"
+            title="Test"
+        />
+    );
+
+    expect(mediaCard.render()).toMatchSnapshot();
 });
 
 test('Render a MediaCard component with a checkbox for selection', () => {
-    expect(render(
+    const mediaCard = mount(
         <MediaCard
+            downloadText=""
+            downloadUrl=""
+            id="test"
             image="http://lorempixel.com/300/200"
             meta="Test/Test"
+            mimeType="image/jpeg"
             onSelectionChange={jest.fn()}
             title="Test"
         />
-    )).toMatchSnapshot();
+    );
+
+    mediaCard.instance().image.onload();
+
+    expect(mediaCard.render()).toMatchSnapshot();
 });
 
 test('Render a MediaCard with download list', () => {
@@ -41,20 +72,23 @@ test('Render a MediaCard with download list', () => {
         },
     ];
 
-    const masonry = mount(
+    const mediaCard = mount(
         <MediaCard
             downloadCopyText="Copy URL"
             downloadText="Direct download"
             downloadUrl="http://lorempixel.com/300/200"
+            id="test"
             image="http://lorempixel.com/300/200"
             imageSizes={imageSizes}
             meta="Test/Test"
+            mimeType="image/jpeg"
             title="Test"
         />
     );
 
-    masonry.instance().openDownloadList();
-    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
+    mediaCard.instance().openDownloadList();
+    mediaCard.update();
+    expect(mediaCard.find('DownloadList Popover').render()).toMatchSnapshot();
 });
 
 test('Clicking on an item should call the responsible handler on the MediaCard component', () => {
@@ -64,9 +98,12 @@ test('Clicking on an item should call the responsible handler on the MediaCard c
 
     const mediaCard = mount(
         <MediaCard
+            downloadText=""
+            downloadUrl=""
             id={itemId}
             image="http://lorempixel.com/300/200"
             meta="Test/Test"
+            mimeType="image/jpeg"
             onClick={clickSpy}
             onSelectionChange={selectionSpy}
             title="Test"

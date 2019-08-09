@@ -1,10 +1,10 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import {Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
+import {Loader, Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
@@ -38,9 +38,27 @@ class MediaCard extends React.Component<Props> {
         showCover: false,
     };
 
+    image: Image;
+
     @observable downloadButtonRef: ?ElementRef<'button'>;
 
     @observable downloadListOpen: boolean = false;
+
+    @observable imageLoading: boolean = true;
+
+    constructor(props: Props) {
+        super(props);
+
+        const {image: src} = this.props;
+
+        if (src) {
+            this.image = new Image();
+            this.image.onload = this.handleImageLoad;
+            this.image.src = src;
+        } else {
+            this.handleImageLoad();
+        }
+    }
 
     @action setDownloadButtonRef = (ref: ?ElementRef<'button'>) => {
         this.downloadButtonRef = ref;
@@ -95,6 +113,10 @@ class MediaCard extends React.Component<Props> {
         }
     };
 
+    @action handleImageLoad = () => {
+        this.imageLoading = false;
+    };
+
     render() {
         const {
             downloadCopyText,
@@ -111,6 +133,7 @@ class MediaCard extends React.Component<Props> {
             title,
             showCover,
         } = this.props;
+
         const mediaCardClass = classNames(
             mediaCardStyles.mediaCard,
             {
@@ -186,7 +209,12 @@ class MediaCard extends React.Component<Props> {
                     role="button"
                 >
                     {image
-                        ? <img alt={title} src={image} />
+                        ? (
+                            <Fragment>
+                                <img alt={title} src={this.image.src} />
+                                {this.imageLoading && <Loader />}
+                            </Fragment>
+                        )
                         : <MimeTypeIndicator height={200} mimeType={mimeType} />
                     }
                     <div className={mediaCardStyles.cover}>

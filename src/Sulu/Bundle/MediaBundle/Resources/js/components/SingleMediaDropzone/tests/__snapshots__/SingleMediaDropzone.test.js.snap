@@ -129,6 +129,49 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
 </div>
 `;
 
+exports[`Render a SingleMediaDropzone with a loader if image has not been loaded yet 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+  style="position: relative;"
+>
+  <img
+    class="thumbnail"
+    src="test.jpg"
+  />
+  <div
+    class="spinner"
+    style="width: 40px; height: 40px;"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
+        />
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;"
+    type="file"
+  />
+</div>
+`;
+
 exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 <div
   aria-disabled="false"
@@ -228,6 +271,38 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
   <input
     autocomplete="off"
     style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Render a SingleMediaDropzone without a loader if image has been loaded yet 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+  style="position: relative;"
+>
+  <img
+    class="thumbnail"
+    src="test.jpg"
+  />
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
+        />
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;"
     type="file"
   />
 </div>

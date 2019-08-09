@@ -112,6 +112,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
           >
             <input
               type="checkbox"
+              value="test"
             />
             <span />
           </span>
@@ -194,19 +195,198 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
 </div>
 `;
 
-exports[`Render a MediaCard with download list 1`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <li class=\\"item\\"><button><span class=\\"content\\">Direct download<span class=\\"copyText\\"></span></span></button></li>
-      <li class=\\"divider\\"></li>
-      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/300/200\\"><span class=\\"content\\">300/200<span class=\\"copyText\\">Copy URL</span></span></button></li>
-      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/600/300\\"><span class=\\"content\\">600/300<span class=\\"copyText\\">Copy URL</span></span></button></li>
-      <li class=\\"item\\"><button type=\\"button\\" class=\\"\\" data-clipboard-text=\\"http://lorempixel.com/150/200\\"><span class=\\"content\\">150/200<span class=\\"copyText\\">Copy URL</span></span></button></li>
-    </ul>
+exports[`Render a MediaCard component with loader if image has not been loaded yet 1`] = `
+<div
+  class="mediaCard noDownloadList"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="description"
+      role="button"
+    >
+      <div
+        class="title"
+      >
+        <div
+          class="titleText"
+        >
+          <div
+            aria-label="Test"
+            class="croppedText"
+            title="Test"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Te
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                st
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Test
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="meta"
+      >
+        <div
+          aria-label="Test/Test"
+          class="croppedText"
+          title="Test/Test"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            Test/
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              Test
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            Test/Test
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>"
+  <div
+    class="media"
+    role="button"
+  >
+    <img
+      alt="Test"
+      src="http://lorempixel.com/300/200"
+    />
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+    <div
+      class="cover"
+    />
+  </div>
+</div>
+`;
+
+exports[`Render a MediaCard with download list 1`] = `
+Array [
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <ul
+      class="menu"
+      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <li
+        class="item"
+      >
+        <button>
+          <span
+            class="content"
+          >
+            Direct download
+            <span
+              class="copyText"
+            />
+          </span>
+        </button>
+      </li>
+      <li
+        class="divider"
+      />
+      <li
+        class="item"
+      >
+        <button
+          class=""
+          data-clipboard-text="http://lorempixel.com/300/200"
+          type="button"
+        >
+          <span
+            class="content"
+          >
+            300/200
+            <span
+              class="copyText"
+            >
+              Copy URL
+            </span>
+          </span>
+        </button>
+      </li>
+      <li
+        class="item"
+      >
+        <button
+          class=""
+          data-clipboard-text="http://lorempixel.com/600/300"
+          type="button"
+        >
+          <span
+            class="content"
+          >
+            600/300
+            <span
+              class="copyText"
+            >
+              Copy URL
+            </span>
+          </span>
+        </button>
+      </li>
+      <li
+        class="item"
+      >
+        <button
+          class=""
+          data-clipboard-text="http://lorempixel.com/150/200"
+          type="button"
+        >
+          <span
+            class="content"
+          >
+            150/200
+            <span
+              class="copyText"
+            >
+              Copy URL
+            </span>
+          </span>
+        </button>
+      </li>
+    </ul>
+  </div>,
+]
 `;
