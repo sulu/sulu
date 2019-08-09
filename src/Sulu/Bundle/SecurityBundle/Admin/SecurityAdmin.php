@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SecurityAdmin extends Admin
 {
@@ -50,6 +51,11 @@ class SecurityAdmin extends Admin
     private $urlGenerator;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $resources;
@@ -58,11 +64,13 @@ class SecurityAdmin extends Admin
         RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator,
         array $resources
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
         $this->resources = $resources;
     }
 
@@ -180,7 +188,16 @@ class SecurityAdmin extends Admin
                 ->setResourceKey('users')
                 ->setFormKey('user_details')
                 ->setTabTitle('sulu_security.permissions')
-                ->addToolbarActions(['sulu_admin.save', 'sulu_security.enable_user', 'sulu_security.lock_user'])
+                ->addToolbarActions([
+                    'sulu_admin.save',
+                    'sulu_security.enable_user',
+                    'sulu_admin.toggler' => [
+                        'label' => $this->translator->trans('sulu_security.user_locked', [], 'admin'),
+                        'property' => 'locked',
+                        'activate' => 'lock',
+                        'deactivate' => 'unlock',
+                    ],
+                ])
                 ->setIdQueryParameter('contactId')
                 ->setTitleVisible(true)
                 ->setTabOrder(3072)

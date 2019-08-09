@@ -309,6 +309,74 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
     ]);
 });
 
+test('Should add items defined in ToolbarActions to Toolbar with options', () => {
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const SaveToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    const DeleteToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    const EditToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    formToolbarActionRegistry.get.mockImplementation((name) => {
+        switch (name) {
+            case 'save':
+                return SaveToolbarAction;
+            case 'delete':
+                return DeleteToolbarAction;
+            case 'edit':
+                return EditToolbarAction;
+        }
+    });
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            toolbarActions: {'save': {test1: 'value1'}, 'delete': {test2: 'value2'}, 2: 'edit'},
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(SaveToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {test1: 'value1'}
+    );
+
+    expect(DeleteToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {test2: 'value2'}
+    );
+
+    expect(EditToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {}
+    );
+});
+
 test('Should not add PublishIndicator if no publish status is available', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;

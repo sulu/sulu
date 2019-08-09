@@ -67,7 +67,7 @@ function createEditToolbarAction(locales) {
         router,
     });
 
-    return new EditToolbarAction(formStore, form, router, locales);
+    return new EditToolbarAction(formStore, form, router, locales, {});
 }
 
 test('Return enabled item config', () => {

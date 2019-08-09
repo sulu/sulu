@@ -10,12 +10,20 @@ export default class AbstractFormToolbarAction implements ToolbarAction {
     form: Form;
     router: Router;
     locales: ?Array<string>;
+    options: {[key: string]: mixed};
 
-    constructor(resourceFormStore: ResourceFormStore, form: Form, router: Router, locales?: Array<string>) {
+    constructor(
+        resourceFormStore: ResourceFormStore,
+        form: Form,
+        router: Router,
+        locales: ?Array<string>,
+        options: {[key: string]: mixed}
+    ) {
         this.resourceFormStore = resourceFormStore;
         this.form = form;
         this.router = router;
         this.locales = locales;
+        this.options = options;
     }
 
     setLocales(locales: Array<string>) {
