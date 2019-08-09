@@ -11,7 +11,10 @@
 
 namespace Sulu\Component\Content\Metadata;
 
-abstract class PropertiesMetadata extends ItemMetadata
+/**
+ * @deprecated
+ */
+class PropertiesMetadata extends ItemMetadata
 {
     /**
      * The resource from which this structure was loaded

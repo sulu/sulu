@@ -38,19 +38,39 @@ class FormMetadata
      */
     private $schema;
 
+    /**
+     * @var string
+     */
+    private $key;
+
     public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
     }
 
     public function setTitle(string $title)
     {
         $this->title = $title;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**
@@ -79,12 +99,12 @@ class FormMetadata
         $this->schema = $schema;
     }
 
-    public function getSchema()
+    public function getSchema(): SchemaMetadata
     {
         return $this->schema;
     }
 
-    public function merge(self $otherForm)
+    public function merge(self $otherForm): FormMetadata
     {
         $mergedForm = new self();
         if ($this->name) {

@@ -9,15 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Metadata;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-/**
- * Represents only a collection of properties.
- *
- * Used in blocks.
- *
- * @deprecated
- */
-class ComponentMetadata extends ItemMetadata
+interface FormMetadataLoaderInterface
 {
+    public function getMetadata(string $key, string $locale);
 }

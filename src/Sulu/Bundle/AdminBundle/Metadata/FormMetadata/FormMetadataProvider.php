@@ -12,91 +12,44 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
-use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
-use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
-use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInterface
+class FormMetadataProvider implements MetadataProviderInterface
 {
-    /**
-     * @var FormXmlLoader
-     */
-    private $formXmlLoader;
-
-    /**
-     * @var StructureMetadataFactory
-     */
-    private $structureMetadataFactory;
-
     /**
      * @var ExpressionLanguage
      */
     private $expressionLanguage;
 
     /**
-     * @var string[]
+     * @var FormMetadataLoaderInterface[]
      */
-    private $locales;
-
-    /**
-     * @var string[]
-     */
-    private $formDirectories;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var bool
-     */
-    private $debug;
+    private $formMetadataLoaders;
 
     public function __construct(
-        FormXmlLoader $formXmlLoader,
-        StructureMetadataFactory $structureMetadataFactory,
         ExpressionLanguage $expressionLanguage,
-        array $locales,
-        array $formDirectories,
-        string $cacheDir,
-        bool $debug
+        iterable $formMetadataLoaders
     ) {
-        $this->formXmlLoader = $formXmlLoader;
-        $this->structureMetadataFactory = $structureMetadataFactory;
         $this->expressionLanguage = $expressionLanguage;
-        $this->locales = $locales;
-        $this->formDirectories = $formDirectories;
-        $this->cacheDir = $cacheDir;
-        $this->debug = $debug;
+        $this->formMetadataLoaders = $formMetadataLoaders;
     }
 
+    /**
+     * @return FormMetadata|TypedFormMetadata
+     */
     public function getMetadata(string $key, string $locale)
     {
-        $configCache = $this->getConfigCache($key, $locale);
-
-        if (!$configCache->isFresh()) {
-            $this->warmUp($this->cacheDir);
+        $form = null;
+        foreach ($this->formMetadataLoaders as $metadataLoader) {
+            $form = $metadataLoader->getMetadata($key, $locale);
+            if ($form) {
+                break;
+            }
         }
-
-        if (!file_exists($configCache->getPath())) {
+        if (!$form) {
             throw new MetadataNotFoundException('form', $key);
         }
-
-        $form = unserialize(file_get_contents($configCache->getPath()));
 
         if ($form instanceof FormMetadata) {
             $this->evaluateFormItemExpressions($form->getItems());
@@ -131,287 +84,5 @@ class FormMetadataProvider implements MetadataProviderInterface, CacheWarmerInte
                 }
             }
         }
-    }
-
-    public function warmUp($cacheDir)
-    {
-        $formsMetadata = [];
-        $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
-        foreach ($formFinder as $formFile) {
-            $formMetadata = $this->formXmlLoader->load($formFile->getPathName());
-            $formKey = $formMetadata->getKey();
-            if (!array_key_exists($formKey, $formsMetadata)) {
-                $formsMetadata[$formKey] = [];
-            }
-            $formsMetadata[$formKey][] = $formMetadata;
-        }
-
-        $structuresMetadataByTypes = [];
-        foreach ($this->structureMetadataFactory->getStructureTypes() as $structureType) {
-            foreach ($this->structureMetadataFactory->getStructures($structureType) as $structureMetadata) {
-                if ($structureMetadata->isInternal() || 'home' === $structureType) {
-                    continue;
-                }
-
-                $structuresMetadataByTypes[$structureType][] = $structureMetadata;
-            }
-        }
-
-        foreach ($this->locales as $locale) {
-            foreach ($structuresMetadataByTypes as $structureType => $structuresMetadata) {
-                $form = $this->mapStructureMetadata($structuresMetadata, $structureType, $locale);
-                $configCache = $this->getConfigCache($structureType, $locale);
-                $configCache->write(
-                    serialize($form),
-                    array_map(function(ContentStructureMetadata $structureMetadata) {
-                        return new FileResource($structureMetadata->getResource());
-                    }, $structuresMetadata)
-                );
-            }
-
-            foreach ($formsMetadata as $key => $formMetadata) {
-                $form = $this->mapFormsMetadata($formMetadata, $locale);
-                $configCache = $this->getConfigCache($key, $locale);
-                $configCache->write(
-                    serialize($form),
-                    array_map(function(ExternalFormMetadata $formMetadata) {
-                        return new FileResource($formMetadata->getResource());
-                    }, $formMetadata)
-                );
-            }
-        }
-    }
-
-    public function isOptional()
-    {
-        return false;
-    }
-
-    /**
-     * @param ContentStructureMetadata[] $structuresMetadata
-     */
-    public function mapStructureMetadata(array $structuresMetadata, string $structureType, string $locale)
-    {
-        $typedForm = new TypedFormMetadata();
-
-        foreach ($structuresMetadata as $structureMetadata) {
-            $form = new FormMetadata();
-            $form->setName($structureMetadata->getName());
-            $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
-            $this->mapChildren($structureMetadata->getChildren(), $form, $locale);
-            $form->setSchema($this->mapSchema($structureMetadata->getProperties()));
-
-            $typedForm->addForm($structureMetadata->getName(), $form);
-        }
-
-        return $typedForm;
-    }
-
-    /**
-     * @param ExternalFormMetadata[] $formsMetadata
-     */
-    private function mapFormsMetadata(array $formsMetadata, $locale)
-    {
-        $mergedForm = null;
-        foreach ($formsMetadata as $formMetadata) {
-            $form = new FormMetadata();
-            $this->mapChildren($formMetadata->getChildren(), $form, $locale);
-
-            $schema = $this->mapSchema($formMetadata->getProperties());
-            $formSchema = $formMetadata->getSchema();
-            if ($formSchema) {
-                $schema = $schema->merge($formSchema);
-            }
-
-            $form->setSchema($schema);
-
-            if (!$mergedForm) {
-                $mergedForm = $form;
-            } else {
-                $mergedForm = $mergedForm->merge($form);
-            }
-        }
-
-        return $mergedForm;
-    }
-
-    /**
-     * @param ContentItemMetadata[] $children
-     */
-    private function mapChildren(array $children, FormMetadata $form, string $locale)
-    {
-        foreach ($children as $child) {
-            if ($child instanceof BlockMetadata) {
-                $item = $this->mapBlock($child, $locale);
-            } elseif ($child instanceof ContentPropertyMetadata) {
-                $item = $this->mapProperty($child, $locale);
-            } elseif ($child instanceof ContentSectionMetadata) {
-                $item = $this->mapSection($child, $locale);
-            } else {
-                throw new \Exception('Unsupported property given "' . get_class($child) . '"');
-            }
-
-            $form->addItem($item);
-        }
-    }
-
-    private function mapSection(ContentSectionMetadata $property, string $locale): SectionMetadata
-    {
-        $section = new SectionMetadata($property->getName());
-
-        $title = $property->getTitle($locale);
-        if ($title) {
-            $section->setLabel($title);
-        }
-
-        $section->setColSpan($property->getColSpan());
-        $section->setDisabledCondition($property->getDisabledCondition());
-        $section->setVisibleCondition($property->getVisibleCondition());
-
-        foreach ($property->getChildren() as $component) {
-            if ($component instanceof BlockMetadata) {
-                $item = $this->mapBlock($component, $locale);
-            } elseif ($component instanceof ContentPropertyMetadata) {
-                $item = $this->mapProperty($component, $locale);
-            } elseif ($component instanceof ContentSectionMetadata) {
-                $item = $this->mapSection($component, $locale);
-            } else {
-                throw new \Exception('Unsupported property given "' . get_class($property) . '"');
-            }
-
-            $section->addItem($item);
-        }
-
-        return $section;
-    }
-
-    private function mapBlock(BlockMetadata $property, string $locale): FieldMetadata
-    {
-        $field = $this->mapProperty($property, $locale);
-        $field->setDefaultType($property->getDefaultComponentName());
-
-        foreach ($property->getComponents() as $component) {
-            $blockType = new FormMetadata();
-            $blockType->setName($component->getName());
-            $blockType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
-
-            foreach ($component->getChildren() as $componentProperty) {
-                if ($componentProperty instanceof ContentPropertyMetadata) {
-                    $blockTypeField = $this->mapProperty($componentProperty, $locale);
-                    $blockType->addItem($blockTypeField);
-                }
-            }
-
-            $field->addType($blockType);
-        }
-
-        return $field;
-    }
-
-    private function mapProperty(ContentPropertyMetadata $property, string $locale): FieldMetadata
-    {
-        $field = new FieldMetadata($property->getName());
-        foreach ($property->getTags() as $tag) {
-            $fieldTag = new TagMetadata();
-            $fieldTag->setName($tag['name']);
-            $fieldTag->setPriority($tag['priority']);
-            $field->addTag($fieldTag);
-        }
-
-        $field->setLabel($property->getTitle($locale));
-        $field->setDisabledCondition($property->getDisabledCondition());
-        $field->setVisibleCondition($property->getVisibleCondition());
-        $field->setDescription($property->getDescription($locale));
-        $field->setType($property->getType());
-        $field->setColSpan($property->getColSpan());
-        $field->setRequired($property->isRequired());
-        $field->setOnInvalid($property->getOnInvalid());
-        $field->setSpaceAfter($property->getSpaceAfter());
-
-        foreach ($property->getParameters() as $parameter) {
-            $field->addOption($this->mapOption($parameter, $locale));
-        }
-
-        return $field;
-    }
-
-    private function mapOption($parameter, string $locale): OptionMetadata
-    {
-        $option = new OptionMetadata();
-        $option->setName($parameter['name']);
-        $option->setType($parameter['type']);
-
-        if ('collection' === $parameter['type']) {
-            foreach ($parameter['value'] as $parameterName => $parameterValue) {
-                $valueOption = new OptionMetadata();
-                $valueOption->setName($parameterValue['name']);
-                $valueOption->setValue($parameterValue['value']);
-
-                $this->mapOptionMeta($parameterValue, $locale, $valueOption);
-
-                $option->addValueOption($valueOption);
-            }
-        } elseif ('string' === $parameter['type'] || 'expression' === $parameter['type']) {
-            $option->setValue($parameter['value']);
-            $this->mapOptionMeta($parameter, $locale, $option);
-        } else {
-            throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');
-        }
-
-        return $option;
-    }
-
-    private function mapOptionMeta($parameterValue, string $locale, OptionMetadata $option)
-    {
-        if (!array_key_exists('meta', $parameterValue)) {
-            return;
-        }
-
-        foreach ($parameterValue['meta'] as $metaKey => $metaValues) {
-            if (array_key_exists($locale, $metaValues)) {
-                switch ($metaKey) {
-                    case 'title':
-                        $option->setTitle($metaValues[$locale]);
-                        break;
-                    case 'info_text':
-                        $option->setInfotext($metaValues[$locale]);
-                        break;
-                    case 'placeholder':
-                        $option->setPlaceholder($metaValues[$locale]);
-                        break;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param ContentItemMetadata[] $itemsMetadata
-     */
-    private function mapSchema(array $itemsMetadata): SchemaMetadata
-    {
-        return new SchemaMetadata($this->mapSchemaProperties($itemsMetadata));
-    }
-
-    /**
-     * @param ContentItemMetadata[] $itemsMetadata
-     */
-    private function mapSchemaProperties(array $itemsMetadata)
-    {
-        return array_filter(array_map(function(ContentItemMetadata $itemMetadata) {
-            if ($itemMetadata instanceof ContentSectionMetadata) {
-                return $this->mapSchemaProperties($itemMetadata->getChildren());
-            }
-
-            if (!$itemMetadata->isRequired()) {
-                return;
-            }
-
-            return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
-        }, $itemsMetadata));
-    }
-
-    private function getConfigCache(string $key, string $locale): ConfigCache
-    {
-        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }

@@ -14,6 +14,8 @@ namespace Sulu\Component\Content\Metadata;
 /**
  * Blocks represents a choice of sub structures.
  *
+ * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata instead
+ *
  * TODO: Components are basically Snippets, but Snippets are loaded as Structures
  */
 class BlockMetadata extends PropertyMetadata

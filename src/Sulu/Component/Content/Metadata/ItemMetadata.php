@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\Metadata;
 
 /**
  * Base class for all structure related metadata classes.
+ *
+ * @deprecated use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata instead
  */
 abstract class ItemMetadata
 {
@@ -217,6 +219,20 @@ abstract class ItemMetadata
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * Set the children of this item.
+     *
+     * @param $children
+     *
+     * @return $this
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+
+        return $this;
     }
 
     /**
