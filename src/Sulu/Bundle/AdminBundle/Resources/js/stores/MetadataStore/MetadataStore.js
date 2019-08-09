@@ -5,15 +5,12 @@ import {Requester} from '../../services';
 class MetadataStore {
     metadataPromises: {[string]: {[string]: Promise<Object>}} = {};
 
-    loadMetadata(type: string, key: string, metadataOptions: Object): Promise<Object> {
+    loadMetadata(type: string, key: string, metadataOptions: Object = {}): Promise<Object> {
         const parameters = {
             type: type,
             key: key,
-            metadataOptions: {},
+            ...metadataOptions,
         };
-        if (metadataOptions) {
-            parameters.metadataOptions = metadataOptions;
-        }
 
         if (!this.metadataPromises[type]) {
             this.metadataPromises[type] = {};

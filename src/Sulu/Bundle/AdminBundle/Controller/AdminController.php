@@ -274,10 +274,7 @@ class AdminController
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $metadataOptions = [];
-        if ($request->query->get('metadataOptions')) {
-            $metadataOptions = $request->query->get('metadataOptions');
-        }
+        $metadataOptions = $request->query->all();
 
         $view = View::create(
             $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale(), $metadataOptions)

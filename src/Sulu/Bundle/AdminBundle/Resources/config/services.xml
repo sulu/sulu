@@ -63,9 +63,17 @@
             id="sulu_admin.list_metadata_provider"
             class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider"
         >
+            <argument type="tagged" tag="sulu_admin.list_metadata_loader"></argument>
+            <tag name="sulu_admin.metadata_provider" type="list" />
+        </service>
+
+        <service
+            id="sulu_admin.xml_list_metadata_loader"
+            class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader"
+        >
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
             <argument type="service" id="translator.default"/>
-            <tag name="sulu_admin.metadata_provider" type="list" />
+            <tag name="sulu_admin.list_metadata_loader"/>
         </service>
 
         <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory" />
