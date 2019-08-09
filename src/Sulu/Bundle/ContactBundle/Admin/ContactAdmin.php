@@ -101,16 +101,12 @@ class ContactAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $routes = [
-            // This route has to be registered even if permissions for contacts are missing
-            // Otherwise the application breaks when other bundles try to add child routes to this one
-            $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
-                ->setResourceKey('contacts')
-                ->setBackRoute(static::CONTACT_LIST_ROUTE)
-                ->setTitleProperty('fullName')
-                ->getRoute(),
-        ];
+        $contactEditFormRoute = $this->routeBuilderFactory
+            ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
+            ->setResourceKey('contacts')
+            ->setBackRoute(static::CONTACT_LIST_ROUTE)
+            ->setTitleProperty('fullName')
+            ->getRoute();
 
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $contactFormToolbarActions = [];
@@ -150,6 +146,7 @@ class ContactAdmin extends Admin
                 ->setResourceKey('contacts')
                 ->setBackRoute(static::CONTACT_LIST_ROUTE)
                 ->getRoute();
+            $routes[] = $contactEditFormRoute;
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
                 ->setResourceKey('contacts')
@@ -180,6 +177,10 @@ class ContactAdmin extends Admin
                 ->setTabOrder(2048)
                 ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
                 ->getRoute();
+        } else {
+            // This route has to be registered even if permissions for contacts are missing
+            // Otherwise the application breaks when other bundles try to add child routes to this one
+            $routes[] = $contactEditFormRoute;
         }
 
         if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
