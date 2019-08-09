@@ -29,7 +29,7 @@ class RolePermissions extends React.Component<Props> {
         const {resourceKey} = this.props;
 
         securityContextStore.loadAvailableActions(resourceKey).then(action((actions) => {
-            this.actions = actions.filter((action) => action !== 'security');
+            this.actions = actions;
         }));
 
         ResourceRequester.get('roles').then(action((response) => {
