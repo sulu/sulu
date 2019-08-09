@@ -18,6 +18,7 @@ use Sulu\Bundle\RouteBundle\Entity\Route as SuluRoute;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,11 +38,6 @@ class RouteProvider implements RouteProviderInterface
      * @var RouteRepositoryInterface
      */
     private $routeRepository;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
 
     /**
      * @var RouteDefaultsProviderInterface
@@ -68,22 +64,13 @@ class RouteProvider implements RouteProviderInterface
      */
     private $routeCache = [];
 
-    /**
-     * @param RouteRepositoryInterface $routeRepository
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param RouteDefaultsProviderInterface $routeDefaultsProvider
-     * @param RequestStack $requestStack
-     * @param LazyLoadingValueHolderFactory $proxyFactory
-     */
     public function __construct(
         RouteRepositoryInterface $routeRepository,
-        RequestAnalyzerInterface $requestAnalyzer,
         RouteDefaultsProviderInterface $routeDefaultsProvider,
         RequestStack $requestStack,
         LazyLoadingValueHolderFactory $proxyFactory = null
     ) {
         $this->routeRepository = $routeRepository;
-        $this->requestAnalyzer = $requestAnalyzer;
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
 
@@ -98,7 +85,22 @@ class RouteProvider implements RouteProviderInterface
         $path = $this->decodePathInfo($request->getPathInfo());
 
         $collection = new RouteCollection();
-        $prefix = $this->requestAnalyzer->getResourceLocatorPrefix();
+        $path = $this->decodePathInfo($request->getPathInfo());
+
+        /** @var RequestAttributes|null $attributes */
+        $attributes = $request->attributes->get('_sulu');
+        if (!$attributes) {
+            return $collection;
+        }
+
+        $matchType = $attributes->getAttribute('matchType');
+        if (RequestAnalyzerInterface::MATCH_TYPE_REDIRECT == $matchType
+            || RequestAnalyzerInterface::MATCH_TYPE_PARTIAL == $matchType
+        ) {
+            return $collection;
+        }
+
+        $prefix = $attributes->getAttribute('resourceLocatorPrefix');
 
         if (!empty($prefix) && 0 === strpos($path, $prefix)) {
             $path = PathHelper::relativizePath($path, $prefix);
@@ -132,7 +134,7 @@ class RouteProvider implements RouteProviderInterface
             return $collection;
         }
 
-        $collection->add(self::ROUTE_PREFIX . $route->getId(), $this->createRoute($route, $request));
+        $collection->add(self::ROUTE_PREFIX . $route->getId(), $this->createRoute($route, $request, $attributes));
 
         return $collection;
     }
@@ -164,6 +166,14 @@ class RouteProvider implements RouteProviderInterface
             throw new RouteNotFoundException();
         }
 
+        $request = $this->requestStack->getCurrentRequest();
+
+        /** @var RequestAttributes $attributes */
+        $attributes = $request->attributes->get('_sulu');
+        if (!$attributes) {
+            throw new RouteNotFoundException();
+        }
+
         $routeId = substr($name, strlen(self::ROUTE_PREFIX));
         if (array_key_exists($routeId, $this->symfonyRouteCache)) {
             return $this->symfonyRouteCache[$routeId];
@@ -183,7 +193,7 @@ class RouteProvider implements RouteProviderInterface
             throw new RouteNotFoundException();
         }
 
-        return $this->createRoute($route, $this->requestStack->getCurrentRequest());
+        return $this->createRoute($route, $request, $attributes);
     }
 
     /**
@@ -202,7 +212,7 @@ class RouteProvider implements RouteProviderInterface
      *
      * @return Route
      */
-    protected function createRoute(RouteInterface $route, Request $request)
+    protected function createRoute(RouteInterface $route, Request $request, RequestAttributes $attributes)
     {
         $routePath = $this->decodePathInfo($request->getPathInfo());
 
@@ -212,7 +222,7 @@ class RouteProvider implements RouteProviderInterface
                 [
                     '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                     'url' => $request->getSchemeAndHttpHost()
-                        . $this->requestAnalyzer->getResourceLocatorPrefix()
+                        . $attributes->getAttribute('resourceLocatorPrefix')
                         . $route->getTarget()->getPath()
                         . ($request->getQueryString() ? ('?' . $request->getQueryString()) : ''),
                 ]

@@ -1,5 +1,34 @@
 # Upgrade
 
+## master
+
+### RouteProvider
+
+The method `Sulu\Bundle\RouteBundle\Routing\RouteProvider::__construct` has removed the second parameter.
+
+__Before:__
+
+```
+public function __construct(
+    RouteRepositoryInterface $routeRepository,
+    RequestAnalyzerInterface $requestAnalyzer,
+    RouteDefaultsProviderInterface $routeDefaultsProvider,
+    RequestStack $requestStack,
+    LazyLoadingValueHolderFactory $proxyFactory = null
+)
+```
+
+__After:__
+
+```
+public function __construct(
+    RouteRepositoryInterface $routeRepository,
+    RouteDefaultsProviderInterface $routeDefaultsProvider,
+    RequestStack $requestStack,
+    LazyLoadingValueHolderFactory $proxyFactory = null
+)
+```
+
 ## 1.6.24
 
 ### Collection Repository count function changed
