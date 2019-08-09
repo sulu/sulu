@@ -72,12 +72,12 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
     {
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         $formsMetadataCollection = [];
-        $formsMetadataDirectory = [];
+        $formsMetadataResources = [];
         foreach ($formFinder as $formFile) {
             $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
             $items = $formMetadataCollection->getItems();
             $formKey = reset($items)->getKey();
-            $formsMetadataDirectory[$formKey] = $formFile->getPathName();
+            $formsMetadataResources[$formKey][] = $formFile->getPathName();
             if (!array_key_exists($formKey, $formsMetadataCollection)) {
                 $formsMetadataCollection[$formKey] = $formMetadataCollection;
             } else {
@@ -88,7 +88,12 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
             foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
                 $configCache = $this->getConfigCache($key, $locale);
-                $configCache->write(serialize($formMetadata), [new FileResource($formsMetadataDirectory[$key])]);
+                $configCache->write(
+                    serialize($formMetadata),
+                    array_map(function(string $resource) {
+                        return new FileResource($resource);
+                    }, $formsMetadataResources[$key])
+                );
             }
         }
     }
