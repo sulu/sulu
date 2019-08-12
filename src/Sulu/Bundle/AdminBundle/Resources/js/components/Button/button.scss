@@ -3,6 +3,7 @@
 
 $borderRadius: 3px;
 $fontSize: 12px;
+$dropdownFontSize: 10px;
 
 $primaryBackground: $shakespeare;
 $primaryColor: $white;
@@ -23,6 +24,8 @@ $iconColorActive: $white;
 .button {
     position: relative;
     white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
 
     &:disabled {
         cursor: default;
@@ -56,6 +59,7 @@ $iconColorActive: $white;
     .dropdown-icon {
         left: auto;
         right: 10px;
+        font-size: $dropdownFontSize;
     }
 }
 
@@ -98,6 +102,7 @@ $iconColorActive: $white;
 
     .dropdown-icon {
         margin-left: 10px;
+        font-size: $dropdownFontSize;
     }
 }
 
@@ -132,6 +137,7 @@ $iconColorActive: $white;
 
     .dropdown-icon {
         margin-left: 5px;
+        font-size: $dropdownFontSize;
     }
 }
 
