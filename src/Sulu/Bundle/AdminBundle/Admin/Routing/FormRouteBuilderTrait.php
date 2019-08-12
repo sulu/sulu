@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 trait FormRouteBuilderTrait
 {
+    use ToolbarActionsRouteBuilderTrait;
+
     private function setResourceKeyToRoute(Route $route, string $resourceKey): void
     {
         $route->setOption('resourceKey', $resourceKey);
@@ -53,13 +55,6 @@ trait FormRouteBuilderTrait
         $oldLocales = $route->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
         $route->setOption('locales', $newLocales);
-    }
-
-    private function addToolbarActionsToRoute(Route $route, array $toolbarActions): void
-    {
-        $oldToolbarActions = $route->getOption('toolbarActions');
-        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
-        $route->setOption('toolbarActions', $newToolbarActions);
     }
 
     private function addRouterAttributesToFormStoreToRoute(Route $route, array $routerAttributesToFormStore): void
