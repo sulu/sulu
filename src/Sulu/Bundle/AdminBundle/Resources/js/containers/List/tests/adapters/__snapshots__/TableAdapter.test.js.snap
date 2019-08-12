@@ -130,23 +130,27 @@ exports[`Render column with ascending sort icon 1`] = `
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -281,23 +285,27 @@ exports[`Render column with descending sort icon 1`] = `
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -446,22 +454,26 @@ exports[`Render data with all different visibility types schema 1`] = `
     >
       of 5
     </span>
-    <button
-      class="previous"
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -703,23 +715,27 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -885,23 +901,27 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -1029,22 +1049,26 @@ exports[`Render data with schema 1`] = `
     >
       of 5
     </span>
-    <button
-      class="previous"
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -1278,23 +1302,27 @@ exports[`Render data with schema and selections 1`] = `
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -1422,22 +1450,26 @@ exports[`Render data with schema in different order 1`] = `
     >
       of 3
     </span>
-    <button
-      class="previous"
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -1537,23 +1569,27 @@ exports[`Render data with schema not containing all fields 1`] = `
     >
       of 3
     </span>
-    <button
-      class="previous"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -1662,22 +1698,26 @@ exports[`Render data with skin 1`] = `
     >
       of 5
     </span>
-    <button
-      class="previous"
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+    <div>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;

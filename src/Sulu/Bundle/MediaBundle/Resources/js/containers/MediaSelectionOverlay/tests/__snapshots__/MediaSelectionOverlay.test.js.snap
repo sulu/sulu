@@ -240,22 +240,26 @@ Array [
                         >
                           sulu_admin.of 3
                         </span>
-                        <button
-                          class="previous"
-                        >
-                          <span
-                            aria-label="su-angle-left"
-                            class="su-angle-left"
-                          />
-                        </button>
-                        <button
-                          class="next"
-                        >
-                          <span
-                            aria-label="su-angle-right"
-                            class="su-angle-right"
-                          />
-                        </button>
+                        <div>
+                          <button
+                            class="button icon button"
+                            type="button"
+                          >
+                            <span
+                              aria-label="su-angle-left"
+                              class="su-angle-left buttonIcon"
+                            />
+                          </button>
+                          <button
+                            class="button icon button"
+                            type="button"
+                          >
+                            <span
+                              aria-label="su-angle-right"
+                              class="su-angle-right buttonIcon"
+                            />
+                          </button>
+                        </div>
                       </nav>
                     </section>
                   </div>
@@ -859,22 +863,26 @@ Array [
                         >
                           sulu_admin.of 3
                         </span>
-                        <button
-                          class="previous"
-                        >
-                          <span
-                            aria-label="su-angle-left"
-                            class="su-angle-left"
-                          />
-                        </button>
-                        <button
-                          class="next"
-                        >
-                          <span
-                            aria-label="su-angle-right"
-                            class="su-angle-right"
-                          />
-                        </button>
+                        <div>
+                          <button
+                            class="button icon button"
+                            type="button"
+                          >
+                            <span
+                              aria-label="su-angle-left"
+                              class="su-angle-left buttonIcon"
+                            />
+                          </button>
+                          <button
+                            class="button icon button"
+                            type="button"
+                          >
+                            <span
+                              aria-label="su-angle-right"
+                              class="su-angle-right buttonIcon"
+                            />
+                          </button>
+                        </div>
                       </nav>
                     </section>
                   </div>
