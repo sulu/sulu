@@ -18,6 +18,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
 
 jest.mock('../../../../containers/Form', () => ({
     ResourceFormStore: class {
+        data = {};
         resourceStore;
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -46,7 +47,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
 
-function createDeleteToolbarAction() {
+function createDeleteToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -56,7 +57,7 @@ function createDeleteToolbarAction() {
         route: router.route,
         router,
     });
-    return new DeleteToolbarAction(resourceFormStore, form, router);
+    return new DeleteToolbarAction(resourceFormStore, form, router, [], options);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value and return closed dialog', () => {
@@ -89,11 +90,27 @@ test('Return item config with disabled button if an add form is opened', () => {
     }));
 });
 
+test('Return empty item config when passed condition is not met', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({display_condition: 'url == "/"'});
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
+test('Return item config when passed condition is met', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({display_condition: 'url == "/"'});
+    deleteToolbarAction.resourceFormStore.data.url = '/';
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({label: 'sulu_admin.delete'}));
+});
+
 test('Open dialog on toolbar item click', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     const element = shallow(deleteToolbarAction.getNode());
@@ -107,6 +124,9 @@ test('Close dialog on cancel click', () => {
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     let element = shallow(deleteToolbarAction.getNode());
@@ -130,6 +150,9 @@ test('Call delete when dialog is confirmed', () => {
     deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
 
     const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     let element = shallow(deleteToolbarAction.getNode());

@@ -40,7 +40,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
 
-function createSaveWithPublishingToolbarAction() {
+function createSaveWithPublishingToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -51,7 +51,7 @@ function createSaveWithPublishingToolbarAction() {
         router,
     });
 
-    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router);
+    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
@@ -150,6 +150,90 @@ test('Return item config with all options disabled when not dirty and data was n
     }));
 });
 
+test('Return item config without publish specific options if condition is not met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+    ]);
+});
+
+test('Return item config without saving specific options if condition is not met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({save_display_condition: '_permission.live'});
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.publish',
+        }),
+    ]);
+});
+
+test('Return item config with publish specific options if condition is met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {live: true};
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.save_publish',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.publish',
+        }),
+    ]);
+});
+
+test('Return item config with saving specific options if condition is met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({save_display_condition: '_permission.edit'});
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.save_publish',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.publish',
+        }),
+    ]);
+});
+
+test('Return empty item config if no options are returned', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({
+        publish_display_condition: '_permisison.live',
+        save_display_condition: '_permission.edit',
+    });
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).toEqual(undefined);
+});
+
 test('Return item config with loading button when saving flag is set', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.resourceFormStore.resourceStore.saving = true;
@@ -163,6 +247,10 @@ test('Submit form with draft action when draft option is clicked', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
 
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     if (!toolbarItemConfig.options[0].onClick) {
         throw new Error('The option must define a onClick callback!');
     }
@@ -175,6 +263,53 @@ test('Submit form with draft action when draft option is clicked', () => {
 test('Submit form with publish action when draft option is clicked', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    if (!toolbarItemConfig.options[1].onClick) {
+        throw new Error('The option must define a onClick callback!');
+    }
+
+    toolbarItemConfig.options[1].onClick();
+
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('publish');
+});
+
+test('Return item config with loading button when saving flag is set', () => {
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
+    publishableSaveToolbarAction.resourceFormStore.resourceStore.saving = true;
+
+    expect(publishableSaveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        loading: true,
+    }));
+});
+
+test('Submit form with draft action when draft option is clicked', () => {
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
+    const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    if (!toolbarItemConfig.options[0].onClick) {
+        throw new Error('The option must define a onClick callback!');
+    }
+
+    toolbarItemConfig.options[0].onClick();
+
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('draft');
+});
+
+test('Submit form with publish action when draft option is clicked', () => {
+    const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
+    const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
 
     if (!toolbarItemConfig.options[1].onClick) {
         throw new Error('The option must define a onClick callback!');

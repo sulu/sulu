@@ -227,16 +227,59 @@ test('Pass correct arguments to ToolbarActions', () => {
                 listKey: 'snippets_list',
                 locales,
                 resourceKey: 'snippets',
-                toolbarActions: ['mock1', 'mock2'],
+                toolbarActions: {'mock1': {'test1': 'value1'}, 'mock2': {'test2': 'value2'}},
             },
         },
     };
 
     const list = shallow(<List router={router} />);
 
-    expect(ToolbarActionMock1).toBeCalledWith(list.instance().listStore, list.instance(), router, locales, undefined);
-    expect(ToolbarActionMock2).toBeCalledWith(list.instance().listStore, list.instance(), router, locales, undefined);
+    expect(ToolbarActionMock1).toBeCalledWith(
+        list.instance().listStore,
+        list.instance(),
+        router,
+        locales,
+        undefined,
+        {'test1': 'value1'}
+    );
+    expect(ToolbarActionMock2).toBeCalledWith(
+        list.instance().listStore,
+        list.instance(),
+        router,
+        locales,
+        undefined,
+        {'test2': 'value2'}
+    );
     expect(ToolbarActionMock3).not.toBeCalled();
+});
+
+test('Throw error if options are not passed correctly', () => {
+    const List = require('../List').default;
+    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+
+    const ToolbarActionMock1 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+
+    listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
+
+    const locales = ['de', 'en'];
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales,
+                resourceKey: 'snippets',
+                toolbarActions: ['mock1'],
+            },
+        },
+    };
+
+    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
 });
 
 test('Pass correct arguments with passed ResourceStore to ToolbarActions', () => {
@@ -261,7 +304,7 @@ test('Pass correct arguments with passed ResourceStore to ToolbarActions', () =>
                 listKey: 'snippets_list',
                 locales,
                 resourceKey: 'snippets',
-                toolbarActions: ['mock1'],
+                toolbarActions: {'mock1': {}},
             },
         },
     };
@@ -273,7 +316,8 @@ test('Pass correct arguments with passed ResourceStore to ToolbarActions', () =>
         list.instance(),
         router,
         locales,
-        resourceStore
+        resourceStore,
+        {}
     );
 });
 
@@ -291,7 +335,7 @@ test('Should pass correct props to move list overlay', () => {
                 listKey: 'snippets_list',
                 resourceKey: 'snippets',
                 title: 'sulu_snippet.snippets',
-                toolbarActions: ['sulu_admin.move'],
+                toolbarActions: {'sulu_admin.move': {}},
             },
         },
     };
@@ -372,7 +416,7 @@ test('Should render the list with the add icon if a addRoute has been passed', (
                 addRoute: 'addRoute',
                 listKey: 'snippets',
                 resourceKey: 'snippets',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -394,7 +438,7 @@ test('Should render the list with the add icon if onItemAdd prop is set', () => 
                 adapters: ['tree_table'],
                 listKey: 'snippets',
                 resourceKey: 'snippets',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -616,7 +660,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
                 addRoute: 'addRoute',
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -650,7 +694,7 @@ test('Should navigate when add button is clicked and locales have been passed in
                 locales: ['de', 'en'],
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -684,7 +728,7 @@ test('Should navigate without locale when add button is clicked', () => {
                 addRoute: 'addRoute',
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -713,7 +757,7 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
                 addRoute: 'addRoute',
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.add'],
+                toolbarActions: {'sulu_admin.add': {}},
             },
         },
     };
@@ -903,7 +947,7 @@ test('Should render the delete item enabled only if something is selected', () =
         bind: jest.fn(),
         route: {
             options: {
-                toolbarActions: ['sulu_admin.delete'],
+                toolbarActions: {'sulu_admin.delete': {}},
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -1158,7 +1202,7 @@ test('Should delete selected items when delete button is clicked', () => {
         bind: jest.fn(),
         route: {
             options: {
-                toolbarActions: ['sulu_admin.delete'],
+                toolbarActions: {'sulu_admin.delete': {}},
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -1196,7 +1240,7 @@ test('Should make move overlay disappear if cancel is clicked', () => {
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.move'],
+                toolbarActions: {'sulu_admin.move': {}},
             },
         },
     };
@@ -1235,7 +1279,7 @@ test('Should move items after move overlay was confirmed', () => {
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
-                toolbarActions: ['sulu_admin.move'],
+                toolbarActions: {'sulu_admin.move': {}},
             },
         },
     };
@@ -1284,7 +1328,7 @@ test('Export dialog should open when the button is pressed', () => {
         bind: jest.fn(),
         route: {
             options: {
-                toolbarActions: ['sulu_admin.export'],
+                toolbarActions: {'sulu_admin.export': {}},
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -1320,7 +1364,7 @@ test('Render export dialog', () => {
         bind: jest.fn(),
         route: {
             options: {
-                toolbarActions: ['sulu_admin.export'],
+                toolbarActions: {'sulu_admin.export': {}},
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -1358,7 +1402,7 @@ test('Export method should be called when the export-button is pressed', () => {
         bind: jest.fn(),
         route: {
             options: {
-                toolbarActions: ['sulu_admin.export'],
+                toolbarActions: {'sulu_admin.export': {}},
                 adapters: ['table'],
                 listKey: 'test',
                 resourceKey: 'test',

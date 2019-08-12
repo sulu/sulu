@@ -247,12 +247,10 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
 });
 
-test('Should add items defined in ToolbarActions to Toolbar', () => {
+test('Throw error if options are not passed correctly', () => {
     const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     class SaveToolbarAction extends AbstractFormToolbarAction {
@@ -298,15 +296,76 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         route,
         attributes: {},
     };
+    expect(() => shallow(<Form resourceStore={resourceStore} route={route} router={router} />))
+        .toThrow('but string was given');
+});
+
+test('Should add items defined in ToolbarActions to Toolbar with options', () => {
+    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const SaveToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    const DeleteToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    const EditToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+    });
+
+    formToolbarActionRegistry.get.mockImplementation((name) => {
+        switch (name) {
+            case 'save':
+                return SaveToolbarAction;
+            case 'delete':
+                return DeleteToolbarAction;
+            case 'edit':
+                return EditToolbarAction;
+        }
+    });
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            toolbarActions: {'save': {test1: 'value1'}, 'delete': {test2: 'value2'}, 'edit': {}},
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        route,
+        attributes: {},
+    };
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    expect(form.html()).toEqual(expect.stringContaining('<p>This is the delete button test!</p>'));
+    expect(SaveToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {test1: 'value1'}
+    );
 
-    const toolbarConfig = toolbarFunction.call(form.instance());
-    expect(toolbarConfig.items).toEqual([
-        {type: 'button', value: 'save'},
-        {type: 'button', value: 'delete'},
-    ]);
+    expect(DeleteToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {test2: 'value2'}
+    );
+
+    expect(EditToolbarAction).toBeCalledWith(
+        form.instance().resourceFormStore,
+        form.instance(),
+        router,
+        undefined,
+        {}
+    );
 });
 
 test('Should not add PublishIndicator if no publish status is available', () => {
@@ -476,7 +535,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
     const route = {
         options: {
             formKey: 'snippets',
-            toolbarActions: ['save'],
+            toolbarActions: {save: {}},
         },
     };
     const router = {

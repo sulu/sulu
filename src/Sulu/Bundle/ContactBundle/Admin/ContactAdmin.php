@@ -194,8 +194,8 @@ class ContactAdmin extends Admin
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
                 $accountFormToolbarActions[] = 'sulu_admin.save';
-                $accountDocumentsToolbarAction[] = 'sulu_account.add_media';
-                $accountDocumentsToolbarAction[] = 'sulu_account.delete_media';
+                $accountDocumentsToolbarAction[] = 'sulu_contact.add_media';
+                $accountDocumentsToolbarAction[] = 'sulu_contact.delete_media';
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {

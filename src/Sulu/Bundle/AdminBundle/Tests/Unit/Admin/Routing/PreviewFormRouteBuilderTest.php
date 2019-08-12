@@ -149,7 +149,7 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->getRoute();
 
         $this->assertSame(
-            ['sulu_admin.save', 'sulu_admin.types', 'sulu_admin.delete'],
+            ['sulu_admin.save' => [], 'sulu_admin.types' => [], 'sulu_admin.delete' => []],
             $route->getOption('toolbarActions')
         );
     }

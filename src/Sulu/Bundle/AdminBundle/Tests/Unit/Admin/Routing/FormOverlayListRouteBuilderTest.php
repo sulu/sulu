@@ -375,6 +375,9 @@ class FormOverlayListRouteBuilderTest extends TestCase
             ->addToolbarActions(['sulu_admin.delete'])
             ->getRoute();
 
-        $this->assertEquals(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
+        $this->assertEquals(
+            ['sulu_admin.add' => [], 'sulu_admin.move' => [], 'sulu_admin.delete' => []],
+            $route->getOption('toolbarActions')
+        );
     }
 }

@@ -6,7 +6,7 @@ import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
 import SaveToolbarAction from './toolbarActions/SaveToolbarAction';
 import TypeToolbarAction from './toolbarActions/TypeToolbarAction';
-import PublishTogglerToolbarAction from './toolbarActions/PublishTogglerToolbarAction';
+import TogglerToolbarAction from './toolbarActions/TogglerToolbarAction';
 
 export default Form;
 
@@ -17,5 +17,5 @@ export {
     SaveWithPublishingToolbarAction,
     SaveToolbarAction,
     TypeToolbarAction,
-    PublishTogglerToolbarAction,
+    TogglerToolbarAction,
 };

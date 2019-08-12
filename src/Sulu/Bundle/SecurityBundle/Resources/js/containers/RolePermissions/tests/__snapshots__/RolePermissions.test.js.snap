@@ -75,6 +75,15 @@ exports[`Render matrix with correct all values selected if not given 2`] = `
             class="fa fa-signal"
           />
         </div>
+        <div
+          class="item selected"
+          title="Security"
+        >
+          <span
+            aria-label="su-lock"
+            class="su-lock"
+          />
+        </div>
         <button
           class="rowButton"
         >
@@ -136,6 +145,15 @@ exports[`Render matrix with correct all values selected if not given 2`] = `
           <span
             aria-label="fa-signal"
             class="fa fa-signal"
+          />
+        </div>
+        <div
+          class="item selected"
+          title="Security"
+        >
+          <span
+            aria-label="su-lock"
+            class="su-lock"
           />
         </div>
         <button
@@ -215,6 +233,15 @@ exports[`Render matrix with correct given values 2`] = `
             class="su-trash-alt"
           />
         </div>
+        <div
+          class="item"
+          title="Security"
+        >
+          <span
+            aria-label="su-lock"
+            class="su-lock"
+          />
+        </div>
         <button
           class="rowButton"
         >
@@ -267,6 +294,15 @@ exports[`Render matrix with correct given values 2`] = `
           <span
             aria-label="su-trash-alt"
             class="su-trash-alt"
+          />
+        </div>
+        <div
+          class="item"
+          title="Security"
+        >
+          <span
+            aria-label="su-lock"
+            class="su-lock"
           />
         </div>
         <button

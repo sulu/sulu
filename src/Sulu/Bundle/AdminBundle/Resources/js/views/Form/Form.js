@@ -2,7 +2,7 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import type {IObservableValue} from 'mobx';
-import {action, computed, toJS, isObservableArray, observable} from 'mobx';
+import {action, computed, toJS, isObservableArray, isObservableObject, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
@@ -14,6 +14,7 @@ import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router
 import ResourceStore from '../../stores/ResourceStore';
 import {translate} from '../../utils/Translator';
 import formToolbarActionRegistry from './registries/FormToolbarActionRegistry';
+import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
 
 type Props = ViewProps & {
@@ -33,7 +34,7 @@ class Form extends React.Component<Props> {
     form: ?ElementRef<typeof FormContainer>;
     @observable errors = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
-    @observable toolbarActions = [];
+    @observable toolbarActions: Array<AbstractFormToolbarAction> = [];
     @observable showDirtyWarning: boolean = false;
     @observable showHasChangedWarning: boolean = false;
     postponedSaveOptions: Object;
@@ -182,21 +183,40 @@ class Form extends React.Component<Props> {
         const {
             route: {
                 options: {
-                    toolbarActions,
+                    toolbarActions: rawToolbarActions,
                 },
             },
         } = router;
 
-        if (!Array.isArray(toolbarActions) && !isObservableArray(toolbarActions)) {
+        if (
+            !Array.isArray(rawToolbarActions)
+            && !isObservableArray(rawToolbarActions)
+            && typeof rawToolbarActions !== 'object'
+            && !isObservableObject(rawToolbarActions)
+        ) {
             throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
         }
 
-        this.toolbarActions = toolbarActions.map((toolbarAction) => new (formToolbarActionRegistry.get(toolbarAction))(
-            this.resourceFormStore,
-            this,
-            router,
-            this.locales
-        ));
+        const toolbarActions = toJS(rawToolbarActions);
+
+        Object.keys(toolbarActions).forEach((toolbarActionKey) => {
+            const toolbarActionValue = toolbarActions[toolbarActionKey];
+            if (typeof toolbarActionValue !== 'object') {
+                throw new Error(
+                    'The value of the toolbarAction entry "' + toolbarActionKey + '" must be an object, '
+                    + 'but ' + typeof toolbarActionValue + ' was given!'
+                );
+            }
+        });
+
+        this.toolbarActions = Object.keys(toolbarActions)
+            .map((toolbarActionKey): AbstractFormToolbarAction => new (formToolbarActionRegistry.get(toolbarActionKey))(
+                this.resourceFormStore,
+                this,
+                router,
+                this.locales,
+                toolbarActions[toolbarActionKey]
+            ));
     }
 
     componentDidUpdate(prevProps: Props) {

@@ -12,6 +12,7 @@ import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import listToolbarActionRegistry from './registries/ListToolbarActionRegistry';
+import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import listStyles from './list.scss';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
@@ -32,7 +33,7 @@ class List extends React.Component<Props> {
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
 
-    @observable toolbarActions = [];
+    @observable toolbarActions: Array<AbstractListToolbarAction> = [];
     @observable errors = [];
 
     static getDerivedRouteAttributes(route: Route) {
@@ -158,22 +159,36 @@ class List extends React.Component<Props> {
             route: {
                 options: {
                     locales,
-                    toolbarActions,
+                    toolbarActions: rawToolbarActions,
                 },
             },
         } = router;
+
+        const toolbarActions = toJS(rawToolbarActions);
 
         if (!toolbarActions) {
             return;
         }
 
-        this.toolbarActions = toolbarActions.map((toolbarAction) => new (listToolbarActionRegistry.get(toolbarAction))(
-            this.listStore,
-            this,
-            router,
-            locales,
-            resourceStore
-        ));
+        Object.keys(toolbarActions).forEach((toolbarActionKey) => {
+            const toolbarActionValue = toolbarActions[toolbarActionKey];
+            if (typeof toolbarActionValue !== 'object') {
+                throw new Error(
+                    'The value of the toolbarAction entry "' + toolbarActionKey + '" must be an object, '
+                    + 'but ' + typeof toolbarActionValue + ' was given!'
+                );
+            }
+        });
+
+        this.toolbarActions = Object.keys(toolbarActions)
+            .map((toolbarActionKey): AbstractListToolbarAction => new (listToolbarActionRegistry.get(toolbarActionKey))(
+                this.listStore,
+                this,
+                router,
+                locales,
+                resourceStore,
+                toolbarActions[toolbarActionKey]
+            ));
     }
 
     componentDidUpdate(prevProps: Props) {

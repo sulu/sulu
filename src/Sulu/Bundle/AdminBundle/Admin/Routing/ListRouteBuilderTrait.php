@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 trait ListRouteBuilderTrait
 {
+    use ToolbarActionsRouteBuilderTrait;
+
     private function setResourceKeyToRoute(Route $route, string $resourceKey): void
     {
         $route->setOption('resourceKey', $resourceKey);
@@ -80,13 +82,6 @@ trait ListRouteBuilderTrait
     private function setDefaultLocaleToRoute(Route $route, string $locale): void
     {
         $route->setAttributeDefault('locale', $locale);
-    }
-
-    private function addToolbarActionsToRoute(Route $route, array $toolbarActions): void
-    {
-        $oldToolbarActions = $route->getOption('toolbarActions');
-        $newToolbarActions = $oldToolbarActions ? array_merge($oldToolbarActions, $toolbarActions) : $toolbarActions;
-        $route->setOption('toolbarActions', $newToolbarActions);
     }
 
     private function addResourceStorePropertiesToListStoreToRoute(Route $route, array $resourceStorePropertiesToListStore): void

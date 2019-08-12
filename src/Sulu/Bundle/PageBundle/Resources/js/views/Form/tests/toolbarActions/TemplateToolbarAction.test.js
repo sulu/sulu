@@ -56,7 +56,7 @@ function createTemplateToolbarAction() {
         router,
     });
 
-    return new TemplateToolbarAction(resourceFormStore, form, router);
+    return new TemplateToolbarAction(resourceFormStore, form, router, [], {});
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {

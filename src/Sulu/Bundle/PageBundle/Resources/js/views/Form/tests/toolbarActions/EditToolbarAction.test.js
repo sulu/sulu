@@ -56,7 +56,7 @@ jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
     this.showSuccessSnackbar = jest.fn();
 }));
 
-function createEditToolbarAction(locales) {
+function createEditToolbarAction(locales, options = {}) {
     const resourceStore = new ResourceStore('test');
     const formStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -67,7 +67,7 @@ function createEditToolbarAction(locales) {
         router,
     });
 
-    return new EditToolbarAction(formStore, form, router, locales);
+    return new EditToolbarAction(formStore, form, router, locales, options);
 }
 
 test('Return enabled item config', () => {
@@ -97,13 +97,115 @@ test('Return enabled item config', () => {
     }));
 });
 
+test('Return item config without publish specific options if condition is not met', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de'], {publish_display_condition: '_permission.live'});
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.copy_locale',
+        }),
+    ]);
+});
+
+test('Return item config without copy locale specific options if condition is not met', () => {
+    const editToolbarAction = createEditToolbarAction(
+        ['en', 'de'],
+        {copy_locale_display_condition: '_permission.edit'}
+    );
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_page.delete_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.unpublish',
+        }),
+    ]);
+});
+
+test('Return item config with publish specific options if condition is met', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de'], {publish_display_condition: '_permission.edit'});
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.copy_locale',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.delete_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.unpublish',
+        }),
+    ]);
+});
+
+test('Return item config with copy locale specific options if condition is met', () => {
+    const editToolbarAction = createEditToolbarAction(
+        ['en', 'de'],
+        {copy_locale_display_condition: '_permission.edit'}
+    );
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.copy_locale',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.delete_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.unpublish',
+        }),
+    ]);
+});
+
+test('Return empty item config if conditions are not met', () => {
+    const editToolbarAction = createEditToolbarAction(
+        ['en', 'de'],
+        {
+            copy_locale_display_condition: '_permission.edit',
+            publish_display_condition: '_permission.live',
+        }
+    );
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+
+    expect(toolbarItemConfig).toEqual(undefined);
+});
+
 test('Return disabled delete draft and unpublish items when page is not published', () => {
     const editToolbarAction = createEditToolbarAction(['en', 'de']);
     editToolbarAction.resourceFormStore.resourceStore.id = 5;
     editToolbarAction.resourceFormStore.resourceStore.data.published = false;
     editToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
 
-    expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig).toEqual(expect.objectContaining({
         icon: 'su-pen',
         label: 'sulu_admin.edit',
         type: 'dropdown',
@@ -130,7 +232,12 @@ test('Return disabled delete draft item when page has no draft', () => {
     editToolbarAction.resourceFormStore.resourceStore.data.published = true;
     editToolbarAction.resourceFormStore.resourceStore.data.publishedState = true;
 
-    expect(editToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig).toEqual(expect.objectContaining({
         icon: 'su-pen',
         label: 'sulu_admin.edit',
         type: 'dropdown',
@@ -219,6 +326,10 @@ test('Pass correct props to CopyLocaleDialog', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[0].onClick;
     if (!clickHandler) {
         throw new Error('A onClick callback should be registered on the copy locale option');
@@ -243,6 +354,10 @@ test('Close dialog when onClose from CopyLocaleDialog is called', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[0].onClick;
     if (!clickHandler) {
         throw new Error('A onClick callback should be registered on the copy locale option');
@@ -275,6 +390,10 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[0].onClick;
     if (!clickHandler) {
         throw new Error('A onClick callback should be registered on the copy locale option');
@@ -307,6 +426,10 @@ test('Close dialog when onClose from delete draft dialog is called', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[1].onClick;
     if (!clickHandler) {
         throw new Error('An onClick callback should be registered on the delete draft option');
@@ -345,6 +468,10 @@ test('Delete draft when delete draft dialog is confirmed', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[1].onClick;
     if (!clickHandler) {
         throw new Error('An onClick callback should be registered on the delete draft option');
@@ -379,6 +506,10 @@ test('Close dialog when onClose from unpublish dialog is called', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[2].onClick;
     if (!clickHandler) {
         throw new Error('A onClick callback should be registered on the unpublish option');
@@ -417,6 +548,10 @@ test('Unpublish page when delete draft dialog is confirmed', () => {
     editToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     const clickHandler = toolbarItemConfig.options[2].onClick;
     if (!clickHandler) {
         throw new Error('A onClick callback should be registered on the unpublish option');

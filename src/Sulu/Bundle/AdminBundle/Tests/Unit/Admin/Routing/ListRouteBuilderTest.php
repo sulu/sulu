@@ -312,6 +312,9 @@ class ListRouteBuilderTest extends TestCase
             ->addToolbarActions(['sulu_admin.delete'])
             ->getRoute();
 
-        $this->assertSame(['sulu_admin.add', 'sulu_admin.move', 'sulu_admin.delete'], $route->getOption('toolbarActions'));
+        $this->assertSame(
+            ['sulu_admin.add' => [], 'sulu_admin.move' => [], 'sulu_admin.delete' => []],
+            $route->getOption('toolbarActions')
+        );
     }
 }
