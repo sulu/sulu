@@ -8,12 +8,18 @@ import Button from '../Button';
 
 type Props = {|
     children: ChildrenArray<Element<typeof ArrowMenu.Action>>,
+    className?: string,
     icon?: string,
-    label: string,
+    label?: string,
+    skin: 'primary' | 'secondary' | 'link' | 'icon',
 |};
 
 @observer
 class DropdownButton extends React.Component<Props> {
+    static defaultProps = {
+        skin: 'secondary',
+    };
+
     static Item = ArrowMenu.Action;
 
     @observable open: boolean = false;
@@ -27,18 +33,22 @@ class DropdownButton extends React.Component<Props> {
     };
 
     render() {
-        const {children, icon, label} = this.props;
+        const {children, className, icon, label, skin} = this.props;
 
         const button = (
-            <div>
-                <Button icon={icon} onClick={this.handleButtonClick} showDropdownIcon={true}>
-                    {label}
-                </Button>
-            </div>
+            <Button
+                className={className}
+                icon={icon}
+                onClick={this.handleButtonClick}
+                showDropdownIcon={true}
+                skin={skin}
+            >
+                {label}
+            </Button>
         );
 
         return (
-            <ArrowMenu anchorElement={button} onClose={this.handleArrowMenuClose} open={this.open}>
+            <ArrowMenu anchorElement={button} onClose={this.handleArrowMenuClose} open={this.open} refProp="buttonRef">
                 <ArrowMenu.Section>
                     {children}
                 </ArrowMenu.Section>

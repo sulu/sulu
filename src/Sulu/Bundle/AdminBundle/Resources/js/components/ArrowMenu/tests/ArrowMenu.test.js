@@ -56,6 +56,22 @@ test('Render ArrowMenu closed', () => {
     expect(arrowMenu.find('Popover').prop('open')).toEqual(false);
 });
 
+test('Render ArrowMenu with non-HTML element as anchor', () => {
+    class Button extends React.Component<*> {
+        render() {
+            return <button ref={this.props.buttonRef} />;
+        }
+    }
+
+    const arrowMenu = mount(
+        <ArrowMenu anchorElement={<Button />} open={true} refProp="buttonRef">
+            <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
+        </ArrowMenu>
+    );
+
+    expect(arrowMenu.render()).toMatchSnapshot();
+});
+
 test('Render ArrowMenu open', () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
@@ -102,7 +118,7 @@ test('Render ArrowMenu open', () => {
 
     expect(arrowMenu.find('Popover').children()).toHaveLength(2);
     expect(arrowMenu.find('Popover Backdrop').prop('open')).toEqual(true);
-    expect(arrowMenu.find('Popover > Portal').render()).toMatchSnapshot();
+    expect(arrowMenu.render()).toMatchSnapshot();
 });
 
 test('Render the correct item active with a value of undefined', () => {

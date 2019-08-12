@@ -16,12 +16,17 @@ type Props = {
     children: ChildrenArray<Element<*>>,
     onClose?: () => void,
     open: boolean,
+    refProp: string,
 };
 
 const VERTICAL_OFFSET = 20;
 
 @observer
 class ArrowMenu extends React.Component<Props> {
+    static defaultProps = {
+        refProp: 'ref',
+    };
+
     static Section = Section;
     static SingleItemSection = SingleItemSection;
     static Item = Item;
@@ -37,7 +42,7 @@ class ArrowMenu extends React.Component<Props> {
         return React.cloneElement(
             anchorElement,
             {
-                ref: this.setDisplayValueRef,
+                [this.props.refProp]: this.setDisplayValueRef,
             }
         );
     };
