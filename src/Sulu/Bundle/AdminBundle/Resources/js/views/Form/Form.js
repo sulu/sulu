@@ -199,24 +199,23 @@ class Form extends React.Component<Props> {
 
         const toolbarActions = toJS(rawToolbarActions);
 
-        const transformedToolbarActions = {};
         Object.keys(toolbarActions).forEach((toolbarActionKey) => {
             const toolbarActionValue = toolbarActions[toolbarActionKey];
-
-            if (!isNaN(toolbarActionKey)) {
-                transformedToolbarActions[toolbarActionValue] = {};
-            } else {
-                transformedToolbarActions[toolbarActionKey] = toolbarActionValue;
+            if (typeof toolbarActionValue !== 'object') {
+                throw new Error(
+                    'The value of the toolbarAction entry "' + toolbarActionKey + '" must be an object, '
+                    + 'but ' + typeof toolbarActionValue + ' was given!'
+                );
             }
         });
 
-        this.toolbarActions = Object.keys(transformedToolbarActions)
+        this.toolbarActions = Object.keys(toolbarActions)
             .map((toolbarActionKey): AbstractFormToolbarAction => new (formToolbarActionRegistry.get(toolbarActionKey))(
                 this.resourceFormStore,
                 this,
                 router,
                 this.locales,
-                transformedToolbarActions[toolbarActionKey]
+                toolbarActions[toolbarActionKey]
             ));
     }
 

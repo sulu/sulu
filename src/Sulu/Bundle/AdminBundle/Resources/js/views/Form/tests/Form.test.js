@@ -249,10 +249,8 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
 
 test('Should add items defined in ToolbarActions to Toolbar', () => {
     const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
     const resourceStore = new ResourceStore('snippet', 1);
 
     class SaveToolbarAction extends AbstractFormToolbarAction {
@@ -298,15 +296,8 @@ test('Should add items defined in ToolbarActions to Toolbar', () => {
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-
-    expect(form.html()).toEqual(expect.stringContaining('<p>This is the delete button test!</p>'));
-
-    const toolbarConfig = toolbarFunction.call(form.instance());
-    expect(toolbarConfig.items).toEqual([
-        {type: 'button', value: 'save'},
-        {type: 'button', value: 'delete'},
-    ]);
+    expect(() => shallow(<Form resourceStore={resourceStore} route={route} router={router} />))
+        .toThrow('but string was given');
 });
 
 test('Should add items defined in ToolbarActions to Toolbar with options', () => {
@@ -341,7 +332,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     const route = {
         options: {
             formKey: 'snippets',
-            toolbarActions: {'save': {test1: 'value1'}, 'delete': {test2: 'value2'}, 2: 'edit'},
+            toolbarActions: {'save': {test1: 'value1'}, 'delete': {test2: 'value2'}, 'edit': {}},
         },
     };
     const router = {
@@ -544,7 +535,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
     const route = {
         options: {
             formKey: 'snippets',
-            toolbarActions: ['save'],
+            toolbarActions: {save: {}},
         },
     };
     const router = {
