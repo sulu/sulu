@@ -18,6 +18,7 @@ type Props = {|
     excludedIds: Array<string | number>,
     listKey: string,
     locale?: ?IObservableValue<string>,
+    metadataOptions?: ?Object,
     onClose: () => void,
     onConfirm: (selectedItem: Object) => void,
     open: boolean,
@@ -49,7 +50,7 @@ class SingleListOverlay extends React.Component<Props> {
         const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
         this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
 
-        const {listKey, locale, options, preSelectedItem, resourceKey} = this.props;
+        const {listKey, locale, metadataOptions, options, preSelectedItem, resourceKey} = this.props;
         const observableOptions = {};
         observableOptions.page = this.page;
         observableOptions.excludedIds = excludedIds;
@@ -68,6 +69,7 @@ class SingleListOverlay extends React.Component<Props> {
             USER_SETTINGS_KEY,
             observableOptions,
             options,
+            metadataOptions,
             initialSelectionIds
         );
 

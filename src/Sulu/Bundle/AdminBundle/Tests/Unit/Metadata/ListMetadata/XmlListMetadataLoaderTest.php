@@ -12,19 +12,18 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\ListMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
-use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ListMetadataProviderTest extends TestCase
+class XmlListMetadataLoaderTest extends TestCase
 {
     /**
-     * @var ListMetadataProvider
+     * @var XmlListMetadataLoader
      */
-    private $listMetadataProvider;
+    private $xmlListMetadataLoader;
 
     /**
      * @var TranslatorInterface
@@ -40,7 +39,7 @@ class ListMetadataProviderTest extends TestCase
     {
         $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactoryInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->listMetadataProvider = new ListMetadataProvider(
+        $this->xmlListMetadataLoader = new XmlListMetadataLoader(
             $this->fieldDescriptorFactory->reveal(),
             $this->translator->reveal()
         );
@@ -84,7 +83,7 @@ class ListMetadataProviderTest extends TestCase
             ]
         );
 
-        $contactListMetadata = $this->listMetadataProvider->getMetadata('contact', 'de', []);
+        $contactListMetadata = $this->xmlListMetadataLoader->getMetadata('contact', 'de', []);
         $contactListFields = $contactListMetadata->getFields();
 
         $this->assertEquals('firstName', $contactListFields['firstName']->getName());
@@ -104,7 +103,7 @@ class ListMetadataProviderTest extends TestCase
             $contactListFields['lastName']->getVisibility()
         );
 
-        $accountListMetadata = $this->listMetadataProvider->getMetadata('account', 'en', []);
+        $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en', []);
         $accountListFields = $accountListMetadata->getFields();
 
         $this->assertEquals('name', $accountListFields['name']->getName());
@@ -119,8 +118,7 @@ class ListMetadataProviderTest extends TestCase
 
     public function testGetMetadataNotExisting()
     {
-        $this->expectException(MetadataNotFoundException::class);
-
-        $this->listMetadataProvider->getMetadata('not-existing', 'de', []);
+        $notExistingMetadata = $this->xmlListMetadataLoader->getMetadata('not-existing', 'de', []);
+        $this->assertNull($notExistingMetadata);
     }
 }

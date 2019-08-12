@@ -275,12 +275,18 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
 
         $metadataOptions = $request->query->all();
-
+        $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale(), $metadataOptions);
         $view = View::create(
-            $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale(), $metadataOptions)
+            $metadata
         );
         $view->setFormat('json');
 
-        return $this->viewHandler->handle($view);
+        $response = $this->viewHandler->handle($view);
+
+        if (!$metadata->isCacheable()) {
+            $response->headers->addCacheControlDirective('no-store', !$metadata->isCacheable());
+        }
+
+        return $response;
     }
 }

@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Bundle\AdminBundle\Metadata\AbstractMetadata;
 
-class TypedFormMetadata
+class TypedFormMetadata extends AbstractMetadata
 {
     /**
      * @var FormMetadata[]
