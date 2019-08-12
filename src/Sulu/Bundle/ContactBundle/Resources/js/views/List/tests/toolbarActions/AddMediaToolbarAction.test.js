@@ -40,7 +40,7 @@ function createAddMediaToolbarAction() {
     const locales = [];
     const resourceStore = new ResourceStore('test');
 
-    return new AddMediaToolbarAction(listStore, list, router, locales, resourceStore);
+    return new AddMediaToolbarAction(listStore, list, router, locales, resourceStore, {});
 }
 
 test('Return config for toolbar item', () => {

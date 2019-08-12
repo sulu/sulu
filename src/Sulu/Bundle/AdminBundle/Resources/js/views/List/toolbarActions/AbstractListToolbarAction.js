@@ -12,19 +12,22 @@ export default class AbstractListToolbarAction implements ToolbarAction {
     router: Router;
     locales: ?Array<string>;
     resourceStore: ?ResourceStore;
+    options: {[key: string]: mixed};
 
     constructor(
         listStore: ListStore,
         list: List,
         router: Router,
         locales?: Array<string>,
-        resourceStore?: ResourceStore
+        resourceStore?: ResourceStore,
+        options: {[key: string]: mixed}
     ) {
         this.listStore = listStore;
         this.list = list;
         this.router = router;
         this.locales = locales;
         this.resourceStore = resourceStore;
+        this.options = options;
     }
 
     setLocales(locales: Array<string>) {

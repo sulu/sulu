@@ -82,7 +82,7 @@ class SnippetAdminTest extends TestCase
         $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeEquals([
             'title' => 'sulu_snippet.snippets',
-            'toolbarActions' => ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
+            'toolbarActions' => ['sulu_admin.add' => [], 'sulu_admin.delete' => [], 'sulu_admin.export' => []],
             'resourceKey' => 'snippets',
             'listKey' => 'snippets',
             'adapters' => ['table'],
@@ -104,9 +104,9 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippet',
             'editRoute' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
-                'sulu_admin.save',
-                'sulu_admin.type',
-                'sulu_admin.delete',
+                'sulu_admin.save' => [],
+                'sulu_admin.type' => [],
+                'sulu_admin.delete' => [],
             ],
         ], 'options', $addDetailRoute);
         $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
@@ -123,9 +123,9 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
             'toolbarActions' => [
-                'sulu_admin.save',
-                'sulu_admin.type',
-                'sulu_admin.delete',
+                'sulu_admin.save' => [],
+                'sulu_admin.type' => [],
+                'sulu_admin.delete' => [],
             ],
         ], 'options', $editDetailRoute);
     }

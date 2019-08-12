@@ -39,7 +39,7 @@ function createAddContactToolbarAction() {
     const locales = [];
     const resourceStore = new ResourceStore('test');
 
-    return new AddContactToolbarAction(listStore, list, router, locales, resourceStore);
+    return new AddContactToolbarAction(listStore, list, router, locales, resourceStore, {});
 }
 
 test('Return config for toolbar item', () => {

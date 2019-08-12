@@ -41,7 +41,7 @@ function createDeleteMediaToolbarAction() {
     const locales = [];
     const resourceStore = new ResourceStore('test');
 
-    return new DeleteMediaToolbarAction(listStore, list, router, locales, resourceStore);
+    return new DeleteMediaToolbarAction(listStore, list, router, locales, resourceStore, {});
 }
 
 test('Return config for toolbar item', () => {

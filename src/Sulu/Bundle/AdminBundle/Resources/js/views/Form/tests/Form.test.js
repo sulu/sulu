@@ -247,7 +247,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
 });
 
-test('Should add items defined in ToolbarActions to Toolbar', () => {
+test('Throw error if options are not passed correctly', () => {
     const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
