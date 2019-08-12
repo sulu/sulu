@@ -40,7 +40,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
 
-function createSaveWithPublishingToolbarAction() {
+function createSaveWithPublishingToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -51,7 +51,7 @@ function createSaveWithPublishingToolbarAction() {
         router,
     });
 
-    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], {});
+    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
@@ -148,6 +148,33 @@ test('Return item config with all options disabled when not dirty and data was n
             }),
         ],
     }));
+});
+
+test('Return item config without publish specific options if condition is no met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
+
+    expect(editToolbarAction.getToolbarItemConfig().options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+    ]);
+});
+
+test('Return item config with publish specific options if condition is met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {live: true};
+
+    expect(editToolbarAction.getToolbarItemConfig().options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.save_publish',
+        }),
+        expect.objectContaining({
+            label: 'sulu_admin.publish',
+        }),
+    ]);
 });
 
 test('Return item config with loading button when saving flag is set', () => {

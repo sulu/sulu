@@ -56,7 +56,7 @@ jest.mock('sulu-admin-bundle/views/Form/Form', () => jest.fn(function() {
     this.showSuccessSnackbar = jest.fn();
 }));
 
-function createEditToolbarAction(locales) {
+function createEditToolbarAction(locales, options = {}) {
     const resourceStore = new ResourceStore('test');
     const formStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -67,7 +67,7 @@ function createEditToolbarAction(locales) {
         router,
     });
 
-    return new EditToolbarAction(formStore, form, router, locales, {});
+    return new EditToolbarAction(formStore, form, router, locales, options);
 }
 
 test('Return enabled item config', () => {
@@ -95,6 +95,33 @@ test('Return enabled item config', () => {
             }),
         ],
     }));
+});
+
+test('Return item config without publish specific options if condition is no met', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de'], {publish_display_condition: '_permission.live'});
+
+    expect(editToolbarAction.getToolbarItemConfig().options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.copy_locale',
+        }),
+    ]);
+});
+
+test('Return item config with publish specific options if condition is met', () => {
+    const editToolbarAction = createEditToolbarAction(['en', 'de'], {publish_display_condition: '_permission.live'});
+    editToolbarAction.resourceFormStore.resourceStore.data._permission = {live: true};
+
+    expect(editToolbarAction.getToolbarItemConfig().options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.copy_locale',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.delete_draft',
+        }),
+        expect.objectContaining({
+            label: 'sulu_page.unpublish',
+        }),
+    ]);
 });
 
 test('Return disabled delete draft and unpublish items when page is not published', () => {

@@ -111,10 +111,16 @@ class PageAdmin extends Admin
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
 
         $formToolbarActionsWithType = [
-            'sulu_admin.save_with_publishing',
+            'sulu_admin.save_with_publishing' => [
+                'publish_display_condition' => '(!_permissions || _permissions.live)',
+            ],
             'sulu_page.templates',
-            'sulu_admin.delete',
-            'sulu_page.edit',
+            'sulu_admin.delete' => [
+                'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+            ],
+            'sulu_page.edit' => [
+                'publish_display_condition' => '(!_permissions || _permissions.live)',
+            ],
         ];
 
         $formToolbarActionsWithoutType = [

@@ -1,6 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
+import jexl from 'jexl';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -79,36 +80,46 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
     }
 
     getToolbarItemConfig() {
+        const {
+            publish_display_condition: publishDisplayCondition,
+        } = this.options;
+
         const {id, data} = this.resourceFormStore;
+
         const {published, publishedState} = data;
+
+        const options = [
+            {
+                disabled: !id,
+                label: translate('sulu_admin.copy_locale'),
+                onClick: action(() => {
+                    this.showCopyLocaleDialog = true;
+                }),
+            },
+        ];
+
+        if (!publishDisplayCondition || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data)) {
+            options.push({
+                disabled: !id || !published || publishedState,
+                label: translate('sulu_page.delete_draft'),
+                onClick: action(() => {
+                    this.showDeleteDraftDialog = true;
+                }),
+            });
+            options.push({
+                disabled: !id || !published,
+                label: translate('sulu_page.unpublish'),
+                onClick: action(() => {
+                    this.showUnpublishDialog = true;
+                }),
+            });
+        }
 
         return {
             type: 'dropdown',
             label: translate('sulu_admin.edit'),
             icon: 'su-pen',
-            options: [
-                {
-                    disabled: !id,
-                    label: translate('sulu_admin.copy_locale'),
-                    onClick: action(() => {
-                        this.showCopyLocaleDialog = true;
-                    }),
-                },
-                {
-                    disabled: !id || !published || publishedState,
-                    label: translate('sulu_page.delete_draft'),
-                    onClick: action(() => {
-                        this.showDeleteDraftDialog = true;
-                    }),
-                },
-                {
-                    disabled: !id || !published,
-                    label: translate('sulu_page.unpublish'),
-                    onClick: action(() => {
-                        this.showUnpublishDialog = true;
-                    }),
-                },
-            ],
+            options,
         };
     }
 
