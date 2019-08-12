@@ -5,7 +5,9 @@ Array [
   <div
     class="buttons"
   >
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -296,7 +298,9 @@ Array [
   <div
     class="buttons"
   >
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"

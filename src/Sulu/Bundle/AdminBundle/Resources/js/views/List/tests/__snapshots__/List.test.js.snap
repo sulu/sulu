@@ -486,7 +486,9 @@ exports[`Should render the list with a title 1`] = `
           >
             of 3
           </span>
-          <div>
+          <div
+            class="buttonGroup"
+          >
             <button
               class="button icon button"
               type="button"
@@ -749,7 +751,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
           >
             of 3
           </span>
-          <div>
+          <div
+            class="buttonGroup"
+          >
             <button
               class="button icon button"
               type="button"

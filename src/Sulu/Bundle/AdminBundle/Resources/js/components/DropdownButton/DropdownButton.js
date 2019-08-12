@@ -7,7 +7,7 @@ import ArrowMenu from '../ArrowMenu';
 import Button from '../Button';
 
 type Props = {|
-    children: ChildrenArray<Element<typeof ArrowMenu.Action>>,
+    children: ChildrenArray<Element<typeof ArrowMenu.Action> | false>,
     className?: string,
     icon?: string,
     label?: string,

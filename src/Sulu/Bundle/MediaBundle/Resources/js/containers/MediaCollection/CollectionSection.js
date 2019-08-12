@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Dialog, Icon, Button, ButtonGroup} from 'sulu-admin-bundle/components';
+import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import type {OperationType, OverlayType} from './types';
@@ -168,42 +168,34 @@ class CollectionSection extends React.Component<Props> {
                                 onNavigate={this.handleBreadcrumbNavigate}
                                 resourceStore={resourceStore}
                             />
-                            {resourceStore.id &&
-                                <div className={collectionSectionStyles.icons}>
-                                    {editable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-pen"
-                                            onClick={this.handleEditCollectionClick}
-                                        />
-                                    }
-                                    {deletable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-trash-alt"
-                                            onClick={this.handleRemoveCollectionClick}
-                                        />
-                                    }
-                                    {editable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-arrows-alt"
-                                            onClick={this.handleMoveCollectionClick}
-                                        />
-                                    }
-                                </div>
-                            }
                         </div>
 
-                        {addable &&
-                            <div className={collectionSectionStyles.right}>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleAddCollectionClick}>
-                                        <Icon name="su-plus" />
-                                    </Button>
-                                </ButtonGroup>
-                            </div>
-                        }
+                        <div className={collectionSectionStyles.right}>
+                            <ButtonGroup>
+                                {addable &&
+                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
+                                }
+                                {!!resourceStore.id &&
+                                    <DropdownButton icon="su-cog">
+                                        {editable &&
+                                            <DropdownButton.Item onClick={this.handleEditCollectionClick}>
+                                                {translate('sulu_admin.edit')}
+                                            </DropdownButton.Item>
+                                        }
+                                        {deletable &&
+                                            <DropdownButton.Item onClick={this.handleRemoveCollectionClick}>
+                                                {translate('sulu_admin.delete')}
+                                            </DropdownButton.Item>
+                                        }
+                                        {editable &&
+                                            <DropdownButton.Item onClick={this.handleMoveCollectionClick}>
+                                                {translate('sulu_admin.move')}
+                                            </DropdownButton.Item>
+                                        }
+                                    </DropdownButton>
+                                }
+                            </ButtonGroup>
+                        </div>
                     </div>
                 }
                 <List

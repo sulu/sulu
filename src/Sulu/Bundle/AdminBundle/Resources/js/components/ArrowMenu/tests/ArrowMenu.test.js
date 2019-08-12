@@ -121,6 +121,60 @@ test('Render ArrowMenu open', () => {
     expect(arrowMenu.render()).toMatchSnapshot();
 });
 
+test('Render ArrowMenu open with falsy values', () => {
+    const handleClose = jest.fn();
+    const handleChangeSection1 = jest.fn();
+    const handleChangeSection2 = jest.fn();
+    const open = true;
+    const button = (<button>Nice button</button>);
+    const value1 = 'sulu';
+    const value2 = undefined;
+
+    const arrowMenu = mount(
+        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
+            <ArrowMenu.Section title="Search Section">
+                <input type="text" />
+                {false}
+            </ArrowMenu.Section>
+            <ArrowMenu.SingleItemSection
+                icon="su-webspace"
+                onChange={handleChangeSection1}
+                title="Webspaces"
+                value={value1}
+            >
+                <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
+                <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
+                <ArrowMenu.Item value="sulu_doc">Sulu Doc</ArrowMenu.Item>
+                {false}
+            </ArrowMenu.SingleItemSection>
+            <ArrowMenu.SingleItemSection
+                icon="su-check"
+                onChange={handleChangeSection2}
+                title="Columns"
+                value={value2}
+            >
+                <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
+                <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
+                {false}
+            </ArrowMenu.SingleItemSection>
+            <ArrowMenu.Section>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 1</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 2</ArrowMenu.Action>
+                <ArrowMenu.Action onClick={jest.fn()}>Test Action 3</ArrowMenu.Action>
+                {false}
+            </ArrowMenu.Section>
+            {false}
+        </ArrowMenu>
+    );
+
+    expect(arrowMenu.children()).toHaveLength(2);
+    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+
+    expect(arrowMenu.find('Popover').children()).toHaveLength(2);
+    expect(arrowMenu.find('Popover Backdrop').prop('open')).toEqual(true);
+    expect(arrowMenu.render()).toMatchSnapshot();
+});
+
 test('Render the correct item active with a value of undefined', () => {
     const button = (<button>Nice button</button>);
 

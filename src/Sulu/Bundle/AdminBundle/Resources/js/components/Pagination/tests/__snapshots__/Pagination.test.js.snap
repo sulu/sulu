@@ -77,7 +77,9 @@ exports[`Render disabled next link if current page is last page 1`] = `
     >
       of 5
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -179,7 +181,9 @@ exports[`Render disabled previous link current page is first page 1`] = `
     >
       of 5
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -293,7 +297,9 @@ exports[`Render pagination with loader 1`] = `
     >
       of 10
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -394,7 +400,9 @@ exports[`Render pagination with page numbers 1`] = `
     >
       of 10
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"

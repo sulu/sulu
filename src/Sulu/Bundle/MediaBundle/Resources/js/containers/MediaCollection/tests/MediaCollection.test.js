@@ -174,53 +174,11 @@ jest.mock('sulu-admin-bundle/stores', () => {
 });
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.all_media':
-                return 'All Media';
-            case 'sulu_media.copy_url':
-                return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Download master file';
-            case 'sulu_media.copy_masterfile_url':
-                return 'Copy masterfile url';
-            case 'sulu_media.add_collection':
-                return 'Add collection';
-            case 'sulu_media.edit_collection':
-                return 'Edit collection';
-            case 'sulu_media.remove_collection':
-                return 'Remove collection';
-            case 'sulu_media.remove_collection_warning':
-                return 'Warning: Remove collection';
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-            case 'sulu_admin.ok':
-                return 'ok';
-            case 'sulu_admin.cancel':
-                return 'cancel';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
@@ -334,10 +292,12 @@ test('Render the MediaCollection without add button when permission is missing',
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(1);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
 });
 
 test('Render the MediaCollection without delete button when permission is missing', () => {
@@ -384,10 +344,12 @@ test('Render the MediaCollection without delete button when permission is missin
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(1);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
 });
 
 test('Render the MediaCollection without edit buttons when permission is missing', () => {
@@ -434,10 +396,12 @@ test('Render the MediaCollection without edit buttons when permission is missing
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(0);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(0);
 });
 
 test('Render the MediaCollection for all media', () => {
@@ -624,7 +588,8 @@ test('Should send a request to add a new collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="su-plus"]').simulate('click');
+    mediaCollection.find('Button[icon="su-plus"]').simulate('click');
+
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
@@ -635,7 +600,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     if (!header) {
         throw new Error('Header not found!');
     }
-    expect(header.outerHTML).toEqual(expect.stringContaining('Add collection'));
+    expect(header.outerHTML).toEqual(expect.stringContaining('sulu_media.add_collection'));
 
     const newResourceStore = mediaCollection.find('CollectionSection').instance().resourceStoreByOperationType;
     newResourceStore.save = jest.fn().mockReturnValue(promise);
@@ -703,7 +668,8 @@ test('Should send a request to update the collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="su-pen"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.edit'}).simulate('click');
 
     // $FlowFixMe
     const resourceStoreInstances = ResourceStore.mock.instances;
@@ -719,7 +685,7 @@ test('Should send a request to update the collection via the overlay', () => {
     if (!header) {
         throw new Error('Header not found!');
     }
-    expect(header.outerHTML).toEqual(expect.stringContaining('Edit collection'));
+    expect(header.outerHTML).toEqual(expect.stringContaining('sulu_media.edit_collection'));
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     const button = document.querySelector('button.primary');
@@ -779,7 +745,8 @@ test('Confirming the delete dialog should delete the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
@@ -856,7 +823,8 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     const button = document.querySelector('button.primary');
@@ -913,7 +881,8 @@ test('Confirming the move dialog should move the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="su-arrows-alt"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);

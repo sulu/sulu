@@ -54,45 +54,34 @@ Array [
                         </button>
                       </li>
                     </ul>
-                    <div
-                      class="icons"
-                    >
-                      <span
-                        aria-label="su-pen"
-                        class="su-pen clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                      <span
-                        aria-label="su-trash-alt"
-                        class="su-trash-alt clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                      <span
-                        aria-label="su-arrows-alt"
-                        class="su-arrows-alt clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                    </div>
                   </div>
                   <div
                     class="right"
                   >
-                    <div>
+                    <div
+                      class="buttonGroup"
+                    >
                       <button
                         class="button icon button"
                         type="button"
                       >
                         <span
-                          class="text"
-                        >
-                          <span
-                            aria-label="su-plus"
-                            class="su-plus"
-                          />
-                        </span>
+                          aria-label="su-plus"
+                          class="su-plus buttonIcon"
+                        />
+                      </button>
+                      <button
+                        class="button icon button"
+                        type="button"
+                      >
+                        <span
+                          aria-label="su-cog"
+                          class="su-cog buttonIcon"
+                        />
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down dropdownIcon"
+                        />
                       </button>
                     </div>
                   </div>
@@ -240,7 +229,9 @@ Array [
                         >
                           sulu_admin.of 3
                         </span>
-                        <div>
+                        <div
+                          class="buttonGroup"
+                        >
                           <button
                             class="button icon button"
                             type="button"
@@ -677,45 +668,34 @@ Array [
                         </button>
                       </li>
                     </ul>
-                    <div
-                      class="icons"
-                    >
-                      <span
-                        aria-label="su-pen"
-                        class="su-pen clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                      <span
-                        aria-label="su-trash-alt"
-                        class="su-trash-alt clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                      <span
-                        aria-label="su-arrows-alt"
-                        class="su-arrows-alt clickable icon"
-                        role="button"
-                        tabindex="0"
-                      />
-                    </div>
                   </div>
                   <div
                     class="right"
                   >
-                    <div>
+                    <div
+                      class="buttonGroup"
+                    >
                       <button
                         class="button icon button"
                         type="button"
                       >
                         <span
-                          class="text"
-                        >
-                          <span
-                            aria-label="su-plus"
-                            class="su-plus"
-                          />
-                        </span>
+                          aria-label="su-plus"
+                          class="su-plus buttonIcon"
+                        />
+                      </button>
+                      <button
+                        class="button icon button"
+                        type="button"
+                      >
+                        <span
+                          aria-label="su-cog"
+                          class="su-cog buttonIcon"
+                        />
+                        <span
+                          aria-label="su-angle-down"
+                          class="su-angle-down dropdownIcon"
+                        />
                       </button>
                     </div>
                   </div>
@@ -863,7 +843,9 @@ Array [
                         >
                           sulu_admin.of 3
                         </span>
-                        <div>
+                        <div
+                          class="buttonGroup"
+                        >
                           <button
                             class="button icon button"
                             type="button"

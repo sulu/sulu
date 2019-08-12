@@ -138,7 +138,9 @@ exports[`Render a basic Folder list with data 1`] = `
     >
        2
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""

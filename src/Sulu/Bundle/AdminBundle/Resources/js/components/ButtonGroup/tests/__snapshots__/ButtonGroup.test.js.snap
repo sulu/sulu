@@ -1,7 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Should render a button and a dropdown button 1`] = `
+<div
+  class="buttonGroup"
+>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      <span
+        aria-label="su-th-large"
+        class="su-th-large"
+      />
+    </span>
+  </button>
+  <button
+    class="button icon button"
+    type="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
+`;
+
 exports[`Should render a button with a custom className 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button test"
     type="button"
@@ -19,7 +50,9 @@ exports[`Should render a button with a custom className 1`] = `
 `;
 
 exports[`Should render more than two buttons 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button"
     type="button"
@@ -76,7 +109,9 @@ exports[`Should render more than two buttons 1`] = `
 `;
 
 exports[`Should render one button 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button"
     type="button"
@@ -94,7 +129,9 @@ exports[`Should render one button 1`] = `
 `;
 
 exports[`Should render one button with a custom className and another one without 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button test"
     type="button"
@@ -125,7 +162,9 @@ exports[`Should render one button with a custom className and another one withou
 `;
 
 exports[`Should render two buttons 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button"
     type="button"

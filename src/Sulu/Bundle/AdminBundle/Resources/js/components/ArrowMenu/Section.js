@@ -4,7 +4,7 @@ import type {ChildrenArray, Element} from 'react';
 import sectionStyles from './section.scss';
 
 type Props = {
-    children?: ChildrenArray<Element<*>>,
+    children?: ChildrenArray<Element<*> | false>,
     title?: string,
 };
 

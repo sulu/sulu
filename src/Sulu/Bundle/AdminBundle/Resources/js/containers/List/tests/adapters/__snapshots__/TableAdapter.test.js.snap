@@ -130,7 +130,9 @@ exports[`Render column with ascending sort icon 1`] = `
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -285,7 +287,9 @@ exports[`Render column with descending sort icon 1`] = `
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -454,7 +458,9 @@ exports[`Render data with all different visibility types schema 1`] = `
     >
       of 5
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -715,7 +721,9 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -901,7 +909,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -1049,7 +1059,9 @@ exports[`Render data with schema 1`] = `
     >
       of 5
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -1302,7 +1314,9 @@ exports[`Render data with schema and selections 1`] = `
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -1450,7 +1464,9 @@ exports[`Render data with schema in different order 1`] = `
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
@@ -1569,7 +1585,9 @@ exports[`Render data with schema not containing all fields 1`] = `
     >
       of 3
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         disabled=""
@@ -1698,7 +1716,9 @@ exports[`Render data with skin 1`] = `
     >
       of 5
     </span>
-    <div>
+    <div
+      class="buttonGroup"
+    >
       <button
         class="button icon button"
         type="button"
