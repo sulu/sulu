@@ -82,23 +82,32 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {
         const {
             publish_display_condition: publishDisplayCondition,
+            copy_locale_display_condition: copyLocaleDisplayCondition,
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
 
         const {published, publishedState} = data;
 
-        const options = [
-            {
+        const publishAllowed = !publishDisplayCondition
+            || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data);
+
+        const copyLocaleAllowed = !copyLocaleDisplayCondition
+            || jexl.evalSync(copyLocaleDisplayCondition, this.resourceFormStore.data);
+
+        const options = [];
+
+        if (copyLocaleAllowed) {
+            options.push({
                 disabled: !id,
                 label: translate('sulu_admin.copy_locale'),
                 onClick: action(() => {
                     this.showCopyLocaleDialog = true;
                 }),
-            },
-        ];
+            });
+        }
 
-        if (!publishDisplayCondition || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data)) {
+        if (publishAllowed) {
             options.push({
                 disabled: !id || !published || publishedState,
                 label: translate('sulu_page.delete_draft'),
@@ -113,6 +122,10 @@ export default class EditToolbarAction extends AbstractFormToolbarAction {
                     this.showUnpublishDialog = true;
                 }),
             });
+        }
+
+        if (options.length === 0) {
+            return;
         }
 
         return {

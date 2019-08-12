@@ -113,12 +113,14 @@ class PageAdmin extends Admin
         $formToolbarActionsWithType = [
             'sulu_admin.save_with_publishing' => [
                 'publish_display_condition' => '(!_permissions || _permissions.live)',
+                'save_display_condition' => '(!_permissions || _permissions.edit)',
             ],
             'sulu_page.templates',
             'sulu_admin.delete' => [
                 'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
             ],
             'sulu_page.edit' => [
+                'copy_locale_display_condition' => '(!_permissions || _permissions.edit)',
                 'publish_display_condition' => '(!_permissions || _permissions.live)',
             ],
         ];

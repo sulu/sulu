@@ -7,21 +7,30 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
     getToolbarItemConfig() {
         const {
             publish_display_condition: publishDisplayCondition,
+            save_display_condition: saveDisplayCondition,
         } = this.options;
 
         const {dirty, data, saving} = this.resourceFormStore;
 
-        const options = [
-            {
+        const publishAllowed = !publishDisplayCondition
+            || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data);
+
+        const saveAllowed = !saveDisplayCondition
+            || jexl.evalSync(saveDisplayCondition, this.resourceFormStore.data);
+
+        const options = [];
+
+        if (saveAllowed) {
+            options.push({
                 label: translate('sulu_admin.save_draft'),
                 disabled: !dirty,
                 onClick: () => {
                     this.form.submit('draft');
                 },
-            },
-        ];
+            });
+        }
 
-        if (!publishDisplayCondition || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data)) {
+        if (saveAllowed && publishAllowed) {
             options.push({
                 label: translate('sulu_admin.save_publish'),
                 disabled: !dirty,
@@ -29,7 +38,9 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                     this.form.submit('publish');
                 },
             });
+        }
 
+        if (publishAllowed) {
             options.push({
                 label: translate('sulu_admin.publish'),
                 // TODO do not hardcode "publishedState" but use metadata instead
@@ -38,6 +49,10 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                     this.form.submit('publish');
                 },
             });
+        }
+
+        if (options.length === 0) {
+            return;
         }
 
         return {
