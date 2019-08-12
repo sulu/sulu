@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {action, observable} from 'mobx';
+import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils/Translator';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
@@ -26,6 +27,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     }
 
     getToolbarItemConfig() {
+        const {
+            display_condition: displayCondition,
+        } = this.options;
+
+        if (displayCondition && !jexl.evalSync(displayCondition, this.resourceFormStore.data)) {
+            return;
+        }
+
         return {
             disabled: !this.resourceFormStore.id,
             icon: 'su-trash-alt',
