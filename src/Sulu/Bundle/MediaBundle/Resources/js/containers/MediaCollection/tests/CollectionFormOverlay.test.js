@@ -1,6 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import CollectionFormOverlay from '../CollectionFormOverlay';
 
@@ -8,6 +8,7 @@ jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     ResourceFormStore: jest.fn(),
+    // $FlowFixMe
     Form: require.requireActual('sulu-admin-bundle/containers').Form,
 }));
 
@@ -86,4 +87,24 @@ test('Keep title when closing overlay until new overlay opens', () => {
         open: false,
         title: 'sulu_media.edit_collection',
     }));
+});
+
+test('Call destroy of ResourceFormStore when unmounted', () => {
+    const resourceStore = new ResourceStore('test');
+    const collectionFormOverlay = mount(
+        <CollectionFormOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            operationType={null}
+            overlayType="overlay"
+            resourceStore={resourceStore}
+        />
+    );
+
+    const resourceFormStore = collectionFormOverlay.instance().formStore;
+    resourceFormStore.destroy = jest.fn();
+
+    collectionFormOverlay.unmount();
+
+    expect(resourceFormStore.destroy).toBeCalledWith();
 });

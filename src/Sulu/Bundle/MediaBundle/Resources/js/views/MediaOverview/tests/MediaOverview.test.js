@@ -8,7 +8,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
         Form: jest.fn(() => null),
-        ResourceFormStore: jest.fn(),
+        ResourceFormStore: jest.fn(function() {
+            this.destroy = jest.fn();
+        }),
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
         List: require('sulu-admin-bundle/containers/List/List').default,
         ListStore: jest.fn(function(resourceKey, observableOptions) {

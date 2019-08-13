@@ -42,8 +42,13 @@ class CollectionFormOverlay extends React.Component<Props> {
         }
 
         if (this.props.resourceStore !== prevProps.resourceStore) {
+            this.formStore.destroy();
             this.formStore = new ResourceFormStore(this.props.resourceStore, FORM_KEY);
         }
+    }
+
+    componentWillUnmount() {
+        this.formStore.destroy();
     }
 
     setFormRef = (formRef: ?Form) => {

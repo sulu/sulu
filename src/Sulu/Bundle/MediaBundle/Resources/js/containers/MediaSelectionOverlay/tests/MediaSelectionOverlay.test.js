@@ -68,7 +68,9 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
     })
 );
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+}));
 
 let collectionListStoreMock: ListStore;
 let mediaListStoreMock: ListStore;
