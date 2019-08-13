@@ -15,9 +15,6 @@ test('Do not send request without defined collectionId', () => {
 });
 
 test('After loading the collection info should be set', (done) => {
-    // $FlowFixMe
-    const Promise = require.requireActual('promise');
-
     ResourceRequester.get.mockReturnValue(Promise.resolve({
         id: 2,
         title: 'test',
@@ -45,4 +42,18 @@ test('After loading the collection info should be set', (done) => {
             done();
         }
     );
+});
+
+test('Should return an empty permission object if still loading', () => {
+    const collectionStore = new CollectionStore(1, observable.box('en'));
+
+    expect(collectionStore.permissions).toEqual({});
+});
+
+test('Should return an empty permission object if no id was given', () => {
+    const collectionStore = new CollectionStore(undefined, observable.box('en'));
+
+    expect(ResourceRequester.get).not.toBeCalled();
+    expect(collectionStore.loading).toEqual(false);
+    expect(collectionStore.permissions).toEqual({});
 });

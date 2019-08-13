@@ -14,6 +14,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.id = 1;
     this.data = {
         id: 1,
+        _permissions: {},
     };
 }));
 

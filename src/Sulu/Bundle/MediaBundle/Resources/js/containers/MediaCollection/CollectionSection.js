@@ -9,6 +9,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
+import PermissionFormOverlay from './PermissionFormOverlay';
 import type {OperationType, OverlayType} from './types';
 import collectionSectionStyles from './collectionSection.scss';
 
@@ -23,6 +24,7 @@ type Props = {
     onCollectionNavigate: (collectionId: ?string | number) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
+    securable: boolean,
 };
 
 @observer
@@ -88,6 +90,10 @@ class CollectionSection extends React.Component<Props> {
         this.openCollectionOperationOverlay('move');
     };
 
+    handlePermissionCollectionClick = () => {
+        this.openCollectionOperationOverlay('permissions');
+    };
+
     handleCollectionOverlayConfirm = (resourceStore: ResourceStore) => {
         const options = {};
         options.breadcrumb = true;
@@ -112,6 +118,16 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleCollectionOverlayClose = () => {
+        this.closeCollectionOperationOverlay();
+    };
+
+    handlePermissionOverlayClose = () => {
+        this.closeCollectionOperationOverlay();
+    };
+
+    handlePermissionOverlayConfirm = () => {
+        const {resourceStore} = this.props;
+        resourceStore.reload();
         this.closeCollectionOperationOverlay();
     };
 
@@ -155,6 +171,7 @@ class CollectionSection extends React.Component<Props> {
             locale,
             overlayType,
             resourceStore,
+            securable,
         } = this.props;
 
         const operationType = this.openedCollectionOperationOverlayType;
@@ -192,6 +209,11 @@ class CollectionSection extends React.Component<Props> {
                                                 {translate('sulu_admin.move')}
                                             </DropdownButton.Item>
                                         }
+                                        {securable &&
+                                            <DropdownButton.Item onClick={this.handlePermissionCollectionClick}>
+                                                {translate('sulu_security.permissions')}
+                                            </DropdownButton.Item>
+                                        }
                                     </DropdownButton>
                                 }
                             </ButtonGroup>
@@ -222,6 +244,12 @@ class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
+                <PermissionFormOverlay
+                    collectionId={this.collectionId}
+                    onClose={this.handlePermissionOverlayClose}
+                    onConfirm={this.handlePermissionOverlayConfirm}
+                    open={operationType === 'permissions'}
+                />
                 <SingleListOverlay
                     adapter="column_list"
                     allowActivateForDisabledItems={false}

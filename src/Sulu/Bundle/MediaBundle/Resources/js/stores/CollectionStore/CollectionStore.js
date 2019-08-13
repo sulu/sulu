@@ -40,6 +40,10 @@ export default class CollectionStore {
     }
 
     @computed get permissions(): {[key: string]: boolean} {
+        if (this.resourceStore.loading || !this.resourceStore.id) {
+            return {};
+        }
+
         return this.resourceStore.data._permissions;
     }
 

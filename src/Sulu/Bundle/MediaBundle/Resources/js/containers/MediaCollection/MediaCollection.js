@@ -76,9 +76,16 @@ class MediaCollection extends React.Component<Props> {
             uploadOverlayOpen,
         } = this.props;
 
+        const {permissions} = collectionStore;
+
+        const addable = permissions.add !== undefined ? permissions.add : MediaCollection.addable;
+        const editable = permissions.edit !== undefined ? permissions.edit : MediaCollection.editable;
+        const deletable = permissions.delete !== undefined ? permissions.delete : MediaCollection.deletable;
+        const securable = permissions.security !== undefined ? permissions.security : MediaCollection.securable;
+
         return (
             <MultiMediaDropzone
-                collectionId={MediaCollection.addable ? collectionStore.id : undefined}
+                collectionId={addable ? collectionStore.id : undefined}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}
@@ -86,14 +93,15 @@ class MediaCollection extends React.Component<Props> {
                 open={uploadOverlayOpen}
             >
                 <CollectionSection
-                    addable={MediaCollection.addable}
-                    deletable={MediaCollection.deletable}
-                    editable={MediaCollection.editable}
+                    addable={addable}
+                    deletable={deletable}
+                    editable={editable}
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
+                    securable={securable}
                 />
                 <Divider />
                 <div>
