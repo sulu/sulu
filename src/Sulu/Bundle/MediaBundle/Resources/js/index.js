@@ -31,6 +31,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     MediaCollection.addable = mediaPermissions.add;
     MediaCollection.deletable = mediaPermissions.delete;
     MediaCollection.editable = mediaPermissions.edit;
+    MediaCollection.securable = mediaPermissions.security;
 
     if (initialized) {
         return;

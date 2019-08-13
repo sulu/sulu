@@ -36,6 +36,7 @@ class MediaCollection extends React.Component<Props> {
     static addable: boolean = true;
     static deletable: boolean = true;
     static editable: boolean = true;
+    static securable: boolean = true;
 
     handleMediaClick = (mediaId: string | number) => {
         const {onMediaNavigate} = this.props;
