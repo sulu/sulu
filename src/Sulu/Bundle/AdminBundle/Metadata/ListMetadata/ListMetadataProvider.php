@@ -26,7 +26,7 @@ class ListMetadataProvider implements MetadataProviderInterface
         $this->listMetadataLoaders = $listMetadataLoaders;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions): ?ListMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?ListMetadata
     {
         $list = null;
         foreach ($this->listMetadataLoaders as $listMetadataLoader) {

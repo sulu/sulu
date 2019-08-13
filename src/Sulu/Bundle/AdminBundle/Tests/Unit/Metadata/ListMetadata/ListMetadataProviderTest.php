@@ -55,7 +55,7 @@ class ListMetadataProviderTest extends TestCase
         $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn($listMetadata);
         $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn(null);
 
-        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en', []);
+        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en');
         $this->assertEquals($listMetadata, $metadata);
     }
 
@@ -69,7 +69,7 @@ class ListMetadataProviderTest extends TestCase
         $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn(null);
         $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn($listMetadata);
 
-        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en', []);
+        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en');
         $this->assertEquals($listMetadata, $metadata);
     }
 
@@ -79,6 +79,6 @@ class ListMetadataProviderTest extends TestCase
         $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn(null);
 
         $this->expectException(MetadataNotFoundException::class);
-        $this->listMetadataProvider->getMetadata('list1', 'en', []);
+        $this->listMetadataProvider->getMetadata('list1', 'en');
     }
 }

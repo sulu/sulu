@@ -83,7 +83,7 @@ class XmlListMetadataLoaderTest extends TestCase
             ]
         );
 
-        $contactListMetadata = $this->xmlListMetadataLoader->getMetadata('contact', 'de', []);
+        $contactListMetadata = $this->xmlListMetadataLoader->getMetadata('contact', 'de');
         $contactListFields = $contactListMetadata->getFields();
 
         $this->assertEquals('firstName', $contactListFields['firstName']->getName());
@@ -103,7 +103,7 @@ class XmlListMetadataLoaderTest extends TestCase
             $contactListFields['lastName']->getVisibility()
         );
 
-        $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en', []);
+        $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en');
         $accountListFields = $accountListMetadata->getFields();
 
         $this->assertEquals('name', $accountListFields['name']->getName());
@@ -118,7 +118,7 @@ class XmlListMetadataLoaderTest extends TestCase
 
     public function testGetMetadataNotExisting()
     {
-        $notExistingMetadata = $this->xmlListMetadataLoader->getMetadata('not-existing', 'de', []);
+        $notExistingMetadata = $this->xmlListMetadataLoader->getMetadata('not-existing', 'de');
         $this->assertNull($notExistingMetadata);
     }
 }

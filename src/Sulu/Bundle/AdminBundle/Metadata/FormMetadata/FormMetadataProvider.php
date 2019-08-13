@@ -38,11 +38,11 @@ class FormMetadataProvider implements MetadataProviderInterface
     /**
      * @return FormMetadata|TypedFormMetadata
      */
-    public function getMetadata(string $key, string $locale, array $metadataOptions)
+    public function getMetadata(string $key, string $locale, array $metadataOptions = [])
     {
         $form = null;
         foreach ($this->formMetadataLoaders as $metadataLoader) {
-            $form = $metadataLoader->getMetadata($key, $locale);
+            $form = $metadataLoader->getMetadata($key, $locale, $metadataOptions);
             if ($form) {
                 break;
             }

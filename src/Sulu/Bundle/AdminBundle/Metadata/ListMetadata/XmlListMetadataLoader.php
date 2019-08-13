@@ -34,7 +34,7 @@ class XmlListMetadataLoader implements ListMetadataLoaderInterface
         $this->translator = $translator;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions): ?ListMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?ListMetadata
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($key);
 

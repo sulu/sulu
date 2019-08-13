@@ -60,7 +60,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale): ?TypedFormMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?TypedFormMetadata
     {
         $configCache = $this->getConfigCache($key, $locale);
 
