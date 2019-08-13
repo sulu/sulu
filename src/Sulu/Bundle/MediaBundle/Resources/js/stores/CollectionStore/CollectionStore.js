@@ -1,6 +1,6 @@
 // @flow
 import {computed} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -37,6 +37,10 @@ export default class CollectionStore {
 
     @computed get id(): ?string | number {
         return this.resourceStore.id;
+    }
+
+    @computed get permissions(): {[key: string]: boolean} {
+        return this.resourceStore.data._permissions;
     }
 
     @computed get parentId(): ?number {

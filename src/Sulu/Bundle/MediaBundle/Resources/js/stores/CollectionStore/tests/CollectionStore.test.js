@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {observable, when} from 'mobx';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import CollectionStore from '../CollectionStore';
@@ -15,6 +15,7 @@ test('Do not send request without defined collectionId', () => {
 });
 
 test('After loading the collection info should be set', (done) => {
+    // $FlowFixMe
     const Promise = require.requireActual('promise');
 
     ResourceRequester.get.mockReturnValue(Promise.resolve({
@@ -25,6 +26,11 @@ test('After loading the collection info should be set', (done) => {
                 id: 1,
             },
         },
+        _permissions: {
+            view: true,
+            edit: false,
+            delete: false,
+        },
     }));
 
     const locale = observable.box('en');
@@ -33,7 +39,8 @@ test('After loading the collection info should be set', (done) => {
     when(
         () => !collectionStore.loading,
         () => {
-            expect(collectionStore.parentId).toBe(1);
+            expect(collectionStore.parentId).toEqual(1);
+            expect(collectionStore.permissions).toEqual({view: true, edit: false, delete: false});
             collectionStore.destroy();
             done();
         }
