@@ -15,11 +15,12 @@ jest.mock('../../../containers/ListOverlay', () => jest.fn(function ListOverlay(
 }));
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
-    function(resourceKey, listKey, userSettingsKey, observableOptions, options) {
+    function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions) {
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
         this.options = options;
+        this.metadataOptions = metadataOptions;
         this.observableOptions = observableOptions;
         this.select = jest.fn();
 
@@ -33,9 +34,10 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
     }
 ));
 
-test('Should instantiate the ListStore with locale, excluded-ids and options', () => {
+test('Should instantiate the ListStore with locale, excluded-ids, options and metadataOptions', () => {
     const locale = observable.box('en');
     const options = {};
+    const metadataOptions = {id: 2};
 
     const singleListOverlay = shallow(
         <SingleListOverlay
@@ -43,6 +45,7 @@ test('Should instantiate the ListStore with locale, excluded-ids and options', (
             excludedIds={['id-1', 'id-2']}
             listKey="snippets_list"
             locale={locale}
+            metadataOptions={metadataOptions}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={false}
@@ -57,9 +60,10 @@ test('Should instantiate the ListStore with locale, excluded-ids and options', (
     expect(singleListOverlay.instance().listStore.observableOptions.locale.get()).toEqual('en');
     expect(singleListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
     expect(singleListOverlay.instance().listStore.options).toBe(options);
+    expect(singleListOverlay.instance().listStore.metadataOptions).toBe(metadataOptions);
 });
 
-test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
+test('Should instantiate the ListStore without locale, excluded-ids, options and metadataOptions', () => {
     const singleListOverlay = shallow(
         <SingleListOverlay
             adapter="table"
@@ -74,6 +78,8 @@ test('Should instantiate the ListStore without locale, excluded-ids and options'
 
     expect(singleListOverlay.instance().listStore.observableOptions.locale).toEqual(undefined);
     expect(singleListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(undefined);
+    expect(singleListOverlay.instance().listStore.options).toEqual(undefined);
+    expect(singleListOverlay.instance().listStore.metadataOptions).toEqual(undefined);
 });
 
 test('Should pass overlayType overlay by default', () => {
@@ -234,6 +240,7 @@ test('Should pass the id from the preSelectedItems to the ListStore', () => {
         <SingleListOverlay
             adapter="table"
             listKey="snippets"
+            metadataOptions={undefined}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
@@ -248,6 +255,7 @@ test('Should pass the id from the preSelectedItems to the ListStore', () => {
         'snippets',
         'single_list_overlay',
         expect.anything(),
+        undefined,
         undefined,
         [1]
     );

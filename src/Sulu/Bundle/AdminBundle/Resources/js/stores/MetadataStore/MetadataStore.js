@@ -32,10 +32,12 @@ class MetadataStore {
             const url = symfonyRouting.generate('sulu_admin.metadata', parameters);
             const response = fetch(url, defaultOptions).then((response) => {
                 if (!response.ok) {
+                    this.metadataPromises[type][keyWithOptions] = undefined;
                     return Promise.reject(response);
                 }
 
                 if (response.status === 204) {
+                    this.metadataPromises[type][keyWithOptions] = undefined;
                     return Promise.resolve({});
                 }
 

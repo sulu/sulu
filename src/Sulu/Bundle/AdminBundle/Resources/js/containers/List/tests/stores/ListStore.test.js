@@ -184,8 +184,13 @@ test('The user store should be called correctly when changing the schema', () =>
         },
         {
             test: 'value',
+        },
+        {
+            id: 1,
         }
     );
+
+    expect((metadataStore).getSchema).toBeCalledWith('tests', {id: 1});
 
     return schemaPromise.then(() => {
         const newSchema = {
@@ -261,7 +266,8 @@ test('The loading strategy should be called with a different resourceKey when a 
         },
         {
             test: 'value',
-        }
+        },
+        undefined
     );
     listStore.schema = {};
 
@@ -819,7 +825,7 @@ test('Set forbidden flag to true if the response returned a 403', (done) => {
 });
 
 test('Set active to undefined if the response returned a 404', (done) => {
-    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()}, undefined);
     listStore.schema = {};
     const promise = Promise.reject({
         status: 404,

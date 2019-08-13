@@ -1,11 +1,6 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
 import metadataStore from '../MetadataStore';
-import Requester from '../../../services/Requester';
-
-jest.mock('../../../services/Requester', () => ({
-    get: jest.fn(),
-}));
 
 test('Load metadata for given type and key', () => {
     const snippetMetadata = {
@@ -34,43 +29,181 @@ test('Load metadata for given type and key', () => {
         },
     };
 
-    const snippetPromise = Promise.resolve(snippetMetadata);
-    const tagPromise = Promise.resolve(tagMetadata);
+    const snippetMetadataPromise = Promise.resolve(snippetMetadata);
+    const tagMetadataPromise = Promise.resolve(tagMetadata);
+
+    const snippetResponse = {
+        json: jest.fn(),
+        ok: true,
+        status: 200,
+        headers: {
+            get: jest.fn(),
+        },
+    };
+
+    const tagResponse = {
+        json: jest.fn(),
+        ok: true,
+        status: 200,
+        headers: {
+            get: jest.fn(),
+        },
+    };
+
+    snippetResponse.json.mockReturnValue(Promise.resolve(snippetMetadata));
+    const snippetResponsePromise = Promise.resolve(snippetResponse);
+
+    tagResponse.json.mockReturnValue(Promise.resolve(tagMetadata));
+    const tagResponsePromise = Promise.resolve(tagResponse);
 
     SymfonyRouting.generate.mockImplementation((routeName, value) => {
         return '/metadata/' + value.type + '/' + value.key;
     });
 
-    Requester.get.mockImplementation((key) => {
+    window.fetch = jest.fn();
+    window.fetch.mockImplementation((key) => {
         switch (key) {
             case '/metadata/form/snippets':
-                return snippetPromise;
+                return snippetResponsePromise;
             case '/metadata/list/tags':
-                return tagPromise;
+                return tagResponsePromise;
         }
     });
 
-    expect(metadataStore.loadMetadata('form', 'snippets')).toEqual(snippetPromise);
-    expect(metadataStore.loadMetadata('list', 'tags')).toEqual(tagPromise);
+    expect(metadataStore.loadMetadata('form', 'snippets')).toEqual(snippetMetadataPromise);
+    expect(metadataStore.loadMetadata('list', 'tags')).toEqual(tagMetadataPromise);
 
-    return Promise.all([snippetPromise, tagPromise]).then(([snippetMetadataFromPromise, tagMetadataFromPromise]) => {
-        expect(snippetMetadataFromPromise).toBe(snippetMetadata);
-        expect(tagMetadataFromPromise).toBe(tagMetadata);
-    });
+    return Promise.all([snippetMetadataPromise, tagMetadataPromise])
+        .then(([snippetMetadataFromPromise, tagMetadataFromPromise]) => {
+            expect(snippetMetadataFromPromise).toBe(snippetMetadata);
+            expect(tagMetadataFromPromise).toBe(tagMetadata);
+        });
 });
 
 test('Load configuration twice should return the same promise', () => {
-    const snippetMetadata = {};
-    const snippetPromise = Promise.resolve(snippetMetadata);
+    const tagMetadata = {
+        list: {
+            name: {
+                label: 'Name',
+                type: 'text_line',
+            },
+        },
+    };
 
-    Requester.get.mockReturnValue(snippetPromise);
+    const response = {
+        json: jest.fn(),
+        ok: true,
+        status: 200,
+        headers: {
+            get: jest.fn(),
+        },
+    };
 
-    const snippetPromise1 = metadataStore.loadMetadata('form', 'snippets');
-    const snippetPromise2 = metadataStore.loadMetadata('form', 'snippets');
+    response.json.mockReturnValue(Promise.resolve(tagMetadata));
+    const tagPromise = Promise.resolve(response);
 
-    expect(snippetPromise1).toBe(snippetPromise2);
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(tagPromise);
 
-    return Promise.all([snippetPromise1, snippetPromise2]).then(([snippetMetadata1, snippetMetadata2]) => {
-        expect(snippetMetadata1).toBe(snippetMetadata2);
+    const tagPromise1 = metadataStore.loadMetadata('form', 'tags');
+    const tagPromise2 = metadataStore.loadMetadata('form', 'tags');
+
+    expect(tagPromise1).toBe(tagPromise2);
+    return Promise.all([tagPromise1, tagPromise2]).then(([tagMetadata1, tagMetadata2]) => {
+        expect(tagMetadata1).toBe(tagMetadata);
+        expect(tagMetadata2).toBe(tagMetadata);
+    });
+});
+
+test('Load metadata should not cache metadata if no-store is set in response', () => {
+    const metadata = {};
+
+    const response = {
+        json: jest.fn(),
+        ok: true,
+        status: 200,
+        headers: {
+            get: jest.fn(),
+        },
+    };
+
+    response.json.mockReturnValue(Promise.resolve(metadata));
+    response.headers.get.mockReturnValue('no-store');
+
+    const responsePromise = Promise.resolve(response);
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(responsePromise);
+
+    const metadataPromise1 = metadataStore.loadMetadata('form', 'no_cache');
+
+    return metadataPromise1.then((metadata1) => {
+        expect(metadata1).toBe(metadata);
+
+        const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
+        expect(window.fetch).toBeCalledTimes(2);
+
+        return metadataPromise2.then((metadata2) => {
+            expect(metadata2).toBe(metadata);
+        });
+    });
+});
+
+test('Load metadata should cache metadata if no-store is not set in response', () => {
+    const metadata = {};
+
+    const response = {
+        json: jest.fn(),
+        ok: true,
+        status: 200,
+        headers: {
+            get: jest.fn(),
+        },
+    };
+
+    response.json.mockReturnValue(Promise.resolve(metadata));
+
+    const responsePromise = Promise.resolve(response);
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(responsePromise);
+
+    const metadataPromise1 = metadataStore.loadMetadata('form', 'no_cache');
+
+    return metadataPromise1.then((metadata1) => {
+        expect(metadata1).toBe(metadata);
+
+        const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
+        expect(window.fetch).toBeCalledTimes(1);
+
+        return metadataPromise2.then((metadata2) => {
+            expect(metadata2).toBe(metadata);
+        });
+    });
+});
+
+test('Load metadata should reject with response when the response contains error', () => {
+    const response = {
+        ok: false,
+    };
+
+    const promise = Promise.resolve(response);
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    expect(metadataStore.loadMetadata('form', 'reject')).rejects.toEqual(response);
+});
+
+test('Load metadata should return empty object if status code was 204', () => {
+    const promise = Promise.resolve({
+        ok: true,
+        status: 204,
+    });
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    return metadataStore.loadMetadata('form', 'empty').then((data) => {
+        expect(data).toEqual({});
     });
 });
