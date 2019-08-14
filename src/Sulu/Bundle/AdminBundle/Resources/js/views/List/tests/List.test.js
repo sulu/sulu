@@ -1123,7 +1123,7 @@ test('Should pass router attributes array from router to the ListStore metadataO
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
-                routerAttributesToListMetadata: ['locale', 'title', 'id'],
+                routerAttributesToListMetadata: ['locale', 'id'],
             },
         },
     };
@@ -1133,7 +1133,7 @@ test('Should pass router attributes array from router to the ListStore metadataO
 
     expect(listStore.metadataOptions.locale).toEqual('en');
     expect(listStore.metadataOptions.id).toEqual('123-123-123');
-    expect(listStore.metadataOptions.title).toEqual('Sulu is awesome');
+    expect(listStore.metadataOptions.title).toBeUndefined();
 });
 
 test('Should pass locale and page observables to the ListStore', () => {

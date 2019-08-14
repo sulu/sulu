@@ -278,9 +278,7 @@ class AdminController
         $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
             ->getMetadata($key, $user->getLocale(), $metadataOptions);
 
-        $view = View::create(
-            $metadata
-        );
+        $view = View::create($metadata);
         $view->setFormat('json');
 
         $response = $this->viewHandler->handle($view);
