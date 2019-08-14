@@ -93,6 +93,7 @@ class PropertiesXmlParser
                 'spaceAfter',
                 'disabledCondition',
                 'visibleCondition',
+                'mandatoryCondition',
             ]
         );
 
@@ -157,6 +158,7 @@ class PropertiesXmlParser
                 'cssClass',
                 'disabledCondition',
                 'visibleCondition',
+                'mandatoryCondition',
             ]
         );
 
@@ -178,7 +180,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'colspan', 'cssClass', 'disabledCondition', 'visibleCondition']
+            ['name', 'colspan', 'cssClass', 'disabledCondition', 'visibleCondition', 'mandatoryCondition']
         );
 
         $result['type'] = 'section';
@@ -397,6 +399,10 @@ class PropertiesXmlParser
             $section->setVisibleCondition($data['visibleCondition']);
         }
 
+        if(isset($data['mandatoryCondition'])) {
+            $section->setMandatoryCondition($data['mandatoryCondition']);
+        }
+
         foreach ($data['properties'] as $name => $property) {
             $section->addChild($this->createProperty($name, $property));
         }
@@ -416,6 +422,10 @@ class PropertiesXmlParser
 
         if (isset($data['visibleCondition'])) {
             $blockProperty->setVisibleCondition($data['visibleCondition']);
+        }
+
+        if (isset($data['mandatoryCondition'])) {
+            $blockProperty->setMandatoryCondition($data['mandatoryCondition']);
         }
 
         if (isset($data['meta']['title'])) {
@@ -470,6 +480,9 @@ class PropertiesXmlParser
         );
         $property->setVisibleCondition(
             array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null
+        );
+        $property->setMandatoryCondition(
+            array_key_exists('mandatoryCondition', $data) ? $data['mandatoryCondition'] : null
         );
         $property->setParameters($data['params']);
         $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);

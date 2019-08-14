@@ -83,6 +83,11 @@ abstract class ItemMetadata
     protected $visibleCondition = null;
 
     /**
+     * @var string
+     */
+    protected $mandatoryCondition = null;
+
+    /**
      * @param mixed $name
      */
     public function __construct($name = null)
@@ -374,6 +379,18 @@ abstract class ItemMetadata
     public function setVisibleCondition(?string $visibleCondition): self
     {
         $this->visibleCondition = $visibleCondition;
+
+        return $this;
+    }
+
+    public function getMandatoryCondition(): ?string
+    {
+        return $this->mandatoryCondition;
+    }
+
+    public function setMandatoryCondition(?string $mandatoryCondition): self
+    {
+        $this->mandatoryCondition = $mandatoryCondition;
 
         return $this;
     }

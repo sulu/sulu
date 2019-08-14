@@ -71,6 +71,7 @@ export type RawSchemaEntry = BaseSchemaEntry & {
     disabledCondition?: string,
     items?: RawSchema,
     types?: RawTypes,
+    mandatoryCondition?: string,
     visibleCondition?: string,
 };
 

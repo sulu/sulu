@@ -1,10 +1,10 @@
 // @flow
-import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import { action, computed, observable, set, toJS, untracked, when } from 'mobx';
+import type { IObservableValue } from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
+import type { RawSchema, RawSchemaEntry, Schema, SchemaEntry } from '../types';
 
 const SECTION_TYPE = 'section';
 
@@ -56,6 +56,10 @@ function transformRawSchemaEntry(
             schemaEntry.disabled = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
         } else if (schemaEntryKey === 'visibleCondition' && rawSchemaEntry[schemaEntryKey]) {
             schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
+        } else if (schemaEntryKey === 'mandatoryCondition' && rawSchemaEntry[schemaEntryKey]) {
+            schemaEntry.required = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
+        } else if (schemaEntryKey === 'required') {
+            schemaEntry.required = schemaEntry.required === undefined ? rawSchemaEntry[schemaEntryKey] : schemaEntry[schemaEntryKey];
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
             schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, path);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
@@ -77,6 +81,11 @@ function transformRawSchemaEntry(
         } else {
             // $FlowFixMe
             schemaEntry[schemaEntryKey] = rawSchemaEntry[schemaEntryKey];
+        }
+
+        if (schemaEntry['required'] === true && (schemaEntry['disabled'] === true || schemaEntry['visible'] === false)) {
+            schemaEntry['required'] = false;
+            log.warn("Mandatory field has been disabled or hidden and is no longer mandatory!")
         }
 
         return schemaEntry;
@@ -152,8 +161,7 @@ function collectTagPaths(
         .map((pathWithPriority) => pathWithPriority.path);
 }
 
-export default class AbstractFormStore
-{
+export default class AbstractFormStore {
     +data: Object;
     +loading: boolean;
     +locale: ?IObservableValue<string>;
@@ -162,7 +170,7 @@ export default class AbstractFormStore
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
-    pathsByTag: {[tagName: string]: Array<string>} = {};
+    pathsByTag: { [tagName: string]: Array<string> } = {};
 
     @computed.struct get schema(): Schema {
         return toJS(this.evaluatedSchema);
@@ -219,7 +227,7 @@ export default class AbstractFormStore
     }
 
     updateFieldPathEvaluations = () => {
-        const {loading, rawSchema} = this;
+        const {loading, rawSchema, jsonSchema} = this;
         const locale = this.locale ? this.locale.get() : undefined;
 
         when(

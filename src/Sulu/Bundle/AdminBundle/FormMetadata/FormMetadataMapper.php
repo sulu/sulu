@@ -72,6 +72,7 @@ class FormMetadataMapper
         $section->setColSpan($property->getColSpan());
         $section->setDisabledCondition($property->getDisabledCondition());
         $section->setVisibleCondition($property->getVisibleCondition());
+        $section->setMandatoryCondition($property->getMandatoryCondition());
 
         foreach ($property->getChildren() as $component) {
             if ($component instanceof BlockMetadata) {
@@ -126,6 +127,7 @@ class FormMetadataMapper
         $field->setLabel($property->getTitle($locale));
         $field->setDisabledCondition($property->getDisabledCondition());
         $field->setVisibleCondition($property->getVisibleCondition());
+        $field->setMandatoryCondition($property->getMandatoryCondition());
         $field->setDescription($property->getDescription($locale));
         $field->setType($property->getType());
         $field->setColSpan($property->getColSpan());

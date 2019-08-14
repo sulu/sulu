@@ -40,6 +40,11 @@ abstract class ItemMetadata
     /**
      * @var string
      */
+    protected $mandatoryCondition;
+
+    /**
+     * @var string
+     */
     protected $description;
 
     /**
@@ -90,6 +95,16 @@ abstract class ItemMetadata
     public function setVisibleCondition(?string $visibleCondition): void
     {
         $this->visibleCondition = $visibleCondition;
+    }
+
+    public function getMandatoryCondition(): ?string
+    {
+        return $this->mandatoryCondition;
+    }
+
+    public function setMandatoryCondition(?string $mandatoryCondition): void
+    {
+        $this->mandatoryCondition = $mandatoryCondition;
     }
 
     public function getDescription(): ?string

@@ -75,6 +75,7 @@
         <xs:attribute type="xs:integer" name="colspan" use="optional" default="12"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
+        <xs:attribute type="xs:string" name="mandatoryCondition" use="optional"/>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
@@ -104,6 +105,7 @@
         <xs:attribute type="xs:integer" name="spaceAfter" use="optional"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
+        <xs:attribute type="xs:string" name="mandatoryCondition" use="optional"/>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
@@ -124,6 +126,7 @@
         <xs:attribute type="xs:integer" name="colspan" use="optional" default="12"/>
         <xs:attribute type="xs:string" name="disabledCondition" use="optional"/>
         <xs:attribute type="xs:string" name="visibleCondition" use="optional"/>
+        <xs:attribute type="xs:string" name="mandatoryCondition" use="optional"/>
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
