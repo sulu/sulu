@@ -251,531 +251,527 @@ Array [
 `;
 
 exports[`Should render the list with a title 1`] = `
-<div>
+<div
+  class="listContainer"
+>
   <div
-    class="listContainer"
+    class="headerContainer"
   >
-    <div
-      class="headerContainer"
+    <h1
+      class="header"
     >
-      <h1
-        class="header"
+      Snippets
+    </h1>
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
       >
-        Snippets
-      </h1>
-      <div
-        class="toolbar"
-      >
-        <label
-          class="input dark left collapsed hasAppendIcon"
+        <div
+          class="prependedContainer dark collapsed"
         >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="text"
-            value=""
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
           />
-        </label>
-        <div>
+        </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="list"
+  >
+    <section>
+      <div
+        class="tableContainer dark"
+      >
+        <table
+          class="table"
+        >
+          <thead
+            class="header"
+          >
+            <tr>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </span>
+              </th>
+              <th
+                class="headerCell clickable"
+              >
+                <button>
+                  Description
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
+                >
+                  Description 1
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
+                >
+                  Description 2
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav
+        class="pagination"
+      >
+        <span
+          class="display"
+        >
+          :
+        </span>
+        <span>
+          <div
+            class="select"
+          >
+            <button
+              class="displayValue dark"
+              type="button"
+            >
+              <div
+                aria-label="10"
+                class="croppedText"
+                title="10"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  1
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    0
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  10
+                </div>
+              </div>
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down toggle"
+              />
+            </button>
+          </div>
+        </span>
+        <div
+          class="loader"
+        />
+        <span>
+          Page:
+        </span>
+        <span
+          class="inputContainer"
+        >
+          <label
+            class="input dark center"
+          >
+            <input
+              inputmode="numeric"
+              type="text"
+              value="1"
+            />
+          </label>
+        </span>
+        <span
+          class="display"
+        >
+          of 3
+        </span>
+        <div
+          class="buttonGroup"
+        >
           <button
-            class="button icon"
+            class="button icon button"
             type="button"
           >
             <span
-              aria-label="su-sort"
-              class="su-sort buttonIcon"
+              aria-label="su-angle-left"
+              class="su-angle-left buttonIcon"
             />
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
             <span
-              aria-label="su-angle-down"
-              class="su-angle-down dropdownIcon"
+              aria-label="su-angle-right"
+              class="su-angle-right buttonIcon"
             />
           </button>
         </div>
-      </div>
-    </div>
-    <div
-      class="list"
-    >
-      <section>
-        <div
-          class="tableContainer dark"
-        >
-          <table
-            class="table"
-          >
-            <thead
-              class="header"
-            >
-              <tr>
-                <th
-                  class="headerCell"
-                >
-                  <span>
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox light"
-                      >
-                        <input
-                          type="checkbox"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </span>
-                </th>
-                <th
-                  class="headerCell clickable"
-                >
-                  <button>
-                    Description
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="row"
-              >
-                <td
-                  class="cell small"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 1
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="row"
-              >
-                <td
-                  class="cell small"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 2
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <nav
-          class="pagination"
-        >
-          <span
-            class="display"
-          >
-            :
-          </span>
-          <span>
-            <div
-              class="select"
-            >
-              <button
-                class="displayValue dark"
-                type="button"
-              >
-                <div
-                  aria-label="10"
-                  class="croppedText"
-                  title="10"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    1
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      0
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    10
-                  </div>
-                </div>
-                <span
-                  aria-label="su-angle-down"
-                  class="su-angle-down toggle"
-                />
-              </button>
-            </div>
-          </span>
-          <div
-            class="loader"
-          />
-          <span>
-            Page:
-          </span>
-          <span
-            class="inputContainer"
-          >
-            <label
-              class="input dark center"
-            >
-              <input
-                inputmode="numeric"
-                type="text"
-                value="1"
-              />
-            </label>
-          </span>
-          <span
-            class="display"
-          >
-            of 3
-          </span>
-          <div
-            class="buttonGroup"
-          >
-            <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                aria-label="su-angle-left"
-                class="su-angle-left buttonIcon"
-              />
-            </button>
-            <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right buttonIcon"
-              />
-            </button>
-          </div>
-        </nav>
-      </section>
-    </div>
+      </nav>
+    </section>
   </div>
 </div>
 `;
 
 exports[`Should render the list with the correct resourceKey 1`] = `
-<div>
+<div
+  class="listContainer"
+>
   <div
-    class="listContainer"
+    class="headerContainer"
   >
-    <div
-      class="headerContainer"
+    <h1
+      class="header"
     >
-      <h1
-        class="header"
+      Test 1
+    </h1>
+    <div
+      class="toolbar"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
       >
-        Test 1
-      </h1>
-      <div
-        class="toolbar"
-      >
-        <label
-          class="input dark left collapsed hasAppendIcon"
+        <div
+          class="prependedContainer dark collapsed"
         >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="text"
-            value=""
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
           />
-        </label>
-        <div>
+        </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="list"
+  >
+    <section>
+      <div
+        class="tableContainer dark"
+      >
+        <table
+          class="table"
+        >
+          <thead
+            class="header"
+          >
+            <tr>
+              <th
+                class="headerCell"
+              >
+                <span>
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox light"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </span>
+              </th>
+              <th
+                class="headerCell clickable"
+              >
+                <button>
+                  Description
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="1"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
+                >
+                  Description 1
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="row"
+            >
+              <td
+                class="cell small"
+              >
+                <div
+                  class="cellContent"
+                >
+                  <label
+                    class="label"
+                  >
+                    <span
+                      class="switch checkbox dark"
+                    >
+                      <input
+                        type="checkbox"
+                        value="2"
+                      />
+                      <span />
+                    </span>
+                  </label>
+                </div>
+              </td>
+              <td
+                class="cell"
+              >
+                <div
+                  class="cellContent"
+                >
+                  Description 2
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav
+        class="pagination"
+      >
+        <span
+          class="display"
+        >
+          :
+        </span>
+        <span>
+          <div
+            class="select"
+          >
+            <button
+              class="displayValue dark"
+              type="button"
+            >
+              <div
+                aria-label="10"
+                class="croppedText"
+                title="10"
+              >
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  1
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    0
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  10
+                </div>
+              </div>
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down toggle"
+              />
+            </button>
+          </div>
+        </span>
+        <div
+          class="loader"
+        />
+        <span>
+          Page:
+        </span>
+        <span
+          class="inputContainer"
+        >
+          <label
+            class="input dark center"
+          >
+            <input
+              inputmode="numeric"
+              type="text"
+              value="1"
+            />
+          </label>
+        </span>
+        <span
+          class="display"
+        >
+          of 3
+        </span>
+        <div
+          class="buttonGroup"
+        >
           <button
-            class="button icon"
+            class="button icon button"
             type="button"
           >
             <span
-              aria-label="su-sort"
-              class="su-sort buttonIcon"
+              aria-label="su-angle-left"
+              class="su-angle-left buttonIcon"
             />
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
             <span
-              aria-label="su-angle-down"
-              class="su-angle-down dropdownIcon"
+              aria-label="su-angle-right"
+              class="su-angle-right buttonIcon"
             />
           </button>
         </div>
-      </div>
-    </div>
-    <div
-      class="list"
-    >
-      <section>
-        <div
-          class="tableContainer dark"
-        >
-          <table
-            class="table"
-          >
-            <thead
-              class="header"
-            >
-              <tr>
-                <th
-                  class="headerCell"
-                >
-                  <span>
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox light"
-                      >
-                        <input
-                          type="checkbox"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </span>
-                </th>
-                <th
-                  class="headerCell clickable"
-                >
-                  <button>
-                    Description
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="row"
-              >
-                <td
-                  class="cell small"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 1
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="row"
-              >
-                <td
-                  class="cell small"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    <label
-                      class="label"
-                    >
-                      <span
-                        class="switch checkbox dark"
-                      >
-                        <input
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span />
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td
-                  class="cell"
-                >
-                  <div
-                    class="cellContent"
-                  >
-                    Description 2
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <nav
-          class="pagination"
-        >
-          <span
-            class="display"
-          >
-            :
-          </span>
-          <span>
-            <div
-              class="select"
-            >
-              <button
-                class="displayValue dark"
-                type="button"
-              >
-                <div
-                  aria-label="10"
-                  class="croppedText"
-                  title="10"
-                >
-                  <div
-                    aria-hidden="true"
-                    class="front"
-                  >
-                    1
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    class="back"
-                  >
-                    <span>
-                      0
-                    </span>
-                  </div>
-                  <div
-                    class="whole"
-                  >
-                    10
-                  </div>
-                </div>
-                <span
-                  aria-label="su-angle-down"
-                  class="su-angle-down toggle"
-                />
-              </button>
-            </div>
-          </span>
-          <div
-            class="loader"
-          />
-          <span>
-            Page:
-          </span>
-          <span
-            class="inputContainer"
-          >
-            <label
-              class="input dark center"
-            >
-              <input
-                inputmode="numeric"
-                type="text"
-                value="1"
-              />
-            </label>
-          </span>
-          <span
-            class="display"
-          >
-            of 3
-          </span>
-          <div
-            class="buttonGroup"
-          >
-            <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                aria-label="su-angle-left"
-                class="su-angle-left buttonIcon"
-              />
-            </button>
-            <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right buttonIcon"
-              />
-            </button>
-          </div>
-        </nav>
-      </section>
-    </div>
+      </nav>
+    </section>
   </div>
 </div>
 `;
