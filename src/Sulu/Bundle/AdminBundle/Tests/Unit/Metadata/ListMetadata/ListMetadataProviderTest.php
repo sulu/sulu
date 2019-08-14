@@ -13,11 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\ListMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader;
 
 class ListMetadataProviderTest extends TestCase
 {
@@ -27,100 +27,58 @@ class ListMetadataProviderTest extends TestCase
     private $listMetadataProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var XmlListMetadataLoader
      */
-    private $translator;
+    private $xmlListMetadataLoader1;
 
     /**
-     * @var FieldDescriptorFactoryInterface
+     * @var XmlListMetadataLoader
      */
-    private $fieldDescriptorFactory;
+    private $xmlListMetadataLoader2;
 
     public function setUp()
     {
-        $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactoryInterface::class);
-        $this->translator = $this->prophesize(TranslatorInterface::class);
-        $this->listMetadataProvider = new ListMetadataProvider(
-            $this->fieldDescriptorFactory->reveal(),
-            $this->translator->reveal()
-        );
+        $this->xmlListMetadataLoader1 = $this->prophesize(ListMetadataLoaderInterface::class);
+        $this->xmlListMetadataLoader2 = $this->prophesize(ListMetadataLoaderInterface::class);
+
+        $loaders = [$this->xmlListMetadataLoader1->reveal(), $this->xmlListMetadataLoader2->reveal()];
+        $this->listMetadataProvider = new ListMetadataProvider($loaders);
     }
 
-    public function testGetMetadata()
+    public function testGetMetadataFromLoader1()
     {
-        $this->translator->trans('sulu_contact.firstname', [], 'admin', 'de')->willReturn('First name');
-        $this->translator->trans('sulu_contact.lastname', [], 'admin', 'de')->willReturn('Last name');
-        $this->translator->trans('sulu_contact.name', [], 'admin', 'en')->willReturn('Name');
-        $this->fieldDescriptorFactory->getFieldDescriptors('contact')->willReturn(
-            [
-                new FieldDescriptor(
-                    'firstName',
-                    'sulu_contact.firstname',
-                    FieldDescriptorInterface::VISIBILITY_YES,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    true
-                ),
-                new FieldDescriptor(
-                    'lastName',
-                    'sulu_contact.lastname',
-                    FieldDescriptorInterface::VISIBILITY_NO,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    false
-                ),
-            ]
-        );
-        $this->fieldDescriptorFactory->getFieldDescriptors('account')->willReturn(
-            [
-                new FieldDescriptor(
-                    'name',
-                    'sulu_contact.name',
-                    FieldDescriptorInterface::VISIBILITY_YES,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    true
-                ),
-            ]
-        );
+        $listMetadata = new ListMetadata();
+        $listMetadata->addField(new FieldMetadata('field1'));
+        $listMetadata->addField(new FieldMetadata('field2'));
+        $listMetadata->addField(new FieldMetadata('field3'));
 
-        $contactListMetadata = $this->listMetadataProvider->getMetadata('contact', 'de');
-        $contactListFields = $contactListMetadata->getFields();
+        $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn($listMetadata);
+        $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn(null);
 
-        $this->assertEquals('firstName', $contactListFields['firstName']->getName());
-        $this->assertEquals('First name', $contactListFields['firstName']->getLabel());
-        $this->assertEquals('string', $contactListFields['firstName']->getType());
-        $this->assertEquals(true, $contactListFields['firstName']->isSortable());
-        $this->assertEquals(
-            FieldDescriptorInterface::VISIBILITY_YES,
-            $contactListFields['firstName']->getVisibility()
-        );
-        $this->assertEquals('lastName', $contactListFields['lastName']->getName());
-        $this->assertEquals('Last name', $contactListFields['lastName']->getLabel());
-        $this->assertEquals('string', $contactListFields['lastName']->getType());
-        $this->assertEquals(false, $contactListFields['lastName']->isSortable());
-        $this->assertEquals(
-            FieldDescriptorInterface::VISIBILITY_NO,
-            $contactListFields['lastName']->getVisibility()
-        );
+        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en');
+        $this->assertEquals($listMetadata, $metadata);
+    }
 
-        $accountListMetadata = $this->listMetadataProvider->getMetadata('account', 'en');
-        $accountListFields = $accountListMetadata->getFields();
+    public function testGetMetadataFromLoader2()
+    {
+        $listMetadata = new ListMetadata();
+        $listMetadata->addField(new FieldMetadata('field1'));
+        $listMetadata->addField(new FieldMetadata('field2'));
+        $listMetadata->addField(new FieldMetadata('field3'));
 
-        $this->assertEquals('name', $accountListFields['name']->getName());
-        $this->assertEquals('Name', $accountListFields['name']->getLabel());
-        $this->assertEquals('string', $accountListFields['name']->getType());
-        $this->assertEquals(true, $accountListFields['name']->isSortable());
-        $this->assertEquals(
-            FieldDescriptorInterface::VISIBILITY_YES,
-            $accountListFields['name']->getVisibility()
-        );
+        $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn(null);
+        $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn($listMetadata);
+
+        $metadata = $this->listMetadataProvider->getMetadata('list1', 'en');
+        $this->assertEquals($listMetadata, $metadata);
     }
 
     public function testGetMetadataNotExisting()
     {
-        $this->expectException(MetadataNotFoundException::class);
+        $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn(null);
+        $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn(null);
 
-        $this->listMetadataProvider->getMetadata('not-existing', 'de');
+        $this->expectException(MetadataNotFoundException::class);
+        $this->listMetadataProvider->getMetadata('list1', 'en');
     }
 }

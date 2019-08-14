@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
@@ -51,7 +52,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale): ?FormMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?MetadataInterface
     {
         $configCache = $this->getConfigCache($key, $locale);
 

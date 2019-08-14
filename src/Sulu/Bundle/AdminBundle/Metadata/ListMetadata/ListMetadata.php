@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata;
 
 use JMS\Serializer\Annotation as Serializer;
+use Sulu\Bundle\AdminBundle\Metadata\AbstractMetadata;
 
-class ListMetadata
+class ListMetadata extends AbstractMetadata
 {
     /**
      * @var FieldMetadata[]

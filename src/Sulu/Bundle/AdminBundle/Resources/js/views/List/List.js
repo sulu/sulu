@@ -70,6 +70,7 @@ class List extends React.Component<Props> {
                     routerAttributesToListStore = {},
                     resourceStorePropertiesToListStore = {},
                     userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
+                    routerAttributesToListMetadata = {},
                 },
             },
         } = router;
@@ -106,12 +107,18 @@ class List extends React.Component<Props> {
             props.resourceStore
         );
 
+        const metadataOptions = this.buildMetadataOptions(
+            attributes,
+            routerAttributesToListMetadata
+        );
+
         this.listStore = new ListStore(
             resourceKey,
             listKey,
             userSettingsKey,
             observableOptions,
-            listStoreOptions
+            listStoreOptions,
+            metadataOptions
         );
 
         router.bind('active', this.listStore.active);
@@ -119,6 +126,22 @@ class List extends React.Component<Props> {
         router.bind('sortOrder', this.listStore.sortOrder);
         router.bind('search', this.listStore.searchTerm);
         router.bind('limit', this.listStore.limit, DEFAULT_LIMIT);
+    }
+    buildMetadataOptions(
+        attributes: Object,
+        routerAttributesToListMetadata: {[string | number]: string}
+    ) {
+        const metadataOptions = {};
+        routerAttributesToListMetadata = toJS(routerAttributesToListMetadata);
+
+        Object.keys(routerAttributesToListMetadata).forEach((key) => {
+            const listOptionKey = routerAttributesToListMetadata[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToListMetadata[key];
+
+            metadataOptions[listOptionKey] = attributes[attributeName];
+        });
+
+        return metadataOptions;
     }
 
     buildListStoreOptions(
@@ -129,7 +152,6 @@ class List extends React.Component<Props> {
         resourceStore: ?ResourceStore
     ) {
         const listStoreOptions = apiOptions ? apiOptions : {};
-
         routerAttributesToListStore = toJS(routerAttributesToListStore);
         Object.keys(routerAttributesToListStore).forEach((key) => {
             const listOptionKey = routerAttributesToListStore[key];

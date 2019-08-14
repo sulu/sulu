@@ -147,6 +147,13 @@ class ListRouteBuilder implements ListRouteBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToListMetadata(array $routerAttributesToListMetadata): ListRouteBuilderInterface
+    {
+        $this->addRouterAttributesToListMetadataToRoute($this->route, $routerAttributesToListMetadata);
+
+        return $this;
+    }
+
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): ListRouteBuilderInterface
     {
         $this->addResourceStorePropertiesToListStoreToRoute($this->route, $resourceStorePropertiesToListStore);

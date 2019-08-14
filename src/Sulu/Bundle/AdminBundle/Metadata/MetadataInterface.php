@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata;
 
-interface MetadataProviderInterface
+interface MetadataInterface
 {
-    public function getMetadata(string $key, string $locale, array $metadataOptions): MetadataInterface;
+    public function isCacheable(): bool;
 }

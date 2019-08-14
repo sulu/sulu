@@ -5,8 +5,8 @@ import type {Schema} from '../types';
 const LIST_TYPE = 'list';
 
 class MetadataStore {
-    getSchema(listKey: string): Promise<Schema> {
-        return metadataStore.loadMetadata(LIST_TYPE, listKey);
+    getSchema(listKey: string, metadataOptions: ?Object): Promise<Schema> {
+        return metadataStore.loadMetadata(LIST_TYPE, listKey, metadataOptions);
     }
 }
 

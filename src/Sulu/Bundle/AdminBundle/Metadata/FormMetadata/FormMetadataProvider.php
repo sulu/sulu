@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
@@ -35,14 +36,11 @@ class FormMetadataProvider implements MetadataProviderInterface
         $this->formMetadataLoaders = $formMetadataLoaders;
     }
 
-    /**
-     * @return FormMetadata|TypedFormMetadata
-     */
-    public function getMetadata(string $key, string $locale)
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
     {
         $form = null;
         foreach ($this->formMetadataLoaders as $metadataLoader) {
-            $form = $metadataLoader->getMetadata($key, $locale);
+            $form = $metadataLoader->getMetadata($key, $locale, $metadataOptions);
             if ($form) {
                 break;
             }

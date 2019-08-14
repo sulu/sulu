@@ -533,6 +533,7 @@ class List extends React.Component<Props> {
                         disabledIds={this.moveId ? [this.moveId] : []}
                         listKey={store.listKey}
                         locale={store.observableOptions.locale}
+                        metadataOptions={store.metadataOptions}
                         onClose={this.handleMoveOverlayClose}
                         onConfirm={this.handleMoveOverlayConfirmClick}
                         open={this.showMoveOverlay}
@@ -549,6 +550,7 @@ class List extends React.Component<Props> {
                         confirmLoading={store.copying}
                         listKey={store.listKey}
                         locale={store.observableOptions.locale}
+                        metadataOptions={store.metadataOptions}
                         onClose={this.handleCopyOverlayClose}
                         onConfirm={this.handleCopyOverlayConfirmClick}
                         open={this.showCopyOverlay}

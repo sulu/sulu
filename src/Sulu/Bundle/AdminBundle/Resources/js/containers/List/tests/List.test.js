@@ -15,69 +15,82 @@ import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer'
 
 let mockStructureStrategyData;
 
-jest.mock('../stores/ListStore', () => jest.fn(function(resourceKey, listKey, observableOptions = {}) {
-    this.resourceKey = resourceKey;
-    this.listKey = listKey;
-    this.observableOptions = observableOptions;
-    this.setPage = jest.fn();
-    this.setActive = jest.fn();
-    this.activeItems = [];
-    this.activate = jest.fn();
-    this.active = {
-        get: jest.fn(),
-    };
-    this.deactivate = jest.fn();
-    this.delete = jest.fn();
-    this.deleteSelection = jest.fn();
-    this.order = jest.fn();
-    this.sort = jest.fn();
-    this.sortColumn = {
-        get: jest.fn(),
-    };
-    this.sortOrder = {
-        get: jest.fn(),
-    };
-    this.searchTerm = {
-        get: jest.fn(),
-    };
-    this.limit = {
-        get: jest.fn().mockReturnValue(10),
-    };
-    this.setLimit = jest.fn();
-    this.updateLoadingStrategy = jest.fn();
-    this.updateStructureStrategy = jest.fn();
-    this.getPage = jest.fn().mockReturnValue(4);
-    this.pageCount = 7;
-    this.selections = [];
-    this.selectionIds = [];
-    this.loading = false;
-    this.userSchema = {
-        title: {
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
-    };
-    this.findById = jest.fn();
-    this.select = jest.fn();
-    this.deselect = jest.fn();
-    this.selectVisibleItems = jest.fn();
-    this.deselectVisibleItems = jest.fn();
-    this.updateLoadingStrategy = jest.fn();
-    this.structureStrategy = {
-        data: mockStructureStrategyData,
-    };
-    this.data = this.structureStrategy.data;
-    this.search = jest.fn();
-    this.move = jest.fn();
-    this.copy = jest.fn();
+jest.mock('../stores/ListStore', () => {
+    return jest.fn(function(
+        resourceKey,
+        listKey,
+        userSettingsKey,
+        observableOptions = {},
+        options = {},
+        metadataOptions = {}
+    ) {
+        this.resourceKey = resourceKey;
+        this.listKey = listKey;
+        this.userSettingsKey = userSettingsKey;
+        this.observableOptions = observableOptions;
+        this.options = options;
+        this.metadataOptions = metadataOptions;
 
-    mockExtendObservable(this, {
-        copying: false,
-        ordering: false,
+        this.setPage = jest.fn();
+        this.setActive = jest.fn();
+        this.activeItems = [];
+        this.activate = jest.fn();
+        this.active = {
+            get: jest.fn(),
+        };
+        this.deactivate = jest.fn();
+        this.delete = jest.fn();
+        this.deleteSelection = jest.fn();
+        this.order = jest.fn();
+        this.sort = jest.fn();
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
+        this.searchTerm = {
+            get: jest.fn(),
+        };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.setLimit = jest.fn();
+        this.updateLoadingStrategy = jest.fn();
+        this.updateStructureStrategy = jest.fn();
+        this.getPage = jest.fn().mockReturnValue(4);
+        this.pageCount = 7;
+        this.selections = [];
+        this.selectionIds = [];
+        this.loading = false;
+        this.userSchema = {
+            title: {
+                type: 'string',
+                sortable: true,
+                visibility: 'yes',
+                label: 'Title',
+            },
+        };
+        this.findById = jest.fn();
+        this.select = jest.fn();
+        this.deselect = jest.fn();
+        this.selectVisibleItems = jest.fn();
+        this.deselectVisibleItems = jest.fn();
+        this.updateLoadingStrategy = jest.fn();
+        this.structureStrategy = {
+            data: mockStructureStrategyData,
+        };
+        this.data = this.structureStrategy.data;
+        this.search = jest.fn();
+        this.move = jest.fn();
+        this.copy = jest.fn();
+
+        mockExtendObservable(this, {
+            copying: false,
+            ordering: false,
+        });
     });
-}));
+});
 
 jest.mock('../registries/ListAdapterRegistry', () => ({
     add: jest.fn(),
@@ -374,13 +387,19 @@ test('Pass options to adapter', () => {
     }));
 });
 
-test('Pass correct options to SingleListOverlays', () => {
-    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+test('Pass correct options and metadataOptions to SingleListOverlays', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)}, {option: 'test'}, {id: 1});
 
     const list = shallow(<List adapters={['test']} store={listStore} />);
 
     expect(list.find(SingleListOverlay).at(0).prop('reloadOnOpen')).toEqual(true);
     expect(list.find(SingleListOverlay).at(1).prop('reloadOnOpen')).toEqual(true);
+
+    expect(list.find(SingleListOverlay).at(0).prop('options')).toEqual({option: 'test'});
+    expect(list.find(SingleListOverlay).at(1).prop('options')).toEqual({option: 'test'});
+
+    expect(list.find(SingleListOverlay).at(0).prop('metadataOptions')).toEqual({id: 1});
+    expect(list.find(SingleListOverlay).at(1).prop('metadataOptions')).toEqual({id: 1});
 });
 
 test('Selecting and deselecting items should update store', () => {

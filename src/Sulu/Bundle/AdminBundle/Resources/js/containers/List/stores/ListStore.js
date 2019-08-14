@@ -55,6 +55,7 @@ export default class ListStore {
     activeSettingDisposer: () => void;
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
+    metadataOptions: ?Object;
 
     static getActiveSetting(listKey: string, userSettingsKey: string): string {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
@@ -121,6 +122,7 @@ export default class ListStore {
         userSettingsKey: string,
         observableOptions: ObservableOptions,
         options: Object = {},
+        metadataOptions: ?Object,
         selectionIds: ?Array<string | number>
     ) {
         this.resourceKey = resourceKey;
@@ -128,6 +130,7 @@ export default class ListStore {
         this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;
+        this.metadataOptions = metadataOptions;
         this.initialSelectionIds = selectionIds;
 
         this.sendRequestDisposer = autorun(() => {
@@ -181,7 +184,7 @@ export default class ListStore {
             return change;
         });
 
-        metadataStore.getSchema(this.listKey)
+        metadataStore.getSchema(this.listKey, this.metadataOptions)
             .then(action((schema) => {
                 this.schema = schema;
                 this.schemaLoading = false;

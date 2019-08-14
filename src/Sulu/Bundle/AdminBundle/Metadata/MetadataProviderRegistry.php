@@ -17,7 +17,7 @@ class MetadataProviderRegistry
 {
     private $metadataProviders = [];
 
-    public function getMetadataProvider(string $type)
+    public function getMetadataProvider(string $type): MetadataProviderInterface
     {
         if (!array_key_exists($type, $this->metadataProviders)) {
             throw new MetadataProviderNotFoundException($type);
