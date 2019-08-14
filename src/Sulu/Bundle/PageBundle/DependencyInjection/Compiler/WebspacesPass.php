@@ -60,6 +60,25 @@ class WebspacesPass implements CompilerPassInterface
                 'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'contexts' => ['website'],
             ];
+            $indexes['home_' . $webspaceKey] = [
+                'name' => $webspaceName,
+                'icon' => 'su-document',
+                'route' => [
+                    'name' => PageAdmin::EDIT_FORM_ROUTE,
+                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                ],
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
+            ];
+            $indexes['home_' . $webspaceKey . '_published'] = [
+                'name' => $webspaceName,
+                'icon' => 'su-document',
+                'route' => [
+                    'name' => PageAdmin::EDIT_FORM_ROUTE,
+                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                ],
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
+                'contexts' => ['website'],
+            ];
         }
 
         $container->setParameter('sulu_search.indexes', $indexes);
