@@ -91,7 +91,7 @@ class WebsiteSearchControllerTest extends TestCase
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
-        $searchQueryBuilder->index('page_sulu_published')->willReturn($searchQueryBuilder->reveal());
+        $searchQueryBuilder->indexes(['home_sulu_published', 'page_sulu_published'])->willReturn($searchQueryBuilder->reveal());
         $searchQueryBuilder->execute()->willReturn([]);
 
         $this->parameterResolver->resolve(
