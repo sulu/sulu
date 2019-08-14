@@ -26,7 +26,6 @@ jest.mock('../stores/ListStore', () => {
     ) {
         this.resourceKey = resourceKey;
         this.listKey = listKey;
-        this.options = options;
         this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;

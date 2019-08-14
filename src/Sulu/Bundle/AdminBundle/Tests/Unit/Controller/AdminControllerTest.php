@@ -305,6 +305,25 @@ class AdminControllerTest extends TestCase
         $this->adminController->metadataAction('form', 'pages', new Request());
     }
 
+    public function testMetadataActionWithOptions()
+    {
+        $form = new FormMetadata();
+
+        $this->user->getLocale()->willReturn('en');
+
+        $metadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $metadataProvider->getMetadata('pages', 'en', ['id' => 1])->willReturn($form);
+        $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
+
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
+            return $form === $view->getData();
+        }))->shouldBeCalled()->willReturn(new Response());
+
+        $request = new Request();
+        $request->query->add(['id' => 1]);
+        $this->adminController->metadataAction('form', 'pages', $request);
+    }
+
     public function provideTranslationsAction()
     {
         return [

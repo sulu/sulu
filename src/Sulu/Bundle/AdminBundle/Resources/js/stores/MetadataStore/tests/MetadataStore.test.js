@@ -193,17 +193,3 @@ test('Load metadata should reject with response when the response contains error
 
     expect(metadataStore.loadMetadata('form', 'reject')).rejects.toEqual(response);
 });
-
-test('Load metadata should return empty object if status code was 204', () => {
-    const promise = Promise.resolve({
-        ok: true,
-        status: 204,
-    });
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
-    return metadataStore.loadMetadata('form', 'empty').then((data) => {
-        expect(data).toEqual({});
-    });
-});

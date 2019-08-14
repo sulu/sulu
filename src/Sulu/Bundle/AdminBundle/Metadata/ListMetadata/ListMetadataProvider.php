@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata;
 
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
 class ListMetadataProvider implements MetadataProviderInterface
@@ -26,7 +27,7 @@ class ListMetadataProvider implements MetadataProviderInterface
         $this->listMetadataLoaders = $listMetadataLoaders;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?ListMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
     {
         $list = null;
         foreach ($this->listMetadataLoaders as $listMetadataLoader) {

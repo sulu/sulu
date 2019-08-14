@@ -23,10 +23,7 @@ class MetadataStore {
         if (!this.metadataPromises[type]) {
             this.metadataPromises[type] = {};
         }
-        const keyWithOptions = buildQueryString({
-            key: key,
-            ...metadataOptions,
-        });
+        const keyWithOptions = key + buildQueryString(metadataOptions);
 
         if (!this.metadataPromises[type][keyWithOptions]) {
             const url = symfonyRouting.generate('sulu_admin.metadata', parameters);
@@ -36,23 +33,16 @@ class MetadataStore {
                     return Promise.reject(response);
                 }
 
-                if (response.status === 204) {
-                    this.metadataPromises[type][keyWithOptions] = undefined;
-                    return Promise.resolve({});
-                }
-
                 const cacheControl = response.headers.get('cache-control');
                 if (cacheControl && cacheControl.includes('no-store')) {
                     this.metadataPromises[type][keyWithOptions] = undefined;
                 }
 
-                return response.json()
-                    .then((data) => {
-                        return data;
-                    });
+                return response.json();
             });
 
             this.metadataPromises[type][keyWithOptions] = response;
+
             return response;
         }
 

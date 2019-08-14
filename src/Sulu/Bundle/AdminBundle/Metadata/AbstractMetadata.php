@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata;
 
 use JMS\Serializer\Annotation as Serializer;
 
-abstract class AbstractMetadata
+abstract class AbstractMetadata implements MetadataInterface
 {
     /**
      * @var bool

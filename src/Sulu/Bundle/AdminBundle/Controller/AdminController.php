@@ -275,7 +275,9 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
 
         $metadataOptions = $request->query->all();
-        $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)->getMetadata($key, $user->getLocale(), $metadataOptions);
+        $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
+            ->getMetadata($key, $user->getLocale(), $metadataOptions);
+
         $view = View::create(
             $metadata
         );
@@ -284,7 +286,7 @@ class AdminController
         $response = $this->viewHandler->handle($view);
 
         if (!$metadata->isCacheable()) {
-            $response->headers->addCacheControlDirective('no-store', !$metadata->isCacheable());
+            $response->headers->addCacheControlDirective('no-store', true);
         }
 
         return $response;

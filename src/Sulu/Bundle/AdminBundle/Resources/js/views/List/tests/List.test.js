@@ -26,12 +26,13 @@ jest.mock('../../../stores/UserStore', () => ({
 
 jest.mock(
     '../../../containers/List/stores/ListStore',
-    () => jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions, options) {
+    () => jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions) {
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
         this.observableOptions = observableOptions;
         this.options = options;
+        this.metadataOptions = metadataOptions;
         this.loading = false;
         this.pageCount = 3;
         this.active = {
@@ -1104,6 +1105,35 @@ test('Should pass router attributes array from router to the ListStore', () => {
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.id).toEqual('123-123-123');
     expect(listStore.options.title).toEqual('Sulu is awesome');
+});
+
+test('Should pass router attributes array from router to the ListStore metadataOptions', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        attributes: {
+            id: '123-123-123',
+            locale: 'en',
+            title: 'Sulu is awesome',
+        },
+        route: {
+            options: {
+                adapters: ['table'],
+                apiOptions: {},
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                routerAttributesToListMetadata: ['locale', 'title', 'id'],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+
+    expect(listStore.metadataOptions.locale).toEqual('en');
+    expect(listStore.metadataOptions.id).toEqual('123-123-123');
+    expect(listStore.metadataOptions.title).toEqual('Sulu is awesome');
 });
 
 test('Should pass locale and page observables to the ListStore', () => {

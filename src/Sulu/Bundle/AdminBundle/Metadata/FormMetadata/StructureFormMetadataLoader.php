@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
@@ -60,7 +61,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?TypedFormMetadata
+    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?MetadataInterface
     {
         $configCache = $this->getConfigCache($key, $locale);
 

@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
+
 interface FormMetadataLoaderInterface
 {
-    public function getMetadata(string $key, string $locale, array $metadataOptions);
+    public function getMetadata(string $key, string $locale, array $metadataOptions): ?MetadataInterface;
 }
