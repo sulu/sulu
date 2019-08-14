@@ -20,7 +20,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     }
 
     viewRegistry.add('sulu_page.page_tabs', PageTabs);
-    viewRegistry.add('sulu_page.webspace_overview', PageList);
+    viewRegistry.add('sulu_page.page_list', PageList);
     viewRegistry.add('sulu_page.webspace_tabs', WebspaceTabs);
 
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);

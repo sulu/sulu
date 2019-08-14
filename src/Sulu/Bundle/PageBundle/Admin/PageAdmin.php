@@ -141,7 +141,7 @@ class PageAdmin extends Admin
         ];
 
         if ($this->hasSomeWebspacePermission()) {
-            $routes[] = (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.webspace_overview'))
+            $routes[] = (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list'))
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->setOption('tabTitle', 'sulu_page.pages')
                 ->setOption('tabOrder', 0)
