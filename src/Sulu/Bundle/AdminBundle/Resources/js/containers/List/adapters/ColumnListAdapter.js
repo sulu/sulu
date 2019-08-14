@@ -53,18 +53,6 @@ class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    handleColumnAdd = (index?: string | number) => {
-        if (!index || typeof index !== 'number') {
-            return;
-        }
-
-        const {activeItems, onItemAdd} = this.props;
-
-        if (onItemAdd && activeItems && activeItems[index]) {
-            onItemAdd(activeItems[index]);
-        }
-    };
-
     handleOrderChange = (id: string | number, order: number) => {
         const {data, onRequestItemOrder} = this.props;
 
