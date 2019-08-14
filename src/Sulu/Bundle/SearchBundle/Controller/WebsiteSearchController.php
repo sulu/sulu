@@ -92,7 +92,7 @@ class WebsiteSearchController
         $hits = $this->searchManager
             ->createSearch($queryString)
             ->locale($locale)
-            ->index('page_' . $webspace->getKey() . '_published')
+            ->indexes(['home_' . $webspace->getKey() . '_published', 'page_' . $webspace->getKey() . '_published'])
             ->execute();
 
         $template = $webspace->getTemplate('search', $request->getRequestFormat());

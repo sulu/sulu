@@ -215,7 +215,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     'search' => [
                         'mapping' => [
                             PageDocument::class => ['index' => 'page', 'decorate_index' => true],
-                            HomeDocument::class => ['index' => 'page', 'decorate_index' => true],
+                            HomeDocument::class => ['index' => 'home', 'decorate_index' => true],
                         ],
                     ],
                 ]
