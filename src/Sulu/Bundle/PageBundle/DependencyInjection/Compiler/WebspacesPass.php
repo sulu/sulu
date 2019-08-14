@@ -61,7 +61,7 @@ class WebspacesPass implements CompilerPassInterface
                 'contexts' => ['website'],
             ];
             $indexes['home_' . $webspaceKey] = [
-                'name' => $webspaceName . ' - Home',
+                'name' => $webspaceName,
                 'icon' => 'su-document',
                 'route' => [
                     'name' => PageAdmin::EDIT_FORM_ROUTE,
@@ -70,7 +70,7 @@ class WebspacesPass implements CompilerPassInterface
                 'security_context' => 'sulu.webspaces.' . $webspaceKey,
             ];
             $indexes['home_' . $webspaceKey . '_published'] = [
-                'name' => $webspaceName . ' - Home',
+                'name' => $webspaceName,
                 'icon' => 'su-document',
                 'route' => [
                     'name' => PageAdmin::EDIT_FORM_ROUTE,
