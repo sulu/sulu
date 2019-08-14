@@ -226,6 +226,22 @@ class ListRouteBuilderTest extends TestCase
         );
     }
 
+    public function testBuildListWithRouterAttributesToListMetadata()
+    {
+        $route = (new ListRouteBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addRouterAttributesToListMetadata(['webspace' => 'webspaceId', 'parent' => 'parentId', 'id' => 1])
+            ->addRouterAttributesToListMetadata(['locale'])
+            ->getRoute();
+
+        $this->assertSame(
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'id' => 1, 'locale'],
+            $route->getOption('routerAttributesToListMetadata')
+        );
+    }
+
     public function testBuildListWithResourceStorePropertiesToListStore()
     {
         $route = (new ListRouteBuilder('sulu_role.datagrid', '/roles'))
