@@ -286,6 +286,80 @@ test('Render without add button in toolbar when onItemAdd callback is given but 
     expect(columnListAdapter.find('Toolbar ToolbarButton[icon="su-plus-circle"]')).toHaveLength(0);
 });
 
+test('Render without toolbar for first column if display_root_level_toolbar option is set', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: true,
+            },
+            {
+                id: 4,
+                title: 'Page 1.2',
+                hasChildren: false,
+                _permissions: {
+                    add: false,
+                },
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined, 1, 4]}
+            adapterOptions={{display_root_level_toolbar: false}}
+            data={data}
+            onItemAdd={jest.fn()}
+            onRequestItemDelete={jest.fn()}
+        />
+    );
+
+    columnListAdapter.find('Column').at(0).find('div').at(0).simulate('mouseEnter');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar').children()).toHaveLength(0);
+
+    columnListAdapter.find('Column').at(1).find('div').at(0).simulate('mouseEnter');
+    columnListAdapter.update();
+    expect(columnListAdapter.find('Toolbar').children()).toHaveLength(1);
+});
+
+test('Render without toolbar when all actions would be deactivated', () => {
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[undefined]}
+            data={data}
+        />
+    );
+
+    expect(columnListAdapter.find('Toolbar')).toHaveLength(0);
+});
+
 test('Render data with loading column', () => {
     const data = [
         [

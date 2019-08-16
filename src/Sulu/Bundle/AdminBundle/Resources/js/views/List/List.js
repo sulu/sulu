@@ -20,7 +20,7 @@ const DEFAULT_LIMIT = 10;
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
-    onItemAdd?: (parentId: string | number) => void,
+    onItemAdd?: (parentId: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     resourceStore?: ResourceStore,
     title?: string,
@@ -241,7 +241,7 @@ class List extends React.Component<Props> {
         this.listStore.destroy();
     }
 
-    addItem = (parentId: string | number) => {
+    addItem = (parentId: ?string | number) => {
         const {onItemAdd, router} = this.props;
         const {
             route: {

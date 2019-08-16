@@ -323,10 +323,6 @@ exports[`Render data with name as fallback for title 1`] = `
     class="columnListToolbarContainer"
   >
     <div
-      class="toolbarContainer"
-      style="margin-left:0"
-    />
-    <div
       class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
     >
       <div

@@ -57,32 +57,7 @@ exports[`Render PageList 1`] = `
           <div
             class="toolbarContainer"
             style="margin-left: 0px;"
-          >
-            <div
-              class="toolbar"
-            >
-              <button
-                class="item primary"
-              >
-                <span
-                  aria-label="su-plus-circle"
-                  class="su-plus-circle"
-                />
-              </button>
-              <button
-                class="item primary"
-              >
-                <span
-                  aria-label="su-cog"
-                  class="su-cog"
-                />
-                <span
-                  aria-label="su-angle-down"
-                  class="su-angle-down buttonArrowIcon"
-                />
-              </button>
-            </div>
-          </div>
+          />
           <div
             class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
           >
