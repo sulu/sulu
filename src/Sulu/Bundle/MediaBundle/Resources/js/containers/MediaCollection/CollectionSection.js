@@ -192,7 +192,7 @@ class CollectionSection extends React.Component<Props> {
                                 {addable &&
                                     <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
                                 }
-                                {!!resourceStore.id &&
+                                {!!resourceStore.id && (editable || deletable || editable || securable) &&
                                     <DropdownButton icon="su-cog">
                                         {editable &&
                                             <DropdownButton.Item onClick={this.handleEditCollectionClick}>

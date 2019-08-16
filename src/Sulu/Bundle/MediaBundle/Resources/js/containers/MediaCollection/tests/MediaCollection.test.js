@@ -251,6 +251,55 @@ test('Render the MediaCollection', () => {
     expect(mediaCollection).toMatchSnapshot();
 });
 
+test('Render the MediaCollection without dropdown button when permissions are missing', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    MediaCollection.addable = false;
+    MediaCollection.deletable = false;
+    MediaCollection.editable = false;
+    MediaCollection.securable = false;
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(0);
+    expect(mediaCollection.find('DropdownButton')).toHaveLength(0);
+});
+
 test('Render the MediaCollection without add button when permission is missing', () => {
     const page = observable.box();
     const locale = observable.box();
