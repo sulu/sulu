@@ -138,23 +138,29 @@ exports[`Render a basic Folder list with data 1`] = `
     >
        2
     </span>
-    <button
-      class="previous"
-      disabled=""
+    <div
+      class="buttonGroup"
     >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;

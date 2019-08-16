@@ -21,49 +21,38 @@ exports[`Render the MediaCollection 1`] = `
               class="item"
               disabled=""
             >
-              All Media
+              sulu_media.all_media
             </button>
           </li>
         </ul>
-        <div
-          class="icons"
-        >
-          <span
-            aria-label="su-pen"
-            class="su-pen clickable icon"
-            role="button"
-            tabindex="0"
-          />
-          <span
-            aria-label="su-trash-alt"
-            class="su-trash-alt clickable icon"
-            role="button"
-            tabindex="0"
-          />
-          <span
-            aria-label="su-arrows-alt"
-            class="su-arrows-alt clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </div>
       </div>
       <div
         class="right"
       >
-        <div>
+        <div
+          class="buttonGroup"
+        >
           <button
             class="button icon button"
             type="button"
           >
             <span
-              class="text"
-            >
-              <span
-                aria-label="su-plus"
-                class="su-plus"
-              />
-            </span>
+              aria-label="su-plus"
+              class="su-plus buttonIcon"
+            />
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              aria-label="su-cog"
+              class="su-cog buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
           </button>
         </div>
       </div>
@@ -103,7 +92,7 @@ exports[`Render the MediaCollection 1`] = `
                   <div
                     class="info"
                   >
-                    1 Object
+                    1 sulu_admin.object
                   </div>
                 </div>
               </div>
@@ -133,7 +122,7 @@ exports[`Render the MediaCollection 1`] = `
                   <div
                     class="info"
                   >
-                    0 Objects
+                    0 sulu_admin.objects
                   </div>
                 </div>
               </div>
@@ -145,7 +134,7 @@ exports[`Render the MediaCollection 1`] = `
             <span
               class="display"
             >
-              :
+              sulu_admin.per_page:
             </span>
             <span>
               <div
@@ -191,7 +180,7 @@ exports[`Render the MediaCollection 1`] = `
               class="loader"
             />
             <span>
-              Page:
+              sulu_admin.page:
             </span>
             <span
               class="inputContainer"
@@ -209,24 +198,30 @@ exports[`Render the MediaCollection 1`] = `
             <span
               class="display"
             >
-              of 3
+              sulu_admin.of 3
             </span>
-            <button
-              class="previous"
+            <div
+              class="buttonGroup"
             >
-              <span
-                aria-label="su-angle-left"
-                class="su-angle-left"
-              />
-            </button>
-            <button
-              class="next"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right"
-              />
-            </button>
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-left"
+                  class="su-angle-left buttonIcon"
+                />
+              </button>
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-right"
+                  class="su-angle-right buttonIcon"
+                />
+              </button>
+            </div>
           </nav>
         </section>
       </div>
@@ -259,6 +254,7 @@ exports[`Render the MediaCollection 1`] = `
               />
             </div>
             <input
+              placeholder="sulu_admin.list_search_placeholder"
               type="text"
               value=""
             />
@@ -576,7 +572,7 @@ exports[`Render the MediaCollection for all media 1`] = `
               class="item"
               disabled=""
             >
-              All Media
+              sulu_media.all_media
             </button>
           </li>
         </ul>
@@ -584,19 +580,17 @@ exports[`Render the MediaCollection for all media 1`] = `
       <div
         class="right"
       >
-        <div>
+        <div
+          class="buttonGroup"
+        >
           <button
             class="button icon button"
             type="button"
           >
             <span
-              class="text"
-            >
-              <span
-                aria-label="su-plus"
-                class="su-plus"
-              />
-            </span>
+              aria-label="su-plus"
+              class="su-plus buttonIcon"
+            />
           </button>
         </div>
       </div>
@@ -636,7 +630,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   <div
                     class="info"
                   >
-                    1 Object
+                    1 sulu_admin.object
                   </div>
                 </div>
               </div>
@@ -666,7 +660,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   <div
                     class="info"
                   >
-                    0 Objects
+                    0 sulu_admin.objects
                   </div>
                 </div>
               </div>
@@ -678,7 +672,7 @@ exports[`Render the MediaCollection for all media 1`] = `
             <span
               class="display"
             >
-              :
+              sulu_admin.per_page:
             </span>
             <span>
               <div
@@ -724,7 +718,7 @@ exports[`Render the MediaCollection for all media 1`] = `
               class="loader"
             />
             <span>
-              Page:
+              sulu_admin.page:
             </span>
             <span
               class="inputContainer"
@@ -742,24 +736,30 @@ exports[`Render the MediaCollection for all media 1`] = `
             <span
               class="display"
             >
-              of 3
+              sulu_admin.of 3
             </span>
-            <button
-              class="previous"
+            <div
+              class="buttonGroup"
             >
-              <span
-                aria-label="su-angle-left"
-                class="su-angle-left"
-              />
-            </button>
-            <button
-              class="next"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right"
-              />
-            </button>
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-left"
+                  class="su-angle-left buttonIcon"
+                />
+              </button>
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-right"
+                  class="su-angle-right buttonIcon"
+                />
+              </button>
+            </div>
           </nav>
         </section>
       </div>
@@ -792,6 +792,7 @@ exports[`Render the MediaCollection for all media 1`] = `
               />
             </div>
             <input
+              placeholder="sulu_admin.list_search_placeholder"
               type="text"
               value=""
             />

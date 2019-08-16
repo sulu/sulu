@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
+import type {ElementRef, Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
@@ -11,6 +11,7 @@ const LOADER_SIZE = 25;
 type Props<T> = {|
     active: boolean,
     activeClassName?: string,
+    buttonRef?: (ref: ?ElementRef<'button'>) => void,
     children?: Node,
     className?: string,
     disabled: boolean,
@@ -50,6 +51,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
         const {
             active,
             activeClassName,
+            buttonRef,
             children,
             className,
             disabled,
@@ -82,6 +84,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
                 className={buttonClass}
                 disabled={loading || disabled}
                 onClick={onClick ? this.handleClick : undefined}
+                ref={buttonRef}
                 type={type}
             >
                 {icon &&

@@ -6,9 +6,10 @@ import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Dialog, Icon, Button, ButtonGroup} from 'sulu-admin-bundle/components';
+import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
+import PermissionFormOverlay from './PermissionFormOverlay';
 import type {OperationType, OverlayType} from './types';
 import collectionSectionStyles from './collectionSection.scss';
 
@@ -23,6 +24,7 @@ type Props = {
     onCollectionNavigate: (collectionId: ?string | number) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
+    securable: boolean,
 };
 
 @observer
@@ -88,6 +90,10 @@ class CollectionSection extends React.Component<Props> {
         this.openCollectionOperationOverlay('move');
     };
 
+    handlePermissionCollectionClick = () => {
+        this.openCollectionOperationOverlay('permissions');
+    };
+
     handleCollectionOverlayConfirm = (resourceStore: ResourceStore) => {
         const options = {};
         options.breadcrumb = true;
@@ -112,6 +118,16 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleCollectionOverlayClose = () => {
+        this.closeCollectionOperationOverlay();
+    };
+
+    handlePermissionOverlayClose = () => {
+        this.closeCollectionOperationOverlay();
+    };
+
+    handlePermissionOverlayConfirm = () => {
+        const {resourceStore} = this.props;
+        resourceStore.reload();
         this.closeCollectionOperationOverlay();
     };
 
@@ -155,6 +171,7 @@ class CollectionSection extends React.Component<Props> {
             locale,
             overlayType,
             resourceStore,
+            securable,
         } = this.props;
 
         const operationType = this.openedCollectionOperationOverlayType;
@@ -168,42 +185,39 @@ class CollectionSection extends React.Component<Props> {
                                 onNavigate={this.handleBreadcrumbNavigate}
                                 resourceStore={resourceStore}
                             />
-                            {resourceStore.id &&
-                                <div className={collectionSectionStyles.icons}>
-                                    {editable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-pen"
-                                            onClick={this.handleEditCollectionClick}
-                                        />
-                                    }
-                                    {deletable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-trash-alt"
-                                            onClick={this.handleRemoveCollectionClick}
-                                        />
-                                    }
-                                    {editable &&
-                                        <Icon
-                                            className={collectionSectionStyles.icon}
-                                            name="su-arrows-alt"
-                                            onClick={this.handleMoveCollectionClick}
-                                        />
-                                    }
-                                </div>
-                            }
                         </div>
 
-                        {addable &&
-                            <div className={collectionSectionStyles.right}>
-                                <ButtonGroup>
-                                    <Button onClick={this.handleAddCollectionClick}>
-                                        <Icon name="su-plus" />
-                                    </Button>
-                                </ButtonGroup>
-                            </div>
-                        }
+                        <div className={collectionSectionStyles.right}>
+                            <ButtonGroup>
+                                {addable &&
+                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
+                                }
+                                {!!resourceStore.id && (editable || deletable || editable || securable) &&
+                                    <DropdownButton icon="su-cog">
+                                        {editable &&
+                                            <DropdownButton.Item onClick={this.handleEditCollectionClick}>
+                                                {translate('sulu_admin.edit')}
+                                            </DropdownButton.Item>
+                                        }
+                                        {deletable &&
+                                            <DropdownButton.Item onClick={this.handleRemoveCollectionClick}>
+                                                {translate('sulu_admin.delete')}
+                                            </DropdownButton.Item>
+                                        }
+                                        {editable &&
+                                            <DropdownButton.Item onClick={this.handleMoveCollectionClick}>
+                                                {translate('sulu_admin.move')}
+                                            </DropdownButton.Item>
+                                        }
+                                        {securable &&
+                                            <DropdownButton.Item onClick={this.handlePermissionCollectionClick}>
+                                                {translate('sulu_security.permissions')}
+                                            </DropdownButton.Item>
+                                        }
+                                    </DropdownButton>
+                                }
+                            </ButtonGroup>
+                        </div>
                     </div>
                 }
                 <List
@@ -230,6 +244,12 @@ class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
+                <PermissionFormOverlay
+                    collectionId={this.collectionId}
+                    onClose={this.handlePermissionOverlayClose}
+                    onConfirm={this.handlePermissionOverlayConfirm}
+                    open={operationType === 'permissions'}
+                />
                 <SingleListOverlay
                     adapter="column_list"
                     allowActivateForDisabledItems={false}

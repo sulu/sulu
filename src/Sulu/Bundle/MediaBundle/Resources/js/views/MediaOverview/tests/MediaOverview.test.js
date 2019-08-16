@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
+import {extendObservable as mockExtendObservable} from 'mobx';
 import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../../containers/List/adapters/MediaCardOverviewAdapter';
@@ -8,7 +9,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
         Form: jest.fn(() => null),
-        ResourceFormStore: jest.fn(),
+        ResourceFormStore: jest.fn(function() {
+            this.destroy = jest.fn();
+        }),
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
         List: require('sulu-admin-bundle/containers/List/List').default,
         ListStore: jest.fn(function(resourceKey, observableOptions) {
@@ -107,14 +110,18 @@ jest.mock('sulu-admin-bundle/stores', () => ({
         this.destroy = jest.fn();
         this.loading = false;
         this.id = 1;
-        this.data = {
-            id: 1,
-            _embedded: {
-                parent: {
-                    id: 1,
+
+        mockExtendObservable(this, {
+            data: {
+                id: 1,
+                _embedded: {
+                    parent: {
+                        id: 1,
+                    },
                 },
+                _permissions: {},
             },
-        };
+        });
     }),
 }));
 
@@ -442,6 +449,39 @@ test('Toolbar buttons should disappear when permissions are missing', () => {
     mediaOverview.locale.set('de');
 
     expect(toolbarFunction.call(mediaOverview).items).toHaveLength(0);
+});
+
+test('Toolbar buttons should disappear when permissions are missing on current collection', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId.set(4);
+    mediaOverview.instance().locale.set('de');
+
+    mediaOverview.instance().collectionStore.resourceStore.data = {
+        _permissions: {add: false, delete: false, edit: false},
+    };
+
+    expect(toolbarFunction.call(mediaOverview.instance()).items).toHaveLength(0);
 });
 
 test('Move overlay button should be disabled if nothing is selected', () => {

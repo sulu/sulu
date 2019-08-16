@@ -22,8 +22,7 @@ const FORM_KEY = 'collection_details';
 @observer
 class CollectionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
-    title: string;
-    operationType: string;
+    @observable title: string;
     @observable formStore: ResourceFormStore;
 
     constructor(props: Props) {
@@ -33,8 +32,8 @@ class CollectionFormOverlay extends React.Component<Props> {
         this.formStore = new ResourceFormStore(resourceStore, FORM_KEY);
     }
 
-    @action componentWillReceiveProps(nextProps: Props) {
-        const {operationType} = nextProps;
+    @action componentDidUpdate(prevProps: Props) {
+        const {operationType} = this.props;
 
         if (operationType) {
             this.title = operationType === 'create'
@@ -42,9 +41,14 @@ class CollectionFormOverlay extends React.Component<Props> {
                 : translate('sulu_media.edit_collection');
         }
 
-        if (this.props.resourceStore !== nextProps.resourceStore) {
-            this.formStore = new ResourceFormStore(nextProps.resourceStore, FORM_KEY);
+        if (this.props.resourceStore !== prevProps.resourceStore) {
+            this.formStore.destroy();
+            this.formStore = new ResourceFormStore(this.props.resourceStore, FORM_KEY);
         }
+    }
+
+    componentWillUnmount() {
+        this.formStore.destroy();
     }
 
     setFormRef = (formRef: ?Form) => {

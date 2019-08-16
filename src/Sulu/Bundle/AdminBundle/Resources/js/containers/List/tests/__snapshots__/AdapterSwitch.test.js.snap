@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render with current adapter "folder" 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon button"
     type="button"
@@ -32,7 +34,9 @@ exports[`The component should render with current adapter "folder" 1`] = `
 `;
 
 exports[`The component should render with current adapter "table" 1`] = `
-<div>
+<div
+  class="buttonGroup"
+>
   <button
     class="button icon active button"
     type="button"

@@ -29,32 +29,3 @@ $buttonActiveColor: $blueZodiac;
     margin-right: 20px;
     width: 50px;
 }
-
-.next,
-.previous {
-    display: inline-block;
-    height: 30px;
-    width: $buttonWidth;
-    background-color: $buttonBackgroundColor;
-    border: 1px solid $buttonBorderColor;
-    text-align: center;
-    font-size: 12px;
-
-    &:not(:disabled) {
-        color: $buttonActiveColor;
-        cursor: pointer;
-    }
-
-    span {
-        line-height: 28px;
-    }
-}
-
-.previous {
-    border-radius: $borderRadius 0 0 $borderRadius;
-}
-
-.next {
-    border-radius: 0 $borderRadius $borderRadius 0;
-    border-left: none;
-}

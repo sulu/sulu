@@ -1,140 +1,333 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render ArrowMenu open 1`] = `
-<div
-  class="container"
->
+Array [
+  <button>
+    Nice button
+  </button>,
   <div
-    class="arrowMenuContainer"
-    style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
   >
     <div
-      class="arrow top right"
-    />
-    <div
-      class="arrowMenu"
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
     >
       <div
-        class="section"
-      >
-        <div
-          class="title"
-        >
-          Search Section
-        </div>
-        <div
-          class="children"
-        >
-          <input
-            type="text"
-          />
-        </div>
-      </div>
+        class="arrow top right"
+      />
       <div
-        class="section"
+        class="arrowMenu"
       >
         <div
-          class="title"
+          class="section"
         >
-          Webspaces
+          <div
+            class="title"
+          >
+            Search Section
+          </div>
+          <div
+            class="children"
+          >
+            <input
+              type="text"
+            />
+          </div>
         </div>
         <div
-          class="children"
+          class="section"
         >
-          <button
-            class="item active"
+          <div
+            class="title"
           >
-            <span
-              class="icon"
+            Webspaces
+          </div>
+          <div
+            class="children"
+          >
+            <button
+              class="item active"
             >
               <span
-                aria-label="su-webspace"
-                class="su-webspace icon"
+                class="icon"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+              </span>
+              <span>
+                Sulu
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
               />
-            </span>
-            <span>
-              Sulu
-            </span>
-          </button>
-          <button
-            class="item"
-          >
-            <span
-              class="icon"
-            />
-            <span>
-              Sulu Blog
-            </span>
-          </button>
-          <button
-            class="item"
-          >
-            <span
-              class="icon"
-            />
-            <span>
-              Sulu Doc
-            </span>
-          </button>
-        </div>
-      </div>
-      <div
-        class="section"
-      >
-        <div
-          class="title"
-        >
-          Columns
+              <span>
+                Sulu Blog
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Sulu Doc
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          class="children"
+          class="section"
         >
-          <button
-            class="item"
+          <div
+            class="title"
           >
-            <span
-              class="icon"
-            />
-            <span>
-              Title
-            </span>
-          </button>
-          <button
-            class="item"
+            Columns
+          </div>
+          <div
+            class="children"
           >
-            <span
-              class="icon"
-            />
-            <span>
-              Description
-            </span>
-          </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Title
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Description
+              </span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        class="section"
-      >
         <div
-          class="children"
+          class="section"
         >
-          <button
-            class="action"
+          <div
+            class="children"
           >
-            Test Action 1
-          </button>
-          <button
-            class="action"
-          >
-            Test Action 2
-          </button>
-          <button
-            class="action"
-          >
-            Test Action 3
-          </button>
+            <button
+              class="action"
+            >
+              Test Action 1
+            </button>
+            <button
+              class="action"
+            >
+              Test Action 2
+            </button>
+            <button
+              class="action"
+            >
+              Test Action 3
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </div>,
+]
+`;
+
+exports[`Render ArrowMenu open with falsy values 1`] = `
+Array [
+  <button>
+    Nice button
+  </button>,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <div
+        class="arrow top right"
+      />
+      <div
+        class="arrowMenu"
+      >
+        <div
+          class="section"
+        >
+          <div
+            class="title"
+          >
+            Search Section
+          </div>
+          <div
+            class="children"
+          >
+            <input
+              type="text"
+            />
+          </div>
+        </div>
+        <div
+          class="section"
+        >
+          <div
+            class="title"
+          >
+            Webspaces
+          </div>
+          <div
+            class="children"
+          >
+            <button
+              class="item active"
+            >
+              <span
+                class="icon"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+              </span>
+              <span>
+                Sulu
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Sulu Blog
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Sulu Doc
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="section"
+        >
+          <div
+            class="title"
+          >
+            Columns
+          </div>
+          <div
+            class="children"
+          >
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Title
+              </span>
+            </button>
+            <button
+              class="item"
+            >
+              <span
+                class="icon"
+              />
+              <span>
+                Description
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="section"
+        >
+          <div
+            class="children"
+          >
+            <button
+              class="action"
+            >
+              Test Action 1
+            </button>
+            <button
+              class="action"
+            >
+              Test Action 2
+            </button>
+            <button
+              class="action"
+            >
+              Test Action 3
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;
+
+exports[`Render ArrowMenu with non-HTML element as anchor 1`] = `
+Array [
+  <button />,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <div
+        class="arrow top right"
+      />
+      <div
+        class="arrowMenu"
+      >
+        <button
+          class="item"
+        >
+          <span
+            class="icon"
+          />
+          <span>
+            Title
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>,
+]
 `;

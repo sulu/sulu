@@ -13,15 +13,20 @@ import arrowMenuStyles from './arrowMenu.scss';
 
 type Props = {
     anchorElement: Element<*>,
-    children: ChildrenArray<Element<*>>,
+    children: ChildrenArray<Element<*> | false>,
     onClose?: () => void,
     open: boolean,
+    refProp: string,
 };
 
 const VERTICAL_OFFSET = 20;
 
 @observer
 class ArrowMenu extends React.Component<Props> {
+    static defaultProps = {
+        refProp: 'ref',
+    };
+
     static Section = Section;
     static SingleItemSection = SingleItemSection;
     static Item = Item;
@@ -37,13 +42,17 @@ class ArrowMenu extends React.Component<Props> {
         return React.cloneElement(
             anchorElement,
             {
-                ref: this.setDisplayValueRef,
+                [this.props.refProp]: this.setDisplayValueRef,
             }
         );
     };
 
-    cloneChildren(children: ChildrenArray<Element<*>>) {
-        return React.Children.map(children, (child: any) => {
+    cloneChildren(children: ChildrenArray<Element<*> | false>) {
+        return React.Children.map(children, (child) => {
+            if (!child) {
+                return null;
+            }
+
             if (child.type === Section) {
                 return React.cloneElement(child, {
                     children: this.cloneSection(child),
@@ -55,8 +64,16 @@ class ArrowMenu extends React.Component<Props> {
     }
 
     cloneSection(section: Element<typeof Section>) {
+        if (!section) {
+            return null;
+        }
+
         if (section.props.children){
-            return React.Children.map(section.props.children, (child: any) => {
+            return React.Children.map(section.props.children, (child) => {
+                if (!child) {
+                    return null;
+                }
+
                 if (child.type === Action) {
                     return this.cloneAction(child);
                 }

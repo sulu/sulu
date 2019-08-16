@@ -1,8 +1,12 @@
 @import '../Button/variables.scss';
 
+.button-group {
+    display: flex;
+}
+
 .button {
     border-radius: 0;
-    width: 34px;
+    min-width: 34px;
 
     &:first-child {
         border-top-left-radius: $iconBorderRadius;

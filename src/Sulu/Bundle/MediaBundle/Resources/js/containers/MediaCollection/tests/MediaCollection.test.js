@@ -114,6 +114,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.data = resourceStore.data;
             this.isFieldModified = jest.fn();
             this.validate = jest.fn().mockReturnValue(true);
+            this.destroy = jest.fn();
         }),
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
@@ -160,6 +161,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.id = 1;
         this.data = {
             id: 1,
+            _permissions: {},
         };
 
         mockExtendObservable(this, {
@@ -174,53 +176,11 @@ jest.mock('sulu-admin-bundle/stores', () => {
 });
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_media.all_media':
-                return 'All Media';
-            case 'sulu_media.copy_url':
-                return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Download master file';
-            case 'sulu_media.copy_masterfile_url':
-                return 'Copy masterfile url';
-            case 'sulu_media.add_collection':
-                return 'Add collection';
-            case 'sulu_media.edit_collection':
-                return 'Edit collection';
-            case 'sulu_media.remove_collection':
-                return 'Remove collection';
-            case 'sulu_media.remove_collection_warning':
-                return 'Warning: Remove collection';
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-            case 'sulu_admin.ok':
-                return 'ok';
-            case 'sulu_admin.cancel':
-                return 'cancel';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-            case 'sulu_admin.object':
-                return 'Object';
-            case 'sulu_admin.objects':
-                return 'Objects';
-        }
-    },
+    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
@@ -229,6 +189,7 @@ beforeEach(() => {
     MediaCollection.addable = true;
     MediaCollection.deletable = true;
     MediaCollection.editable = true;
+    MediaCollection.securable = true;
 
     const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
 
@@ -290,6 +251,55 @@ test('Render the MediaCollection', () => {
     expect(mediaCollection).toMatchSnapshot();
 });
 
+test('Render the MediaCollection without dropdown button when permissions are missing', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    MediaCollection.addable = false;
+    MediaCollection.deletable = false;
+    MediaCollection.editable = false;
+    MediaCollection.securable = false;
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(0);
+    expect(mediaCollection.find('DropdownButton')).toHaveLength(0);
+});
+
 test('Render the MediaCollection without add button when permission is missing', () => {
     const page = observable.box();
     const locale = observable.box();
@@ -319,6 +329,7 @@ test('Render the MediaCollection without add button when permission is missing',
     MediaCollection.addable = false;
     MediaCollection.deletable = true;
     MediaCollection.editable = true;
+    MediaCollection.securable = true;
 
     const mediaCollection = mount(
         <MediaCollection
@@ -334,10 +345,13 @@ test('Render the MediaCollection without add button when permission is missing',
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(1);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_security.permissions'})).toHaveLength(1);
 });
 
 test('Render the MediaCollection without delete button when permission is missing', () => {
@@ -369,6 +383,7 @@ test('Render the MediaCollection without delete button when permission is missin
     MediaCollection.addable = true;
     MediaCollection.deletable = false;
     MediaCollection.editable = true;
+    MediaCollection.securable = true;
 
     const mediaCollection = mount(
         <MediaCollection
@@ -384,10 +399,13 @@ test('Render the MediaCollection without delete button when permission is missin
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(1);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_security.permissions'})).toHaveLength(1);
 });
 
 test('Render the MediaCollection without edit buttons when permission is missing', () => {
@@ -419,6 +437,7 @@ test('Render the MediaCollection without edit buttons when permission is missing
     MediaCollection.addable = true;
     MediaCollection.deletable = true;
     MediaCollection.editable = false;
+    MediaCollection.securable = true;
 
     const mediaCollection = mount(
         <MediaCollection
@@ -434,10 +453,67 @@ test('Render the MediaCollection without edit buttons when permission is missing
         />
     );
 
-    expect(mediaCollection.find('CollectionSection Icon[name="su-plus"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-trash-alt"]')).toHaveLength(1);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-pen"]')).toHaveLength(0);
-    expect(mediaCollection.find('CollectionSection Icon[name="su-arrows-alt"]')).toHaveLength(0);
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(0);
+    expect(mediaCollection.find('Action').find({children: 'sulu_security.permissions'})).toHaveLength(1);
+});
+
+test('Render the MediaCollection without security buttons when permission is missing', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    MediaCollection.addable = true;
+    MediaCollection.deletable = true;
+    MediaCollection.editable = true;
+    MediaCollection.securable = false;
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.find('DropdownButton').simulate('click');
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.delete'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
+    expect(mediaCollection.find('Action').find({children: 'sulu_security.permissions'})).toHaveLength(0);
 });
 
 test('Render the MediaCollection for all media', () => {
@@ -608,6 +684,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.data = {
         title: 'Title',
+        _permissions: {},
     };
 
     const mediaCollection = mount(
@@ -624,7 +701,8 @@ test('Should send a request to add a new collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="su-plus"]').simulate('click');
+    mediaCollection.find('Button[icon="su-plus"]').simulate('click');
+
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
@@ -635,7 +713,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     if (!header) {
         throw new Error('Header not found!');
     }
-    expect(header.outerHTML).toEqual(expect.stringContaining('Add collection'));
+    expect(header.outerHTML).toEqual(expect.stringContaining('sulu_media.add_collection'));
 
     const newResourceStore = mediaCollection.find('CollectionSection').instance().resourceStoreByOperationType;
     newResourceStore.save = jest.fn().mockReturnValue(promise);
@@ -687,6 +765,7 @@ test('Should send a request to update the collection via the overlay', () => {
     const collectionStore = new CollectionStore(1, locale);
     collectionStore.resourceStore.data = {
         title: 'Title',
+        _permissions: {},
     };
 
     const mediaCollection = mount(
@@ -703,7 +782,8 @@ test('Should send a request to update the collection via the overlay', () => {
         />
     );
 
-    mediaCollection.find('CollectionSection Icon[name="su-pen"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.edit'}).simulate('click');
 
     // $FlowFixMe
     const resourceStoreInstances = ResourceStore.mock.instances;
@@ -719,7 +799,7 @@ test('Should send a request to update the collection via the overlay', () => {
     if (!header) {
         throw new Error('Header not found!');
     }
-    expect(header.outerHTML).toEqual(expect.stringContaining('Edit collection'));
+    expect(header.outerHTML).toEqual(expect.stringContaining('sulu_media.edit_collection'));
 
     // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
     const button = document.querySelector('button.primary');
@@ -779,7 +859,8 @@ test('Confirming the delete dialog should delete the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
@@ -840,6 +921,7 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
                 id: 3,
             },
         },
+        _permissions: {},
     };
 
     const mediaCollection = mount(
@@ -856,15 +938,9 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
         />
     );
 
-    mediaCollection.find('Icon[name="su-trash-alt"]').simulate('click');
-
-    // enzyme can't know about portals (rendered outside the react tree), so the document has to be used instead
-    const button = document.querySelector('button.primary');
-    if (!button) {
-        throw new Error('Button not found!');
-    }
-
-    button.click();
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
+    mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
 
     return promise.then(() => {
         expect(collectionNavigateSpy).toBeCalledWith(3);
@@ -913,7 +989,8 @@ test('Confirming the move dialog should move the item', () => {
         />
     );
 
-    mediaCollection.find('Icon[name="su-arrows-alt"]').simulate('click');
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
     expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
@@ -934,5 +1011,66 @@ test('Confirming the move dialog should move the item', () => {
         expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(false);
         expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
         expect(collectionStore.resourceStore.reload).toBeCalledWith();
+    });
+});
+
+test('Confirming the permission overlay should save the permissions', () => {
+    const promise = Promise.resolve({});
+    const page = observable.box();
+    const locale = observable.box();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.move = jest.fn().mockReturnValue(promise);
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.find('DropdownButton').simulate('click');
+    expect(mediaCollection.find('PermissionFormOverlay').prop('open')).toEqual(false);
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_security.permissions'}).simulate('click');
+    expect(mediaCollection.find('PermissionFormOverlay').prop('open')).toEqual(true);
+
+    const savePromise = Promise.resolve();
+    mediaCollection.find('PermissionFormOverlay').instance().resourceStore.save.mockReturnValue(savePromise);
+
+    mediaCollection.find('PermissionFormOverlay Form').at(0).prop('onSubmit')();
+
+    expect(mediaCollection.find('PermissionFormOverlay').instance().resourceStore.save)
+        .toBeCalledWith({resourceKey: 'media'});
+
+    return savePromise.then(() => {
+        expect(collectionStore.resourceStore.reload).toBeCalledWith();
+        mediaCollection.update();
+        expect(mediaCollection.find('PermissionFormOverlay').prop('open')).toEqual(false);
     });
 });

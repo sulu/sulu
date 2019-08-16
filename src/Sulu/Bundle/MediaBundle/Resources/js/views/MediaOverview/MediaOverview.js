@@ -218,9 +218,9 @@ export default withToolbar(MediaOverview, function() {
             options: {
                 locales,
                 permissions: {
-                    add: addPermission,
-                    delete: deletePermission,
-                    edit: editPermission,
+                    add: routeAddPermission,
+                    delete: routeDeletePermission,
+                    edit: routeEditPermission,
                 },
             },
         },
@@ -240,6 +240,14 @@ export default withToolbar(MediaOverview, function() {
         : undefined;
 
     const items = [];
+
+    const {permissions: collectionPermissions = {}} = this.collectionStore;
+
+    const addPermission = collectionPermissions.add !== undefined ? collectionPermissions.add : routeAddPermission;
+    const deletePermission = collectionPermissions.delete !== undefined
+        ? collectionPermissions.delete
+        : routeDeletePermission;
+    const editPermission = collectionPermissions.edit !== undefined ? collectionPermissions.edit : routeEditPermission;
 
     if (addPermission) {
         items.push({

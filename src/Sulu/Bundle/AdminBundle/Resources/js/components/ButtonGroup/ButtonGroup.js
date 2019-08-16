@@ -3,10 +3,11 @@ import React from 'react';
 import classNames from 'classnames';
 import type {ChildrenArray, Element} from 'react';
 import Button from '../Button';
+import DropdownButton from '../DropdownButton';
 import buttonGroupStyles from './buttonGroup.scss';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Button>>,
+    children: ChildrenArray<Element<typeof Button | typeof DropdownButton> | false>,
 };
 
 export default class ButtonGroup extends React.PureComponent<Props> {
@@ -14,6 +15,10 @@ export default class ButtonGroup extends React.PureComponent<Props> {
         const {children} = this.props;
 
         return React.Children.map(children, (child) => {
+            if (!child) {
+                return null;
+            }
+
             const buttonClass = classNames(
                 buttonGroupStyles.button,
                 child.props.className
@@ -31,7 +36,7 @@ export default class ButtonGroup extends React.PureComponent<Props> {
 
     render() {
         return (
-            <div>
+            <div className={buttonGroupStyles.buttonGroup}>
                 {this.cloneChildren()}
             </div>
         );

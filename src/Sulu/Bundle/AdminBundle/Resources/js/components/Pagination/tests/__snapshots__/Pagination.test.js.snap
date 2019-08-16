@@ -77,23 +77,29 @@ exports[`Render disabled next link if current page is last page 1`] = `
     >
       of 5
     </span>
-    <button
-      class="previous"
+    <div
+      class="buttonGroup"
     >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-      disabled=""
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -175,23 +181,29 @@ exports[`Render disabled previous link current page is first page 1`] = `
     >
       of 5
     </span>
-    <button
-      class="previous"
-      disabled=""
+    <div
+      class="buttonGroup"
     >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -285,22 +297,28 @@ exports[`Render pagination with loader 1`] = `
     >
       of 10
     </span>
-    <button
-      class="previous"
+    <div
+      class="buttonGroup"
     >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;
@@ -382,22 +400,28 @@ exports[`Render pagination with page numbers 1`] = `
     >
       of 10
     </span>
-    <button
-      class="previous"
+    <div
+      class="buttonGroup"
     >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left"
-      />
-    </button>
-    <button
-      class="next"
-    >
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right"
-      />
-    </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
   </nav>
 </section>
 `;

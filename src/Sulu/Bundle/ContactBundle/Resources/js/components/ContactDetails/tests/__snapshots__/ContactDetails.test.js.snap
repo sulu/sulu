@@ -335,26 +335,24 @@ exports[`Render ContactDetails with data 1`] = `
       >
         sulu_contact.contact_details
       </label>
-      <div>
-        <button
-          class="button secondary"
-          type="button"
+      <button
+        class="button secondary"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="text"
         >
-          <span
-            aria-label="su-plus"
-            class="su-plus buttonIcon"
-          />
-          <span
-            class="text"
-          >
-            sulu_admin.add
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
+          sulu_admin.add
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down dropdownIcon"
+        />
+      </button>
       <label
         class="errorLabel"
       />
@@ -490,26 +488,24 @@ exports[`Render empty ContactDetails 1`] = `
       >
         sulu_contact.contact_details
       </label>
-      <div>
-        <button
-          class="button secondary"
-          type="button"
+      <button
+        class="button secondary"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="text"
         >
-          <span
-            aria-label="su-plus"
-            class="su-plus buttonIcon"
-          />
-          <span
-            class="text"
-          >
-            sulu_admin.add
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
+          sulu_admin.add
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down dropdownIcon"
+        />
+      </button>
       <label
         class="errorLabel"
       />
@@ -849,26 +845,24 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       >
         sulu_contact.contact_details
       </label>
-      <div>
-        <button
-          class="button secondary"
-          type="button"
+      <button
+        class="button secondary"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="text"
         >
-          <span
-            aria-label="su-plus"
-            class="su-plus buttonIcon"
-          />
-          <span
-            class="text"
-          >
-            sulu_admin.add
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
+          sulu_admin.add
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down dropdownIcon"
+        />
+      </button>
       <label
         class="errorLabel"
       />

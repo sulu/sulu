@@ -13,7 +13,9 @@ exports[`Render PageList 1`] = `
       <div
         class="toolbar"
       >
-        <div>
+        <div
+          class="buttonGroup"
+        >
           <button
             class="button icon active button"
             type="button"

@@ -2,7 +2,8 @@
 import React, {type Node} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import Icon from '../Icon';
+import Button from '../Button';
+import ButtonGroup from '../ButtonGroup';
 import Input from '../Input';
 import Loader from '../Loader';
 import SingleSelect from '../SingleSelect';
@@ -166,20 +167,18 @@ class Pagination extends React.Component<Props> {
                     <span className={paginationStyles.display}>
                         {translate('sulu_admin.of')} {totalPages}
                     </span>
-                    <button
-                        className={paginationStyles.previous}
-                        disabled={!this.hasPreviousPage()}
-                        onClick={this.handlePreviousClick}
-                    >
-                        <Icon name="su-angle-left" />
-                    </button>
-                    <button
-                        className={paginationStyles.next}
-                        disabled={!this.hasNextPage()}
-                        onClick={this.handleNextClick}
-                    >
-                        <Icon name="su-angle-right" />
-                    </button>
+                    <ButtonGroup>
+                        <Button
+                            disabled={!this.hasPreviousPage()}
+                            icon="su-angle-left"
+                            onClick={this.handlePreviousClick}
+                        />
+                        <Button
+                            disabled={!this.hasNextPage()}
+                            icon="su-angle-right"
+                            onClick={this.handleNextClick}
+                        />
+                    </ButtonGroup>
                 </nav>
             </section>
         );

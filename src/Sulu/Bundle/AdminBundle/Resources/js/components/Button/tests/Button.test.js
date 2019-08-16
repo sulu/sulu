@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import Button from '../Button';
 
 test('Should render the button with icon', () => {
@@ -54,4 +54,11 @@ test('Should call the callback on click', () => {
     button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
     expect(preventDefaultSpy).toBeCalled();
     expect(onClick).toBeCalled();
+});
+
+test('Should call the buttonRef callback correctly', () => {
+    const buttonRefSpy = jest.fn();
+    const button = mount(<Button buttonRef={buttonRefSpy} />);
+
+    expect(buttonRefSpy).toBeCalledWith(button.find('button').instance());
 });

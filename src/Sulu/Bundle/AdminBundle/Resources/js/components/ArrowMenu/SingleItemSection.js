@@ -5,7 +5,7 @@ import Item from './Item';
 import Section from './Section';
 
 type Props = {
-    children: ChildrenArray<Element<typeof Item>>,
+    children: ChildrenArray<Element<typeof Item> | false>,
     icon: string,
     onChange: (value: *) => void,
     title?: string,
@@ -21,10 +21,14 @@ export default class SingleItemSection extends React.PureComponent<Props> {
         this.props.onChange(value);
     };
 
-    cloneChildren = (items: ChildrenArray<Element<typeof Item>>) => {
+    cloneChildren = (items: ChildrenArray<Element<typeof Item> | false>) => {
         const {value, icon} = this.props;
 
         return React.Children.map(items, (item) => {
+            if (!item) {
+                return null;
+            }
+
             return React.cloneElement(
                 item,
                 {

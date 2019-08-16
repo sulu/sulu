@@ -14,6 +14,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.id = 1;
     this.data = {
         id: 1,
+        _permissions: {},
     };
 }));
 
@@ -68,7 +69,9 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
     })
 );
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+}));
 
 let collectionListStoreMock: ListStore;
 let mediaListStoreMock: ListStore;

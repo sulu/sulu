@@ -250,7 +250,7 @@ class ContactAdmin extends Admin
                 ->createListRouteBuilder('sulu_contact.account_contacts_list', '/contacts')
                 ->setResourceKey('account_contacts')
                 ->setListKey('account_contacts')
-                ->setTabTitle(static::CONTACT_SECURITY_CONTEXT)
+                ->setTabTitle('sulu_contact.people')
                 ->addListAdapters(['table'])
                 ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                 ->addRouterAttributesToListStore(['id'])
