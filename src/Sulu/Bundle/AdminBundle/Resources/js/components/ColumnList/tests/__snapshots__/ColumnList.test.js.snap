@@ -5,6 +5,703 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
   class="columnListToolbarContainer"
 >
   <div
+    class="columnListContainer firstVisibleColumnActive lastVisibleColumnActive"
+  >
+    <div
+      class="columnList"
+    >
+      <div
+        class="column"
+        role="button"
+      >
+        <div
+          class="item selected"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right"
+            />
+          </span>
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+      </div>
+      <div
+        class="column"
+        role="button"
+      >
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right"
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        class="column"
+        role="button"
+      >
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+      </div>
+      <div
+        class="column"
+        role="button"
+      >
+        <div
+          class="loader"
+        >
+          <div
+            class="spinner"
+            style="width:40px;height:40px"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`The ColumnList component should render in a scrolling container 1`] = `
+<div
+  class="columnListToolbarContainer"
+>
+  <div
+    class="toolbarContainer"
+    style="margin-left: 520px;"
+  >
+    <div
+      class="toolbar"
+    >
+      <button
+        class="item primary"
+      >
+        <span
+          aria-label="fa-plus"
+          class="fa fa-plus"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="columnListContainer lastVisibleColumnActive"
+  >
+    <div
+      class="columnList"
+    >
+      <div
+        class="column scrolling"
+        role="button"
+      >
+        <div
+          class="item selected"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right"
+            />
+          </span>
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+      </div>
+      <div
+        class="column scrolling"
+        role="button"
+      >
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          >
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right"
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        class="column scrolling"
+        role="button"
+      >
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+        <div
+          class="item"
+          role="button"
+        >
+          <span
+            class="buttons"
+          />
+          <span
+            class="text"
+          >
+            <div
+              aria-label="Item 1"
+              class="croppedText"
+              title="Item 1"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Ite
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  m 1
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Item 1
+              </div>
+            </div>
+          </span>
+          <span
+            class="children"
+          />
+        </div>
+      </div>
+      <div
+        class="column scrolling"
+        role="button"
+      >
+        <div
+          class="loader"
+        >
+          <div
+            class="spinner"
+            style="width: 40px; height: 40px;"
+          >
+            <div
+              class="doubleBounce1"
+            />
+            <div
+              class="doubleBounce2"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`The ColumnList component should render without  1`] = `
+<div
+  class="columnListToolbarContainer"
+>
+  <div
     class="toolbarContainer"
     style="margin-left:0"
   >
@@ -440,363 +1137,6 @@ exports[`The ColumnList component should render in a non-scrolling container 1`]
           <div
             class="spinner"
             style="width:40px;height:40px"
-          >
-            <div
-              class="doubleBounce1"
-            />
-            <div
-              class="doubleBounce2"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`The ColumnList component should render in a scrolling container 1`] = `
-<div
-  class="columnListToolbarContainer"
->
-  <div
-    class="toolbarContainer"
-    style="margin-left: 520px;"
-  >
-    <div
-      class="toolbar"
-    >
-      <button
-        class="item primary"
-      >
-        <span
-          aria-label="fa-plus"
-          class="fa fa-plus"
-        />
-      </button>
-    </div>
-  </div>
-  <div
-    class="columnListContainer lastVisibleColumnActive"
-  >
-    <div
-      class="columnList"
-    >
-      <div
-        class="column scrolling"
-        role="button"
-      >
-        <div
-          class="item selected"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          >
-            <span
-              aria-label="su-angle-right"
-              class="su-angle-right"
-            />
-          </span>
-        </div>
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-      </div>
-      <div
-        class="column scrolling"
-        role="button"
-      >
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          >
-            <span
-              aria-label="su-angle-right"
-              class="su-angle-right"
-            />
-          </span>
-        </div>
-      </div>
-      <div
-        class="column scrolling"
-        role="button"
-      >
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-        <div
-          class="item"
-          role="button"
-        >
-          <span
-            class="buttons"
-          />
-          <span
-            class="text"
-          >
-            <div
-              aria-label="Item 1"
-              class="croppedText"
-              title="Item 1"
-            >
-              <div
-                aria-hidden="true"
-                class="front"
-              >
-                Ite
-              </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  m 1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Item 1
-              </div>
-            </div>
-          </span>
-          <span
-            class="children"
-          />
-        </div>
-      </div>
-      <div
-        class="column scrolling"
-        role="button"
-      >
-        <div
-          class="loader"
-        >
-          <div
-            class="spinner"
-            style="width: 40px; height: 40px;"
           >
             <div
               class="doubleBounce1"

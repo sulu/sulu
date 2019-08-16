@@ -13,6 +13,10 @@ $columnListContainerTextColor: $black;
     overflow: hidden;
 }
 
+.toolbar-container {
+    height: $toolbarHeight;
+}
+
 .column-list-container {
     color: $columnListContainerTextColor;
     height: 100%;

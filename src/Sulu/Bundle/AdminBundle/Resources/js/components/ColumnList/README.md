@@ -93,11 +93,84 @@ const indicators = [
 </div>
 ```
 
-The `toolbarItems` prop is not optional, but it is possible to return an empty array to use the `ColumnList` with an
-no toolbar.
+The `toolbarItems` prop is not optional, but it is possible to return `undefined` to use the `ColumnList` with no
+toolbar.
 
 ```
-const toolbarItems = () => [];
+const toolbarItems = () => undefined;
+
+<div style={{height: '60vh'}}>
+    <ColumnList toolbarItemsProvider={toolbarItems}>
+        <ColumnList.Column>
+            <ColumnList.Item id="1">Google 1</ColumnList.Item>
+            <ColumnList.Item id="2" hasChildren="true">Apple 1</ColumnList.Item>
+            <ColumnList.Item id="3">Microsoft 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-2" hasChildren="true">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column>
+            <ColumnList.Item id="1-1-1">Item 1</ColumnList.Item>
+            <ColumnList.Item id="1-1-2">Item 1</ColumnList.Item>
+        </ColumnList.Column>
+        <ColumnList.Column />
+    </ColumnList>
+</div>
+```
+
+By returning an empty array you indicated that only this single column does not have a toolbar, while the others might
+return something.
+
+```
+const toolbarItems = (index) => {
+    if (index === 0) {
+        return [];
+    }
+
+    return [
+        {
+            icon: 'fa-plus',
+            type: 'button',
+            onClick: (index) => {
+                alert('Clicked plus button for item with index: ' + index);
+            },
+        },
+        {
+            icon: 'fa-search',
+            type: 'button',
+            skin: 'secondary',
+            onClick: (index) => {
+                alert('Clicked search button for column with index: ' + index);
+            },
+        },
+        {
+            icon: 'fa-gear',
+            type: 'dropdown',
+            options: [
+                {
+                    label: 'Option1 ',
+                    onClick: (index) => {
+                        alert('Clicked option1 for column with index: ' + index);
+                    },
+                },
+                {
+                    label: 'Option2 ',
+                    onClick: (index) => {
+                        alert('Clicked option2 for column with index: ' + index);
+                    },
+                },
+                {
+                    isDisabled: (index) => true,
+                    label: 'Option3 ',
+                    onClick: (index) => {
+                        alert('This alert will never be called, because the button is disabled...');
+                    },
+                },
+            ],
+        },
+    ];
+};
 
 <div style={{height: '60vh'}}>
     <ColumnList toolbarItemsProvider={toolbarItems}>
