@@ -157,6 +157,45 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals($result, $permissions);
     }
 
+    public function testGetUserPermissionsWithMissingRole() {
+        $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+
+        /** @var AccessControlProviderInterface $accessControlProvider */
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(\stdClass::class)->willReturn(true);
+        $accessControlProvider->getPermissions(\stdClass::class, '1')
+            ->willReturn([2 => ['view' => true, 'edit' => true]]);
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        // create role for given role permissions from data provider
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn(64);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $role1 */
+        $role1 = $this->prophesize(Role::class);
+        $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getId()->willReturn(1);
+        /** @var UserRole $userRole1 */
+        $userRole1 = $this->prophesize(UserRole::class);
+        $userRole1->getRole()->willReturn($role1->reveal());
+        $userRole1->getLocales()->willReturn(['de', 'en']);
+
+        // return the user with the above definitions
+        /** @var User $user */
+        $user = $this->prophesize(User::class);
+        $user->getUserRoles()->willReturn([$userRole1->reveal()]);
+        $user->getRoleObjects()->willReturn([$role1->reveal()]);
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('example', 'de', \stdClass::class, '1'),
+            $user->reveal()
+        );
+
+        $this->assertEquals(['view' => false, 'edit' => false], $permissions);
+    }
+
     public function testAddAccessControlProvider()
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
