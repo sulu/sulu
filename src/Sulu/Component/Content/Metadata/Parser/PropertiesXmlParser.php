@@ -399,7 +399,7 @@ class PropertiesXmlParser
             $section->setVisibleCondition($data['visibleCondition']);
         }
 
-        if(isset($data['mandatoryCondition'])) {
+        if (isset($data['mandatoryCondition'])) {
             $section->setMandatoryCondition($data['mandatoryCondition']);
         }
 

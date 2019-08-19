@@ -1,10 +1,10 @@
 // @flow
-import { action, computed, observable, set, toJS, untracked, when } from 'mobx';
-import type { IObservableValue } from 'mobx';
+import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type { RawSchema, RawSchemaEntry, Schema, SchemaEntry } from '../types';
+import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
 
 const SECTION_TYPE = 'section';
 
@@ -59,7 +59,8 @@ function transformRawSchemaEntry(
         } else if (schemaEntryKey === 'mandatoryCondition' && rawSchemaEntry[schemaEntryKey]) {
             schemaEntry.required = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
         } else if (schemaEntryKey === 'required') {
-            schemaEntry.required = schemaEntry.required === undefined ? rawSchemaEntry[schemaEntryKey] : schemaEntry[schemaEntryKey];
+            schemaEntry.required =
+                schemaEntry.required === undefined ? rawSchemaEntry[schemaEntryKey] : schemaEntry[schemaEntryKey];
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
             schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, path);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
@@ -83,9 +84,10 @@ function transformRawSchemaEntry(
             schemaEntry[schemaEntryKey] = rawSchemaEntry[schemaEntryKey];
         }
 
-        if (schemaEntry['required'] === true && (schemaEntry['disabled'] === true || schemaEntry['visible'] === false)) {
+        if (schemaEntry['required'] === true &&
+            (schemaEntry['disabled'] === true || schemaEntry['visible'] === false)) {
             schemaEntry['required'] = false;
-            log.warn("Mandatory field has been disabled or hidden and is no longer mandatory!")
+            log.warn('Mandatory field has been disabled or hidden and is no longer mandatory!');
         }
 
         return schemaEntry;
