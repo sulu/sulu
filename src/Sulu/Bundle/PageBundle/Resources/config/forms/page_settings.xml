@@ -93,7 +93,7 @@
                         <title>sulu_page.link_title</title>
                     </meta>
                 </property>
-                <property name="internal_link" type="single_page_selection" visibleCondition="nodeType == 2">
+                <property name="internal_link" type="single_page_selection" visibleCondition="nodeType == 2" mandatory="true">
                     <meta>
                         <title>sulu_page.linked_content</title>
                     </meta>
