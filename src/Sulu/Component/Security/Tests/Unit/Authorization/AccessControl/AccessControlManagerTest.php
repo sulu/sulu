@@ -157,7 +157,8 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals($result, $permissions);
     }
 
-    public function testGetUserPermissionsWithMissingRole() {
+    public function testGetUserPermissionsWithMissingRole()
+    {
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
 

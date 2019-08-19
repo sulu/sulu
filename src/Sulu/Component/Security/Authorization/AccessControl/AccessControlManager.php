@@ -89,7 +89,7 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         $objectPermissions = $this->getUserObjectPermission($securityCondition, $user);
-        $checkPermissionType = $objectPermissions === null;
+        $checkPermissionType = null === $objectPermissions;
 
         $securityContextPermissions = $this->getUserSecurityContextPermissions(
             $securityCondition->getLocale(),
@@ -111,7 +111,7 @@ class AccessControlManager implements AccessControlManagerInterface
     public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user)
     {
         $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user);
-        $checkPermissionType = $objectPermissions === null;
+        $checkPermissionType = null === $objectPermissions;
 
         $securityContextPermissions = $this->getUserSecurityContextPermissions(
             $locale,
