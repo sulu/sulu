@@ -227,7 +227,7 @@ export default class AbstractFormStore {
     }
 
     updateFieldPathEvaluations = () => {
-        const {loading, rawSchema, jsonSchema} = this;
+        const {loading, rawSchema} = this;
         const locale = this.locale ? this.locale.get() : undefined;
 
         when(
