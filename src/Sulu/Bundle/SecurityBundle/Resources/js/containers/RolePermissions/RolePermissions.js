@@ -22,6 +22,9 @@ class RolePermissions extends React.Component<Props> {
         disabled: false,
     };
 
+    // TODO Could be removed by using resourceKey for security as well instead of separate security context
+    static resourceKeyMapping: {[resourceKey: string]: string};
+
     @observable roles: ?Array<Role>;
     @observable actions: ?Array<string>;
 
@@ -38,15 +41,19 @@ class RolePermissions extends React.Component<Props> {
     }
 
     @computed get defaultValue() {
+        const {resourceKey} = this.props;
         const {actions, roles} = this;
 
         if (!actions || ! roles) {
             return {};
         }
 
+        const securityContext = RolePermissions.resourceKeyMapping[resourceKey];
+
         return roles.reduce((value, role) => {
+            const rolePermission = role.permissions.find((permission) => permission.context === securityContext);
             value[role.id] = actions.reduce((actionValue, action) => {
-                actionValue[action] = true;
+                actionValue[action] = rolePermission ? rolePermission.permissions[action] : true;
 
                 return actionValue;
             }, {});
