@@ -1,9 +1,9 @@
 // @flow
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx';
 import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
-import React from 'react';
+import React, {Fragment} from 'react';
 import equals from 'fast-deep-equal';
 import {default as ListContainer, ListStore} from '../../containers/List';
 import {withToolbar} from '../../containers/Toolbar';
@@ -20,7 +20,7 @@ const DEFAULT_LIMIT = 10;
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
-    onItemAdd?: (parentId: string | number) => void,
+    onItemAdd?: (parentId: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     resourceStore?: ResourceStore,
     title?: string,
@@ -241,7 +241,7 @@ class List extends React.Component<Props> {
         this.listStore.destroy();
     }
 
-    addItem = (parentId: string | number) => {
+    addItem = (parentId: ?string | number) => {
         const {onItemAdd, router} = this.props;
         const {
             route: {
@@ -314,7 +314,7 @@ class List extends React.Component<Props> {
         const title = routeTitle ? translate(routeTitle) : propTitle;
 
         return (
-            <div>
+            <Fragment>
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{title}</h1>}
@@ -325,7 +325,7 @@ class List extends React.Component<Props> {
                     store={this.listStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
-            </div>
+            </Fragment>
         );
     }
 }

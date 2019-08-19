@@ -28,17 +28,18 @@ export type Action = {|
     onClick: ?(itemId: string | number, index: number) => void,
 |};
 
-export type ListAdapterProps = {
+export type ListAdapterProps = {|
     actions?: Array<Action>,
     active: ?string | number,
     activeItems: ?Array<?string | number>,
+    adapterOptions?: {[key: string]: mixed},
     data: Array<*>,
     disabledIds: Array<string | number>,
     limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,
     onItemActivate: (itemId: string | number) => void,
-    onItemAdd: ?(id: string | number) => void,
+    onItemAdd: ?(id: ?string | number) => void,
     onItemClick: ?(itemId: string | number) => void,
     onItemDeactivate: (itemId: string | number) => void,
     onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void,
@@ -56,7 +57,7 @@ export type ListAdapterProps = {
     selections: Array<number | string>,
     sortColumn: ?string,
     sortOrder: ?SortOrder,
-};
+|};
 
 export type ObservableOptions = {
     locale?: ?IObservableValue<string>,

@@ -31,6 +31,7 @@ import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 
 type Props = {|
     actions?: Array<Action>,
+    adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
@@ -39,7 +40,7 @@ type Props = {|
     disabledIds: Array<string | number>,
     header?: Node,
     movable: boolean,
-    onItemAdd?: (id: string | number) => void,
+    onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
     searchable: boolean,
@@ -413,6 +414,7 @@ class List extends React.Component<Props> {
     render() {
         const {
             actions,
+            adapterOptions,
             adapters,
             copyable,
             deletable,
@@ -473,6 +475,7 @@ class List extends React.Component<Props> {
                             actions={actions}
                             active={store.active.get()}
                             activeItems={store.activeItems}
+                            adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}
                             data={store.data}
                             disabledIds={disabledIds}
                             limit={store.limit.get()}

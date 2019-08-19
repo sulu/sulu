@@ -15,7 +15,7 @@ type Props = {|
 |};
 
 @observer
-export default class ResourceLocator extends React.Component<Props> {
+class ResourceLocator extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
@@ -80,3 +80,5 @@ export default class ResourceLocator extends React.Component<Props> {
         );
     }
 }
+
+export default ResourceLocator;

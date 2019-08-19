@@ -53,18 +53,6 @@ class ColumnListAdapter extends AbstractAdapter {
         }
     };
 
-    handleColumnAdd = (index?: string | number) => {
-        if (!index || typeof index !== 'number') {
-            return;
-        }
-
-        const {activeItems, onItemAdd} = this.props;
-
-        if (onItemAdd && activeItems && activeItems[index]) {
-            onItemAdd(activeItems[index]);
-        }
-    };
-
     handleOrderChange = (id: string | number, order: number) => {
         const {data, onRequestItemOrder} = this.props;
 
@@ -149,6 +137,9 @@ class ColumnListAdapter extends AbstractAdapter {
     getToolbarItems = (index: number) => {
         const {
             activeItems,
+            adapterOptions: {
+                display_root_level_toolbar: displayRootLevelToolbar = true,
+            } = {},
             data,
             onItemAdd,
             onRequestItemCopy,
@@ -162,6 +153,10 @@ class ColumnListAdapter extends AbstractAdapter {
                 'The ColumnListAdapter does not work without activeItems. '
                 + 'This error should not happen and is likely a bug.'
             );
+        }
+
+        if (!displayRootLevelToolbar && !activeItems[index]) {
+            return [];
         }
 
         if (this.orderColumn === index) {
@@ -191,9 +186,7 @@ class ColumnListAdapter extends AbstractAdapter {
                 icon: 'su-plus-circle',
                 type: 'button',
                 onClick: () => {
-                    if (activeItems && activeItems[index]) {
-                        onItemAdd(activeItems[index]);
-                    }
+                    onItemAdd(activeItems[index]);
                 },
             });
         }
@@ -278,7 +271,7 @@ class ColumnListAdapter extends AbstractAdapter {
             });
         }
 
-        return toolbarItems;
+        return toolbarItems.length > 0 ? toolbarItems : undefined;
     };
 
     render() {

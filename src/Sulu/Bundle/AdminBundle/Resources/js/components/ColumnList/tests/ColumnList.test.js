@@ -21,6 +21,34 @@ jest.mock('../columnList.scss', () => new Proxy({}, {
 test('The ColumnList component should render in a non-scrolling container', () => {
     const onItemClick = jest.fn();
 
+    const toolbarItemsProvider = jest.fn(() => undefined);
+
+    expect(render(
+        <ColumnList
+            onItemClick={onItemClick}
+            toolbarItemsProvider={toolbarItemsProvider}
+        >
+            <Column>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
+                <Item id="3">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1">Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1-1">Item 1</Item>
+                <Item id="1-1-2">Item 1</Item>
+            </Column>
+            <Column loading={true} />
+        </ColumnList>
+    )).toMatchSnapshot();
+});
+
+test('The ColumnList component should render without ', () => {
+    const onItemClick = jest.fn();
+
     const buttonsConfig = [
         {
             icon: 'fa-heart',

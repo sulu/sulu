@@ -8,7 +8,8 @@ import MediaCard from '../../../components/MediaCard';
 
 const THUMBNAIL_SIZE = 'sulu-240x';
 
-type Props = ListAdapterProps & {
+type Props = {
+    ...ListAdapterProps,
     icon: string,
     showCoverWhenSelected?: boolean,
 };

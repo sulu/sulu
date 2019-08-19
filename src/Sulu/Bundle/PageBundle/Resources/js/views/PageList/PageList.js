@@ -161,6 +161,11 @@ class PageList extends React.Component<Props> {
         return (
             <div className={pageListStyles.pageList}>
                 <List
+                    adapterOptions={{
+                        column_list: {
+                            display_root_level_toolbar: false,
+                        },
+                    }}
                     adapters={['column_list', 'tree_table']}
                     onItemAdd={this.handleItemAdd}
                     onItemClick={this.handleEditClick}
