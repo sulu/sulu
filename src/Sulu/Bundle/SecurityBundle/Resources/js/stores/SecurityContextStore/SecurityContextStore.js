@@ -5,6 +5,8 @@ import type {SecurityContextGroups, Systems} from './types';
 class SecurityContextStore {
     endpoint: string;
     promise: Promise<Systems>;
+
+    // TODO Could be removed by using resourceKey for security as well instead of separate security key
     resourceKeyMapping: {[resourceKey: string]: string};
 
     sendRequest(): Promise<Systems> {
