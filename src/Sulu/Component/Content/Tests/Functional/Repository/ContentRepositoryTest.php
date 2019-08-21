@@ -763,6 +763,11 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindWithPermissionsNotGranted()
     {
+        $packageVersion = $this->getPackageVersion('jackalope/jackalope');
+        if (version_compare($packageVersion, '1.3.0') < 0) {
+            $this->markTestSkipped('The jackalope/jackalope version below 1.3.0 has a bug causing this test to fail');
+        }
+
         $role1 = $this->prophesize(RoleInterface::class);
         $role1->getId()->willReturn(1);
         $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
@@ -1212,5 +1217,18 @@ class ContentRepositoryTest extends SuluTestCase
         $this->documentManager->flush();
 
         return $document;
+    }
+
+    private function getPackageVersion(string $packageName)
+    {
+        $this->composerLock = json_decode(
+            file_get_contents($this->getContainer()->getParameter('kernel.root_dir') . '/../../composer.lock')
+        );
+
+        foreach ($this->composerLock->packages as $package) {
+            if ($package->name === $packageName) {
+                return $package->version;
+            }
+        }
     }
 }
