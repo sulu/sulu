@@ -140,37 +140,37 @@ class Toolbar extends React.Component<*> {
                 }
                 <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
-                    <ToolbarComponent.Button
-                        disabled={!onNavigationButtonClick}
-                        icon={navigationOpen ? 'su-times' : 'su-bars'}
-                        onClick={onNavigationButtonClick}
-                        primary={true}
-                    />
+                        <ToolbarComponent.Button
+                            disabled={!onNavigationButtonClick}
+                            icon={navigationOpen ? 'su-times' : 'su-bars'}
+                            onClick={onNavigationButtonClick}
+                            primary={true}
+                        />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
-                    <ToolbarComponent.Button
-                        {...this.backButtonConfig}
-                        icon="su-angle-left"
-                    />
+                        <ToolbarComponent.Button
+                            {...this.backButtonConfig}
+                            icon="su-angle-left"
+                        />
                     }
                     {this.toolbarStore.hasItemsConfig() &&
-                    <ToolbarComponent.Items>
-                        {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
-                    </ToolbarComponent.Items>
+                        <ToolbarComponent.Items>
+                            {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
+                        </ToolbarComponent.Items>
                     }
                 </ToolbarComponent.Controls>
                 <ToolbarComponent.Controls>
                     {this.toolbarStore.hasIconsConfig() &&
-                    <ToolbarComponent.Icons>
-                        {this.toolbarStore.getIconsConfig().map((icon) => icon)}
-                    </ToolbarComponent.Icons>
+                        <ToolbarComponent.Icons>
+                            {this.toolbarStore.getIconsConfig().map((icon) => icon)}
+                        </ToolbarComponent.Icons>
                     }
                     {this.toolbarStore.hasLocaleConfig() &&
-                    <ToolbarComponent.Select
-                        className={toolbarStyles.locale}
-                        size={LOCALE_SELECT_SIZE}
-                        {...this.toolbarStore.getLocaleConfig()}
-                    />
+                        <ToolbarComponent.Select
+                            className={toolbarStyles.locale}
+                            size={LOCALE_SELECT_SIZE}
+                            {...this.toolbarStore.getLocaleConfig()}
+                        />
                     }
                 </ToolbarComponent.Controls>
             </ToolbarComponent>
