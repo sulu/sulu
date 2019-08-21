@@ -1,8 +1,9 @@
 // @flow
 import {observer} from 'mobx-react';
 import {action, computed} from 'mobx';
-import React from 'react';
+import React, {Fragment} from 'react';
 import ToolbarComponent from '../../components/Toolbar';
+import Snackbar from '../../components/Snackbar';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
@@ -105,55 +106,57 @@ class Toolbar extends React.Component<ToolbarProps> {
         const {showSuccess} = this.toolbarStore;
 
         return (
-            <ToolbarComponent>
-                <ToolbarComponent.Snackbar
+            <Fragment>
+                <Snackbar
                     onCloseClick={handleSnackbarCloseClick}
                     type="error"
                     visible={this.toolbarStore.errors.length > 0}
                 />
-                <ToolbarComponent.Controls grow={true}>
-                    {!!onNavigationButtonClick &&
-                        <ToolbarComponent.Button
-                            disabled={!onNavigationButtonClick}
-                            icon={showSuccess
-                                ? SUCCESS_ICON
-                                : navigationOpen
-                                    ? 'su-times'
-                                    : 'su-bars'
-                            }
-                            onClick={onNavigationButtonClick}
-                            primary={true}
-                            success={showSuccess}
-                        />
-                    }
-                    {this.toolbarStore.hasBackButtonConfig() &&
-                        <ToolbarComponent.Button
-                            {...this.backButtonConfig}
-                            icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}
-                            success={!onNavigationButtonClick && showSuccess}
-                        />
-                    }
-                    {this.toolbarStore.hasItemsConfig() &&
-                        <ToolbarComponent.Items>
-                            {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
-                        </ToolbarComponent.Items>
-                    }
-                </ToolbarComponent.Controls>
-                <ToolbarComponent.Controls>
-                    {this.toolbarStore.hasIconsConfig() &&
-                        <ToolbarComponent.Icons>
-                            {this.toolbarStore.getIconsConfig().map((icon) => icon)}
-                        </ToolbarComponent.Icons>
-                    }
-                    {this.toolbarStore.hasLocaleConfig() &&
-                        <ToolbarComponent.Select
-                            className={toolbarStyles.locale}
-                            size={LOCALE_SELECT_SIZE}
-                            {...this.toolbarStore.getLocaleConfig()}
-                        />
-                    }
-                </ToolbarComponent.Controls>
-            </ToolbarComponent>
+                <ToolbarComponent>
+                    <ToolbarComponent.Controls grow={true}>
+                        {!!onNavigationButtonClick &&
+                            <ToolbarComponent.Button
+                                disabled={!onNavigationButtonClick}
+                                icon={showSuccess
+                                    ? SUCCESS_ICON
+                                    : navigationOpen
+                                        ? 'su-times'
+                                        : 'su-bars'
+                                }
+                                onClick={onNavigationButtonClick}
+                                primary={true}
+                                success={showSuccess}
+                            />
+                        }
+                        {this.toolbarStore.hasBackButtonConfig() &&
+                            <ToolbarComponent.Button
+                                {...this.backButtonConfig}
+                                icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}
+                                success={!onNavigationButtonClick && showSuccess}
+                            />
+                        }
+                        {this.toolbarStore.hasItemsConfig() &&
+                            <ToolbarComponent.Items>
+                                {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
+                            </ToolbarComponent.Items>
+                        }
+                    </ToolbarComponent.Controls>
+                    <ToolbarComponent.Controls>
+                        {this.toolbarStore.hasIconsConfig() &&
+                            <ToolbarComponent.Icons>
+                                {this.toolbarStore.getIconsConfig().map((icon) => icon)}
+                            </ToolbarComponent.Icons>
+                        }
+                        {this.toolbarStore.hasLocaleConfig() &&
+                            <ToolbarComponent.Select
+                                className={toolbarStyles.locale}
+                                size={LOCALE_SELECT_SIZE}
+                                {...this.toolbarStore.getLocaleConfig()}
+                            />
+                        }
+                    </ToolbarComponent.Controls>
+                </ToolbarComponent>
+            </Fragment>
         );
     }
 }

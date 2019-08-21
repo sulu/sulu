@@ -103,34 +103,34 @@ exports[`Render based on current route 1`] = `
       <header
         class="header"
       >
+        <div
+          class="snackbar error"
+          role="button"
+        >
+          <span
+            aria-label="su-exclamation-triangle"
+            class="su-exclamation-triangle icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.error
+            </strong>
+            <button
+              class="closeButton"
+            >
+              sulu_admin.close
+              <span
+                aria-label="su-times"
+                class="su-times closeButtonIcon"
+              />
+            </button>
+          </div>
+        </div>
         <nav
           class="toolbar light"
         >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-              <button
-                class="closeButton"
-              >
-                sulu_admin.close
-                <span
-                  aria-label="su-times"
-                  class="su-times closeButtonIcon"
-                />
-              </button>
-            </div>
-          </div>
           <div
             class="controls light grow"
           >
@@ -271,34 +271,34 @@ exports[`Render based on current route with app version 1`] = `
       <header
         class="header"
       >
+        <div
+          class="snackbar error"
+          role="button"
+        >
+          <span
+            aria-label="su-exclamation-triangle"
+            class="su-exclamation-triangle icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.error
+            </strong>
+            <button
+              class="closeButton"
+            >
+              sulu_admin.close
+              <span
+                aria-label="su-times"
+                class="su-times closeButtonIcon"
+              />
+            </button>
+          </div>
+        </div>
         <nav
           class="toolbar light"
         >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-              <button
-                class="closeButton"
-              >
-                sulu_admin.close
-                <span
-                  aria-label="su-times"
-                  class="su-times closeButtonIcon"
-                />
-              </button>
-            </div>
-          </div>
           <div
             class="controls light grow"
           >
@@ -638,34 +638,34 @@ exports[`Render opened navigation 1`] = `
       <header
         class="header"
       >
+        <div
+          class="snackbar error"
+          role="button"
+        >
+          <span
+            aria-label="su-exclamation-triangle"
+            class="su-exclamation-triangle icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.error
+            </strong>
+            <button
+              class="closeButton"
+            >
+              sulu_admin.close
+              <span
+                aria-label="su-times"
+                class="su-times closeButtonIcon"
+              />
+            </button>
+          </div>
+        </div>
         <nav
           class="toolbar light"
         >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-              <button
-                class="closeButton"
-              >
-                sulu_admin.close
-                <span
-                  aria-label="su-times"
-                  class="su-times closeButtonIcon"
-                />
-              </button>
-            </div>
-          </div>
           <div
             class="controls light grow"
           >
@@ -803,34 +803,34 @@ exports[`Should not fail if current route does not exist 1`] = `
       <header
         class="header"
       >
+        <div
+          class="snackbar error"
+          role="button"
+        >
+          <span
+            aria-label="su-exclamation-triangle"
+            class="su-exclamation-triangle icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.error
+            </strong>
+            <button
+              class="closeButton"
+            >
+              sulu_admin.close
+              <span
+                aria-label="su-times"
+                class="su-times closeButtonIcon"
+              />
+            </button>
+          </div>
+        </div>
         <nav
           class="toolbar light"
         >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-              <button
-                class="closeButton"
-              >
-                sulu_admin.close
-                <span
-                  aria-label="su-times"
-                  class="su-times closeButtonIcon"
-                />
-              </button>
-            </div>
-          </div>
           <div
             class="controls light grow"
           >

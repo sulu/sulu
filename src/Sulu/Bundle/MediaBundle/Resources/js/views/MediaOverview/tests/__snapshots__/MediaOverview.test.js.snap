@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a simple MediaOverview 1`] = `
-<div
-  class="mediaOverview"
->
+<div>
   <div
     aria-disabled="false"
     class="dropzone"

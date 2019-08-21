@@ -3,7 +3,6 @@ import {render} from 'enzyme';
 import React from 'react';
 import Button from '../Button';
 import Controls from '../Controls';
-import Snackbar from '../../Snackbar';
 import Toolbar from '../Toolbar';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -16,17 +15,6 @@ test('Render controls', () => {
             <Controls>
                 <Button onClick={jest.fn()}>Test</Button>
             </Controls>
-            <Controls>
-                <Button onClick={jest.fn()}>Test</Button>
-            </Controls>
-        </Toolbar>
-    )).toMatchSnapshot();
-});
-
-test('Render with Snackbar', () => {
-    expect(render(
-        <Toolbar>
-            <Snackbar onCloseClick={jest.fn()} type="error" />
             <Controls>
                 <Button onClick={jest.fn()}>Test</Button>
             </Controls>

@@ -1,7 +1,0 @@
-@import 'sulu-admin-bundle/containers/Application/variables.scss';
-@import 'sulu-admin-bundle/components/Toolbar/variables.scss';
-
-.mediaOverview {
-    min-height: calc(100vh - $toolbarHeight);
-    display: flex;
-}

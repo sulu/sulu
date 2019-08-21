@@ -11,12 +11,9 @@ $snackbarIconSuccessBackgroundColor: $mantis;
 $closeButtonBorderColor: $white;
 
 .snackbar {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: $snackbarHeight;
-    z-index: 1;
     display: flex;
+    width: 100%;
 }
 
 .icon {
@@ -51,16 +48,15 @@ $closeButtonBorderColor: $white;
 }
 
 .error {
-    right: 0;
     background-color: $snackbarErrorBackgroundColor;
     color: $snackbarErrorColor;
     display: flex;
     align-items: center;
-    will-change: top;
-    transition: top .15s;
+    will-change: margin-top;
+    transition: margin-top .15s;
 
     &:not(.visible) {
-        top: -100%;
+        margin-top: -$snackbarHeight;
     }
 
     .icon {

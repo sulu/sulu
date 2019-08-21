@@ -9,7 +9,6 @@ import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../../containers/MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
-import mediaOverviewStyles from './mediaOverview.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 const MEDIA_ROUTE = 'sulu_media.form.details';
@@ -177,7 +176,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
     render() {
         return (
-            <div className={mediaOverviewStyles.mediaOverview}>
+            <div>
                 <MediaCollection
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}

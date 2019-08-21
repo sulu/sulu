@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the items and icons from the ToolbarStore 1`] = `
-<nav
-  class="toolbar light"
->
+Array [
   <div
     class="snackbar error"
     role="button"
@@ -28,113 +26,115 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
         />
       </button>
     </div>
-  </div>
-  <div
-    class="controls light grow"
+  </div>,
+  <nav
+    class="toolbar light"
   >
     <div
-      class="itemsContainer"
+      class="controls light grow"
     >
-      <ul
-        class="items light"
+      <div
+        class="itemsContainer"
       >
-        <li>
-          <button
-            class="button light"
-            disabled=""
-          >
-            <span
-              aria-label="fa-trash-o"
-              class="fa fa-trash-o icon"
-            />
-            <span
-              class="label"
+        <ul
+          class="items light"
+        >
+          <li>
+            <button
+              class="button light"
+              disabled=""
             >
-              Delete
-            </span>
-          </button>
-        </li>
-        <li>
-          <div
-            class="dropdown"
-          >
+              <span
+                aria-label="fa-trash-o"
+                class="fa fa-trash-o icon"
+              />
+              <span
+                class="label"
+              >
+                Delete
+              </span>
+            </button>
+          </li>
+          <li>
+            <div
+              class="dropdown"
+            >
+              <button
+                class="button light"
+              >
+                <span
+                  aria-label="fa-floppy-more"
+                  class="fa fa-floppy-more icon"
+                />
+                <span
+                  class="label"
+                >
+                  Save
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button light"
             >
               <span
-                aria-label="fa-floppy-more"
-                class="fa fa-floppy-more icon"
-              />
-              <span
                 class="label"
               >
-                Save
-              </span>
-              <span
-                aria-label="su-angle-down"
-                class="su-angle-down dropdownIcon"
-              />
-            </button>
-          </div>
-        </li>
-        <li>
-          <button
-            class="button light"
-          >
-            <span
-              class="label"
-            >
-              <label
-                class="label"
-              >
-                <span
-                  class="switch toggler"
+                <label
+                  class="label"
                 >
-                  <input
-                    checked=""
-                    type="checkbox"
-                  />
-                  <span />
-                </span>
-                <div>
-                  Toggler
-                </div>
-              </label>
-            </span>
-          </button>
-        </li>
-      </ul>
+                  <span
+                    class="switch toggler"
+                  >
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    <span />
+                  </span>
+                  <div>
+                    Toggler
+                  </div>
+                </label>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div
-    class="controls light"
-  >
     <div
-      class="icons light"
+      class="controls light"
     >
       <div
-        class="icon"
+        class="icons light"
       >
-        <p>
-          Test1
-        </p>
-      </div>
-      <div
-        class="icon"
-      >
-        <p>
-          Test2
-        </p>
+        <div
+          class="icon"
+        >
+          <p>
+            Test1
+          </p>
+        </div>
+        <div
+          class="icon"
+        >
+          <p>
+            Test2
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>,
+]
 `;
 
 exports[`Show success message on back button for some time 1`] = `
-<nav
-  class="toolbar light"
->
+Array [
   <div
     class="snackbar error"
     role="button"
@@ -159,36 +159,38 @@ exports[`Show success message on back button for some time 1`] = `
         />
       </button>
     </div>
-  </div>
-  <div
-    class="controls light grow"
+  </div>,
+  <nav
+    class="toolbar light"
   >
-    <button
-      class="button light success"
-    >
-      <span
-        aria-label="su-check"
-        class="su-check icon"
-      />
-    </button>
     <div
-      class="itemsContainer"
+      class="controls light grow"
     >
-      <ul
-        class="items light"
-      />
+      <button
+        class="button light success"
+      >
+        <span
+          aria-label="su-check"
+          class="su-check icon"
+        />
+      </button>
+      <div
+        class="itemsContainer"
+      >
+        <ul
+          class="items light"
+        />
+      </div>
     </div>
-  </div>
-  <div
-    class="controls light"
-  />
-</nav>
+    <div
+      class="controls light"
+    />
+  </nav>,
+]
 `;
 
 exports[`Show success message on navigation button for some time 1`] = `
-<nav
-  class="toolbar light"
->
+Array [
   <div
     class="snackbar error"
     role="button"
@@ -213,36 +215,40 @@ exports[`Show success message on navigation button for some time 1`] = `
         />
       </button>
     </div>
-  </div>
-  <div
-    class="controls light grow"
+  </div>,
+  <nav
+    class="toolbar light"
   >
-    <button
-      class="button light primary success"
-    >
-      <span
-        aria-label="su-check"
-        class="su-check icon"
-      />
-    </button>
-    <button
-      class="button light"
-    >
-      <span
-        aria-label="su-angle-left"
-        class="su-angle-left icon"
-      />
-    </button>
     <div
-      class="itemsContainer"
+      class="controls light grow"
     >
-      <ul
-        class="items light"
-      />
+      <button
+        class="button light primary success"
+      >
+        <span
+          aria-label="su-check"
+          class="su-check icon"
+        />
+      </button>
+      <button
+        class="button light"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left icon"
+        />
+      </button>
+      <div
+        class="itemsContainer"
+      >
+        <ul
+          class="items light"
+        />
+      </div>
     </div>
-  </div>
-  <div
-    class="controls light"
-  />
-</nav>
+    <div
+      class="controls light"
+    />
+  </nav>,
+]
 `;
