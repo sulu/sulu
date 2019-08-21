@@ -3,7 +3,6 @@ import {observer} from 'mobx-react';
 import {action, computed} from 'mobx';
 import React from 'react';
 import ToolbarComponent from '../../components/Toolbar';
-import Initializer from '../../services/Initializer';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
 import toolbarStyles from './toolbar.scss';
@@ -124,20 +123,16 @@ class Toolbar extends React.Component<*> {
 
         return (
             <ToolbarComponent>
-                {!!Initializer.initializedTranslationsLocale &&
-                    <ToolbarComponent.Snackbar
-                        onCloseClick={handleSnackbarCloseClick}
-                        type="error"
-                        visible={this.toolbarStore.errors.length > 0}
-                    />
-                }
-                {!!Initializer.initializedTranslationsLocale &&
-                    <ToolbarComponent.Snackbar
-                        onClick={snackbarClickZoneAvailable ? handleSnackbarClick : undefined}
-                        type="success"
-                        visible={this.toolbarStore.showSuccess}
-                    />
-                }
+                <ToolbarComponent.Snackbar
+                    onCloseClick={handleSnackbarCloseClick}
+                    type="error"
+                    visible={this.toolbarStore.errors.length > 0}
+                />
+                <ToolbarComponent.Snackbar
+                    onClick={snackbarClickZoneAvailable ? handleSnackbarClick : undefined}
+                    type="success"
+                    visible={this.toolbarStore.showSuccess}
+                />
                 <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
                         <ToolbarComponent.Button
