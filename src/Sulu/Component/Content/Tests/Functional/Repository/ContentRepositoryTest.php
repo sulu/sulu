@@ -1219,7 +1219,7 @@ class ContentRepositoryTest extends SuluTestCase
         return $document;
     }
 
-    private function getPackageVersion(string $packageName)
+    private function getPackageVersion($packageName)
     {
         $this->composerLock = json_decode(
             file_get_contents($this->getContainer()->getParameter('kernel.root_dir') . '/../../composer.lock')
