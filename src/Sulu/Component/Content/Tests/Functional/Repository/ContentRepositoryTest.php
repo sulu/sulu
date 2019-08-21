@@ -722,7 +722,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals(
             [
                 1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                2 => ['view' => true, 'add' => false, 'edit' => false, 'delete' => false, 'archive' => true]
+                2 => ['view' => true, 'add' => false, 'edit' => false, 'delete' => false, 'archive' => true],
             ],
             $result->getPermissions()
         );
@@ -801,7 +801,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals(
             [
                 1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
-                2 => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false]
+                2 => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
             ],
             $result->getPermissions()
         );
