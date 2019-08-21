@@ -131,7 +131,7 @@ test('Render the items as disabled if one is loading', () => {
     expect(buttons.at(2).prop('disabled')).toBe(true);
 });
 
-test('Show success message for some time', () => {
+test('Show success message on back button for some time', () => {
     const storeKey = 'testStore';
 
     // $FlowFixMe
@@ -145,10 +145,24 @@ test('Show success message for some time', () => {
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
     toolbarStoreMock.showSuccess = true;
 
-    const view = shallow(<Toolbar storeKey={storeKey} />);
+    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+});
 
-    expect(view.find('Snackbar[type="success"]')).toHaveLength(1);
-    expect(view.find('Snackbar[type="success"]').prop('type')).toEqual('success');
+test('Show success message on navigation button for some time', () => {
+    const storeKey = 'testStore';
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+    toolbarStoreMock.showSuccess = true;
+
+    expect(render(<Toolbar onNavigationButtonClick={jest.fn()} storeKey={storeKey} />)).toMatchSnapshot();
 });
 
 test('Click on the success message should open the navigation', () => {
@@ -168,9 +182,33 @@ test('Click on the success message should open the navigation', () => {
 
     const view = shallow(<Toolbar onNavigationButtonClick={navigationButtonClickSpy} storeKey={storeKey} />);
 
-    view.find('Snackbar[type="success"]').simulate('click');
+    view.find('Button[success=true]').simulate('click');
 
     expect(navigationButtonClickSpy).toBeCalledWith();
+});
+
+test('Click on the success message should navigate back', () => {
+    const storeKey = 'testStore';
+    const backSpy = jest.fn();
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({
+        onClick: backSpy,
+    });
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+    toolbarStoreMock.showSuccess = true;
+
+    const view = shallow(<Toolbar storeKey={storeKey} />);
+
+    view.find('Button[success=true]').simulate('click');
+
+    expect(backSpy).toBeCalledWith();
 });
 
 test('Remove last error if close button on snackbar is clicked', () => {

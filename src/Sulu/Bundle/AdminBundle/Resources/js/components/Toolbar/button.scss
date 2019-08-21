@@ -11,6 +11,8 @@ $buttonActiveBackgroundLightColor: $wildSand;
 $buttonActiveBackgroundDarkColor: $mirage;
 $primaryTextColor: $white;
 $primaryBackgroundColor: $shakespeare;
+$successColor: $white;
+$successBackgroundColor: $mantis;
 
 .light {
     color: $buttonTextLightColor;
@@ -84,6 +86,12 @@ $primaryBackgroundColor: $shakespeare;
     &.primary:hover {
         color: $primaryTextColor;
         background-color: $primaryBackgroundColor;
+    }
+
+    &.success,
+    &.success:hover {
+        background-color: $successBackgroundColor;
+        color: $successColor;
     }
 }
 

@@ -178,7 +178,7 @@ test('Render opened navigation', () => {
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
 
-    expect(view).toMatchSnapshot();
+    expect(view.render()).toMatchSnapshot();
 });
 
 test('Pin navigation', () => {

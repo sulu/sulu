@@ -30,15 +30,6 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
     </div>
   </div>
   <div
-    class="snackbar success"
-    role="button"
-  >
-    <span
-      aria-label="su-check"
-      class="su-check icon"
-    />
-  </div>
-  <div
     class="controls light grow"
   >
     <div
@@ -137,5 +128,121 @@ exports[`Render the items and icons from the ToolbarStore 1`] = `
       </div>
     </div>
   </div>
+</nav>
+`;
+
+exports[`Show success message on back button for some time 1`] = `
+<nav
+  class="toolbar light"
+>
+  <div
+    class="snackbar error"
+    role="button"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.error
+      </strong>
+      <button
+        class="closeButton"
+      >
+        sulu_admin.close
+        <span
+          aria-label="su-times"
+          class="su-times closeButtonIcon"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="controls light grow"
+  >
+    <button
+      class="button light success"
+    >
+      <span
+        aria-label="su-check"
+        class="su-check icon"
+      />
+    </button>
+    <div
+      class="itemsContainer"
+    >
+      <ul
+        class="items light"
+      />
+    </div>
+  </div>
+  <div
+    class="controls light"
+  />
+</nav>
+`;
+
+exports[`Show success message on navigation button for some time 1`] = `
+<nav
+  class="toolbar light"
+>
+  <div
+    class="snackbar error"
+    role="button"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.error
+      </strong>
+      <button
+        class="closeButton"
+      >
+        sulu_admin.close
+        <span
+          aria-label="su-times"
+          class="su-times closeButtonIcon"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="controls light grow"
+  >
+    <button
+      class="button light primary success"
+    >
+      <span
+        aria-label="su-check"
+        class="su-check icon"
+      />
+    </button>
+    <button
+      class="button light"
+    >
+      <span
+        aria-label="su-angle-left"
+        class="su-angle-left icon"
+      />
+    </button>
+    <div
+      class="itemsContainer"
+    >
+      <ul
+        class="items light"
+      />
+    </div>
+  </div>
+  <div
+    class="controls light"
+  />
 </nav>
 `;

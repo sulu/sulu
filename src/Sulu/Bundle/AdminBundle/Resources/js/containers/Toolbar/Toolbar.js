@@ -10,6 +10,8 @@ import type {ToolbarProps} from './types';
 
 const LOCALE_SELECT_SIZE = 'small';
 
+const SUCCESS_ICON = 'su-check';
+
 const ToolbarItemTypes = {
     Button: 'button',
     Dropdown: 'dropdown',
@@ -35,12 +37,10 @@ function getItemComponentByType(itemConfig, key) {
 }
 
 @observer
-class Toolbar extends React.Component<*> {
+class Toolbar extends React.Component<ToolbarProps> {
     static defaultProps = {
         navigationOpen: false,
     };
-
-    props: ToolbarProps;
 
     toolbarStore: ToolbarStore;
 
@@ -99,27 +99,10 @@ class Toolbar extends React.Component<*> {
         return itemsConfig;
     }
 
-    @computed get snackbarClickZoneAvailable(): boolean {
-        const {onNavigationButtonClick} = this.props;
-        return !!onNavigationButtonClick || !!this.backButtonConfig;
-    }
-
-    handleSnackbarClick = () => {
-        const {onNavigationButtonClick} = this.props;
-
-        if (onNavigationButtonClick) {
-            onNavigationButtonClick();
-            return;
-        }
-
-        if (this.backButtonConfig) {
-            this.backButtonConfig.onClick();
-        }
-    };
-
     render() {
-        const {snackbarClickZoneAvailable, handleSnackbarClick, handleSnackbarCloseClick} = this;
+        const {handleSnackbarCloseClick} = this;
         const {onNavigationButtonClick, navigationOpen} = this.props;
+        const {showSuccess} = this.toolbarStore;
 
         return (
             <ToolbarComponent>
@@ -128,24 +111,26 @@ class Toolbar extends React.Component<*> {
                     type="error"
                     visible={this.toolbarStore.errors.length > 0}
                 />
-                <ToolbarComponent.Snackbar
-                    onClick={snackbarClickZoneAvailable ? handleSnackbarClick : undefined}
-                    type="success"
-                    visible={this.toolbarStore.showSuccess}
-                />
                 <ToolbarComponent.Controls grow={true}>
                     {!!onNavigationButtonClick &&
                         <ToolbarComponent.Button
                             disabled={!onNavigationButtonClick}
-                            icon={navigationOpen ? 'su-times' : 'su-bars'}
+                            icon={showSuccess
+                                ? SUCCESS_ICON
+                                : navigationOpen
+                                    ? 'su-times'
+                                    : 'su-bars'
+                            }
                             onClick={onNavigationButtonClick}
                             primary={true}
+                            success={showSuccess}
                         />
                     }
                     {this.toolbarStore.hasBackButtonConfig() &&
                         <ToolbarComponent.Button
                             {...this.backButtonConfig}
-                            icon="su-angle-left"
+                            icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}
+                            success={!onNavigationButtonClick && showSuccess}
                         />
                     }
                     {this.toolbarStore.hasItemsConfig() &&

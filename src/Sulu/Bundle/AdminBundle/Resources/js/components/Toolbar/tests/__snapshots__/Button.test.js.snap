@@ -93,3 +93,39 @@ exports[`Render loading button 1`] = `
   </span>
 </button>
 `;
+
+exports[`Render primary button 1`] = `
+<button
+  class="button primary"
+>
+  <span
+    class="label"
+  >
+    Click
+  </span>
+</button>
+`;
+
+exports[`Render primary success button 1`] = `
+<button
+  class="button primary success"
+>
+  <span
+    class="label"
+  >
+    Click
+  </span>
+</button>
+`;
+
+exports[`Render success button 1`] = `
+<button
+  class="button success"
+>
+  <span
+    class="label"
+  >
+    Click
+  </span>
+</button>
+`;

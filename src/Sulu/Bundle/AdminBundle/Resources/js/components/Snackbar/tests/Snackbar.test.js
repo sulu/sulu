@@ -7,18 +7,6 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Render an invisible success snackbar', () => {
-    expect(render(<Snackbar type="success" visible={false} />)).toMatchSnapshot();
-});
-
-test('Render a success snackbar', () => {
-    expect(render(<Snackbar type="success" />)).toMatchSnapshot();
-});
-
-test('Render a clickable success snackbar', () => {
-    expect(render(<Snackbar onClick={jest.fn()} type="success" />)).toMatchSnapshot();
-});
-
 test('Render an error snackbar', () => {
     expect(render(<Snackbar onCloseClick={jest.fn()} type="error" />)).toMatchSnapshot();
 });
@@ -29,7 +17,7 @@ test('Render an error snackbar without close button', () => {
 
 test('Click the snackbar should call the onClick callback', () => {
     const clickSpy = jest.fn();
-    const snackbar = shallow(<Snackbar onClick={clickSpy} type="success" />);
+    const snackbar = shallow(<Snackbar onClick={clickSpy} type="error" />);
 
     snackbar.simulate('click');
 
