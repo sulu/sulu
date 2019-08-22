@@ -1543,6 +1543,59 @@ test('Should show error if form has been tried to save although it is not valid'
     });
 });
 
+test('Should clear errors if form has been saved', () => {
+    const Form = require('../Form').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/MetadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const putPromise = Promise.resolve({});
+    ResourceRequester.put.mockReturnValue(putPromise);
+
+    const schemaTypesPromise = Promise.resolve({});
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve({required: []});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+    form.instance().errors.push({});
+
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        return jsonSchemaPromise.then(() => {
+            form.find('Form').at(1).instance().submit().then(() => {
+                expect(ResourceRequester.put).toBeCalledWith('snippets', {}, {action: undefined, id: 8, locale: 'en'});
+                expect(form.instance().errors).toHaveLength(0);
+            });
+        });
+    });
+});
+
 test('Should keep errors after form submission has failed', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     const error = {code: 100, message: 'Something went wrong'};

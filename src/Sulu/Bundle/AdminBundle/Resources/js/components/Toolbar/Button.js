@@ -17,6 +17,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
         hasOptions: false,
         primary: false,
         showText: true,
+        success: false,
     };
 
     handleOnClick = () => {
@@ -42,7 +43,9 @@ export default class Button extends React.PureComponent<ButtonProps> {
             size,
             showText,
             skin,
+            success,
         } = this.props;
+
         const buttonClass = classNames(
             buttonStyles.button,
             {
@@ -50,6 +53,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 [buttonStyles[size]]: size,
                 [buttonStyles[skin]]: skin,
                 [buttonStyles.primary]: primary,
+                [buttonStyles.success]: success,
             }
         );
         const buttonContent = this.props.children || label;

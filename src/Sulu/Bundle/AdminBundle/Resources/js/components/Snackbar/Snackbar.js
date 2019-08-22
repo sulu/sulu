@@ -8,13 +8,13 @@ import snackbarStyles from './snackbar.scss';
 type Props = {|
     onClick?: () => void,
     onCloseClick?: () => void,
-    type: 'error' | 'success',
+    type: 'error' | 'warning',
     visible: boolean,
 |};
 
 const ICONS = {
     error: 'su-exclamation-triangle',
-    success: 'su-check',
+    warning: 'su-bell',
 };
 
 export default class Snackbar extends React.Component<Props> {
@@ -37,16 +37,11 @@ export default class Snackbar extends React.Component<Props> {
         return (
             <div className={snackbarClass} onClick={onClick} role="button">
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
-                {type !== 'success' &&
-                    <div className={snackbarStyles.text}>
-                        <strong>{translate('sulu_admin.' + type)}</strong>
-                        {onCloseClick &&
-                            <button className={snackbarStyles.closeButton} onClick={onCloseClick}>
-                                {translate('sulu_admin.close')}
-                                <Icon className={snackbarStyles.closeButtonIcon} name="su-times" />
-                            </button>
-                        }
-                    </div>
+                <div className={snackbarStyles.text}>
+                    <strong>{translate('sulu_admin.' + type)}</strong>
+                </div>
+                {onCloseClick &&
+                    <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />
                 }
             </div>
         );

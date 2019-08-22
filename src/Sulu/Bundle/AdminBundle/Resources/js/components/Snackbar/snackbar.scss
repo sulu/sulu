@@ -1,26 +1,28 @@
 @import '../../containers/Application/colors.scss';
 
-$snackbarHeight: 60px;
-$snackbarIconWidth: 60px;
+$snackbarHeight: 40px;
 
 $snackbarErrorColor: $white;
-$snackbarErrorBackgroundColor: $roman;
-$snackbarIconErrorBackgroundColor: $persianRed;
-$snackbarSuccessColor: $white;
-$snackbarIconSuccessBackgroundColor: $mantis;
-$closeButtonBorderColor: $white;
+$snackbarErrorBackgroundColor: $persianRed;
+$snackbarWarningColor: $blueZodiac;
+$snackbarWarningBackgroundColor: $gold;
 
 .snackbar {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: $snackbarHeight;
-    z-index: 1;
+    padding: 0 20px;
     display: flex;
+    align-items: center;
+    will-change: margin-top;
+    transition: margin-top .15s;
+    width: 100%;
+
+    &:not(.visible) {
+        margin-top: -$snackbarHeight;
+    }
 }
 
 .icon {
-    width: $snackbarIconWidth;
+    padding-right: 10px;
     font-size: 20px;
     display: flex;
     align-items: center;
@@ -30,20 +32,13 @@ $closeButtonBorderColor: $white;
 
 .text {
     font-size: 12px;
-    margin-left: 20px;
+    flex-grow: 1;
 }
 
-.close-button {
-    border: 1px solid $closeButtonBorderColor;
-    border-radius: 3px;
-    margin-left: 20px;
-    padding: 4px 20px;
-    cursor: pointer;
-}
-
-.close-button-icon {
-    font-size: 10px;
-    margin-left: 20px;
+.close-icon {
+    font-size: 14px;
+    font-weight: 900;
+    padding: 3px;
 }
 
 .clickable {
@@ -51,21 +46,8 @@ $closeButtonBorderColor: $white;
 }
 
 .error {
-    right: 0;
     background-color: $snackbarErrorBackgroundColor;
     color: $snackbarErrorColor;
-    display: flex;
-    align-items: center;
-    will-change: top;
-    transition: top .15s;
-
-    &:not(.visible) {
-        top: -100%;
-    }
-
-    .icon {
-        background-color: $snackbarIconErrorBackgroundColor;
-    }
 
     .close-button {
         background-color: $snackbarErrorBackgroundColor;
@@ -73,21 +55,12 @@ $closeButtonBorderColor: $white;
     }
 }
 
-.success {
-    color: $snackbarSuccessColor;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    will-change: opacity;
-    transition: opacity .25s, visibility .25s;
+.warning {
+    background-color: $snackbarWarningBackgroundColor;
+    color: $snackbarWarningColor;
 
-    &.visible {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .icon {
-        background-color: $snackbarIconSuccessBackgroundColor;
+    .close-button {
+        background-color: $snackbarWarningColor;
+        color: $snackbarWarningColor;
     }
 }

@@ -30,6 +30,7 @@ export type Button = {|
     showText?: boolean,
     size?: string,
     skin?: Skin,
+    success?: boolean,
 |};
 
 export type Toggler = {|

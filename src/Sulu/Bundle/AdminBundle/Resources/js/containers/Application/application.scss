@@ -41,8 +41,8 @@
 }
 
 .view-container {
+    flex-grow: 1;
     overflow-y: auto;
-    height: calc(100% - $toolbarHeight);
     padding: $viewPadding;
 }
 
@@ -53,6 +53,8 @@
     flex-basis: $viewMinWidth;
     flex-grow: 1;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar {

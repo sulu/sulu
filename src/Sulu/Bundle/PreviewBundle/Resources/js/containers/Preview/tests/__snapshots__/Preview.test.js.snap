@@ -143,6 +143,7 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       />
       <Select
         icon="su-expand"
@@ -178,6 +179,7 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.reload
       </Button>
@@ -189,6 +191,7 @@ exports[`Render correct preview 1`] = `
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.open_in_window
       </Button>
@@ -228,6 +231,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       />
       <Select
         icon="su-expand"
@@ -263,6 +267,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.reload
       </Button>
@@ -274,6 +279,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.open_in_window
       </Button>
@@ -313,6 +319,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       />
       <Select
         icon="su-expand"
@@ -348,6 +355,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.reload
       </Button>
@@ -359,6 +367,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         onClick={[Function]}
         primary={false}
         showText={true}
+        success={false}
       >
         sulu_preview.open_in_window
       </Button>

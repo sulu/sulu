@@ -53,16 +53,13 @@ Array [
                 <strong>
                   sulu_admin.error
                 </strong>
-                <button
-                  class="closeButton"
-                >
-                  sulu_admin.close
-                  <span
-                    aria-label="su-times"
-                    class="su-times closeButtonIcon"
-                  />
-                </button>
               </div>
+              <span
+                aria-label="su-times"
+                class="su-times clickable closeIcon"
+                role="button"
+                tabindex="0"
+              />
             </div>
             <div>
               form container mock

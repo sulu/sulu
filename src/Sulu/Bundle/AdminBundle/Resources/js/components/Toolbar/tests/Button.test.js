@@ -7,6 +7,18 @@ test('Render button', () => {
     expect(render(<Button>Click</Button>)).toMatchSnapshot();
 });
 
+test('Render success button', () => {
+    expect(render(<Button success={true}>Click</Button>)).toMatchSnapshot();
+});
+
+test('Render primary button', () => {
+    expect(render(<Button primary={true}>Click</Button>)).toMatchSnapshot();
+});
+
+test('Render primary success button', () => {
+    expect(render(<Button primary={true} success={true}>Click</Button>)).toMatchSnapshot();
+});
+
 test('Render loading button', () => {
     expect(render(<Button loading={true}>Click</Button>)).toMatchSnapshot();
 });

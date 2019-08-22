@@ -1,25 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a clickable success snackbar 1`] = `
+exports[`Render a warning snackbar 1`] = `
 <div
-  class="snackbar success clickable visible"
+  class="snackbar warning visible"
   role="button"
 >
   <span
-    aria-label="su-check"
-    class="su-check icon"
+    aria-label="su-bell"
+    class="su-bell icon"
   />
-</div>
-`;
-
-exports[`Render a success snackbar 1`] = `
-<div
-  class="snackbar success visible"
-  role="button"
->
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.warning
+    </strong>
+  </div>
   <span
-    aria-label="su-check"
-    class="su-check icon"
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
   />
 </div>
 `;
@@ -39,16 +40,13 @@ exports[`Render an error snackbar 1`] = `
     <strong>
       sulu_admin.error
     </strong>
-    <button
-      class="closeButton"
-    >
-      sulu_admin.close
-      <span
-        aria-label="su-times"
-        class="su-times closeButtonIcon"
-      />
-    </button>
   </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
 </div>
 `;
 
@@ -68,17 +66,5 @@ exports[`Render an error snackbar without close button 1`] = `
       sulu_admin.error
     </strong>
   </div>
-</div>
-`;
-
-exports[`Render an invisible success snackbar 1`] = `
-<div
-  class="snackbar success"
-  role="button"
->
-  <span
-    aria-label="su-check"
-    class="su-check icon"
-  />
 </div>
 `;

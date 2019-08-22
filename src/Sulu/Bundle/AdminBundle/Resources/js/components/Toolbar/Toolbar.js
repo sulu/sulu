@@ -2,7 +2,6 @@
 import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
-import Snackbar from '../Snackbar';
 import Button from './Button';
 import Controls from './Controls';
 import Dropdown from './Dropdown';
@@ -14,7 +13,7 @@ import type {Skin} from './types';
 import toolbarStyles from './toolbar.scss';
 
 type Props = {
-    children: ChildrenArray<false | Element<typeof Controls | typeof Snackbar>>,
+    children: ChildrenArray<false | Element<typeof Controls>>,
     skin?: Skin,
 };
 
@@ -30,7 +29,6 @@ export default class Toolbar extends React.PureComponent<Props> {
     static Icons = Icons;
     static Select = Select;
     static Toggler = Toggler;
-    static Snackbar = Snackbar;
 
     static createChildren(children: ChildrenArray<*>, skin?: Skin) {
         return React.Children.map(children, (child) => {
