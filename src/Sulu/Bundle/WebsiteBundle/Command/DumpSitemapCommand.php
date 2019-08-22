@@ -21,11 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Dump sitemaps to filesystem.
- */
 class DumpSitemapCommand extends Command
 {
+    protected static $defaultName = 'sulu:website:dump-sitemap';
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -68,26 +67,21 @@ class DumpSitemapCommand extends Command
         string $baseDirectory,
         string $environment
     ) {
+        parent::__construct();
+
         $this->webspaceManager = $webspaceManager;
         $this->sitemapDumper = $sitemapDumper;
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
-        parent::__construct('sulu:website:dump-sitemap');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->addOption('https', null, InputOption::VALUE_NONE, 'Use https scheme for url generation.')
             ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;

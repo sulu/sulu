@@ -24,11 +24,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Validates pages.
- */
 class ValidatePagesCommand extends Command
 {
+    protected static $defaultName = 'sulu:content:validate';
+
     /**
      * @var SessionInterface
      */
@@ -55,11 +54,12 @@ class ValidatePagesCommand extends Command
         StructureManagerInterface $structureManager,
         WebspaceStructureProviderInterface $structureProvider
     ) {
+        parent::__construct();
+
         $this->session = $session;
         $this->webspaceManager = $webspaceManager;
         $this->structureManager = $structureManager;
         $this->structureProvider = $structureProvider;
-        parent::__construct('sulu:content:validate');
     }
 
     protected function configure()

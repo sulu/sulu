@@ -17,11 +17,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Clears the media cache.
- */
 class ClearCacheCommand extends Command
 {
+    protected static $defaultName = 'sulu:media:format:cache:clear';
+
     /**
      * @var FormatCacheClearerInterface
      */
@@ -29,8 +28,9 @@ class ClearCacheCommand extends Command
 
     public function __construct(FormatCacheClearerInterface $cacheClearer)
     {
+        parent::__construct();
+
         $this->cacheClearer = $cacheClearer;
-        parent::__construct('sulu:media:format:cache:clear');
     }
 
     protected function configure()

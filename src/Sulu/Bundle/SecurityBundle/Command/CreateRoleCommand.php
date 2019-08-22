@@ -25,6 +25,8 @@ use Symfony\Component\Console\Question\Question;
 
 class CreateRoleCommand extends Command
 {
+    protected static $defaultName = 'sulu:security:role:create';
+
     /**
      * @var EntityManagerInterface
      */
@@ -45,15 +47,13 @@ class CreateRoleCommand extends Command
         RoleRepositoryInterface $roleRepository,
         AdminPool $adminPool
     ) {
+        parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->roleRepository = $roleRepository;
         $this->adminPool = $adminPool;
-        parent::__construct('sulu:security:role:create');
     }
 
-    /**
-     * @see Command
-     */
     protected function configure()
     {
         $this->setName('sulu:security:role:create')
@@ -66,9 +66,6 @@ class CreateRoleCommand extends Command
             );
     }
 
-    /**
-     * @see Command
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');

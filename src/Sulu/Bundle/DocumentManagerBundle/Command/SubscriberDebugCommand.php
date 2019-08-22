@@ -21,6 +21,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SubscriberDebugCommand extends Command
 {
+    protected static $defaultName = 'sulu:document:subscriber:debug';
+
     const PREFIX = 'sulu_document_manager.';
 
     /**
@@ -30,8 +32,9 @@ class SubscriberDebugCommand extends Command
 
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
+        parent::__construct();
+
         $this->eventDispatcher = $eventDispatcher;
-        parent::__construct('sulu:document:subscriber:debug');
     }
 
     public function configure()

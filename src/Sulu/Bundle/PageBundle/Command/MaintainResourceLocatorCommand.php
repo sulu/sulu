@@ -31,6 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MaintainResourceLocatorCommand extends Command
 {
+    protected static $defaultName = 'sulu:content:resource-locator:maintain';
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -69,23 +71,19 @@ class MaintainResourceLocatorCommand extends Command
         StructureMetadataFactory $structureMetadataFactory,
         PropertyEncoder $propertyEncoder
     ) {
+        parent::__construct();
+
         $this->webspaceManager = $webspaceManager;
         $this->sessionManager = $sessionManager;
         $this->liveSession = $liveSession;
         $this->metadataFactory = $metadataFactory;
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->propertyEncoder = $propertyEncoder;
-
-        parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
-        $this->setName('sulu:content:resource-locator:maintain')
-            ->setDescription('Resets the cached url value on every node in the live workspace');
+        $this->setDescription('Resets the cached url value on every node in the live workspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

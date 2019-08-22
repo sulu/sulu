@@ -24,6 +24,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AccountRecoverCommand extends Command
 {
+    protected static $defaultName = 'sulu:contacts:accounts:recover';
+
     /**
      * @var EntityManagerInterface
      */
@@ -36,9 +38,10 @@ class AccountRecoverCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, AccountRepositoryInterface $accountRepository)
     {
+        parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->accountRepository = $accountRepository;
-        parent::__construct('sulu:contacts:accounts:recover');
     }
 
     protected function configure()
@@ -57,12 +60,6 @@ class AccountRecoverCommand extends Command
             );
     }
 
-    /**
-     * Execute command.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;

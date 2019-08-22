@@ -22,6 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MediaTypeUpdateCommand extends Command
 {
+    protected static $defaultName = 'sulu:media:type:update';
+
     /**
      * @var TypeManagerInterface
      */
@@ -32,17 +34,12 @@ class MediaTypeUpdateCommand extends Command
      */
     private $entityManager;
 
-    /**
-     * MediaTypeUpdateCommand constructor.
-     *
-     * @param TypeManagerInterface $mediaTypeManager
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(TypeManagerInterface $mediaTypeManager, EntityManagerInterface $entityManager)
     {
+        parent::__construct();
+
         $this->mediaTypeManager = $mediaTypeManager;
         $this->entityManager = $entityManager;
-        parent::__construct('sulu:media:type:update');
     }
 
     protected function configure()
@@ -76,6 +73,7 @@ class MediaTypeUpdateCommand extends Command
                 }
             }
         }
+
         if ($counter) {
             $em->flush();
             $output->writeln(sprintf('<info>SUCCESS FULLY UPDATED (%s)</info>', $counter));

@@ -33,11 +33,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Copies a given webspace with given locale to a destination webspace with a destination locale.
- */
 class WebspaceCopyCommand extends Command
 {
+    protected static $defaultName = 'sulu:webspaces:copy';
+
     /**
      * @var SymfonyStyle
      */
@@ -84,11 +83,12 @@ class WebspaceCopyCommand extends Command
         DocumentInspector $documentInspector,
         HtmlTagExtractor $htmlTagExtractor
     ) {
+        parent::__construct();
+
         $this->documentManager = $documentManager;
         $this->sessionManager = $sessionManager;
         $this->documentInspector = $documentInspector;
         $this->htmlTagExtractor = $htmlTagExtractor;
-        parent::__construct('sulu:webspaces:copy');
     }
 
     protected function configure()
@@ -98,7 +98,9 @@ class WebspaceCopyCommand extends Command
             ->addArgument('destination-webspace', InputArgument::REQUIRED)
             ->addArgument('destination-locale', InputArgument::REQUIRED)
             ->addOption('clear-destination-webspace')
-            ->setDescription('Copy whole webspace');
+            ->setDescription(
+                'Copies a given webspace with given locale to a destination webspace with a destination locale.'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -19,11 +19,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-/**
- * Export a webspace in a specific format.
- */
 class WebspaceExportCommand extends Command
 {
+    protected static $defaultName = 'sulu:webspaces:export';
+
     /**
      * @var WebspaceExportInterface
      */
@@ -31,8 +30,9 @@ class WebspaceExportCommand extends Command
 
     public function __construct(WebspaceExportInterface $webspaceExporter)
     {
+        parent::__construct();
+
         $this->webspaceExporter = $webspaceExporter;
-        parent::__construct('sulu:webspaces:export');
     }
 
     protected function configure()

@@ -17,30 +17,22 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Export snippet translation by given language.
- */
 class SnippetExportCommand extends Command
 {
+    protected static $defaultName = 'sulu:snippet:export';
+
     /**
      * @var SnippetExportInterface
      */
     private $snippetExporter;
 
-    /**
-     * SnippetExportCommand constructor.
-     *
-     * @param SnippetExportInterface $snippetExporter
-     */
     public function __construct(SnippetExportInterface $snippetExporter)
     {
+        parent::__construct();
+
         $this->snippetExporter = $snippetExporter;
-        parent::__construct('sulu:snippet:export');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setDescription('Export snippet translations from given language.');
@@ -48,9 +40,6 @@ class SnippetExportCommand extends Command
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to export (e.g. de, en)');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $target = $input->getArgument('target');

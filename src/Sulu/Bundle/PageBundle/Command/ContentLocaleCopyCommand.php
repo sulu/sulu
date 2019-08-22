@@ -22,11 +22,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Copy internationalized properties from one locale to another.
- */
 class ContentLocaleCopyCommand extends Command
 {
+    protected static $defaultName = 'sulu:content:locale-copy';
+
     /**
      * The namespace for languages.
      *
@@ -56,15 +55,13 @@ class ContentLocaleCopyCommand extends Command
 
     public function __construct(ContentMapperInterface $contentMapper, SessionInterface $session, string $languageNamespace)
     {
+        parent::__construct();
+
         $this->languageNamespace = $languageNamespace;
         $this->contentMapper = $contentMapper;
         $this->session = $session;
-        parent::__construct('sulu:content:locale-copy');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setDescription('Copy content nodes from one locale to another');
@@ -89,9 +86,6 @@ EOT
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $webspaceKey = $input->getArgument('webspaceKey');

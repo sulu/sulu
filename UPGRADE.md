@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Removed deprecated commands
+
+Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.
+
 ### Rename ToolbarActionRegistry and AbstractToolbarAction javscript classes
 
 **This change only affects you if you have used a 2.0.0 release before**
