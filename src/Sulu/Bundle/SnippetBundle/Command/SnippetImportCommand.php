@@ -22,11 +22,10 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-/**
- * Import snippets translations in a specific format.
- */
 class SnippetImportCommand extends Command
 {
+    protected static $defaultName = 'sulu:snippet:import';
+
     /**
      * @var SnippetImportInterface
      */
@@ -39,9 +38,10 @@ class SnippetImportCommand extends Command
 
     public function __construct(SnippetImportInterface $snippetImporter, LoggerInterface $logger = null)
     {
+        parent::__construct();
+
         $this->snippetImporter = $snippetImporter;
         $this->logger = $logger ?: new NullLogger();
-        parent::__construct('sulu:snippet:import');
     }
 
     protected function configure()

@@ -24,6 +24,8 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class FormatCacheCleanupCommand extends Command
 {
+    protected static $defaultName = 'sulu:media:format:cache:cleanup';
+
     /**
      * @var EntityRepository
      */
@@ -44,7 +46,8 @@ class FormatCacheCleanupCommand extends Command
         Filesystem $filesystem,
         $localFormatCachePath
     ) {
-        parent::__construct('sulu:media:format:cache:cleanup');
+        parent::__construct();
+
         $this->mediaRepository = $mediaRepository;
         $this->filesystem = $filesystem;
         $this->localFormatCachePath = $localFormatCachePath;

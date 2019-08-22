@@ -21,11 +21,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Validates pages.
- */
 class ValidateWebspacesCommand extends Command
 {
+    protected static $defaultName = 'sulu:content:validate:webspaces';
+
     /**
      * @var OutputInterface
      */
@@ -80,6 +79,8 @@ class ValidateWebspacesCommand extends Command
         WebspaceManagerInterface $webspaceManager,
         $activeTheme = null
     ) {
+        parent::__construct();
+
         $this->twig = $twig;
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->controllerNameConverter = $controllerNameConverter;
@@ -87,7 +88,6 @@ class ValidateWebspacesCommand extends Command
         $this->structureProvider = $structureProvider;
         $this->activeTheme = $activeTheme;
         $this->webspaceManager = $webspaceManager;
-        parent::__construct('sulu:content:validate:webspaces');
     }
 
     protected function configure()

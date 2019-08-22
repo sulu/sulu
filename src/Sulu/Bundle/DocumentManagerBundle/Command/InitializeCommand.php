@@ -19,11 +19,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-/**
- * Initialize the content repository as managed by the document manager.
- */
 class InitializeCommand extends Command
 {
+    protected static $defaultName = 'sulu:document:initialize';
+
     /**
      * @var Initializer
      */
@@ -39,23 +38,20 @@ class InitializeCommand extends Command
         QuestionHelper $questionHelper = null
     ) {
         parent::__construct();
+
         $this->initializer = $initializer;
         $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
-            ->setName('sulu:document:initialize')
             ->setDescription('Initialize the content repository/repositories.')
             ->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the content repository before initialization.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confiration.')
             ->setHelp(<<<'EOT'
 Initialize the PHPCR content repository. This command
-will all registered initializers. 
+will call registered initializers. 
 
     <info>$ %command.full_name%</info>
     
@@ -67,9 +63,6 @@ EOT
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $purge = $input->getOption('purge');

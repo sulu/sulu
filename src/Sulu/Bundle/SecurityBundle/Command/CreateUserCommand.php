@@ -33,6 +33,8 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class CreateUserCommand extends Command
 {
+    protected static $defaultName = 'sulu:security:user:create';
+
     /**
      * @var EntityManagerInterface
      */
@@ -79,10 +81,12 @@ class CreateUserCommand extends Command
         RoleRepositoryInterface $roleRepository,
         ContactRepositoryInterface $contactRepository,
         LocalizationManagerInterface $localizationManager,
-        SaltGenerator $saltGenerator, EncoderFactoryInterface
-        $encoderFactory,
+        SaltGenerator $saltGenerator,
+        EncoderFactoryInterface $encoderFactory,
         array $locales
     ) {
+        parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
@@ -91,12 +95,8 @@ class CreateUserCommand extends Command
         $this->saltGenerator = $saltGenerator;
         $this->encoderFactory = $encoderFactory;
         $this->locales = $locales;
-        parent::__construct('sulu:security:user:create');
     }
 
-    /**
-     * @see Command
-     */
     protected function configure()
     {
         $this->setDescription('Create a user.')
@@ -113,9 +113,6 @@ class CreateUserCommand extends Command
             );
     }
 
-    /**
-     * @see Command
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $localizations = $this->localizationManager->getLocalizations();
@@ -207,9 +204,6 @@ class CreateUserCommand extends Command
         return $this->userRepository->createNew();
     }
 
-    /**
-     * @see Command
-     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $roleNames = $this->getRoleNames();

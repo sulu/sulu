@@ -24,6 +24,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RecoverCommand extends Command
 {
+    protected static $defaultName = 'sulu:categories:recover';
+
     /**
      * @var EntityManagerInterface
      */
@@ -36,9 +38,10 @@ class RecoverCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, CategoryRepositoryInterface $categoryRepository)
     {
+        parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->categoryRepository = $categoryRepository;
-        parent::__construct('sulu:categories:recover');
     }
 
     protected function configure()
@@ -57,12 +60,6 @@ class RecoverCommand extends Command
             );
     }
 
-    /**
-     * Execute command.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;

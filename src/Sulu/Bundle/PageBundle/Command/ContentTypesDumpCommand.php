@@ -17,25 +17,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Dumps all content types to console.
- */
 class ContentTypesDumpCommand extends Command
 {
-    /**
-     * {@inheritdoc}
-     */
+    protected static $defaultName = 'sulu:content:types:dump';
+
     protected function configure()
     {
-        $this->setName('sulu:content:types:dump')
-            ->setDescription('Dumps all ContentTypes registered in the system')->setDefinition([
+        $this->setDescription('Dumps all ContentTypes registered in the system')
+            ->setDefinition([
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt'),
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $command = $this->getApplication()->find('debug:container');

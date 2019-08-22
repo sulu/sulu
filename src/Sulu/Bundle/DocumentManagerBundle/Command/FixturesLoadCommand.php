@@ -22,11 +22,10 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * This command loads data fixtures from your bundles DataFixtures/Document directory.
- */
 class FixturesLoadCommand extends Command
 {
+    protected static $defaultName = 'sulu:document:fixtures:load';
+
     /**
      * @var DocumentFixtureLoader
      */
@@ -60,8 +59,7 @@ class FixturesLoadCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('sulu:document:fixtures:load')
-            ->setDescription('Load Sulu document fixtures')
+            ->setDescription('Loads data fixtures from your bundles DataFixtures/Document directory.')
             ->addOption('fixtures', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures to the existing data - will not purge the workspace.')
             ->addOption('no-initialize', null, InputOption::VALUE_NONE, 'Do not run the repository initializers after purging the repository.')

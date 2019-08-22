@@ -22,11 +22,10 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-/**
- * Export a webspace in a specific format.
- */
 class WebspaceImportCommand extends Command
 {
+    protected static $defaultName = 'sulu:webspaces:import';
+
     /**
      * @var WebspaceImportInterface
      */
@@ -39,9 +38,10 @@ class WebspaceImportCommand extends Command
 
     public function __construct(WebspaceImportInterface $webspaceImporter, LoggerInterface $logger = null)
     {
+        parent::__construct();
+
         $this->webspaceImporter = $webspaceImporter;
         $this->logger = $logger ?: new NullLogger();
-        parent::__construct('sulu:webspaces:import');
     }
 
     protected function configure()

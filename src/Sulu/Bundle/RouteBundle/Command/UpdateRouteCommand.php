@@ -22,11 +22,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Update the routes for all entities which will be returned by the repository of given entity service.
- */
 class UpdateRouteCommand extends Command
 {
+    protected static $defaultName = 'sulu:route:update';
+
     /**
      * @var TranslatorInterface
      */
@@ -47,15 +46,13 @@ class UpdateRouteCommand extends Command
         EntityManagerInterface $entityManager,
         RouteManagerInterface $routeManager
     ) {
+        parent::__construct();
+
         $this->translator = $translator;
         $this->entityManager = $entityManager;
         $this->routeManager = $routeManager;
-        parent::__construct('sulu:route:update');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->addArgument('entity', InputArgument::REQUIRED)
@@ -71,9 +68,6 @@ EOT
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->translator->setLocale($input->getArgument('locale'));

@@ -18,6 +18,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class InitCommand extends Command
 {
+    protected static $defaultName = 'sulu:media:init';
+
     /**
      * @var Filesystem
      */
@@ -30,9 +32,10 @@ class InitCommand extends Command
 
     public function __construct(Filesystem $filesystem, string $formatCacheDir)
     {
+        parent::__construct();
+
         $this->filesystem = $filesystem;
         $this->formatCacheDir = $formatCacheDir;
-        parent::__construct('sulu:media:init');
     }
 
     protected function configure()

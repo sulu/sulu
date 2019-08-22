@@ -20,11 +20,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Cleanup ResourceLocator History.
- */
 class CleanupHistoryCommand extends Command
 {
+    protected static $defaultName = 'sulu:content:cleanup-history';
+
     /**
      * @var SessionManagerInterface
      */
@@ -45,19 +44,15 @@ class CleanupHistoryCommand extends Command
         SessionInterface $defaultSession,
         SessionInterface $liveSession
     ) {
+        parent::__construct();
+
         $this->sessionManager = $sessionManager;
         $this->defaultSession = $defaultSession;
         $this->liveSession = $liveSession;
-
-        parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
-        $this->setName('sulu:content:cleanup-history');
         $this->setDescription('Cleanup resource-locator history');
         $this->setHelp(
             <<<'EOT'
@@ -76,9 +71,6 @@ EOT
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $webspaceKey = $input->getArgument('webspaceKey');
