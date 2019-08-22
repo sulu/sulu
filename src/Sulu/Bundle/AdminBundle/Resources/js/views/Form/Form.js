@@ -289,6 +289,7 @@ class Form extends React.Component<Props> {
         return this.resourceFormStore.save(saveOptions)
             .then((response) => {
                 this.showSuccessSnackbar();
+                this.clearErrors();
 
                 if (editRoute) {
                     router.navigate(
@@ -316,6 +317,10 @@ class Form extends React.Component<Props> {
 
     handleError = () => {
         this.errors.push('Errors occured when trying to save the data from the FormStore');
+    };
+
+    @action clearErrors = () => {
+        this.errors.splice(0, this.errors.length);
     };
 
     @action handleDirtyWarningCancelClick = () => {
