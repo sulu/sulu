@@ -117,16 +117,13 @@ exports[`Render based on current route 1`] = `
             <strong>
               sulu_admin.error
             </strong>
-            <button
-              class="closeButton"
-            >
-              sulu_admin.close
-              <span
-                aria-label="su-times"
-                class="su-times closeButtonIcon"
-              />
-            </button>
           </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
         </div>
         <nav
           class="toolbar light"
@@ -285,16 +282,13 @@ exports[`Render based on current route with app version 1`] = `
             <strong>
               sulu_admin.error
             </strong>
-            <button
-              class="closeButton"
-            >
-              sulu_admin.close
-              <span
-                aria-label="su-times"
-                class="su-times closeButtonIcon"
-              />
-            </button>
           </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
         </div>
         <nav
           class="toolbar light"
@@ -652,16 +646,13 @@ exports[`Render opened navigation 1`] = `
             <strong>
               sulu_admin.error
             </strong>
-            <button
-              class="closeButton"
-            >
-              sulu_admin.close
-              <span
-                aria-label="su-times"
-                class="su-times closeButtonIcon"
-              />
-            </button>
           </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
         </div>
         <nav
           class="toolbar light"
@@ -817,16 +808,13 @@ exports[`Should not fail if current route does not exist 1`] = `
             <strong>
               sulu_admin.error
             </strong>
-            <button
-              class="closeButton"
-            >
-              sulu_admin.close
-              <span
-                aria-label="su-times"
-                class="su-times closeButtonIcon"
-              />
-            </button>
           </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
         </div>
         <nav
           class="toolbar light"

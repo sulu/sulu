@@ -32,7 +32,7 @@ test('Call onCloseClick callback when close button is clicked', () => {
     const closeClickSpy = jest.fn();
     const snackbar = shallow(<Snackbar onCloseClick={closeClickSpy} type="error" />);
 
-    snackbar.find('button').simulate('click');
+    snackbar.find('Icon[name="su-times"]').prop('onClick')();
 
     expect(closeClickSpy).toBeCalledWith();
 });

@@ -1,18 +1,15 @@
 @import '../../containers/Application/colors.scss';
 
-$snackbarHeight: 60px;
-$snackbarIconWidth: 60px;
+$snackbarHeight: 40px;
 
 $snackbarErrorColor: $white;
-$snackbarErrorBackgroundColor: $roman;
-$snackbarIconErrorBackgroundColor: $persianRed;
+$snackbarErrorBackgroundColor: $persianRed;
 $snackbarWarningColor: $blueZodiac;
-$snackbarWarningBackgroundColor: $energyYellow;
-$snackbarIconWarningBackgroundColor: $gold;
-$closeButtonBorderColor: $white;
+$snackbarWarningBackgroundColor: $gold;
 
 .snackbar {
     height: $snackbarHeight;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     will-change: margin-top;
@@ -25,7 +22,7 @@ $closeButtonBorderColor: $white;
 }
 
 .icon {
-    width: $snackbarIconWidth;
+    padding-right: 10px;
     font-size: 20px;
     display: flex;
     align-items: center;
@@ -35,20 +32,13 @@ $closeButtonBorderColor: $white;
 
 .text {
     font-size: 12px;
-    margin-left: 20px;
+    flex-grow: 1;
 }
 
-.close-button {
-    border: 1px solid $closeButtonBorderColor;
-    border-radius: 3px;
-    margin-left: 20px;
-    padding: 4px 20px;
-    cursor: pointer;
-}
-
-.close-button-icon {
-    font-size: 10px;
-    margin-left: 20px;
+.close-icon {
+    font-size: 14px;
+    font-weight: 900;
+    padding: 3px;
 }
 
 .clickable {
@@ -59,10 +49,6 @@ $closeButtonBorderColor: $white;
     background-color: $snackbarErrorBackgroundColor;
     color: $snackbarErrorColor;
 
-    .icon {
-        background-color: $snackbarIconErrorBackgroundColor;
-    }
-
     .close-button {
         background-color: $snackbarErrorBackgroundColor;
         color: $snackbarErrorColor;
@@ -72,10 +58,6 @@ $closeButtonBorderColor: $white;
 .warning {
     background-color: $snackbarWarningBackgroundColor;
     color: $snackbarWarningColor;
-
-    .icon {
-        background-color: $snackbarIconWarningBackgroundColor;
-    }
 
     .close-button {
         background-color: $snackbarWarningColor;

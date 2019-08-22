@@ -39,13 +39,10 @@ export default class Snackbar extends React.Component<Props> {
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
                 <div className={snackbarStyles.text}>
                     <strong>{translate('sulu_admin.' + type)}</strong>
-                    {onCloseClick &&
-                        <button className={snackbarStyles.closeButton} onClick={onCloseClick}>
-                            {translate('sulu_admin.close')}
-                            <Icon className={snackbarStyles.closeButtonIcon} name="su-times" />
-                        </button>
-                    }
                 </div>
+                {onCloseClick &&
+                    <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />
+                }
             </div>
         );
     }
