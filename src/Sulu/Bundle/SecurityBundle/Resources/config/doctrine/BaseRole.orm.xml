@@ -8,7 +8,7 @@
         </id>
 
         <field name="name" type="string" column="name" length="60" unique="true"/>
-        <field name="system" type="string" column="system" length="60"/>
+        <field name="system" type="string" column="securitySystem" length="60"/>
 
         <many-to-one field="securityType" target-entity="Sulu\Bundle\SecurityBundle\Entity\SecurityType"
                      inversed-by="roles">
