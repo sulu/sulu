@@ -6,14 +6,22 @@ $snackbarIconWidth: 60px;
 $snackbarErrorColor: $white;
 $snackbarErrorBackgroundColor: $roman;
 $snackbarIconErrorBackgroundColor: $persianRed;
-$snackbarSuccessColor: $white;
-$snackbarIconSuccessBackgroundColor: $mantis;
+$snackbarWarningColor: $blueZodiac;
+$snackbarWarningBackgroundColor: $energyYellow;
+$snackbarIconWarningBackgroundColor: $gold;
 $closeButtonBorderColor: $white;
 
 .snackbar {
     height: $snackbarHeight;
     display: flex;
+    align-items: center;
+    will-change: margin-top;
+    transition: margin-top .15s;
     width: 100%;
+
+    &:not(.visible) {
+        margin-top: -$snackbarHeight;
+    }
 }
 
 .icon {
@@ -50,14 +58,6 @@ $closeButtonBorderColor: $white;
 .error {
     background-color: $snackbarErrorBackgroundColor;
     color: $snackbarErrorColor;
-    display: flex;
-    align-items: center;
-    will-change: margin-top;
-    transition: margin-top .15s;
-
-    &:not(.visible) {
-        margin-top: -$snackbarHeight;
-    }
 
     .icon {
         background-color: $snackbarIconErrorBackgroundColor;
@@ -66,5 +66,19 @@ $closeButtonBorderColor: $white;
     .close-button {
         background-color: $snackbarErrorBackgroundColor;
         color: $snackbarErrorColor;
+    }
+}
+
+.warning {
+    background-color: $snackbarWarningBackgroundColor;
+    color: $snackbarWarningColor;
+
+    .icon {
+        background-color: $snackbarIconWarningBackgroundColor;
+    }
+
+    .close-button {
+        background-color: $snackbarWarningColor;
+        color: $snackbarWarningColor;
     }
 }

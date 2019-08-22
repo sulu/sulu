@@ -11,6 +11,10 @@ test('Render an error snackbar', () => {
     expect(render(<Snackbar onCloseClick={jest.fn()} type="error" />)).toMatchSnapshot();
 });
 
+test('Render a warning snackbar', () => {
+    expect(render(<Snackbar onCloseClick={jest.fn()} type="warning" />)).toMatchSnapshot();
+});
+
 test('Render an error snackbar without close button', () => {
     expect(render(<Snackbar type="error" />)).toMatchSnapshot();
 });

@@ -8,12 +8,13 @@ import snackbarStyles from './snackbar.scss';
 type Props = {|
     onClick?: () => void,
     onCloseClick?: () => void,
-    type: 'error',
+    type: 'error' | 'warning',
     visible: boolean,
 |};
 
 const ICONS = {
     error: 'su-exclamation-triangle',
+    warning: 'su-bell',
 };
 
 export default class Snackbar extends React.Component<Props> {
