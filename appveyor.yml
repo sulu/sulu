@@ -9,15 +9,13 @@ environment:
   MAILER_URL: null://localhost
   SULU_ADMIN_EMAIL:
   PHPCR_TRANSPORT: doctrinedbal
-  DATABASE_URL: mysql://root:Password12!@127.0.0.1/sulu_test
+  DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test
   DATABASE_CHARSET: utf8mb4
   DATABASE_COLLATE: utf8mb4_unicode_ci
   SYMFONY_DEPRECATIONS_HELPER: weak
+  MYSQL_VERSION: 8.0.17
   matrix:
    - PHP_VERSION: 7.2.4
-
-services:
-  - mysql
 
 hosts:
   localhost: 127.0.0.1
@@ -37,15 +35,20 @@ install:
   # disable wuauserv service
   - ps: Set-Service wuauserv -StartupType Manual
 
+  # install configured mysql version and set authentication-plugin for root
+  - choco install mysql --version %MYSQL_VERSION%
+  - cd C:\tools\mysql\current\bin
+  - mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+
   # install composer
   - IF NOT EXIST C:\tools\composer.phar (
         cd C:\tools
         && appveyor DownloadFile https://getcomposer.org/composer.phar
     )
 
-  # install php
+  # install configured php version
   - IF NOT EXIST C:\tools\php (
-        cinst --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
+        choco install --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
     )
 
   # configure PHP and enable extensions.
