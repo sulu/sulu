@@ -78,7 +78,7 @@ class ValidateWebspacesCommand extends Command
         StructureManagerInterface $structureManager,
         WebspaceStructureProvider $structureProvider,
         WebspaceManagerInterface $webspaceManager,
-        ?string $activeTheme = null
+        $activeTheme = null
     ) {
         $this->twig = $twig;
         $this->structureMetadataFactory = $structureMetadataFactory;
