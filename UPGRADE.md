@@ -6,6 +6,15 @@
 
 Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.
 
+### Rename system column of se_roles table to securitySystem for MySQL 8 compatibility
+
+The `system` column of the `se_roles` table was renamed to `securitySystem` to make Sulu compatible with MySQL 8.0.
+This is necessary because `SYTEM` is a SQL keyword since MySQL 8.0.3.
+
+```sql
+ALTER TABLE se_roles CHANGE system securitySystem VARCHAR(60) NOT NULL;
+```
+
 ### Rename ToolbarActionRegistry and AbstractToolbarAction javscript classes
 
 **This change only affects you if you have used a 2.0.0 release before**
