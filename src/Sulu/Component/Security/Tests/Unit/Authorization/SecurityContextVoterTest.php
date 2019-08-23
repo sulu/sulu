@@ -12,7 +12,6 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -89,7 +88,7 @@ class SecurityContextVoterTest extends TestCase
 
     public function setUp()
     {
-        $roleIdReflection = new \ReflectionProperty(BaseRole::class, 'id');
+        $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
         $roleIdReflection->setAccessible(true);
 
         $this->user = new User();

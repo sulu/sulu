@@ -474,7 +474,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      *
      * @param string $email
      *
-     * @return BaseUser
+     * @return self
      */
     public function setEmail($email)
     {
@@ -498,7 +498,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      *
      * @param \DateTime $passwordResetTokenExpiresAt
      *
-     * @return BaseUser
+     * @return self
      */
     public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
     {
@@ -522,7 +522,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      *
      * @param int $passwordResetTokenEmailsSent
      *
-     * @return BaseUser
+     * @return self
      */
     public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
     {
