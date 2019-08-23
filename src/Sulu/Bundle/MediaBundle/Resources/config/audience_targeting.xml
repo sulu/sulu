@@ -3,6 +3,7 @@
     <services>
         <service id="sulu_media.media_audience_targeting_subscriber"
                  class="Sulu\Bundle\MediaBundle\EventListener\MediaAudienceTargetingSubscriber">
+            <argument>%sulu.model.target_group.class%</argument>
             <tag name="doctrine.event_subscriber"/>
         </service>
     </services>
