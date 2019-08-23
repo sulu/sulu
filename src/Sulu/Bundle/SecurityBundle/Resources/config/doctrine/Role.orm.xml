@@ -4,6 +4,19 @@
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <mapped-superclass name="Sulu\Bundle\SecurityBundle\Entity\Role" table="se_roles"
             repository-class="Sulu\Bundle\SecurityBundle\Entity\RoleRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="name" type="string" column="name" length="60" unique="true"/>
+        <field name="system" type="string" column="securitySystem" length="60"/>
+
+        <many-to-one field="securityType" target-entity="Sulu\Bundle\SecurityBundle\Entity\SecurityType"
+                     inversed-by="roles">
+            <join-columns>
+                <join-column name="idSecurityTypes" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
 
         <one-to-many field="permissions" target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role">
             <cascade>
