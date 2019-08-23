@@ -217,7 +217,7 @@ class SecurityAdmin extends Admin
     {
         return [
             'endpoints' => [
-                'contexts' => $this->urlGenerator->generate('cget_contexts'),
+                'contexts' => $this->urlGenerator->generate('sulu_security.cget_contexts'),
             ],
             'resourceKeySecurityContextMapping' => array_filter(array_map(function(array $resource) {
                 return $resource['security_context'] ?? null;

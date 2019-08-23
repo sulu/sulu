@@ -191,14 +191,14 @@ class AdminController
     {
         $endpoints = [
             'config' => $this->urlGenerator->generate('sulu_admin.config'),
-            'items' => $this->urlGenerator->generate('get_items'),
+            'items' => $this->urlGenerator->generate('sulu_page.get_items'),
             'loginCheck' => $this->urlGenerator->generate('sulu_admin.login_check'),
             'logout' => $this->urlGenerator->generate('sulu_admin.logout'),
-            'profileSettings' => $this->urlGenerator->generate('patch_profile_settings'),
+            'profileSettings' => $this->urlGenerator->generate('sulu_security.patch_profile_settings'),
             'reset' => $this->urlGenerator->generate('sulu_security.reset_password.email'),
             'resetResend' => $this->urlGenerator->generate('sulu_security.reset_password.email.resend'),
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
-            'generateUrl' => $this->urlGenerator->generate('post_resourcelocator', ['action' => 'generate']),
+            'generateUrl' => $this->urlGenerator->generate('sulu_page.post_resourcelocator', ['action' => 'generate']),
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
         ];
 

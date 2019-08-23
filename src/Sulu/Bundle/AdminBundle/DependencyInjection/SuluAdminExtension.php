@@ -98,7 +98,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'c?get_.*',
+                        '.+\.c?get_.*',
                         'sulu_admin.metadata',
                     ],
                 ]
@@ -111,12 +111,12 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 'resources' => [
                     'localizations' => [
                         'routes' => [
-                            'list' => 'get_localizations',
+                            'list' => 'sulu_core.get_localizations',
                         ],
                     ],
                     'teasers' => [
                         'routes' => [
-                            'list' => 'get_teasers',
+                            'list' => 'sulu_page.get_teasers',
                         ],
                     ],
                 ],
