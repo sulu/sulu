@@ -20,6 +20,8 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class ExceptionControllerTest extends TestCase
 {
@@ -34,17 +36,12 @@ class ExceptionControllerTest extends TestCase
     private $innerExceptionController;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
     /**
-     * @var \Twig_LoaderInterface
-     */
-    private $twigLoader;
-
-    /**
-     * @var \Twig_ExistsLoaderInterface
+     * @var FilesystemLoader
      */
     private $loader;
 
@@ -60,8 +57,8 @@ class ExceptionControllerTest extends TestCase
 
     public function setUp()
     {
-        $this->twig = $this->prophesize(\Twig_Environment::class);
-        $this->loader = $this->prophesize(\Twig_ExistsLoaderInterface::class);
+        $this->twig = $this->prophesize(Environment::class);
+        $this->loader = $this->prophesize(FilesystemLoader::class);
         $this->twig->getLoader()->willReturn($this->loader->reveal());
 
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);

@@ -16,11 +16,13 @@ use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides snippets by area.
  */
-class SnippetAreaTwigExtension extends \Twig_Extension
+class SnippetAreaTwigExtension extends AbstractExtension
 {
     /**
      * @var DefaultSnippetManagerInterface
@@ -53,7 +55,7 @@ class SnippetAreaTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_snippet_load_by_area', [$this, 'loadByArea']),
+            new TwigFunction('sulu_snippet_load_by_area', [$this, 'loadByArea']),
         ];
     }
 
@@ -94,13 +96,5 @@ class SnippetAreaTwigExtension extends \Twig_Extension
         }
 
         return $snippets[0];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_snippet.area';
     }
 }

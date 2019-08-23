@@ -25,11 +25,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Twig\Environment;
 
 class TargetGroupSubscriberTest extends TestCase
 {
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -50,7 +51,7 @@ class TargetGroupSubscriberTest extends TestCase
 
     public function setUp()
     {
-        $this->twig = $this->prophesize(\Twig_Environment::class);
+        $this->twig = $this->prophesize(Environment::class);
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);

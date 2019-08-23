@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
+use Twig\Extension\ExtensionInterface;
+use Twig\TwigFunction;
 
 class MemoizeTwigExtensionTraitTest extends TestCase
 {
@@ -24,7 +26,7 @@ class MemoizeTwigExtensionTraitTest extends TestCase
     protected $trait;
 
     /**
-     * @var \Twig_ExtensionInterface
+     * @var ExtensionInterface
      */
     protected $extension;
 
@@ -56,7 +58,7 @@ class MemoizeTwigExtensionTraitTest extends TestCase
     protected function setUp()
     {
         $this->memoizeCache = $this->prophesize(MemoizeInterface::class);
-        $this->extension = $this->prophesize(\Twig_ExtensionInterface::class);
+        $this->extension = $this->prophesize(ExtensionInterface::class);
 
         $this->trait = $this->getMockForTrait(MemoizeTwigExtensionTrait::class);
 
@@ -76,13 +78,13 @@ class MemoizeTwigExtensionTraitTest extends TestCase
     public function testGetFunctions()
     {
         $before = [
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'sulu_content_load',
                 function() {
                     return 1;
                 }
             ),
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'sulu_content_load_parent',
                 function() {
                     return 2;
@@ -104,13 +106,13 @@ class MemoizeTwigExtensionTraitTest extends TestCase
                 }
             );
 
-        /** @var \Twig_SimpleFunction[] $result */
+        /** @var TwigFunction[] $result */
         $result = $this->trait->getFunctions();
 
-        $this->assertInstanceOf(\Twig_SimpleFunction::class, $result[0]);
+        $this->assertInstanceOf(TwigFunction::class, $result[0]);
         $this->assertEquals('sulu_content_load', $result[0]->getName());
 
-        $this->assertInstanceOf(\Twig_SimpleFunction::class, $result[1]);
+        $this->assertInstanceOf(TwigFunction::class, $result[1]);
         $this->assertEquals('sulu_content_load_parent', $result[1]->getName());
 
         $this->assertEquals(1, call_user_func($result[0]->getCallable()));

@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Twig\Error\Error;
 
 /**
  * Renders preview responses.
@@ -188,7 +189,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
         try {
             $response = $this->handle($request);
-        } catch (\Twig_Error $e) {
+        } catch (Error $e) {
             // dev/test only: display also the file and line which was causing the error
             // for better debugging and faster development
             if (in_array($this->environment, ['dev', 'test'])) {

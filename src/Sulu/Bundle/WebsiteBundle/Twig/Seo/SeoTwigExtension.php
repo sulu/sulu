@@ -14,11 +14,14 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Seo;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * This twig extension provides support for the SEO functionality provided by Sulu.
  */
-class SeoTwigExtension extends \Twig_Extension
+class SeoTwigExtension extends AbstractExtension
 {
     /**
      * @var RequestAnalyzerInterface
@@ -50,18 +53,10 @@ class SeoTwigExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'sulu_seo';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_seo', [$this, 'renderSeoTags'], ['needs_environment' => true]),
+            new TwigFunction('sulu_seo', [$this, 'renderSeoTags'], ['needs_environment' => true]),
         ];
     }
 
@@ -72,7 +67,7 @@ class SeoTwigExtension extends \Twig_Extension
      * @deprecated use the twig include function to render the seo
      */
     public function renderSeoTags(
-        \Twig_Environment $twig,
+        Environment $twig,
         array $seoExtension,
         array $content,
         array $urls,

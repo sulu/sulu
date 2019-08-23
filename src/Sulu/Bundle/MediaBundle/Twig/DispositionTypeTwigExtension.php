@@ -13,11 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Twig;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension for content form generation.
  */
-class DispositionTypeTwigExtension extends \Twig_Extension
+class DispositionTypeTwigExtension extends AbstractExtension
 {
     /**
      * Returns an array of possible function in this extension.
@@ -27,7 +29,7 @@ class DispositionTypeTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_get_media_url', [$this, 'getMediaUrl']),
+            new TwigFunction('sulu_get_media_url', [$this, 'getMediaUrl']),
         ];
     }
 
@@ -50,15 +52,5 @@ class DispositionTypeTwigExtension extends \Twig_Extension
         }
 
         return $url;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'media_disposition_type';
     }
 }

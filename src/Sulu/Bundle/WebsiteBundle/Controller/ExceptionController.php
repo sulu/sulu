@@ -18,6 +18,7 @@ use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Twig\Environment;
 
 /**
  * Custom exception controller.
@@ -40,7 +41,7 @@ class ExceptionController
     private $parameterResolver;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -50,17 +51,13 @@ class ExceptionController
     private $debug;
 
     /**
-     * @param BaseExceptionController $exceptionController
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param ParameterResolverInterface $parameterResolver
-     * @param \Twig_Environment $twig
      * @param bool $debug
      */
     public function __construct(
         BaseExceptionController $exceptionController,
         RequestAnalyzerInterface $requestAnalyzer,
         ParameterResolverInterface $parameterResolver,
-        \Twig_Environment $twig,
+        Environment $twig,
         $debug
     ) {
         $this->exceptionController = $exceptionController;

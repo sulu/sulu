@@ -13,11 +13,13 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * provides the content_path function to generate real urls for frontend.
  */
-class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInterface
+class ContentPathTwigExtension extends AbstractExtension implements ContentPathInterface
 {
     /**
      * @var RequestAnalyzerInterface
@@ -50,8 +52,8 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_content_path', [$this, 'getContentPath']),
-            new \Twig_SimpleFunction('sulu_content_root_path', [$this, 'getContentRootPath']),
+            new TwigFunction('sulu_content_path', [$this, 'getContentPath']),
+            new TwigFunction('sulu_content_root_path', [$this, 'getContentRootPath']),
         ];
     }
 
@@ -114,13 +116,5 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     public function getContentRootPath($full = false)
     {
         return $this->getContentPath('/');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_website_content_path';
     }
 }

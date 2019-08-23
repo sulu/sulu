@@ -13,11 +13,12 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Provides memoized navigation functions.
  */
-class MemoizedNavigationTwigExtension extends \Twig_Extension
+class MemoizedNavigationTwigExtension extends AbstractExtension
 {
     use MemoizeTwigExtensionTrait;
 
@@ -31,13 +32,5 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->extension->getName();
     }
 }

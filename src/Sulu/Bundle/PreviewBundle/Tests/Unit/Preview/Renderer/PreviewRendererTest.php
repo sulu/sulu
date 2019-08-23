@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Twig\Error\RuntimeError;
 
 class PreviewRendererTest extends TestCase
 {
@@ -393,7 +394,7 @@ class PreviewRendererTest extends TestCase
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
-            ->shouldBeCalled()->willThrow(new \Twig_Error_Runtime('Test error'));
+            ->shouldBeCalled()->willThrow(new RuntimeError('Test error'));
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);

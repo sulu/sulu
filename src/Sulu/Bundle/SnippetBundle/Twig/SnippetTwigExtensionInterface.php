@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Twig;
 
+use Twig\Extension\ExtensionInterface;
+
 /**
  * Provides Twig functions to handle snippets.
  */
-interface SnippetTwigExtensionInterface extends \Twig_ExtensionInterface
+interface SnippetTwigExtensionInterface extends ExtensionInterface
 {
     /**
      * Returns snippet.

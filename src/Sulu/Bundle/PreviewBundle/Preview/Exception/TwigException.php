@@ -11,19 +11,20 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
+use Twig\Error\Error;
+
 /**
  * This exception will be thrown when preview rendering fails.
  */
 class TwigException extends PreviewRendererException
 {
     /**
-     * @param \Twig_Error $exception
      * @param int $object
      * @param mixed $id
      * @param string $webspaceKey
      * @param string $locale
      */
-    public function __construct(\Twig_Error $exception, $object, $id, $webspaceKey, $locale)
+    public function __construct(Error $exception, $object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
             $exception->getMessage(),

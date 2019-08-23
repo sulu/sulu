@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Twig\Environment;
 
 /**
  * This controller handles the search for the website.
@@ -42,21 +43,15 @@ class WebsiteSearchController
     private $parameterResolver;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param ParameterResolverInterface $parameterResolver
-     * @param \Twig_Environment $twig
-     */
     public function __construct(
         SearchManagerInterface $searchManager,
         RequestAnalyzerInterface $requestAnalyzer,
         ParameterResolverInterface $parameterResolver,
-        \Twig_Environment $twig
+        Environment $twig
     ) {
         $this->searchManager = $searchManager;
         $this->requestAnalyzer = $requestAnalyzer;

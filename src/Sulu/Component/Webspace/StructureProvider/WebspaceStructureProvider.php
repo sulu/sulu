@@ -14,6 +14,8 @@ namespace Sulu\Component\Webspace\StructureProvider;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
 
 /**
  * Provide templates which are implemented in a single webspace.
@@ -21,7 +23,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 class WebspaceStructureProvider implements WebspaceStructureProviderInterface
 {
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -35,13 +37,8 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
      */
     protected $cache;
 
-    /**
-     * @param \Twig_Environment $twig
-     * @param StructureManagerInterface $structureManager
-     * @param Cache $cache
-     */
     public function __construct(
-        \Twig_Environment $twig,
+        Environment $twig,
         StructureManagerInterface $structureManager,
         Cache $cache
     ) {
@@ -50,9 +47,6 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $this->cache = $cache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructures($webspaceKey)
     {
         if (!$this->cache->contains($webspaceKey)) {
@@ -112,7 +106,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
             // cast possible TemplateReferenceInterface to string because the
             // EngineInterface supports them but Twig_LoaderInterface does not
             $loader->getSource($template)->getCode();
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             return false;
         }
 

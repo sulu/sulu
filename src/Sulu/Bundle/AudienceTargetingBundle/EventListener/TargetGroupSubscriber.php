@@ -21,11 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Twig\Environment;
 
 class TargetGroupSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -90,11 +91,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     private $visitorSessionCookie;
 
     /**
-     * @param \Twig_Environment $twig
      * @param bool $preview
-     * @param TargetGroupStoreInterface $targetGroupStore
-     * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
-     * @param TargetGroupRepositoryInterface $targetGroupRepository
      * @param string $targetGroupUrl
      * @param string $targetGroupHitUrl
      * @param string $urlHeader
@@ -105,7 +102,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      * @param string $visitorSessionCookie
      */
     public function __construct(
-        \Twig_Environment $twig,
+        Environment $twig,
         $preview,
         TargetGroupStoreInterface $targetGroupStore,
         TargetGroupEvaluatorInterface $targetGroupEvaluator,

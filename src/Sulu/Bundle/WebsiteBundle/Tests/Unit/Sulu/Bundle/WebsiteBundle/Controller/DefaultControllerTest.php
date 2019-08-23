@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class DefaultControllerTest extends TestCase
 {
@@ -48,8 +50,8 @@ class DefaultControllerTest extends TestCase
         $this->request = $this->prophesize(Request::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
-        $this->twig = $this->prophesize(\Twig_Environment::class);
-        $this->twigLoader = $this->prophesize(\Twig_Loader_Filesystem::class);
+        $this->twig = $this->prophesize(Environment::class);
+        $this->twigLoader = $this->prophesize(FilesystemLoader::class);
         $this->twig->getLoader()->willReturn($this->twigLoader->reveal());
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

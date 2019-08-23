@@ -22,6 +22,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class WebsiteSearchControllerTest extends TestCase
 {
@@ -41,12 +43,12 @@ class WebsiteSearchControllerTest extends TestCase
     private $parameterResolver;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
     /**
-     * @var \Twig_LoaderInterface
+     * @var FilesystemLoader
      */
     private $twigLoader;
 
@@ -60,8 +62,8 @@ class WebsiteSearchControllerTest extends TestCase
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->parameterResolver = $this->prophesize(ParameterResolverInterface::class);
-        $this->twig = $this->prophesize(\Twig_Environment::class);
-        $this->twigLoader = $this->prophesize(\Twig_Loader_Filesystem::class);
+        $this->twig = $this->prophesize(Environment::class);
+        $this->twigLoader = $this->prophesize(FilesystemLoader::class);
         $this->twig->getLoader()->willReturn($this->twigLoader->reveal());
 
         $this->websiteSearchController = new WebsiteSearchController(

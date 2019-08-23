@@ -15,11 +15,13 @@ use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension to handle medias in frontend.
  */
-class MediaTwigExtension extends \Twig_Extension
+class MediaTwigExtension extends AbstractExtension
 {
     /**
      * @var MediaManagerInterface
@@ -40,8 +42,8 @@ class MediaTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_resolve_media', [$this, 'resolveMediaFunction']),
-            new \Twig_SimpleFunction('sulu_resolve_medias', [$this, 'resolveMediasFunction']),
+            new TwigFunction('sulu_resolve_media', [$this, 'resolveMediaFunction']),
+            new TwigFunction('sulu_resolve_medias', [$this, 'resolveMediasFunction']),
         ];
     }
 
@@ -121,13 +123,5 @@ class MediaTwigExtension extends \Twig_Extension
         }
 
         return;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_media';
     }
 }
