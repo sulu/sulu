@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route as HateoasRoute;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
