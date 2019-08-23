@@ -24,6 +24,7 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Input\InputInterface;
@@ -104,7 +105,7 @@ class MaintainResourceLocatorCommandTest extends TestCase
         $webspace1->setKey('sulu_io');
         $webspace1->addLocalization(new Localization('de'));
 
-        $this->webspaceManager->getWebspaceCollection()->willReturn([$webspace1]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1]));
 
         $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
         $this->sessionManager->getRoutePath('sulu_io', 'de')->willReturn('/cmf/sulu_io/routes/de');

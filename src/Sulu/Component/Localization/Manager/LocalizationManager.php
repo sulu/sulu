@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Localization\Manager;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 /**
@@ -25,10 +26,7 @@ class LocalizationManager implements LocalizationManagerInterface
      */
     private $localizationProviders = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getLocalizations()
+    public function getLocalizations(): array
     {
         $localizations = [];
 
@@ -41,9 +39,18 @@ class LocalizationManager implements LocalizationManagerInterface
         return $localizations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getLocales(): array
+    {
+        return array_values(
+            array_map(
+                function(Localization $localization) {
+                    return $localization->getLocale();
+                },
+                $this->getLocalizations()
+            )
+        );
+    }
+
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider)
     {
         $this->localizationProviders[] = $localizationProvider;

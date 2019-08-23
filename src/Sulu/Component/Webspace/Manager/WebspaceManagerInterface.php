@@ -11,165 +11,106 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 
-/**
- * Defines the methods for the WebspaceManager.
- */
 interface WebspaceManagerInterface extends LocalizationProviderInterface
 {
-    /**
-     * Returns the webspace with the given key.
-     *
-     * @param $key string The key to search for
-     *
-     * @return Webspace|null
-     */
-    public function findWebspaceByKey($key);
+    public function findWebspaceByKey(?string $key): ?Webspace;
 
-    /**
-     * Returns the portal with the given key.
-     *
-     * @param string $key The key to search for
-     *
-     * @return Portal|null
-     */
-    public function findPortalByKey($key);
+    public function findPortalByKey(?string $key): ?Portal;
 
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
-     *
-     * @param string $url The url to search for
-     * @param string $environment The environment in which the url should be searched
-     *
-     * @return PortalInformation|null
      */
-    public function findPortalInformationByUrl($url, $environment);
+    public function findPortalInformationByUrl(string $url, string $environment): ?PortalInformation;
 
     /**
      * Returns all portal which matches the given url (which has not necessarily to be the main url).
      *
-     * @param string $url The url to search for
-     * @param string $environment The environment in which the url should be searched
-     *
      * @return PortalInformation[]
      */
-    public function findPortalInformationsByUrl($url, $environment);
+    public function findPortalInformationsByUrl(string $url, string $environment): array;
 
     /**
      * Returns all portal which matches the given webspace-key and locale.
      *
-     * @param string $webspaceKey The webspace-key which the portal should match
-     * @param string $locale The locale which the portal should match
-     * @param string $environment The environment in which the url should be searched
-     *
      * @return PortalInformation[]
      */
-    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment);
+    public function findPortalInformationsByWebspaceKeyAndLocale(
+        string $webspaceKey,
+        string $locale,
+        string $environment
+    ): array;
 
     /**
      * Returns all portal which matches the given portal-key and locale.
      *
-     * @param string $portalKey The portal-key which the portal should match
-     * @param string $locale The locale which the portal should match
-     * @param string $environment The environment in which the url should be searched
-     *
      * @return PortalInformation[]
      */
-    public function findPortalInformationsByPortalKeyAndLocale($portalKey, $locale, $environment);
+    public function findPortalInformationsByPortalKeyAndLocale(
+        string $portalKey,
+        string $locale,
+        string $environment
+    ): array;
 
     /**
      * Returns all possible urls for resourcelocator.
      *
-     * @param string $resourceLocator
-     * @param string $environment
-     * @param string $languageCode
-     * @param null|string $webspaceKey
-     * @param null|string $domain
-     * @param string $scheme
-     *
-     * @return array
+     * @return string[]
      */
     public function findUrlsByResourceLocator(
-        $resourceLocator,
-        $environment,
-        $languageCode,
-        $webspaceKey = null,
-        $domain = null,
-        $scheme = 'http'
-    );
+        string $resourceLocator,
+        string $environment,
+        string $languageCode,
+        ?string $webspaceKey = null,
+        ?string $domain = null,
+        string $scheme = 'http'
+    ): array;
 
     /**
      * Returns the main url for resourcelocator.
-     *
-     * @param string $resourceLocator
-     * @param string $environment
-     * @param string $languageCode
-     * @param null|string $webspaceKey
-     * @param null|string $domain
-     * @param string $scheme
-     *
-     * @return string
      */
     public function findUrlByResourceLocator(
-        $resourceLocator,
-        $environment,
-        $languageCode,
-        $webspaceKey = null,
-        $domain = null,
-        $scheme = 'http'
-    );
+        ?string $resourceLocator,
+        string $environment,
+        string $languageCode,
+        ?string $webspaceKey = null,
+        ?string $domain = null,
+        string $scheme = 'http'
+    ): ?string;
 
     /**
-     * Returns all portals managed by this webspace manager.
-     *
      * @return Portal[]
      */
-    public function getPortals();
+    public function getPortals(): array;
 
     /**
-     * Returns all URLs in the given environment managed by this WebspaceManager.
-     *
-     * @param string $environment
-     *
      * @return string[]
      */
-    public function getUrls($environment);
+    public function getUrls(string $environment): array;
 
     /**
-     * Returns the portal informations managed by this WebspaceManger.
-     *
-     * @param string $environment
-     *
      * @return PortalInformation[]
      */
-    public function getPortalInformations($environment);
+    public function getPortalInformations(string $environment): array;
 
     /**
-     * Returns the portal informations for the given webspace managed by this WebspaceManager.
-     *
-     * @param string $environment
-     *
      * @return PortalInformation[]
      */
-    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey);
+    public function getPortalInformationsByWebspaceKey(string $environment, string $webspaceKey): array;
 
-    /**
-     * Returns all the webspaces managed by this specific instance.
-     *
-     * @return WebspaceCollection
-     */
-    public function getWebspaceCollection();
+    public function getWebspaceCollection(): WebspaceCollection;
 
     /**
      * For all available webspaces provide all their possible locales. Moreover
      * for each website the default locale is provided. The default locales of
      * the webspaces are always on the first position.
      *
-     * @return array
+     * @return Localization[]
      */
-    public function getAllLocalesByWebspaces();
+    public function getAllLocalesByWebspaces(): array;
 }

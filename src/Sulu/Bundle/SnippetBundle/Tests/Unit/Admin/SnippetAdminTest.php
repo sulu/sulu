@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -68,9 +67,7 @@ class SnippetAdminTest extends TestCase
         $this->securityChecker->hasPermission('sulu.global.snippets', 'delete')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'view')->willReturn(true);
 
-        $this->webspaceManager->getAllLocalizations()->willReturn(array_map(function($localization) {
-            return new Localization($localization);
-        }, $locales));
+        $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
         $routes = $snippetAdmin->getRoutes();
         $listRoute = $routes[0];

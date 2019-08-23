@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Build\NodeOrderBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -92,7 +93,7 @@ class NodeOrderBuilderTest extends TestCase
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
-        $this->webspaceManager->getWebspaceCollection()->willReturn([$webspace]);
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace]));
 
         $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
 

@@ -21,16 +21,14 @@ use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 interface LocalizationManagerInterface
 {
     /**
-     * Returns all the localizations, which are available in this system.
-     *
      * @return Localization[]
      */
-    public function getLocalizations();
+    public function getLocalizations(): array;
 
     /**
-     * Adds another LocalizationProvider to the manager.
-     *
-     * @param LocalizationProviderInterface $localizationProvider
+     * @return string[]
      */
+    public function getLocales(): array;
+
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
 }

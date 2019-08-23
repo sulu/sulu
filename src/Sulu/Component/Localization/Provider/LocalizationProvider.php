@@ -13,28 +13,22 @@ namespace Sulu\Component\Localization\Provider;
 
 use Sulu\Component\Localization\Localization;
 
-/**
- * Basic localization provider.
- */
 class LocalizationProvider implements LocalizationProviderInterface
 {
     /**
-     * @var array
+     * @var string[]
      */
     private $locales;
 
     /**
-     * @param array $locales
+     * @param string[] $locales
      */
     public function __construct(array $locales)
     {
         $this->locales = $locales;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllLocalizations()
+    public function getAllLocalizations(): array
     {
         $result = [];
         foreach ($this->locales as $locale) {
@@ -42,6 +36,11 @@ class LocalizationProvider implements LocalizationProviderInterface
         }
 
         return $result;
+    }
+
+    public function getAllLocales(): array
+    {
+        return $this->locales;
     }
 
     /**

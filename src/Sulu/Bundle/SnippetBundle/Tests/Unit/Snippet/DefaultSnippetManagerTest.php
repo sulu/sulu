@@ -20,6 +20,7 @@ use Sulu\Bundle\SnippetBundle\Snippet\SnippetNotFoundException;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -243,7 +244,7 @@ class DefaultSnippetManagerTest extends TestCase
         $webspace2 = new Webspace();
         $webspace2->setKey('test-2');
 
-        $webspaceManager->getWebspaceCollection()->willReturn([$webspace1, $webspace2]);
+        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
         $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
             ['test-1' => '123', 'test-2' => '456']
         );

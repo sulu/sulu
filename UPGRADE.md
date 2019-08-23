@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Added Type-Hints
+
+We added type-hints to following interfaces:
+
+* `Sulu\Component\Localization\Manager\LocalizationManagerInterface`
+* `Sulu\Component\Webspace\Manager\WebspaceManagerInterface`
+* `Sulu\Component\Localization\Provider\LocalizationProviderInterface`
+
 ### Removed deprecated commands
 
 Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.

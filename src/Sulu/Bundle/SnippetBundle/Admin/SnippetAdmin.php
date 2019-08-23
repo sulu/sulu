@@ -17,7 +17,6 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -101,14 +100,7 @@ class SnippetAdmin extends Admin
      */
     public function getRoutes(): array
     {
-        $snippetLocales = array_values(
-            array_map(
-                function(Localization $localization) {
-                    return $localization->getLocale();
-                },
-                $this->webspaceManager->getAllLocalizations()
-            )
-        );
+        $snippetLocales = $this->webspaceManager->getAllLocales();
 
         $formToolbarActionsWithType = [];
         $formToolbarActionsWithoutType = [];
