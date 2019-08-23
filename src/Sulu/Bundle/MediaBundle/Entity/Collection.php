@@ -14,12 +14,73 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Collection.
  */
-class Collection extends BaseCollection
+class Collection implements CollectionInterface
 {
+    /**
+     * @var int
+     */
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $style;
+
+    /**
+     * @var int
+     * @Exclude
+     */
+    protected $lft;
+
+    /**
+     * @var int
+     * @Exclude
+     */
+    protected $rgt;
+
+    /**
+     * @var int
+     * @Exclude
+     */
+    protected $depth;
+
+    /**
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime
+     */
+    protected $changed;
+
+    /**
+     * @var CollectionType
+     */
+    protected $type;
+
+    /**
+     * @var UserInterface
+     * @Exclude
+     */
+    protected $changer;
+
+    /**
+     * @var UserInterface
+     * @Exclude
+     */
+    protected $creator;
+
+    /**
+     * @var string
+     */
+    private $key;
+
     /**
      * @var DoctrineCollection|CollectionMeta[]
      */
@@ -51,6 +112,228 @@ class Collection extends BaseCollection
         $this->meta = new ArrayCollection();
         $this->media = new ArrayCollection();
         $this->children = new ArrayCollection();
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set changer.
+     *
+     * @param UserInterface $changer
+     *
+     * @return CollectionInterface
+     */
+    public function setChanger(UserInterface $changer = null)
+    {
+        $this->changer = $changer;
+
+        return $this;
+    }
+
+    /**
+     * Get changer.
+     *
+     * @return UserInterface
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * Set creator.
+     *
+     * @param UserInterface $creator
+     *
+     * @return CollectionInterface
+     */
+    public function setCreator(UserInterface $creator = null)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator.
+     *
+     * @return UserInterface
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Set style.
+     *
+     * @param string $style
+     *
+     * @return CollectionInterface
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
+
+        return $this;
+    }
+
+    /**
+     * Get style.
+     *
+     * @return string
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+    /**
+     * Set lft.
+     *
+     * @param int $lft
+     *
+     * @return CollectionInterface
+     */
+    public function setLft($lft)
+    {
+        $this->lft = $lft;
+
+        return $this;
+    }
+
+    /**
+     * Get lft.
+     *
+     * @return int
+     */
+    public function getLft()
+    {
+        return $this->lft;
+    }
+
+    /**
+     * Set rgt.
+     *
+     * @param int $rgt
+     *
+     * @return CollectionInterface
+     */
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+
+        return $this;
+    }
+
+    /**
+     * Get rgt.
+     *
+     * @return int
+     */
+    public function getRgt()
+    {
+        return $this->rgt;
+    }
+
+    /**
+     * Set depth.
+     *
+     * @param int $depth
+     *
+     * @return CollectionInterface
+     */
+    public function setDepth($depth)
+    {
+        $this->depth = $depth;
+
+        return $this;
+    }
+
+    /**
+     * Get depth.
+     *
+     * @return int
+     */
+    public function getDepth()
+    {
+        return $this->depth;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Get changed.
+     *
+     * @return \DateTime
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * Set type.
+     *
+     * @param CollectionType $type
+     *
+     * @return CollectionInterface
+     */
+    public function setType(CollectionType $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type.
+     *
+     * @return CollectionType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Get key.
+     *
+     * @param string $key
+     *
+     * @return CollectionInterface
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
