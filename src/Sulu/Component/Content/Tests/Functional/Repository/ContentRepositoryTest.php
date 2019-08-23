@@ -99,7 +99,8 @@ class ContentRepositoryTest extends SuluTestCase
             $this->webspaceManager,
             $this->localizationFinder,
             $this->structureManager,
-            $this->nodeHelper
+            $this->nodeHelper,
+            ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8]
         );
 
         $this->initPhpcr();
@@ -719,7 +720,89 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertEquals(
-            [1 => ['edit' => true], 2 => ['view' => true, 'archive' => true]],
+            [
+                1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                2 => ['view' => true, 'add' => false, 'edit' => false, 'delete' => false, 'archive' => true],
+            ],
+            $result->getPermissions()
+        );
+    }
+
+    public function testFindWithoutPermissions()
+    {
+        $role1 = $this->prophesize(RoleInterface::class);
+        $role1->getId()->willReturn(1);
+        $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
+        $role2 = $this->prophesize(RoleInterface::class);
+        $role2->getId()->willReturn(2);
+        $role2->getIdentifier()->willReturn('ROLE_SULU_ROLE-2');
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+
+        $page = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null
+        );
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
+        );
+
+        $this->assertEquals(
+            [],
+            $result->getPermissions()
+        );
+    }
+
+    public function testFindWithPermissionsNotGranted()
+    {
+        $packageVersion = $this->getPackageVersion('jackalope/jackalope');
+        if (version_compare($packageVersion, '1.3.0') < 0) {
+            $this->markTestSkipped('The jackalope/jackalope version below 1.3.0 has a bug causing this test to fail');
+        }
+
+        $role1 = $this->prophesize(RoleInterface::class);
+        $role1->getId()->willReturn(1);
+        $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
+        $role2 = $this->prophesize(RoleInterface::class);
+        $role2->getId()->willReturn(2);
+        $role2->getIdentifier()->willReturn('ROLE_SULU_ROLE-2');
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+
+        $page = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                1 => ['edit' => false],
+                2 => ['view' => false, 'archive' => false],
+                3 => ['add' => false],
+            ]
+        );
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
+        );
+
+        $this->assertEquals(
+            [
+                1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
+                2 => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
+            ],
             $result->getPermissions()
         );
     }
@@ -1035,7 +1118,7 @@ class ContentRepositoryTest extends SuluTestCase
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [])
+    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = null)
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
@@ -1057,7 +1140,9 @@ class ContentRepositoryTest extends SuluTestCase
         $document->setRedirectType(RedirectType::NONE);
         $document->setShadowLocaleEnabled(false);
         $document->getStructure()->bind($data);
-        $document->setPermissions($permissions);
+        if ($permissions) {
+            $document->setPermissions($permissions);
+        }
         $this->documentManager->persist(
             $document,
             $locale,
@@ -1132,5 +1217,18 @@ class ContentRepositoryTest extends SuluTestCase
         $this->documentManager->flush();
 
         return $document;
+    }
+
+    private function getPackageVersion($packageName)
+    {
+        $this->composerLock = json_decode(
+            file_get_contents($this->getContainer()->getParameter('kernel.root_dir') . '/../../composer.lock')
+        );
+
+        foreach ($this->composerLock->packages as $package) {
+            if ($package->name === $packageName) {
+                return $package->version;
+            }
+        }
     }
 }
