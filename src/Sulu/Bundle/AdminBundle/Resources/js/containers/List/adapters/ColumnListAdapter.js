@@ -109,16 +109,25 @@ class ColumnListAdapter extends AbstractAdapter {
         const isGhost = item.type && item.type.name === 'ghost';
 
         const buttons = [];
+
+        const {
+            _permissions: {
+                view: viewPermission = true,
+            } = {},
+        } = item;
+
         if (onItemClick) {
             if (isGhost) {
                 buttons.push({
                     icon: 'su-plus-circle',
                     onClick: onItemClick,
+                    visible: viewPermission,
                 });
             } else {
                 buttons.push({
                     icon: 'su-pen',
                     onClick: onItemClick,
+                    visible: viewPermission,
                 });
             }
         }

@@ -99,6 +99,9 @@ test('Render different kind of data with edit button', () => {
                 type: {
                     name: 'shadow',
                 },
+                _permissions: {
+                    view: false,
+                },
             },
         ],
         [],

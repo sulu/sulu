@@ -1,28 +1,44 @@
 // @flow
 import React from 'react';
+import classNames from 'classnames';
 import Icon from '../Icon';
-import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
 
 type Props = {|
-    config: ItemButtonConfig,
+    icon: string,
     id: string | number,
+    onClick: (id: string | number) => void,
+    visible: boolean,
 |};
 
 export default class ItemButton extends React.Component<Props> {
-    handleClick = () => {
-        const {id, config} = this.props;
+    static defaultProps = {
+        visible: true,
+    };
 
-        if (!config.onClick) {
+    handleClick = () => {
+        const {id, onClick} = this.props;
+
+        if (!onClick) {
             return;
         }
 
-        config.onClick(id);
+        onClick(id);
     };
 
     render() {
+        const {
+            icon,
+            visible,
+        } = this.props;
+
+        const iconClass = classNames({
+            [itemStyles.button]: true,
+            [itemStyles.visible]: visible,
+        });
+
         return (
-            <Icon className={itemStyles.button} name={this.props.config.icon} onClick={this.handleClick} />
+            <Icon className={iconClass} name={icon} onClick={this.handleClick} />
         );
     }
 }

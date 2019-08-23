@@ -757,7 +757,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />
@@ -810,7 +810,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />
@@ -913,7 +913,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />
@@ -966,7 +966,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />
@@ -1029,7 +1029,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />
@@ -1082,7 +1082,7 @@ exports[`The ColumnList component should render without  1`] = `
           >
             <span
               aria-label="fa-heart"
-              class="fa fa-heart clickable button"
+              class="fa fa-heart clickable button visible"
               role="button"
               tabindex="0"
             />

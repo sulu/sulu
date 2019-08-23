@@ -57,6 +57,7 @@ test('The ColumnList component should render without ', () => {
         {
             icon: 'fa-pencil',
             onClick: () => {},
+            visible: false,
         },
     ];
 

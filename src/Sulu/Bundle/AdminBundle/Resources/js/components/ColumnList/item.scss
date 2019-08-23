@@ -50,6 +50,11 @@ $itemHeight: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    visibility: inherit;
+
+    &:not(.visible) {
+        visibility: hidden;
+    }
 }
 
 .buttons {
