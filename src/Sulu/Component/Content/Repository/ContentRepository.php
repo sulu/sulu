@@ -504,12 +504,7 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function getLocales()
     {
-        return array_map(
-            function(Localization $localization) {
-                return $localization->getLocale();
-            },
-            $this->webspaceManager->getAllLocalizations()
-        );
+        return $this->webspaceManager->getAllLocales();
     }
 
     /**

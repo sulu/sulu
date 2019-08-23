@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
@@ -49,41 +50,32 @@ class WebspaceManager implements WebspaceManagerInterface
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
-        $options = []
+        array $options = []
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
         $this->setOptions($options);
     }
 
-    /**
-     * Returns the webspace with the given key.
-     *
-     * @param $key string The key to search for
-     *
-     * @return Webspace|null
-     */
-    public function findWebspaceByKey($key)
+    public function findWebspaceByKey(?string $key): ?Webspace
     {
+        if (!$key) {
+            return null;
+        }
+
         return $this->getWebspaceCollection()->getWebspace($key);
     }
 
-    /**
-     * Returns the portal with the given key.
-     *
-     * @param string $key The key to search for
-     *
-     * @return Portal|null
-     */
-    public function findPortalByKey($key)
+    public function findPortalByKey(?string $key): ?Portal
     {
+        if (!$key) {
+            return null;
+        }
+
         return $this->getWebspaceCollection()->getPortal($key);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findPortalInformationByUrl($url, $environment)
+    public function findPortalInformationByUrl(string $url, string $environment): ?PortalInformation
     {
         $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portalInformations as $portalInformation) {
@@ -92,13 +84,10 @@ class WebspaceManager implements WebspaceManagerInterface
             }
         }
 
-        return;
+        return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findPortalInformationsByUrl($url, $environment)
+    public function findPortalInformationsByUrl(string $url, string $environment): array
     {
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
@@ -108,11 +97,11 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment)
-    {
+    public function findPortalInformationsByWebspaceKeyAndLocale(
+        string $webspaceKey,
+        string $locale,
+        string $environment
+    ): array {
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
@@ -122,11 +111,11 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findPortalInformationsByPortalKeyAndLocale($portalKey, $locale, $environment)
-    {
+    public function findPortalInformationsByPortalKeyAndLocale(
+        string $portalKey,
+        string $locale,
+        string $environment
+    ): array {
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
@@ -137,17 +126,14 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUrlsByResourceLocator(
-        $resourceLocator,
-        $environment,
-        $languageCode,
-        $webspaceKey = null,
-        $domain = null,
-        $scheme = 'http'
-    ) {
+        string $resourceLocator,
+        string $environment,
+        string $languageCode,
+        ?string $webspaceKey = null,
+        ?string $domain = null,
+        string $scheme = 'http'
+    ): array {
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
@@ -165,17 +151,14 @@ class WebspaceManager implements WebspaceManagerInterface
         return $urls;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUrlByResourceLocator(
-        $resourceLocator,
-        $environment,
-        $languageCode,
-        $webspaceKey = null,
-        $domain = null,
-        $scheme = 'http'
-    ) {
+        ?string $resourceLocator,
+        string $environment,
+        string $languageCode,
+        ?string $webspaceKey = null,
+        ?string $domain = null,
+        string $scheme = 'http'
+    ): ?string {
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
@@ -201,21 +184,15 @@ class WebspaceManager implements WebspaceManagerInterface
             }
         }
 
-        return reset($urls);
+        return reset($urls) ?: null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPortals()
+    public function getPortals(): array
     {
         return $this->getWebspaceCollection()->getPortals();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getUrls($environment)
+    public function getUrls(string $environment): array
     {
         $urls = [];
 
@@ -229,15 +206,12 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPortalInformations($environment)
+    public function getPortalInformations(string $environment): array
     {
         return $this->getWebspaceCollection()->getPortalInformations($environment);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey)
+    public function getPortalInformationsByWebspaceKey(string $environment, string $webspaceKey): array
     {
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
@@ -247,10 +221,7 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllLocalizations()
+    public function getAllLocalizations(): array
     {
         $localizations = [];
 
@@ -264,10 +235,19 @@ class WebspaceManager implements WebspaceManagerInterface
         return $localizations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllLocalesByWebspaces()
+    public function getAllLocales(): array
+    {
+        return array_values(
+            array_map(
+                function(Localization $localization) {
+                    return $localization->getLocale();
+                },
+                $this->getAllLocalizations()
+            )
+        );
+    }
+
+    public function getAllLocalesByWebspaces(): array
     {
         $webspaces = [];
         foreach ($this->getWebspaceCollection() as $webspace) {
@@ -286,12 +266,7 @@ class WebspaceManager implements WebspaceManagerInterface
         return $webspaces;
     }
 
-    /**
-     * Returns all the webspaces managed by this specific instance.
-     *
-     * @return WebspaceCollection
-     */
-    public function getWebspaceCollection()
+    public function getWebspaceCollection(): WebspaceCollection
     {
         if (null === $this->webspaceCollection) {
             $class = $this->options['cache_class'];

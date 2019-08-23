@@ -15,7 +15,6 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -75,14 +74,7 @@ class CategoryAdmin extends Admin
 
     public function getRoutes(): array
     {
-        $locales = array_values(
-            array_map(
-                function(Localization $localization) {
-                    return $localization->getLocale();
-                },
-                $this->localizationManager->getLocalizations()
-            )
-        );
+        $locales = $this->localizationManager->getLocales();
 
         $formToolbarActions = [];
         $listToolbarActions = [];

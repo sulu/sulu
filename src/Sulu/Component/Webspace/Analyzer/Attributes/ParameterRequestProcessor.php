@@ -41,7 +41,7 @@ class ParameterRequestProcessor implements RequestProcessorInterface
      */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        if (!$request->get('_locale') && !$request->get('_portal')) {
+        if (!$request->get('_locale') || !$request->get('_portal')) {
             return new RequestAttributes();
         }
 

@@ -19,9 +19,12 @@ use Sulu\Component\Localization\Localization;
 interface LocalizationProviderInterface
 {
     /**
-     * Returns all the localizations offered for the system by this class.
-     *
      * @return Localization[]
      */
-    public function getAllLocalizations();
+    public function getAllLocalizations(): array;
+
+    /**
+     * @return string[]
+     */
+    public function getAllLocales(): array;
 }

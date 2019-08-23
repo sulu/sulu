@@ -50,6 +50,11 @@ class WebspaceCollection implements \IteratorAggregate
      */
     private $resources;
 
+    public function __construct(array $webspaces = [])
+    {
+        $this->webspaces = $webspaces;
+    }
+
     /**
      * Adds a new FileResource, which is required to determine if the cache is fresh.
      *

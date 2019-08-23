@@ -29,6 +29,7 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 
 class CustomUrlManagerTest extends TestCase
 {
@@ -170,7 +171,7 @@ class CustomUrlManagerTest extends TestCase
         $portal = $this->prophesize(Portal::class);
         $portal->getEnvironment($this->environment)->willReturn($environment->reveal());
 
-        $webspace = $this->prophesize(WebspaceManagerInterface::class);
+        $webspace = $this->prophesize(Webspace::class);
         $webspace->getPortals()->willReturn([$portal->reveal()]);
 
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace->reveal());
