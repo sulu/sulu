@@ -35,9 +35,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -556,25 +554,25 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $view = $this->responseDelete(
             $id,
-            function($id) use ($webspace, $request) {
-                    try {
-                        $document = $this->getDocumentManager()->find($id);
+            function($id) use ($request) {
+                try {
+                    $document = $this->getDocumentManager()->find($id);
 
-                        $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->get('sulu_security.security_checker')->checkPermission(
                             $this->getSecurityCondition($request, $document),
                             'delete'
                         );
 
-                        $this->getDocumentManager()->remove($document);
-                        $this->getDocumentManager()->flush();
-                    } catch (DocumentNotFoundException $ex) {
-                        throw new EntityNotFoundException('Content', $id);
-                    }
+                    $this->getDocumentManager()->remove($document);
+                    $this->getDocumentManager()->flush();
+                } catch (DocumentNotFoundException $ex) {
+                    throw new EntityNotFoundException('Content', $id);
                 }
+            }
             );
 
-            return $this->handleView($view);
-        }
+        return $this->handleView($view);
+    }
 
     /**
      * trigger a action for given node specified over get-action parameter
