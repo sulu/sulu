@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Repository;
 
 use Jackalope\Query\Row;
+use PHPCR\NodeInterface;
 use PHPCR\Query\QOM\ChildNodeInterface;
 use PHPCR\Query\QOM\ColumnInterface;
 use PHPCR\Query\QOM\ComparisonInterface;
@@ -130,7 +131,8 @@ class ContentRepositoryTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->localizationFinder->reveal(),
             $this->structureManager->reveal(),
-            $this->nodeHelper->reveal()
+            $this->nodeHelper->reveal(),
+            []
         );
 
         $qomFactory->selector(Argument::cetera())->willReturn($this->prophesize(SelectorInterface::class)->reveal());
@@ -169,6 +171,10 @@ class ContentRepositoryTest extends TestCase
 
         $row->getPath()->willReturn('/cmf/sulu_io/contents');
         $this->nodeHelper->extractWebspaceFromPath('/cmf/sulu_io/contents')->willReturn('sulu_io');
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getProperties('sec:*')->willReturn([]);
+        $row->getNode()->willReturn($node->reveal());
 
         $row->getValues()->willReturn(
             [
