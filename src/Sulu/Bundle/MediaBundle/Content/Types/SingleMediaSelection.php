@@ -61,6 +61,14 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     /**
      * {@inheritdoc}
      */
+    public function getViewData(PropertyInterface $property)
+    {
+        return $property->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function preResolve(PropertyInterface $property)
     {
         $data = $property->getValue();
