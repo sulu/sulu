@@ -19,6 +19,7 @@ use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class AudienceTargetingCacheListenerTest extends TestCase
 {
@@ -127,7 +128,11 @@ class AudienceTargetingCacheListenerTest extends TestCase
         $targetGroupResponse->headers = $responseHeaderBag->reveal();
 
         $httpCache = $this->prophesize(SuluHttpCache::class);
-        $httpCache->handle(Argument::any())->willReturn($targetGroupResponse->reveal());
+        $httpCache->handle(
+            Argument::any(),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )->willReturn($targetGroupResponse->reveal());
 
         return $httpCache->reveal();
     }
