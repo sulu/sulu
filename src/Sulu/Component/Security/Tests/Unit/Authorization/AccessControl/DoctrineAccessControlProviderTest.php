@@ -15,7 +15,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
-use Sulu\Bundle\SecurityBundle\Entity\BaseRole;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
@@ -127,7 +126,7 @@ class DoctrineAccessControlProviderTest extends TestCase
 
     public function testGetPermissions()
     {
-        $roleIdReflection = new \ReflectionProperty(BaseRole::class, 'id');
+        $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
         $roleIdReflection->setAccessible(true);
 
         $role1 = new Role();

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\RouteBundle\Model;
 
-use Sulu\Bundle\RouteBundle\Entity\BaseRoute;
-
 /**
  * Represents a concrete route in the route-pool.
  */
@@ -30,7 +28,7 @@ interface RouteInterface
      *
      * @param string $path
      *
-     * @return BaseRoute
+     * @return RouteInterface
      */
     public function setPath($path);
 
@@ -46,7 +44,7 @@ interface RouteInterface
      *
      * @param string $locale
      *
-     * @return BaseRoute
+     * @return RouteInterface
      */
     public function setLocale($locale);
 
@@ -69,7 +67,7 @@ interface RouteInterface
      *
      * @param string $entityClass
      *
-     * @return BaseRoute
+     * @return RouteInterface
      */
     public function setEntityClass($entityClass);
 
@@ -85,7 +83,7 @@ interface RouteInterface
      *
      * @param string $entityId
      *
-     * @return BaseRoute
+     * @return RouteInterface
      */
     public function setEntityId($entityId);
 

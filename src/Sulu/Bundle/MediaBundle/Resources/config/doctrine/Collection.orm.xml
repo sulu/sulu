@@ -5,6 +5,28 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\Collection" table="me_collections" repository-class="Sulu\Bundle\MediaBundle\Entity\CollectionRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="style" type="string" column="style" length="255" nullable="true"/>
+        <field name="lft" type="integer" column="lft">
+            <gedmo:tree-left/>
+        </field>
+        <field name="rgt" type="integer" column="rgt">
+            <gedmo:tree-right/>
+        </field>
+        <field name="depth" type="integer" column="depth">
+            <gedmo:tree-level/>
+        </field>
+
+        <field name="key" type="string" column="collection_key" length="191" unique="true" nullable="true"/>
+
+        <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
+            <join-columns>
+                <join-column name="idCollectionTypes" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta">
             <cascade>
                 <cascade-all />
@@ -30,5 +52,6 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
+        <gedmo:tree type="nested"/>
     </entity>
 </doctrine-mapping>

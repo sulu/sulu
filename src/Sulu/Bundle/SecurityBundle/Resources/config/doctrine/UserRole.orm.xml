@@ -3,5 +3,17 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\SecurityBundle\Entity\UserRole" table="se_user_roles">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="locale" type="text"/>
+
+        <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface" inversed-by="userRoles">
+            <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one field="role" target-entity="Sulu\Component\Security\Authentication\RoleInterface" inversed-by="userRoles">
+            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
     </entity>
 </doctrine-mapping>

@@ -18,15 +18,106 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Serializable;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
  * User.
  *
  * @ExclusionPolicy("all")
  */
-class User extends BaseUser
+class User extends ApiEntity implements UserInterface, Serializable, EquatableInterface
 {
+    /**
+     * @var int
+     * @Expose
+     * @Groups({"frontend", "fullUser"})
+     */
+    protected $id;
+
+    /**
+     * @var string
+     * @Expose
+     * @Groups({"fullUser", "profile"})
+     */
+    protected $username;
+
+    /**
+     * @var string
+     * @Expose
+     * @Groups({"fullUser", "profile"})
+     */
+    protected $email;
+
+    /**
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * @var string
+     * @Expose
+     * @Groups({"frontend", "fullUser", "profile"})
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $salt;
+
+    /**
+     * @var string
+     * @Expose
+     */
+    protected $privateKey;
+
+    /**
+     * @var string
+     */
+    protected $apiKey;
+
+    /**
+     * @var bool
+     * @Expose
+     */
+    protected $locked = false;
+
+    /**
+     * @var bool
+     * @Expose
+     */
+    protected $enabled = true;
+
+    /**
+     * @var \DateTime
+     */
+    protected $lastLogin;
+
+    /**
+     * @var string
+     */
+    protected $confirmationKey;
+
+    /**
+     * @var string
+     */
+    protected $passwordResetToken;
+
+    /**
+     * @var \DateTime
+     */
+    private $passwordResetTokenExpiresAt;
+
+    /**
+     * @var int
+     */
+    private $passwordResetTokenEmailsSent;
+
     /**
      * @var ContactInterface
      * @Expose
@@ -56,10 +147,412 @@ class User extends BaseUser
      */
     public function __construct()
     {
-        parent::__construct();
+        $this->apiKey = md5(uniqid());
+
         $this->userRoles = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
         $this->userSettings = new ArrayCollection();
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set username.
+     *
+     * @param string $username
+     *
+     * @return self
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username.
+     *
+     * @SerializedName("username")
+     * @Groups({"frontend", "fullUser"})
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set password.
+     *
+     * @param string $password
+     *
+     * @return self
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set locale.
+     *
+     * @param string $locale
+     *
+     * @return self
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Get locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Set salt.
+     *
+     * @param string $salt
+     *
+     * @return self
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt.
+     *
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set privateKey.
+     *
+     * @param string $privateKey
+     *
+     * @return self
+     */
+    public function setPrivateKey($privateKey)
+    {
+        $this->privateKey = $privateKey;
+
+        return $this;
+    }
+
+    /**
+     * Get privateKey.
+     *
+     * @return string
+     */
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
+
+    /**
+     * Removes the password of the user.
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * Serializes the user just with the id, as it is enough.
+     *
+     * @see http://php.net/manual/en/serializable.serialize.php
+     *
+     * @return string The string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->id,
+                $this->password,
+                $this->salt,
+                $this->username,
+                $this->locked,
+                $this->enabled,
+            ]
+        );
+    }
+
+    /**
+     * Constructs the object.
+     *
+     * @see http://php.net/manual/en/serializable.unserialize.php
+     *
+     * @param string $serialized The string representation of the object
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
+            ) = unserialize($serialized);
+    }
+
+    /**
+     * Set apiKey.
+     *
+     * @param string $apiKey
+     *
+     * @return self
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+
+        return $this;
+    }
+
+    /**
+     * Get apiKey.
+     *
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * Set locked.
+     *
+     * @param bool $locked
+     *
+     * @return self
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Set enabled.
+     *
+     * @param bool $enabled
+     *
+     * @return self
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set lastLogin.
+     *
+     * @param \DateTime $lastLogin
+     *
+     * @return self
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * Get lastLogin.
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Set confirmationKey.
+     *
+     * @param string $confirmationKey
+     *
+     * @return self
+     */
+    public function setConfirmationKey($confirmationKey)
+    {
+        $this->confirmationKey = $confirmationKey;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmationKey.
+     *
+     * @return string
+     */
+    public function getConfirmationKey()
+    {
+        return $this->confirmationKey;
+    }
+
+    /**
+     * Set passwordResetToken.
+     *
+     * @param string $passwordResetToken
+     *
+     * @return self
+     */
+    public function setPasswordResetToken($passwordResetToken)
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetToken.
+     *
+     * @return string
+     */
+    public function getPasswordResetToken()
+    {
+        return $this->passwordResetToken;
+    }
+
+    /**
+     * Set email.
+     *
+     * @param string $email
+     *
+     * @return self
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set tokenExpiresAt.
+     *
+     * @param \DateTime $passwordResetTokenExpiresAt
+     *
+     * @return self
+     */
+    public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
+    {
+        $this->passwordResetTokenExpiresAt = $passwordResetTokenExpiresAt;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetTokenExpiresAt.
+     *
+     * @return \DateTime
+     */
+    public function getPasswordResetTokenExpiresAt()
+    {
+        return $this->passwordResetTokenExpiresAt;
+    }
+
+    /**
+     * Set passwordResetTokenEmailsSent.
+     *
+     * @param int $passwordResetTokenEmailsSent
+     *
+     * @return self
+     */
+    public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
+    {
+        $this->passwordResetTokenEmailsSent = $passwordResetTokenEmailsSent;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetTokenEmailsSent.
+     *
+     * @return int
+     */
+    public function getPasswordResetTokenEmailsSent()
+    {
+        return $this->passwordResetTokenEmailsSent;
+    }
+
+    public function isEqualTo(SymfonyUserInterface $user)
+    {
+        if (!$user instanceof self) {
+            return false;
+        }
+
+        return $this->id === $user->getId()
+            && $this->password === $user->getPassword()
+            && $this->salt === $user->getSalt()
+            && $this->username === $user->getUsername()
+            && $this->locked === $user->getLocked()
+            && $this->enabled === $user->getEnabled();
     }
 
     /**
@@ -103,7 +596,7 @@ class User extends BaseUser
      */
     public function getRoles()
     {
-        $roles = parent::getRoles();
+        $roles = ['ROLE_USER'];
 
         foreach ($this->getUserRoles() as $userRole) {
             /* @var UserRole $userRole */

@@ -15,13 +15,38 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Component\Persistence\Model\AuditableTrait;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
+use Symfony\Component\Security\Core\Role\Role as SymfonyRole;
 
 /**
  * Role.
  */
-class Role extends BaseRole
+class Role extends SymfonyRole implements RoleInterface
 {
+    use AuditableTrait;
+
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $system;
+
+    /**
+     * @var SecurityType
+     */
+    private $securityType;
+
     /**
      * @var Collection|Permission[]
      * @var Collection
@@ -58,7 +83,105 @@ class Role extends BaseRole
         $this->groups = new ArrayCollection();
         $this->settings = new ArrayCollection();
 
-        parent::__construct();
+        parent::__construct('');
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRole()
+    {
+        return 'ROLE_SULU_' . strtoupper($this->name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'ROLE_SULU_' . strtoupper($this->getName());
+    }
+
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return Role
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set system.
+     *
+     * @param string $system
+     *
+     * @return Role
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
+
+        return $this;
+    }
+
+    /**
+     * Get system.
+     *
+     * @return string
+     */
+    public function getSystem()
+    {
+        return $this->system;
+    }
+
+    /**
+     * Set securityType.
+     *
+     * @param SecurityType $securityType
+     *
+     * @return Role
+     */
+    public function setSecurityType(SecurityType $securityType = null)
+    {
+        $this->securityType = $securityType;
+
+        return $this;
+    }
+
+    /**
+     * Get securityType.
+     *
+     * @return SecurityType
+     */
+    public function getSecurityType()
+    {
+        return $this->securityType;
     }
 
     /**
