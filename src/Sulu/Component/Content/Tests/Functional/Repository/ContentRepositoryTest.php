@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
+namespace Sulu\Component\Content\Tests\Functional\Repository;
 
 use PHPCR\SessionInterface;
-use Sulu\Bundle\PageBundle\Document\HomeDocument;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -87,7 +87,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager_test.property_encoder');
+        $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
@@ -371,8 +371,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
-            MappingBuilder::create()->getMapping());
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
 
@@ -764,6 +763,11 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindWithPermissionsNotGranted()
     {
+        $packageVersion = $this->getPackageVersion('jackalope/jackalope');
+        if (version_compare($packageVersion, '1.3.0') < 0) {
+            $this->markTestSkipped('The jackalope/jackalope version below 1.3.0 has a bug causing this test to fail');
+        }
+
         $role1 = $this->prophesize(RoleInterface::class);
         $role1->getId()->willReturn(1);
         $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
@@ -838,7 +842,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]->getId());
         $this->assertTrue($layer[0]->hasChildren());
-        $this->assertNull($layer[0]->getChildren());
+        $this->assertCount(0, $layer[0]->getChildren());
         $this->assertEquals($page2->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -847,7 +851,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page5->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertNull($layer[0]->getChildren());
+        $this->assertCount(0, $layer[0]->getChildren());
         $this->assertEquals($page6->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -856,7 +860,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page9->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertNull($layer[0]->getChildren());
+        $this->assertCount(0, $layer[0]->getChildren());
         $this->assertEquals($page10->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
@@ -865,10 +869,10 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $layer);
         $this->assertEquals($page11->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
-        $this->assertNull($layer[0]->getChildren());
+        $this->assertCount(0, $layer[0]->getChildren());
         $this->assertEquals($page12->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
-        $this->assertNull($layer[1]->getChildren());
+        $this->assertCount(0, $layer[1]->getChildren());
     }
 
     public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey()
@@ -1036,16 +1040,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertEquals('/test-1', $result->getUrl());
-        $this->assertEquals(
-            [
-                'en' => null,
-                'en_us' => null,
-                'de' => '/test-1',
-                'de_at' => null,
-                'fr' => null,
-            ],
-            $result->getUrls()
-        );
+        $this->assertEquals(['en' => null, 'en_us' => null, 'de' => '/test-1', 'de_at' => null], $result->getUrls());
     }
 
     public function testFindUrls()
@@ -1059,16 +1054,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->setResolveUrl(true)->getMapping()
         );
 
-        $this->assertEquals(
-            [
-                'en' => '/test-1',
-                'en_us' => null,
-                'de' => '/test-1',
-                'de_at' => null,
-                'fr' => null,
-            ],
-            $result->getUrls()
-        );
+        $this->assertEquals(['en' => '/test-1', 'en_us' => null, 'de' => '/test-1', 'de_at' => null], $result->getUrls());
     }
 
     public function testFindByWebspaceRootPublished()
@@ -1095,7 +1081,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-1', $result[0]->getPath());
     }
 
-    public function testFindContentLocales()
+    public function testFindConcreteLanguages()
     {
         $page = $this->createShadowPage('test', 'de', 'en');
 
@@ -1106,7 +1092,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->setResolveConcreteLocales(true)->getMapping()
         );
 
-        $this->assertEquals(['de'], $result->getContentLocales());
+        $this->assertEquals(['de'], $result->getConcreteLanguages());
     }
 
     public function testFindNonExistingProperty()
@@ -1231,5 +1217,18 @@ class ContentRepositoryTest extends SuluTestCase
         $this->documentManager->flush();
 
         return $document;
+    }
+
+    private function getPackageVersion($packageName)
+    {
+        $this->composerLock = json_decode(
+            file_get_contents($this->getContainer()->getParameter('kernel.root_dir') . '/../../composer.lock')
+        );
+
+        foreach ($this->composerLock->packages as $package) {
+            if ($package->name === $packageName) {
+                return $package->version;
+            }
+        }
     }
 }

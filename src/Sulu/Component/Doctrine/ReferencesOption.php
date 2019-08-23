@@ -13,6 +13,9 @@ namespace Sulu\Component\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\Event\GenerateSchemaTableEventArgs;
 use Doctrine\ORM\Tools\ToolEvents;
@@ -60,9 +63,6 @@ class ReferencesOption implements EventSubscriber
      */
     private $managerRegistry;
 
-    /**
-     * @param ManagerRegistry $managerRegistry
-     */
     public function __construct(ManagerRegistry $managerRegistry)
     {
         $this->managerRegistry = $managerRegistry;
@@ -73,7 +73,27 @@ class ReferencesOption implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return [ToolEvents::postGenerateSchemaTable];
+        return [
+            ToolEvents::postGenerateSchemaTable,
+            Events::loadClassMetadata,
+        ];
+    }
+
+    public function loadClassMetadata(LoadClassMetadataEventArgs $event)
+    {
+        $classMetadata = $event->getClassMetadata();
+
+        foreach ($classMetadata->getFieldNames() as $fieldName) {
+            $mapping = $classMetadata->getFieldMapping($fieldName);
+
+            if (!isset($mapping['options']['references'])) {
+                continue;
+            }
+
+            $mapping['_custom']['references'] = $mapping['options']['references'];
+            unset($mapping['options']['references']);
+            $classMetadata->setAttributeOverride($mapping['fieldName'], $mapping);
+        }
     }
 
     /**
@@ -92,15 +112,15 @@ class ReferencesOption implements EventSubscriber
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
 
-            if (!isset($mapping['options']['references'])) {
+            if (!isset($mapping['_custom']['references'])) {
                 continue;
             }
 
-            $referencesOptions = $mapping['options']['references'];
+            $referencesOptions = $mapping['_custom']['references'];
 
             $unknownOptions = array_diff_key($referencesOptions, array_flip(self::$knownOptions));
 
-            if (count($unknownOptions) > 0) {
+            if (\count($unknownOptions) > 0) {
                 throw new RuntimeException(
                     sprintf(
                         'Unknown options "%s" in the "references" option in the Doctrine schema of %s::%s.',
@@ -133,9 +153,10 @@ class ReferencesOption implements EventSubscriber
 
             $localColumnName = $classMetadata->getColumnName($fieldName);
 
+            /** @var ObjectManager $manager */
+            $manager = $this->managerRegistry->getManagerForClass($referencesOptions['entity']);
             /** @var ClassMetadata $foreignClassMetadata */
-            $foreignClassMetadata = $this->managerRegistry->getManagerForClass($referencesOptions['entity'])
-                ->getClassMetadata($referencesOptions['entity']);
+            $foreignClassMetadata = $manager->getClassMetadata($referencesOptions['entity']);
 
             $foreignTable = $foreignClassMetadata->getTableName();
             $foreignColumnName = $foreignClassMetadata->getColumnName($referencesOptions['field']);
