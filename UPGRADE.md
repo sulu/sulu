@@ -14,6 +14,10 @@ We added type-hints to following interfaces:
 
 Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.
 
+### Removed SuluResourceBundle 
+
+The `SuluResourceBundle` was removed from the source code as it is not used by Sulu anymore.
+
 ### Rename system column of se_roles table to securitySystem for MySQL 8 compatibility
 
 The `system` column of the `se_roles` table was renamed to `securitySystem` to make Sulu compatible with MySQL 8.0.
