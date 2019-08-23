@@ -45,7 +45,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * handles content nodes.
  */
-class NodeController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class NodeController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -69,7 +69,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      *
      * @return string
      */
-    private function getLanguage(Request $request)
+    public function getLocale(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', false, null);
 
@@ -78,14 +78,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         return $this->getRequestParameter($request, 'language', true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLocale(Request $request)
-    {
-        return $this->getLanguage($request);
     }
 
     /**
@@ -102,40 +94,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * returns entry point (webspace as node).
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function entryAction(Request $request)
-    {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-
-        $depth = $this->getRequestParameter($request, 'depth', false, 1);
-        $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
-
-        $view = $this->responseGetById(
-            null,
-            function() use ($language, $webspace, $depth, $ghostContent) {
-                try {
-                    return $this->getRepository()->getWebspaceNode(
-                        $webspace,
-                        $language,
-                        $depth,
-                        $ghostContent
-                    );
-                } catch (DocumentNotFoundException $ex) {
-                    return;
-                }
-            }
-        );
-
-        return $this->handleView($view);
-    }
-
-    /**
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
@@ -145,44 +103,53 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function getAction(Request $request, $id)
     {
-        if (null !== $request->get('fields')) {
-            return $this->getContent($request, $id);
+        $locale = $this->getLocale($request);
+        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
+        $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
+        $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
+        $template = $this->getRequestParameter($request, 'template', false, null);
+
+        $view = $this->responseGetById(
+            $id,
+            function($id) use ($locale, $ghostContent, $template, $request) {
+                try {
+                    $document = $this->getDocumentManager()->find(
+                        $id,
+                        $locale,
+                        [
+                            'load_ghost_content' => $ghostContent,
+                            'structure_type' => $template,
+                        ]
+                    );
+
+                    $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->getSecurityCondition($request, $document),
+                        'view'
+                    );
+
+                    return $document;
+                } catch (DocumentNotFoundException $ex) {
+                    return;
+                }
+            }
+        );
+
+        $groups = [];
+        if (!$complete) {
+            $groups[] = 'smallPage';
+        } else {
+            $groups[] = 'defaultPage';
         }
 
-        return $this->getSingleNode($request, $id);
-    }
+        if ($breadcrumb) {
+            $groups[] = 'breadcrumbPage';
+        }
 
-    /**
-     * Returns single content.
-     *
-     * @param Request $request
-     * @param $id
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Sulu\Component\Rest\Exception\MissingParameterException
-     * @throws \Sulu\Component\Rest\Exception\ParameterDataTypeException
-     */
-    private function getContent(Request $request, $id)
-    {
-        $properties = array_filter(explode(',', $request->get('fields', '')));
-        $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
-        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
-        $locale = $this->getRequestParameter($request, 'language', true);
-        $webspaceKey = $this->getRequestParameter($request, 'webspace');
+        $context = new Context();
+        $context->setGroups($groups);
 
-        $user = $this->getUser();
-
-        $mapping = MappingBuilder::create()
-            ->setHydrateGhost(!$excludeGhosts)
-            ->setHydrateShadow(!$excludeShadows)
-            ->setResolveConcreteLocales(true)
-            ->addProperties($properties)
-            ->getMapping();
-
-        $data = $this->get('sulu_page.content_repository')->find($id, $locale, $webspaceKey, $mapping, $user);
-        $view = $this->view($data);
+        // preview needs also null value to work correctly
+        $view->setContext($context);
 
         return $this->handleView($view);
     }
@@ -238,58 +205,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * @param Request $request
-     * @param string $id
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function getSingleNode(Request $request, $id)
-    {
-        $language = $this->getLanguage($request);
-        $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
-        $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
-        $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
-        $template = $this->getRequestParameter($request, 'template', false, null);
-
-        $view = $this->responseGetById(
-            $id,
-            function($id) use ($language, $ghostContent, $template) {
-                try {
-                    return $this->getDocumentManager()->find(
-                        $id,
-                        $language,
-                        [
-                            'load_ghost_content' => $ghostContent,
-                            'structure_type' => $template,
-                        ]
-                    );
-                } catch (DocumentNotFoundException $ex) {
-                    return;
-                }
-            }
-        );
-
-        $groups = [];
-        if (!$complete) {
-            $groups[] = 'smallPage';
-        } else {
-            $groups[] = 'defaultPage';
-        }
-
-        if ($breadcrumb) {
-            $groups[] = 'breadcrumbPage';
-        }
-
-        $context = new Context();
-        $context->setGroups($groups);
-
-        // preview needs also null value to work correctly
-        $view->setContext($context);
-
-        return $this->handleView($view);
-    }
-
-    /**
      * Returns a tree along the given path with the siblings of all nodes on the path.
      * This functionality is required for preloading the content navigation.
      *
@@ -300,7 +215,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getTreeForUuid(Request $request, $id)
     {
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
@@ -310,14 +225,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $result = $this->getRepository()->getNodesTree(
                     $id,
                     $webspace,
-                    $language,
+                    $locale,
                     $excludeGhosts,
                     $excludeShadows
                 );
             } elseif (null !== $webspace) {
-                $result = $this->getRepository()->getWebspaceNode($webspace, $language);
+                $result = $this->getRepository()->getWebspaceNode($webspace, $locale);
             } else {
-                $result = $this->getRepository()->getWebspaceNodes($language);
+                $result = $this->getRepository()->getWebspaceNodes($locale);
             }
         } catch (DocumentNotFoundException $ex) {
             // TODO return 404 and handle this edge case on client side
@@ -327,7 +242,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     [
                         'tree' => 'false',
                         'depth' => 1,
-                        'language' => $language,
+                        'language' => $locale,
                         'webspace' => $webspace,
                         'exclude-ghosts' => $excludeGhosts,
                     ]
@@ -350,31 +265,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getNodesByIds(Request $request, $idString)
     {
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request, false);
 
         $result = $this->getRepository()->getNodesByIds(
             preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
             $webspace,
-            $language
+            $locale
         );
-
-        return $this->handleView($this->view($result));
-    }
-
-    /**
-     * returns a content item for startpage.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(Request $request)
-    {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-
-        $result = $this->getRepository()->getIndexNode($webspace, $language);
 
         return $this->handleView($this->view($result));
     }
@@ -418,7 +316,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             return $this->getNodesByIds($request, $ids);
         }
 
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
@@ -432,7 +330,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $result = $this->getRepository()->getNodes(
             $parentUuid,
             $webspace,
-            $language,
+            $locale,
             $depth,
             $flat,
             false,
@@ -536,26 +434,31 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function putAction(Request $request, $id)
     {
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $action = $request->get('action');
-
-        $this->checkActionParameterSecurity($action, $language, $id);
 
         $document = $this->getDocumentManager()->find(
             $id,
-            $language,
+            $locale,
             [
                 'load_ghost_content' => false,
                 'load_shadow_content' => false,
             ]
         );
 
+        $this->get('sulu_security.security_checker')->checkPermission(
+            $this->getSecurityCondition($request, $document),
+            'edit'
+        );
+
+        $this->checkActionParameterSecurity($action, $request, $document);
+
         $formType = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getFormType();
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
-        $this->persistDocument($request, $formType, $document, $language);
-        $this->handleActionParameter($action, $document, $language);
+        $this->persistDocument($request, $formType, $document, $locale);
+        $this->handleActionParameter($action, $document, $locale);
         $this->getDocumentManager()->flush();
 
         $context = new Context();
@@ -577,16 +480,30 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postAction(Request $request)
     {
         $type = 'page';
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $action = $request->get('action');
 
-        $this->checkActionParameterSecurity($action, $language);
+        $parentDocument = $this->getDocumentManager()->find(
+            $this->getRequestParameter($request, 'parentId', true),
+            $locale,
+            [
+                'load_ghost_content' => false,
+                'load_shadow_content' => false,
+            ]
+        );
+
+        $this->get('sulu_security.security_checker')->checkPermission(
+            $this->getSecurityCondition($request, $parentDocument),
+            'add'
+        );
+
+        $this->checkActionParameterSecurity($action, $request, $parentDocument);
 
         $document = $this->getDocumentManager()->create($type);
         $formType = $this->getMetadataFactory()->getMetadataForAlias($type)->getFormType();
 
-        $this->persistDocument($request, $formType, $document, $language);
-        $this->handleActionParameter($action, $document, $language);
+        $this->persistDocument($request, $formType, $document, $locale);
+        $this->handleActionParameter($action, $document, $locale);
         $this->getDocumentManager()->flush();
 
         $context = new Context();
@@ -605,7 +522,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function deleteAction(Request $request, $id)
     {
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
         $force = $this->getBooleanRequestParameter($request, 'force', false, false);
 
@@ -627,7 +544,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $content = $this->get('sulu.content.mapper')->load(
                         $reference->getParent()->getIdentifier(),
                         $webspace,
-                        $language,
+                        $locale,
                         true
                     );
                     $data['structures'][] = $content->toArray();
@@ -639,17 +556,25 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $view = $this->responseDelete(
             $id,
-            function($id) use ($webspace) {
-                try {
-                    $this->getRepository()->deleteNode($id, $webspace);
-                } catch (DocumentNotFoundException $ex) {
-                    throw new EntityNotFoundException('Content', $id);
-                }
-            }
-        );
+            function($id) use ($webspace, $request) {
+                    try {
+                        $document = $this->getDocumentManager()->find($id);
 
-        return $this->handleView($view);
-    }
+                        $this->get('sulu_security.security_checker')->checkPermission(
+                            $this->getSecurityCondition($request, $document),
+                            'delete'
+                        );
+
+                        $this->getDocumentManager()->remove($document);
+                        $this->getDocumentManager()->flush();
+                    } catch (DocumentNotFoundException $ex) {
+                        throw new EntityNotFoundException('Content', $id);
+                    }
+                }
+            );
+
+            return $this->handleView($view);
+        }
 
     /**
      * trigger a action for given node specified over get-action parameter
@@ -669,7 +594,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         // extract parameter
         $action = $this->getRequestParameter($request, 'action', true);
-        $language = $this->getLanguage($request);
+        $locale = $this->getLocale($request);
         $userId = $this->getUser()->getId();
 
         // prepare vars
@@ -680,7 +605,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
-                    $data = $this->getDocumentManager()->find($id, $language);
+                    $data = $this->getDocumentManager()->find($id, $locale);
+
+                    $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->getSecurityCondition($request, $data),
+                        'edit'
+                    );
 
                     $this->getDocumentManager()->move(
                         $data,
@@ -689,39 +619,58 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $this->getDocumentManager()->flush();
                     break;
                 case 'copy':
+                    $document = $this->getDocumentManager()->find($id, $locale);
+
+                    $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->getSecurityCondition($request, $document),
+                        'edit'
+                    );
+
                     $copiedPath = $this->getDocumentManager()->copy(
-                        $this->getDocumentManager()->find($id, $language),
+                        $document,
                         $this->getRequestParameter($request, 'destination', true)
                     );
                     $this->getDocumentManager()->flush();
 
-                    $data = $this->getDocumentManager()->find($copiedPath, $language);
+                    $data = $this->getDocumentManager()->find($copiedPath, $locale);
                     break;
                 case 'order':
                     $position = (int) $this->getRequestParameter($request, 'position', true);
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->orderAt($id, $position, $webspace, $language, $userId);
+                    $data = $repository->orderAt($id, $position, $webspace, $locale, $userId);
                     break;
                 case 'copy-locale':
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->copyLocale($id, $userId, $webspace, $language, explode(',', $destLocale));
+                    $data = $repository->copyLocale($id, $userId, $webspace, $locale, explode(',', $destLocale));
                     break;
                 case 'unpublish':
-                    $document = $this->getDocumentManager()->find($id, $language);
-                    $this->getDocumentManager()->unpublish($document, $language);
+                    $document = $this->getDocumentManager()->find($id, $locale);
+
+                    $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->getSecurityCondition($request, $document),
+                        'live'
+                    );
+
+                    $this->getDocumentManager()->unpublish($document, $locale);
                     $this->getDocumentManager()->flush();
 
-                    $data = $this->getDocumentManager()->find($id, $language);
+                    $data = $this->getDocumentManager()->find($id, $locale);
                     break;
                 case 'remove-draft':
                     $webspace = $this->getWebspace($request);
-                    $data = $this->getDocumentManager()->find($id, $language);
-                    $this->getDocumentManager()->removeDraft($data, $language);
+                    $data = $this->getDocumentManager()->find($id, $locale);
+
+                    $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->getSecurityCondition($request, $data),
+                        'live'
+                    );
+
+                    $this->getDocumentManager()->removeDraft($data, $locale);
                     $this->getDocumentManager()->flush();
                     break;
                 default:
@@ -764,45 +713,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     protected function getMetadataFactory()
     {
         return $this->get('sulu_document_manager.metadata_factory.base');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSecurityContext()
-    {
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
-        $webspace = $requestAnalyzer->getWebspace();
-
-        if ($webspace) {
-            return 'sulu.webspaces.' . $webspace->getKey();
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSecuredClass()
-    {
-        return SecurityBehavior::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSecuredObjectId(Request $request)
-    {
-        $id = null;
-
-        if (null !== ($id = $request->get('id'))) {
-            $id = $id;
-        } elseif (null !== ($parent = $request->get('parentId')) && Request::METHOD_GET !== $request->getMethod()) {
-            // the user is always allowed to get the children of a node
-            // so the security check only applies for requests not being GETs
-            $id = $parent;
-        }
-
-        return $id;
     }
 
     /**
@@ -923,12 +833,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @param Request $request
      * @param $formType
      * @param $document
-     * @param $language
+     * @param $locale
      *
      * @throws InvalidFormException
      * @throws MissingParameterException
      */
-    private function persistDocument(Request $request, $formType, $document, $language)
+    private function persistDocument(Request $request, $formType, $document, $locale)
     {
         $data = $request->request->all();
 
@@ -957,7 +867,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $this->getDocumentManager()->persist(
             $document,
-            $language,
+            $locale,
             [
                 'user' => $this->getUser()->getId(),
                 'clear_missing_content' => false,
@@ -973,7 +883,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @param string $locale
      * @param string $id
      */
-    private function checkActionParameterSecurity($actionParameter, $locale, $id = null)
+    private function checkActionParameterSecurity($actionParameter, Request $request, $document = null)
     {
         $permission = null;
         switch ($actionParameter) {
@@ -987,12 +897,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         $this->get('sulu_security.security_checker')->checkPermission(
-            new SecurityCondition(
-                $this->getSecurityContext(),
-                $locale,
-                $this->getSecuredClass(),
-                $id
-            ),
+            $this->getSecurityCondition($request, $document),
             $permission
         );
     }
@@ -1011,5 +916,15 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $this->getDocumentManager()->publish($document, $locale);
                 break;
         }
+    }
+
+    private function getSecurityCondition(Request $request, $document = null)
+    {
+        return new SecurityCondition(
+            'sulu.webspaces.' . $document->getWebspaceName(),
+            $this->getLocale($request),
+            SecurityBehavior::class,
+            $request->get('id')
+        );
     }
 }

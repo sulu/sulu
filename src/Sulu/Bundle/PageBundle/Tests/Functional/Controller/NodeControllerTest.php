@@ -119,8 +119,14 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data1);
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data1
+        );
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
         $uuid = $response->id;
@@ -172,7 +178,13 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
@@ -220,10 +232,20 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
         $this->assertHttpStatusCode(409, $client->getResponse());
     }
 
@@ -552,7 +574,13 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
@@ -687,7 +715,9 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request('POST', '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $data = [
@@ -773,7 +803,13 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=de', $data);
@@ -864,7 +900,9 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request('POST', '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en', $data);
@@ -889,7 +927,13 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $response = json_decode($client->getResponse()->getContent(), true);
         $id = $response['id'];
 
@@ -921,11 +965,25 @@ class NodeControllerTest extends SuluTestCase
             'template' => 'default',
             'url' => '/test',
         ];
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $data['url'] = '/test2';
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
@@ -1355,7 +1413,14 @@ class NodeControllerTest extends SuluTestCase
             'url' => '/a1',
             'article' => 'Test',
         ];
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
         $response = json_decode($client->getResponse()->getContent(), true);
         $uuid = $response['id'];
         $data = [
@@ -1823,8 +1888,14 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data[0]
+        );
         $data[0] = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
@@ -1850,7 +1921,14 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
             'navContexts' => ['main', 'footer'],
         ];
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $data);
@@ -1890,7 +1968,14 @@ class NodeControllerTest extends SuluTestCase
             'url' => '/test1',
             'article' => 'Test',
         ];
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
@@ -1921,7 +2006,14 @@ class NodeControllerTest extends SuluTestCase
             'url' => '/test1',
             'article' => 'Test',
         ];
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
@@ -2069,7 +2161,14 @@ class NodeControllerTest extends SuluTestCase
         ];
 
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data[0]
+        );
         $data[0] = json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&parentId=' . $data[0]['id'], $data[1]);
         $data[1] = json_decode($client->getResponse()->getContent(), true);
@@ -2136,8 +2235,14 @@ class NodeControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
         for ($i = 0; $i < count($data); ++$i) {
-            $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[$i]);
+            $client->request(
+                'POST',
+                '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+                $data[$i]
+            );
             $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
         }
 

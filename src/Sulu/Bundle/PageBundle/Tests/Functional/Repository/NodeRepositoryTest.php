@@ -101,16 +101,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($document->getStructure()->getProperty('url')->getValue(), $result['url']);
     }
 
-    public function testDelete()
-    {
-        $structure = $this->prepareGetTestData();
-
-        $this->nodeRepository->deleteNode($structure->getUuid(), 'sulu_io');
-
-        $this->expectException(DocumentNotFoundException::class);
-        $this->nodeRepository->getNode($structure->getUuid(), 'sulu_io', 'en');
-    }
-
     public function testGetWebspaceNode()
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');

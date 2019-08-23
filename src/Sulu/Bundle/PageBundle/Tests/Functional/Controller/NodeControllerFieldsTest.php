@@ -195,25 +195,6 @@ class NodeControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[0]['title']);
     }
 
-    public function testGet()
-    {
-        $page1 = $this->createPage('test-1', 'de');
-        $this->createPage('test-1-1', 'de', [], $page1);
-
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'GET',
-            sprintf('/api/nodes/%s', $page1->getUuid()),
-            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
-        );
-        $result = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertEquals($page1->getUuid(), $result['id']);
-        $this->assertTrue($result['hasChildren']);
-        $this->assertEmpty($result['_embedded']['pages']);
-    }
-
     public function testGetTree()
     {
         $page1 = $this->createPage('test-1', 'de');
@@ -306,23 +287,6 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('external', $result['linked']);
-    }
-
-    public function testTypeGhost()
-    {
-        $page = $this->createPage('test-2', 'en');
-
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'GET',
-            sprintf('/api/nodes/%s', $page->getUuid()),
-            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
-        );
-        $result = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertEquals('ghost', $result['type']['name']);
-        $this->assertEquals('en', $result['type']['value']);
     }
 
     public function testTypeShadow()

@@ -229,15 +229,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteNode($uuid, $webspaceKey)
-    {
-        // TODO remove third parameter, and ask in UI if referenced node should be deleted
-        $this->getMapper()->delete($uuid, $webspaceKey, true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getReferences($uuid)
     {
         $session = $this->sessionManager->getSession();
