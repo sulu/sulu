@@ -14,6 +14,6 @@
         <default key="_controller">SuluSecurityBundle:Resetting:reset</default>
     </route>
 
-    <import type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\ContextsController"/>
-    <import type="rest" resource="sulu_security.profile_controller"/>
+    <import type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\ContextsController" name-prefix="sulu_security."/>
+    <import type="rest" resource="sulu_security.profile_controller" name-prefix="sulu_security."/>
 </routes>

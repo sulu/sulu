@@ -1,11 +1,14 @@
 sulu_snippet.snippet:
     type: rest
+    name_prefix: sulu_snippet.
     resource: sulu_snippet.controller.snippet
 
 sulu_snippet.snippet-areas:
     type: rest
+    name_prefix: sulu_snippet.
     resource: Sulu\Bundle\SnippetBundle\Controller\SnippetAreaController
 
 sulu_snippet.languages:
     type: rest
+    name_prefix: sulu_snippet.
     resource: Sulu\Bundle\SnippetBundle\Controller\LanguageController

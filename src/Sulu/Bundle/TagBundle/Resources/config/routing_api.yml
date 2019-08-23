@@ -1,3 +1,4 @@
 sulu_tag.tags:
     type: rest
+    name_prefix: sulu_tag.
     resource: Sulu\Bundle\TagBundle\Controller\TagController

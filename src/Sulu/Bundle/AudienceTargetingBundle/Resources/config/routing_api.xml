@@ -4,6 +4,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <import resource="@SuluAudienceTargetingBundle/Controller/TargetGroupController.php" type="rest"/>
+    <import resource="@SuluAudienceTargetingBundle/Controller/TargetGroupController.php" type="rest" name-prefix="sulu_audience_targeting."/>
 
 </routes>

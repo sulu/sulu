@@ -1,21 +1,26 @@
 sulu_media.collections:
     type: rest
+    name_prefix: sulu_media.
     resource: Sulu\Bundle\MediaBundle\Controller\CollectionController
 
 sulu_media.media:
     type: rest
+    name_prefix: sulu_media.
     resource: Sulu\Bundle\MediaBundle\Controller\MediaController
 
 sulu_media.media_preview:
     type: rest
+    name_prefix: sulu_media.
     parent: sulu_media.media
     resource: Sulu\Bundle\MediaBundle\Controller\MediaPreviewController
 
 sulu_media.format:
     type: rest
+    name_prefix: sulu_media.
     resource: Sulu\Bundle\MediaBundle\Controller\FormatController
 
 sulu_media.media_format:
     type: rest
+    name_prefix: sulu_media.
     parent: sulu_media.media
     resource: Sulu\Bundle\MediaBundle\Controller\MediaFormatController
