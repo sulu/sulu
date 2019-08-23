@@ -55,10 +55,9 @@ trait PersistenceExtensionTrait
             if (array_key_exists('model', $services)) {
                 $repositoryDefinition = $this->getRepositoryDefinition($object, $services, $container);
 
-                $container->setDefinition(
-                    $this->getContainerKey('repository', $object),
-                    $repositoryDefinition
-                )->setPublic(true);
+                $container->setDefinition($this->getContainerKey('repository', $object), $repositoryDefinition)
+                    ->setPublic(true)
+                    ->setLazy(true);
             }
         }
     }
