@@ -10,6 +10,11 @@ We added type-hints to following interfaces:
 * `Sulu\Component\Webspace\Manager\WebspaceManagerInterface`
 * `Sulu\Component\Localization\Provider\LocalizationProviderInterface`
 
+### Removed various base classes
+
+The `BaseRole`, `BaseUser`, `BaseUserRole`, `BaseRoute` and `BaseCollection` class were removed. The functionality
+of these classes was moved to the `Role`, `User`, `UserRole`, `Route` and `Collection` class.
+
 ### Removed deprecated commands
 
 Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.
