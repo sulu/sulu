@@ -74,7 +74,7 @@ class PathCleanup implements PathCleanupInterface
 
         // Inspired by ZOOLU
         // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
+        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s\-_\/])/', '', $clean)));
 
         // replace multiple dash with one
         $clean = preg_replace('/([-]+)/', '-', $clean);

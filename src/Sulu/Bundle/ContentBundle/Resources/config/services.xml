@@ -129,6 +129,7 @@
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
+            <argument>%sulu_security.permissions%</argument>
         </service>
         <service id="sulu_content.content_repository.event_subscriber"
                  class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">

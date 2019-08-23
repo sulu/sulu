@@ -91,13 +91,19 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private $nodeHelper;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         PropertyEncoder $propertyEncoder,
         WebspaceManagerInterface $webspaceManager,
         LocalizationFinderInterface $localizationFinder,
         StructureManagerInterface $structureManager,
-        SuluNodeHelper $nodeHelper
+        SuluNodeHelper $nodeHelper,
+        array $permissions
     ) {
         $this->sessionManager = $sessionManager;
         $this->propertyEncoder = $propertyEncoder;
@@ -105,6 +111,7 @@ class ContentRepository implements ContentRepositoryInterface
         $this->localizationFinder = $localizationFinder;
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
+        $this->permissions = $permissions;
 
         $this->session = $sessionManager->getSession();
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
@@ -829,8 +836,19 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolvePermissions(Row $row, UserInterface $user = null)
     {
         $permissions = [];
+
+        $hasObjectPermissions = count($row->getNode()->getProperties('sec:*')) > 0;
+
+        if (!$hasObjectPermissions) {
+            return [];
+        }
+
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
+                foreach ($this->permissions as $permissionKey => $permission) {
+                    $permissions[$role->getId()][$permissionKey] = false;
+                }
+
                 foreach (array_filter(explode(' ', $row->getValue(sprintf('role%s', $role->getId())))) as $permission) {
                     $permissions[$role->getId()][$permission] = true;
                 }
