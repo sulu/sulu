@@ -41,7 +41,7 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
      *
      * @return Route[]
      */
-    public function getRoutes(): array
+    public function getRoutes(RouteCollection $routeCollection): array
     {
         return [];
     }

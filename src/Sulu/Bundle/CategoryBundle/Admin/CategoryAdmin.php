@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -72,7 +73,7 @@ class CategoryAdmin extends Admin
         return new Navigation($rootNavigationItem);
     }
 
-    public function getRoutes(): array
+    public function getRoutes(RouteCollection $routeCollection): array
     {
         $locales = $this->localizationManager->getLocales();
 

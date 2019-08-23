@@ -59,16 +59,16 @@ class RouteRegistry
 
     private function loadRoutes(): void
     {
-        $routes = [];
+        $routeCollection = new RouteCollection();
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof RouteProviderInterface) {
                 continue;
             }
 
-            $routes = array_merge($routes, $admin->getRoutes());
+            $routeCollection->addRoutes($admin->getRoutes($routeCollection));
         }
 
-        $this->validateRoutes($routes);
+        $this->validateRoutes($routeCollection->all());
 
         array_walk($routes, function(&$route, $index) {
             $route = clone $route;
@@ -85,6 +85,9 @@ class RouteRegistry
         }
     }
 
+    /**
+     * @param Route[] $routes
+     */
     private function validateRoutes(array $routes): void
     {
         $routeNames = array_map(function(Route $route) {
@@ -104,6 +107,9 @@ class RouteRegistry
         }
     }
 
+    /**
+     * @param Route[] $routes
+     */
     private function mergeRouteOptions(array $routes, string $parent = null)
     {
         /** @var Route[] $childRoutes */

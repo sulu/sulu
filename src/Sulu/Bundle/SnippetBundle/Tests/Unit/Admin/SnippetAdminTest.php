@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Component\Security\Authorization\SecurityChecker;
@@ -69,7 +70,8 @@ class SnippetAdminTest extends TestCase
 
         $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
-        $routes = $snippetAdmin->getRoutes();
+        $routeCollection = new RouteCollection();
+        $routes = $snippetAdmin->getRoutes($routeCollection);
         $listRoute = $routes[0];
         $addFormRoute = $routes[1];
         $addDetailRoute = $routes[2];

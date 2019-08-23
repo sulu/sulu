@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -66,7 +67,7 @@ class WebsiteAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getRoutes(): array
+    public function getRoutes(RouteCollection $routeCollection): array
     {
         $listToolbarActions = [
             'sulu_admin.add',

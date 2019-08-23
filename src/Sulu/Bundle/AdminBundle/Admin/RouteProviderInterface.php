@@ -18,5 +18,5 @@ interface RouteProviderInterface
     /**
      * @return Route[]
      */
-    public function getRoutes(): array;
+    public function getRoutes(RouteCollection $routeCollection): array;
 }

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
@@ -54,14 +55,15 @@ class RouteRegistryTest extends TestCase
 
     public function testFindRouteByName()
     {
+        $routeCollection = new RouteCollection();
         $route1 = new Route('test1', '/test1', 'test1');
         $route1->setOption('value', 'test1');
         $route2 = new Route('test2', '/test2', 'test2');
         $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
         $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1]);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3]);
+        $this->admin1->getRoutes($routeCollection)->willReturn([$route1]);
+        $this->admin2->getRoutes($routeCollection)->willReturn([$route2, $route3]);
 
         $route = $this->routeRegistry->findRouteByName('test2');
         $this->assertEquals($route, $route2);
@@ -71,8 +73,9 @@ class RouteRegistryTest extends TestCase
     {
         $this->expectException(RouteNotFoundException::class);
 
-        $this->admin1->getRoutes()->willReturn([]);
-        $this->admin2->getRoutes()->willReturn([]);
+        $routeCollection = new RouteCollection();
+        $this->admin1->getRoutes($routeCollection)->willReturn([]);
+        $this->admin2->getRoutes($routeCollection)->willReturn([]);
 
         $this->routeRegistry->findRouteByName('not_existing');
     }
@@ -85,8 +88,9 @@ class RouteRegistryTest extends TestCase
         $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
         $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1]);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3]);
+        $routeCollection = new RouteCollection();
+        $this->admin1->getRoutes($routeCollection)->willReturn([$route1]);
+        $this->admin2->getRoutes($routeCollection)->willReturn([$route2, $route3]);
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(3, $routes);
@@ -103,8 +107,9 @@ class RouteRegistryTest extends TestCase
         $route2->setOption('value', 'test2');
         $route3 = new Route('test3', '/test3', 'test3');
         $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1])->shouldBeCalledTimes(1);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3])->shouldBeCalledTimes(1);
+        $routeCollection = new RouteCollection();
+        $this->admin1->getRoutes($routeCollection)->willReturn([$route1])->shouldBeCalledTimes(1);
+        $this->admin2->getRoutes($routeCollection)->willReturn([$route2, $route3])->shouldBeCalledTimes(1);
 
         $routes1 = $this->routeRegistry->getRoutes();
         $routes2 = $this->routeRegistry->getRoutes();
@@ -118,8 +123,9 @@ class RouteRegistryTest extends TestCase
 
         $route = new Route('test1', '/test1', 'test1');
         $route->setParent('not-existing');
-        $this->admin1->getRoutes()->willReturn([$route]);
-        $this->admin2->getRoutes()->willReturn([]);
+        $routeCollection = new RouteCollection();
+        $this->admin1->getRoutes($routeCollection)->willReturn([$route]);
+        $this->admin2->getRoutes($routeCollection)->willReturn([]);
 
         $this->routeRegistry->getRoutes();
     }
@@ -139,8 +145,9 @@ class RouteRegistryTest extends TestCase
         $route2 = new Route('test2', '/test2', 'test2');
         $route2->setOption('value', 'test');
 
-        $this->admin1->getRoutes()->willReturn([$route1, $route1_1, $route1_1_1, $route2]);
-        $this->admin2->getRoutes()->willReturn([]);
+        $routeCollection = new RouteCollection();
+        $this->admin1->getRoutes($routeCollection)->willReturn([$route1, $route1_1, $route1_1_1, $route2]);
+        $this->admin2->getRoutes($routeCollection)->willReturn([]);
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(4, $routes);

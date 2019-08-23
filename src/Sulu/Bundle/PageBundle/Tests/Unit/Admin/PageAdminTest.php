@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
@@ -90,13 +91,15 @@ class PageAdminTest extends TestCase
             false
         );
 
-        $route = $admin->getRoutes()[0];
+        $routeCollection = new RouteCollection();
+        $route = $admin->getRoutes($routeCollection)[0];
         $this->assertAttributeEquals('sulu_page.webspaces', 'name', $route);
         $this->assertAttributeEquals([
             'webspace' => 'test-1',
         ], 'attributeDefaults', $route);
 
-        $route = $admin->getRoutes()[1];
+        $routeCollection = new RouteCollection();
+        $route = $admin->getRoutes($routeCollection)[1];
         $this->assertAttributeEquals('sulu_page.pages_list', 'name', $route);
         $this->assertAttributeEquals([
             'locale' => 'de',

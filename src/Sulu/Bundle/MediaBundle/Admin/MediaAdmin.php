@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
@@ -91,7 +92,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getRoutes(): array
+    public function getRoutes(RouteCollection $routeCollection): array
     {
         $mediaLocales = $this->localizationManager->getLocales();
 

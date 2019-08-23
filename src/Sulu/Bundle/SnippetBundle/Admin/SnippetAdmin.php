@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
@@ -98,7 +99,7 @@ class SnippetAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getRoutes(): array
+    public function getRoutes(RouteCollection $routeCollection): array
     {
         $snippetLocales = $this->webspaceManager->getAllLocales();
 
