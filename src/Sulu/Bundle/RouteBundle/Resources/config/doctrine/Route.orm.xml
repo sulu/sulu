@@ -6,6 +6,10 @@
     <entity repository-class="Sulu\Bundle\RouteBundle\Entity\RouteRepository"
             name="Sulu\Bundle\RouteBundle\Entity\Route" table="ro_routes">
 
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
         <indexes>
             <index columns="path"/>
             <index columns="locale"/>
@@ -15,5 +19,17 @@
             <unique-constraint columns="path,locale"/>
         </unique-constraints>
 
+        <field name="path" type="string" length="191"/>
+        <field name="locale" type="string" length="8"/>
+        <field name="entityClass" type="string" length="191"/>
+        <field name="entityId" type="string" length="191"/>
+        <field name="history" type="boolean"/>
+
+        <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" mapped-by="target">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+        <many-to-one field="target" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" inversed-by="histories"/>
     </entity>
 </doctrine-mapping>
