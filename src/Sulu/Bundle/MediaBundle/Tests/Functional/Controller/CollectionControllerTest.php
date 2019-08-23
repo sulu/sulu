@@ -1058,7 +1058,6 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPutWithChildCollection()
     {
-        $client = $this->createAuthenticatedClient();
         $childCollection = $this->createCollection(
             $this->collectionType1,
             ['en-gb' => 'Test Child Collection', 'de' => 'Test Kind Kollektion'],
@@ -1066,6 +1065,8 @@ class CollectionControllerTest extends SuluTestCase
             null,
             5
         );
+
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -1092,7 +1093,6 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPutWithoutBreadcrumb()
     {
-        $client = $this->createAuthenticatedClient();
         $childCollection = $this->createCollection(
             $this->collectionType1,
             ['en-gb' => 'Test Child Collection', 'de' => 'Test Kind Kollektion'],
@@ -1100,6 +1100,8 @@ class CollectionControllerTest extends SuluTestCase
             null,
             5
         );
+
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',

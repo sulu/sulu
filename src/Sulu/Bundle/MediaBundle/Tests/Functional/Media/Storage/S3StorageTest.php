@@ -19,9 +19,11 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class S3StorageTest extends SuluTestCase
 {
+    protected static $class = S3Kernel::class;
+
     public function testSave(): void
     {
-        $kernel = $this->getKernel([], S3Kernel::class);
+        $kernel = self::bootKernel();
 
         $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
@@ -37,7 +39,7 @@ class S3StorageTest extends SuluTestCase
 
     public function testLoad(): void
     {
-        $kernel = $this->getKernel([], S3Kernel::class);
+        $kernel = self::bootKernel();
 
         /** @var S3AdapterMock $adapter */
         $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
@@ -56,7 +58,7 @@ class S3StorageTest extends SuluTestCase
 
     public function testRemove(): void
     {
-        $kernel = $this->getKernel([], S3Kernel::class);
+        $kernel = self::bootKernel();
 
         /** @var S3AdapterMock $adapter */
         $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
@@ -75,7 +77,7 @@ class S3StorageTest extends SuluTestCase
 
     public function testGetPath(): void
     {
-        $kernel = $this->getKernel([], S3Kernel::class);
+        $kernel = self::bootKernel();
 
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
         $this->assertInstanceOf(S3Storage::class, $storage);
@@ -89,7 +91,7 @@ class S3StorageTest extends SuluTestCase
 
     public function testGetType(): void
     {
-        $kernel = $this->getKernel([], S3Kernel::class);
+        $kernel = self::bootKernel();
 
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
         $this->assertInstanceOf(S3Storage::class, $storage);

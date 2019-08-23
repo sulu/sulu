@@ -92,7 +92,7 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
         $this->assertEquals('This is a perfect description.', $resultDE->getStructure()->getProperty('description')->getValue());
         $this->assertEquals('This is a perfect description.', $resultEN->getStructure()->getProperty('description')->getValue());
 
-        $container = $this->getKernel(['context' => SuluKernel::CONTEXT_WEBSITE])->getContainer();
+        $container = self::bootKernel(['sulu.context' => SuluKernel::CONTEXT_WEBSITE])->getContainer();
         $documentManager = $container->get('sulu_document_manager.document_manager');
 
         $resultEN = $documentManager->find($snippet->getUuid(), 'en');

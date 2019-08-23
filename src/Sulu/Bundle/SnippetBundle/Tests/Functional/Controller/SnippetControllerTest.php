@@ -50,11 +50,11 @@ class SnippetControllerTest extends SuluTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->phpcrSession = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
         $this->initPhpcr();
-        $this->loadFixtures();
         $this->client = $this->createAuthenticatedClient();
+        $this->phpcrSession = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->loadFixtures();
     }
 
     /**
@@ -550,6 +550,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($car, 'en');
 
         $this->documentManager->flush();
+        $this->documentManager->clear();
     }
 
     private function assertLinks(array $links, array $response)

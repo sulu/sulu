@@ -5,6 +5,20 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC1...2.0.0-RC2).
 
+### SuluTestCase and KernelTestCase changed
+
+The `SuluTestCase` and `KernelTestCase` extend now from the default Symfony `KernelTestCase` to support the newest features
+of it. The new `KernelTestCase` can in some cases behave different e.g.: `createClient` in the Symfony `KernelTestCase`
+does reboot the `Kernel` which was not the behaviour before.
+
+Also the following function and services were removed:
+
+ - `SuluTestCase::createHomeDocument` removed
+ - `SuluTestCase::$importer` removed
+ - `KernelTestCase::getKernel` removed use `KernelTestCase::$kernel` or `KernelTestCase::bootKernel` instead
+
+The TestKernel option `sulu_context` was renamed to `sulu.context` to match its service tag.
+
 ### Renaming of JS files
 
 All JavaScript files containing not a constructor but export an instance of a class instead have been renamed to start
