@@ -168,8 +168,7 @@ class SingleMediaSelectionTest extends TestCase
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
 
-        $this->assertEquals(
-            [],
+        $this->assertNull(
             $this->singleMediaSelection->getViewData($property)
         );
     }
@@ -180,7 +179,7 @@ class SingleMediaSelectionTest extends TestCase
         $property->setValue(['id' => 11]);
 
         $this->assertEquals(
-            [],
+            ['id' => 11],
             $this->singleMediaSelection->getViewData($property)
         );
     }
