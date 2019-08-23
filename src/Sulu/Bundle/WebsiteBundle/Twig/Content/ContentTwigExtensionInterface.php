@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
+use Twig\Extension\ExtensionInterface;
 
 /**
  * Provide Interface to load content.
  */
-interface ContentTwigExtensionInterface extends \Twig_ExtensionInterface
+interface ContentTwigExtensionInterface extends ExtensionInterface
 {
     /**
      * Returns resolved content for parent of given uuid.

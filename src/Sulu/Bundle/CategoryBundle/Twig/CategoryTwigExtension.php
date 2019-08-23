@@ -16,11 +16,13 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides functionality to handle categories in twig templates.
  */
-class CategoryTwigExtension extends \Twig_Extension
+class CategoryTwigExtension extends AbstractExtension
 {
     /**
      * @var CategoryManagerInterface
@@ -60,10 +62,10 @@ class CategoryTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_categories', [$this, 'getCategoriesFunction']),
-            new \Twig_SimpleFunction('sulu_category_url', [$this, 'setCategoryUrlFunction']),
-            new \Twig_SimpleFunction('sulu_category_url_append', [$this, 'appendCategoryUrlFunction']),
-            new \Twig_SimpleFunction('sulu_category_url_clear', [$this, 'clearCategoryUrlFunction']),
+            new TwigFunction('sulu_categories', [$this, 'getCategoriesFunction']),
+            new TwigFunction('sulu_category_url', [$this, 'setCategoryUrlFunction']),
+            new TwigFunction('sulu_category_url_append', [$this, 'appendCategoryUrlFunction']),
+            new TwigFunction('sulu_category_url_clear', [$this, 'clearCategoryUrlFunction']),
         ];
     }
 
@@ -128,13 +130,5 @@ class CategoryTwigExtension extends \Twig_Extension
     public function clearCategoryUrlFunction($categoriesParameter = 'categories')
     {
         return $this->categoryRequestHandler->removeCategoriesFromUrl($categoriesParameter);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_category';
     }
 }

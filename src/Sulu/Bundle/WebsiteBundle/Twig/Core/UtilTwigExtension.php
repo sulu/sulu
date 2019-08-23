@@ -11,29 +11,25 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Core;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+
 /**
  * Twig extension providing generally useful utilities which are available
  * in the Sulu\Component\Util namespace.
  */
-class UtilTwigExtension extends \Twig_Extension
+class UtilTwigExtension extends AbstractExtension
 {
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'sulu_util';
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
-            new \Twig_SimpleFilter('sulu_util_filter', 'Sulu\Component\Util\ArrayUtils::filter'),
-            new \Twig_SimpleFilter('sulu_util_domain_info', 'tld_extract'),
+            new TwigFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
+            new TwigFilter('sulu_util_filter', 'Sulu\Component\Util\ArrayUtils::filter'),
+            new TwigFilter('sulu_util_domain_info', 'tld_extract'),
         ];
     }
 
@@ -43,7 +39,7 @@ class UtilTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_util_domain_info', 'tld_extract'),
+            new TwigFunction('sulu_util_domain_info', 'tld_extract'),
         ];
     }
 }

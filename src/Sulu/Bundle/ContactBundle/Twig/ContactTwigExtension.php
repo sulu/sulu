@@ -14,11 +14,13 @@ namespace Sulu\Bundle\ContactBundle\Twig;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension to handle contacts in frontend.
  */
-class ContactTwigExtension extends \Twig_Extension
+class ContactTwigExtension extends AbstractExtension
 {
     /**
      * @var ContactRepository
@@ -36,19 +38,14 @@ class ContactTwigExtension extends \Twig_Extension
         $this->contactRepository = $contactRepository;
     }
 
-    /**
-     * @return array
-     */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_resolve_contact', [$this, 'resolveContactFunction']),
+            new TwigFunction('sulu_resolve_contact', [$this, 'resolveContactFunction']),
         ];
     }
 
     /**
-     * resolves user id to user data.
-     *
      * @param int $id id to resolve
      *
      * @return Contact
@@ -67,15 +64,5 @@ class ContactTwigExtension extends \Twig_Extension
         $this->cache->save($id, $contact);
 
         return $contact;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'sulu_contact';
     }
 }

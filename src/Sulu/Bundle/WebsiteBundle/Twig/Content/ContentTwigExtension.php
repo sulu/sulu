@@ -19,11 +19,13 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides Interface to load content.
  */
-class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
+class ContentTwigExtension extends AbstractExtension implements ContentTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -73,8 +75,8 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_content_load', [$this, 'load']),
-            new \Twig_SimpleFunction('sulu_content_load_parent', [$this, 'loadParent']),
+            new TwigFunction('sulu_content_load', [$this, 'load']),
+            new TwigFunction('sulu_content_load_parent', [$this, 'loadParent']),
         ];
     }
 
@@ -116,13 +118,5 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         }
 
         return $this->load($node->getParent()->getIdentifier());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_website_content';
     }
 }

@@ -15,11 +15,13 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides Twig functions to handle snippets.
  */
-class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
+class SnippetTwigExtension extends AbstractExtension implements SnippetTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -55,7 +57,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_snippet_load', [$this, 'loadSnippet']),
+            new TwigFunction('sulu_snippet_load', [$this, 'loadSnippet']),
         ];
     }
 
@@ -75,13 +77,5 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
         } catch (DocumentNotFoundException $ex) {
             return;
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_snippet';
     }
 }

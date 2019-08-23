@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 
+use Twig\Extension\ExtensionInterface;
+
 /**
  * Provides twig functions for sitemap.
  */
-interface SitemapTwigExtensionInterface extends \Twig_ExtensionInterface
+interface SitemapTwigExtensionInterface extends ExtensionInterface
 {
     /**
      * Returns prefixed resourcelocator with the url and locale.

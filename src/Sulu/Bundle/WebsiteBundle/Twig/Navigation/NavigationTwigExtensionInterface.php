@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
+use Twig\Extension\ExtensionInterface;
 
 /**
  * provides the navigation function.
  */
-interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
+interface NavigationTwigExtensionInterface extends ExtensionInterface
 {
     /**
      * Returns a flat navigation of first layer.

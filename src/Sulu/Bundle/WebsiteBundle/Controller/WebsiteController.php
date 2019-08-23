@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Twig\Template;
 
 /**
  * Basic class to render Website from phpcr content.
@@ -109,7 +110,7 @@ abstract class WebsiteController extends Controller
         $twig = $this->get('twig');
         $attributes = $twig->mergeGlobals($attributes);
 
-        /** @var \Twig_Template $template */
+        /** @var Template $template */
         $template = $twig->loadTemplate($template);
 
         $level = ob_get_level();

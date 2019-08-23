@@ -14,11 +14,13 @@ namespace Sulu\Bundle\SecurityBundle\Twig;
 use Doctrine\Common\Cache\Cache;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension to handle users in frontend.
  */
-class UserTwigExtension extends \Twig_Extension
+class UserTwigExtension extends AbstractExtension
 {
     /**
      * @var UserRepository
@@ -42,7 +44,7 @@ class UserTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_resolve_user', [$this, 'resolveUserFunction']),
+            new TwigFunction('sulu_resolve_user', [$this, 'resolveUserFunction']),
         ];
     }
 
@@ -67,13 +69,5 @@ class UserTwigExtension extends \Twig_Extension
         $this->cache->save($id, $user);
 
         return $user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_user';
     }
 }

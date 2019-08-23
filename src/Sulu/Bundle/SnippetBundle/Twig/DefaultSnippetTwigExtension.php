@@ -14,6 +14,8 @@ namespace Sulu\Bundle\SnippetBundle\Twig;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * @deprecated
@@ -23,7 +25,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  *
  * Provides default snippets.
  */
-class DefaultSnippetTwigExtension extends \Twig_Extension
+class DefaultSnippetTwigExtension extends AbstractExtension
 {
     /**
      * @var DefaultSnippetManagerInterface
@@ -56,7 +58,7 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_snippet_load_default', [$this, 'getDefault']),
+            new TwigFunction('sulu_snippet_load_default', [$this, 'getDefault']),
         ];
     }
 
@@ -79,13 +81,5 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
         $ids = array_filter($ids);
 
         return $this->snippetResolver->resolve($ids, $webspaceKey, $locale);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_snippet.default';
     }
 }

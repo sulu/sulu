@@ -13,13 +13,15 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Meta;
 
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides helper function to generate meta tags.
  *
  * @deprecated will be removed in 1.2
  */
-class MetaTwigExtension extends \Twig_Extension
+class MetaTwigExtension extends AbstractExtension
 {
     /**
      * @var RequestAnalyzerInterface
@@ -43,19 +45,11 @@ class MetaTwigExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'sulu_website_meta';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_meta_alternate', [$this, 'getAlternateLinks']),
-            new \Twig_SimpleFunction('sulu_meta_seo', [$this, 'getSeoMetaTags']),
+            new TwigFunction('sulu_meta_alternate', [$this, 'getAlternateLinks']),
+            new TwigFunction('sulu_meta_seo', [$this, 'getSeoMetaTags']),
         ];
     }
 

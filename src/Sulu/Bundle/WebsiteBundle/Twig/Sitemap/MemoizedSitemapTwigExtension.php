@@ -13,11 +13,12 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Provides memoized twig functions for sitemap.
  */
-class MemoizedSitemapTwigExtension extends \Twig_Extension
+class MemoizedSitemapTwigExtension extends AbstractExtension
 {
     use MemoizeTwigExtensionTrait;
 
@@ -31,13 +32,5 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->extension->getName();
     }
 }

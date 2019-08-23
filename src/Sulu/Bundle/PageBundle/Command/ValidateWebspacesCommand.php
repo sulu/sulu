@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Twig\Environment;
 
 class ValidateWebspacesCommand extends Command
 {
@@ -31,7 +32,7 @@ class ValidateWebspacesCommand extends Command
     private $output;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -71,7 +72,7 @@ class ValidateWebspacesCommand extends Command
     private $webspaceManager;
 
     public function __construct(
-        \Twig_Environment $twig,
+        Environment $twig,
         StructureMetadataFactoryInterface $structureMetadataFactory,
         ControllerNameParser $controllerNameConverter,
         StructureManagerInterface $structureManager,

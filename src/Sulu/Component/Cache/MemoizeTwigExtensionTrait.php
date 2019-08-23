@@ -11,13 +11,16 @@
 
 namespace Sulu\Component\Cache;
 
+use Twig\Extension\ExtensionInterface;
+use Twig\TwigFunction;
+
 /**
  * Provides functionality to convert twig functions.
  */
 trait MemoizeTwigExtensionTrait
 {
     /**
-     * @var \Twig_ExtensionInterface
+     * @var ExtensionInterface
      */
     protected $extension;
 
@@ -31,9 +34,6 @@ trait MemoizeTwigExtensionTrait
      */
     protected $lifeTime;
 
-    /**
-     * {@see \Twig_Extension::getFunctions}.
-     */
     public function getFunctions()
     {
         $result = [];
@@ -41,7 +41,7 @@ trait MemoizeTwigExtensionTrait
             $callable = $function->getCallable();
             $name = $function->getName();
 
-            $result[] = new \Twig_SimpleFunction(
+            $result[] = new TwigFunction(
                 $name,
                 function() use ($callable, $name) {
                     return $this->memoizeCache->memoizeById($name, func_get_args(), $callable, $this->lifeTime);

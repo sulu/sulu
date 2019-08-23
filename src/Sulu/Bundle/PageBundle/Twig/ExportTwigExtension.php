@@ -12,11 +12,13 @@
 namespace Sulu\Bundle\PageBundle\Twig;
 
 use Sulu\Component\Export\Manager\ExportManagerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Twig extensions for the Webspace export.
  */
-class ExportTwigExtension extends \Twig_Extension
+class ExportTwigExtension extends AbstractExtension
 {
     /**
      * @var ExportManagerInterface
@@ -44,8 +46,8 @@ class ExportTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_content_type_export_escape', [$this, 'escapeXmlContent']),
-            new \Twig_SimpleFunction('sulu_content_type_export_counter', [$this, 'counter']),
+            new TwigFunction('sulu_content_type_export_escape', [$this, 'escapeXmlContent']),
+            new TwigFunction('sulu_content_type_export_counter', [$this, 'counter']),
         ];
     }
 
@@ -77,15 +79,5 @@ class ExportTwigExtension extends \Twig_Extension
         }
 
         return $content;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'content_export';
     }
 }

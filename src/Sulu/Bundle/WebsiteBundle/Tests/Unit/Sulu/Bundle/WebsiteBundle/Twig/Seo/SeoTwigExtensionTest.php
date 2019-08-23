@@ -20,6 +20,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\TwigFunction;
 
 class SeoTwigExtensionTest extends TestCase
 {
@@ -72,7 +73,7 @@ class SeoTwigExtensionTest extends TestCase
         $result = $this->seoTwigExtension->getFunctions();
 
         $this->assertEquals(
-            new \Twig_SimpleFunction('sulu_seo', [$this->seoTwigExtension, 'renderSeoTags'], ['needs_environment' => true]),
+            new TwigFunction('sulu_seo', [$this->seoTwigExtension, 'renderSeoTags'], ['needs_environment' => true]),
             $result[0]
         );
     }

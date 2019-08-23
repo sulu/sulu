@@ -14,11 +14,13 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides twig functions for sitemap.
  */
-class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
+class SitemapTwigExtension extends AbstractExtension implements SitemapTwigExtensionInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -58,8 +60,8 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_sitemap_url', [$this, 'sitemapUrlFunction']),
-            new \Twig_SimpleFunction('sulu_sitemap', [$this, 'sitemapFunction']),
+            new TwigFunction('sulu_sitemap_url', [$this, 'sitemapUrlFunction']),
+            new TwigFunction('sulu_sitemap', [$this, 'sitemapFunction']),
         ];
     }
 
@@ -98,13 +100,5 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         }
 
         return $this->sitemapGenerator->generate($webspaceKey, $locale)->getSitemap();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_website_sitemap';
     }
 }

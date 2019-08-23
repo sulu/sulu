@@ -15,11 +15,13 @@ use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Provides the navigation functions.
  */
-class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
+class NavigationTwigExtension extends AbstractExtension implements NavigationTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -52,12 +54,12 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
-            new \Twig_SimpleFunction('sulu_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
-            new \Twig_SimpleFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
-            new \Twig_SimpleFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
-            new \Twig_SimpleFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
-            new \Twig_SimpleFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
+            new TwigFunction('sulu_navigation_root_flat', [$this, 'flatRootNavigationFunction']),
+            new TwigFunction('sulu_navigation_root_tree', [$this, 'treeRootNavigationFunction']),
+            new TwigFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
+            new TwigFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
+            new TwigFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
+            new TwigFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
         ];
     }
 
@@ -179,13 +181,5 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         }
 
         return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_website_navigation';
     }
 }

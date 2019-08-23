@@ -16,8 +16,10 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class TagTwigExtension extends \Twig_Extension
+class TagTwigExtension extends AbstractExtension
 {
     /**
      * @var TagManagerInterface
@@ -57,10 +59,10 @@ class TagTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_tags', [$this, 'getTagsFunction']),
-            new \Twig_SimpleFunction('sulu_tag_url', [$this, 'setTagUrlFunction']),
-            new \Twig_SimpleFunction('sulu_tag_url_append', [$this, 'appendTagUrlFunction']),
-            new \Twig_SimpleFunction('sulu_tag_url_clear', [$this, 'clearTagUrlFunction']),
+            new TwigFunction('sulu_tags', [$this, 'getTagsFunction']),
+            new TwigFunction('sulu_tag_url', [$this, 'setTagUrlFunction']),
+            new TwigFunction('sulu_tag_url_append', [$this, 'appendTagUrlFunction']),
+            new TwigFunction('sulu_tag_url_clear', [$this, 'clearTagUrlFunction']),
         ];
     }
 
@@ -120,13 +122,5 @@ class TagTwigExtension extends \Twig_Extension
     public function clearTagUrlFunction($tagsParameter = 'tags')
     {
         return $this->tagRequestHandler->removeTagsFromUrl($tagsParameter);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'sulu_tag';
     }
 }

@@ -18,6 +18,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class WebspaceStructureProviderTest extends TestCase
 {
@@ -34,12 +36,12 @@ class WebspaceStructureProviderTest extends TestCase
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getTheme()->willReturn('test');
 
-        $twigLoader = $this->prophesize(\Twig_ExistsLoaderInterface::class);
+        $twigLoader = $this->prophesize(FilesystemLoader::class);
         $twigLoader->exists('MyBundle:default:t1.html.twig')->willReturn(false);
         $twigLoader->exists('MyBundle:default:t2.html.twig')->shouldBeCalled()->willReturn(true);
         $twigLoader->exists('MyBundle:default:t3.html.twig')->willReturn(false);
 
-        $twig = $this->prophesize('\Twig_Environment');
+        $twig = $this->prophesize(Environment::class);
         $twig->getLoader()->willReturn($twigLoader->reveal());
 
         $structureManager = $this->prophesize(StructureManagerInterface::class);
@@ -71,7 +73,7 @@ class WebspaceStructureProviderTest extends TestCase
             $this->generateStructure('t3', 'MyBundle:default:t3'),
         ];
 
-        $twig = $this->prophesize(\Twig_Environment::class);
+        $twig = $this->prophesize(Environment::class);
         $twig->getLoader()->shouldNotBeCalled();
 
         $structureManager = $this->prophesize(StructureManagerInterface::class);
