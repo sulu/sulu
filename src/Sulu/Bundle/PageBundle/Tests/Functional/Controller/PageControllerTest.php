@@ -91,11 +91,11 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Homepage', $page1->title);
         $this->assertEquals('test_io', $page1->webspaceKey);
         $this->assertObjectHasAttribute('id', $page1);
-        $this->assertObjectNotHasAttribute('uuid', $page1);
+        $this->assertObjectHasAttribute('uuid', $page1);
         $this->assertEquals('Homepage', $page2->title);
         $this->assertEquals('sulu_io', $page2->webspaceKey);
         $this->assertObjectHasAttribute('id', $page2);
-        $this->assertObjectNotHasAttribute('uuid', $page2);
+        $this->assertObjectHasAttribute('uuid', $page2);
     }
 
     public function testPostTriggerAction()

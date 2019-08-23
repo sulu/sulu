@@ -54,6 +54,7 @@ class StructureResolver implements StructureResolverInterface
         $data = [
             'view' => [],
             'content' => [],
+            'id' => $structure->getUuid(),
             'uuid' => $structure->getUuid(),
             'creator' => $structure->getCreator(),
             'changer' => $structure->getChanger(),

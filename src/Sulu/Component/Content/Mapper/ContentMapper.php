@@ -751,6 +751,7 @@ class ContentMapper implements ContentMapperInterface
 
         $documentData = [
             'id' => $originalDocument->getUuid(),
+            'uuid' => $originalDocument->getUuid(),
             'nodeType' => $redirectType,
             'path' => $shortPath,
             'changed' => $document->getChanged(),

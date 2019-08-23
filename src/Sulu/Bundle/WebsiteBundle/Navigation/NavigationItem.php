@@ -21,7 +21,7 @@ class NavigationItem
     /**
      * @var string
      */
-    private $uuid;
+    private $id;
 
     /**
      * @var string
@@ -48,14 +48,14 @@ class NavigationItem
      */
     private $excerpt;
 
-    public function __construct($title, $url, $excerpt, $children = [], $uuid = null, $nodeType = Structure::STATE_TEST)
+    public function __construct($title, $url, $excerpt, $children = [], $id = null, $nodeType = Structure::STATE_TEST)
     {
         $this->title = $title;
         $this->url = $url;
         $this->nodeType = $nodeType;
         $this->excerpt = $excerpt;
 
-        $this->uuid = (null === $uuid ? uniqid() : $uuid);
+        $this->id = (null === $id ? uniqid() : $id);
 
         $this->children = $children;
     }
@@ -71,9 +71,17 @@ class NavigationItem
     /**
      * @return string
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
     public function getUuid()
     {
-        return $this->uuid;
+        return $this->id;
     }
 
     /**
