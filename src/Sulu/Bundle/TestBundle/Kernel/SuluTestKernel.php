@@ -82,7 +82,6 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
             $bundles[] = new \FOS\RestBundle\FOSRestBundle();
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new \Sulu\Bundle\ResourceBundle\SuluResourceBundle();
             $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
             $bundles[] = new \Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle();
             $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
